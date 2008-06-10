@@ -35,4 +35,8 @@ class Test::Unit::TestCase
   fixtures :all
 
   # Add more helper methods to be used by all tests here...
+  def self.load_ce_fixtures (fx)
+     directory = File.join(File.dirname(__FILE__), "../vendor/plugins/community_engine/test/fixtures") 
+     Fixtures.create_fixtures(directory, fx)
+  end
 end
