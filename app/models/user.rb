@@ -16,9 +16,18 @@ class User < ActiveRecord::Base
   #validates_presence_of :country
     
   validates_presence_of :phone
-
-
+  has_many :subscriptions
+  has_many :memberships, :through => :subscriptions
   
+  def isTeam?
+    role.name.eql? Role::TEAM
+  end
   
+  def isLeague?
+    role.name.eql? Role::LEAGUE
+  end
   
+  def isScout?
+    role.name.eql? Role::SCOUT
+  end  
 end
