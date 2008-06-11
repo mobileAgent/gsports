@@ -182,12 +182,10 @@ gsports_admin:
   description: Global Sports Site Administrator
   firstname: Ad
   lastname: Ministrator
-  user.login_slug: Administrator
-  user.role_id= Role[:admin].id
-  user.birthday: 25.years.ago.to_date
-  user.address1: 1 Global Sports Way
-  user.city: Globalcity
-  user.phone: 301.555.1212
-  user.password: gsadmin123
-  user.password_confirmation: gsadmin123
+  login_slug: Administrator
+  role_id: Role[:admin].id
+  birthday: <%= 25.years.ago.to_date %>
+  address1: 1 Global Sports Way
+  city: Globalcity
+  phone: 301.555.1212
   
