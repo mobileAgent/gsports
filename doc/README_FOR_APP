@@ -1,9 +1,11 @@
-Welcome to gsports Use this README file to introduce your application and point to useful places in the API for learning more.
+Welcome to gsports
+
 Run "rake doc:app" to generate API documentation for your models, controllers, helpers, and libraries.
 
 Requirements:
   - ImageMagick
   - RAILS VERSION 2.1
+  - MySql 5
 
 Required Gems:  
       rmagick
@@ -13,10 +15,25 @@ Required Gems:
       rake 0.8.1
       haml
       mime-types
+      httpclient
+      mysql
+      stomp
 
 Required Plugins:      
-    - exception-notification: http://dev.rubyonrails.org/svn/rails/plugins/exception_notification/
+    - exception-notification:
+      script/plugin http://dev.rubyonrails.org/svn/rails/plugins/exception_notification/
 
-    - The engines plugin for Rails 2.1: http://railsengines.org/news/2008/06/01/engines-2-1-0-release/
+    - The engines plugin for Rails 2.1:
+      script/plugin http://railsengines.org/news/2008/06/01/engines-2-1-0-release/
 
-    - Community engine: git clone --depth 1 git://github.com/bborn/communityengine.git vendor/plugins/community_engine
+    - Community engine:
+      git clone --depth 1 git://github.com/bborn/communityengine.git vendor/plugins/community_engine
+
+     - ActiveMessaging:
+       script/plugin install http://activemessaging.googlecode.com/svn/trunk/plugins/activemessaging
+
+Other:
+
+   - Active MQ must be installed and running
+     for the background video upload and checking
+     http://activemq.apache.com/

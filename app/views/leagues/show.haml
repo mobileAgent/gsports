@@ -1,0 +1,27 @@
+%p
+  %b Name:
+  =h @leqgue.name 
+
+%p
+  %b Logo uri:
+  =h @leqgue.logo_uri 
+
+%p
+  %b City:
+  =h @leqgue.city 
+
+%p
+  %b State:
+  =h @leqgue.state 
+
+%p
+  %b Description:
+  =h @leqgue.description 
+
+%p
+  %b Active:
+  =h @leqgue.active 
+
+
+= link_to 'Edit', edit_leqgue_path(@leqgue)
+= link_to 'Back', leqgues_path

@@ -1,0 +1,34 @@
+%h1 New leqgue
+
+= error_messages_for :leqgue 
+
+- form_for(@leqgue) do |f| 
+  %p
+    %b Name
+    %br
+    = f.text_field :name 
+  %p
+    %b Logo uri
+    %br
+    = f.text_field :logo_uri 
+  %p
+    %b City
+    %br
+    = f.text_field :city 
+  %p
+    %b State
+    %br
+    = f.text_field :state 
+  %p
+    %b Description
+    %br
+    = f.text_field :description 
+  %p
+    %b Active
+    %br
+    = f.check_box :active 
+
+  %p
+    = f.submit "Create"
+    
+= link_to 'Back', leqgues_path 

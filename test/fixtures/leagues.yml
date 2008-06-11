@@ -1,0 +1,17 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  name: Northeast Regional
+  logo_uri: leagueone.jpg
+  city: 
+  state: 
+  description: We are Northeast Regional
+  active: true
+
+two:
+  name: SouthWest Regional
+  logo_uri: leaguetwo.jpg
+  city: 
+  state: 
+  description: We are Southwest Regional
+  active: false
