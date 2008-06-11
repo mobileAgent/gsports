@@ -174,4 +174,20 @@ kyle:
   activated_at: <%= 5.days.ago.to_s :db %>  
   activation_code: 
   role_id: 3  
+
+gsports_admin:
+  email: admin@globalsports.net
+  activated_at: DateTime.now
+  login: gsadmin
+  description: Global Sports Site Administrator
+  firstname: Ad
+  lastname: Ministrator
+  user.login_slug: Administrator
+  user.role_id= Role[:admin].id
+  user.birthday: 25.years.ago.to_date
+  user.address1: 1 Global Sports Way
+  user.city: Globalcity
+  user.phone: 301.555.1212
+  user.password: gsadmin123
+  user.password_confirmation: gsadmin123
   
