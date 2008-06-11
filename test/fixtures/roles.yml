@@ -1,0 +1,13 @@
+team:
+  id:   1
+  name: team
+  subscription_plan: :basic
+league:
+  id:   2
+  name: league
+  subscription_plan: :member
+scout:
+  id:   3
+  name: scout
+  subscription_plan: :scout
+
