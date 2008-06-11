@@ -1,8 +1,7 @@
 
 require 'vendor/plugins/community_engine/app/models/user'
 
-class User < ActiveRecord::Base  
-  
+class User < ActiveRecord::Base
 
   validates_presence_of :firstname
   #validates_presence_of :minitial

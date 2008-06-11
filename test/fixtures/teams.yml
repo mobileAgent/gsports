@@ -1,0 +1,17 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  name: Home Team
+  logo_uri: hometeam.jpg
+  city: Whoville
+  state: Maryland
+  description: We are the home team
+  active: true
+
+two:
+  name: Visiting Team
+  logo_uri: visitors.jpg
+  city: Whatville
+  state: Maryland
+  description: We are the visiting team
+  active: true

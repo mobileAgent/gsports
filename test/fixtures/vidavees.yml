@@ -1,0 +1,17 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  uri: theuri.vidavee.example.com
+  key: thekey
+  secret: thesecret
+  context: thecontext
+  username: theusername
+  password: thepassword
+  
+two:
+  uri: second.vidavee.example.com
+  key: thekey2
+  secret: thesecret2
+  context: thecontext2
+  username: theusername2
+  password: thepassword2

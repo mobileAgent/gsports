@@ -1,0 +1,27 @@
+%p
+  %b Name:
+  =h @team.name 
+
+%p
+  %b Logo uri:
+  =h @team.logo_uri 
+
+%p
+  %b City:
+  =h @team.city 
+
+%p
+  %b State:
+  =h @team.state 
+
+%p
+  %b Description:
+  =h @team.description 
+
+%p
+  %b Active:
+  =h @team.active 
+
+
+= link_to 'Edit', edit_team_path(@team)
+= link_to 'Back', teams_path
