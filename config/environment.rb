@@ -1,3 +1,5 @@
+require 'yaml'
+
 # Be sure to restart your server when you modify this file
 
 # Uncomment below to force Rails into production mode when
@@ -9,12 +11,17 @@ RAILS_GEM_VERSION = '2.1.0' unless defined? RAILS_GEM_VERSION
 
 # Bootstrap the Rails environment, frameworks, and default configuration
 require File.join(File.dirname(__FILE__), 'boot')
+require File.join(File.dirname(__FILE__), '../vendor/plugins/engines/boot')
 
 Rails::Initializer.run do |config|
   # Settings in config/environments/* take precedence over those specified here.
   # Application configuration should go into files in config/initializers
   # -- all .rb files in that directory are automatically loaded.
   # See Rails::Configuration for more options.
+
+  #resource_hacks required here to ensure routes like /:login_slug work
+  config.plugins = [:engines, :community_engine, :white_list, :all]
+  config.plugin_paths += ["#{RAILS_ROOT}/vendor/plugins/community_engine/engine_plugins"]
 
   # Skip frameworks you're not going to use. To use Rails without a database
   # you must remove the Active Record framework.
@@ -45,11 +52,12 @@ Rails::Initializer.run do |config|
 
   # Your secret key for verifying cookie session data integrity.
   # If you change this key, all old sessions will become invalid!
-  # Make sure the secret is at least 30 characters and all random, 
-  # no regular words or you'll be exposed to dictionary attacks.
+  # To separate the different environments we load session keys
+  # from database.yml, where other passwords live
+  db = YAML.load_file('config/database.yml')
   config.action_controller.session = {
-    :session_key => '_gsports_session',
-    :secret      => '8f1c59861c2f44210fe3f9a0eb1ed9cde900ae4631a0cf8f07eda4ef99dc2de65901d3e4ca4169ca5a3a6c3bcd7a480ea6dee83e4559a28fd88285c352e955b1'
+     :session_key => db[RAILS_ENV]['session_key'],
+     :secret      => db[RAILS_ENV]['secret']
   }
 
   # Use the database for sessions instead of the cookie-based default,
@@ -67,3 +75,6 @@ Rails::Initializer.run do |config|
 end
 
 ExceptionNotifier.exception_recipients = %w(flester@gmail.com)
+
+require "#{RAILS_ROOT}/vendor/plugins/community_engine/engine_config/boot.rb"
+
