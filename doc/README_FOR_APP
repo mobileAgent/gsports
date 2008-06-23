@@ -12,6 +12,7 @@ Required Gems:
       RedCloth
       rake 0.8.1
       haml
+      mime-types
 
 Required Plugins:      
     - exception-notification: http://dev.rubyonrails.org/svn/rails/plugins/exception_notification/
