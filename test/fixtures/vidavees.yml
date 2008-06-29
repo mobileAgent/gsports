@@ -1,0 +1,17 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  uri: MyString
+  key: MyString
+  secret: MyString
+  context: MyString
+  username: MyString
+  password: MyString
+
+two:
+  uri: MyString
+  key: MyString
+  secret: MyString
+  context: MyString
+  username: MyString
+  password: MyString

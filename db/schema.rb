@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20080623122609) do
+ActiveRecord::Schema.define(:version => 20080627013300) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id",    :limit => 10
@@ -348,6 +348,18 @@ ActiveRecord::Schema.define(:version => 20080623122609) do
   add_index "users", ["activated_at"], :name => "index_users_on_activated_at"
   add_index "users", ["vendor"], :name => "index_users_on_vendor"
   add_index "users", ["login_slug"], :name => "index_users_on_login_slug"
+
+  create_table "vidavees", :force => true do |t|
+    t.string   "uri"
+    t.string   "servlet"
+    t.string   "key"
+    t.string   "secret"
+    t.string   "context"
+    t.string   "username"
+    t.string   "password"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "votes", :force => true do |t|
     t.string   "user_id"

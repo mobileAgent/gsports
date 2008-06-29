@@ -1,0 +1,8 @@
+1:
+  uri: tribeca.vidavee.com
+  servlet: rest
+  key: 5342smallworld
+  secret: smallworld5342
+  context: hsstv
+  username: hsstv
+  password: hsstvUser
