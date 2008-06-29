@@ -77,3 +77,6 @@ end
 ExceptionNotifier.exception_recipients = %w(flester@gmail.com)
 
 require "#{RAILS_ROOT}/vendor/plugins/community_engine/engine_config/boot.rb"
+require 'httpclient'
+require 'digest/md5'
+require 'hpricot'

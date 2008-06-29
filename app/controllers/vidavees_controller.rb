@@ -1,0 +1,2 @@
+class VidaveesController < ApplicationController
+end
