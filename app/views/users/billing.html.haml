@@ -1,0 +1,13 @@
+.yui-main
+  .box
+    %h3  Part 3: Billing Information
+
+    %form{:action=>'/users/submit_billing'}
+ 
+      %br
+      %br
+ 
+      = hidden_field_tag :userid, @user.id
+      %input{:type=>:submit, :value=>"COMPLETE REGISTRATION"}
+
+%br

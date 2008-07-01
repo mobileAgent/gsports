@@ -1,0 +1,43 @@
+.yui-main
+  .box
+    %h3 Part 1: Account Type 
+
+    %form{:action=>'/users/new'}
+      %table
+        %tr
+          %td{ :style=>"width:60px;", :align=>"center" }
+            %input{:type=>:radio, :name=>:role, :value=>"" }
+          %td
+            %b Athletes, Coaches, Parents, and Fans
+            %p
+              Etiam pharetra bibendum neque. In viverra dictum leo. Maecenas aliquet facilisis magna. Phasellus semper. 
+              Vestibulum turpis massa, congue commodo, euismod at, mollis ac, augue. Ut varius. 
+        %tr
+          %td{ :style=>"width:60px;", :align=>"center" }
+            %input{:type=>:radio, :name=>:role, :value=>Role[:team].id }
+          %td
+            %b Schools and Private Clubs 
+            %p
+              Mauris ante nisi, hendrerit in, facilisis ac, aliquet quis, libero. 
+              Nunc varius pharetra libero. Integer iaculis viverra lorem. Proin non pede sed nisi luctus rhoncus. 
+        %tr
+          %td{ :style=>"width:60px;", :align=>"center" }
+            %input{:type=>:radio, :name=>:role, :value=>Role[:league].id }
+          %td
+            %b Leagues and Conferences 
+            %p
+              Cras iaculis, arcu ac pulvinar hendrerit, felis magna vehicula nisl, sed tempor mi sem ac enim. 
+              Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Quisque vel magna. 
+        %tr
+          %td{ :style=>"width:60px;", :align=>"center" }
+            %input{:type=>:radio, :name=>:role, :value=>Role[:scout].id }
+          %td
+            %b Scouts and Recruiters 
+            %p
+              Morbi tempus lorem. Curabitur consectetuer hendrerit felis. Aliquam eget risus. Integer lacus purus, accumsan in, dapibus id, ullamcorper in, leo. 
+              Aliquam libero. Suspendisse rutrum. Nullam ac orci non lacus rutrum egestas. 
+      %br
+  
+      %input{:type=>:submit, :value=>"CONTINUE TO USER INFORMATION"}
+
+%br

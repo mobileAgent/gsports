@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20080623122609) do
+ActiveRecord::Schema.define(:version => 20080701142629) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id",    :limit => 10
@@ -341,6 +341,15 @@ ActiveRecord::Schema.define(:version => 20080623122609) do
     t.integer  "sb_posts_count",            :limit => 11, :default => 0
     t.datetime "sb_last_seen_at"
     t.integer  "role_id",                   :limit => 11
+    t.string   "firstname"
+    t.string   "minitial"
+    t.string   "lastname"
+    t.string   "address1"
+    t.string   "address2"
+    t.string   "city"
+    t.string   "state"
+    t.string   "country"
+    t.string   "phone"
   end
 
   add_index "users", ["avatar_id"], :name => "index_users_on_avatar_id"
