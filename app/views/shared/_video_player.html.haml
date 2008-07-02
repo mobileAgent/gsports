@@ -1,0 +1,4 @@
+- if session[:vidavee].nil?
+-   session[:vidavee] = vidavee.login
+- end
+%div= vidavee.asset_embed_code(session[:vidavee],dockey)

@@ -20,4 +20,4 @@ config.action_mailer.raise_delivery_errors = false
 APP_URL = "http://localhost:3000"
 
 # Caching, use memory for dev/test
-ActionController::Base.cache_store = :memory_store
+config.cache_store = :memory_store

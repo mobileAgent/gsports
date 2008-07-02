@@ -1,7 +1,5 @@
 class VidapiController < ApplicationController
   
-  #before_filter :admin_required, :except => [:login]
-
   # GET /vidapi/login
   # log into the vidavee backend and get a session token
   def login

@@ -16,7 +16,7 @@ class Vidavee < ActiveRecord::Base
   CLIENT = HTTPClient.new
 
   # Turn this on for debug of HTTP traffic to Vidavee
-  CLIENT.debug_dev = STDERR
+  # CLIENT.debug_dev = STDERR
 
   # http://tribeca.vidavee.com/hsstv/rest/session/CheckUser;jsessionid=39555E57BCF38625CF7DEA2EDD9038F7.node1?api_key=5342smallworld&api_ts=1214532647018&api_token=39555E57BCF38625CF7DEA2EDD9038F7.node1&api_sig=830678DF3E967D0392F936122F767754&session_id=
   # Seems to always return false, not sure what good it is
@@ -28,6 +28,7 @@ class Vidavee < ActiveRecord::Base
   # http://tribeca.vidavee.com/hsstv/rest/session/Login?api_key=5342smallworld&api_ts=1214531598256&api_sig=EFF68F8B9CBC146FCEE39EA3D4AFED79&userName=hsstv&password=hsstvUser
   def login
     response = vrequest('session/Login')
+    puts "Logging into the Vidavee backend"
     extract(response.content,'//newToken').text;
   end
 
@@ -117,6 +118,7 @@ class Vidavee < ActiveRecord::Base
   def load_gallery_assets(sessionid, extra_params = {})
     response = vrequest('gallery/GetGalleryAssets',sessionid, extra_params)
     assets = extract(response.content,'//asset')
+    save_count = 0
     assets.each do |a|
       v = VideoAsset.new
       v.dockey= a.search('//dockey').text
@@ -132,13 +134,19 @@ class Vidavee < ActiveRecord::Base
       v.thumbnail= a.search('//thumbnail').text
       v.thumbnail_low= a.search('//thumbnailLow').text
       v.thumbnail_medium= a.search('//thumbnailMedium').text
-      if v.save!
-        puts "Saved video #{v.dockey} - #{v.type} as id #{v.id}"
+      existing = VideoAsset.find_by_dockey(v.dockey)
+      if existing
+        puts "Video aset for dockey already exists #{v.dockey}"
       else
-        puts "Failed to save #{v.dockey}"
+        if v.save!
+          save_count+=1
+          puts "Saved video #{v.dockey} - #{v.type} as id #{v.id}"
+        else
+          puts "Failed to save #{v.dockey}"
+        end
       end
     end
-    assets.size
+    save_count
   end
 
   def new_vtag(sessionid, dockey, startTime, endTime, title, snapshotOffset, extra_params = {})
@@ -148,16 +156,9 @@ class Vidavee < ActiveRecord::Base
   end
 
   # a <script> tag to use for the embed
-  def asset_embed_code(sessionid, dockey)
-    response = vrequest('assets/GetDetailsAssetEmbedCode',sessionid,DOCKEY_PARAM => dockey)
+  def asset_embed_code(sessionid, dockey, width=400, height=350, autoplay="off")
+    response = vrequest('assets/GetDetailsAssetEmbedCode',sessionid,DOCKEY_PARAM => dockey, 'width'=>width,'height'=>height, 'autoplay'=>autoplay)
     extract(response.content,'//assetEmbedCode').text
-  end
-
-  # The html code is not available via an api call in this
-  # version, but does not depend on the logged in user or session
-  # so we can just plug the dockey into the template
-  def asset_embed_html(sessionid,dockey,height=500,width=425)
-    '<object width="'+width.to_s+'" height="'+height.to_s+'" align="middle" classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" id="movie1185893226841"><param name="allowScriptAccess" value="always"></param><param name="movie" value="http://publish.vidavee.com/publish/vidavee/playerv3/vFlasher_debug.swf?p19=movie1185893226841&p2=off&p3=on&p4=50&p5=off&p7=on&p8=on&p22=http://analytics.vidavee.com/v3.1/gateway/&p13=no&p16=v3Skin.swf&p17=http%3A%2F%2Fpublish.vidavee.com%2Fpublish%2Fvidavee%2Fplayerv3%2Fskins%2F&p11=0&p15=http%3A%2F%2Fpublish.vidavee.com%2Fpublish%2FvClientXML.view%3FAF_renderParam_contentType%3Dtext%2Fxml%26dockey%3D'+dockey+'&p21=http%3A%2F%2Fpublish.vidavee.com%2Fpublish%2Fvidavee%2Fplayerv3%2Fjs%2FFlashProxyLoader.js&p18=timeDisplay%3Dyes%3Bwatermark%3Dno%3BtextureStripe%3Dyes%3BvtagDisplay%3Dno"></param><param name="quality" value="high"></param><param name="bgcolor" value="#ffffff" ></param><param name="wmode" value="opaque"></param><embed width="500" height="425" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" quality="high" name="movie1185893226841" src="http://publish.vidavee.com/publish/vidavee/playerv3/vFlasher_debug.swf?p19=movie1185893226841&p2=off&p3=on&p4=50&p5=off&p7=on&p8=on&p22=http://analytics.vidavee.com/v3.1/gateway/&p13=no&p16=v3Skin.swf&p17=http%3A%2F%2Fpublish.vidavee.com%2Fpublish%2Fvidavee%2Fplayerv3%2Fskins%2F&p11=0&p15=http%3A%2F%2Fpublish.vidavee.com%2Fpublish%2FvClientXML.view%3FAF_renderParam_contentType%3Dtext%2Fxml%26dockey%3D'+dockey+'&p21=http%3A%2F%2Fpublish.vidavee.com%2Fpublish%2Fvidavee%2Fplayerv3%2Fjs%2FFlashProxyLoader.js&p18=timeDisplay%3Dyes%3Bwatermark%3Dno%3BtextureStripe%3Dyes%3BvtagDisplay%3Dno" wmode="opaque"></embed></object>'
   end
 
   # This moves the entire asset to the trash, it should be deleted from there

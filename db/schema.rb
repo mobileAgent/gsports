@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20080701032948) do
+ActiveRecord::Schema.define(:version => 20080702131607) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id",    :limit => 10
@@ -341,6 +341,15 @@ ActiveRecord::Schema.define(:version => 20080701032948) do
     t.integer  "sb_posts_count",            :limit => 11, :default => 0
     t.datetime "sb_last_seen_at"
     t.integer  "role_id",                   :limit => 11
+    t.string   "firstname"
+    t.string   "minitial"
+    t.string   "lastname"
+    t.string   "address1"
+    t.string   "address2"
+    t.string   "city"
+    t.string   "state"
+    t.string   "country"
+    t.string   "phone"
   end
 
   add_index "users", ["avatar_id"], :name => "index_users_on_avatar_id"
@@ -367,10 +376,10 @@ ActiveRecord::Schema.define(:version => 20080701032948) do
     t.string   "description"
     t.string   "author_name"
     t.string   "author_email"
-    t.string   "lenth"
+    t.string   "video_length"
     t.string   "frame_rate"
-    t.string   "type"
-    t.string   "status"
+    t.string   "video_type"
+    t.string   "video_status"
     t.boolean  "can_edit"
     t.string   "thumbnail"
     t.string   "thumbnail_low"
