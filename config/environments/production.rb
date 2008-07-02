@@ -25,4 +25,5 @@ config.action_view.cache_template_loading            = true
 APP_URL = "http://globalsports.net"
 
 # Caching, use memory for dev/test, memcache on localhost for production
-ActionController::Base.cache_store = :mem_cache_store, "localhost"
+config.cache_store = :mem_cache_store
+#ActionController::Base.cache_store = :mem_cache_store, "localhost"

@@ -43,8 +43,14 @@ alt blue dark #94beff
 /* =============================================== */
 /* 1. UNIVERSAL THINGS                             */
 /* =============================================== */
+
+body{
+	/*background-color: #477dd2;*/
+}
+
 #doc2{
 color: #464337;
+	background-color: white;
 }
 
 a{color: #06f;}
@@ -87,7 +93,8 @@ img.polaroid {
 /* 2. HEADER                                       */
 /* =============================================== */
 
-#hd{border-top: 4px solid red;}
+#hd{
+}
 
 #hd h1{float: left;}
 
@@ -97,16 +104,35 @@ font-weight: bold;
 text-transform: uppercase;
 text-decoration: none;
 display: block;
-margin: 20px 0 10px 0;
+margin: 0; /*20px 0 10px 0;*/
 color: #464337;
 }
 
 #hd h1 a:hover{text-decoration: underline;}
 
 #hd h2{
+}
+
+/* UserPanel */
+
+#UserPanel{
 float: right;
-font-size: 138.5%;
-margin-top: 25px;
+font-size: 80%;
+margin-top: 12px;	
+}
+
+/* Banner */
+
+#Banner{
+	clear: both;
+	
+	background-color: #405463;
+	height: 91px;
+
+}
+
+#Banner .sponsor{
+	margin: 6px;
 }
 
 /* Navbar */
@@ -625,7 +651,8 @@ margin-left:  12.3846em; /* about 200px - 3em*/
 /* =============================================== */
 
 #CommunityFooter{
-margin: 20px 0;
+margin: 0;
+margin-top: 20px;
 font-size: 85%;}
 
 #CommunityFooter ul, #CommunityFooter ul li{float: left;}
