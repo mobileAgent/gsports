@@ -1,0 +1,28 @@
+<h1>Listing vidavees</h1>
+
+<table>
+  <tr>
+    <th>Uri</th>
+    <th>Servlet</th>
+    <th>Key</th>
+    <th>Secret</th>
+    <th>Context</th>
+    <th>Username</th>
+    <th>Password</th>
+  </tr>
+
+<% for vidavee in @vidavees %>
+  <tr>
+    <td><%=h vidavee.uri %></td>
+    <td><%=h vidavee.servlet %></td>
+    <td><%=h vidavee.key %></td>
+    <td><%=h vidavee.secret %></td>
+    <td><%=h vidavee.context %></td>
+    <td><%=h vidavee.username %></td>
+    <td><%=h vidavee.password %></td>
+    <td><%= link_to 'Show', vidavee %></td>
+    <td><%= link_to 'Edit', edit_vidavee_path(vidavee) %></td>
+  </tr>
+<% end %>
+</table>
+

@@ -1,0 +1,31 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  dockey: MyString
+  title: MyString
+  description: MyString
+  author_name: MyString
+  author_email: MyString
+  lenth: MyString
+  frame_rate: MyString
+  type: MyString
+  status: MyString
+  can_edit: false
+  thumbnail: MyString
+  thumbnail_low: MyString
+  thumbnail_medium: MyString
+
+two:
+  dockey: MyString
+  title: MyString
+  description: MyString
+  author_name: MyString
+  author_email: MyString
+  lenth: MyString
+  frame_rate: MyString
+  type: MyString
+  status: MyString
+  can_edit: false
+  thumbnail: MyString
+  thumbnail_low: MyString
+  thumbnail_medium: MyString

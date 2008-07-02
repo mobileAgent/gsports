@@ -1,4 +1,6 @@
 ActionController::Routing::Routes.draw do |map|
+  map.resources :video_assets
+
   map.resources :vidavees
 
   # The priority is based upon order of creation: first created -> highest priority.

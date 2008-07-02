@@ -1,0 +1,73 @@
+<p>
+  <b>Dockey:</b>
+  <%=h @video_asset.dockey %>
+</p>
+
+<p>
+  <b>Title:</b>
+  <%=h @video_asset.title %>
+</p>
+
+<p>
+  <b>Description:</b>
+  <%=h @video_asset.description %>
+</p>
+
+<p>
+  <b>Author name:</b>
+  <%=h @video_asset.author_name %>
+</p>
+
+<p>
+  <b>Author email:</b>
+  <%=h @video_asset.author_email %>
+</p>
+
+<p>
+  <b>Length:</b>
+  <%=h @video_asset.video_length %>
+</p>
+
+<p>
+  <b>Frame rate:</b>
+  <%=h @video_asset.frame_rate %>
+</p>
+
+<p>
+  <b>Type:</b>
+  <%=h @video_asset.video_type %>
+</p>
+
+<p>
+  <b>Status:</b>
+  <%=h @video_asset.video_status %>
+</p>
+
+<p>
+  <b>Can edit:</b>
+  <%=h @video_asset.can_edit %>
+</p>
+
+<p>
+  <b>Thumbnail:</b>
+  <img src='<%=@video_asset.thumbnail -%>'/>
+</p>
+
+<p>
+  <b>Thumbnail low:</b>
+  <img src='<%= @video_asset.thumbnail_low -%>'/>
+</p>
+
+<p>
+  <b>Thumbnail medium:</b>
+  <img src='<%= @video_asset.thumbnail_medium %>'/>
+</p>
+
+<p>
+  <%= @vidavee.asset_embed_code(session[:vidavee], @video_asset.dockey) -%>
+</p>  
+  
+
+
+<%= link_to 'Edit', edit_video_asset_path(@video_asset) %> |
+<%= link_to 'Back', video_assets_path %>

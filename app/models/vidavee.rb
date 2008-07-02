@@ -39,7 +39,7 @@ class Vidavee < ActiveRecord::Base
 
   def customer_groups(sessionid)
     response = vrequest('customers/GetCustomerGroups',sessionid)
-    extract(response.content,'//group');
+    extract(response.content,'//group')
   end
 
   def delete_content(sessionid,dockey)
@@ -92,28 +92,56 @@ class Vidavee < ActiveRecord::Base
     response.content
   end
 
-  def new_playlist(sessionid, extra_params)
+  def new_playlist(sessionid, extra_params = {})
   end
 
-  def update_playlist(sessionid, extra_params)
+  def update_playlist(sessionid, extra_params = {})
   end
 
   # Result is paginated, see currentPage, totalPages
   # also takes optional date range, creator, set, and search keyword
   # Use param AF_page to see other than the first page
-  def gallery_playlists(sessionid, extra_params)
+  def gallery_playlists(sessionid, extra_params = {})
     response = vrequest('playlist/GetGalleryPlaylists',sessionid,extra_params)
-    extract(response.content,'//asset');
+    extract(response.content,'//asset')
   end
 
   # List items in gallery, result is paginated, see currentPage, totalPages
   # Use 
-  def gallery_assets(sessionid, extra_params)
+  def gallery_assets(sessionid, extra_params = {})
     response = vrequest('gallery/GetGalleryAssets',sessionid, extra_params)
-    extract(response.content,'//asset');
+    extract(response.content,'//asset')
   end
 
-  def new_vtag(sessionid, dockey, startTime, endTime, title, snapshotOffset, extra_params)
+  # Load gallery assets from vidavee xml into our video_assets models
+  def load_gallery_assets(sessionid, extra_params = {})
+    response = vrequest('gallery/GetGalleryAssets',sessionid, extra_params)
+    assets = extract(response.content,'//asset')
+    assets.each do |a|
+      v = VideoAsset.new
+      v.dockey= a.search('//dockey').text
+      v.title= a.search('//title').text
+      v.description= a.search('//description').text
+      v.author_name= a.search('//authorName').text
+      v.author_email= a.search('//authorEmail').text
+      v.video_length= a.search('//length').text
+      v.frame_rate= a.search('//frameRate').text
+      v.video_type= a.search('//type').text
+      v.video_status= a.search('//status').text
+      v.can_edit= a.search('//canEdit').text
+      v.thumbnail= a.search('//thumbnail').text
+      v.thumbnail_low= a.search('//thumbnailLow').text
+      v.thumbnail_medium= a.search('//thumbnailMedium').text
+      if v.save!
+        puts "Saved video #{v.dockey} - #{v.type} as id #{v.id}"
+      else
+        puts "Failed to save #{v.dockey}"
+      end
+    end
+    assets.size
+  end
+
+  def new_vtag(sessionid, dockey, startTime, endTime, title, snapshotOffset, extra_params = {})
     my_params = {'asset' => dockey, 'startTime' => startTime, 'endTime' => endTime, 'snapshotOffset' => snapshotOffset}
     extra_params.each { |p| my_params[p[0]] = p[1] }
     response = vrequest('assets/NewVTag',sessionid,my_params)
@@ -162,8 +190,8 @@ class Vidavee < ActiveRecord::Base
 
   # Owner is from what is listed in getCustomerGroups (I think)
   def sets(sessionid, owner)
-    response = vrequest('users/GetSets',sessionid,'setOwner' => owner);
-    extract(response.content,'//set');
+    response = vrequest('users/GetSets',sessionid,'setOwner' => owner)
+    extract(response.content,'//set')
   end
 
   #### Internal methods follow here
@@ -172,7 +200,7 @@ class Vidavee < ActiveRecord::Base
   # extract some element from the response document
   def extract(doc,fragment)
     h = Hpricot.XML(doc)
-    status = h.search('/response').attr('status');
+    status = h.search('/response').attr('status')
     if (status == 'ok')
       token = h.search(fragment)
     else
@@ -187,7 +215,6 @@ class Vidavee < ActiveRecord::Base
     str = "/" + service + "/" + secret + KEY_PARAM + key +
       (sessionid.length > 0 ? (TOKEN_PARAM + sessionid) : "") +
       TS_PARAM + ts
-    puts 'digesting ' + str
     digest.update str
     digest.hexdigest.upcase
   end
