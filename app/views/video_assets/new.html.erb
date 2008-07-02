@@ -1,0 +1,63 @@
+<h1>New video_asset</h1>
+
+<% form_for(@video_asset) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :dockey %><br />
+    <%= f.text_field :dockey %>
+  </p>
+  <p>
+    <%= f.label :title %><br />
+    <%= f.text_field :title %>
+  </p>
+  <p>
+    <%= f.label :description %><br />
+    <%= f.text_field :description %>
+  </p>
+  <p>
+    <%= f.label :author_name %><br />
+    <%= f.text_field :author_name %>
+  </p>
+  <p>
+    <%= f.label :author_email %><br />
+    <%= f.text_field :author_email %>
+  </p>
+  <p>
+    <%= f.label :video_length %><br />
+    <%= f.text_field :video_length %>
+  </p>
+  <p>
+    <%= f.label :frame_rate %><br />
+    <%= f.text_field :frame_rate %>
+  </p>
+  <p>
+    <%= f.label :video_type %><br />
+    <%= f.text_field :video_type %>
+  </p>
+  <p>
+    <%= f.label :video_status %><br />
+    <%= f.text_field :video_status %>
+  </p>
+  <p>
+    <%= f.label :can_edit %><br />
+    <%= f.check_box :can_edit %>
+  </p>
+  <p>
+    <%= f.label :thumbnail %><br />
+    <%= f.text_field :thumbnail %>
+  </p>
+  <p>
+    <%= f.label :thumbnail_low %><br />
+    <%= f.text_field :thumbnail_low %>
+  </p>
+  <p>
+    <%= f.label :thumbnail_medium %><br />
+    <%= f.text_field :thumbnail_medium %>
+  </p>
+  <p>
+    <%= f.submit "Create" %>
+  </p>
+<% end %>
+
+<%= link_to 'Back', video_assets_path %>

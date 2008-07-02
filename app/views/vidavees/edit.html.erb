@@ -1,0 +1,40 @@
+<h1>Editing vidavee</h1>
+
+<% form_for(@vidavee) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :uri %><br />
+    <%= f.text_field :uri %>
+  </p>
+  <p>
+    <%= f.label :servlet %><br />
+    <%= f.text_field :servlet %>
+  </p>
+  <p>
+    <%= f.label :key %><br />
+    <%= f.text_field :key %>
+  </p>
+  <p>
+    <%= f.label :secret %><br />
+    <%= f.text_field :secret %>
+  </p>
+  <p>
+    <%= f.label :context %><br />
+    <%= f.text_field :context %>
+  </p>
+  <p>
+    <%= f.label :username %><br />
+    <%= f.text_field :username %>
+  </p>
+  <p>
+    <%= f.label :password %><br />
+    <%= f.text_field :password %>
+  </p>
+  <p>
+    <%= f.submit "Update" %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @vidavee %> |
+<%= link_to 'Back', vidavees_path %>

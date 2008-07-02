@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20080627013300) do
+ActiveRecord::Schema.define(:version => 20080701032948) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id",    :limit => 10
@@ -357,6 +357,29 @@ ActiveRecord::Schema.define(:version => 20080627013300) do
     t.string   "context"
     t.string   "username"
     t.string   "password"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "video_assets", :force => true do |t|
+    t.string   "dockey"
+    t.string   "title"
+    t.string   "description"
+    t.string   "author_name"
+    t.string   "author_email"
+    t.string   "lenth"
+    t.string   "frame_rate"
+    t.string   "type"
+    t.string   "status"
+    t.boolean  "can_edit"
+    t.string   "thumbnail"
+    t.string   "thumbnail_low"
+    t.string   "thumbnail_medium"
+    t.integer  "sponsor_id",       :limit => 11
+    t.integer  "member_id",        :limit => 11
+    t.integer  "user_id",          :limit => 11
+    t.string   "sport"
+    t.datetime "game_date"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
