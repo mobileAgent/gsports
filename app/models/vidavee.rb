@@ -48,9 +48,6 @@ class Vidavee < ActiveRecord::Base
     'ok' == extract(response.content,'/response')['status']
   end
 
-  def file_upload_progress(sessionid,uploadid)
-  end
-
   # Returns the thumbnail jpeg bytes for the dockey
   def file_thumbnail(sessionid,dockey)
     response = vrequest('file/GetFileThumbnail',sessionid,DOCKEY_PARAM => dockey)
@@ -93,12 +90,6 @@ class Vidavee < ActiveRecord::Base
     response.content
   end
 
-  def new_playlist(sessionid, extra_params = {})
-  end
-
-  def update_playlist(sessionid, extra_params = {})
-  end
-
   # Result is paginated, see currentPage, totalPages
   # also takes optional date range, creator, set, and search keyword
   # Use param AF_page to see other than the first page
@@ -108,13 +99,15 @@ class Vidavee < ActiveRecord::Base
   end
 
   # List items in gallery, result is paginated, see currentPage, totalPages
-  # Use 
+  # Use rowsPerPage to change the default of 15, set to 0 for all
+  # AF_page to specify a subsequent page
   def gallery_assets(sessionid, extra_params = {})
     response = vrequest('gallery/GetGalleryAssets',sessionid, extra_params)
     extract(response.content,'//asset')
   end
 
   # Load gallery assets from vidavee xml into our video_assets models
+  # Use rowsPerPage to change the default of 15, set to 0 for all
   def load_gallery_assets(sessionid, extra_params = {})
     response = vrequest('gallery/GetGalleryAssets',sessionid, extra_params)
     assets = extract(response.content,'//asset')
@@ -140,7 +133,7 @@ class Vidavee < ActiveRecord::Base
       else
         if v.save!
           save_count+=1
-          puts "Saved video #{v.dockey} - #{v.type} as id #{v.id}"
+          puts "Saved video #{v.dockey} - #{v.video_type} as id #{v.id}"
         else
           puts "Failed to save #{v.dockey}"
         end
@@ -233,7 +226,12 @@ class Vidavee < ActiveRecord::Base
     if extra_params && extra_params.class == Hash
       extra_params.each { |p| params[p[0]] = p[1] }
     end
-    response = CLIENT.post(url,params)
+    begin
+      response = CLIENT.post(url,params)
+    rescue TimeoutError
+      logger.error "Could not contact Vidavee backend"
+      nil
+    end
   end
   
   # Create base url for vidavee rest service 

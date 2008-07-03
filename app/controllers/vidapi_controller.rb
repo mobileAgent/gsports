@@ -7,7 +7,6 @@ class VidapiController < ApplicationController
     if (session[:vidavee].nil?)
       session[:vidavee] = @vidavee.login
     end
-    @dockey = params[:dockey] || '018F8DACEFE48C219653F781EE72690F'
   end
 
   # GET /vidapi/logout
