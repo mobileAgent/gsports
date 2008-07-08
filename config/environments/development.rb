@@ -20,4 +20,5 @@ config.action_mailer.raise_delivery_errors = false
 APP_URL = "http://localhost:3000"
 
 # Caching, use memory for dev/test
+# config.cache_store = :file_store, "#{RAILS_ROOT}/tmp/cache"
 config.cache_store = :memory_store

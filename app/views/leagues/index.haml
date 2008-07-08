@@ -1,0 +1,25 @@
+%h1 Listing sponsors
+
+%table
+  %tr
+    %th Name
+    %th Logo uri
+    %th City
+    %th State
+    %th Description
+    %th Active
+
+- for leqgue in @leqgues
+  %tr
+    %td=h leqgue.name
+    %td=h leqgue.logo_uri
+    %td=h leqgue.city
+    %td=h leqgue.state
+    %td=h leqgue.description
+    %td=h leqgue.active
+  
+    %td= link_to 'Show', leqgue_path(leqgue)
+    %td= link_to 'Edit', edit_leqgue_path(leqgue)
+    %td= link_to 'Destroy', leqgue_path(leqgue), :confirm => 'Are you sure?', :method => :delete, :confirm => "Are you sure?", :method => :delete
+    
+= link_to 'New leqgue', new_leqgue_path 

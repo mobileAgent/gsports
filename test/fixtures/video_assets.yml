@@ -1,31 +1,32 @@
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
 
 one:
-  dockey: MyString
-  title: MyString
-  description: MyString
-  author_name: MyString
-  author_email: MyString
-  lenth: MyString
-  frame_rate: MyString
-  type: MyString
-  status: MyString
-  can_edit: false
-  thumbnail: MyString
-  thumbnail_low: MyString
-  thumbnail_medium: MyString
+  dockey: EA12F786710475002AB71111
+  title: Fred and Ethel vs. Ricky and Lucy
+  description: The Battle of the Ages
+  author_name: desi
+  author_email: none@example.com
+  video_length: 1:12:34
+  frame_rate: 25
+  video_type: video
+  video_status: ready
+  can_edit: true
+  thumbnail: uri_for_thumbnail.example.com/getThumbNail/1
+  thumbnail_low: uri_for_thumbnail.example.com/getThumbNailLow/1
+  thumbnail_medium: uri_for_thumbnail.example.com/getThumbNailMedium/1
 
 two:
-  dockey: MyString
-  title: MyString
-  description: MyString
-  author_name: MyString
-  author_email: MyString
-  lenth: MyString
-  frame_rate: MyString
-  type: MyString
-  status: MyString
-  can_edit: false
-  thumbnail: MyString
-  thumbnail_low: MyString
-  thumbnail_medium: MyString
+  dockey: 93FEA12F7867104750022222
+  title: The Beaver Gets In Trouble
+  description: The Beaver does it again, Wally and Lumpy clean up the mess
+  author_name: author1
+  author_email: none@example.com
+  video_length: 1:12
+  frame_rate: 25
+  video_type: video
+  video_status: ready
+  can_edit: true
+  thumbnail: uri_for_thumbnail.example.com/getThumbNail/2
+  thumbnail_low: uri_for_thumbnail.example.com/getThumbNailLow/2
+  thumbnail_medium: uri_for_thumbnail.example.com/getThumbNailMedium/2
+

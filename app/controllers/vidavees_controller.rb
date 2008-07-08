@@ -1,4 +1,4 @@
-class VidaveesController < ApplicationController
+class VidaveesController < BaseController
 
   # Only admin can edit this table
   # Those just wishing to use the values, see vidapi_controller
@@ -48,9 +48,12 @@ class VidaveesController < ApplicationController
 
     respond_to do |format|
       if @vidavee.save
-        flash[:notice] = 'Vidavee was successfully created.'
+        flash[:notice] = 'Vidavee was successfully saved.'
         format.html { redirect_to(@vidavee) }
         format.xml  { render :xml => @vidavee, :status => :created, :location => @vidavee }
+        # Destroy any copy in cache
+        Rails.cache.delete('vidavee')
+        puts 'Need to expire all user vidavee login tokens'
       else
         format.html { render :action => "new" }
         format.xml  { render :xml => @vidavee.errors, :status => :unprocessable_entity }
