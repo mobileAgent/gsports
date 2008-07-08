@@ -1,0 +1,29 @@
+%h1 Editing leqgue
+
+= error_messages_for :leqgue
+
+- form_for(@leqgue) do |f|
+  %p
+    %b Name
+    = f.text_field :name 
+  %p
+    %b Logo uri
+    = f.text_field :logo_uri 
+  %p
+    %b City
+    = f.text_field :city 
+  %p
+    %b State
+    = f.text_field :state 
+  %p
+    %b Description
+    = f.text_field :description 
+  %p
+    %b Active
+    = f.check_box :active 
+    
+  %p= f.submit "Update"
+  
+= link_to 'Show', leqgue_path(@leqgue)
+= link_to 'Back', leqgues_path
+

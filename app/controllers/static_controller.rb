@@ -1,4 +1,4 @@
-class StaticController < ApplicationController
+class StaticController < BaseController
 
   def tos
   end

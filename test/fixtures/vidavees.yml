@@ -1,17 +1,17 @@
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
 
 one:
-  uri: MyString
-  key: MyString
-  secret: MyString
-  context: MyString
-  username: MyString
-  password: MyString
-
+  uri: theuri.vidavee.example.com
+  key: thekey
+  secret: thesecret
+  context: thecontext
+  username: theusername
+  password: thepassword
+  
 two:
-  uri: MyString
-  key: MyString
-  secret: MyString
-  context: MyString
-  username: MyString
-  password: MyString
+  uri: second.vidavee.example.com
+  key: thekey2
+  secret: thesecret2
+  context: thecontext2
+  username: theusername2
+  password: thepassword2
