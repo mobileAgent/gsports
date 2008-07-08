@@ -11,6 +11,11 @@ class Vidavee < ActiveRecord::Base
   SESSION_PARAM = ';jsessionid='
   DOCKEY_PARAM = 'dockey'
   PAGE_PARAM = 'AF_page'
+  UPLOAD_ID_PARAM = 'AF_uploadId'
+  
+  # These are for upload control
+  LEGAL_FILE_EXTENSIONS = [".3g2",".3gp",".3gp2",".3gpp",".asf",".avi",".avs",".dv",".flc",".fli",".flv",".gvi",".m1v",".m2v",".m4e",".m4u",".m4v",".mjp",".mkv",".moov",".mov",".movie",".mp4",".mpe",".mpeg",".mpg",".mpv2",".qt",".rm",".ts",".vfw",".vob",".wm",".wmv"]
+		
 
   # Our HTTP Client to communicate with Vidavee service
   CLIENT = HTTPClient.new
@@ -46,9 +51,6 @@ class Vidavee < ActiveRecord::Base
   def delete_content(sessionid,dockey)
     response = vrequest('assets/DeleteAsset',sessionid,DOCKEY_PARAM => dockey)
     'ok' == extract(response.content,'/response')['status']
-  end
-
-  def file_upload_progress(sessionid,uploadid)
   end
 
   # Returns the thumbnail jpeg bytes for the dockey
@@ -93,12 +95,6 @@ class Vidavee < ActiveRecord::Base
     response.content
   end
 
-  def new_playlist(sessionid, extra_params = {})
-  end
-
-  def update_playlist(sessionid, extra_params = {})
-  end
-
   # Result is paginated, see currentPage, totalPages
   # also takes optional date range, creator, set, and search keyword
   # Use param AF_page to see other than the first page
@@ -108,16 +104,19 @@ class Vidavee < ActiveRecord::Base
   end
 
   # List items in gallery, result is paginated, see currentPage, totalPages
-  # Use 
+  # Use rowsPerPage to change the default of 15, set to 0 for all
+  # AF_page to specify a subsequent page
   def gallery_assets(sessionid, extra_params = {})
     response = vrequest('gallery/GetGalleryAssets',sessionid, extra_params)
     extract(response.content,'//asset')
   end
 
   # Load gallery assets from vidavee xml into our video_assets models
+  # Use rowsPerPage to change the default of 15, set to 0 for all
   def load_gallery_assets(sessionid, extra_params = {})
     response = vrequest('gallery/GetGalleryAssets',sessionid, extra_params)
     assets = extract(response.content,'//asset')
+    admin = User.find_by_email('admin@globalsports.net')
     save_count = 0
     assets.each do |a|
       v = VideoAsset.new
@@ -134,13 +133,16 @@ class Vidavee < ActiveRecord::Base
       v.thumbnail= a.search('//thumbnail').text
       v.thumbnail_low= a.search('//thumbnailLow').text
       v.thumbnail_medium= a.search('//thumbnailMedium').text
+      if admin
+        v.user_id = admin.id
+      end
       existing = VideoAsset.find_by_dockey(v.dockey)
       if existing
         puts "Video aset for dockey already exists #{v.dockey}"
       else
         if v.save!
           save_count+=1
-          puts "Saved video #{v.dockey} - #{v.type} as id #{v.id}"
+          puts "Saved video #{v.dockey} - #{v.video_type} as id #{v.id}"
         else
           puts "Failed to save #{v.dockey}"
         end
@@ -163,13 +165,13 @@ class Vidavee < ActiveRecord::Base
 
   # This moves the entire asset to the trash, it should be deleted from there
   def delete_asset(sessionid, dockey)
-    response = vrequest('/assets/DeleteAsset',sessionid,DOCKEY_PARAM => dockey)
+    response = vrequest('assets/DeleteAsset',sessionid,DOCKEY_PARAM => dockey)
     extract(response.content,'//status')
   end
 
-  # looking for 'ready' or 'blocked'
+  # looking for 'ready', 'queued', 'blocked'
   def asset_status(sessionid, dockey)
-    response = vrequest('/assets/GetDetailsAssetStatus',sessionid,DOCKEY_PARAM => dockey)
+    response = vrequest('assets/GetDetailsAssetStatus',sessionid,DOCKEY_PARAM => dockey)
     el = extract(response.content,'//status')
     el.text if el 
   end
@@ -195,8 +197,76 @@ class Vidavee < ActiveRecord::Base
     extract(response.content,'//set')
   end
 
+  # Get the action where the upload form will
+  # post to send a new video asset file to vidavee
+  # not calling the action here, just helping to display the form
+  # Returns [action, uploadid] for tracking progress
+  def old_upload_action(sessionid)
+    url = url_for('html/NewAsset',sessionid)
+    uploadid = "#{Time.now.to_i.to_s}|#{sessionid}"
+    params = build_request_params('html/NewAsset',sessionid,
+                                  {UPLOAD_ID_PARAM => uploadid })
+    url = query_url(url,params)
+    [url,uploadid]
+  end
+
+  # Called from the activemessaging processor once we get the video
+  # uploaded to our server, the info will be saved to the 
+  # video_assets table, waiting to be pushed over to vidavee
+  # and obtain a dockey to associate with the video_asset
+  # video_asset dockey and video_status are updated and saved on success
+  def push_video(sessionid, video_asset, file_path)
+
+    # Build the url, yeah, with parameters on it
+    url = url_for('assets/NewAssetVideo',sessionid)
+    params = build_request_params('assets/NewAssetVideo',sessionid)
+    url = query_url(url,params)
+    
+    # Convince HttpClient to post multipart data by sending a boundary
+    boundary = Array::new(8){ "%2.2d" % rand(99) }.join('__')
+    extheader = {'content-type' => "multipart/form-data; boundary=--------#{ boundary }__xyzzy"}
+
+    # Name and open the files
+    upload_params = {'Asset' => open(file_path)}
+
+    # Send in any extra parameters the upload form requires
+    upload_params['title'] = video_asset.title
+    upload_params['description'] = video_asset.description
+    upload_params['transcoderVersion'] = 3
+    upload_params['type'] = 'video'
+    asis=file_path.downcase.end_with? '.flv'
+    upload_params['asisFlv'] = asis
+
+    # Send the post
+    begin
+      response = CLIENT.post(url, upload_params, extheader)
+    rescue TimeoutError
+      logger.error "Could not contact Vidavee backend"
+      response = nil
+    end
+    dockey_elem = extract(response.content,'//dockey')
+
+    # update attributes in the asset
+    if dockey_elem
+      video_asset.dockey= dockey_elem.text
+      video_asset.video_status= asis ? 'ready' : 'queued'
+      video_asset.save!
+      dockey_elem.text
+    else
+      video_asset.video_status= 'upload failed'
+      video_asset.save!
+      logger.debug "Video push failed: #{response.content}"
+      nil
+    end
+  end
+
   #### Internal methods follow here
-  protected 
+  protected
+
+  # Build a query url from the base url given plus the query parameters
+  def query_url(url, params)
+    url +"?" + params.inject([]) { |s,(k,v)| s << "#{k}=#{v}" }.join("&")
+  end
 
   # extract some element from the response document
   def extract(doc,fragment)
@@ -220,9 +290,20 @@ class Vidavee < ActiveRecord::Base
     digest.hexdigest.upcase
   end
 
-  # Ask a standard request, get a standard answer
+  # Post a standard request, get a standard (usually xml) answer
   def vrequest(action,sessionid='',extra_params={})
     url = url_for(action,sessionid)
+    params = build_request_params(action,sessionid,extra_params)
+    begin
+      response = CLIENT.post(query_url(url,params))
+    rescue TimeoutError
+      logger.error "Could not contact Vidavee backend"
+      nil
+    end
+  end
+
+  # Build and sign the request params
+  def build_request_params(action,sessionid='',extra_params={})
     # get a timestamp in vidavee format for use in the http api
     ts = Time.now.to_i.to_s + "000"
     params = {KEY_PARAM => key,
@@ -233,7 +314,7 @@ class Vidavee < ActiveRecord::Base
     if extra_params && extra_params.class == Hash
       extra_params.each { |p| params[p[0]] = p[1] }
     end
-    response = CLIENT.post(url,params)
+    params
   end
   
   # Create base url for vidavee rest service 

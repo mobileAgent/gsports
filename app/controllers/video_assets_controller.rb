@@ -1,8 +1,16 @@
-class VideoAssetsController < ApplicationController
+class VideoAssetsController < BaseController
+  
+  # Only admin can edit this table directly
+  # Those just wishing to use the values, see vidapi_controller
+  before_filter :admin_required, :except => [:show, :upload]
+  before_filter :vidavee_login
+  
   # GET /video_assets
   # GET /video_assets.xml
   def index
-    @video_assets = VideoAsset.find(:all)
+    
+    # @video_assets = VideoAsset.find(:all)
+    @pages, @video_assets = paginate :video_assets, :order => "created_at DESC"
 
     respond_to do |format|
       format.html # index.html.erb
@@ -14,8 +22,6 @@ class VideoAssetsController < ApplicationController
   # GET /video_assets/1.xml
   def show
     @video_asset = VideoAsset.find(params[:id])
-    @vidavee = Vidavee.find(:first)
-
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @video_asset }
@@ -42,9 +48,9 @@ class VideoAssetsController < ApplicationController
   # POST /video_assets.xml
   def create
     @video_asset = VideoAsset.new(params[:video_asset])
-
+    @video_asset.video_status = 'unknown'
     respond_to do |format|
-      if @video_asset.save
+      if @video_asset.save!
         flash[:notice] = 'VideoAsset was successfully created.'
         format.html { redirect_to(@video_asset) }
         format.xml  { render :xml => @video_asset, :status => :created, :location => @video_asset }
@@ -83,4 +89,5 @@ class VideoAssetsController < ApplicationController
       format.xml  { head :ok }
     end
   end
+
 end

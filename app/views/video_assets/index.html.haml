@@ -1,0 +1,52 @@
+%h1 Listing video_assets
+
+%table
+  %thead
+    %tr
+      %th Dockey
+      %th Title
+      %th Description
+      %th Author name
+      %th Author email
+      %th Length
+      %th Frame rate
+      %th Type
+      %th Status
+      %th Can edit
+      %th Thumbnail
+      %th Thumbnail low
+      %th Thumbnail medium
+      %th Sport
+      %th League id
+      %th Team id
+      %th User id
+      %th Actions
+
+    %tbody
+      - for video_asset in @video_assets
+      %tr
+        %td= video_asset.dockey
+        %td= link_to video_asset.title, video_asset
+        %td= video_asset.description
+        %td= video_asset.author_name
+        %td= video_asset.author_email
+        %td= video_asset.video_length
+        %td= video_asset.frame_rate
+        %td= video_asset.video_type
+        %td= video_asset.video_status
+        %td= video_asset.can_edit
+        %td= video_asset.thumbnail
+        %td= video_asset.thumbnail_low
+        %td= video_asset.thumbnail_medium
+        %td= video_asset.sport
+        %td= video_asset.league_id
+        %td= video_asset.team_id
+        %td= video_asset.user_id
+        %td=link_to 'Edit', edit_video_asset_path(video_asset)
+        %td= link_to 'Destroy', video_asset, :confirm => 'Are you sure?', :method => :delete
+    - end
+    
+%p= pagination_links_for @pages, { :link_to_current_page => true } if @pages.length > 1
+%br/
+
+%p= link_to 'New video_asset', new_video_asset_path
