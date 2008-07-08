@@ -3,6 +3,10 @@ ActionController::Routing::Routes.draw do |map|
 
   map.resources :vidavees
 
+  map.register 'register', :controller => "users", :action => "register"
+  
+  
+  
   # The priority is based upon order of creation: first created -> highest priority.
 
   # Sample of regular route:
