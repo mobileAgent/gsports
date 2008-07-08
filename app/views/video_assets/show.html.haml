@@ -4,43 +4,45 @@
 
 %p
   %b Title:
-  = @video_asset.title
+  =h @video_asset.title
 
 %p
   %b Description:
-  = @video_asset.description
+  =h @video_asset.description
 
 %p
   %b Author name:
-  = @video_asset.author_name
+  =h @video_asset.author_name
 
 %p
   %b Author email:
-  = @video_asset.author_email
+  =h @video_asset.author_email
 
 %p
   %b Length:
-  = @video_asset.video_length
+  =h @video_asset.video_length
 
 %p
   %b Sport:
-  %b= @video_asset.sport
+  =h @video_asset.sport
   
 %p
   %b Frame rate:
-  = @video_asset.frame_rate
+  =h @video_asset.frame_rate
 
 %p
   %b Type:
-  = @video_asset.video_type
+  =h @video_asset.video_type
 
 %p
   %b Status:
-  = @video_asset.video_status
+  =h @video_asset.video_status
 
 %p
   %b Can edit:
-  = @video_asset.can_edit
+  =h @video_asset.can_edit
+
+-if @vidavee && session[:vidavee] && @video_asset.dockey
 
 %p
   %b Thumbnail:
@@ -57,7 +59,10 @@
 %p
   = @vidavee.asset_embed_code(session[:vidavee], @video_asset.dockey)
   
+-else
+  = "Your video is still loading."
+-end  
 
-
+%br/
 = link_to 'Edit', edit_video_asset_path(@video_asset) |
 = link_to 'Back', video_assets_path

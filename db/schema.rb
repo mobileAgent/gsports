@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20080702131607) do
+ActiveRecord::Schema.define(:version => 20080705200528) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id",    :limit => 10
@@ -173,6 +173,17 @@ ActiveRecord::Schema.define(:version => 20080702131607) do
     t.datetime "created_at"
   end
 
+  create_table "leagues", :force => true do |t|
+    t.string   "name"
+    t.string   "logo_uri"
+    t.string   "city"
+    t.string   "state"
+    t.string   "description"
+    t.boolean  "active"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "metro_areas", :force => true do |t|
     t.string  "name"
     t.integer "state_id",    :limit => 11
@@ -289,6 +300,18 @@ ActiveRecord::Schema.define(:version => 20080702131607) do
     t.string "name"
   end
 
+  create_table "teams", :force => true do |t|
+    t.string   "name"
+    t.string   "logo_uri"
+    t.string   "city"
+    t.string   "state"
+    t.string   "description"
+    t.boolean  "active"
+    t.integer  "league_id",   :limit => 11
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "topics", :force => true do |t|
     t.integer  "forum_id",       :limit => 11
     t.integer  "user_id",        :limit => 11
@@ -384,13 +407,16 @@ ActiveRecord::Schema.define(:version => 20080702131607) do
     t.string   "thumbnail"
     t.string   "thumbnail_low"
     t.string   "thumbnail_medium"
-    t.integer  "sponsor_id",       :limit => 11
-    t.integer  "member_id",        :limit => 11
-    t.integer  "user_id",          :limit => 11
+    t.integer  "league_id",          :limit => 11
+    t.integer  "team_id",            :limit => 11
+    t.integer  "user_id",            :limit => 11
     t.string   "sport"
     t.datetime "game_date"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "home_team_id",       :limit => 11
+    t.integer  "visiting_team_id",   :limit => 11
+    t.string   "uploaded_file_path"
   end
 
   create_table "votes", :force => true do |t|

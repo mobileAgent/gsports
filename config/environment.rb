@@ -54,7 +54,7 @@ Rails::Initializer.run do |config|
   # If you change this key, all old sessions will become invalid!
   # To separate the different environments we load session keys
   # from database.yml, where other passwords live
-  db = YAML.load_file('config/database.yml')
+  db = YAML.load_file("#{RAILS_ROOT}/config/database.yml")
   config.action_controller.session = {
      :session_key => db[RAILS_ENV]['session_key'],
      :secret      => db[RAILS_ENV]['secret']
@@ -76,7 +76,15 @@ end
 
 ExceptionNotifier.exception_recipients = %w(flester@gmail.com)
 
+# Project requires go here, rather than spread out in the project
 require "#{RAILS_ROOT}/vendor/plugins/community_engine/engine_config/boot.rb"
 require 'httpclient'
 require 'digest/md5'
 require 'hpricot'
+require 'activemessaging/processor'
+
+# This sets the root of where video upload and 
+# transfer to vidavee takes place. Best not to be
+# under the public web server as we don't want to
+# be serving these up ourselves.
+VIDEO_BASE = "#{RAILS_ROOT}/videos"

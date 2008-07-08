@@ -1,4 +1,9 @@
 ActionController::Routing::Routes.draw do |map|
+  
+  map.resources :members
+
+  map.resources :sponsors
+
   map.resources :video_assets
 
   map.resources :vidavees

@@ -17,8 +17,8 @@
       %th Thumbnail low
       %th Thumbnail medium
       %th Sport
-      %th Sponsor id
-      %th Member id
+      %th League id
+      %th Team id
       %th User id
       %th Actions
 
@@ -39,13 +39,14 @@
         %td= video_asset.thumbnail_low
         %td= video_asset.thumbnail_medium
         %td= video_asset.sport
-        %td= video_asset.sponsor_id
-        %td= video_asset.member_id
+        %td= video_asset.league_id
+        %td= video_asset.team_id
         %td= video_asset.user_id
         %td=link_to 'Edit', edit_video_asset_path(video_asset)
         %td= link_to 'Destroy', video_asset, :confirm => 'Are you sure?', :method => :delete
     - end
-
+    
+%p= pagination_links_for @pages, { :link_to_current_page => true } if @pages.length > 1
 %br/
 
 %p= link_to 'New video_asset', new_video_asset_path
