@@ -1,0 +1,22 @@
+
+#UserPanel
+  Welcome, 
+  =link_to "Log in", login_path
+  or
+  =link_to "Sign up", register_path
+
+#Banner
+  %a{:href=>"/", :title=>"#{AppConfig.community_name}"}
+    %img{:src=>"/images/gs_logo.png", :width=>312, :height=>91}
+
+#NavBar
+  = link_to 'About Global Sports', about_path
+  |
+  = link_to 'Membership', ''
+  |
+  = link_to 'Registration', register_path
+
+
+
+
+

@@ -45,7 +45,7 @@ alt blue dark #94beff
 /* =============================================== */
 
 body{
-	/*background-color: #477dd2;*/
+	background-color: #477dd2;
 }
 
 #doc2{
@@ -116,9 +116,9 @@ color: #464337;
 /* UserPanel */
 
 #UserPanel{
-float: right;
-font-size: 80%;
-margin-top: 12px;	
+	float: right;
+	font-size: 80%;
+	margin-top: 12px;	
 }
 
 /* Banner */
@@ -127,6 +127,8 @@ margin-top: 12px;
 	clear: both;
 	
 	background-color: #405463;
+	
+	margin-top: 12px;
 	height: 91px;
 
 }
@@ -138,9 +140,9 @@ margin-top: 12px;
 /* Navbar */
 
 #NavBar{
-background: #aba8a3 url(/plugin_assets/community_engine/images/bg_navbar.gif) repeat-x 0 0;
-border-top: 1px solid #d9d6d3;
-clear: both;
+	background: #aba8a3 url(/plugin_assets/community_engine/images/bg_navbar.gif) repeat-x 0 0;
+	border-top: 1px solid #d9d6d3;
+	clear: both;
 }
 
 #NavBar ul, #NavBar ul li{float: left;}
