@@ -18,6 +18,7 @@ class UpdateVideoStatusProcessor < ApplicationProcessor
 
     # Get their status
     new_status = video_asset.video_status
+    attempt=0
     while (new_status != 'ready' && new_status != 'blocked')
       new_status = vidavee.asset_status(session_token,video_asset.dockey)
       logger.debug "Trying to update status for #{message}, vidavee says '#{new_status}'"
@@ -27,7 +28,12 @@ class UpdateVideoStatusProcessor < ApplicationProcessor
         logger.debug "Updated video status for #{message} to #{new_status}"
         return
       end
-      sleep 15
+      attempt += 1
+      if (attempt > 100)
+        logger.error "Video asset #{video_asset.id} is stuck in state #{new_status} after maximum tries"
+        return;
+      end
+      sleep (5*attempt)
     end
   end
 end
