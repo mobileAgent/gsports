@@ -21,7 +21,7 @@ class Vidavee < ActiveRecord::Base
   CLIENT = HTTPClient.new
 
   # Turn this on for debug of HTTP traffic to Vidavee
-  # CLIENT.debug_dev = STDERR
+  CLIENT.debug_dev = STDERR
 
   # http://tribeca.vidavee.com/hsstv/rest/session/CheckUser;jsessionid=39555E57BCF38625CF7DEA2EDD9038F7.node1?api_key=5342smallworld&api_ts=1214532647018&api_token=39555E57BCF38625CF7DEA2EDD9038F7.node1&api_sig=830678DF3E967D0392F936122F767754&session_id=
   # Seems to always return false, not sure what good it is
@@ -72,25 +72,25 @@ class Vidavee < ActiveRecord::Base
   end
 
   # Returns the artifact data for the dockey
-  def file_artifact(sessiond,dockey)
+  def file_artifact(sessionid,dockey)
     response = vrequest('file/GetFileArtifact',sessionid,DOCKEY_PARAM => dockey)
     response.content
   end
   
   # Returns the asset data for the dockey
-  def file_asset(sessiond,dockey)
+  def file_asset(sessionid,dockey)
     response = vrequest('file/GetFileAsset',sessionid,DOCKEY_PARAM => dockey)
     response.content
   end
 
   # Returns the flv data for the dockey
-  def file_flv(sessiond,dockey)
+  def file_flv(sessionid,dockey)
     response = vrequest('file/GetFileFlv',sessionid,DOCKEY_PARAM => dockey)
     response.content
   end
   
   # Returns the mpg data for the dockey
-  def file_mpg(sessiond,dockey)
+  def file_mpg(sessionid,dockey)
     response = vrequest('file/GetFileMpg',sessionid,DOCKEY_PARAM => dockey)
     response.content
   end
@@ -116,7 +116,7 @@ class Vidavee < ActiveRecord::Base
   def load_gallery_assets(sessionid, extra_params = {})
     response = vrequest('gallery/GetGalleryAssets',sessionid, extra_params)
     assets = extract(response.content,'//asset')
-    admin = User.find_by_email('admin@globalsports.net')
+    admin = User.find_by_email(ADMIN_EMAIL)
     save_count = 0
     assets.each do |a|
       v = VideoAsset.new
@@ -295,7 +295,11 @@ class Vidavee < ActiveRecord::Base
     url = url_for(action,sessionid)
     params = build_request_params(action,sessionid,extra_params)
     begin
-      response = CLIENT.post(query_url(url,params))
+      if method == "POST"
+        response = CLIENT.post(query_url(url,params))
+      else
+        response = CLIENT.get(query_url(url,params))
+      end
     rescue TimeoutError
       logger.error "Could not contact Vidavee backend"
       nil
@@ -328,6 +332,5 @@ class Vidavee < ActiveRecord::Base
     end
     url
   end
-
   
 end

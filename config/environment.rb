@@ -88,3 +88,6 @@ require 'activemessaging/processor'
 # under the public web server as we don't want to
 # be serving these up ourselves.
 VIDEO_BASE = "#{RAILS_ROOT}/videos"
+
+# Email addr for the admin account
+ADMIN_EMAIL = "admin@globalsports.net"
