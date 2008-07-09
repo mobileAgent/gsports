@@ -3,6 +3,15 @@ class VideoAsset < ActiveRecord::Base
   belongs_to :team
   belongs_to :user
 
+  # Every video needs a title
+  validates_presence_of :title
+
+  # Save file after new record is saved so we have the id
+  after_save :save_upload_file
+
+  # Quietly delete file when record is destroyed
+  after_destroy :delete_file
+
   VIDEO_UPLOADED = VIDEO_BASE+"/uploaded"
 
   # Virtual attribute to handle uploaded file
@@ -15,12 +24,6 @@ class VideoAsset < ActiveRecord::Base
   def video_upload_path(uploaded_file_path=self.uploaded_file_path)
     "#{VIDEO_UPLOADED}/#{id}-#{uploaded_file_path}"
   end
-
-  # Save file after new record is saved so we have the id
-  after_save :save_upload_file
-
-  # Quietly delete file when record is destroyed
-  after_destroy :delete_file
 
   private 
 
