@@ -295,11 +295,7 @@ class Vidavee < ActiveRecord::Base
     url = url_for(action,sessionid)
     params = build_request_params(action,sessionid,extra_params)
     begin
-      if method == "POST"
-        response = CLIENT.post(query_url(url,params))
-      else
-        response = CLIENT.get(query_url(url,params))
-      end
+      response = CLIENT.post(query_url(url,params))
     rescue TimeoutError
       logger.error "Could not contact Vidavee backend"
       nil
