@@ -1,8 +1,13 @@
 require File.dirname(__FILE__) + '/../test_helper'
 require 'video_assets_controller'
+require 'mocha'
 
 # Re-raise errors caught by the controller.
 class VideoAssetsController; def rescue_action(e) raise e end; end
+
+class Vidavee
+  CLIENT = stub(:post => '<xml>fake vidavee</xml>')
+end
 
 class VideoAssetsControllerTest < ActionController::TestCase
   fixtures :users

@@ -88,6 +88,11 @@ class Vidavee < ActiveRecord::Base
     response = vrequest('file/GetFileFlv',sessionid,DOCKEY_PARAM => dockey)
     response.content
   end
+
+  def file_flv_as_flash_param(sessionid,dockey)
+    url = file_flv(sessionid,dockey)
+    url.gsub /&/,'&amp;'
+  end
   
   # Returns the mpg data for the dockey
   def file_mpg(sessionid,dockey)
@@ -319,12 +324,9 @@ class Vidavee < ActiveRecord::Base
   
   # Create base url for vidavee rest service 
   def url_for(service,sessionid='')
-    url = "http://" + uri +
-      "/" + context +
-      "/" + servlet +
-      "/" + service
+    url = "http://#{uri}/#{context}/#{servlet}/#{service}"
     if sessionid.length > 0
-      url = url + SESSION_PARAM  + sessionid
+      url = "#{url}#{SESSION_PARAM}#{sessionid}"
     end
     url
   end
