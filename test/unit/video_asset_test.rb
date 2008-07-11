@@ -1,8 +1,18 @@
 require 'test_helper'
 
 class VideoAssetTest < ActiveSupport::TestCase
-  # Replace this with your real tests.
-  def test_truth
-    assert true
+  
+  fixtures :video_assets
+  
+  def test_save
+    v = video_assets(:one)
+    assert v.save!
   end
+
+  def test_title_required
+    v = video_assets(:one)
+    v.title= nil
+    assert ! v.valid?
+  end
+
 end

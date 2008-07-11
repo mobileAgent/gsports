@@ -9,7 +9,7 @@
 
 = javascript_include_tag "application", :plugin => "community_engine"		
 = javascript_include_tag "rounder", :plugin => "community_engine"
-= javascript_include_tag "AC_RunActiveContent", :plugin => "community_engine" if current_page?(:controller => 'photos', :action => 'new') or current_page?(:controller => 'statistics', :action => 'index')		
+= javascript_include_tag "AC_OETags"
 
 - if current_page?(:controller => 'photos', :action => 'new')
   = javascript_include_tag 'swfupload', :plugin => "community_engine"

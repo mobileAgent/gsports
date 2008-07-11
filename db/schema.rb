@@ -19,6 +19,21 @@ ActiveRecord::Schema.define(:version => 20080705200528) do
     t.datetime "created_at"
   end
 
+  create_table "addresses", :force => true do |t|
+    t.string   "firstname"
+    t.string   "minitial"
+    t.string   "lastname"
+    t.string   "address1"
+    t.string   "address2"
+    t.string   "city"
+    t.string   "state"
+    t.string   "country"
+    t.string   "phone"
+    t.string   "email"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "ads", :force => true do |t|
     t.string   "name"
     t.text     "html"
@@ -184,6 +199,23 @@ ActiveRecord::Schema.define(:version => 20080705200528) do
     t.datetime "updated_at"
   end
 
+  create_table "membership_billing_histories", :force => true do |t|
+    t.string   "authorization_reference_number"
+    t.string   "payment_method"
+    t.integer  "membership_id",                  :limit => 11
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "memberships", :force => true do |t|
+    t.string   "name"
+    t.string   "billing_method"
+    t.decimal  "cost",                         :precision => 8, :scale => 2, :default => 0.0
+    t.integer  "address_id",     :limit => 11
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "metro_areas", :force => true do |t|
     t.string  "name"
     t.integer "state_id",    :limit => 11
@@ -253,7 +285,8 @@ ActiveRecord::Schema.define(:version => 20080705200528) do
   add_index "posts", ["category_id"], :name => "index_posts_on_category_id"
 
   create_table "roles", :force => true do |t|
-    t.string "name"
+    t.string  "name"
+    t.integer "subscription_plan_id", :limit => 11
   end
 
   create_table "sb_posts", :force => true do |t|
@@ -284,6 +317,21 @@ ActiveRecord::Schema.define(:version => 20080705200528) do
 
   create_table "states", :force => true do |t|
     t.string "name"
+  end
+
+  create_table "subscription_plans", :force => true do |t|
+    t.string   "name"
+    t.decimal  "cost",        :precision => 8, :scale => 2, :default => 0.0
+    t.text     "description"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "subscriptions", :force => true do |t|
+    t.integer  "membership_id", :limit => 11
+    t.integer  "user_id",       :limit => 11
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "taggings", :force => true do |t|

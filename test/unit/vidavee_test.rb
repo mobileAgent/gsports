@@ -1,8 +1,10 @@
 require 'test_helper'
 
 class VidaveeTest < ActiveSupport::TestCase
-  # Replace this with your real tests.
-  def test_truth
-    assert true
+  
+  # There always has to be one record or the system will not function
+  def test_one_record_exists
+    assert Vidavee.find(:first)
   end
+
 end
