@@ -1000,3 +1000,43 @@ table.poll {
       font-size: 10px;
       text-align: right;
       padding-right: 2px; }
+
+
+
+
+
+#Banner .MainForm{
+}
+
+#Banner .MainForm label{
+display: block;
+margin: 0;
+}
+
+#Banner .MainForm label {
+color: #ccc;
+}
+
+#Banner .MainForm input {
+border: 1px solid #ccc;
+padding: 0px;
+font-size: 100%;
+font-weight: normal;
+color: #333;
+width: auto;
+background: #f8f8f8;
+}
+
+#Banner .MainForm input:focus, .MainForm textarea:focus{
+color: #777;
+border-color: #777;
+background: #fff;
+}
+
+#Banner .login {
+text-align: right;
+margin-right: 8px;
+}
+
+
+
