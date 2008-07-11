@@ -4,6 +4,8 @@ require File.dirname(__FILE__) + '/../../app/processors/application'
 
 class UpdateVideoStatusProcessorTest < Test::Unit::TestCase
   include ActiveMessaging::TestHelper
+
+  fixtures :video_assets
   
   def setup
     @processor = UpdateVideoStatusProcessor.new
@@ -14,6 +16,10 @@ class UpdateVideoStatusProcessorTest < Test::Unit::TestCase
   end  
 
   def test_update_video_status_processor
-    @processor.on_message('Your test message here!')
+    vidavee = stub_everything
+    vidavee.stubs(:login).returns("vidavee_login_token")
+    Vidavee.stubs(:find).with(:first).returns(vidavee)
+    @processor.on_message(video_assets(:one).id.to_s)
+    assert video_assets(:one).video_status == 'ready'
   end
 end

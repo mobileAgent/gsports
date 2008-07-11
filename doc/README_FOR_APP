@@ -18,6 +18,7 @@ Required Gems:
       httpclient
       mysql
       stomp
+      mocha (for tests)
 
 Required Plugins:      
     - exception-notification:
