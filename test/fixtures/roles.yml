@@ -1,13 +1,22 @@
+admin:
+  id: 1
+  name: admin
+moderator:
+  id: 2
+  name: moderator
+member:
+  id: 3 
+  name: member
 team:
-  id:   1
+  id:   4
   name: team
   subscription_plan: :basic
 league:
-  id:   2
+  id:   5
   name: league
   subscription_plan: :member
 scout:
-  id:   3
+  id:   6
   name: scout
   subscription_plan: :scout
 

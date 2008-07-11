@@ -16,6 +16,9 @@ class PushVideoFilesProcessorTest < Test::Unit::TestCase
   end  
 
   def test_push_video_files_processor
+    vidavee = stub_everything
+    vidavee.stubs(:login).returns("vidavee_login_token")
+    Vidavee.stubs(:find).with(:first).returns(vidavee)
     @processor.on_message(video_assets(:one))
   end
 end
