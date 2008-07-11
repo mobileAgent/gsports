@@ -20,5 +20,9 @@ class BaseController < ApplicationController
     @vidavee
   end
   
+  def site_index
+    redirect_to(dashboard_user_path(current_user)) if logged_in?
+  end
+  
 
 end
