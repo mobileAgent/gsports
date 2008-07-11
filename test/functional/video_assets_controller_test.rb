@@ -5,20 +5,19 @@ require 'video_assets_controller'
 class VideoAssetsController; def rescue_action(e) raise e end; end
 
 class VideoAssetsControllerTest < ActionController::TestCase
-  fixtures :users
+  
+  fixtures :users, :roles, :video_assets
 
   def setup
-    puts "User id is #{users(:admin).id} which is cool"
     @controller = VideoAssetsController.new
     @request = ActionController::TestRequest.new
     @response = ActionController::TestResponse.new
-    #@request.session[:vidavee] = 'vidavee_sample_login_token'
-    @request.session[:foo] = 'bar'
+    @request.session[:vidavee] = 'vidavee_sample_login_token'
+    @request.session[:vidavee_expires] = 5.minutes.from_now
   end
 
   def test_should_get_index
     login_as :admin
-    puts "Login as :admin produces #{@request.session[:user]}"
     get :index
     assert_response :success
     assert_not_nil assigns(:video_assets)
@@ -41,6 +40,9 @@ class VideoAssetsControllerTest < ActionController::TestCase
   
   def test_should_show_video_asset
     login_as :admin
+    vidavee = stub_everything
+    vidavee.stubs(:asset_embed_code).returns("<embed>foo</embed>")
+    Vidavee.stubs(:find).with(:first).returns(vidavee)
     get :show, :id => video_assets(:one).id
     assert_response :success
   end

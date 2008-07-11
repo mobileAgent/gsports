@@ -45,5 +45,9 @@ class Test::Unit::TestCase
     yield
     assert_equal initial_value + difference, object.send(method)
   end
-  
+  def self.load_ce_fixtures (fx)
+    directory = File.join(File.dirname(__FILE__), "../vendor/plugins/community_engine/test/fixtures")
+   Fixtures.create_fixtures(directory, fx)
+  end
+
 end

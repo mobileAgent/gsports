@@ -14,6 +14,7 @@ one:
   thumbnail: uri_for_thumbnail.example.com/getThumbNail/1
   thumbnail_low: uri_for_thumbnail.example.com/getThumbNailLow/1
   thumbnail_medium: uri_for_thumbnail.example.com/getThumbNailMedium/1
+  uploaded_file_path: the/path/to/happiness.flv
 
 two:
   dockey: 93FEA12F7867104750022222
@@ -29,4 +30,5 @@ two:
   thumbnail: uri_for_thumbnail.example.com/getThumbNail/2
   thumbnail_low: uri_for_thumbnail.example.com/getThumbNailLow/2
   thumbnail_medium: uri_for_thumbnail.example.com/getThumbNailMedium/2
+  uploaded_file_path: the/path/to/recoding.mov
 
