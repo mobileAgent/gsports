@@ -1,13 +1,34 @@
 
 #UserPanel
-  Welcome, 
-  =link_to "Log in", login_path
-  or
-  =link_to "Sign up", register_path
+  &nbsp;
+  -#
+    Welcome, 
+    =link_to "Log in", login_path
+    or
+    =link_to "Sign up", register_path
 
 #Banner
-  %a{:href=>"/", :title=>"#{AppConfig.community_name}"}
-    %img{:src=>"/images/gs_logo.png", :width=>312, :height=>91}
+  .yui-g
+    .yui-b.first
+      %a{:href=>"/", :title=>"#{AppConfig.community_name}"}
+        %img{:src=>"/images/gs_logo.png", :width=>312, :height=>91}
+    .yui-b.login
+      - form_tag sessions_path, :class => 'MainForm' do
+        %label{"for"=>"username"} Username
+        = text_field_tag 'login', nil, :size => 25
+        %label{"for"=>"password"} Password
+        = password_field_tag 'password', nil, :size => 15
+        = submit_tag 'Log in'
+        
+        %nobr
+          %label{"for"=>"remember_me"}
+            = check_box_tag 'remember_me'
+            Remember me
+        %nobr
+          =link_to 'Sign Up', register_path
+          |
+          =link_to 'Forgot Password?', forgot_password_path
+
 
 #NavBar
   = link_to 'About Global Sports', about_path
@@ -15,7 +36,6 @@
   = link_to 'Membership', ''
   |
   = link_to 'Registration', register_path
-
 
 
 
