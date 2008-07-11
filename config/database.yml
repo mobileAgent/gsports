@@ -27,3 +27,15 @@ production:
   host: 
   session_key: gsports
   secret: gsdb504824dcc51b6add9831913df8582c5f72543eicci
+
+  
+aaron:
+  adapter: mysql
+  database: gs
+  username: gs
+  password: gs
+  host: localhost
+  session_key: gsports_dev
+  secret: gsdev7a429f619e940cc0f308ce22b3c3459821bbaec6
+
+  
