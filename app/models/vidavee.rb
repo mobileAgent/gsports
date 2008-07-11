@@ -71,35 +71,21 @@ class Vidavee < ActiveRecord::Base
     response.content
   end
 
-  # Returns the artifact data for the dockey
-  def file_artifact(sessionid,dockey)
-    response = vrequest('file/GetFileArtifact',sessionid,DOCKEY_PARAM => dockey)
-    response.content
-  end
-  
-  # Returns the asset data for the dockey
-  def file_asset(sessionid,dockey)
-    response = vrequest('file/GetFileAsset',sessionid,DOCKEY_PARAM => dockey)
-    response.content
-  end
-
-  # Returns the flv data for the dockey
+  # Returns a url suitable for getting the transcoded content (flv)
   def file_flv(sessionid,dockey)
-    response = vrequest('file/GetFileFlv',sessionid,DOCKEY_PARAM => dockey)
-    response.content
+    url = url_for('file/GetFile',sessionid)
+    params = build_request_params('file/GetFile',sessionid,{"field" => "AssetTranscoded", DOCKEY_PARAM => dockey },false)
+    url = query_url(url,params)
+    return url + "&ftype=.flv"
   end
 
   def file_flv_as_flash_param(sessionid,dockey)
     url = file_flv(sessionid,dockey)
-    url.gsub /&/,'&amp;'
+    url = CGI::escape(url)
+    puts "Flash URL : #{url}"
+    url
   end
   
-  # Returns the mpg data for the dockey
-  def file_mpg(sessionid,dockey)
-    response = vrequest('file/GetFileMpg',sessionid,DOCKEY_PARAM => dockey)
-    response.content
-  end
-
   # Result is paginated, see currentPage, totalPages
   # also takes optional date range, creator, set, and search keyword
   # Use param AF_page to see other than the first page
@@ -202,19 +188,6 @@ class Vidavee < ActiveRecord::Base
     extract(response.content,'//set')
   end
 
-  # Get the action where the upload form will
-  # post to send a new video asset file to vidavee
-  # not calling the action here, just helping to display the form
-  # Returns [action, uploadid] for tracking progress
-  def old_upload_action(sessionid)
-    url = url_for('html/NewAsset',sessionid)
-    uploadid = "#{Time.now.to_i.to_s}|#{sessionid}"
-    params = build_request_params('html/NewAsset',sessionid,
-                                  {UPLOAD_ID_PARAM => uploadid })
-    url = query_url(url,params)
-    [url,uploadid]
-  end
-
   # Called from the activemessaging processor once we get the video
   # uploaded to our server, the info will be saved to the 
   # video_assets table, waiting to be pushed over to vidavee
@@ -296,9 +269,9 @@ class Vidavee < ActiveRecord::Base
   end
 
   # Post a standard request, get a standard (usually xml) answer
-  def vrequest(action,sessionid='',extra_params={})
+  def vrequest(action,sessionid='',extra_params={},login=true)
     url = url_for(action,sessionid)
-    params = build_request_params(action,sessionid,extra_params)
+    params = build_request_params(action,sessionid,extra_params,login)
     begin
       response = CLIENT.post(query_url(url,params))
     rescue TimeoutError
@@ -308,14 +281,17 @@ class Vidavee < ActiveRecord::Base
   end
 
   # Build and sign the request params
-  def build_request_params(action,sessionid='',extra_params={})
+  def build_request_params(action,sessionid='',extra_params={}, include_login=true)
     # get a timestamp in vidavee format for use in the http api
     ts = Time.now.to_i.to_s + "000"
     params = {KEY_PARAM => key,
       TS_PARAM => ts,
       SIG_PARAM => sign(action,ts),
-      USER_PARAM => username,
-      PASS_PARAM => password}
+    }
+    if include_login
+      params[USER_PARAM] = username
+      params[PASS_PARAM] = password
+    end
     if extra_params && extra_params.class == Hash
       extra_params.each { |p| params[p[0]] = p[1] }
     end
