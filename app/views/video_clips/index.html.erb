@@ -1,0 +1,32 @@
+<h1>Listing video_clips</h1>
+
+<table>
+  <tr>
+    <th>Title</th>
+    <th>Description</th>
+    <th>Length</th>
+    <th>Dockey</th>
+    <th>View url</th>
+    <th>Video asset</th>
+    <th>User</th>
+  </tr>
+
+<% for video_clip in @video_clips %>
+  <tr>
+    <td><%=h video_clip.title %></td>
+    <td><%=h video_clip.description %></td>
+    <td><%=h video_clip.length %></td>
+    <td><%=h video_clip.dockey %></td>
+    <td><%=h video_clip.view_url %></td>
+    <td><%=h video_clip.video_asset_id %></td>
+    <td><%=h video_clip.user_id %></td>
+    <td><%= link_to 'Show', video_clip %></td>
+    <td><%= link_to 'Edit', edit_video_clip_path(video_clip) %></td>
+    <td><%= link_to 'Destroy', video_clip, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New video_clip', new_video_clip_path %>
