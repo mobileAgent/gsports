@@ -1,0 +1,38 @@
+<p>
+  <b>Title:</b>
+  <%=h @video_clip.title %>
+</p>
+
+<p>
+  <b>Description:</b>
+  <%=h @video_clip.description %>
+</p>
+
+<p>
+  <b>Length:</b>
+  <%=h @video_clip.length %>
+</p>
+
+<p>
+  <b>Dockey:</b>
+  <%=h @video_clip.dockey %>
+</p>
+
+<p>
+  <b>View url:</b>
+  <%=h @video_clip.view_url %>
+</p>
+
+<p>
+  <b>Video asset:</b>
+  <%=h @video_clip.video_asset_id %>
+</p>
+
+<p>
+  <b>User:</b>
+  <%=h @video_clip.user_id %>
+</p>
+
+
+<%= link_to 'Edit', edit_video_clip_path(@video_clip) %> |
+<%= link_to 'Back', video_clips_path %>

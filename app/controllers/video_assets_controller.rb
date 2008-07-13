@@ -10,7 +10,7 @@ class VideoAssetsController < BaseController
   def index
     
     # @video_assets = VideoAsset.find(:all)
-    @pages, @video_assets = paginate :video_assets, :order => "created_at DESC"
+    @pages, @video_assets = paginate :video_assets, :order => "title ASC"
 
     respond_to do |format|
       format.html # index.html.erb

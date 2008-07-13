@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20080705200528) do
+ActiveRecord::Schema.define(:version => 20080712224519) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id",    :limit => 10
@@ -241,6 +241,15 @@ ActiveRecord::Schema.define(:version => 20080705200528) do
     t.integer "user_id",  :limit => 11
   end
 
+  create_table "pages", :force => true do |t|
+    t.string   "name"
+    t.string   "permalink"
+    t.text     "content"
+    t.text     "html_content"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "photos", :force => true do |t|
     t.string   "name"
     t.text     "description"
@@ -465,6 +474,18 @@ ActiveRecord::Schema.define(:version => 20080705200528) do
     t.integer  "home_team_id",       :limit => 11
     t.integer  "visiting_team_id",   :limit => 11
     t.string   "uploaded_file_path"
+  end
+
+  create_table "video_clips", :force => true do |t|
+    t.string   "title"
+    t.string   "description"
+    t.string   "length"
+    t.string   "dockey"
+    t.string   "view_url"
+    t.integer  "video_asset_id", :limit => 11
+    t.integer  "user_id",        :limit => 11
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "votes", :force => true do |t|

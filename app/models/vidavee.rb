@@ -21,7 +21,7 @@ class Vidavee < ActiveRecord::Base
   CLIENT = HTTPClient.new
 
   # Turn this on for debug of HTTP traffic to Vidavee
-  CLIENT.debug_dev = STDERR
+  # CLIENT.debug_dev = STDERR
 
   # http://tribeca.vidavee.com/hsstv/rest/session/CheckUser;jsessionid=39555E57BCF38625CF7DEA2EDD9038F7.node1?api_key=5342smallworld&api_ts=1214532647018&api_token=39555E57BCF38625CF7DEA2EDD9038F7.node1&api_sig=830678DF3E967D0392F936122F767754&session_id=
   # Seems to always return false, not sure what good it is
@@ -97,28 +97,57 @@ class Vidavee < ActiveRecord::Base
   # List items in gallery, result is paginated, see currentPage, totalPages
   # Use rowsPerPage to change the default of 15, set to 0 for all
   # AF_page to specify a subsequent page
-  def gallery_assets(sessionid, extra_params = {})
-    response = vrequest('gallery/GetGalleryAssets',sessionid, extra_params)
-    extract(response.content,'//asset')
+  def gallery_assets(sessionid, asset_type='videoAsset', extra_params = {})
+    url = url_for('gallery/GetGalleryAssets',sessionid)
+    params = build_request_params('gallery/GetGalleryAssets',sessionid,extra_params,false)
+    url = query_url(url,params)
+    assets = nil
+    # Send the post
+    form_params = { 'assetType' => asset_type, 'dateRange' => 'All' }
+    begin
+      response = CLIENT.post(url, form_params)
+      assets = extract(response.content,'//asset')
+    rescue TimeoutError
+      logger.error "Could not contact Vidavee backend"
+    end
+    logger.debug "Asking for #{asset_type} with #{url} got #{assets.size}"
+    assets
   end
+
+  # Get all the vtag records for a video_asset
+  # Uses rowsPerPage and AF_page to control paging
+  def vtags_for_asset(sessionid,dockey,extra_params = {})
+    extra_params[DOCKEY_PARAM] = dockey
+    response = vrequest('gallery/GetGalleryVtagsByAsset',sessionid,extra_params,false)
+    extract(response.content,'//vtag')
+  end
+
 
   # Load gallery assets from vidavee xml into our video_assets models
   # Use rowsPerPage to change the default of 15, set to 0 for all
-  def load_gallery_assets(sessionid, extra_params = {})
-    response = vrequest('gallery/GetGalleryAssets',sessionid, extra_params)
-    assets = extract(response.content,'//asset')
+  # AssetType can be videoAsset, imageAsset, audioAsset, vtag, vidad
+  # Returns [count_found, count_loaded]
+  def load_gallery_assets(sessionid, asset_type='videoAsset', extra_params = {})
+    assets = gallery_assets(sessionid,asset_type,extra_params)
+    if assets.nil?
+      return [0,0]
+    end
     admin = User.find_by_email(ADMIN_EMAIL)
     save_count = 0
     assets.each do |a|
       v = VideoAsset.new
       v.dockey= a.search('//dockey').text
+      next if v.dockey.nil?
+      v.video_type= a.search('//type').text
       v.title= a.search('//title').text
+      if (v.title.nil? || v.title.length == 0)
+        v.title = 'no title supplied'
+      end
       v.description= a.search('//description').text
       v.author_name= a.search('//authorName').text
       v.author_email= a.search('//authorEmail').text
       v.video_length= a.search('//length').text
       v.frame_rate= a.search('//frameRate').text
-      v.video_type= a.search('//type').text
       v.video_status= a.search('//status').text
       v.can_edit= a.search('//canEdit').text
       v.thumbnail= a.search('//thumbnail').text
@@ -129,17 +158,48 @@ class Vidavee < ActiveRecord::Base
       end
       existing = VideoAsset.find_by_dockey(v.dockey)
       if existing
-        puts "Video aset for dockey already exists #{v.dockey}"
+        puts "Video asset for dockey already exists #{v.dockey}"
       else
         if v.save!
           save_count+=1
-          puts "Saved video #{v.dockey} - #{v.video_type} as id #{v.id}"
+          logger.debug "Saved video #{v.dockey} - #{v.video_type} as id #{v.id}"
         else
-          puts "Failed to save #{v.dockey}"
+          logger.warn "Failed to save #{v.dockey}"
         end
       end
     end
-    save_count
+    [assets.size, save_count]
+  end
+
+  # Load the vtags for the specified dockey into
+  # our database by querying the vidavee backend
+  # Returns [found, saved]
+  def load_vtags(sessionid,video_asset)
+    vtags = vtags_for_asset(sessionid,video_asset.dockey)
+    return [0,0] if vtags.nil?
+    save_count = 0
+    vtags.each do |v|
+      vt = VideoClip.new
+      vt.dockey= v.search('//dockey').text
+      vt.title= v.search('//title').text
+      vt.length= v.search('//length').text
+      vt.description= v.search('//description').text
+      vt.view_url= v.search('//videoViewUrl').text
+      vt.video_asset_id = video_asset.id
+      vt.user_id = video_asset.user_id
+      existing = VideoClip.find_by_dockey(vt.dockey)
+      if existing
+        logger.debug "VideoClip #{vt.dockey} already saved"
+      else
+        if vt.save!
+          logger.debug "Saved vtag #{vt.dockey} for asset #{video_asset.dockey}"
+          save_count += 1
+        else
+          logger.warn "Failed to save vtag #{vt.dockey}"
+        end
+      end
+    end
+    [vtags.size,save_count]
   end
 
   def new_vtag(sessionid, dockey, startTime, endTime, title, snapshotOffset, extra_params = {})
@@ -149,8 +209,12 @@ class Vidavee < ActiveRecord::Base
   end
 
   # a <script> tag to use for the embed
-  def asset_embed_code(sessionid, dockey, width=400, height=350, autoplay="off")
-    response = vrequest('assets/GetDetailsAssetEmbedCode',sessionid,DOCKEY_PARAM => dockey, 'width'=>width,'height'=>height, 'autoplay'=>autoplay)
+  def asset_embed_code(sessionid, dockey, width=400, height=350, autoplay="off", vtag="off")
+    response = vrequest('assets/GetDetailsAssetEmbedCode',sessionid,
+                        DOCKEY_PARAM => dockey,
+                        'width'=>width,'height'=>height,
+                        'shareWidgets'=>'off',
+                        'autoplay'=>autoplay, 'vtagView'=>vtag)
     extract(response.content,'//assetEmbedCode').text
   end
 
@@ -237,6 +301,47 @@ class Vidavee < ActiveRecord::Base
       nil
     end
   end
+
+  #### Class methods
+
+  # Load videos from the back end, up to limit
+  def self.load_backend_video (limit = -1)
+    v = Vidavee.find(:first)
+    token = v.login
+    save_count = 0
+    find_count = 0
+    fc = -1
+    page = 1
+    rowsPerPage = 50
+    while fc != 0
+      if limit > 0 && rowsPerPage > (limit-find_count)
+        rowsPerPage = limit-find_count
+      end
+      fc,sc =
+        v.load_gallery_assets(token,'videoAsset','rowsPerPage' => rowsPerPage,'AF_page' => page)
+      save_count += sc
+      find_count += fc
+      page += 1
+      break if limit > 0 && find_count >= limit
+    end
+    puts "Pulled #{find_count} and saved #{save_count} video assets from Vidavee"
+  end
+  
+  # Load clips up from the vidavee backend
+  # that correspond to the video_assets passed in
+  # or all video_assets
+  def self.load_backend_clips(video_assets = VideoAssets.find(:all))
+    v = Vidavee.find(:first)
+    token = v.login
+    total_found, total_saved = 0,0
+    video_assets.each do |video_asset|
+      found,saved = v.load_vtags token,video_asset
+      puts "Found #{found} clips for video #{video_asset.dockey}, saved #{saved}"
+      total_found += found
+      total_saved += saved
+    end
+    [total_found, total_saved]
+  end    
 
   #### Internal methods follow here
   protected
