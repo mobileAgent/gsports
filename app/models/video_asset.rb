@@ -10,7 +10,7 @@ class VideoAsset < ActiveRecord::Base
   after_save :save_upload_file
 
   # Quietly delete file when record is destroyed
-  after_destroy :delete_file
+  # after_destroy :delete_file
 
   VIDEO_UPLOADED = VIDEO_BASE+"/uploaded"
 
@@ -43,7 +43,7 @@ class VideoAsset < ActiveRecord::Base
   end
 
   def delete_file
-    File.rm_f "#{VIDEO_UPLOADED}/#{uploaded_file_path}"
+    File.rm_f "#{VIDEO_UPLOADED}/#{self.uploaded_file_path}"
   end
 
   def sanitize_filename (new_file_name)
