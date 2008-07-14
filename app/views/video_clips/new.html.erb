@@ -1,0 +1,39 @@
+<h1>New video_clip</h1>
+
+<% form_for(@video_clip) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :title %><br />
+    <%= f.text_field :title %>
+  </p>
+  <p>
+    <%= f.label :description %><br />
+    <%= f.text_field :description %>
+  </p>
+  <p>
+    <%= f.label :length %><br />
+    <%= f.text_field :length %>
+  </p>
+  <p>
+    <%= f.label :dockey %><br />
+    <%= f.text_field :dockey %>
+  </p>
+  <p>
+    <%= f.label :view_url %><br />
+    <%= f.text_field :view_url %>
+  </p>
+  <p>
+    <%= f.label :video_asset_id %><br />
+    <%= f.text_field :video_asset_id %>
+  </p>
+  <p>
+    <%= f.label :user_id %><br />
+    <%= f.text_field :user_id %>
+  </p>
+  <p>
+    <%= f.submit "Create" %>
+  </p>
+<% end %>
+
+<%= link_to 'Back', video_clips_path %>

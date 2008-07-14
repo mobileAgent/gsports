@@ -11,7 +11,6 @@ Required Gems:
       rmagick
       hpricot
       htmlentities
-      RedCloth
       rake 0.8.1
       haml
       mime-types
@@ -19,6 +18,7 @@ Required Gems:
       mysql
       stomp
       mocha (for tests)
+      RedCloth >= 3.301 "sudo gem install RedCloth --source=http://code.whytheluckystuff.net"
 
 Required Plugins:      
     - exception-notification:
