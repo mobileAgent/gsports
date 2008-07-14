@@ -1,0 +1,9 @@
+one:
+  name: This Page
+  permalink: this
+  content: This is another boring test
+
+two:
+  name: That Page
+  permalink: that
+  content: That is another boring test

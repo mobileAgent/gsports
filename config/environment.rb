@@ -72,7 +72,12 @@ Rails::Initializer.run do |config|
 
   # Activate observers that should always be running
   # config.active_record.observers = :cacher, :garbage_collector
+  
+  # Make sure we get super red cloth
+  config.gem "RedCloth", :version => ">= 3.301", :source => "http://code.whytheluckystiff.net/"
+
 end
+
 
 ExceptionNotifier.exception_recipients = %w(flester@gmail.com)
 
@@ -91,3 +96,4 @@ VIDEO_BASE = "#{RAILS_ROOT}/videos"
 
 # Email addr for the admin account
 ADMIN_EMAIL = "admin@globalsports.net"
+
