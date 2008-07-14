@@ -18,14 +18,14 @@ Required Gems:
       mysql
       stomp
       mocha (for tests)
-      RedCloth >= 3.301 "sudo gem install RedCloth --source=http://code.whytheluckystuff.net"
+      RedCloth >= 3.301 "sudo gem install RedCloth --source=http://code.whytheluckystiff.net"
 
 Required Plugins:      
     - exception-notification:
-      script/plugin http://dev.rubyonrails.org/svn/rails/plugins/exception_notification/
+      script/plugin install http://dev.rubyonrails.org/svn/rails/plugins/exception_notification/
 
     - The engines plugin for Rails 2.1:
-      script/plugin http://railsengines.org/news/2008/06/01/engines-2-1-0-release/
+      script/plugin install http://railsengines.org/news/2008/06/01/engines-2-1-0-release/
 
     - Community engine:
       git clone --depth 1 git://github.com/bborn/communityengine.git vendor/plugins/community_engine
