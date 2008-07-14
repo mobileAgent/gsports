@@ -1,12 +1,11 @@
 ActionController::Routing::Routes.draw do |map|
   
   map.resources :members
-
+  map.resources :pages
   map.resources :sponsors
-
-  map.resources :video_assets
-
   map.resources :vidavees
+  map.resources :video_assets
+  map.resources :video_clips
 
   # The priority is based upon order of creation: first created -> highest priority.
 
@@ -45,6 +44,8 @@ ActionController::Routing::Routes.draw do |map|
   # Turn on community engine routes
   map.from_plugin :community_engine
 
+  # Turn on the static pages with permalink routes
+  map.info 'info/:permalink', :controller => 'pages', :action => 'show'
 
   # See how all your routes lay out with "rake routes"
 

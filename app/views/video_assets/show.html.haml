@@ -57,7 +57,9 @@
   %img{ :src=>"#{@video_asset.thumbnail_medium}"}
 
 %p
+  = render :partial => 'shared/maverick_video_player', :locals => { :dockey => @video_asset.dockey }
   = @vidavee.asset_embed_code(session[:vidavee], @video_asset.dockey)
+  
   
 -else
   = "Your video is still loading."
