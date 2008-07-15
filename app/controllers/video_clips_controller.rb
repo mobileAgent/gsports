@@ -1,8 +1,11 @@
-class VideoClipsController < ApplicationController
+class VideoClipsController < BaseController
+  
+  before_filter :vidavee_login
+  
   # GET /video_clips
   # GET /video_clips.xml
   def index
-    @video_clips = VideoClip.find(:all)
+    @pages, @video_clips = paginate :video_clips, :order => "title ASC"
 
     respond_to do |format|
       format.html # index.html.erb
@@ -81,5 +84,10 @@ class VideoClipsController < ApplicationController
       format.html { redirect_to(video_clips_url) }
       format.xml  { head :ok }
     end
+  end
+  
+  def thumbnail
+    @video_clip = VideoClip.find(params[:id])
+    send_data @vidavee.file_thumbnail_medium(session[:vidavee],@video_clip.dockey), :filename => "clip#{@video_clip.id}.jpg", :type => 'image/jpeg' 
   end
 end
