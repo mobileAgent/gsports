@@ -1,62 +1,6 @@
-%h1 New video_asset
+%h1 New Video Asset Record
+%p Advanced use only: these are normally created in the Vidavee backend first!
 
-- form_for @video_asset do |f|
-
-  = f.error_messages
-
-  %p
-    = f.label :dockey
-    %br/
-    = f.text_field :dockey
-  %p
-    = f.label :title
-    %br/
-    = f.text_field :title
-  %p
-    = f.label :description
-    %br/
-    = f.text_field :description
-  %p
-    = f.label :author_name
-    %br/
-    = f.text_field :author_name
-  %p
-    = f.label :author_email
-    %br/
-    = f.text_field :author_email
-  %p
-    = f.label :video_length
-    %br/
-    = f.text_field :video_length
-  %p
-    = f.label :frame_rate
-    %br/
-    = f.text_field :frame_rate
-  %p
-    = f.label :video_type
-    %br/
-    = f.text_field :video_type
-  %p
-    = f.label :video_status
-    %br/
-    = f.text_field :video_status
-  %p
-    = f.label :can_edit
-    %br/
-    = f.check_box :can_edit
-  %p
-    = f.label :thumbnail
-    %br/
-    = f.text_field :thumbnail
-  %p
-    = f.label :thumbnail_low
-    %br/
-    = f.text_field :thumbnail_low
-  %p
-    = f.label :thumbnail_medium
-    %br/
-    = f.text_field :thumbnail_medium
-  %p
-    = f.submit "Create"
+= render :partial => 'form'
   
 %p= link_to 'Back', video_assets_path
