@@ -1,0 +1,28 @@
+%form{:action=>""}
+  #VideoQuickfind
+    %table
+      %tr
+        %td
+          Video Quickfind
+        %td  
+          STATE
+          %br
+          %select{ :name=>"state" }
+            %option{ :value=>0 } Any
+        %td
+          SEASON/YEAR
+          %select{ :name=>"when" }
+            %option{ :value=>0 } Any
+        %td
+          LEAGUE/SCHOOL 
+          %select{ :name=>"league" }
+            %option{ :value=>0 } Any
+        %td
+          COUNTY 
+          %select{ :name=>"country" }
+            %option{ :value=>0 } Any
+        %td
+          SPORT
+          %select{ :name=>"sport" }
+            %option{ :value=>0 } Any
+          
