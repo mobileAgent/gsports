@@ -54,22 +54,41 @@ class Vidavee < ActiveRecord::Base
   end
 
   # Returns the thumbnail jpeg bytes for the dockey
-  def file_thumbnail(sessionid,dockey)
+  def thumbnail_bytes(sessionid,dockey)
     response = vrequest('file/GetFileThumbnail',sessionid,DOCKEY_PARAM => dockey)
     response.content
   end
-  
+
   # Returns the thumbnail jpeg bytes for the dockey, low res version
-  def file_thumbnail_low(sessionid,dockey)
+  def thumbnail_low_bytes(sessionid,dockey)
     response = vrequest('file/GetFileThumbnailLow',sessionid,DOCKEY_PARAM => dockey)
     response.content
   end
   
   # Returns the thumbnail jpeg bytes for the dockey, medium res version
-  def file_thumbnail_medium(sessionid,dockey)
+  def thumbnail_bytes(sessionid,dockey)
     response = vrequest('file/GetFileThumbnailMedium',sessionid,DOCKEY_PARAM => dockey)
     response.content
   end
+
+  # Returns the thumbnail url for the dockey
+  def file_thumbnail_low(dockey)
+    s = url_for('file/GetFileThumbnailLow')
+    "#{s}?#{DOCKEY_PARAM}=#{dockey}"
+  end
+    
+  # Returns the thumbnail url for the dockey
+  def file_thumbnail_medium(dockey)
+    s = url_for('file/GetFileThumbnailMedium')
+    "#{s}?#{DOCKEY_PARAM}=#{dockey}"
+  end
+    
+  # Returns the thumbnail url for the dockey
+  def file_thumbnail(dockey)
+    s = url_for('file/GetFileThumbnail')
+    "#{s}?#{DOCKEY_PARAM}=#{dockey}"
+  end
+  
 
   # Returns a url suitable for getting the transcoded content (flv)
   def file_flv(sessionid,dockey)
