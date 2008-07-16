@@ -1,4 +1,5 @@
 <p>
+  <img src='<%= @vidavee.file_thumbnail_medium(@video_clip.dockey) %>'/><br />
   <b>Title:</b>
   <%=h @video_clip.title %>
 </p>
@@ -19,13 +20,8 @@
 </p>
 
 <p>
-  <b>View url:</b>
-  <%=h @video_clip.view_url %>
-</p>
-
-<p>
   <b>Video asset:</b>
-  <%=h @video_clip.video_asset_id %>
+  <%= link_to 'Parent video',video_asset_path(@video_clip.video_asset_id) %>
 </p>
 
 <p>
