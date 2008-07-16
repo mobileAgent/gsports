@@ -19,14 +19,14 @@ class User < ActiveRecord::Base
   has_many :memberships, :through => :subscriptions
   
   def isTeamRole?
-    role.name.eql? Role::TEAM_ROLE
+    role && role.eql?(Role[:team])
   end
   
   def isLeagueRole?
-    role.name.eql? Role::LEAGUE_ROLE
+    role && role.eql?(Role[:league])
   end
   
   def isScoutRole?
-    role.name.eql? Role::SCOUT_ROLE
+    role && role.eql?(Role[:scout])
   end  
 end

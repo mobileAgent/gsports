@@ -1,18 +1,15 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
 class UserTest < ActiveSupport::TestCase
+  
   fixtures :users, :roles, :subscription_plans
-  # Test the creation of a GSports Team member
-  def test_create_team_member
-    user_count = User.find :all
-    puts "USER COUNT:" + user_count.length.to_s
+  
+  # Test the creation of a GSports team manager
+  def test_create_team_manager
     buser = User.find_by_login "mark"
-    puts buser.inspect
     assert_not_nil buser
-    assert buser.isTeam?
-    assert !buser.isLeague?
-    assert !buser.isScout?
-
-#    assert buser.valid?
+    assert buser.isTeamRole?
+    assert !buser.isLeagueRole?
+    assert !buser.isScoutRole?
   end
 end

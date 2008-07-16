@@ -131,7 +131,7 @@ privateuser:
   id: 10
   login: privateuser
   email: privateuser@example.com
-  description: I am a private user, which means you can't see my profile stuff unless logged in
+  description: I am a private user, which means you cant see my profile stuff unless logged in
   salt: 7e3041ebc2fc05a40c60028e2c4901a81035d3cd
   crypted_password: 00742970dc9e6319f8019fd54864d3ea740f04b1 # test
   created_at: <%= 1.days.ago.to_s :db %>
@@ -174,7 +174,18 @@ kyle:
   activated_at: <%= 5.days.ago.to_s :db %>  
   activation_code: 
   role_id: 3  
-
+mark:
+  id: 14
+  login: mark
+  login_slug: mark
+  email: mark@example.com
+  description: I am the team lead
+  created_at: <%= 3.days.ago.to_s :db %>
+  sb_posts_count: 0  
+  activated_at: <%= 3.days.ago.to_s :db %>
+  birthday: <%= 45.years.ago.to_date %>
+  activation_code: 
+  role_id: 4
 gsports_admin:
   email: admin@globalsports.net
   activated_at: DateTime.now
@@ -183,7 +194,7 @@ gsports_admin:
   firstname: Ad
   lastname: Ministrator
   login_slug: Administrator
-  role_id: Role[:admin].id
+  role_id: 1
   birthday: <%= 25.years.ago.to_date %>
   address1: 1 Global Sports Way
   city: Globalcity
