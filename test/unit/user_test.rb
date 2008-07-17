@@ -8,8 +8,8 @@ class UserTest < ActiveSupport::TestCase
   def test_create_team_manager
     buser = User.find_by_login "mark"
     assert_not_nil buser
-    assert buser.isTeamRole?
-    assert !buser.isLeagueRole?
-    assert !buser.isScoutRole?
+    assert buser.team_admin?
+    assert !buser.league_admin?
+    assert !buser.scout_admin?
   end
 end

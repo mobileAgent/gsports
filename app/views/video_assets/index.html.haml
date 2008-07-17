@@ -1,35 +1,8 @@
-%table
-  %thead
-    %tr
-      %th Title
-      %th Description
-      %th Length
-      %th Status
-      %th Thumbnail
-      %th Sport
-      %th League
-      %th Team
-      %th User
-      %th Actions
-
-    %tbody
-      - for video_asset in @video_assets
-      %tr
-        %td= video_asset.title
-        %td= video_asset.description
-        %td= video_asset.video_length
-        %td= video_asset.video_status
-        %td
-          = link_to "<img src='#{h video_asset.thumbnail_medium}' title='#{video_asset.dockey}'>", :action => 'show', :id => video_asset
-        %td= video_asset.sport
-        %td= video_asset.league_id
-        %td= video_asset.team_id
-        %td= video_asset.user_id
-        %td=link_to 'Edit', edit_video_asset_path(video_asset)
-        %td= link_to 'Destroy', video_asset, :confirm => 'Are you sure?', :method => :delete
-    - end
-    
+- for video_asset in @video_assets
+  = render :partial => 'video_block', :locals => { :video_asset => video_asset }
+  
 %p= pagination_links_for @pages, { :link_to_current_page => true } if @pages.length > 1
 %br/
 
-%p= link_to 'New video_asset', new_video_asset_path
+- if(current_user.league_admin? || current_user.team_admin? || current_user.admin?)
+  %p= link_to('New video_asset', new_video_asset_path)

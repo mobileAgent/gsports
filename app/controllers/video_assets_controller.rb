@@ -3,9 +3,6 @@ class VideoAssetsController < BaseController
   include ActiveMessaging::MessageSender
   publishes_to :push_video_files
 
-  # Only admin can edit this table directly
-  # Those just wishing to use the values, see vidapi_controller
-  before_filter :admin_required, :except => [:show, :upload, :save_video, :swfupload]
   before_filter :login_required
   before_filter :vidavee_login
   
@@ -41,7 +38,7 @@ class VideoAssetsController < BaseController
     @video_asset = VideoAsset.new
 
     respond_to do |format|
-      format.html # new.html.erb
+      format.html # new.html.haml
       format.xml  { render :xml => @video_asset }
     end
   end
