@@ -1,4 +1,5 @@
 class VideoAsset < ActiveRecord::Base
+  
   belongs_to :league
   belongs_to :team
   belongs_to :user
@@ -6,48 +7,50 @@ class VideoAsset < ActiveRecord::Base
   # Every video needs a title
   validates_presence_of :title
 
-  # Save file after new record is saved so we have the id
-  after_save :save_upload_file
+  # Video upload repository
+  VIDEO_REPOSITORY = VIDEO_BASE+"/uploaded"
 
-  # Quietly delete file when record is destroyed
-  # after_destroy :delete_file
-
-  VIDEO_UPLOADED = VIDEO_BASE+"/uploaded"
-
-  # Virtual attribute to handle uploaded file
-  def video=(video_file)
-    @temp_file = video_file
-    self.uploaded_file_path = sanitize_filename video_file.original_filename
-    #self.ext = self.uploaded_file_path.split('.').last
+  def self.video_repository
+    VIDEO_REPOSITORY
   end
 
-  def video_upload_path(uploaded_file_path=self.uploaded_file_path)
-    "#{VIDEO_UPLOADED}/#{id}-#{uploaded_file_path}"
-  end
-
-  private 
-
-  def save_upload_file
-    if  @temp_file
-      if !File.exist?(VIDEO_BASE)
-        Dir.mkdir(VIDEO_BASE)
+  # Move the swfuploaded tmp file into the repo with the user specified name
+  def self.move_upload_to_repository(tmpfile,filename)
+    File.makedirs VIDEO_REPOSITORY if ! File.exists?(VIDEO_REPOSITORY)
+    fname = self.sanitize_filename(filename)
+    if File.exists? "#{VIDEO_REPOSITORY}/#{fname}"
+      dup=2
+      if fname.index('.')
+        ext=fname.split('.').last
+        base=fname[0..(0-(ext.size+2))]
+      else
+        base=fname
+        ext='unk'
       end
-      if !File.exist?(VIDEO_UPLOADED)
-        Dir.mkdir(VIDEO_UPLOADED)
+      while (File.exists? "#{VIDEO_REPOSITORY}/#{base}(#{dup}).#{ext}")
+        dup+=1
       end
-      
-      File.open(video_upload_path,"wb") do |f|
-        f.write(@temp_file.read)
-      end
+      fname = "#{base}(#{dup}).#{ext}"
+    end
+    full_path = "#{VIDEO_REPOSITORY}/#{fname}"
+    if File.mv(tmpfile.path,full_path)
+      full_path
+    else
+      nil
     end
   end
 
-  def delete_file
-    File.rm_f "#{VIDEO_UPLOADED}/#{self.uploaded_file_path}"
-  end
+  def self.sanitize_filename(filename)
+    name = filename.strip
+    # Filename only no path
+    name.gsub! /^.*(\\|\/)/, ''
+    # replace all non alphanumeric, underscore or periods with underscore
+    name.gsub! /[^\w\.\-]/, '_'
+    
+    # Remove multiple underscores
+    name.gsub!(/\_+/, '_')
 
-  def sanitize_filename (new_file_name)
-    File.basename(new_file_name).gsub(/[^\w\.\-\_]/,'_').gsub(/\\/,'/')
+    name
   end
   
 end
