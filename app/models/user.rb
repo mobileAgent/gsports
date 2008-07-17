@@ -18,15 +18,15 @@ class User < ActiveRecord::Base
   has_many :subscriptions
   has_many :memberships, :through => :subscriptions
   
-  def isTeamRole?
+  def team_admin?
     role && role.eql?(Role[:team])
   end
   
-  def isLeagueRole?
+  def league_admin?
     role && role.eql?(Role[:league])
   end
   
-  def isScoutRole?
+  def scout_admin?
     role && role.eql?(Role[:scout])
   end  
 end
