@@ -14,8 +14,9 @@ class Vidavee < ActiveRecord::Base
   UPLOAD_ID_PARAM = 'AF_uploadId'
   
   # These are for upload control
-  LEGAL_FILE_EXTENSIONS = [".3g2",".3gp",".3gp2",".3gpp",".asf",".avi",".avs",".dv",".flc",".fli",".flv",".gvi",".m1v",".m2v",".m4e",".m4u",".m4v",".mjp",".mkv",".moov",".mov",".movie",".mp4",".mpe",".mpeg",".mpg",".mpv2",".qt",".rm",".ts",".vfw",".vob",".wm",".wmv"]
-		
+  def self.legal_file_extensions
+    ["*.3g2","*.3gp","*.3gp2","*.3gpp","*.asf","*.avi","*.avs","*.dv","*.flc","*.fli","*.flv","*.gvi","*.m1v","*.m2v","*.m4e","*.m4u","*.m4v","*.mjp","*.mkv","*.moov","*.mov","*.movie","*.mp4","*.mpe","*.mpeg","*.mpg","*.mpv2","*.qt","*.rm","*.ts","*.vfw","*.vob","*.wm","*.wmv"]
+  end
 
   # Our HTTP Client to communicate with Vidavee service
   CLIENT = HTTPClient.new
@@ -155,23 +156,8 @@ class Vidavee < ActiveRecord::Base
     save_count = 0
     assets.each do |a|
       v = VideoAsset.new
-      v.dockey= a.search('//dockey').text
+      update_asset_record_from_xml(v,a)
       next if v.dockey.nil?
-      v.video_type= a.search('//type').text
-      v.title= a.search('//title').text
-      if (v.title.nil? || v.title.length == 0)
-        v.title = 'no title supplied'
-      end
-      v.description= a.search('//description').text
-      v.author_name= a.search('//authorName').text
-      v.author_email= a.search('//authorEmail').text
-      v.video_length= a.search('//length').text
-      v.frame_rate= a.search('//frameRate').text
-      v.video_status= a.search('//status').text
-      v.can_edit= a.search('//canEdit').text
-      v.thumbnail= a.search('//thumbnail').text
-      v.thumbnail_low= a.search('//thumbnailLow').text
-      v.thumbnail_medium= a.search('//thumbnailMedium').text
       if admin
         v.user_id = admin.id
       end
@@ -189,6 +175,13 @@ class Vidavee < ActiveRecord::Base
     end
     [assets.size, save_count]
   end
+
+  def update_asset_record(sessionid,video_asset)
+    response = vrequest('assets/GetDetailsAssetContent',sessionid, { DOCKEY_PARAM => video_asset.dockey })
+    update_asset_record_from_xml(video_asset,extract(response.content,"//content"))
+    video_asset
+  end
+    
 
   # Load the vtags for the specified dockey into
   # our database by querying the vidavee backend
@@ -429,6 +422,25 @@ class Vidavee < ActiveRecord::Base
       url = "#{url}#{SESSION_PARAM}#{sessionid}"
     end
     url
+  end
+
+  def update_asset_record_from_xml(video_asset,asset_xml)
+      video_asset.dockey= asset_xml.search('//dockey').text
+      video_asset.video_type= asset_xml.search('//type').text
+      title= asset_xml.search('//title').text
+      if ((title.nil? || title.length == 0) && video_asset.title.nil?)
+        video_asset.title = 'no title supplied'
+      end
+      video_asset.description= asset_xml.search('//description').text
+      video_asset.author_name= asset_xml.search('//authorName').text
+      video_asset.author_email= asset_xml.search('//authorEmail').text
+      video_asset.video_length= asset_xml.search('//length').text
+      video_asset.frame_rate= asset_xml.search('//frameRate').text
+      video_asset.video_status= asset_xml.search('//status').text
+      video_asset.can_edit= asset_xml.search('//canEdit').text
+      video_asset.thumbnail= asset_xml.search('//thumbnail').text
+      video_asset.thumbnail_low= asset_xml.search('//thumbnailLow').text
+      video_asset.thumbnail_medium= asset_xml.search('//thumbnailMedium').text
   end
   
 end
