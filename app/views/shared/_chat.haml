@@ -5,4 +5,6 @@
   |
   =link_to "my account ", ""
   |
-  =link_to "mailbox ", ""
+  - unread = Message.unread(current_user)
+  - mcount = (unread > 0) ? "(#{unread})" : ''
+  =link_to "mailbox #{mcount}", messages_path()
