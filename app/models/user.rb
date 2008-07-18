@@ -41,4 +41,8 @@ class User < ActiveRecord::Base
     role && (role.eql?(Role[:scout_staff]) || scount_admin?)
   end
 
+  def full_name
+    "#{firstname} #{lastname}"
+  end
+  
 end
