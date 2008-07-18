@@ -14,12 +14,12 @@ GSports.SwfUpload = Class.create({
             file_queued_handler : this.fileQueued.bind(this),
 	    file_queue_error_handler : this.fileQueueError.bind(this),
 	    file_dialog_complete_handler : this.fileDialogComplete.bind(this),
-  	    //file_dialog_start_handler: this.fileDialogStart.bind(this),
+  	    file_dialog_start_handler: this.fileDialogStart.bind(this),
 	    upload_progress_handler : this.uploadProgress.bind(this),
 	    upload_error_handler : this.uploadError.bind(this),
 	    upload_success_handler : this.uploadSuccess.bind(this),
 	    upload_complete_handler : this.uploadComplete.bind(this),
-            file_browse_handler : this.fileBrowse.bind(this),
+            //file_browse_handler : this.fileBrowse.bind(this),
 	    custom_settings : { 
 		progress_target : 'uploadProgressContainer',
                 upload_successful : false
@@ -30,12 +30,10 @@ GSports.SwfUpload = Class.create({
     
     uploadErrors: [],
     
-    fileBrowse : function() {
+    fileDialogStart : function() {
 	var txtFileName = document.getElementById("uploaded_file_path");
 	txtFileName.value = "";
-        
 	this.swfu.cancelUpload();
-	this.swfu.selectFile();
     },
 
     // Called by the queue complete handler to submit the form

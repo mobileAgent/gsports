@@ -14,7 +14,7 @@ class VideoAssetsController < BaseController
   # GET /video_assets.xml
   def index
     
-    @pages, @video_assets = paginate :video_assets, :order => "title ASC"
+    @pages, @video_assets = paginate :video_assets, :conditions => [ "video_status = 'ready'" ], :order => "title ASC"
 
     respond_to do |format|
       format.html # index.html.erb
