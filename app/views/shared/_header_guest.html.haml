@@ -14,7 +14,7 @@
         %img{:src=>"/images/gs_logo.png", :width=>312, :height=>91}
     .yui-b.login
       - form_tag sessions_path, :class => 'MainForm' do
-        %label{"for"=>"username"} Username
+        %label{"for"=>"username"} Email Address
         = text_field_tag 'login', nil, :size => 25
         %label{"for"=>"password"} Password
         = password_field_tag 'password', nil, :size => 15
