@@ -20,7 +20,10 @@ class Vidavee < ActiveRecord::Base
 
   # Our HTTP Client to communicate with Vidavee service
   CLIENT = HTTPClient.new
-
+  CLIENT.connect_timeout = 60
+  CLIENT.receive_timeout = 300
+  CLIENT.send_timeout = 0
+  
   # Turn this on for debug of HTTP traffic to Vidavee
   # CLIENT.debug_dev = STDERR
 
@@ -34,8 +37,12 @@ class Vidavee < ActiveRecord::Base
   # http://tribeca.vidavee.com/hsstv/rest/session/Login?api_key=5342smallworld&api_ts=1214531598256&api_sig=EFF68F8B9CBC146FCEE39EA3D4AFED79&userName=hsstv&password=hsstvUser
   def login
     response = vrequest('session/Login')
-    puts "Logging into the Vidavee backend"
-    extract(response.content,'//newToken').text;
+    if response && response.content
+      logger.debug "Logging into the Vidavee backend"
+      extract(response.content,'//newToken').text;
+    else
+      nil
+    end
   end
 
   # Logout of the session
@@ -178,7 +185,16 @@ class Vidavee < ActiveRecord::Base
 
   def update_asset_record(sessionid,video_asset)
     response = vrequest('assets/GetDetailsAssetContent',sessionid, { DOCKEY_PARAM => video_asset.dockey })
-    update_asset_record_from_xml(video_asset,extract(response.content,"//content"))
+    if response && response.content
+      body = extract(response.content,"//content")
+      if body
+        update_asset_record_from_xml(video_asset,body)
+      else
+        logger.debug "Bad response #{response.content}"
+      end
+    else
+      logger.debug "No content in response #{response}"
+    end
     video_asset
   end
     
@@ -296,7 +312,7 @@ class Vidavee < ActiveRecord::Base
       response = CLIENT.post(url, upload_params, extheader)
     rescue TimeoutError
       logger.error "Could not contact Vidavee backend"
-      response = nil
+      response = "Timeout"
     end
     dockey_elem = extract(response.content,'//dockey')
 
@@ -425,22 +441,27 @@ class Vidavee < ActiveRecord::Base
   end
 
   def update_asset_record_from_xml(video_asset,asset_xml)
-      video_asset.dockey= asset_xml.search('//dockey').text
-      video_asset.video_type= asset_xml.search('//type').text
-      title= asset_xml.search('//title').text
-      if ((title.nil? || title.length == 0) && video_asset.title.nil?)
-        video_asset.title = 'no title supplied'
-      end
-      video_asset.description= asset_xml.search('//description').text
-      video_asset.author_name= asset_xml.search('//authorName').text
-      video_asset.author_email= asset_xml.search('//authorEmail').text
-      video_asset.video_length= asset_xml.search('//length').text
-      video_asset.frame_rate= asset_xml.search('//frameRate').text
-      video_asset.video_status= asset_xml.search('//status').text
-      video_asset.can_edit= asset_xml.search('//canEdit').text
-      video_asset.thumbnail= asset_xml.search('//thumbnail').text
-      video_asset.thumbnail_low= asset_xml.search('//thumbnailLow').text
-      video_asset.thumbnail_medium= asset_xml.search('//thumbnailMedium').text
+    dockey = asset_xml.search('//dockey')
+    if dockey.nil?
+      logger.debug "No valid response in #{asset_xml}"
+      return
+    end
+    video_asset.dockey= dockey.text
+    video_asset.video_type= asset_xml.search('//type').text
+    title= asset_xml.search('//title').text
+    if ((title.nil? || title.length == 0) && video_asset.title.nil?)
+      video_asset.title = 'no title supplied'
+    end
+    video_asset.description= asset_xml.search('//description').text
+    video_asset.author_name= asset_xml.search('//authorName').text
+    video_asset.author_email= asset_xml.search('//authorEmail').text
+    video_asset.video_length= asset_xml.search('//length').text
+    video_asset.frame_rate= asset_xml.search('//frameRate').text
+    video_asset.video_status= asset_xml.search('//status').text
+    video_asset.can_edit= asset_xml.search('//canEdit').text
+    video_asset.thumbnail= asset_xml.search('//thumbnail').text
+    video_asset.thumbnail_low= asset_xml.search('//thumbnailLow').text
+    video_asset.thumbnail_medium= asset_xml.search('//thumbnailMedium').text
   end
   
 end

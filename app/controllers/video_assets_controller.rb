@@ -94,7 +94,7 @@ class VideoAssetsController < BaseController
     end
   end
 
-  # POST /vidapi/swfupload comes from the video_uploader.js 
+  # POST /video_assets/swfupload comes from the video_uploader.js 
   def swfupload
     f = params[:Filedata] # the tmp file
     fpath = VideoAsset.move_upload_to_repository(f,params[:Filename])
