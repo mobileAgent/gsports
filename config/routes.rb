@@ -4,13 +4,12 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :pages
   map.resources :sponsors
   map.resources :vidavees
-  map.resources :video_assets
+  map.resources :video_assets, :collection => { :swfupload => :post, :save_video => :post }
   map.resources :video_clips
   map.resources :messages
 
   map.register         'register',        :controller => 'users', :action => 'register'
   map.forgot_password  'forgot_password', :controller => 'users', :action => 'forgot_password'
-  
   
   # The priority is based upon order of creation: first created -> highest priority.
 
