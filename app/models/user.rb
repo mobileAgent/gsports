@@ -29,4 +29,10 @@ class User < ActiveRecord::Base
   def isScout?
     role.name.eql? Role::SCOUT
   end  
+  
+  def full_name
+    "#{firstname} #{lastname}"
+  end
+  
+  
 end

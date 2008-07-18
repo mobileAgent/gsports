@@ -6,6 +6,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :vidavees
   map.resources :video_assets
   map.resources :video_clips
+  map.resources :messages
 
   map.register         'register',        :controller => 'users', :action => 'register'
   map.forgot_password  'forgot_password', :controller => 'users', :action => 'forgot_password'

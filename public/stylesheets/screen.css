@@ -1002,7 +1002,7 @@ table.poll {
       padding-right: 2px; }
 
 
-
+/* other... assuming this stylesheet will be gone soon anyway */
 
 
 #Banner .MainForm{
@@ -1038,5 +1038,13 @@ text-align: right;
 margin-right: 8px;
 }
 
+
+
+#message_to_box {
+	border: 1px solid #ccc;
+	xwidth: 30%;
+	height: 120px;
+	overflow: scroll;
+}
 
 
