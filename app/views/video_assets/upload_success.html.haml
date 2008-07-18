@@ -3,3 +3,5 @@
 %p
   = "Your video '#{@video_asset.title}' has been uploaded. It may take from a minute to a few minutes for it to appear in your gallery and be viewable. The time depends on the size and type of the video and the load on the servers."
 
+%p
+  = link_to "Upload another", new_video_asset_path

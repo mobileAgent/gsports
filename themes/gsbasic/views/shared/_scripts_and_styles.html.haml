@@ -14,7 +14,9 @@
 - if current_page?(:controller => 'photos', :action => 'new')
   = javascript_include_tag 'swfupload', :plugin => "community_engine"
   = javascript_include_tag 'uploader', :plugin => "community_engine"
-
+- if  current_page?(:controller => 'video_assets', :action => 'new')  
+  = javascript_include_tag 'swfupload', :plugin => "community_engine"
+  = javascript_include_tag 'video_uploader'
 
 = stylesheet_link_tag 'reset-fonts-grids'
 = stylesheet_link_tag 'screen'

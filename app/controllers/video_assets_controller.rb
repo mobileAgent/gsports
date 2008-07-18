@@ -1,15 +1,19 @@
 class VideoAssetsController < BaseController
   
-  # Only admin can edit this table directly
-  # Those just wishing to use the values, see vidapi_controller
-  before_filter :admin_required, :except => [:show, :upload]
+  include ActiveMessaging::MessageSender
+  publishes_to :push_video_files
+
+  before_filter :login_required
   before_filter :vidavee_login
+  
+  session :cookie_only => false, :only => [:swfupload]
+  protect_from_forgery :except => :swfupload
+  verify :method => :post, :only => [ :save_video, :swfupload ]
   
   # GET /video_assets
   # GET /video_assets.xml
   def index
     
-    # @video_assets = VideoAsset.find(:all)
     @pages, @video_assets = paginate :video_assets, :order => "title ASC"
 
     respond_to do |format|
@@ -34,7 +38,7 @@ class VideoAssetsController < BaseController
     @video_asset = VideoAsset.new
 
     respond_to do |format|
-      format.html # new.html.erb
+      format.html # new.html.haml
       format.xml  { render :xml => @video_asset }
     end
   end
@@ -90,4 +94,46 @@ class VideoAssetsController < BaseController
     end
   end
 
+  # POST /vidapi/swfupload comes from the video_uploader.js 
+  def swfupload
+    f = params[:Filedata] # the tmp file
+    fpath = VideoAsset.move_upload_to_repository(f,params[:Filename])
+    @video = VideoAsset.new :uploaded_file_path => fpath, :title => 'Upload in Progress', :user_id => current_user.id
+    @video.save!
+    render :text => @video.id
+  rescue
+    render :text => "Error saving file"
+  end
+  
+  # POST /vidapi/save_video (the rest of the form after the swfupload)
+  def save_video
+    if params[:hidFileID]
+      @video_asset = VideoAsset.find(params[:hidFileID])
+      @video_asset.attributes= params[:video_asset]
+    else
+      @video_asset = VideoAsset.new params[:video_asset]
+      # TODO: check for a fallback non-swf file upload and add it here
+    end
+
+    # Set up things that don't come from the form
+    @video_asset.video_status = 'saving'
+    @video_asset.user_id = current_user.id
+    ### This is temporary until the user has a team and league linked
+    @video_asset.team_id = Team.find(:first).id
+    @video_asset.league_id = League.find(:first).id
+    ### End temp
+
+    if @video_asset.save!
+      publish(:push_video_files,"#{@video_asset.id}")
+      flash[:notice] = "Your video is being procesed. It may be several minutes before it appears in your gallery"
+      render :action=>:upload_success
+    else
+      flash[:notice] = "There was a problem with the video"
+      render :action=>:upload
+    end
+  end
+
+  def upload_success
+  end
+  
 end

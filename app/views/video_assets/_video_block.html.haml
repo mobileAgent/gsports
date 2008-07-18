@@ -1,0 +1,15 @@
+#video_thumbnail
+  = link_to "<img src='#{h video_asset.thumbnail_medium}' title='#{h video_asset.title}'>", :action => 'show', :id => video_asset
+  %br
+  = h video_asset.title
+  %br
+  = "#{h video_asset.description} - #{h video_asset.video_length}"
+  %br
+  = "#{h video_asset.league.name if video_asset.league}, #{h video_asset.team.name if video_asset.team}, #{h video_asset.sport}, #{video_asset.game_date}"
+  
+  - if current_user.league_admin? || current_user.team_admin? || current_user.admin?
+    %br
+    = link_to 'Edit', edit_video_asset_path(video_asset)
+    |
+    = link_to 'Destroy', video_asset, :confirm => 'Are you sure?', :method => :delete
+    

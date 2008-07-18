@@ -1,62 +1,57 @@
-%h1 New video_asset
+%h1 Upload a new video
 
-- form_for @video_asset do |f|
+- form_for(:video_asset, @video_asset,:html => {:multipart => true}, :url => {:controller => 'video_assets' , :action => 'save_video'}, :html => {:id => 'upload_form', :onsubmit => 'return doSubmit();' } ) do |f|
 
   = f.error_messages
 
   %p
-    = f.label :dockey
-    %br/
-    = f.text_field :dockey
-  %p
     = f.label :title
     %br/
     = f.text_field :title
+
   %p
     = f.label :description
     %br/
     = f.text_field :description
+
   %p
-    = f.label :author_name
+    = f.label :sport
     %br/
-    = f.text_field :author_name
+    = f.text_field :sport
+
   %p
-    = f.label :author_email
+    =f.label :game_date
     %br/
-    = f.text_field :author_email
+    =f.text_field :game_date
+    
   %p
-    = f.label :video_length
+
+    <input type="hidden" name="hidFileID" id="hidFileID" value="" />
+    =f.label :uploaded_file_path
     %br/
-    = f.text_field :video_length
+    <input type="text" id="uploaded_file_path" disabled="true" style="border: solid 1px; background-color: #FFFFFF;" />
+    - session_key = (ActionController::Base.session.first[:session_key] || '_session_id').to_sym
+    %script{:type=>'text/javascript'}
+      var uploader;
+      window.onload = function (){
+      ="uploader = new GSports.SwfUpload('#{swfupload_video_assets_path(session_key => session.session_id)}','#{Vidavee.legal_file_extensions.join(";")}');"
+      };
+      
+    %div{:style=>"margin: 0px 10px;", :id => "flashUI"}
+      %div
+        %form.MainForm
+          %p
+            %button{:id=>"btnBrowse", :type=>"button", :style=>"padding: 5px;", :onclick=>"uploader.swfu.selectFile(); this.blur();"}
+              =image_tag '/icons/add.png', :plugin => 'community_engine'
+              Select Video to Upload
+          %label
+            %em
+              You can select only one file
+              %br
+              = (AppConfig.video_asset['attachment_fu_options']['max_size'])
+              megabyte upload limit per file.                
+      #uploadProgressContainer
+
   %p
-    = f.label :frame_rate
-    %br/
-    = f.text_field :frame_rate
-  %p
-    = f.label :video_type
-    %br/
-    = f.text_field :video_type
-  %p
-    = f.label :video_status
-    %br/
-    = f.text_field :video_status
-  %p
-    = f.label :can_edit
-    %br/
-    = f.check_box :can_edit
-  %p
-    = f.label :thumbnail
-    %br/
-    = f.text_field :thumbnail
-  %p
-    = f.label :thumbnail_low
-    %br/
-    = f.text_field :thumbnail_low
-  %p
-    = f.label :thumbnail_medium
-    %br/
-    = f.text_field :thumbnail_medium
-  %p
-    = f.submit "Create"
-  
-%p= link_to 'Back', video_assets_path
+    = f.submit "Upload"
+

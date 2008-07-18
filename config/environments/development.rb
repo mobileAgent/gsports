@@ -22,3 +22,5 @@ APP_URL = "http://localhost:3000"
 # Caching, use memory for dev/test
 # config.cache_store = :file_store, "#{RAILS_ROOT}/tmp/cache"
 config.cache_store = :memory_store
+
+# THis thing is unbelievably noisy and log cluttering
