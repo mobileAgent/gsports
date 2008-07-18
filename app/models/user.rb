@@ -24,6 +24,7 @@ class User < ActiveRecord::Base
 
   def team_staff?
     role && (role.eql?(Role[:team_staff]) || team_admin? )
+  end
   
   def league_admin?
     role && role.eql?(Role[:league])
@@ -36,11 +37,11 @@ class User < ActiveRecord::Base
   def scout_admin?
     role && role.eql?(Role[:scout])
   end
-
+  
   def scout_staff?
     role && (role.eql?(Role[:scout_staff]) || scount_admin?)
   end
-
+  
   def full_name
     "#{firstname} #{lastname}"
   end
