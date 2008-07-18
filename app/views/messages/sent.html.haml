@@ -1,0 +1,16 @@
+
+#yui-main
+  .yui-b
+    .box.hfeed
+      %h3 Sent Messages
+      = render :partial => 'messages/message', :collection => @msgs
+
+.yui-b  
+  .box
+    %h3 Mailbox
+    %ul.list.checks
+      %li= link_to 'Inbox', messages_path()
+
+  =render :partial => "contacts"
+        
+        
