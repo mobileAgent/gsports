@@ -450,7 +450,9 @@ class Vidavee < ActiveRecord::Base
     video_asset.video_type= asset_xml.search('//type').text
     title= asset_xml.search('//title').text
     if ((title.nil? || title.length == 0) && video_asset.title.nil?)
-      video_asset.title = 'no title supplied'
+      video_asset.title= 'no title supplied'
+    else
+      video_asset.title= title
     end
     video_asset.description= asset_xml.search('//description').text
     video_asset.author_name= asset_xml.search('//authorName').text
