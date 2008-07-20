@@ -42,14 +42,12 @@ class UsersController < BaseController
 
   end
 
+  #
+  # Capture payment
+  #
   def submit_billing
     @user = User.find(params[:userid].to_i)
     billing_info = params[:billing]
-
-    gateway = ActiveMerchant::Billing::BraintreeGateway.new({
-      :login => 'demo',
-      :password => 'password'
-    })
 
     @credit_card = ActiveMerchant::Billing::CreditCard.new({
       :first_name => billing_info[:firstname],
@@ -60,10 +58,15 @@ class UsersController < BaseController
       :verification_value => billing_info[:verificationnumber]
     })
     if (!@credit_card.valid?)
-      renderkkk :action => 'billing', :userid => @user.id
+      render :action => 'billing', :userid => @user.id
       return
     end
-    response = gateway.purchase(100, @credit_card)
+
+    gateway = ActiveMerchant::Billing::BraintreeGateway.new({
+      :login => 'demo',
+      :password => 'password'
+    })
+    response = gateway.purchase(@user.role.plan.cost, @credit_card)
     logger.debug "RESPONSE:" + response.inspect
 
     flash[:notice] = "Thanks for signing up! You should receive an e-mail confirmation shortly at #{@user.email}"
