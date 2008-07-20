@@ -1,18 +1,20 @@
-basic:
-  name: basic
-  cost: 9.95
-  description: basic subscription for end users
 member:
-  name: member firm
+  id: 1
+  name: member
+  cost: 9.95
+  description: Athletes, Coaches, Parents, and Fans
+team:
+  id: 2
+  name: team
   cost: 250.00
-  description: basic subscription for member firms
-sponsor:
-  name: sponsor orgs
+  description: Schools and Private Clubs
+league:
+  id: 3
+  name: league
   cost: 250.00
-  description: basic subscription for sponsor orgs
+  description: Leagues and Conferences
 scout:
-  name: scouts
+  id: 4
+  name: scout
   cost: 250.00
-  description: basic subscription for scouts/recruiters  
-  
-  
+  description: Scouts and Recruiters  
