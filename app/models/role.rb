@@ -3,6 +3,7 @@ class Role < ActiveRecord::Base
   TEAM_ROLE = "team"
   LEAGUE_ROLE = "league"
   SCOUT_ROLE = "scout"
+  MEMBER_ROLE = "member"
   
   belongs_to :subscription_plan
   
