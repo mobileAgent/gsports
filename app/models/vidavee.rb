@@ -96,21 +96,33 @@ class Vidavee < ActiveRecord::Base
     s = url_for('file/GetFileThumbnail')
     "#{s}?#{DOCKEY_PARAM}=#{dockey}"
   end
-  
 
-  # Returns a url suitable for getting the transcoded content (flv)
+  # This call is a little different from all the others so far in that it isn't
+  # part of the restful api (no /rest/ after the context part so we can't use
+  # the url_for -> vrequest methods as they are right now). It isn't signed
+  # or secure (the sessionid is ignored). But this is the Vidavee recommended
+  # method of obtaining the flv access for our player. Works for both videos and clips
+  # What comes back in the xml document is a <url type="stream"> element (usually
+  # more than one) that have the following format in a cdata:
+  #  stream.tribeca.vidavee.com:80/vidad/tribeca.vidavee.com/hsstv/hsstv/4B5E0218C9C29D59862F2E880935BC48.flv
+  # (Note there is no http in front -- weird.)
   def file_flv(sessionid,dockey)
-    url = url_for('file/GetFile',sessionid)
-    params = build_request_params('file/GetFile',sessionid,{"field" => "AssetTranscoded", DOCKEY_PARAM => dockey },false)
-    url = query_url(url,params)
-    return url + "&ftype=.flv"
+    url = "http://#{uri}/#{context}/vClientXML.view?AF_renderParam_contentType=text/xml&#{DOCKEY_PARAM}=#{dockey}"
+    response = CLIENT.post url
+    video_url = extract_no_status(response.content,"//url[@type='stream']/").first
+    if video_url.nil?
+      logger.debug "Found no valid url objects in response"
+      return nil
+    end
+    logger.debug "Video url is #{video_url.class} methods #{(video_url.methods.sort - Object.methods).join("\n")}"
+    "http://#{video_url.inner_text}"
   end
 
-  def file_flv_as_flash_param(sessionid,dockey)
-    url = file_flv(sessionid,dockey)
-    url = CGI::escape(url)
-    puts "Flash URL : #{url}"
-    url
+  # Grok the flv url without making a call for the xml document, a faster
+  # alternative to file_flv as long as nothing changes on the back end
+  #  stream.tribeca.vidavee.com:80/vidad/tribeca.vidavee.com/hsstv/hsstv/4B5E0218C9C29D59862F2E880935BC48.flv
+  def file_flv_const(session_id,dockey)
+    "http://stream.#{uri}:80/vidad/#{uri}/#{context}/#{context}/#{dockey}.flv"
   end
   
   # Result is paginated, see currentPage, totalPages
@@ -390,6 +402,13 @@ class Vidavee < ActiveRecord::Base
     end
     token
   end
+
+  def extract_no_status(doc,fragment)
+    h = Hpricot.XML(doc)
+    token = h.search(fragment)
+    token
+  end
+
 
   # Compute the MD5 sum on the required params for the security token
   def sign(service,ts,sessionid='')
