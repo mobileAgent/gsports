@@ -24,3 +24,6 @@ APP_URL = "http://localhost:3000"
 config.cache_store = :memory_store
 
 # THis thing is unbelievably noisy and log cluttering
+
+# Using ActiveMerchant in development
+ActiveMerchant::Billing::Base.mode = :test

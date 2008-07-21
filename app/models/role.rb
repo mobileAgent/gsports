@@ -5,4 +5,8 @@ class Role < ActiveRecord::Base
   SCOUT_ROLE = "scout"
   
   belongs_to :subscription_plan
+  
+  def plan
+    SubscriptionPlan.find_by_name(name)
+  end
 end
