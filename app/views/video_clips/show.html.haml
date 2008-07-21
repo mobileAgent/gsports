@@ -1,0 +1,15 @@
+- if @vidavee && session[:vidavee] && @video_clip.dockey
+  = render(:partial => 'shared/maverick_video_player', :locals => { :dockey => @video_clip.dockey })
+  = @vidavee.asset_embed_code(session[:vidavee], @video_clip.dockey) if false
+  %br
+  = h @video_clip.title
+  %br
+  = h @video_clip.description
+  %br
+  = h @video_clip.length
+  %br
+  = link_to 'Parent video',video_asset_path(@video_clip.video_asset_id)  
+- else
+  %p = "This clip could not be found"
+
+= link_to 'Back', video_clips_path

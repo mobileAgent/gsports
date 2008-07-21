@@ -51,7 +51,7 @@ if ( hasProductInstall && !hasRequestedVersion ) {
 			"allowScriptAccess","sameDomain",
 			"type", "application/x-shockwave-flash",
 			"pluginspage", "http://www.adobe.com/go/getflashplayer",
-            "FlashVars","p1=<%= @vidavee.file_flv_as_flash_param session[:vidavee],dockey -%>"
+            "FlashVars","p1="+encodeURIComponent('<%= @vidavee.file_flv_const session[:vidavee],dockey -%>')
 	);
   } else {  // flash is too old or we can't detect the plugin
     var alternateContent = 'This content requires the Adobe Flash Player. '
