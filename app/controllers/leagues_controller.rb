@@ -1,4 +1,7 @@
 class LeaguesController < BaseController
+
+  auto_complete_for :league, :name
+  
   # GET /league
   # GET /league.xml
   def index
@@ -82,4 +85,5 @@ class LeaguesController < BaseController
       format.xml  { head :ok }
     end
   end
+  
 end

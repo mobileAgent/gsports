@@ -3,7 +3,14 @@ class VideoAsset < ActiveRecord::Base
   belongs_to :league
   belongs_to :team
   belongs_to :user
-
+  belongs_to :home_team, :class_name => 'Team', :foreign_key => 'home_team_id'
+  belongs_to :visiting_team, :class_name => 'Team', :foreign_key => 'visiting_team_id'
+  has_many :video_clips
+  
+  acts_as_commentable
+  acts_as_taggable
+  belongs_to :favoritable, :polymorphic => true
+  
   # Every video needs a title
   validates_presence_of :title
 
@@ -51,6 +58,40 @@ class VideoAsset < ActiveRecord::Base
     name.gsub!(/\_+/, '_')
 
     name
+  end
+
+  def home_team_name= team_name
+    home_team= team_by_name team_name
+  end
+
+  def home_team_name
+    if home_team
+      home_team.name
+    else
+      nil
+    end
+  end
+  
+  def visiting_team_name= team_name
+    visiting_team= team_by_name team_name
+  end
+
+  def visiting_team_name
+    if visiting_team
+      visiting_team.name
+    else
+      nil
+    end
+  end
+
+  private
+  
+  def team_by_name team_name
+    team = Team.find_by_name team_name
+    if team.nil?
+      team = Team.new :name => team_name
+    end
+    team
   end
   
 end

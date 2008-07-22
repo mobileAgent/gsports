@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20080718142310) do
+ActiveRecord::Schema.define(:version => 20080722175239) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id",    :limit => 10
@@ -441,6 +441,7 @@ ActiveRecord::Schema.define(:version => 20080718142310) do
     t.string   "state"
     t.string   "country"
     t.string   "phone"
+    t.integer  "team_id",                   :limit => 11
   end
 
   add_index "users", ["avatar_id"], :name => "index_users_on_avatar_id"
@@ -495,6 +496,15 @@ ActiveRecord::Schema.define(:version => 20080718142310) do
     t.string   "view_url"
     t.integer  "video_asset_id", :limit => 11
     t.integer  "user_id",        :limit => 11
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "video_reels", :force => true do |t|
+    t.string   "title"
+    t.string   "description"
+    t.integer  "user_id",     :limit => 11
+    t.string   "dockey"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
