@@ -1,0 +1,8 @@
+- for video_clip in @video_clips
+  = render :partial => 'video_block', :locals => {:video_clip => video_clip }
+
+%br
+%p>
+  = pagination_links_for @pages, { :link_to_current_page => true } if @pages.length > 1
+%br
+

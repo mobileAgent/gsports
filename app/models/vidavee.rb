@@ -20,7 +20,10 @@ class Vidavee < ActiveRecord::Base
 
   # Our HTTP Client to communicate with Vidavee service
   CLIENT = HTTPClient.new
-
+  CLIENT.connect_timeout = 60
+  CLIENT.receive_timeout = 300
+  CLIENT.send_timeout = 0
+  
   # Turn this on for debug of HTTP traffic to Vidavee
   # CLIENT.debug_dev = STDERR
 
@@ -34,8 +37,12 @@ class Vidavee < ActiveRecord::Base
   # http://tribeca.vidavee.com/hsstv/rest/session/Login?api_key=5342smallworld&api_ts=1214531598256&api_sig=EFF68F8B9CBC146FCEE39EA3D4AFED79&userName=hsstv&password=hsstvUser
   def login
     response = vrequest('session/Login')
-    puts "Logging into the Vidavee backend"
-    extract(response.content,'//newToken').text;
+    if response && response.content
+      logger.debug "Logging into the Vidavee backend"
+      extract(response.content,'//newToken').text;
+    else
+      nil
+    end
   end
 
   # Logout of the session
@@ -89,21 +96,33 @@ class Vidavee < ActiveRecord::Base
     s = url_for('file/GetFileThumbnail')
     "#{s}?#{DOCKEY_PARAM}=#{dockey}"
   end
-  
 
-  # Returns a url suitable for getting the transcoded content (flv)
+  # This call is a little different from all the others so far in that it isn't
+  # part of the restful api (no /rest/ after the context part so we can't use
+  # the url_for -> vrequest methods as they are right now). It isn't signed
+  # or secure (the sessionid is ignored). But this is the Vidavee recommended
+  # method of obtaining the flv access for our player. Works for both videos and clips
+  # What comes back in the xml document is a <url type="stream"> element (usually
+  # more than one) that have the following format in a cdata:
+  #  stream.tribeca.vidavee.com:80/vidad/tribeca.vidavee.com/hsstv/hsstv/4B5E0218C9C29D59862F2E880935BC48.flv
+  # (Note there is no http in front -- weird.)
   def file_flv(sessionid,dockey)
-    url = url_for('file/GetFile',sessionid)
-    params = build_request_params('file/GetFile',sessionid,{"field" => "AssetTranscoded", DOCKEY_PARAM => dockey },false)
-    url = query_url(url,params)
-    return url + "&ftype=.flv"
+    url = "http://#{uri}/#{context}/vClientXML.view?AF_renderParam_contentType=text/xml&#{DOCKEY_PARAM}=#{dockey}"
+    response = CLIENT.post url
+    video_url = extract_no_status(response.content,"//url[@type='stream']/").first
+    if video_url.nil?
+      logger.debug "Found no valid url objects in response"
+      return nil
+    end
+    logger.debug "Video url is #{video_url.class} methods #{(video_url.methods.sort - Object.methods).join("\n")}"
+    "http://#{video_url.inner_text}"
   end
 
-  def file_flv_as_flash_param(sessionid,dockey)
-    url = file_flv(sessionid,dockey)
-    url = CGI::escape(url)
-    puts "Flash URL : #{url}"
-    url
+  # Grok the flv url without making a call for the xml document, a faster
+  # alternative to file_flv as long as nothing changes on the back end
+  #  stream.tribeca.vidavee.com:80/vidad/tribeca.vidavee.com/hsstv/hsstv/4B5E0218C9C29D59862F2E880935BC48.flv
+  def file_flv_const(session_id,dockey)
+    "http://stream.#{uri}:80/vidad/#{uri}/#{context}/#{context}/#{dockey}.flv"
   end
   
   # Result is paginated, see currentPage, totalPages
@@ -178,7 +197,16 @@ class Vidavee < ActiveRecord::Base
 
   def update_asset_record(sessionid,video_asset)
     response = vrequest('assets/GetDetailsAssetContent',sessionid, { DOCKEY_PARAM => video_asset.dockey })
-    update_asset_record_from_xml(video_asset,extract(response.content,"//content"))
+    if response && response.content
+      body = extract(response.content,"//content")
+      if body
+        update_asset_record_from_xml(video_asset,body)
+      else
+        logger.debug "Bad response #{response.content}"
+      end
+    else
+      logger.debug "No content in response #{response}"
+    end
     video_asset
   end
     
@@ -296,7 +324,7 @@ class Vidavee < ActiveRecord::Base
       response = CLIENT.post(url, upload_params, extheader)
     rescue TimeoutError
       logger.error "Could not contact Vidavee backend"
-      response = nil
+      response = "Timeout"
     end
     dockey_elem = extract(response.content,'//dockey')
 
@@ -375,6 +403,13 @@ class Vidavee < ActiveRecord::Base
     token
   end
 
+  def extract_no_status(doc,fragment)
+    h = Hpricot.XML(doc)
+    token = h.search(fragment)
+    token
+  end
+
+
   # Compute the MD5 sum on the required params for the security token
   def sign(service,ts,sessionid='')
     digest = Digest::MD5.new
@@ -425,22 +460,29 @@ class Vidavee < ActiveRecord::Base
   end
 
   def update_asset_record_from_xml(video_asset,asset_xml)
-      video_asset.dockey= asset_xml.search('//dockey').text
-      video_asset.video_type= asset_xml.search('//type').text
-      title= asset_xml.search('//title').text
-      if ((title.nil? || title.length == 0) && video_asset.title.nil?)
-        video_asset.title = 'no title supplied'
-      end
-      video_asset.description= asset_xml.search('//description').text
-      video_asset.author_name= asset_xml.search('//authorName').text
-      video_asset.author_email= asset_xml.search('//authorEmail').text
-      video_asset.video_length= asset_xml.search('//length').text
-      video_asset.frame_rate= asset_xml.search('//frameRate').text
-      video_asset.video_status= asset_xml.search('//status').text
-      video_asset.can_edit= asset_xml.search('//canEdit').text
-      video_asset.thumbnail= asset_xml.search('//thumbnail').text
-      video_asset.thumbnail_low= asset_xml.search('//thumbnailLow').text
-      video_asset.thumbnail_medium= asset_xml.search('//thumbnailMedium').text
+    dockey = asset_xml.search('//dockey')
+    if dockey.nil?
+      logger.debug "No valid response in #{asset_xml}"
+      return
+    end
+    video_asset.dockey= dockey.text
+    video_asset.video_type= asset_xml.search('//type').text
+    title= asset_xml.search('//title').text
+    if ((title.nil? || title.length == 0) && video_asset.title.nil?)
+      video_asset.title= 'no title supplied'
+    else
+      video_asset.title= title
+    end
+    video_asset.description= asset_xml.search('//description').text
+    video_asset.author_name= asset_xml.search('//authorName').text
+    video_asset.author_email= asset_xml.search('//authorEmail').text
+    video_asset.video_length= asset_xml.search('//length').text
+    video_asset.frame_rate= asset_xml.search('//frameRate').text
+    video_asset.video_status= asset_xml.search('//status').text
+    video_asset.can_edit= asset_xml.search('//canEdit').text
+    video_asset.thumbnail= asset_xml.search('//thumbnail').text
+    video_asset.thumbnail_low= asset_xml.search('//thumbnailLow').text
+    video_asset.thumbnail_medium= asset_xml.search('//thumbnailMedium').text
   end
   
 end
