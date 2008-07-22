@@ -61,27 +61,19 @@ class VideoAsset < ActiveRecord::Base
   end
 
   def home_team_name= team_name
-    home_team= team_by_name team_name
+    self.home_team = team_by_name team_name
   end
 
   def home_team_name
-    if home_team
-      home_team.name
-    else
-      nil
-    end
+    home_team ? home_team.name : nil
   end
   
   def visiting_team_name= team_name
-    visiting_team= team_by_name team_name
+    self.visiting_team = team_by_name team_name
   end
 
   def visiting_team_name
-    if visiting_team
-      visiting_team.name
-    else
-      nil
-    end
+    visiting_team ? visiting_team.name : nil
   end
 
   private
@@ -89,7 +81,7 @@ class VideoAsset < ActiveRecord::Base
   def team_by_name team_name
     team = Team.find_by_name team_name
     if team.nil?
-      team = Team.new :name => team_name
+      team = Team.create :name => team_name
     end
     team
   end

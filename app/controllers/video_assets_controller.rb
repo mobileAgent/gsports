@@ -74,6 +74,7 @@ class VideoAssetsController < BaseController
     @video_asset = VideoAsset.find(params[:id])
 
     respond_to do |format|
+      @video_asset.tag_with(params[:tag_list] || '') 
       if @video_asset.update_attributes(params[:video_asset])
         flash[:notice] = 'VideoAsset was successfully updated.'
         format.html { redirect_to(@video_asset) }
@@ -118,11 +119,14 @@ class VideoAssetsController < BaseController
       # TODO: check for a fallback non-swf file upload and add it here
     end
 
-    # Set up things that don't come from the form
+    logger.debug "********** Params for va = #{params[:video_asset]} , object is #{@video_asset.inspect}, valid is #{@video_asset.valid?}"
+
+    # Set up things that don't come naturally from the form
     @video_asset.video_status = 'saving'
     @video_asset.user_id = current_user.id
     @video_asset.team= current_user.team
     @video_asset.league= current_user.team.league
+    @video_asset.tag_with(params[:tag_list] || '') 
 
     if @video_asset.save!
       publish(:push_video_files,"#{@video_asset.id}")
