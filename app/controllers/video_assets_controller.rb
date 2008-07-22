@@ -5,11 +5,14 @@ class VideoAssetsController < BaseController
 
   before_filter :login_required
   before_filter :vidavee_login
+  skip_before_filter :verify_authenticity_token, :only => [:auto_complete_for_video_asset_home_team_name,
+                                                           :auto_complete_for_video_asset_visiting_team_name,
+                                                           :auto_complete_for_video_asset_sport ]
   
   session :cookie_only => false, :only => [:swfupload]
-  protect_from_forgery :except => :swfupload
+  protect_from_forgery :except => [:swfupload ]
   verify :method => :post, :only => [ :save_video, :swfupload ]
-  
+
   # GET /video_assets
   # GET /video_assets.xml
   def index
@@ -118,10 +121,8 @@ class VideoAssetsController < BaseController
     # Set up things that don't come from the form
     @video_asset.video_status = 'saving'
     @video_asset.user_id = current_user.id
-    ### This is temporary until the user has a team and league linked
-    @video_asset.team_id = Team.find(:first).id
-    @video_asset.league_id = League.find(:first).id
-    ### End temp
+    @video_asset.team= current_user.team
+    @video_asset.league= current_user.team.league
 
     if @video_asset.save!
       publish(:push_video_files,"#{@video_asset.id}")
@@ -134,6 +135,23 @@ class VideoAssetsController < BaseController
   end
 
   def upload_success
+  end
+  
+  auto_complete_for :video_asset, :sport
+  
+  def auto_complete_for_video_asset_home_team_name
+    render :inline => auto_complete_team_field(params[:video_asset][:home_team_name])
+  end
+  
+  def auto_complete_for_video_asset_visiting_team_name
+    render :inline => auto_complete_team_field(params[:video_asset][:visiting_team_name])
+  end
+
+  private
+
+  def auto_complete_team_field(team_name_start)
+    @teams = Team.find(:all, :conditions => ["LOWER(name) like ?", team_name_start.downcase + '%' ], :order => "name ASC", :limit => 10 )
+    "<%= content_tag(:ul, @teams.map { |t| content_tag(:li, h(t.name)) }) %>"    
   end
   
 end

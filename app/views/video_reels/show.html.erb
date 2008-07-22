@@ -1,0 +1,23 @@
+<p>
+  <b>Title:</b>
+  <%=h @video_reel.title %>
+</p>
+
+<p>
+  <b>Description:</b>
+  <%=h @video_reel.description %>
+</p>
+
+<p>
+  <b>User:</b>
+  <%=h @video_reel.user_id %>
+</p>
+
+<p>
+  <b>Dockey:</b>
+  <%=h @video_reel.dockey %>
+</p>
+
+
+<%= link_to 'Edit', edit_video_reel_path(@video_reel) %> |
+<%= link_to 'Back', video_reels_path %>
