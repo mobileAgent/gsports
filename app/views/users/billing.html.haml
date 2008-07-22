@@ -1,13 +1,70 @@
-.yui-main
+.yui-b
   .box
-    %h3  Part 3: Billing Information
+    %h3
+      Registration
+    %ul.list.checks
+      User wants to be a
+      = requested_role_name()
 
-    %form{:action=>'/users/submit_billing'}
- 
-      %br
-      %br
- 
-      = hidden_field_tag :userid, @user.id
-      %input{:type=>:submit, :value=>"COMPLETE REGISTRATION"}
+  .box.alt
+    %h3 Tips
+    %p
+      After signing up,
+      %strong
+        Make sure you add your friends to your friends list
 
-%br
+#yui-main
+  .yui-b
+    .box
+      %h3 Part 3: Billing Information
+      %h3= "The cost for this member ship is $"+ @user.role.plan.cost.to_s + " per month"
+      = error_messages_for :credit_card
+      %form{:action=>'/users/submit_billing',:class => 'MainForm',:method => :post}
+
+        %label{"for"=>"firstname"}
+        First Name
+        %em (Required: )
+        %br
+        = text_field :billing, :firstname, {:value => @user.firstname}
+
+
+        %label{"for"=>"minitial"}
+        M.I.
+        %em (Required: )
+        %br
+        = text_field :billing, :minitial,  {:width => 2, :value => @user.minitial}
+
+
+        %label{"for"=>"lastname"}
+        Last Name
+        %em (Required: )
+        %br
+        = text_field :billing,:lastname,  {:size => 10, :value => @user.lastname}
+
+        %label{"for"=>"expirationdate"}
+        Expiration Date:
+        %em (Required: )
+        %br
+        = date_select :billing, :date, {:start_year => 1926, :end_year => Time.now.year + 10,:discard_day => true}
+
+        %label{"for"=>"cardnumber"}
+        Card Number
+        %em (Required: )
+        %br
+        = text_field :billing, :cardnumber, :size => 16
+
+        %label{"for"=>"verificationnumber"}
+        Verification number
+        %em (Required: )
+        %br
+        = text_field :billing, :verificationnumber, :size => 4
+
+        = hidden_field_tag :inviter_id, params[:inviter_id]
+        = hidden_field_tag :inviter_code, params[:inviter_code]
+        = hidden_field_tag :role, @requested_role
+        = hidden_field_tag :userid, @user.id
+        %p= submit_tag 'Submit'
+
+
+
+

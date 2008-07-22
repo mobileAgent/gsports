@@ -14,7 +14,7 @@ class VideoAssetsController < BaseController
   # GET /video_assets.xml
   def index
     
-    @pages, @video_assets = paginate :video_assets, :order => "title ASC"
+    @pages, @video_assets = paginate :video_assets, :conditions => [ "video_status = 'ready'" ], :order => "title ASC"
 
     respond_to do |format|
       format.html # index.html.erb
@@ -94,7 +94,7 @@ class VideoAssetsController < BaseController
     end
   end
 
-  # POST /vidapi/swfupload comes from the video_uploader.js 
+  # POST /video_assets/swfupload comes from the video_uploader.js 
   def swfupload
     f = params[:Filedata] # the tmp file
     fpath = VideoAsset.move_upload_to_repository(f,params[:Filename])

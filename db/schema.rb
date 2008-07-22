@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20080715192045) do
+ActiveRecord::Schema.define(:version => 20080718142310) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id",    :limit => 10
@@ -475,8 +475,8 @@ ActiveRecord::Schema.define(:version => 20080715192045) do
     t.string   "thumbnail"
     t.string   "thumbnail_low"
     t.string   "thumbnail_medium"
-    t.integer  "sponsor_id",         :limit => 11
-    t.integer  "member_id",          :limit => 11
+    t.integer  "league_id",          :limit => 11
+    t.integer  "team_id",            :limit => 11
     t.integer  "user_id",            :limit => 11
     t.string   "sport"
     t.datetime "game_date"
