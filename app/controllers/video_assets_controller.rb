@@ -16,8 +16,17 @@ class VideoAssetsController < BaseController
   # GET /video_assets
   # GET /video_assets.xml
   def index
+
+    @user = params[:user_id] ? User.find(params[:user_id]) : current_user
+    cond = Caboose::EZ::Condition.new
+    cond.user_id == @user.id
+    if params[:tag_name]    
+      cond.append ['tags.name = ?', params[:tag_name]]
+    end
+    cond.append ['video_status = ?','ready']
     
-    @pages, @video_assets = paginate :video_assets, :conditions => [ "video_status = 'ready'" ], :order => "title ASC"
+    @pages, @video_assets = paginate :video_assets, :conditions => cond.to_sql, :order => "created_at DESC", :include => :tags
+    @tags = VideoAsset.tags_count :user_id => @user.id, :limit => 20
 
     respond_to do |format|
       format.html # index.html.erb

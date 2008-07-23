@@ -3,7 +3,15 @@ class VideoReelsController < BaseController
   # GET /video_reels
   # GET /video_reels.xml
   def index
-    @video_reels = VideoReel.find(:all)
+    @user = params[:user_id] ? User.find(params[:user_id]) : current_user
+    cond = Caboose::EZ::Condition.new
+    cond.user_id == @user.id
+    if params[:tag_name]    
+      cond.append ['tags.name = ?', params[:tag_name]]
+    end
+    
+    @pages, @video_reels = paginate :video_reels, :conditions => cond.to_sql, :order => "created_at DESC", :include => :tags
+    @tags = VideoReel.tags_count :user_id => @user.id, :limit => 20
 
     respond_to do |format|
       format.html # index.html.erb
