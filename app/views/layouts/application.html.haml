@@ -1,0 +1,36 @@
+!!!
+%html{:xmlns=>"http://www.w3.org/1999/xhtml", 'xml:lang'=>"en", :lang=>"en"}
+  %head
+    %link{:rel=>"shortcut icon", :href=>"/favicon.ico"}
+    %meta{"http-equiv"=>"Content-Type", :content=>"text/html;charset=utf-8"}
+  
+    %title= page_title
+     
+    -if @meta
+      -@meta.each do |key|
+        %meta{:name=>key[0], :content=>key[1]}
+  
+    = render :partial => "shared/scripts_and_styles"
+    - if @rss_title && @rss_url
+      = auto_discovery_link_tag(:rss, @rss_url, {:title => @rss_title})
+    
+  %body
+    .backgroundContainer
+      .outerContainer
+        - if logged_in?
+          = render :partial => "shared/block_util"
+          = render :partial => "shared/block_header"
+          = render :partial => "shared/block_topNav"
+          = render :partial => "shared/block_videoFindChat"
+        -else
+          = render :partial => "shared/block_guest_header"
+        
+        = render :partial => "shared/messages"
+        .mainContentArea
+          = @content_for_layout
+        
+        = render :partial => "shared/block_weeklyFeature"
+        = render :partial => "shared/block_footer"
+        = render :partial => "shared/block_legal"
+        
+        
