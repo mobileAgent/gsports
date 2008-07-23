@@ -161,6 +161,20 @@ class Vidavee < ActiveRecord::Base
     extract(response.content,'//vtag')
   end
 
+  # Get details for a playlist (reel)
+  def playlist_details(sessionid, dockey)
+    url = "http://#{uri}/#{context}/pClientXML.view?AF_renderParam_contentType=text/xml&#{DOCKEY_PARAM}=#{dockey}"
+    response = CLIENT.post url
+    response.content.gsub!('&dockey=','&amp;dockey=') if response.content
+    h = Hpricot.XML(response.content)
+    vpel = '/VVPlaylist'
+    title = h.search(vpel).attr('title')
+    title.gsub!(/:uid=\d+/,'') # cruft from the pilot site
+    desc = h.search(vpel).attr('description')
+    length = h.search(vpel).attr('length')
+    part_count = h.search('//item').size
+    [title, desc, length, part_count]
+  end
 
   # Load gallery assets from vidavee xml into our video_assets models
   # Use rowsPerPage to change the default of 15, set to 0 for all
