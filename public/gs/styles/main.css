@@ -1,0 +1,472 @@
+body *{
+	border: 0;
+	margin: 0;
+	padding: 0;
+	font-size: 11px;
+}
+body{
+	font-size: 10px; /*** all other font sizes should be specified as percentages of 10px ***/
+	font-family: "Lucida Grande", verdana, arial, helvetica, sans-serif;	
+	background-color: #000000;
+	margin: 0;
+}
+.backgroundContainer{
+	background-image: url("/gs/images/football_background_shadow.jpg");	
+	background-repeat: no-repeat;
+	background-position: center top;
+	margin: auto;
+	width:1098px;
+}
+.outerContainer{
+	width:956px;
+	margin: auto;
+}
+.util, .legal{
+	width:956px;
+	color: #ffffff;
+	height: 22px;
+}
+.util{
+	margin-bottom: 5px;
+}
+.util *, .legal *{
+	font-size: 100%;
+}
+.util span{
+	display:block;
+	margin-top: 10px;
+	float:right;
+}
+.legal span{
+	display:block;
+	margin-top: 10px;
+}
+.util a, .legal a{
+	text-decoration: none;
+	color: #FFFFFF;
+}
+.clearDiv{
+	clear:both;
+}
+label.verbalSemantic { /* used for <label> tags that are needed for semantic completeness but not for the visual design */
+	position: absolute;
+	opacity: 0;
+	filter: alpha(opacity=0);
+}
+/* head */
+.header {
+	background-image: url("/gs/images/header_brand.jpg");
+	height: 90px;
+	font-size: 100%; /* = 10px @ 100% browser zoom */
+	color: #B3B3B3;
+}
+.headerAd1{
+	width: 329px;
+	height: 75px;
+	margin-right: 7px;
+	margin-top: 7px;
+	float: right;
+}
+.headerAd2{
+	height: 75px;
+	width: 257px;
+	margin-right: 7px;
+	margin-top: 7px;
+	float: right;
+}
+
+.headerBrand {
+	position: absolute;
+	opacity: 0;
+	filter: alpha(opacity=0);
+}
+.headerAccountControl {
+	position: absolute; /* absolute positioning is not actually absolute here; is used ONLY to anchor this object to the bottom of its parent */
+	text-align: right;
+	height: 80px;
+}
+.headerAccountControl span {
+	position: absolute; /* absolute positioning is not actually absolute here; is used ONLY to anchor this object to the bottom of its parent */
+	width: 330px;
+	bottom: 0px;
+}
+.headerAccountControl .content {
+}
+.headerSchoolLogo {
+	height: 75px;
+	width: 257px;
+	margin-right: 7px;
+	margin-top: 7px;
+	float: right;
+}
+a.logout {
+	color: #FFFFFF;
+	border-left: 1px solid #FFFFFF;
+	padding-left: 4px;
+	padding-right: 4px;
+	border-right: 1px solid #FFFFFF;
+}
+a.logout:hover { }
+
+/* top nav */
+.topNav{
+	width: inherit;
+	height: 35px;
+	background-image: url("/gs/images/top_nav_background.gif");
+	padding-top: 0;
+	margin-top: 0;
+}
+.leftTopNav{
+	margin-top: 5px;
+	margin-left: 5px;
+	float: left;
+	height: 35px;
+	margin: 0;
+}
+.leftTopNav li {
+	display: inline;
+	float: left;
+	padding-top: 11px;
+	padding-left: 14px;
+	margin-right: 14px;
+	padding-bottom: 14px;
+	/* height: 35px; */
+}
+.leftTopNav li.divider {
+	background-image: url("/gs/images/top_nav_divider.gif");
+	background-position-x: 0;
+	background-position-y: 0;
+	background-repeat: no-repeat;
+}
+
+.rightTopNav{
+	margin-top: 5px;
+	margin-right: 5px;
+	float:right;
+	color: #EEEEEE;
+	font-size: 100%;
+	text-align: right;
+	padding-top: 4px;
+}
+.rightTopNav * {
+	float: left;
+}
+.rightTopNav option {
+	float: none;
+}
+.rightTopNav h2 {
+	font-size: 100%;
+	font-weight: normal;
+	display: inline;
+	margin-right: 5px;
+	padding-top: 4px;
+}
+.rightTopNav input {
+	margin-right: 5px;
+	height: 18px;
+	padding: 0;
+	font-size: 10px;
+}
+.rightTopNav select {
+	margin-right: 5px;
+	height: 20px;
+	padding-top: 2px;
+	font-size: 110%;
+	border: none;
+}
+.rightTopNav option {
+	font-size: 110%;
+}
+.rightTopNav #searchTerms {
+	width: 100px;
+	border: 1px solid #000000;
+}
+
+/* Begin Global Navigation *********************************************************************/
+
+#gnavMyNetwork, #gnavMyNetwork a				{ background-image: url("/gs/images/gnav_my_network.gif");		width: 70px; height: 10px; }
+#gnavMyVideos, #gnavMyVideos a					{ background-image: url("/gs/images/gnav_my_videos.gif");		width: 56px; height: 10px; }
+#gnavMyProfile, #gnavMyProfile a				{ background-image: url("/gs/images/gnav_my_profile.gif");		width: 59px; height: 10px; }
+
+/* global navigation utility classes *********/
+span.ROLLOVERIMAGE { background-position: top right; }
+span.ROLLOVERIMAGE a { background-position: top left; display: block; }
+span.ROLLOVERIMAGE a:hover { background-position: top right; }
+span.ROLLOVERIMAGE a span { display: none; visibility: hide; }
+/* End Global Navigation *********************************************************************/
+
+/* video/chat */
+.videoFindChat{
+	height: 55px;
+}
+.videoFind{
+	height: 55px;
+	width: 682px;
+	background:#ffffff url("/gs/images/video_find_background.gif") no-repeat scroll left bottom;
+	float: left;
+}
+.videoFind select {
+	margin-right: 5px;
+	height: 20px;
+	padding-top: 2px;
+	font-size: 110%;
+	border: none;
+}
+.videoFind option {
+	font-size: 110%;
+}
+.videoFind form {
+	margin-top: 17px;
+	margin-right: 15px;
+	float:right;
+}
+.videoFind form select, .videoFind form submit{
+	margin-top: 3px;
+	float: left;
+}
+.videoFind .submit {
+	margin-top: 0px;
+	margin-right: 10px;
+	margin-left: 10px;
+}
+
+.chat{
+	height: 42px;
+	width: 274px;
+	background:#ffffff url("/gs/images/chat_tab_background.gif") no-repeat scroll left bottom;
+	padding-top: 13px;
+	float: left;
+}
+.chatHeader{
+	width: 42px;
+	height: 17px;
+	padding-bottom: 3px;
+	margin-right: 5px;
+	float: left;
+	display: inline;
+}
+.chatHeader div{
+	width: 40px;
+	height: 17px;
+	margin-left: 15px;
+	position: absolute; /* absolute positioning is not actually absolute here; is used ONLY to anchor this object to the bottom of its parent */
+}
+.chatHeader span{
+	color: #595959;
+	font-weight: bold;
+	position: absolute; /* absolute positioning is not actually absolute here; is used ONLY to anchor this object to the bottom of its parent */
+	bottom: 0px;
+}
+.chatTools{
+	float: left;
+	margin-left: 10px;
+}
+.chatAlert{
+	height: 20px;
+	width: 190px;
+	margin-bottom: 6px;
+	background-color: #68A34E;
+}
+.chatAlert div{
+	width: 100%;
+	height: 17px;
+	padding-left: 5px;
+	color: #FFEF0A;
+	position: absolute; /* absolute positioning is not actually absolute here; is used ONLY to anchor this object to the bottom of its parent */
+}
+.chatAlert span.chatNotify{
+	font-size: 90%;
+	position: absolute; /* absolute positioning is not actually absolute here; is used ONLY to anchor this object to the bottom of its parent */
+	bottom: 0px;
+}
+.chatAlert span.chatInfo{
+	/* will need to be clipped, serverside and ellipsis inserted */
+	width:  110px;
+	height: 13px;
+	display: block;
+	float:left;
+	overflow: hidden;
+	white-space: nowrap;
+}
+.chatAlert .popLink{
+	color: #FFFFFF;
+	margin-left: 5px;
+	text-decoration: none;
+	display: block;
+	float:left;
+}
+.chatToolLinks {
+	display: block;
+	width: 254px;
+	float: left;
+	text-align: right;
+}
+.chatToolLinks a{
+	font-size: 90%;
+	text-decoration: none;
+	font-weight: bold;
+	color: #333333;
+}
+/* main content */
+.mainContentArea{
+	background-color: #ffffff;
+}
+.mainCol1{
+	padding-top: 20px;
+	float:left;
+}
+.mainCol2{
+	padding-top: 20px;
+	float:left;
+}
+.mainCol3{
+	padding-top: 20px;
+	float:left;
+}
+.tanBackground{
+	background-color: #E2E4A7;
+}
+.contentBox{
+	width: 312px;
+	height: 140px;
+	margin-left: 20px;
+	margin-bottom:20px;
+}
+.contentBoxHeader{
+	background: url("/gs/images/content_box_header.png") repeat-x scroll left bottom;
+	background-color: #68A34E;
+	border-bottom: 2px solid #b7baa3;
+	height: 18px;
+	padding-top: 2px;
+}
+/* used in weekly features as well */
+.yellowHeader{
+	color: #FFEF0A;
+}
+.contentBoxHeader a{
+	color: #ffffff;
+}
+.boxDescription{
+	margin-left:10px;
+}
+.moreLink{
+	float:right;
+	margin-right:10px;
+}
+.moreLink a{
+	font-size: 70%;
+}
+.contentBoxContent{
+	height: 118px;
+	overflow:auto;
+}
+.featureSummary{
+	padding-bottom: 3px;
+	margin: 5px 10px 10px 10px;
+	border-bottom: 1px solid #b7baa3;
+}
+.featureSummary h3{
+	margin-bottom: 3px;
+	color: #536338;
+}
+.featureSummary .sportName{
+	font-size: 90%;
+}
+.featureSummary .date{
+	font-size: 90%;
+	color: #999999;
+}
+/* used in weekly summaries as well */
+.featureSummaryThumb{
+	float:left;
+}
+/* used in weekly summaries as well */
+.featureSummaryText{
+	margin-left: 10px;
+	margin-right: 10px;
+	float:left;
+}
+
+/* right content */
+.rightContentItem {
+	width: 270px;
+	margin: 10px 0px 0px 20px;
+}
+.rightContentItem .moreLink a{
+	color: #676767;
+	margin-right: 110px;
+}
+.rightContentItem h2{
+	font-size: 110%;
+	color: #0081C0;
+	margin-bottom: 5px;
+}
+.rightContentItem a.articleLink{
+	font-size: 110%;
+	color: #989898;
+}
+/* weekly feature */
+.weeklyFeature{
+	height: 128px;
+	background:transparent url("/gs/images/weekly_background.gif") repeat-x scroll left bottom;
+	color: #ffffff;
+}
+.weeklyFeature .yellowHeader{
+	display: block;
+	margin-bottom: 10px;
+}
+.featureSummaryText{
+	width: 100px;
+}
+.weeklyFeature .featureSummaryText h3{
+	margin-bottom: 0px;
+	font-size: 110%;
+	font-weight: normal;
+	color: #ffffff;
+}
+.weeklyFeature .sportName{
+	color: #ffffff;
+}
+.weeklyFeature .date{
+	color: #ffffff;
+}
+.weeklyCol1{
+	width: 229px;
+}
+.weeklyCol2{
+	width: 499px;
+}
+.weeklyCol3{
+	width: 155px;
+}
+.arrowButton{
+	float:right;
+	margin-right:10px;
+}
+.featureCol{
+	margin: 20px 0px 20px 20px;
+	padding: 0px 0px 0px 0px;
+	height: 85px;
+}
+.featureFloat{
+	display:inline;
+	float: left;
+}
+.featureVertRule{
+	border-right: 1px dashed #E6E6E6;
+}
+/* footerAds */
+.footer{
+	background:transparent url("/gs/images/footer_advert_background.png") no-repeat scroll left bottom;
+	margin-top: 20px;
+	height: 110px;
+	padding-top: 10px;
+	width: inherit;
+}
+.footerAds{
+	margin-left: 20px;
+}
+.footerAd{
+	margin-left: 10px;
+}
+
