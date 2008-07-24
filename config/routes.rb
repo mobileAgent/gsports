@@ -4,7 +4,8 @@ ActionController::Routing::Routes.draw do |map|
   
   map.resources :members
   map.resources :pages
-  map.resources :sponsors
+  map.resources :teams
+  map.resources :leagues
   map.resources :vidavees
   map.resources :video_assets, :new => { :save_video => :post, :swfupload => :post }
   map.resources :video_clips

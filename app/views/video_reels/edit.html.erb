@@ -1,4 +1,4 @@
-<h1>Editing video_reel</h1>
+<h1>Editing Reel <%=h @video_reel.title%></h1>
 
 <% form_for(@video_reel) do |f| %>
   <%= f.error_messages %>
@@ -18,6 +18,10 @@
   <p>
     <%= f.label :dockey %><br />
     <%= f.text_field :dockey %>
+  </p>
+  <p>
+    <%= f.label :thumbnail_dockey %><br />
+    <%= f.text_field :thumbnail_dockey %>
   </p>
   <p>
     <%= f.submit "Update" %>

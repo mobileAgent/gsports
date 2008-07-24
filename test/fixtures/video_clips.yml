@@ -3,17 +3,17 @@
 one:
   title: My First Clip
   description: My First Clip is cool
-  length: 0:0:11
+  video_length: 0:0:11
   dockey: ABCDEFGHIHKLMNOPQRS
-  view_url: http://foo/bar
+  view_count: 2
   video_asset_id: 1
   user_id: 1
 
 two:
   title: My Second Clip
   description: My Second Clip rocks
-  length: 0:3:12
+  video_length: 0:3:12
   dockey: GHIJKLMN12345
-  view_url: http://bar/foo
+  view_count: 10
   video_asset_id: 2
   user_id: 1
