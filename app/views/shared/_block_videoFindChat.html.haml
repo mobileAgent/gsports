@@ -1,0 +1,119 @@
+.videoFindChat
+  .videoFind
+    %form#videoFind{ :action => "#", :method => "get" }
+      %select#videoFindSeason{ :name => "season" }
+        %option{ :value => "" }
+          \-Season-
+        %option{ :value => "" }
+          Option
+        %option{ :value => "" }
+          Option
+        %option{ :value => "" }
+          Option
+      %label.verbalSemantic{ :for => "videoFindSeason" }
+        Season
+      %select#videoFindState{ :name => "state" }
+        %option{ :value => "" }
+          \-State-
+        %option{ :value => "" }
+          Option
+        %option{ :value => "" }
+          Option
+        %option{ :value => "" }
+          Option
+      %label.verbalSemantic{ :for => "videoFindState" }
+        State
+      %select#videoFindCounty{ :name => "county" }
+        %option{ :value => "" }
+          \-County-
+        %option{ :value => "" }
+          Option
+        %option{ :value => "" }
+          Option
+        %option{ :value => "" }
+          Option
+      %label.verbalSemantic{ :for => "videoFindCounty" }
+        County
+      %select#videoFindLeague{ :name => "league" }
+        %option{ :value => "" }
+          \-League-
+        %option{ :value => "" }
+          Option
+        %option{ :value => "" }
+          Option
+        %option{ :value => "" }
+          Option
+      %label.verbalSemantic{ :for => "videoFindLeague" }
+        League
+      %select#videoFindSport{ :name => "sport" }
+        %option{ :value => "" }
+          \-Sport-
+        %option{ :value => "" }
+          Option
+        %option{ :value => "" }
+          Option
+        %option{ :value => "" }
+          Option
+      %label.verbalSemantic{ :for => "videoFindSport" }
+        Sport
+      %input#videoFindSubmit.submit{ :name => "submit", :src => "/gs/images/video_find_submit.gif", :type => "image", :value => "search", :alt => "Search" }/
+      %label.verbalSemantic{ :for => "videoFindSubmit" }
+        Video Find
+  .chat
+    /
+      note that this seemingly overcomplicated layout helps the text scale nicely when the user increases the font size
+    .chatHeader
+      %div
+        %span
+          CHAT
+    .chatTools
+      /
+        note that this seemingly overcomplicated layout helps the text scale nicely when the user increases the font size
+      .chatAlert
+        %div
+          %span.chatNotify
+            %span.chatInfo
+              1 NEW from Mike J...
+            %a.popLink{ :href => "#" }
+              pop out +
+    .chatToolLinks
+      =link_to "send invites", '/invite'
+      |
+      =link_to "my account", edit_account_user_path(current_user), :id => 'user-menu'
+      |
+      - unread = Message.unread(current_user)
+      - mcount = (unread > 0) ? "(#{unread})" : ''
+      =link_to "mailbox #{mcount}", messages_path()
+
+
+
+
+
+
+#user-menu-tip
+  %ul
+    %li= link_to('Admin', admin_dashboard_path) if current_user.admin?
+  %hr
+  %ul
+    %li= link_to "dashboard", dashboard_user_path(current_user) 
+    %li= link_to "Edit account", edit_account_user_path(current_user)          
+    %li= link_to "View profile", user_path(current_user)                  
+  %hr
+  %ul
+    %li= link_to 'Blog', manage_user_posts_path(current_user)
+    %li= link_to 'Photos', user_photos_path(current_user)
+    %li= link_to 'Clippings', user_clippings_path(current_user)
+    %li= link_to 'Friends', accepted_user_friendships_path(current_user)        
+  %hr
+  =link_to 'Log out', logout_path
+
+%script{:type => "text/javascript"}
+  :plain
+    new Tip('user-menu', $('user-menu-tip'), {
+      hook:{target: 'bottomRight', tip: 'topRight'},
+      hideOn: false, 
+      hideAfter: 1.5,  
+      className: 'gs',
+      offset: {y:2, x:12}
+      });
+
