@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20080722175239) do
+ActiveRecord::Schema.define(:version => 20080723160808) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id",    :limit => 10
@@ -192,11 +192,11 @@ ActiveRecord::Schema.define(:version => 20080722175239) do
     t.string   "name"
     t.string   "logo_uri"
     t.string   "city"
-    t.string   "state"
     t.string   "description"
     t.boolean  "active"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "state_id",    :limit => 11
   end
 
   create_table "membership_billing_histories", :force => true do |t|
@@ -466,16 +466,9 @@ ActiveRecord::Schema.define(:version => 20080722175239) do
     t.string   "dockey"
     t.string   "title"
     t.string   "description"
-    t.string   "author_name"
-    t.string   "author_email"
     t.string   "video_length"
-    t.string   "frame_rate"
     t.string   "video_type"
     t.string   "video_status"
-    t.boolean  "can_edit"
-    t.string   "thumbnail"
-    t.string   "thumbnail_low"
-    t.string   "thumbnail_medium"
     t.integer  "league_id",          :limit => 11
     t.integer  "team_id",            :limit => 11
     t.integer  "user_id",            :limit => 11
@@ -486,27 +479,35 @@ ActiveRecord::Schema.define(:version => 20080722175239) do
     t.integer  "home_team_id",       :limit => 11
     t.integer  "visiting_team_id",   :limit => 11
     t.string   "uploaded_file_path"
+    t.string   "county_name"
+    t.string   "game_level"
+    t.string   "game_gender"
+    t.integer  "state_id",           :limit => 11
+    t.integer  "view_count",         :limit => 11, :default => 0
   end
 
   create_table "video_clips", :force => true do |t|
     t.string   "title"
     t.string   "description"
-    t.string   "length"
+    t.string   "video_length"
     t.string   "dockey"
-    t.string   "view_url"
     t.integer  "video_asset_id", :limit => 11
     t.integer  "user_id",        :limit => 11
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "view_count",     :limit => 11, :default => 0
   end
 
   create_table "video_reels", :force => true do |t|
     t.string   "title"
     t.string   "description"
-    t.integer  "user_id",     :limit => 11
+    t.integer  "user_id",          :limit => 11
     t.string   "dockey"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "video_length"
+    t.string   "thumbnail_dockey"
+    t.integer  "view_count",       :limit => 11, :default => 0
   end
 
   create_table "votes", :force => true do |t|

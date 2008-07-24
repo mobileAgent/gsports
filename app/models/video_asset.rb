@@ -9,7 +9,10 @@ class VideoAsset < ActiveRecord::Base
   
   acts_as_commentable
   acts_as_taggable
-  belongs_to :favoritable, :polymorphic => true
+  has_many :favorites, :as => :favoritable, :dependent => :destroy
+  acts_as_activity :user, :if => Proc.new{|r| r.video_status == 'ready' }
+  
+  attr_protected :team_name
   
   # Every video needs a title
   validates_presence_of :title
@@ -58,6 +61,14 @@ class VideoAsset < ActiveRecord::Base
     name.gsub!(/\_+/, '_')
 
     name
+  end
+
+  def team_name= team_name
+    self.team_id = team_by_name(team_name).id
+  end
+
+  def team_name
+    team ? team.name : nil
   end
 
   def home_team_name= team_name

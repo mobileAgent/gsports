@@ -6,7 +6,7 @@ class VideoAssetsController; def rescue_action(e) raise e end; end
 
 class VideoAssetsControllerTest < ActionController::TestCase
   
-  fixtures :users, :roles, :video_assets
+  fixtures :users, :roles, :video_assets, :teams
 
   def setup
     @controller = VideoAssetsController.new
@@ -37,6 +37,27 @@ class VideoAssetsControllerTest < ActionController::TestCase
     
     assert_redirected_to video_asset_path(assigns(:video_asset))
   end
+  
+  def test_should_create_video_asset_with_team_name
+    login_as :admin
+    assert_difference(VideoAsset,:count,1) do
+      post :create, :video_asset => {:dockey => 'abc123def456', :title=> 'this is the title', :description => 'this is the description', :team_name => teams(:one).name }
+    end
+    
+    assert_redirected_to video_asset_path(assigns(:video_asset))
+    #assert_equal VideoAsset.find_by_dockey('abc123def456').team_id,teams(:one).id
+  end
+
+  def test_should_create_video_asset_but_ignore_team_name
+    login_as :mark # not the admin
+    assert_difference(VideoAsset,:count,1) do
+      post :create, :video_asset => {:dockey => '9988abc123def456', :title=> 'this is the title', :description => 'this is the description', :team_name => teams(:two).name }
+    end
+    
+    assert_redirected_to video_asset_path(assigns(:video_asset))
+    #assert_equal VideoAsset.find_by_dockey('9988abc123def456').team_id,teams(:one).id 
+  end
+  
   
   def test_should_show_video_asset
     login_as :admin

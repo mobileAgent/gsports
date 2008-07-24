@@ -1,5 +1,0 @@
-- for video_asset in @video_assets
-  = render :partial => 'video_block', :locals => { :video_asset => video_asset }
-  
-%p= pagination_links_for @pages, { :link_to_current_page => true } if @pages.length > 1
-%br/

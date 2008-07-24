@@ -28,10 +28,6 @@
   %b Status:
   =h @video_asset.video_status
 
-%p
-  %b Can edit:
-  =h @video_asset.can_edit
-
 %br/
 
 - if(current_user.league_admin? || current_user.team_admin? || current_user.admin?)
