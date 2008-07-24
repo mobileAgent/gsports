@@ -104,46 +104,20 @@
           My Files
       .contentBoxContent.topRowFixHeight
         .profileFeature.fileFeatures
-          .fileThumb
-            %a.fileName{ :href => "" }
-              %span
-                File na...
-          .fileThumb
-            %a.fileName{ :href => "" }
-              %span
-                File na...
-          .fileThumb
-            %a.fileName{ :href => "" }
-              %span
-                File na...
-          .fileThumb
-            %a.fileName{ :href => "" }
-              %span
-                File na...
-          .fileThumb
-            %a.fileName{ :href => "" }
-              %span
-                File na...
-          .fileThumb
-            %a.fileName{ :href => "" }
-              %span
-                File na...
-          .fileThumb
-            %a.fileName{ :href => "" }
-              %span
-                File na...
-          .fileThumb
-            %a.fileName{ :href => "" }
-              %span
-                File na...
-          .fileThumb
-            %a.fileName{ :href => "" }
-              %span
-                File na...
+          - unless @photos.empty?
+            - @photos.each do |photo|
+              .fileThumb
+                = link_to image_tag( photo.public_filename(:thumb), :class => "fileName"), user_photo_path(@user, photo)
+                %span
+                  File na...
+                
           .clearDiv.moreLinkArea
-            %span.moreLink
-              %a{ :href => "" }
-                more?
+            -if @is_current_user
+              %span.moreLink
+                = link_to "more?", user_photos_path(@user)
+              %span.moreLink
+                = link_to "add?", new_user_photo_path(@user)
+                
     .contentBox.tanBackground
       .contentBoxHeader.yellowHeader
         %span.moreLink
