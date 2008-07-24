@@ -5,38 +5,12 @@
     %img{ :src => "/gs/placeholders/header_school_logo.jpg", :alt => "##TEXT EQUIVALENT##" }/
   .headerAd1
     %img{ :src => "/gs/placeholders/header_ad_1.jpg", :alt => "##TEXT EQUIVALENT##" }/
-  - if logged_in?
-    .headerAccountControl
+  .headerAccountControl
+    .headerAccountControlLinks
       %span
         Logged in as 
         = current_user.full_name
-        =link_to 'logout', logout_path, :id => 'user-menu', :class=>'logout'
+        =link_to 'logout', logout_path, :class=>'logout'
+  .clearDiv
 
 
-- if logged_in?
-  #user-menu-tip
-    %ul
-      %li= link_to('Admin', admin_dashboard_path) if current_user.admin?
-    %hr
-    %ul
-      %li= link_to "dashboard", dashboard_user_path(current_user) 
-      %li= link_to "Edit account", edit_account_user_path(current_user)          
-      %li= link_to "View profile", user_path(current_user)                  
-    %hr
-    %ul
-      %li= link_to 'Blog', manage_user_posts_path(current_user)
-      %li= link_to 'Photos', user_photos_path(current_user)
-      %li= link_to 'Clippings', user_clippings_path(current_user)
-      %li= link_to 'Friends', accepted_user_friendships_path(current_user)        
-    %hr
-    =link_to 'Log out', logout_path
-
-  %script{:type => "text/javascript"}
-    :plain
-      new Tip('user-menu', $('user-menu-tip'), {
-        hook:{target: 'bottomRight', tip: 'topRight'},
-        hideOn: false, 
-        hideAfter: 1.5,  
-        className: 'silver',
-        offset: {y:2, x:12}
-        });

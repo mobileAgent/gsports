@@ -1,5 +1,5 @@
-!!!
-%html{:xmlns=>"http://www.w3.org/1999/xhtml", 'xml:lang'=>"en", :lang=>"en"}
+!!! Strict
+%html
   %head
     %link{:rel=>"shortcut icon", :href=>"/favicon.ico"}
     %meta{"http-equiv"=>"Content-Type", :content=>"text/html;charset=utf-8"}
@@ -11,6 +11,7 @@
         %meta{:name=>key[0], :content=>key[1]}
   
     = render :partial => "shared/scripts_and_styles"
+    
     - if @rss_title && @rss_url
       = auto_discovery_link_tag(:rss, @rss_url, {:title => @rss_title})
     
