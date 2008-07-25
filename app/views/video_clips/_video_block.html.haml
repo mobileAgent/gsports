@@ -6,7 +6,7 @@
   = "#{h video_clip.description} - #{h video_clip.length}"
   %br
   = link_to 'Parent Video', video_asset_path(video_clip.video_asset_id)
-  -if current_user.admin?
+  -if current_user.admin? || current_user.id == video_clip.user_id
     %br
     = link_to 'Edit', edit_video_clip_path(video_clip)
     |

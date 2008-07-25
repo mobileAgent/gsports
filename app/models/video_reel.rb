@@ -1,13 +1,11 @@
-class VideoClip < ActiveRecord::Base
-
-  belongs_to :video_asset
+class VideoReel < ActiveRecord::Base
+  
   belongs_to :user
   
   acts_as_commentable
   acts_as_taggable
   belongs_to :favoritable, :polymorphic => true
   
-  # Every clip needs a title
+  # Every reel needs a title
   validates_presence_of :title
-
 end

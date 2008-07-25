@@ -1,4 +1,7 @@
 class TeamsController < BaseController
+
+  auto_complete_for :team, :name
+  
   # GET /team
   # GET /team.xml
   def index
@@ -82,4 +85,5 @@ class TeamsController < BaseController
       format.xml  { head :ok }
     end
   end
+  
 end

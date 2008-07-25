@@ -15,8 +15,13 @@ class User < ActiveRecord::Base
   #validates_presence_of :country
     
   validates_presence_of :phone
+
   has_many :subscriptions
   has_many :memberships, :through => :subscriptions
+  belongs_to :team
+  has_many :video_assets
+  has_many :video_clips
+  has_many :video_reels
   
   def team_admin?
     role && role.eql?(Role[:team])
