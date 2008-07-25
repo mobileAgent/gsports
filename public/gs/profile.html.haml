@@ -1,0 +1,576 @@
+!!! Strict
+%html
+  %head
+    %link{ :href => "styles/main.css", :rel => "stylesheet" }/
+    /
+      [if IE 6]>
+      <style type="text/css">
+      \.contentBoxHeader { background-image: none; }
+      </style>
+      <![endif]
+    %script{ :type => "text/javascript", :src => "scripts/profile.js" }/
+  %body
+    .backgroundContainer
+      .outerContainer
+        .util
+          %span
+            %a{ :href => "" }
+              about
+            |
+            %a{ :href => "" }
+              contact
+            |
+            %a{ :href => "" }
+              help
+            |
+            %a{ :href => "" }
+              logout
+            %img{ :src => "images/lock.gif" }/
+        /
+          header/ads
+        .header
+          %h1.headerBrand
+            Global Sports
+          .headerSchoolLogo
+            %img{ :src => "/gs/placeholders/header_school_logo.jpg", :alt => "##TEXT EQUIVALENT##" }/
+          .headerAd1
+            %img{ :src => "/gs/placeholders/header_ad_1.jpg", :alt => "##TEXT EQUIVALENT##" }/
+          .headerAccountControl
+            .headerAccountControlLinks
+              %span
+                Logged in as Norman Gale
+                %a.logout{ :href => "#" }
+                  logout
+          .clearDiv/
+        /
+          end header/ads
+        /
+          top-nav
+        .topNav
+          %ul.leftTopNav
+            %li
+              %span#gnavMyNetwork.ROLLOVERIMAGE
+                %a{ :href => "#" }
+                  %span
+                    My Network
+            %li.divider
+              %span#gnavMyVideos.ROLLOVERIMAGE
+                %a{ :href => "#" }
+                  %span
+                    My Videos
+            %li.divider
+              %span#gnavMyProfile.ROLLOVERIMAGE
+                %a{ :href => "#" }
+                  %span
+                    My Profile
+          %form.rightTopNav{ :action => "#", :method => "get" }
+            %h2
+              Search Site
+            %label.verbalSemantic{ :for => "searchCategory" }
+              Category
+            %select#searchCategory{ :name => "category" }
+              %option{ :value => "" }
+                All Categories
+              %option{ :value => "" }
+                Category
+              %option{ :value => "" }
+                Category
+              %option{ :value => "" }
+                Category
+            %label.verbalSemantic{ :for => "searchTerms" }
+              Search Terms
+            %input#searchTerms{ :name => "terms", :type => "text" }/
+            %input.submit{ :name => "submit", :src => "images/top_nav_search.gif", :type => "image", :value => "search", :alt => "Search" }/
+        /
+          end top-nav
+        /
+          find/chat
+        .videoFindChat
+          .videoFind
+            %form#videoFind{ :action => "#", :method => "get" }
+              %select#videoFindSeason{ :name => "season" }
+                %option{ :value => "" }
+                  \-Season-
+                %option{ :value => "" }
+                  Option
+                %option{ :value => "" }
+                  Option
+                %option{ :value => "" }
+                  Option
+              %label.verbalSemantic{ :for => "videoFindSeason" }
+                Season
+              %select#videoFindState{ :name => "state" }
+                %option{ :value => "" }
+                  \-State-
+                %option{ :value => "" }
+                  Option
+                %option{ :value => "" }
+                  Option
+                %option{ :value => "" }
+                  Option
+              %label.verbalSemantic{ :for => "videoFindState" }
+                State
+              %select#videoFindCounty{ :name => "county" }
+                %option{ :value => "" }
+                  \-County-
+                %option{ :value => "" }
+                  Option
+                %option{ :value => "" }
+                  Option
+                %option{ :value => "" }
+                  Option
+              %label.verbalSemantic{ :for => "videoFindCounty" }
+                County
+              %select#videoFindLeague{ :name => "league" }
+                %option{ :value => "" }
+                  \-League-
+                %option{ :value => "" }
+                  Option
+                %option{ :value => "" }
+                  Option
+                %option{ :value => "" }
+                  Option
+              %label.verbalSemantic{ :for => "videoFindLeague" }
+                League
+              %select#videoFindSport{ :name => "sport" }
+                %option{ :value => "" }
+                  \-Sport-
+                %option{ :value => "" }
+                  Option
+                %option{ :value => "" }
+                  Option
+                %option{ :value => "" }
+                  Option
+              %label.verbalSemantic{ :for => "videoFindSport" }
+                Sport
+              %input#videoFindSubmit.submit{ :name => "submit", :src => "images/video_find_submit.gif", :type => "image", :value => "search", :alt => "Search" }/
+              %label.verbalSemantic{ :for => "videoFindSubmit" }
+                Video Find
+          .chat
+            /
+              note that this seemingly overcomplicated layout helps the text scale nicely when the user increases the font size
+            .chatHeader
+              %div
+                %span
+                  CHAT
+            .chatTools
+              /
+                note that this seemingly overcomplicated layout helps the text scale nicely when the user increases the font size
+              .chatAlert
+                %div
+                  %span.chatNotify
+                    %span.chatInfo
+                      1 NEW from Mike J...
+                    %a.popLink{ :href => "#" }
+                      pop out +
+            .chatToolLinks
+              %a{ :href => "" }
+                send invites
+              |
+              %a{ :href => "" }
+                my account
+              |
+              %a{ :href => "" }
+                mailbox (2)
+        /
+          end find/chat
+        /
+          3 col content
+        .profileContentArea
+          .profilePageHeader
+            %h1
+              %span
+                PROFILE
+              NORMAN GALE
+          .leftNavCol
+            %h2.yellowHeader
+              My Profile
+            .leftNav
+              %ul
+                %li.hilighted
+                  %a{ :href => "" }
+                    Test
+                %li
+                  %a{ :href => "" }
+                    More test
+          /
+            col1 content
+          .mainCol1
+            .contentBox.tanBackground
+              .contentBoxHeader.yellowHeader
+                %span.moreLink
+                  %a{ :href => "#", :onclick => "return profile_minimize(this)" }
+                    minimize -
+                %h2.boxDescription
+                  Photo
+              .contentBoxContent.topRowFixHeight
+                %img{ :src => "/gs/placeholders/profile.jpg" }/
+            .contentBox.tanBackground
+              .contentBoxHeader.yellowHeader
+                %span.moreLink
+                  %a{ :href => "#", :onclick => "return profile_minimize(this)" }
+                    minimize -
+                %h2.boxDescription
+                  About Me
+              .contentBoxContent
+                .profileFeature
+                  .profileInfo
+                    %span.profileSubHeading
+                      Gender:
+                    Male
+                    %br/
+                    %span.profileSubHeading
+                      Birthday:
+                    April 15th, 1988
+                    %br/
+                    %br/
+                    %h2.profileHeading
+                      Favorites:
+                    %span.profileSubHeading
+                      Teams:
+                    team, team, team, team, team, team
+                    %br/
+                    %span.profileSubHeading
+                      Music:
+                    Acid speed jazz fusion.
+                    %br/
+                    %span.profileSubHeading
+                      Category:
+                    response
+                    %br/
+                    %span.profileSubHeading
+                      Category:
+                    response
+                    %br/
+            .contentBox.tanBackground
+              .contentBoxHeader.yellowHeader
+                %span.moreLink
+                  %a{ :href => "#", :onclick => "return profile_minimize(this)" }
+                    minimize -
+                %h2.boxDescription
+                  Friends
+              .contentBoxContent
+                .profileFeature
+                  .featureSummaryThumb
+                    %img{ :src => "/gs/placeholders/friend.jpg" }/
+                  .featureText
+                    %span.profileSubHeading
+                      Liz Waters
+                    %br/
+                    Mezeek HS
+                    %br/
+                  .clearDiv/
+                  .featureSummaryThumb
+                    %img{ :src => "/gs/placeholders/friend.jpg" }/
+                  .featureText
+                    %span.profileSubHeading
+                      Liz Waters
+                    %br/
+                    Mezeek HS
+                    %br/
+                  .clearDiv/
+                  .featureSummaryThumb
+                    %img{ :src => "/gs/placeholders/friend.jpg" }/
+                  .featureText
+                    %span.profileSubHeading
+                      Liz Waters
+                    %br/
+                    Mezeek HS
+                    %br/
+                  .clearDiv/
+                  .featureSummaryThumb
+                    %img{ :src => "/gs/placeholders/friend.jpg" }/
+                  .featureText
+                    %span.profileSubHeading
+                      Liz Waters
+                    %br/
+                    Mezeek HS
+                    %br/
+                  .clearDiv/
+                  .featureSummaryThumb
+                    %img{ :src => "/gs/placeholders/friend.jpg" }/
+                  .featureText
+                    %span.profileSubHeading
+                      Liz Waters
+                    %br/
+                    Mezeek HS
+                    %br/
+                  .clearDiv.moreLinkArea
+                    %span.moreLink
+                      %a{ :href => "" }
+                        more?
+          /
+            col2 content
+          .mainCol2
+            .contentBox.tanBackground
+              .contentBoxHeader.yellowHeader
+                %span.moreLink
+                  %a{ :href => "#", :onclick => "return profile_minimize(this)" }
+                    minimize -
+                %h2.boxDescription
+                  My Files
+              .contentBoxContent.topRowFixHeight
+                .profileFeature.fileFeatures
+                  .fileThumb
+                    %a.fileName{ :href => "" }
+                      %span
+                        File na...
+                  .fileThumb
+                    %a.fileName{ :href => "" }
+                      %span
+                        File na...
+                  .fileThumb
+                    %a.fileName{ :href => "" }
+                      %span
+                        File na...
+                  .fileThumb
+                    %a.fileName{ :href => "" }
+                      %span
+                        File na...
+                  .fileThumb
+                    %a.fileName{ :href => "" }
+                      %span
+                        File na...
+                  .fileThumb
+                    %a.fileName{ :href => "" }
+                      %span
+                        File na...
+                  .fileThumb
+                    %a.fileName{ :href => "" }
+                      %span
+                        File na...
+                  .fileThumb
+                    %a.fileName{ :href => "" }
+                      %span
+                        File na...
+                  .fileThumb
+                    %a.fileName{ :href => "" }
+                      %span
+                        File na...
+                  .clearDiv.moreLinkArea
+                    %span.moreLink
+                      %a{ :href => "" }
+                        more?
+            .contentBox.tanBackground
+              .contentBoxHeader.yellowHeader
+                %span.moreLink
+                  %a{ :href => "#", :onclick => "return profile_minimize(this)" }
+                    minimize -
+                %h2.boxDescription
+                  Favorites
+              .contentBoxContent
+                .profileFeature
+                  .featureSummaryThumb
+                    %img{ :src => "/gs/placeholders/story_thumb.jpg" }/
+                  .featureText
+                    %span.profileSubHeading
+                      Liz Waters
+                    %br/
+                    Mezeek HS
+                    %br/
+                  .clearDiv/
+                  .featureSummaryThumb
+                    %img{ :src => "/gs/placeholders/friend.jpg" }/
+                  .featureText
+                    %span.profileSubHeading
+                      Liz Waters
+                    %br/
+                    Mezeek HS
+                    %br/
+                  .clearDiv/
+                  .featureSummaryThumb
+                    %img{ :src => "/gs/placeholders/story_thumb.jpg" }/
+                  .featureText
+                    %span.profileSubHeading
+                      Liz Waters
+                    %br/
+                    Mezeek HS
+                    %br/
+                  .clearDiv/
+                  .featureSummaryThumb
+                    %img{ :src => "/gs/placeholders/friend.jpg" }/
+                  .featureText
+                    %span.profileSubHeading
+                      Liz Waters
+                    %br/
+                    Mezeek HS
+                    %br/
+                  .clearDiv/
+                  .featureSummaryThumb
+                    %img{ :src => "/gs/placeholders/story_thumb.jpg" }/
+                  .featureText
+                    %span.profileSubHeading
+                      Liz Waters
+                    %br/
+                    Mezeek HS
+                    %br/
+                  .clearDiv.moreLinkArea
+                    %span.moreLink
+                      %a{ :href => "" }
+                        more?
+          /
+            col3 content
+          .mainCol3
+            .contentBox.tanBackground
+              .contentBoxHeader.yellowHeader
+                %span.moreLink
+                  %a{ :href => "#", :onclick => "return profile_minimize(this)" }
+                    minimize -
+                %h2.boxDescription
+                  Information
+              .contentBoxContent
+                .profileFeature
+                  .profileInfo
+                    %span.profileSubHeading
+                      Location:
+                    Verona Junction, TU
+                    %br/
+                    %span.profileSubHeading
+                      Contact:
+                    %a{ :href => "mailto:" }
+                      nobody@veronaHS.biz
+                    %br/
+                    %span.profileSubHeading
+                      Sponsor:
+                    Cadillac
+                    %br/
+                    %span.profileSubHeading
+                      Member Organization:
+                    Framing
+                    %br/
+                    %br/
+                    %h2.profileHeading
+                      Sports Played:
+                    %span.profileSubHeading
+                      Bocce:
+                    pallino
+                    %br/
+                    %span.profileSubHeading
+                      Cricket:
+                    wicket
+                    %br/
+                    %span.profileSubHeading
+                      Curling:
+                    center
+                    %br/
+            .contentBox.tanBackground
+              .contentBoxHeader.yellowHeader
+                %span.moreLink
+                  %a{ :href => "#", :onclick => "return profile_minimize(this)" }
+                    minimize -
+                %h2.boxDescription
+                  Description
+              .contentBoxContent
+                .profileFeature.myClips
+                  .featureSummaryThumb
+                    %img{ :src => "/gs/placeholders/my_clip_thumb.jpg" }/
+                    %a{ :href => "" }
+                      %h3
+                        Headline ?
+                    %span.date
+                      Neverembuary 44, 1981
+                    %br/
+                  .featureSummaryThumb
+                    %img{ :src => "/gs/placeholders/my_clip_thumb.jpg" }/
+                    %a{ :href => "" }
+                      %h3
+                        Headline ?
+                    %span.date
+                      Neverembuary 44, 1981
+                    %br/
+                  .clearDiv.moreLinkArea
+                    %span.moreLink
+                      %a{ :href => "" }
+                        more?
+            .contentBox.tanBackground
+              .contentBoxHeader.yellowHeader
+                %span.moreLink
+                  %a{ :href => "#", :onclick => "return profile_minimize(this)" }
+                    minimize -
+                %h2.boxDescription
+                  Activity
+              .contentBoxContent
+                .profileFeature
+                  .profileInfo
+                    %span.profileSubHeading
+                      Monday 11/11
+                    Uploaded a video of
+                    %a{ :href => "" }
+                      Albert vs Richard
+                    %br/
+                    %span.profileSubHeading
+                      Monday 11/11
+                    Uploaded a video of
+                    %a{ :href => "" }
+                      Albert vs Richard
+                    %br/
+                    %span.profileSubHeading
+                      Monday 11/11
+                    Uploaded a video of
+                    %a{ :href => "" }
+                      Albert vs Richard
+                    %br/
+                  .clearDiv.moreLinkArea
+                    %span.moreLink
+                      %a{ :href => "" }
+                        more?
+            .contentBox.tanBackground
+              .contentBoxHeader.yellowHeader
+                %span.moreLink
+                  %a{ :href => "#", :onclick => "return profile_minimize(this)" }
+                    minimize -
+                %h2.boxDescription
+                  Testimonials
+              .contentBoxContent
+                .profileFeature
+                  .profileInfo
+                    %a{ :href => "" }
+                      Johnny Boombatz
+                    said...
+                    %br/
+                    %span.testimonial
+                      lorem loremlorem lorem etc.
+                    %a{ :href => "" }
+                      Johnny Boombatz
+                    said...
+                    %br/
+                    %span.testimonial
+                      lorem loremlorem lorem etc.
+                  .clearDiv.moreLinkArea
+                    %span.moreLink
+                      %a{ :href => "" }
+                        write a testimonial for this person
+                      |
+                      %a{ :href => "" }
+                        see all testimonials?
+          .clearDiv/
+        /
+          end 3 col content
+        /
+          footer/ads
+        .footer
+          .footerAds
+            %span.footerAd
+              %img{ :src => "/gs/placeholders/ad1.jpg" }/
+            %span.footerAd
+              %img{ :src => "/gs/placeholders/ad2.jpg" }/
+            %span.footerAd
+              %img{ :src => "/gs/placeholders/ad3.jpg" }/
+            %span.footerAd
+              %img{ :src => "/gs/placeholders/ad4.jpg" }/
+        /
+          end footer/ads
+        .legal
+          %span
+            ? Global Sports 2008 |
+            %a{ :href => "" }
+              Terms of Use
+            |
+            %a{ :href => "" }
+              Privacy Policy
+            |
+            %a{ :href => "" }
+              Advertising Opportunities
+            |
+            %a{ :href => "" }
+              Contact Us

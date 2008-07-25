@@ -1,8 +1,10 @@
+/* flatten this line before release! */
+@import "brian.css";
+ 
 body *{
 	border: 0;
 	margin: 0;
 	padding: 0;
-	font-size: 11px;
 }
 body{
 	font-size: 10px; /*** all other font sizes should be specified as percentages of 10px ***/
@@ -41,7 +43,7 @@ body{
 	display:block;
 	margin-top: 10px;
 }
-.util a, .legal a{
+.util a, .legal a, .util a:visited, .legal a:visited{
 	text-decoration: none;
 	color: #FFFFFF;
 }
@@ -53,51 +55,57 @@ label.verbalSemantic { /* used for <label> tags that are needed for semantic com
 	opacity: 0;
 	filter: alpha(opacity=0);
 }
-/* head */
-.header {
-	background-image: url("/gs/images/header_brand.jpg");
-	height: 90px;
-	font-size: 100%; /* = 10px @ 100% browser zoom */
-	color: #B3B3B3;
+
+/* more link */
+.moreLink {
+	float:right;
+	margin-right:7px;
 }
-.headerAd1{
-	width: 329px;
-	height: 75px;
-	margin-right: 7px;
-	margin-top: 7px;
-	float: right;
-}
-.headerAd2{
-	height: 75px;
-	width: 257px;
-	margin-right: 7px;
-	margin-top: 7px;
-	float: right;
+.moreLink a, .moreLink a:visited {
+	font-size: 90%;
 }
 
+/* head */
+.header {
+	background: #000000 url("/gs/images/header_brand.jpg") no-repeat top left;
+	font-size: 100%; /* = 10px @ 100% browser zoom */
+	color: #B3B3B3;
+	padding-bottom: 10px;
+	width:100%;
+	height: 110px;
+}
+.headerAd1{
+	margin-right: 7px;
+	margin-top: 7px;
+	float: right;
+}
 .headerBrand {
 	position: absolute;
 	opacity: 0;
 	filter: alpha(opacity=0);
 }
 .headerAccountControl {
+	float:right;
+}
+.headerAccountControlLinks{
 	position: absolute; /* absolute positioning is not actually absolute here; is used ONLY to anchor this object to the bottom of its parent */
-	text-align: right;
-	height: 80px;
+}
+.headerAccountControl, .headerAccountControlLinks{
+	height: 105px;
+	width: 300px;
 }
 .headerAccountControl span {
 	position: absolute; /* absolute positioning is not actually absolute here; is used ONLY to anchor this object to the bottom of its parent */
-	width: 330px;
 	bottom: 0px;
+	right: 20px;
 }
 .headerAccountControl .content {
 }
 .headerSchoolLogo {
-	height: 75px;
-	width: 257px;
 	margin-right: 7px;
 	margin-top: 7px;
 	float: right;
+	display: inline;
 }
 a.logout {
 	color: #FFFFFF;
@@ -275,7 +283,7 @@ span.ROLLOVERIMAGE a span { display: none; visibility: hide; }
 	position: absolute; /* absolute positioning is not actually absolute here; is used ONLY to anchor this object to the bottom of its parent */
 }
 .chatAlert span.chatNotify{
-	font-size: 90%;
+	font-size: 100%;
 	position: absolute; /* absolute positioning is not actually absolute here; is used ONLY to anchor this object to the bottom of its parent */
 	bottom: 0px;
 }
@@ -301,36 +309,72 @@ span.ROLLOVERIMAGE a span { display: none; visibility: hide; }
 	float: left;
 	text-align: right;
 }
-.chatToolLinks a{
+.chatToolLinks a, .chatToolLinks a:visited {
 	font-size: 90%;
 	text-decoration: none;
 	font-weight: bold;
 	color: #333333;
 }
 /* main content */
-.mainContentArea{
+.landingContentArea{
 	background-color: #ffffff;
 }
-.mainCol1{
-	padding-top: 20px;
+.leftNavCol h2{	
+	padding-left: 10px;
+	padding-top: 3px;
+	height:17px;
+	font-size: 120%;
+	font-weight: normal;
+	background: url("/gs/images/left_nav_header.gif") repeat-x scroll left top;
+	width:115px;
+}
+.leftNav{
+	background: #999999;
+	width:125px;
+	padding-top: 10px;
+	padding-bottom: 20px;
+}
+.leftNav ul{
+	display: block;
+	list-style: inside;
+	margin-left: 20px;
+}
+.leftNav li{
+	font-weight: bold;
+	font-size: 110%;
+	font-family: "Lucida Grande", verdana, arial, helvetica, sans-serif;	
+	margin-bottom:5px;
+}
+.leftNav li.hilighted{
+	color: #ffffff;
+}
+.leftNav li.hilighted a, .leftNav li.hilighted a:visited{
+	color: #ffffff;
+}
+.leftNav a, .leftNav a:visited{
+	text-decoration: none;
+	color: #000000;
+}
+.leftNavCol .moreLinkArea .moreLink{
 	float:left;
 }
-.mainCol2{
+.leftNavCol .moreLinkArea .moreLink a{
+	color: #666666;
+}
+.leftNavCol .moreLinkArea{
+	width: 100%;
+	padding-left: 10px;
+	height:20px;
+	background-color: transparent;
+}
+.mainCol1,.mainCol2,.mainCol3, .leftNavCol{
 	padding-top: 20px;
 	float:left;
-}
-.mainCol3{
-	padding-top: 20px;
-	float:left;
-}
-.tanBackground{
-	background-color: #E2E4A7;
 }
 .contentBox{
-	width: 312px;
-	height: 140px;
 	margin-left: 20px;
 	margin-bottom:20px;
+	background-color: #E2E4A7;
 }
 .contentBoxHeader{
 	background: url("/gs/images/content_box_header.png") repeat-x scroll left bottom;
@@ -338,27 +382,26 @@ span.ROLLOVERIMAGE a span { display: none; visibility: hide; }
 	border-bottom: 2px solid #b7baa3;
 	height: 18px;
 	padding-top: 2px;
+	font-size: 110%;
 }
 /* used in weekly features as well */
 .yellowHeader{
 	color: #FFEF0A;
 }
-.contentBoxHeader a{
+.yellowHeader h3{
+	font-size: 110%;
+}
+.contentBoxHeader a, .contentBoxHeader a:visited {
 	color: #ffffff;
 }
 .boxDescription{
 	margin-left:10px;
-}
-.moreLink{
-	float:right;
-	margin-right:10px;
-}
-.moreLink a{
-	font-size: 70%;
+	font-weight: normal;
+	font-size: 100%;
 }
 .contentBoxContent{
-	height: 118px;
 	overflow:auto;
+	color: #444444;
 }
 .featureSummary{
 	padding-bottom: 3px;
@@ -370,18 +413,21 @@ span.ROLLOVERIMAGE a span { display: none; visibility: hide; }
 	color: #536338;
 }
 .featureSummary .sportName{
+	color: #000000;
 	font-size: 90%;
 }
 .featureSummary .date{
 	font-size: 90%;
-	color: #999999;
 }
 /* used in weekly summaries as well */
 .featureSummaryThumb{
+	line-height: normal;
 	float:left;
+	margin-top:3px;
+	padding:0px;
 }
 /* used in weekly summaries as well */
-.featureSummaryText{
+.featureText{
 	margin-left: 10px;
 	margin-right: 10px;
 	float:left;
@@ -392,17 +438,17 @@ span.ROLLOVERIMAGE a span { display: none; visibility: hide; }
 	width: 270px;
 	margin: 10px 0px 0px 20px;
 }
-.rightContentItem .moreLink a{
+.rightContentItem .moreLink a, .rightContentItem .moreLink a:visited {
 	color: #676767;
 	margin-right: 110px;
 }
-.rightContentItem h2{
-	font-size: 110%;
+.rightContentItem h2, .profileHeading{
+	font-size: 120%;
 	color: #0081C0;
 	margin-bottom: 5px;
 }
 .rightContentItem a.articleLink{
-	font-size: 110%;
+	font-size: 120%;
 	color: #989898;
 }
 /* weekly feature */
@@ -415,10 +461,10 @@ span.ROLLOVERIMAGE a span { display: none; visibility: hide; }
 	display: block;
 	margin-bottom: 10px;
 }
-.featureSummaryText{
+.weeklyFeature .featureText{
 	width: 100px;
 }
-.weeklyFeature .featureSummaryText h3{
+.weeklyFeature .featureText h3{
 	margin-bottom: 0px;
 	font-size: 110%;
 	font-weight: normal;
@@ -470,3 +516,128 @@ span.ROLLOVERIMAGE a span { display: none; visibility: hide; }
 	margin-left: 10px;
 }
 
+/* landing page */
+.landingContentArea{
+	background-color: #ffffff;
+}
+.landingContentArea .contentBox{
+	width: 312px;
+	height: 140px;
+}
+.landingContentArea .contentBoxContent{
+	height: 118px;
+}
+/*profile page */
+.profilePageHeader{
+	margin-left:135px;
+	padding-top:20px;
+}
+.profilePageHeader h1{
+	font-size:140%;
+	color: #666666;
+}
+.profilePageHeader span{
+	color: #0081C0;	
+}
+.profileContentArea{
+	background-color: #ffffff;
+}
+.profileContentArea .mainCol1 .contentBox, .profileContentArea .mainCol2 .contentBox{
+	width: 215px;
+	height: auto;
+}
+.profileContentArea .mainCol3 .contentBox{
+	width: 345px;
+	height: auto;
+}
+.profileContentArea .contentBox{
+	margin-left: 10px;	
+}
+.profileContentArea .contentBoxContent{
+	height: auto;
+}
+.profileFeature{
+	line-height: 180%;
+	margin: 5px 10px 0px 10px;
+}
+.profileFeature .featureText{
+	margin-top: 10px;
+}
+.profileFeature  a, .profileFeature a:visited {
+	color: #676767;
+	font-size: 100%;
+}
+.profileContentArea .topRowFixHeight{
+	height:175px;
+	width:215px;
+	overflow:hidden;
+}
+.fileThumb{
+	line-height: normal;
+	float: left;
+	margin-right:7px;
+	margin-left:0px;
+	margin-bottom:7px;
+	width: 60px;
+	height: 40px;
+}
+.fileName{
+	display:block;
+	background-image: url("/gs/placeholders/file.gif");	
+	padding: 0;
+	width:60px;
+	height:40px;
+	text-decoration: none;
+	position: absolute;
+}
+.fileName span{
+	color: #ffffff;
+	position: absolute;
+	bottom: 3px;
+	left: 5px;
+}
+.fileFeatures{
+	line-height: normal;
+	margin-right:0px;
+	margin-bottom:0px;
+	margin-top:7px;
+}
+.fileFeatures .moreLinkArea{
+	margin-right: 3px;
+	height: 20px;
+}
+.moreLinkArea{
+	height: 23px;
+}
+.profileSubHeading{
+	font-weight: bold;
+	color: #000000;
+}
+.profileInfo{
+	margin: 0px 0px 5px 0px;
+}
+.myClips{
+	color: #000000;
+	margin-left: 0px;
+	margin-top: 10px;
+}
+.myClips .featureSummaryThumb a{
+	text-decoration: none;
+}
+.myClips h3{
+	font-size:120%;
+	color: #536338;
+	font-weight: normal;
+}
+.myClips .featureSummaryThumb{
+	margin: 0px 0px 0px 15px;
+	line-height: 180%;
+	display: inline;
+}
+.testimonial{
+	display: block;
+	padding: 5px;
+	background-color: #ffffff;
+	margin-top: 2px;
+	margin-bottom: 2px;
+}
