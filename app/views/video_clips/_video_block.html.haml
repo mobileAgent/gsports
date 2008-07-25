@@ -1,9 +1,9 @@
 #video_thumbnail
-  = "<a href='#{video_clip_path(:action => 'show', :id => video_clip)}'><img src='#{@vidavee.file_thumbnail_medium(video_clip.dockey)}' title='#{h video_clip.title}'/></a>"
+  = "<a href='#{user_video_clip_path(video_clip.user_id,video_clip)}'><img src='#{@vidavee.file_thumbnail_medium(video_clip.dockey)}' title='#{h video_clip.title}'/></a>"
   %br
   = h video_clip.title
   %br
-  = "#{h video_clip.description} - #{h video_clip.length}"
+  = "#{h video_clip.description} - #{h video_clip.video_length}"
   %br
   = link_to 'Parent Video', video_asset_path(video_clip.video_asset_id)
   -if current_user.admin? || current_user.id == video_clip.user_id

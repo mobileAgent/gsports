@@ -161,8 +161,8 @@ class Vidavee < ActiveRecord::Base
     extract(response.content,'//vtag')
   end
 
-  # Get details for a playlist (reel)
-  def playlist_details(sessionid, dockey)
+  # Get details for a reel (vidavee calls this a playlist)
+  def reel_details(sessionid, dockey)
     url = "http://#{uri}/#{context}/pClientXML.view?AF_renderParam_contentType=text/xml&#{DOCKEY_PARAM}=#{dockey}"
     response = CLIENT.post url
     response.content.gsub!('&dockey=','&amp;dockey=') if response.content
@@ -173,7 +173,8 @@ class Vidavee < ActiveRecord::Base
     desc = h.search(vpel).attr('description')
     length = h.search(vpel).attr('length')
     part_count = h.search('//item').size
-    [title, desc, length, part_count]
+    thumbnail_dockey = h.search('//item').attr('id')
+    { :title => title, :description => desc, :video_length => length, :part_count => part_count, :thumbnail_dockey => thumbnail_dockey }
   end
 
   # Load gallery assets from vidavee xml into our video_assets models
@@ -238,7 +239,6 @@ class Vidavee < ActiveRecord::Base
       vt.title= v.search('//title').text
       vt.length= v.search('//length').text
       vt.description= v.search('//description').text
-      vt.view_url= v.search('//videoViewUrl').text
       vt.video_asset_id = video_asset.id
       vt.user_id = video_asset.user_id
       existing = VideoClip.find_by_dockey(vt.dockey)
@@ -488,15 +488,8 @@ class Vidavee < ActiveRecord::Base
       video_asset.title= title
     end
     video_asset.description= asset_xml.search('//description').text
-    video_asset.author_name= asset_xml.search('//authorName').text
-    video_asset.author_email= asset_xml.search('//authorEmail').text
     video_asset.video_length= asset_xml.search('//length').text
-    video_asset.frame_rate= asset_xml.search('//frameRate').text
     video_asset.video_status= asset_xml.search('//status').text
-    video_asset.can_edit= asset_xml.search('//canEdit').text
-    video_asset.thumbnail= asset_xml.search('//thumbnail').text
-    video_asset.thumbnail_low= asset_xml.search('//thumbnailLow').text
-    video_asset.thumbnail_medium= asset_xml.search('//thumbnailMedium').text
   end
   
 end
