@@ -5,7 +5,16 @@ class VideoClipsController < BaseController
   # GET /video_clips
   # GET /video_clips.xml
   def index
+    
+    @user = params[:user_id] ? User.find(params[:user_id]) : current_user
+    cond = Caboose::EZ::Condition.new
+    cond.user_id == @user.id
+    if params[:tag_name]    
+      cond.append ['tags.name = ?', params[:tag_name]]
+    end
+    
     @pages, @video_clips = paginate :video_clips, :order => "title ASC"
+    @tags = VideoClip.tags_count :user_id => @user.id, :limit => 20
 
     respond_to do |format|
       format.html # index.html.erb
