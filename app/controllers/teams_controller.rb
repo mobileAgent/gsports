@@ -1,6 +1,7 @@
 class TeamsController < BaseController
 
   auto_complete_for :team, :name
+  before_filter :admin_required, :except => [:auto_complete_for_team_name, :show ]
   
   # GET /team
   # GET /team.xml

@@ -3,15 +3,15 @@
 one:
   name: Northeast Regional
   logo_uri: leagueone.jpg
-  city: 
-  state: 
+  city: Columbia
+  state_id: 1
   description: We are Northeast Regional
   active: true
 
 two:
   name: SouthWest Regional
   logo_uri: leaguetwo.jpg
-  city: 
-  state: 
+  city: Freedonia
+  state_id: 3
   description: We are Southwest Regional
   active: false

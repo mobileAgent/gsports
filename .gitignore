@@ -4,4 +4,5 @@ nbproject
 tmp/**/*
 videos
 public/photos
+public/assets
 art

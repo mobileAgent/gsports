@@ -1,13 +1,14 @@
 ActionController::Routing::Routes.draw do |map|
-  map.resources :video_reels
 
   
   map.resources :members
   map.resources :pages
-  map.resources :sponsors
+  map.resources :teams
+  map.resources :leagues
   map.resources :vidavees
   map.resources :video_assets, :new => { :save_video => :post, :swfupload => :post }
   map.resources :video_clips
+  map.resources :video_reels
   map.resources :messages
 
   map.register         'register',        :controller => 'users', :action => 'register'
@@ -20,6 +21,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :users, :member_path => '/:id', :nested_member_path => '/:user_id', :member => {} do |user|
     user.resources :video_assets
     user.resources :video_clips
+    user.resources :video_reels
   end
 
   

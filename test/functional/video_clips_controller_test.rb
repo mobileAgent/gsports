@@ -31,7 +31,7 @@ class VideoClipsControllerTest < ActionController::TestCase
   def test_should_create_video_clip
     login_as :kevin
     assert_difference(VideoClip,:count, 1) do
-      post :create, :video_clip => {:title => "My First Tackle", :description => "my desc", :length => "0:0:25", :dockey => "abcdefghijklm", :video_asset_id => video_assets(:one).id, :user_id => users(:kevin).id  }
+      post :create, :video_clip => {:title => "My First Tackle", :description => "my desc", :video_length => "0:0:25", :dockey => "abcdefghijklm", :video_asset_id => video_assets(:one).id, :user_id => users(:kevin).id  }
     end
 
     assert_redirected_to video_clip_path(assigns(:video_clip))

@@ -7,6 +7,7 @@ class VideoAssetsController < BaseController
   before_filter :vidavee_login
   skip_before_filter :verify_authenticity_token, :only => [:auto_complete_for_video_asset_home_team_name,
                                                            :auto_complete_for_video_asset_visiting_team_name,
+                                                           :auto_complete_for_video_asset_team_name,
                                                            :auto_complete_for_video_asset_sport ]
   
   session :cookie_only => false, :only => [:swfupload]
@@ -128,13 +129,15 @@ class VideoAssetsController < BaseController
       # TODO: check for a fallback non-swf file upload and add it here
     end
 
-    logger.debug "********** Params for va = #{params[:video_asset]} , object is #{@video_asset.inspect}, valid is #{@video_asset.valid?}"
-
     # Set up things that don't come naturally from the form
     @video_asset.video_status = 'saving'
     @video_asset.user_id = current_user.id
-    @video_asset.team= current_user.team
-    @video_asset.league= current_user.team.league
+    if(current_user.admin? && params[:video_asset][:team_name])
+      @video_asset.team_name= params[:video_asset][:team_name]
+    else
+      @video_asset.team= current_user.team
+    end
+    @video_asset.league= @video_asset.team.league
     @video_asset.tag_with(params[:tag_list] || '') 
 
     if @video_asset.save!
@@ -151,6 +154,10 @@ class VideoAssetsController < BaseController
   end
   
   auto_complete_for :video_asset, :sport
+
+  def auto_complete_for_video_asset_team_name
+    render :inline => auto_complete_team_field(params[:video_asset][:team_name])
+  end
   
   def auto_complete_for_video_asset_home_team_name
     render :inline => auto_complete_team_field(params[:video_asset][:home_team_name])

@@ -15,6 +15,7 @@ quentin:
   birthday: <%= 15.years.ago.to_s :db %>
   activities_count: 0
   role_id: 3
+  team_id: 1
 aaron:
   id: 2
   login: aaron
@@ -30,6 +31,7 @@ aaron:
   login_slug: aaron
   birthday: <%= 15.years.ago.to_s :db %>  
   role_id: 3
+  team_id: 1
 kevin:
   id: 3
   login: kevin
@@ -43,6 +45,7 @@ kevin:
   login_slug: kevin
   birthday: <%= 15.years.ago.to_s :db %>  
   role_id: 3
+  team_id: 2
 admin:
   id: 4
   login: admin
@@ -56,6 +59,7 @@ admin:
   login_slug: admin
   birthday: <%= 15.years.ago.to_s :db %>  
   role_id: 1
+  team_id: 1
 dwr:
   id: 5
   login: dwreach
@@ -70,6 +74,7 @@ dwr:
   login_slug: dwreach
   birthday: <%= 15.years.ago.to_s :db %>  
   role_id: 3
+  team_id: 1
 leopoldo:
   id: 6
   login: leopoldo
@@ -84,6 +89,7 @@ leopoldo:
   login_slug: leopoldo
   birthday: <%= 15.years.ago.to_s :db %>  
   role_id: 3  
+  team_id: 1
 florian:
   id: 7
   login: florian
@@ -98,6 +104,7 @@ florian:
   login_slug: florian
   birthday: <%= 15.years.ago.to_s :db %>  
   role_id: 3  
+  team_id: 1
 super_writer:
   id: 8
   login: superwriter
@@ -113,6 +120,7 @@ super_writer:
   login_slug: superwriter
   birthday: <%= 15.years.ago.to_s :db %>  
   role_id: 3  
+  team_id: 1
 plumberbob:
   id: 9
   login: plumberbob
@@ -127,6 +135,7 @@ plumberbob:
   login_slug: plumberbob
   birthday: <%= 15.years.ago.to_s :db %>  
   role_id: 3  
+  team_id: 1
 privateuser:
   id: 10
   login: privateuser
@@ -142,6 +151,7 @@ privateuser:
   profile_public: 0
   birthday: <%= 15.years.ago.to_s :db %>  
   role_id: 3  
+  team_id: 1
 sam:
   id: 11
   login: sam
@@ -153,6 +163,7 @@ sam:
   activated_at: <%= 5.days.ago.to_s :db %>  
   activation_code: 
   role_id: 3    
+  team_id: 1
 joe:
   id: 12
   login: joe
@@ -164,6 +175,7 @@ joe:
   activated_at: <%= 5.days.ago.to_s :db %>  
   activation_code: 
   role_id: 3    
+  team_id: 1
 kyle:
   id: 13
   login: kyle
@@ -173,7 +185,8 @@ kyle:
   sb_posts_count: 0  
   activated_at: <%= 5.days.ago.to_s :db %>  
   activation_code: 
-  role_id: 3  
+  role_id: 3
+  team_id: 1
 mark:
   id: 14
   login: mark
@@ -186,6 +199,7 @@ mark:
   birthday: <%= 45.years.ago.to_date %>
   activation_code: 
   role_id: 4
+  team_id: 1
 gsports_admin:
   email: admin@globalsports.net
   activated_at: DateTime.now
@@ -199,4 +213,5 @@ gsports_admin:
   address1: 1 Global Sports Way
   city: Globalcity
   phone: 301.555.1212
+  team_id: 1
   

@@ -5,7 +5,8 @@ class VideoClip < ActiveRecord::Base
   
   acts_as_commentable
   acts_as_taggable
-  belongs_to :favoritable, :polymorphic => true
+  has_many :favorites, :as => :favoritable, :dependent => :destroy
+  acts_as_activity :user
   
   # Every clip needs a title
   validates_presence_of :title
