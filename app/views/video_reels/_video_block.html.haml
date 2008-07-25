@@ -1,5 +1,5 @@
 #video_thumbnail
-  = "<a href='#{video_reel_path(:action => 'show', :id => video_reel)}'><img src='#{@vidavee.file_thumbnail_medium(video_reel.thumbnail_dockey)}' title='#{h video_reel.title}'/></a>"
+  = "<a href='#{user_video_reel_path(video_reel.user_id,video_reel)}'><img src='#{@vidavee.file_thumbnail_medium(video_reel.thumbnail_dockey)}' title='#{h video_reel.title}' alt='Reel'/></a>"
   %br
   = h video_reel.title
   %br
