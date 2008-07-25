@@ -95,7 +95,7 @@
     %li= link_to('Admin', admin_dashboard_path) if current_user.admin?
   %hr
   %ul
-    %li= link_to "dashboard", dashboard_user_path(current_user) 
+    %li= link_to "Dashboard", dashboard_user_path(current_user) 
     %li= link_to "Edit account", edit_account_user_path(current_user)          
     %li= link_to "View profile", user_path(current_user)                  
   %hr
