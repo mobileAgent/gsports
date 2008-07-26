@@ -1,4 +1,5 @@
 class LinkAndLoadSubscriptionPlans < ActiveRecord::Migration
+  # Link each role to a subscription plan
   def self.up
     directory = File.join(File.dirname(__FILE__),"dev_data")
     Fixtures.create_fixtures(directory,"subscription_plans")
