@@ -1,5 +1,5 @@
 class UsersController < BaseController
-
+  protect_from_forgery :only => [:create, :update, :destroy]
   # registration step 1
   def register
   end
