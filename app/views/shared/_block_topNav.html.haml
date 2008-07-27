@@ -10,12 +10,12 @@
               My Network
       %li.divider
         %span#gnavMyVideos.ROLLOVERIMAGE
-          %a{ :href => video_assets_path }
+          %a{ :href => user_video_assets_path(current_user.id) }
             %span
               My Videos
       %li.divider
         %span#gnavMyProfile.ROLLOVERIMAGE
-          %a{ :href => user_path(current_user) }
+          %a{ :href => user_path(current_user.id) }
             %span
               My Profile
     %form.rightTopNav{ :action => "#", :method => "get" }

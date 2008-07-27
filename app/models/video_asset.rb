@@ -63,6 +63,22 @@ class VideoAsset < ActiveRecord::Base
     name
   end
 
+  def self.sports
+    VideoAsset.find(:all, :select => 'DISTINCT sport', :conditions => 'sport IS NOT NULL')
+  end
+
+  def self.states
+    VideoAsset.find(:all, :select => 'DISTINCT state_id', :conditions => 'state_id IS NOT NULL')
+  end
+
+  def self.counties(state_id=-1)
+    if (state_id > -1)
+      VideoAsset.find(:all, :select => "DISTINCT county_name", :conditions => "state_id = #{state_id} AND county_name IS NOT NULL")
+    else
+      VideoAsset.find(:all, :select => "DISTINCT county_name", :conditions => "county_name IS NOT NULL")
+    end
+  end
+
   def team_name= team_name
     self.team_id = team_by_name(team_name).id
   end
