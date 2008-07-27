@@ -4,6 +4,9 @@ class Membership < ActiveRecord::Base
    has_many :users, :through => :subscriptions
    has_many :membership_billing_histories
 
+  CREDIT_CARD_BILLING_METHOD = "cc"
+  INVOICE_BILLING_METHOD = "invoice"
+
    STATES = {
   'AL' => 'Alabama',
   'AK' => 'Alaska',
