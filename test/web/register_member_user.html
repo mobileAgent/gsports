@@ -32,6 +32,66 @@
 	<td></td>
 </tr>
 <tr>
+	<td>clickAndWait</td>
+	<td>//input[@name='commit' and @value='Sign up']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>errors prohibited this user from being saved</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>City can't be blank</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>Address1 can't be blank</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>Password confirmation can't be blank</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>Lastname can't be blank</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>Firstname can't be blank</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>Phone can't be blank</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>Password can't be blank</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>Password is too short (minimum is 6 characters)</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>Login can't be blank</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>Login is too short (minimum is 5 characters)</td>
+	<td></td>
+</tr>
+<tr>
 	<td>type</td>
 	<td>user_firstname</td>
 	<td>markdr</td>
@@ -43,28 +103,18 @@
 </tr>
 <tr>
 	<td>type</td>
-	<td>user_firstname</td>
-	<td>mark</td>
-</tr>
-<tr>
-	<td>type</td>
 	<td>user_lastname</td>
-	<td>russell1</td>
+	<td>russell</td>
 </tr>
 <tr>
 	<td>type</td>
 	<td>user_address1</td>
-	<td>q</td>
+	<td>123 elm street</td>
 </tr>
 <tr>
 	<td>type</td>
 	<td>user_city</td>
-	<td>o</td>
-</tr>
-<tr>
-	<td>type</td>
-	<td>user_phone</td>
-	<td>(888)333-4444</td>
+	<td>Anywhere</td>
 </tr>
 <tr>
 	<td>type</td>
@@ -125,6 +175,26 @@
 	<td>type</td>
 	<td>billing_cardnumber</td>
 	<td>4111111111111111</td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>billing_verificationnumber</td>
+	<td>999</td>
+</tr>
+<tr>
+	<td>clickAndWait</td>
+	<td>//input[@name='commit' and @value='Submit']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>Your credit card has been successfuly charged for</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>his charge will occur every month. It will appear on your credit card statement as GSports Inc.</td>
+	<td></td>
 </tr>
 
 </tbody></table>
