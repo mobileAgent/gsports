@@ -62,16 +62,31 @@ class UsersController < BaseController
       return
     end
 
-    gateway = ActiveMerchant::Billing::BraintreeGateway.new({
-      :login => 'demo',
-      :password => 'password'
+    gateway = ActiveMerchant::Billing::PayflowGateway.new({
+      :login => 'markdr_1217114297_biz@gmail.com',
+      :password => 'markrmarkr',
+      :partner => 'PayPal'
     })
     response = gateway.purchase(@user.role.plan.cost, @credit_card)
-    logger.debug "RESPONSE:" + response.inspect
 
+#    if (response.success?)  # Test gateway is a bit flakey
+# Will use Payflow Pro test gateway
+      m = Membership.new
+      m.billing_method = Membership::CREDIT_CARD_BILLING_METHOD
+      m.cost = @user.role.plan.cost
+      m.name = @user.firstname + " " + @user.minitial + " " + @user.lastname
+
+      # Note that this member has paid the first month
+      history = MembershipBillingHistory.new
+      history.authorization_reference_number = "sample"
+      history.payment_method = Membership::CREDIT_CARD_BILLING_METHOD
+      m.membership_billing_histories << history
+      @user.memberships << m
+      @user.save
+
+ #   end
     flash[:notice] = "Thanks for signing up! You should receive an e-mail confirmation shortly at #{@user.email}"
 
     redirect_to signup_completed_user_path(@user)
   end
-
 end
