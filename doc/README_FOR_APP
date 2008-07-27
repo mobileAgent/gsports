@@ -20,6 +20,8 @@ Required Gems:
       mocha (for tests)
       RedCloth >= 3.301 "sudo gem install RedCloth --source=http://code.whytheluckystiff.net"
 
+      You might be able to use "sudo rake gems:install" to get all of these
+
 Required Plugins:      
     - exception-notification:
       script/plugin install http://dev.rubyonrails.org/svn/rails/plugins/exception_notification/
