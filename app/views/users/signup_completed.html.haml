@@ -1,0 +1,18 @@
+.box
+  %h3 Go check your e-mail!
+  %ul.list.checks
+    %li
+      = "Your credit card has been successfuly charged for $"+ @user.role.plan.cost.to_s
+    %li
+      This charge will occur every month.  It will appear on your credit card statement as GSports Inc.
+    %li
+      We just sent an e-mail to
+      %strong
+        = @user.email
+      that will let you activate your account. </li
+      %li
+        Look for a message from
+        = AppConfig.community_name
+        (check your junk mail folder too, just in case).
+      %li
+        See you back here in a short while...
