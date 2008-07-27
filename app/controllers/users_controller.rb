@@ -67,10 +67,9 @@ class UsersController < BaseController
       :password => 'markrmarkr',
       :partner => 'PayPal'
     })
-    response = gateway.purchase(@user.role.plan.cost, @credit_card)
+    @response = gateway.purchase(@user.role.plan.cost, @credit_card)
 
-#    if (response.success?)  # Test gateway is a bit flakey
-# Will use Payflow Pro test gateway
+#    if (@response.success?)  # Test gateway is a bit flakey
       m = Membership.new
       m.billing_method = Membership::CREDIT_CARD_BILLING_METHOD
       m.cost = @user.role.plan.cost
@@ -83,8 +82,9 @@ class UsersController < BaseController
       m.membership_billing_histories << history
       @user.memberships << m
       @user.save
-
- #   end
+#    else
+#      render :action => 'billing', :userid => @user.id
+#    end
     flash[:notice] = "Thanks for signing up! You should receive an e-mail confirmation shortly at #{@user.email}"
 
     redirect_to signup_completed_user_path(@user)
