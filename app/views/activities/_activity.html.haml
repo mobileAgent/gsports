@@ -2,7 +2,7 @@
   %dt
     =time_ago_in_words_or_date(activity.created_at)
   %dd
-    =link_to "#{activity.user.firstname} #{activity.user.lastname}", user_path(activity.user_id)  
+    =link_to "#{activity.user.full_name}", user_path(activity.user_id)  
     - if activity.item
       - case activity.item_type
         - when 'Post'
@@ -35,7 +35,7 @@
           =" created a new clip "
           = link_to truncate_words(activity.item.title), user_video_clip_path(activity.item.user_id,activity.item)
         - when 'VideoReel'
-          =" createa a new video reel "
+          =" created a new video reel "
           = link_to truncate_words(activity.item.title), user_video_reel_path(activity.item.user_id,activity.item)
     - else
       - case activity.action

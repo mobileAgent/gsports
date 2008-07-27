@@ -2,13 +2,13 @@
   - if logged_in?
     -#= render :partial => 'shared/user_menu'
     %span
-      %a{ :href => "" }
+      %a{ :href => "/info/about" }
         about
       |
-      %a{ :href => "" }
+      %a{ :href => "/info/contact" }
         contact
       |
-      %a{ :href => "" }
+      %a{ :href => "/info/help" }
         help
       |
       =link_to 'logout', logout_path
