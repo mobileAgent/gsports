@@ -1,8 +1,0 @@
-class SearchController < ApplicationController
-  def quickfind
-  end
-
-  def search
-  end
-
-end
