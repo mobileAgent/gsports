@@ -1,0 +1,3 @@
+%p= "#{@video_assets.size} videos match your criteria"
+- for video_asset in @video_assets
+  = render :partial => 'video_assets/video_block', :locals => { :video_asset => video_asset }

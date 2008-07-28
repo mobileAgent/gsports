@@ -1,0 +1,2 @@
+- for video_asset in @video_assets
+  = render :partial => 'video_assets/video_block', :locals => { :video_asset => video_asset }
