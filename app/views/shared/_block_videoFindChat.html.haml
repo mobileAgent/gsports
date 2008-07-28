@@ -1,6 +1,6 @@
 .videoFindChat
   .videoFind
-    %form#videoFind{ :action => "#", :method => "get" }
+    - form_for :video_asset, VideoAsset.new, :url => {:controller => 'search', :action => 'quickfind' } do |f|
       %select#videoFindSeason{ :name => "season" }
         %option{ :value => "" }
           \-Season-
@@ -12,16 +12,16 @@
           Option
       %label.verbalSemantic{ :for => "videoFindSeason" }
         Season
-      =collection_select("video_asset","state_id",VideoAsset.states(),"state_id","state.name", {:prompt => "State", :selected => "State"}, {:id => 'video_findState', :name => 'state'})
+      =collection_select("video_asset","state_id",VideoAsset.states(),"state_id","state.name", {:prompt => "-State-", :selected => params[:state] || "-State-"}, {:id => 'video_findState', :name => 'state'})
       %label.verbalSemantic{ :for => "videoFindState" }
         State
-      =collection_select("video_asset","county_name",VideoAsset.counties(),"county_name","county_name",{:prompt => "County", :selected => "County"}, {:id => 'videoFindCounty', :name => 'county'})
+      =collection_select("video_asset","county_name",VideoAsset.counties(),"county_name","county_name",{:prompt => "-County-", :selected => params[:county_name] || "-County-"}, {:id => 'videoFindCounty', :name => 'county_name'})
       %label.verbalSemantic{ :for => "videoFindCounty" }
         County
-      =collection_select("league","id",League.find(:all),"id","name",{:prompt => "League", :selected => "League"}, {:id => 'video_findLeague', :name => 'league'})
+      =collection_select("league","id",League.find(:all),"id","name",{:prompt => "-League-", :selected => params[:league] || "-League-"}, {:id => 'video_findLeague', :name => 'league'})
       %label.verbalSemantic{ :for => "videoFindLeague" }
         League
-      =collection_select("video_asset","sport",VideoAsset.sports(),"sport","sport",{:prompt => "Sport", :selected => "Sport"}, {:id => 'videoFindSport', :name => 'sport'})
+      =collection_select("video_asset","sport",VideoAsset.sports(),"sport","sport",{:prompt => "-Sport-", :selected => params[:sport] || "-Sport-"}, {:id => 'video_findSport', :name => 'sport'})
       %label.verbalSemantic{ :for => "videoFindSport" }
         Sport
       %input#videoFindSubmit.submit{ :name => "submit", :src => "/gs/images/video_find_submit.gif", :type => "image", :value => "search", :alt => "Search" }/
