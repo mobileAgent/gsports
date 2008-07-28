@@ -118,6 +118,9 @@
               %span.moreLink
                 = link_to "add?", new_user_photo_path(@user)
                 
+                
+                
+                
     .contentBox.tanBackground
       .contentBoxHeader.yellowHeader
         %span.moreLink
@@ -249,38 +252,12 @@
             %span.moreLink
               %a{ :href => "" }
                 more?
-    .contentBox.tanBackground
-      .contentBoxHeader.yellowHeader
-        %span.moreLink
-          %a{ :href => "#", :onclick => "return profile_minimize(this)" }
-            minimize -
-        %h2.boxDescription
-          Activity
-      .contentBoxContent
-        .profileFeature
-          .profileInfo
-            %span.profileSubHeading
-              Monday 11/11
-            Uploaded a video of
-            %a{ :href => "" }
-              Albert vs Richard
-            %br/
-            %span.profileSubHeading
-              Monday 11/11
-            Uploaded a video of
-            %a{ :href => "" }
-              Albert vs Richard
-            %br/
-            %span.profileSubHeading
-              Monday 11/11
-            Uploaded a video of
-            %a{ :href => "" }
-              Albert vs Richard
-            %br/
-          .clearDiv.moreLinkArea
-            %span.moreLink
-              %a{ :href => "" }
-                more?
+                
+                
+    =render :partial => "users/profile_activity"
+                
+                
+                
     .contentBox.tanBackground
       .contentBoxHeader.yellowHeader
         %span.moreLink
