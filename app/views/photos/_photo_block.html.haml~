@@ -1,0 +1,1 @@
+= link_to "<img src='#{@.public_filename(:thumb)}' /><br />&laquo; Prev ", user_photo_path(@user, @previous), :class => 'left' if @previous

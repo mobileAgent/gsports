@@ -185,7 +185,7 @@ kyle:
   sb_posts_count: 0  
   activated_at: <%= 5.days.ago.to_s :db %>  
   activation_code: 
-  role_id: 3
+  role_id: 5
   team_id: 1
 mark:
   id: 14

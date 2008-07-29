@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20080723160808) do
+ActiveRecord::Schema.define(:version => 20080729115007) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id",    :limit => 10
@@ -190,13 +190,13 @@ ActiveRecord::Schema.define(:version => 20080723160808) do
 
   create_table "leagues", :force => true do |t|
     t.string   "name"
-    t.string   "logo_uri"
     t.string   "city"
     t.string   "description"
     t.boolean  "active"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "state_id",    :limit => 11
+    t.integer  "avatar_id",   :limit => 11
   end
 
   create_table "membership_billing_histories", :force => true do |t|
@@ -370,7 +370,6 @@ ActiveRecord::Schema.define(:version => 20080723160808) do
 
   create_table "teams", :force => true do |t|
     t.string   "name"
-    t.string   "logo_uri"
     t.string   "city"
     t.string   "state"
     t.string   "description"
@@ -378,6 +377,7 @@ ActiveRecord::Schema.define(:version => 20080723160808) do
     t.integer  "league_id",   :limit => 11
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "avatar_id",   :limit => 11
   end
 
   create_table "topics", :force => true do |t|

@@ -89,4 +89,31 @@ class UsersController < BaseController
 
     redirect_to signup_completed_user_path(@user)
   end
+
+  def change_team_photo
+    @user = User.find(params[:id])
+    if ((@user.team_staff? && current_user.id == @user.id) || current_user.admin?)
+      @photo = Photo.find(params[:photo_id])
+      @team = @user.team
+      @team.avatar = @photo
+      if @team.save!
+        flash[:notice] = "Your changes were saved."
+        redirect_to user_photo_path(@user, @photo)
+      end
+    end
+  end
+  
+  def change_league_photo
+    @user = User.find(params[:id])
+    if ((@user.league_staff? && current_user.id == @user.id) || current_user.admin?)
+      @photo = Photo.find(params[:photo_id])
+      @league = @user.team.league
+      @league.avatar = @photo
+      if @team.save!
+        flash[:notice] = "Your changes were saved."
+        redirect_to user_photo_path(@user, @photo)
+      end
+    end
+  end
+  
 end
