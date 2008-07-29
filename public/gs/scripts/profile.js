@@ -1,6 +1,6 @@
 function profile_minimize(o) {
 	if (o.isMinimized == true) {
-		o.innerHTML = "minimize -";
+		o.innerHTML = "minimize +";
 		o.isMinimized = false;
 	} else {
 		o.innerHTML = "maximize +";
