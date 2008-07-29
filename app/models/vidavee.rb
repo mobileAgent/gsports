@@ -20,9 +20,10 @@ class Vidavee < ActiveRecord::Base
 
   # Our HTTP Client to communicate with Vidavee service
   CLIENT = HTTPClient.new
-  CLIENT.connect_timeout = 60
-  CLIENT.receive_timeout = 300
-  CLIENT.send_timeout = 0
+  CLIENT.connect_timeout = 10
+  CLIENT.receive_timeout = 30
+  CLIENT.send_timeout = 30
+  LOGIN_TIMEOUT = 3
   
   # Turn this on for debug of HTTP traffic to Vidavee
   # CLIENT.debug_dev = STDERR
@@ -335,7 +336,13 @@ class Vidavee < ActiveRecord::Base
 
     # Send the post
     begin
+      CLIENT.connect_timeout = 60
+      CLIENT.receive_timeout = 500
+      CLIENT.send_timeout = 0
       response = CLIENT.post(url, upload_params, extheader)
+      CLIENT.connect_timeout = 30
+      CLIENT.receive_timeout = 30
+      CLIENT.send_timeout = 30
     rescue TimeoutError
       logger.error "Could not contact Vidavee backend"
       response = "Timeout"

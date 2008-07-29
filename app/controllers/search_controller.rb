@@ -7,7 +7,6 @@ class SearchController < BaseController
     cond.append ['county_name = ?', params[:county_name]]
     cond.append ['league_id = ?', params[:league]]
     cond.append ['sport = ?', params[:sport]]
-    puts "********** Conditions #{cond.to_sql}"
     @video_assets = VideoAsset.find(:all, :conditions => cond.to_sql)
   end
 

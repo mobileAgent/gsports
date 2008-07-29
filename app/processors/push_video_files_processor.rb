@@ -16,7 +16,16 @@ class PushVideoFilesProcessor < ApplicationProcessor
         publish(:update_video_status,"#{video_asset.id}")
       end
     else
-      logger.debug "Video push failed for #{video_asset.uploaded_file_path}"
+      fullpath = video_asset.uploaded_file_path
+      fn = fullpath[File.dirname(fullpath).length+1..-1]
+      logger.debug "Video push failed for #{fullpath}"
+      [User.find_by_email(ADMIN_EMAIL),video_asset.user_id].uniq.each do |u|
+        m = Message.create(:title => "Video upload failed for #{fn}",
+                           :body => "Video file #{fn} could not be pushed to the backend video engine.",
+                           :from_id => User.find_by_email(ADMIN_EMAIL).id,
+                           :to_id => u )
+      end
     end
   end
+  
 end
