@@ -11,7 +11,20 @@ else
         element.replace(render(:partial => 'clippings/meta.html.haml', :locals => {:clipping => @favorite.favoritable}))    
       end
 
+    when 'video_assets'
+      page.alert("Created video asset favorite")
+    
+    when 'video_reels'
+      page.alert("Created video reel favorite")
+    
+    when 'video_clips'
+      page.alert("Created video clip favorite")
+    
+    when 'photos'
+       page.alert("Created photo favorite")
+       
     when 'posts'
       page.replace("post_#{@favorite.favoritable.id}_meta", :partial => 'posts/meta', :locals => {:post => @favorite.favoritable})
+
   end
 end

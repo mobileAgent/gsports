@@ -10,5 +10,18 @@ case @favorite.favoritable.class.to_s.tableize
 
 
   when 'posts'
-    page.replace "post_#{@favorite.favoritable.id}_meta", :partial => 'posts/meta', :locals => {:post => @favorite.favoritable} 
+    page.replace "post_#{@favorite.favoritable.id}_meta", :partial => 'posts/meta', :locals => {:post => @favorite.favoritable}
+     
+  when 'video_assets'
+    page.alert("Removed video asset favorite")
+    
+  when 'video_reels'
+    page.alert("Removed video reel favorite")
+    
+  when 'video_clips'
+    page.alert("Removed video clip favorite")
+    
+  when 'photos'
+     page.alert("Removed photo favorite")
+       
 end

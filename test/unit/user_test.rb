@@ -12,4 +12,10 @@ class UserTest < ActiveSupport::TestCase
     assert !buser.league_admin?
     assert !buser.scout_admin?
   end
+
+  def test_league_staff
+    u = users(:kyle)
+    assert u.league_staff?
+  end
+  
 end

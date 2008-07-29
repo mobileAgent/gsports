@@ -19,4 +19,12 @@ scout:
   id:   6
   name: scout
   subscription_plan: :scout
-
+team_staff:
+  id:   7
+  name: team_staff
+league_staff:
+  id:   8
+  name: league_staff
+scout_staff:
+  id:   9
+  name: scout_staff

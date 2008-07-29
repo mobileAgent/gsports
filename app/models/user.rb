@@ -36,7 +36,7 @@ class User < ActiveRecord::Base
   end
 
   def league_staff?
-    role && (role.eql(Role[:league_staff]) || league_admin?)
+    role && (role.eql?(Role[:league_staff]) || league_admin?)
   end
   
   def scout_admin?
