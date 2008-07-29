@@ -367,7 +367,7 @@ class Vidavee < ActiveRecord::Base
 
   # Load videos from the back end, up to limit
   def self.load_backend_video (limit = -1)
-    v = Vidavee.find(:first)
+    v = Vidavee.first
     token = v.login
     save_count = 0
     find_count = 0
@@ -392,7 +392,7 @@ class Vidavee < ActiveRecord::Base
   # that correspond to the video_assets passed in
   # or all video_assets
   def self.load_backend_clips(video_assets = VideoAssets.find(:all))
-    v = Vidavee.find(:first)
+    v = Vidavee.first
     token = v.login
     total_found, total_saved = 0,0
     video_assets.each do |video_asset|

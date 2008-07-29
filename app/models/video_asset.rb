@@ -84,7 +84,7 @@ v    # Filename only no path
 
   # TO be called externally to update status of queued videos
   def self.update_queued_assets
-    vidavee = Vidavee.find(:first)
+    vidavee = Vidavee.first
     session_token = vidavee.login
     check_count = 0
     save_count = 0
