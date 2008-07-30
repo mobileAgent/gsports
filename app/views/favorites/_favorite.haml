@@ -10,4 +10,4 @@
   - when 'posts'
     = render :partial => "posts/favorited_post", :locals => {:post => favorite.favoritable}
   - when 'photos'
-    = render :partial => "photos/photo_block", :locals => {:photo => favorite.favoritable}
+    = render :partial => "photos/photo_block", :locals => {:photo => favorite.favoritable, :photo_type => :thumb}

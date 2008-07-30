@@ -1,5 +1,4 @@
 quentin:
-  id: 1
   login: quentin
   email: quentin@example.com
   description: I am friggin awesome
@@ -8,32 +7,32 @@ quentin:
   created_at: <%= 5.days.ago.to_s :db %>
   activated_at: <%= 5.days.ago.to_s :db %>  
   activation_code: 
-  state_id: 1
-  metro_area_id: 1
+  state: maryland
+  metro_area: annapolis
   profile_public: true
   login_slug: quentin
   birthday: <%= 15.years.ago.to_s :db %>
   activities_count: 0
-  role_id: 3
-  team_id: 1
+  role: member
+  team: one
+  avatar: library_pic
 aaron:
-  id: 2
   login: aaron
   email: aaron@example.com
   description: I am happy to be here. Community rawks!
   salt: 7e3041ebc2fc05a40c60028e2c4901a81035d3cd
   crypted_password: 00742970dc9e6319f8019fd54864d3ea740f04b1 # test
-  created_at: <%= 1.days.ago.to_s :db %>
+  created_at: <%= 5.days.ago.to_s :db %>
   activated_at: <%= 30.minutes.ago.to_s :db %>  
   activation_code: 
   sb_posts_count: 2
   sb_last_seen_at: <%= 5.minutes.ago.to_s :db %>
   login_slug: aaron
   birthday: <%= 15.years.ago.to_s :db %>  
-  role_id: 3
-  team_id: 1
+  role: member
+  team: one
+  avatar: library_pic
 kevin:
-  id: 3
   login: kevin
   email: kevin@example.com
   description: I am Garnett
@@ -44,10 +43,10 @@ kevin:
   activation_code: 
   login_slug: kevin
   birthday: <%= 15.years.ago.to_s :db %>  
-  role_id: 3
-  team_id: 2
+  role: member
+  team: two
+  avatar: library_pic
 admin:
-  id: 4
   login: admin
   email: admin@example.com
   description: I am all powerful
@@ -58,10 +57,10 @@ admin:
   activation_code: 
   login_slug: admin
   birthday: <%= 15.years.ago.to_s :db %>  
-  role_id: 1
-  team_id: 1
+  role: admin
+  team: one
+  avatar: library_pic
 dwr:
-  id: 5
   login: dwreach
   email: dwr@example.com
   description: We are the best design company in the world
@@ -73,40 +72,40 @@ dwr:
   vendor: 1
   login_slug: dwreach
   birthday: <%= 15.years.ago.to_s :db %>  
-  role_id: 3
-  team_id: 1
+  role: member
+  team: one
+  avatar: library_pic
 leopoldo:
-  id: 6
   login: leopoldo
   email: leopoldo@example.com
-  description: I am Bruno's dad
+  description: "I am Bruno's dad"
   salt: 7e3041ebc2fc05a40c60028e2c4901a81035d3cd
   crypted_password: 00742970dc9e6319f8019fd54864d3ea740f04b1 # test
   created_at: <%= 5.days.ago.to_s :db %>
   activated_at: <%= 5.days.ago.to_s :db %>  
-  metro_area_id: 4
+  metro_area: rochester
   activation_code: 
   login_slug: leopoldo
   birthday: <%= 15.years.ago.to_s :db %>  
-  role_id: 3  
-  team_id: 1
+  role: member  
+  team: one
+  avatar: library_pic
 florian:
-  id: 7
   login: florian
   email: florian@example.com
-  description: I am Ben's friend
+  description: "I am Ben's friend"
   salt: 7e3041ebc2fc05a40c60028e2c4901a81035d3cd
   crypted_password: 00742970dc9e6319f8019fd54864d3ea740f04b1 # test
   created_at: <%= 30.minutes.ago.to_s :db %>
   activated_at: <%= 10.minutes.ago.to_s :db %>  
-  metro_area_id: 5
+  metro_area: twincities
   activation_code: 
   login_slug: florian
   birthday: <%= 15.years.ago.to_s :db %>  
-  role_id: 3  
-  team_id: 1
+  role: member
+  team: one
+  avatar: library_pic
 super_writer:
-  id: 8
   login: superwriter
   email: superwriter@example.com
   description: I am Such An Awesome Writer!!
@@ -114,18 +113,18 @@ super_writer:
   crypted_password: 00742970dc9e6319f8019fd54864d3ea740f04b1 # test
   created_at: <%= 30.minutes.ago.to_s :db %>
   activated_at: <%= 10.minutes.ago.to_s :db %>  
-  metro_area_id: 5
+  metro_area: detroit
   activation_code: 
   featured_writer: 1
   login_slug: superwriter
   birthday: <%= 15.years.ago.to_s :db %>  
-  role_id: 3  
-  team_id: 1
+  role: member
+  team: one
+  avatar: library_pic
 plumberbob:
-  id: 9
   login: plumberbob
   email: plumberbob@example.com
-  description: I love pipe fitting, Hello! I'm one of the Community founders.  Thanks for checking out my profile.  If you have any questions or comments, don't hesitate to email me at founder at community dot com, or comment on my profile.
+  description: "I love pipe fitting, Hello! I'm one of the Community founders.  Thanks for checking out my profile.  If you have any questions or comments, don't hesitate to email me at founder at community dot com, or comment on my profile."
   salt: 7e3041ebc2fc05a40c60028e2c4901a81035d3cd
   crypted_password: 00742970dc9e6319f8019fd54864d3ea740f04b1 # test
   created_at: <%= 1.days.ago.to_s :db %>
@@ -134,10 +133,10 @@ plumberbob:
   vendor: 1
   login_slug: plumberbob
   birthday: <%= 15.years.ago.to_s :db %>  
-  role_id: 3  
-  team_id: 1
+  role: member
+  team: one
+  avatar: library_pic
 privateuser:
-  id: 10
   login: privateuser
   email: privateuser@example.com
   description: I am a private user, which means you cant see my profile stuff unless logged in
@@ -150,10 +149,10 @@ privateuser:
   login_slug: privateuser
   profile_public: 0
   birthday: <%= 15.years.ago.to_s :db %>  
-  role_id: 3  
-  team_id: 1
+  role: member
+  team: one
+  avatar: library_pic
 sam:
-  id: 11
   login: sam
   login_slug: sam  
   email: sam@email.com
@@ -162,10 +161,10 @@ sam:
   sb_last_seen_at: <%= 4.minutes.ago.to_s :db %>
   activated_at: <%= 5.days.ago.to_s :db %>  
   activation_code: 
-  role_id: 3    
-  team_id: 1
+  role: member    
+  team: one
+  avatar: library_pic
 joe:
-  id: 12
   login: joe
   login_slug: joe  
   email: joe@email.com
@@ -174,10 +173,10 @@ joe:
   sb_last_seen_at: <%= 4.minutes.ago.to_s :db %>
   activated_at: <%= 5.days.ago.to_s :db %>  
   activation_code: 
-  role_id: 3    
-  team_id: 1
+  role: member    
+  team: one
+  avatar: library_pic
 kyle:
-  id: 13
   login: kyle
   login_slug: kyle  
   email: kyle@email.com
@@ -185,10 +184,10 @@ kyle:
   sb_posts_count: 0  
   activated_at: <%= 5.days.ago.to_s :db %>  
   activation_code: 
-  role_id: 5
-  team_id: 1
+  role: league
+  team: one
+  avatar: library_pic
 mark:
-  id: 14
   login: mark
   login_slug: mark
   email: mark@example.com
@@ -198,20 +197,22 @@ mark:
   activated_at: <%= 3.days.ago.to_s :db %>
   birthday: <%= 45.years.ago.to_date %>
   activation_code: 
-  role_id: 4
-  team_id: 1
+  role: team
+  team: one
+  avatar: library_pic
 gsports_admin:
   email: admin@globalsports.net
-  activated_at: DateTime.now
+  activated_at: <%= DateTime.now.to_s :db %>
   login: gsadmin
   description: Global Sports Site Administrator
   firstname: Ad
   lastname: Ministrator
   login_slug: Administrator
-  role_id: 1
+  role: admin
   birthday: <%= 25.years.ago.to_date %>
   address1: 1 Global Sports Way
   city: Globalcity
   phone: 301.555.1212
-  team_id: 1
+  team: one
+  avatar: library_pic
   

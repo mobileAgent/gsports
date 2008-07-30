@@ -2,9 +2,9 @@
   %h1.headerBrand
     Global Sports
   .headerSchoolLogo
-    %img{ :src => "/gs/placeholders/header_school_logo.jpg", :alt => "##TEXT EQUIVALENT##" }/
+    = render :partial => "photos/photo_block", :locals => {:photo => current_user.team_or_league_avatar}
   .headerAd1
-    %img{ :src => "/gs/placeholders/header_ad_1.jpg", :alt => "##TEXT EQUIVALENT##" }/
+    %img{ :src => "/gs/placeholders/header_ad_1.jpg", :alt => "##TEXT EQUIVALENT##" }
   .headerAccountControl
     .headerAccountControlLinks
       %span

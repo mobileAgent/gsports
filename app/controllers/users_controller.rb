@@ -95,7 +95,7 @@ class UsersController < BaseController
     if ((@user.team_staff? && current_user.id == @user.id) || current_user.admin?)
       @photo = Photo.find(params[:photo_id])
       @team = @user.team
-      @team.avatar = @photo
+      @team.avatar= @photo
       if @team.save!
         flash[:notice] = "Your changes were saved."
         redirect_to user_photo_path(@user, @photo)
@@ -108,7 +108,7 @@ class UsersController < BaseController
     if ((@user.league_staff? && current_user.id == @user.id) || current_user.admin?)
       @photo = Photo.find(params[:photo_id])
       @league = @user.team.league
-      @league.avatar = @photo
+      @league.avatar= @photo
       if @team.save!
         flash[:notice] = "Your changes were saved."
         redirect_to user_photo_path(@user, @photo)

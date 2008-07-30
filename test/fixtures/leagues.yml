@@ -3,15 +3,15 @@
 one:
   name: Northeast Regional
   city: Columbia
-  state_id: 1
+  state: maryland
   description: We are Northeast Regional
   active: true
-  avatar_id: 1
+  avatar: library_pic
 
 two:
   name: SouthWest Regional
   city: Freedonia
-  state_id: 3
+  state: michigan
   description: We are Southwest Regional
   active: false
-  avatar_id: 2
+  avatar: another_pic
