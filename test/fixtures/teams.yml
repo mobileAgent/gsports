@@ -2,16 +2,18 @@
 
 one:
   name: Home Team
-  logo_uri: hometeam.jpg
   city: Whoville
-  state: Maryland
+  state: maryland
   description: We are the home team
   active: true
+  avatar: another_pic
+  league: one
 
 two:
   name: Visiting Team
-  logo_uri: visitors.jpg
   city: Whatville
-  state: Maryland
+  state: maryland
   description: We are the visiting team
   active: true
+  avatar: library_pic
+  league: two

@@ -7,7 +7,7 @@ class VidaveesController < BaseController
   # GET /vidavees
   # GET /vidavees.xml
   def index
-    @vidavees = Vidavee.find(:all)
+    @vidavees = Vidavee.all
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @vidavees }
