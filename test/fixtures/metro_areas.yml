@@ -1,0 +1,23 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+twincities:
+  name: Minneapolis / St. Paul
+  state: michigan
+  country: us
+detroit:
+  name: Detroit
+  state: minnesota
+  country: us
+rochester:
+  name: Rochester
+  state: michigan
+  country: us
+annapolis:
+  name: Annapolis
+  state: maryland
+  country: us
+buenos:
+  name: Buenos Aires
+  country: argentina
+berlin:
+  name: Berlin
+  country: germany

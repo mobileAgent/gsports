@@ -18,10 +18,14 @@ ActionController::Routing::Routes.draw do |map|
   map.from_plugin :community_engine
 
   # Add resources to the community engine routes
-  map.resources :users, :member_path => '/:id', :nested_member_path => '/:user_id', :member => {} do |user|
+  map.resources :users, :member_path => '/:id', :nested_member_path => '/:user_id', :member => {
+    :change_team_photo => :put,
+    :change_league_photo => :put,
+  } do |user|
     user.resources :video_assets
     user.resources :video_clips
     user.resources :video_reels
+    user.resources :photos, :collection => {:swfupload => :post, :slideshow => :get}
   end
 
   

@@ -52,7 +52,7 @@ class VideoAsset < ActiveRecord::Base
 
   def self.sanitize_filename(filename)
     name = filename.strip
-    # Filename only no path
+v    # Filename only no path
     name.gsub! /^.*(\\|\/)/, ''
     # replace all non alphanumeric, underscore or periods with underscore
     name.gsub! /[^\w\.\-]/, '_'
@@ -63,20 +63,41 @@ class VideoAsset < ActiveRecord::Base
     name
   end
 
+  # To support the video quickfind selection dropdown
   def self.sports
     VideoAsset.find(:all, :select => 'DISTINCT sport', :conditions => 'sport IS NOT NULL')
   end
 
+  # To support the video quickfind selection dropdown
   def self.states
     VideoAsset.find(:all, :select => 'DISTINCT state_id', :conditions => 'state_id IS NOT NULL')
   end
 
+  # To support the video quickfind selection dropdown
   def self.counties(state_id=-1)
     if (state_id > -1)
       VideoAsset.find(:all, :select => "DISTINCT county_name", :conditions => "state_id = #{state_id} AND county_name IS NOT NULL")
     else
       VideoAsset.find(:all, :select => "DISTINCT county_name", :conditions => "county_name IS NOT NULL")
     end
+  end
+
+  # TO be called externally to update status of queued videos
+  def self.update_queued_assets
+    vidavee = Vidavee.first
+    session_token = vidavee.login
+    check_count = 0
+    save_count = 0
+    video_assets = VideoAsset.find(:all, :conditions => "video_status = 'queued'")
+    video_assets.each do |video_asset|
+      check_count += 1
+      vidavee.update_asset_record(session_token,video_asset)
+      if (video_asset.video_status != 'queued')
+        video_asset.save!
+        save_count += 1
+      end
+    end
+    return {:checked => check_count, :saved => save_count}
   end
 
   def team_name= team_name
@@ -108,7 +129,7 @@ class VideoAsset < ActiveRecord::Base
   def team_by_name team_name
     team = Team.find_by_name team_name
     if team.nil?
-      team = Team.create :name => team_name
+      team = Team.create :name => team_name, :league_id => 1
     end
     team
   end

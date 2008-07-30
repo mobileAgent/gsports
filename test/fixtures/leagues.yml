@@ -2,16 +2,16 @@
 
 one:
   name: Northeast Regional
-  logo_uri: leagueone.jpg
   city: Columbia
-  state_id: 1
+  state: maryland
   description: We are Northeast Regional
   active: true
+  avatar: library_pic
 
 two:
   name: SouthWest Regional
-  logo_uri: leaguetwo.jpg
   city: Freedonia
-  state_id: 3
+  state: michigan
   description: We are Southwest Regional
   active: false
+  avatar: another_pic
