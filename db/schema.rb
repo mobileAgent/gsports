@@ -469,8 +469,8 @@ ActiveRecord::Schema.define(:version => 20080723160808) do
     t.string   "video_length"
     t.string   "video_type"
     t.string   "video_status"
-    t.integer  "league_id",          :limit => 11
-    t.integer  "team_id",            :limit => 11
+    t.integer  "sponsor_id",         :limit => 11
+    t.integer  "member_id",          :limit => 11
     t.integer  "user_id",            :limit => 11
     t.string   "sport"
     t.datetime "game_date"
