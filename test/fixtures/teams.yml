@@ -3,15 +3,17 @@
 one:
   name: Home Team
   city: Whoville
-  state: Maryland
+  state: maryland
   description: We are the home team
   active: true
-  avatar_id: 1
+  avatar: another_pic
+  league: one
 
 two:
   name: Visiting Team
   city: Whatville
-  state: Maryland
+  state: maryland
   description: We are the visiting team
   active: true
-  avatar_id: 2
+  avatar: library_pic
+  league: two

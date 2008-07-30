@@ -129,7 +129,7 @@ v    # Filename only no path
   def team_by_name team_name
     team = Team.find_by_name team_name
     if team.nil?
-      team = Team.create :name => team_name
+      team = Team.create :name => team_name, :league_id => 1
     end
     team
   end
