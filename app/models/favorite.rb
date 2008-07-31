@@ -25,5 +25,9 @@ class Favorite < ActiveRecord::Base
   def self.favorite? (user, item)
     Favorite.user(user).item(item).count > 0
   end
+
+  def self.count_for_item(item)
+    Favorite.item(item).count
+  end
   
 end
