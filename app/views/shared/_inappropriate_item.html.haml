@@ -1,0 +1,2 @@
+#inappropriate_control
+  = link_to_remote "Mark Inappropriate", :url => {:controller => :messages, :action => :create, 'message[to_id]' => User.find_by_email(ADMIN_EMAIL).id, 'message[title]' => "Inappropriate #{item.class.to_s}", 'message[body]' => "Inappropriate content marked /#{item.class.to_s.tableize}/#{item.id}"}

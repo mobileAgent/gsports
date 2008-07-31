@@ -43,5 +43,5 @@ class Message < ActiveRecord::Base
   def sent_on_display(format = "%Y/%m/%d")
      created_at.strftime(format)
   end
-    
+
 end

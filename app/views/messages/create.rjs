@@ -1,0 +1,6 @@
+if @message.new_record?
+  #it didn't work
+  page.alert(@message.errors.full_messages.join(', '))
+else
+  page.alert("Your message has been sent to #{@message.recipient.full_name}")
+end

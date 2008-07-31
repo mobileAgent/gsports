@@ -33,12 +33,14 @@ class MessagesController < ApplicationController
     @message.from_id = current_user.id
     respond_to do |format|
       if @message.save
-        flash[:notice] = "Your message was sent successfully."
         format.html { 
+          flash[:notice] = "Your message was sent successfully."
           redirect_to messages_path()
         }
+        format.js
       else
         format.html { render :action => "new" }
+        format.js
       end
     end
   end

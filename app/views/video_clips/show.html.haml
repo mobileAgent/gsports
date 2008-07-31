@@ -10,6 +10,7 @@
   %br
   = link_to 'Parent video',video_asset_path(@video_clip.video_asset_id)  
   = render :partial => 'shared/favorite_item', :locals => { :item => @video_clip }
+  = render :partial => 'shared/inappropriate_item', :locals => { :item => @video_clip }
 - else
   %p = "This clip could not be found"
 
