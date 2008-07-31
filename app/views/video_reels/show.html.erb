@@ -14,5 +14,6 @@
 </p>
 
 <%= render :partial => 'shared/favorite_item', :locals => { :item => @video_reel } %> |
+<%= render :partial => 'shared/inappropriate_item', :locals => { :item => @video_reel } %> |
 <%= link_to 'Edit', edit_video_reel_path(@video_reel) %> |
 <%= link_to 'Back', video_reels_path %>
