@@ -3,6 +3,7 @@ class VideoAsset < ActiveRecord::Base
   belongs_to :league
   belongs_to :team
   belongs_to :user
+  belongs_to :state
   belongs_to :home_team, :class_name => 'Team', :foreign_key => 'home_team_id'
   belongs_to :visiting_team, :class_name => 'Team', :foreign_key => 'visiting_team_id'
   has_many :video_clips
@@ -16,6 +17,8 @@ class VideoAsset < ActiveRecord::Base
   
   # Every video needs a title
   validates_presence_of :title
+  
+  [:year, :month, :day].each { |m| delegate m, :to => :game_date }
 
   # Video upload repository
   VIDEO_REPOSITORY = VIDEO_BASE+"/uploaded"
@@ -63,26 +66,43 @@ v    # Filename only no path
     name
   end
 
-  # To support the video quickfind selection dropdown
+  # To support the video quickfind sport selection dropdown
   def self.sports
-    VideoAsset.find(:all, :select => 'DISTINCT sport', :conditions => 'sport IS NOT NULL')
+    VideoAsset.find(:all, 
+                    :select => 'DISTINCT sport', 
+                    :conditions => 'sport IS NOT NULL')
   end
 
-  # To support the video quickfind selection dropdown
+  # To support the video quickfind state selection dropdown
   def self.states
-    VideoAsset.find(:all, :select => 'DISTINCT state_id', :conditions => 'state_id IS NOT NULL')
+    VideoAsset.find(:all, 
+                    :select => 'DISTINCT state_id', 
+                    :conditions => 'state_id IS NOT NULL')
   end
 
-  # To support the video quickfind selection dropdown
+  # To support the video quickfind county selection dropdown
   def self.counties(state_id=-1)
     if (state_id > -1)
-      VideoAsset.find(:all, :select => "DISTINCT county_name", :conditions => "state_id = #{state_id} AND county_name IS NOT NULL")
+      VideoAsset.find(:all, 
+                      :select => "DISTINCT county_name", 
+                      :conditions => "state_id = #{state_id} AND county_name IS NOT NULL")
     else
-      VideoAsset.find(:all, :select => "DISTINCT county_name", :conditions => "county_name IS NOT NULL")
+      VideoAsset.find(:all, 
+                      :select => "DISTINCT county_name", 
+                      :conditions => "county_name IS NOT NULL")
     end
   end
 
-  # TO be called externally to update status of queued videos
+  # To support the video quickfind season selection dropdown
+  def self.seasons
+    VideoAsset.find(:all, 
+                    :select => "DISTINCT year(game_date) as year", 
+                    :conditions => "game_date IS NOT NULL")
+    # THIS IS A HACK until the above is made to work
+    [VideoAsset.new(:game_date => Time.now)]
+  end
+
+  # To be called externally to update status of queued videos
   def self.update_queued_assets
     vidavee = Vidavee.first
     session_token = vidavee.login
@@ -106,6 +126,10 @@ v    # Filename only no path
 
   def team_name
     team ? team.name : nil
+  end
+
+  def state_name
+    state ? state.name : nil
   end
 
   def home_team_name= team_name

@@ -7,7 +7,7 @@ class SearchController < BaseController
     cond.append ['county_name = ?', params[:county_name]]
     cond.append ['league_id = ?', params[:league]]
     cond.append ['sport = ?', params[:sport]]
-    @video_assets = VideoAsset.find(:all, :conditions => cond.to_sql)
+    @pages, @video_assets = paginate :video_assets, :conditions => cond.to_sql, :order => 'created_at DESC', :include => :tags
   end
 
   def search
