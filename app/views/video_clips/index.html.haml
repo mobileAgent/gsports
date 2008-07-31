@@ -1,5 +1,6 @@
 - for video_clip in @video_clips
   = render :partial => 'video_block', :locals => {:video_clip => video_clip }
+  = render :partial => 'shared/favorite_item', :locals => { :item => video_clip }
 
 %br
 %p>

@@ -13,11 +13,6 @@
   <%=h @video_reel.user_id %>
 </p>
 
-<p>
-  <b>Dockey:</b>
-  <%=h @video_reel.dockey %>
-</p>
-
-
+<%= render :partial => 'shared/favorite_item', :locals => { :item => @video_reel } %> |
 <%= link_to 'Edit', edit_video_reel_path(@video_reel) %> |
 <%= link_to 'Back', video_reels_path %>
