@@ -1,0 +1,5 @@
+#favorite_control
+  - if Favorite.favorite?(current_user, item)
+    = link_to_remote "Unfavorite", :url => {:controller => :favorites, :action => :remove, :favoritable_type => item.class.to_s, :favoritable_id => item.id}
+  - else
+    = link_to_remote "Mark as Favorite", :url => {:controller => :favorites, :action => :create, :favoritable_type => item.class.to_s, :favoritable_id => item.id }

@@ -13,7 +13,11 @@ class Favorite < ActiveRecord::Base
 
   named_scope :item,
     lambda { |item| { :conditions => ["favoritable_type = ? and favoritable_id = ?",
-                                    item.class.to_s,item.id] } }
+                                      item.class.to_s,item.id] } }
+
+  named_scope :item_type_id,
+     lambda { |item_type, item_id| { :conditions => ["favoritable_type = ? and favoritable_id = ?",
+                                                   item_type,item_id] } }
   
   named_scope :videos, 
      :conditions => ["favoritable_type IN (?)",["VideoAsset","VideoReel","VideoCLip"]]
