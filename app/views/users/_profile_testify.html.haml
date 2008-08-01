@@ -1,0 +1,24 @@
+.contentBox.tanBackground
+  .contentBoxHeader.yellowHeader
+    %span.moreLink
+      %a{ :href => "#", :onclick => "return profile_minimize(this)" }
+        minimize -
+    %h2.boxDescription
+      Testimonials
+  .contentBoxContent
+    .profileFeature
+      .profileInfo
+        = render :partial => 'profile_comment', :collection => @comments
+      
+        = render :partial => 'users/profile_comment_form', :locals => {:commentable => @user}
+      
+      .clearDiv.moreLinkArea
+        %span.moreLink
+          %a{ :href => "" }
+            write a testimonial for this person
+          |
+          = link_to 'see all testimonials?', comments_url(@user.class.to_s, @user.to_param)
+
+            
+            
+            

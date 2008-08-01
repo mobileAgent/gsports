@@ -12,7 +12,7 @@ class VideoAsset < ActiveRecord::Base
   has_many :favorites, :as => :favoritable, :dependent => :destroy
   acts_as_activity :user, :if => Proc.new{|r| r.video_status == 'ready' }
   
-  attr_protected :team_name
+  attr_protected :team_name, :league_name
   
   # Every video needs a title
   validates_presence_of :title
@@ -102,7 +102,7 @@ class VideoAsset < ActiveRecord::Base
   end
 
   def team_name= team_name
-    self.team= team_by_name(team_name)
+    self.team= Team.find_or_create_by_name team_name
   end
 
   def team_name
