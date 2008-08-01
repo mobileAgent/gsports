@@ -1,2 +1,2 @@
 - photo_type ||= nil
-= link_to "<img src='#{photo.public_filename(photo_type)}' alt='#{h photo.description}' title='#{h photo.description}' />", user_photo_path(photo.user, photo)
+= link_to "<img src='#{photo.public_filename(photo_type)}' alt='#{h photo.description}' title='#{h photo.description}' />", user_photo_path(photo.user.id, photo)

@@ -1,20 +1,19 @@
-="Logged in as #{link_to current_user.login, dashboard_user_path(current_user), :id => 'user-menu'}"
+="Logged in as #{link_to current_user.login, dashboard_user_path(current_user.id), :id => 'user-menu'}"
 #user-menu-tip
   %ul
     %li= link_to('Admin', admin_dashboard_path) if current_user.admin?
   %hr
   %ul
-    %li= link_to "dashboard", dashboard_user_path(current_user) 
-    %li= link_to "Edit account", edit_account_user_path(current_user)          
-    %li= link_to "View profile", user_path(current_user)                  
+    %li= link_to "dashboard", dashboard_user_path(current_user.id) 
+    %li= link_to "Edit account", edit_account_user_path(current_user.id)          
+    %li= link_to "View profile", user_path(current_user.id)
   %hr
   %ul
-    %li= link_to 'Blog', manage_user_posts_path(current_user)
-    %li= link_to 'Photos', user_photos_path(current_user)
-    %li= link_to 'Clippings', user_clippings_path(current_user)
-    %li= link_to 'Friends', accepted_user_friendships_path(current_user)        
-  %hr
-  =link_to 'Log out', logout_path
+    %li= link_to 'Blog', manage_user_posts_path(current_user.id)
+    %li= link_to 'Clips', user_video_clips_path(current_user.id)
+    %li= link_to 'Reels', user_video_reels_path(current_user.id)
+    %li= link_to 'Photos', user_photos_path(current_user.id)
+    %li= link_to 'Friends', accepted_user_friendships_path(current_user.id)
 
 %script{:type => "text/javascript"}
   :plain

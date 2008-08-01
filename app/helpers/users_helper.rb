@@ -12,5 +12,12 @@ module UsersHelper
 
     "Player/Fan"
   end
+
+  def random_greeting(user)
+    greetings = ['Hello', 'Hola', 'Hi ', 'Yo', 'Welcome back,', 'Greetings',
+        'Wassup', 'Aloha', 'Halloo']
+    "#{greetings.sort_by {rand}.first} #{user.full_name}!"
+  end
+  
   
 end
