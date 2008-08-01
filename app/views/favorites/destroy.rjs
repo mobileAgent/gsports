@@ -1,27 +1,17 @@
-case @favorite.favoritable.class.to_s.tableize
-  when 'clippings'
+flashnow(page,'Your favorite has been removed')
+if @favorite
+  case @favorite.favoritable.class.to_s.tableize
+    when 'clippings'
 
-    page.select("#clipping_#{@favorite.favoritable.id}").each do |element|
-      element.replace(render(:partial => 'clippings/clipping', :object => @favorite.favoritable)) 
-    end
-    page.select("#clipping_#{@favorite.favoritable.id}_meta").each do |element|
-      element.replace(render(:partial => 'clippings/meta.html.haml', :locals => {:clipping => @favorite.favoritable}))    
-    end
+      page.select("#clipping_#{@favorite.favoritable.id}").each do |element|
+        element.replace(render(:partial => 'clippings/clipping', :object => @favorite.favoritable)) 
+      end
+      page.select("#clipping_#{@favorite.favoritable.id}_meta").each do |element|
+        element.replace(render(:partial => 'clippings/meta.html.haml', :locals => {:clipping => @favorite.favoritable}))    
+      end
 
-
-  when 'posts'
-    page.replace "post_#{@favorite.favoritable.id}_meta", :partial => 'posts/meta', :locals => {:post => @favorite.favoritable}
-     
-  when 'video_assets'
-    page.alert("Removed video asset favorite")
-    
-  when 'video_reels'
-    page.alert("Removed video reel favorite")
-    
-  when 'video_clips'
-    page.alert("Removed video clip favorite")
-    
-  when 'photos'
-     page.alert("Removed photo favorite")
+    when 'posts'
+      page.replace "post_#{@favorite.favoritable.id}_meta", :partial => 'posts/meta', :locals => {:post => @favorite.favoritable}
        
+  end
 end

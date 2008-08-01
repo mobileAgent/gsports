@@ -12,4 +12,11 @@ include FriendshipsHelper
 include PostsHelper
 include SitemapHelper
 include UsersHelper
+
+  # For rjs pages to tickle the flash on the current page
+  def flashnow(page,msg)
+    page.select("#flash_notice span").first.replace("<span>#{msg}</span>")
+    page.select("#flash_notice").first.show
+  end
+  
 end
