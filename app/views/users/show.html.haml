@@ -201,36 +201,9 @@
     =render :partial => "users/profile_activity"
                 
                 
-                
-    .contentBox.tanBackground
-      .contentBoxHeader.yellowHeader
-        %span.moreLink
-          %a{ :href => "#", :onclick => "return profile_minimize(this)" }
-            minimize -
-        %h2.boxDescription
-          Testimonials
-      .contentBoxContent
-        .profileFeature
-          .profileInfo
-            %a{ :href => "" }
-              Johnny Boombatz
-            said...
-            %br/
-            %span.testimonial
-              lorem loremlorem lorem etc.
-            %a{ :href => "" }
-              Johnny Boombatz
-            said...
-            %br/
-            %span.testimonial
-              lorem loremlorem lorem etc.
-          .clearDiv.moreLinkArea
-            %span.moreLink
-              %a{ :href => "" }
-                write a testimonial for this person
-              |
-              %a{ :href => "" }
-                see all testimonials?
+    =render :partial => "users/profile_testify"
+     
+     
   .clearDiv
 
 
