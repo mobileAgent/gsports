@@ -1,0 +1,24 @@
+- if current_user
+  %script{"type"=>"text/javascript"}
+    function scrollToNewestComment(){
+    loc = document.location.toString();
+    if (loc.indexOf("#") != -1){
+    parts = loc.split('#')
+    loc = parts[0] + "#newest_comment"
+    } else {
+    loc = loc + "#newest_comment";
+    }
+    document.location.href = loc;
+    }
+  .errors
+  - profile_comment_form(commentable) do |f|
+    %label
+      %em (2000 character limit)    
+    = text_area :comment, :comment, {:size => "86x5", :class => "rich_text_editor"}
+    %p
+      = submit_tag "Add Comment"
+      = image_tag 'spinner.gif', :plugin => "community_engine", :style => 'display:none;', :id => 'comment_spinner'
+- else
+  = link_to "Log in to leave a comment", new_comment_path(commentable.class, commentable.id)
+  or
+  = link_to "Create an account", signup_path
