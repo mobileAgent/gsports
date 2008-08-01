@@ -126,7 +126,8 @@ class VideoAsset < ActiveRecord::Base
   end
 
   def team_name= team_name
-    self.team_id = team_by_name(team_name).id
+    #self.team_id = team_by_name(team_name).id
+    self.team = team_by_name(team_name)
   end
 
   def team_name
