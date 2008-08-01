@@ -5,10 +5,18 @@
   .yui-b
     .box.hfeed
       %h3 Games of the Week
-      - for v in GameOfTheWeek.find
-        = render :partial => 'shared/maverick_video_player', :locals  => { :dockey => v.dockey }
-        %br/        
-
+      - v = GameOfTheWeek.find
+      - game1 = v.shift
+      = render :partial => 'shared/maverick_video_player', :locals  => { :dockey => game1.dockey }
+      = game1.title
+      %br/
+      = game1.description
+      %br/
+      = "#{game1.team.name} - #{game1.team.league.name}"
+      %br/
+      - v.each do |video_asset|
+        = render :partial => 'video_assets/video_block', :locals => { :video_asset => video_asset }
+        
 .yui-b
   .box
     %h3= "Explore #{AppConfig.community_name}"

@@ -17,7 +17,8 @@ class VideoAsset < ActiveRecord::Base
   
   # Every video needs a title
   validates_presence_of :title
-  
+
+  # Be careful, game_date can be nil
   [:year, :month, :day].each { |m| delegate m, :to => :game_date }
 
   # Video upload repository
@@ -55,7 +56,7 @@ class VideoAsset < ActiveRecord::Base
 
   def self.sanitize_filename(filename)
     name = filename.strip
-v    # Filename only no path
+    # Filename only no path
     name.gsub! /^.*(\\|\/)/, ''
     # replace all non alphanumeric, underscore or periods with underscore
     name.gsub! /[^\w\.\-]/, '_'
@@ -70,14 +71,16 @@ v    # Filename only no path
   def self.sports
     VideoAsset.find(:all, 
                     :select => 'DISTINCT sport', 
-                    :conditions => 'sport IS NOT NULL')
+                    :conditions => 'sport IS NOT NULL',
+                    :order => 'sport ASC')
   end
 
   # To support the video quickfind state selection dropdown
   def self.states
     VideoAsset.find(:all, 
                     :select => 'DISTINCT state_id', 
-                    :conditions => 'state_id IS NOT NULL')
+                    :conditions => 'state_id IS NOT NULL',
+                    :order => 'state_id ASC')
   end
 
   # To support the video quickfind county selection dropdown
@@ -85,21 +88,23 @@ v    # Filename only no path
     if (state_id > -1)
       VideoAsset.find(:all, 
                       :select => "DISTINCT county_name", 
-                      :conditions => "state_id = #{state_id} AND county_name IS NOT NULL")
+                      :conditions => "state_id = #{state_id} AND county_name IS NOT NULL",
+                      :order => 'county_name ASC')
     else
       VideoAsset.find(:all, 
                       :select => "DISTINCT county_name", 
-                      :conditions => "county_name IS NOT NULL")
+                      :conditions => "county_name IS NOT NULL",
+                      :order => 'county_name ASC')
     end
   end
 
   # To support the video quickfind season selection dropdown
   def self.seasons
-    VideoAsset.find(:all, 
-                    :select => "DISTINCT year(game_date) as year", 
-                    :conditions => "game_date IS NOT NULL")
-    # THIS IS A HACK until the above is made to work
-    [VideoAsset.new(:game_date => Time.now)]
+    years = VideoAsset.find(:all, 
+                            :select => "DISTINCT year(game_date) as season", 
+                            :conditions => "game_date IS NOT NULL",
+                            :order => "season ASC").map(&:season)
+    years.inject([]) { |v,y| v << VideoAsset.new(:game_date => "#{y}-01-01") }
   end
 
   # To be called externally to update status of queued videos

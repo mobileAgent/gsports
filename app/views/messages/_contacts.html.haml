@@ -2,15 +2,15 @@
   - friend_count = current_user.accepted_friendships.size
   %h3
     My Friends    
-    = link_to "(#{friend_count})", accepted_user_friendships_path(current_user) if friend_count > 9
-  = link_to "&raquo; Invite a friend to #{AppConfig.community_name}", invite_user_path(current_user)
+    = link_to "(#{friend_count})", accepted_user_friendships_path(current_user.id) if friend_count > 9
+  = link_to "&raquo; Invite a friend to #{AppConfig.community_name}", invite_user_path(current_user.id)
   %br
   %br    
   - current_user.accepted_friendships.each do |friendship|
     =render :partial => "users/sidebar_user", :locals => {:user => friendship.friend}
   - if friend_count > 9
     %h6.all
-      =link_to 'See All', accepted_user_friendships_path(current_user)
+      =link_to 'See All', accepted_user_friendships_path(current_user.id)
       
       
       

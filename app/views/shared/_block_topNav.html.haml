@@ -5,7 +5,7 @@
     %ul.leftTopNav
       %li
         %span#gnavMyNetwork.ROLLOVERIMAGE
-          %a{ :href => users_path }
+          %a{ :href => accepted_user_friendships_path(current_user.id) }
             %span
               My Network
       %li.divider
@@ -43,12 +43,12 @@
     %ul.leftTopNav
       %li
         %span
-          %a{ :href => about_path }
+          %a{ :href => '/info/about' }
             %span
               About Global Sports
       %li.divider
         %span
-          %a{ :href => about_path }
+          %a{ :href => '/info/about' }
             %span
               Membership
       %li.divider

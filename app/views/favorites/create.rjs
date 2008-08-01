@@ -1,7 +1,8 @@
 if @favorite.new_record?
   #it didn't work
-  page.alert(@favorite.errors.full_messages.join(', '))
+  flashnow(page,'You have already favorited this item')
 else
+  flashnow(page,'Your favorite has been recorded')
   case @favorite.favoritable.class.to_s.tableize
     when 'clippings'
       page.select("#clipping_#{@favorite.favoritable.id}").each do |element|
@@ -10,19 +11,7 @@ else
       page.select("#clipping_#{@favorite.favoritable.id}_meta").each do |element|
         element.replace(render(:partial => 'clippings/meta.html.haml', :locals => {:clipping => @favorite.favoritable}))    
       end
-
-    when 'video_assets'
-      page.alert("Created video asset favorite")
     
-    when 'video_reels'
-      page.alert("Created video reel favorite")
-    
-    when 'video_clips'
-      page.alert("Created video clip favorite")
-    
-    when 'photos'
-       page.alert("Created photo favorite")
-       
     when 'posts'
       page.replace("post_#{@favorite.favoritable.id}_meta", :partial => 'posts/meta', :locals => {:post => @favorite.favoritable})
 
