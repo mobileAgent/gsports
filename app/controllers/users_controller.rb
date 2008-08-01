@@ -7,10 +7,10 @@ class UsersController < BaseController
     @pending_friendships_count = @user.pending_friendships.count()
     
     fav_cond = { :user_id => @user.id }
-    @favorites = Favorite.find(:all, :limit=>5, :conditions=>fav_cond)
+    @favorites = Favorite.find(:all, :limit=>5, :conditions=>fav_cond, :order => 'created_at DESC')
     @favorites_more = Favorite.count( :conditions=>fav_cond ) > 5
 
-    @comments = @user.comments.find(:all, :limit => 10, :order => 'created_at DESC', :order => "created_at DESC")
+    @comments = @user.comments.find(:all, :limit => 10, :order => 'created_at DESC')
     @photo_comments = Comment.find_photo_comments_for(@user)
     
     @users_comments = Comment.find_comments_by_user(@user, :limit => 5)
