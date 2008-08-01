@@ -7,6 +7,19 @@
 	background-color: #ffffff;
 }
 
+.mainContentArea input[type='text'], .mainContentArea input[type='password'], .mainContentArea select, .mainContentArea input[type='radio'] {
+  background-color: #feb;
+  border: 1px solid #26a;
+  margin-bottom: 0;
+}
+.mainContentArea input[type='text']:focus, .mainContentArea input[type='password']:focus { 
+  border: 2px solid darkblue;
+}
+.mainConentArea label { 
+  font-weight: bold;
+  color: black;
+  text-align: left;
+}
 
 
 
@@ -35,3 +48,4 @@
 .prototip .gs .title { padding: 5px; }
 .prototip .gs .content { background: #fff; color: #666666; padding: 5px;}
 .prototip .gs li {	list-style: none; }
+
