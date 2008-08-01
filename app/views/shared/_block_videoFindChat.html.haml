@@ -4,10 +4,10 @@
       =collection_select("video_asset","game_date",VideoAsset.seasons(),"year","year",{:prompt => '-Season-', :selected => params[:season] || '-Season-'}, {:id => "videoFindSeason", :name => 'season'})
       %label.verbalSemantic{ :for => "videoFindSeason" }
         Season
-      =collection_select("video_asset","state_id",VideoAsset.states(),"state_id","state_name", {:prompt => "-State-", :selected => params[:state] || "-State-"}, {:id => 'videoFindState', :name => 'state'})
+      =collection_select("team","state_id",Team.states(),"state_id","state_name", {:prompt => "-State-", :selected => params[:state] || "-State-"}, {:id => 'videoFindState', :name => 'state'})
       %label.verbalSemantic{ :for => "videoFindState" }
         State
-      =collection_select("video_asset","county_name",VideoAsset.counties(),"county_name","county_name",{:prompt => "-County-", :selected => params[:county_name] || "-County-"}, {:id => 'videoFindCounty', :name => 'county_name'})
+      =collection_select("team","county_name",Team.counties(),"county_name","county_name",{:prompt => "-County-", :selected => params[:county_name] || "-County-"}, {:id => 'videoFindCounty', :name => 'county_name'})
       %label.verbalSemantic{ :for => "videoFindCounty" }
         County
       =collection_select("league","id",League.find(:all),"id","name",{:prompt => "-League-", :selected => params[:league] || "-League-"}, {:id => 'video_findLeague', :name => 'league'})

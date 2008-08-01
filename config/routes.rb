@@ -1,5 +1,4 @@
 ActionController::Routing::Routes.draw do |map|
-
   
   map.resources :members
   map.resources :pages
@@ -14,8 +13,12 @@ ActionController::Routing::Routes.draw do |map|
   map.register         'register',        :controller => 'users', :action => 'register'
   map.forgot_password  'forgot_password', :controller => 'users', :action => 'forgot_password'
   
+  # Override CE on this one by getting mine in there first
+  map.admin_dashboard  '/admin/dashboard', :controller => 'admin', :action => 'dashboard'
+  
   # Turn on community engine routes
   map.from_plugin :community_engine
+
 
   # Add resources to the community engine routes
   map.resources :users, :member_path => '/:id', :nested_member_path => '/:user_id', :member => {
@@ -38,3 +41,5 @@ ActionController::Routing::Routes.draw do |map|
   map.connect ':controller/:action/:id'
   map.connect ':controller/:action/:id.:format'
 end
+  
+

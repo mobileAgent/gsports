@@ -10,18 +10,42 @@
 .mainContentArea input[type='text'], .mainContentArea input[type='password'], .mainContentArea select, .mainContentArea input[type='radio'] {
   background-color: #feb;
   border: 1px solid #26a;
-  margin-bottom: 0;
+  margin-bottom: 4px;
 }
 .mainContentArea input[type='text']:focus, .mainContentArea input[type='password']:focus { 
   border: 2px solid darkblue;
 }
+
+.mainContentArea input[type='submit'] {
+   border: 2px solid darkblue;
+   margin-top: 5px;
+   font-weight: bold;
+}
+
+.mainContentArea input[type='submit']:hover {
+   color: red;
+}
+
 .mainConentArea label { 
   font-weight: bold;
   color: black;
   text-align: left;
 }
 
+.mainContentArea fieldset {
+  border: 2px solid darkblue;
+  margin-left: 4%;
+  margin-right: 4%;
+}
 
+.mainContentArea fieldset legend {
+   font-weight: bold;
+}
+
+.mainContentArea table.unstyled {
+  border: 1px solid black;
+}
+  
 
 
 .warning, #errorExplanation, .errorExplanation{

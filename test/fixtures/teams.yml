@@ -4,6 +4,7 @@ one:
   name: Home Team
   city: Whoville
   state: maryland
+  county_name: Howard
   description: We are the home team
   active: true
   avatar: another_pic
@@ -13,6 +14,7 @@ two:
   name: Visiting Team
   city: Whatville
   state: maryland
+  county_name: Anne Arundel
   description: We are the visiting team
   active: true
   avatar: library_pic

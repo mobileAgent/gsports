@@ -1,7 +1,8 @@
 class TeamsController < BaseController
 
   auto_complete_for :team, :name
-  before_filter :admin_required, :except => [:auto_complete_for_team_name, :show ]
+  skip_before_filter :verify_authenticity_token, :only => [:auto_complete_for_team_name, :auto_complete_for_team_league_name ]
+  before_filter :admin_required, :except => [:auto_complete_for_team_name, :show, :auto_complete_for_team_league_name ]
   
   # GET /team
   # GET /team.xml
@@ -85,6 +86,12 @@ class TeamsController < BaseController
       format.html { redirect_to(teams_url) }
       format.xml  { head :ok }
     end
+  end
+  
+  def auto_complete_for_team_league_name
+    @leagues = League.find(:all, :conditions => ["LOWER(name) like ?", params[:team][:league_name].downcase + '%' ], :order => "name ASC", :limit => 10 )
+    choices = "<%= content_tag(:ul, @leagues.map { |l| content_tag(:li, h(l.name)) }) %>"    
+    render :inline => choices
   end
   
 end
