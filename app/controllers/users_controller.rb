@@ -94,26 +94,42 @@ class UsersController < BaseController
     @user = User.find(params[:id])
     if ((@user.team_staff? && current_user.id == @user.id) || current_user.admin?)
       @photo = Photo.find(params[:photo_id])
-      @team = @user.team
-      @team.avatar= @photo
-      if @team.save!
-        flash[:notice] = "Your changes were saved."
-        redirect_to user_photo_path(@user, @photo)
+      h=@photo.height
+      w=@photo.width
+      if ((h==100 && w==100) || (h==60 && w=234))
+        @team = @user.team
+        @team.avatar= @photo
+        if @team.save!
+          flash[:notice] = "Your changes were saved."
+        else
+          flash[:notice] = "The change could not be saved: #{@team.errors}"
+        end
+      else
+        flash[:notice] = "Team logo photos must be 100x100 or 234x60, this one is #{w}x#{h}"
       end
     end
+    redirect_to user_photo_path(@user, @photo)
   end
   
   def change_league_photo
     @user = User.find(params[:id])
     if ((@user.league_staff? && current_user.id == @user.id) || current_user.admin?)
       @photo = Photo.find(params[:photo_id])
-      @league = @user.team.league
-      @league.avatar= @photo
-      if @team.save!
-        flash[:notice] = "Your changes were saved."
-        redirect_to user_photo_path(@user, @photo)
+      h=@photo.height
+      w=@photo.width
+      if ((h==100 && w==100) || (h==60 && w=234))
+        @league = @user.team.league
+        @league.avatar= @photo
+        if @team.save!
+          flash[:notice] = "Your changes were saved."
+        else
+          flash[:notice] = "The change could not be saved: #{@league.errors}"
+        end
+      else
+        flash[:notice] = "League logo photos must be 100x100 or 234x60, this one is #{w}x#{h}"
       end
     end
+    redirect_to user_photo_path(@user, @photo)
   end
   
 end
