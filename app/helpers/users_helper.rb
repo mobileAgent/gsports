@@ -19,5 +19,16 @@ module UsersHelper
     "#{greetings.sort_by {rand}.first} #{user.full_name}!"
   end
   
+  def profile_comment_form(commentable, &block)
+    form_remote_for(:comment, 
+      :loading => "$$('div#comments div.errors')[0].innerHTML = ''; $('comment_spinner').show();", 
+      :before => "tinyMCE.activeEditor.save();", 
+      :url => comments_url(Inflector.underscore(commentable.class), commentable.id ), 500 => "$$('div#comments div.errors')[0].innerHTML = request.responseText; return false;", 
+      :success => "new Insertion.#{commentable.class.to_s.eql?('User') ? 'After': 'After' }('newest_comment', request.responseText); tinyMCE.activeEditor.setContent(\'\'); scrollToNewestComment();", 
+      :complete => "$('comment_spinner').hide();", 
+      :html => {:class => "MainForm"},
+      &block
+    )
+  end
   
 end

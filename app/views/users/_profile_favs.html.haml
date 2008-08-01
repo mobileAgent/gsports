@@ -1,0 +1,28 @@
+.contentBox.tanBackground
+  .contentBoxHeader.yellowHeader
+    %span.moreLink
+      %a{ :href => "#", :onclick => "return profile_minimize(this)" }
+        minimize -
+    %h2.boxDescription
+      Favorites
+  .contentBoxContent
+    .profileFeature
+    
+      - @favorites.each() do |fav|
+        = render :partial => "favorites/favorite", :locals => {:favorite => fav}
+      
+      -# tellart template
+        .featureSummaryThumb
+          %img{ :src => "placeholders/story_thumb.jpg" }/
+        .featureText
+          %span.profileSubHeading
+            Liz
+          %br/
+          Mezeek HS
+          %br/
+        
+      - if @favorites_more
+        .clearDiv.moreLinkArea
+          %span.moreLink
+            %a{ :href => "" }
+              more?

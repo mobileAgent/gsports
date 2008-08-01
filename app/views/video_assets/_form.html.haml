@@ -9,15 +9,6 @@
   %br/
   = f.text_field :description
   
-- if current_user.admin?
-  %p
-    = f.label :league_name
-    %br/
-    = text_field_with_auto_complete :video_asset, :league_name, :autocomplete => "off"
-  %p
-    = f.label :team_name
-    %br/
-    = text_field_with_auto_complete :video_asset, :team_name, :autocomplete => "off"
 %p
   = f.label :sport
   %br/
@@ -47,6 +38,14 @@
 - if current_user.admin?
   %fieldset
     %legend="Advanced Fields (Admin Only)"
+    %p
+      = f.label :league_name
+      %br/
+      = text_field_with_auto_complete :video_asset, :league_name, :autocomplete => "off"
+    %p
+      = f.label :team_name
+      %br/
+      = text_field_with_auto_complete :video_asset, :team_name, :autocomplete => "off"
     %p
       = f.label :dockey
       %br/
