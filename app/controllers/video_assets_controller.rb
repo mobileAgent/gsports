@@ -8,6 +8,7 @@ class VideoAssetsController < BaseController
   skip_before_filter :verify_authenticity_token, :only => [:auto_complete_for_video_asset_home_team_name,
                                                            :auto_complete_for_video_asset_visiting_team_name,
                                                            :auto_complete_for_video_asset_team_name,
+                                                           :auto_complete_for_video_asset_league_name,
                                                            :auto_complete_for_video_asset_sport ]
   
   session :cookie_only => false, :only => [:swfupload]
@@ -179,11 +180,18 @@ class VideoAssetsController < BaseController
     render :inline => auto_complete_team_field(params[:video_asset][:visiting_team_name])
   end
 
+  def auto_complete_for_video_asset_league_name
+    @leagues = League.find(:all, :conditions => ["LOWER(name) like ?", params[:video_asset][:league_name].downcase + '%' ], :order => "name ASC", :limit => 10 )
+    choices = "<%= content_tag(:ul, @leagues.map { |l| content_tag(:li, h(l.name)) }) %>"    
+    render :inline => choices
+  end
+  
   private
 
   def auto_complete_team_field(team_name_start)
     @teams = Team.find(:all, :conditions => ["LOWER(name) like ?", team_name_start.downcase + '%' ], :order => "name ASC", :limit => 10 )
     "<%= content_tag(:ul, @teams.map { |t| content_tag(:li, h(t.name)) }) %>"    
   end
+  
   
 end
