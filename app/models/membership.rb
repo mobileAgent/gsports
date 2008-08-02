@@ -3,6 +3,7 @@ class Membership < ActiveRecord::Base
    has_many :subscriptions
    has_many :users, :through => :subscriptions
    has_many :membership_billing_histories
+   has_one  :credit_card
 
   CREDIT_CARD_BILLING_METHOD = "cc"
   INVOICE_BILLING_METHOD = "invoice"
