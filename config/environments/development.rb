@@ -27,3 +27,8 @@ config.cache_store = :memory_store
 
 # Using ActiveMerchant in development
 ActiveMerchant::Billing::Base.mode = :test
+Active_Merchant_payflow_gateway_username = 'markdr_1217114297_biz@gmail.com'
+Active_Merchant_payflow_gateway_password = 'markrmarkr'
+Active_Merchant_payflow_gateway_partner = 'PayPal'
+
+
