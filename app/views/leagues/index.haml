@@ -15,8 +15,8 @@
       %tr
         %td= link_to league.name, edit_league_path(league)
         %td=h league.city
-        %td=h league.state
-        %td=h league.description
+        %td=h(league.state_id? ? league.state.name : '')
+        %td=truncate(h(league.description),45)
         %td=h league.active
   
         %td= link_to 'Destroy', league_path(league), :confirm => 'Are you sure?', :method => :delete, :confirm => "Are you sure?", :method => :delete

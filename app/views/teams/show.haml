@@ -7,6 +7,10 @@
   =h @team.city 
 
 %p
+  %b County:
+  =h @team.county_name
+
+%p
   %b State:
   =h @team.state_id? ? @team.state.name : ""
 

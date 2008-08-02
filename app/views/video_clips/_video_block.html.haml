@@ -5,9 +5,10 @@
   %br
   = "#{h video_clip.description} - #{h video_clip.video_length}"
   %br
-  = link_to 'Parent Video', video_asset_path(video_clip.video_asset_id)
-  -if current_user.admin? || current_user.id == video_clip.user_id
-    %br
-    = link_to 'Edit', edit_video_clip_path(video_clip)
-    |
-    = link_to 'Destroy', video_clip, :confirm => 'Are you sure?', :method => :delete
+  -unless skip_controls
+    = link_to 'Parent Video', video_asset_path(video_clip.video_asset_id)
+    -if current_user && current_user.can_edit?(video_clip)
+      %br
+      = link_to 'Edit', edit_video_clip_path(video_clip)
+      |
+      = link_to 'Destroy', video_clip, :confirm => 'Are you sure?', :method => :delete

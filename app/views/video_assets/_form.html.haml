@@ -29,6 +29,16 @@
   = text_field_with_auto_complete :video_asset, :visiting_team_name, :autocomplete => "off"
 
 %p
+  %label{:for=>"video_asset[game_gender]"} Mens/Womens
+  %br/
+  = collection_select("video_asset","game_gender",["Mens","Womens","Coed"],"to_s","to_s",{ :selected => @video_asset.game_gender, :include_blank => true})
+
+%p
+  %label{:for=>"video_asset[game_level]"} Level
+  %br/
+  = collection_select("video_asset","game_level",["Varsity","JV","Recreational","Other"], "to_s","to_s",{:include_blank => true, :selected => @video_asset.game_level})
+
+%p
   =f.label :tags
   %br/
   = text_field_tag 'tag_list', @video_asset.tags.collect{|t| t.name}.join(" "), {:autocomplete => "off", :size => 35}
