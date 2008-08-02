@@ -1,23 +1,24 @@
 %h1 Listing teams
 
-%table
-  %tr
-    %th Name
-    %th City
-    %th State
-    %th Description
-    %th Active
+%table.unstyled
+  %thead
+    %tr
+      %th Name
+      %th City
+      %th State
+      %th Description
+      %th Active
+      %th/
 
-- for team in @teams
-  %tr
-    %td=h team.name
-    %td=h team.city
-    %td=h team.state
-    %td=h team.description
-    %td=h team.active
+  - for team in @teams
+    %tbody
+      %tr
+      %td= link_to team.name, edit_team_path(team)
+      %td=h team.city
+      %td=h team.state_id? ? team.state.name : ""
+      %td=truncate h(team.description),45
+      %td=h team.active
   
-    %td= link_to 'Show', team_path(team)
-    %td= link_to 'Edit', edit_team_path(team)
-    %td= link_to 'Destroy', team_path(team), :confirm => 'Are you sure?', :method => :delete, :confirm => "Are you sure?", :method => :delete
+      %td= link_to 'Destroy', team_path(team), :confirm => 'Are you sure?', :method => :delete, :confirm => "Are you sure?", :method => :delete
     
 = link_to 'New team', new_team_path 

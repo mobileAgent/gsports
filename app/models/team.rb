@@ -4,6 +4,7 @@ class Team < ActiveRecord::Base
   belongs_to :league
   has_many :users
   belongs_to :avatar, :class_name => "Photo", :foreign_key => "avatar_id"
+  belongs_to :state
 
   # Every team needs a name and a league
   validates_presence_of :name
@@ -16,6 +17,41 @@ class Team < ActiveRecord::Base
   
   def self.find_list(tag_list)
     find(:all, :conditions => [ 'LOWER(name) LIKE ?', '%' + tag_list + '%' ])
+  end
+  
+  # To support the video quickfind state selection dropdown
+  def self.states
+    Team.find(:all, 
+              :select => 'DISTINCT state_id', 
+              :conditions => 'state_id IS NOT NULL',
+              :order => 'state_id ASC')
+  end
+
+  # To support the video quickfind county selection dropdown
+  def self.counties(state_id=-1)
+    if (state_id > -1)
+      Team.find(:all, 
+                :select => "DISTINCT county_name", 
+                :conditions => "state_id = #{state_id} AND county_name IS NOT NULL",
+                :order => 'county_name ASC')
+    else
+      Team.find(:all, 
+                :select => "DISTINCT county_name", 
+                :conditions => "county_name IS NOT NULL",
+                :order => 'county_name ASC')
+    end
+  end
+
+  def state_name
+    state ? state.name : nil
+  end
+
+  def league_name
+    league ? league.name : nil
+  end
+  
+  def league_name= league_name
+    self.league= League.find_or_create_by_name league_name
   end
   
 end

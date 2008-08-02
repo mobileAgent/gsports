@@ -132,12 +132,24 @@ class VideoAssetsController < BaseController
     # Set up things that don't come naturally from the form
     @video_asset.video_status = 'saving'
     @video_asset.user_id = current_user.id
+
+    # Set up team (should only come from admin form)
     if(current_user.admin? && params[:video_asset][:team_name])
       @video_asset.team_name= params[:video_asset][:team_name]
     else
       @video_asset.team= current_user.team
     end
-    @video_asset.league= @video_asset.team.league
+    
+    # Set up league (should only come from admin form)
+    if(current_user.admin? && params[:video_asset][:league_name])
+      @video_asset.league_name= params[:video_asset][:league_name]
+      if (@video_asset.team_id?)
+        @video_asset.team.league_id = @video_asset.league_id
+      end
+    else    
+      @video_asset.league= @video_asset.team.league
+    end
+    
     @video_asset.tag_with(params[:tag_list] || '') 
 
     if @video_asset.save!

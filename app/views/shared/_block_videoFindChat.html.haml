@@ -4,10 +4,10 @@
       =collection_select("video_asset","game_date",VideoAsset.seasons(),"year","year",{:prompt => '-Season-', :selected => params[:season] || '-Season-'}, {:id => "videoFindSeason", :name => 'season'})
       %label.verbalSemantic{ :for => "videoFindSeason" }
         Season
-      =collection_select("video_asset","state_id",VideoAsset.states(),"state_id","state_name", {:prompt => "-State-", :selected => params[:state] || "-State-"}, {:id => 'videoFindState', :name => 'state'})
+      =collection_select("team","state_id",Team.states(),"state_id","state_name", {:prompt => "-State-", :selected => params[:state] || "-State-"}, {:id => 'videoFindState', :name => 'state'})
       %label.verbalSemantic{ :for => "videoFindState" }
         State
-      =collection_select("video_asset","county_name",VideoAsset.counties(),"county_name","county_name",{:prompt => "-County-", :selected => params[:county_name] || "-County-"}, {:id => 'videoFindCounty', :name => 'county_name'})
+      =collection_select("team","county_name",Team.counties(),"county_name","county_name",{:prompt => "-County-", :selected => params[:county_name] || "-County-"}, {:id => 'videoFindCounty', :name => 'county_name'})
       %label.verbalSemantic{ :for => "videoFindCounty" }
         County
       =collection_select("league","id",League.find(:all),"id","name",{:prompt => "-League-", :selected => params[:league] || "-League-"}, {:id => 'video_findLeague', :name => 'league'})
@@ -39,7 +39,7 @@
     .chatToolLinks
       =link_to "send invites", '/invite'
       |
-      =link_to "my account", edit_account_user_path(current_user), :id => 'user-menu'
+      =link_to "my account", edit_account_user_path(current_user.id), :id => 'user-menu'
       |
       - unread = Message.unread(current_user)
       - mcount = (unread > 0) ? "(#{unread})" : ''
@@ -55,17 +55,16 @@
     %li= link_to('Admin', admin_dashboard_path) if current_user.admin?
   %hr
   %ul
-    %li= link_to "Dashboard", dashboard_user_path(current_user) 
-    %li= link_to "Edit account", edit_account_user_path(current_user)          
-    %li= link_to "View profile", user_path(current_user)                  
+    %li= link_to "Dashboard", dashboard_user_path(current_user.id)
+    %li= link_to "Edit account", edit_account_user_path(current_user.id)
   %hr
   %ul
-    %li= link_to 'Blog', manage_user_posts_path(current_user)
-    %li= link_to 'Photos', user_photos_path(current_user)
-    %li= link_to 'Clippings', user_clippings_path(current_user)
-    %li= link_to 'Friends', accepted_user_friendships_path(current_user)        
-  %hr
-  =link_to 'Log out', logout_path
+    %li= link_to "View profile", user_path(current_user.id)
+    %li= link_to 'Blog', manage_user_posts_path(current_user.id)
+    %li= link_to 'Clips', user_video_clips_path(current_user.id)
+    %li= link_to 'Reels', user_video_reels_path(current_user.id)
+    %li= link_to 'Photos', user_photos_path(current_user.id)
+    %li= link_to 'Friends', accepted_user_friendships_path(current_user.id)        
 
 %script{:type => "text/javascript"}
   :plain

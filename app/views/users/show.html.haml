@@ -88,7 +88,6 @@
             response
             %br/
   
-    
     =render :partial => "users/profile_friends"
     
           
@@ -120,64 +119,9 @@
                 
                 
                 
-                
-    .contentBox.tanBackground
-      .contentBoxHeader.yellowHeader
-        %span.moreLink
-          %a{ :href => "#", :onclick => "return profile_minimize(this)" }
-            minimize -
-        %h2.boxDescription
-          Favorites
-      .contentBoxContent
-        .profileFeature
-          .featureSummaryThumb
-            %img{ :src => "/gs/placeholders/story_thumb.jpg" }/
-          .featureText
-            %span.profileSubHeading
-              Liz Waters
-            %br/
-            Mezeek HS
-            %br/
-          .clearDiv
-          .featureSummaryThumb
-            %img{ :src => "/gs/placeholders/friend.jpg" }/
-          .featureText
-            %span.profileSubHeading
-              Liz Waters
-            %br/
-            Mezeek HS
-            %br/
-          .clearDiv
-          .featureSummaryThumb
-            %img{ :src => "/gs/placeholders/story_thumb.jpg" }/
-          .featureText
-            %span.profileSubHeading
-              Liz Waters
-            %br/
-            Mezeek HS
-            %br/
-          .clearDiv
-          .featureSummaryThumb
-            %img{ :src => "/gs/placeholders/friend.jpg" }/
-          .featureText
-            %span.profileSubHeading
-              Liz Waters
-            %br/
-            Mezeek HS
-            %br/
-          .clearDiv
-          .featureSummaryThumb
-            %img{ :src => "/gs/placeholders/story_thumb.jpg" }/
-          .featureText
-            %span.profileSubHeading
-              Liz Waters
-            %br/
-            Mezeek HS
-            %br/
-          .clearDiv.moreLinkArea
-            %span.moreLink
-              %a{ :href => "" }
-                more?
+    =render :partial => "users/profile_favs"
+
+       
   /
     col3 content
   .mainCol3
@@ -257,36 +201,9 @@
     =render :partial => "users/profile_activity"
                 
                 
-                
-    .contentBox.tanBackground
-      .contentBoxHeader.yellowHeader
-        %span.moreLink
-          %a{ :href => "#", :onclick => "return profile_minimize(this)" }
-            minimize -
-        %h2.boxDescription
-          Testimonials
-      .contentBoxContent
-        .profileFeature
-          .profileInfo
-            %a{ :href => "" }
-              Johnny Boombatz
-            said...
-            %br/
-            %span.testimonial
-              lorem loremlorem lorem etc.
-            %a{ :href => "" }
-              Johnny Boombatz
-            said...
-            %br/
-            %span.testimonial
-              lorem loremlorem lorem etc.
-          .clearDiv.moreLinkArea
-            %span.moreLink
-              %a{ :href => "" }
-                write a testimonial for this person
-              |
-              %a{ :href => "" }
-                see all testimonials?
+    =render :partial => "users/profile_testify"
+     
+     
   .clearDiv
 
 

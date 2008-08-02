@@ -3,24 +3,10 @@
 = error_messages_for :team
 
 - form_for(@team) do |f|
-  %p
-    %b Name
-    = f.text_field :name 
-  %p
-    %b City
-    = f.text_field :city 
-  %p
-    %b State
-    = f.text_field :state 
-  %p
-    %b Description
-    = f.text_field :description 
-  %p
-    %b Active
-    = f.check_box :active 
-    
+  = render :partial => "form", :locals => { :f => f }
   %p= f.submit "Update"
-  
-= link_to 'Show', team_path(@team)
+ 
+    
+= link_to 'Show', team_path(@team) | 
 = link_to 'Back', teams_path
 

@@ -1,0 +1,7 @@
+- %w(info notice error).each do |type|
+  .warning.flash_message{ :class => "#{type}", :id => "flash_#{type}", :style => "display: #{flash[type.to_sym] ? 'block' : 'none'}" }
+    %span
+      - if flash[type.to_sym]
+        = h(flash[type.to_sym])
+    %small
+      %a{:href=>"#", :onclick=>"$$('div.#{type.to_s}')[0].hide();return false"} Close this message

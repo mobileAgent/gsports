@@ -21,13 +21,13 @@
   =h @video_asset.video_length
 
 %p
+  %b Game Date:
+  =h @video_asset.game_date.to_s(:game_date)  
+
+%p
   %b Sport:
   =h @video_asset.sport
   
-%p
-  %b Status:
-  =h @video_asset.video_status
-
 %br/
 
 - if(current_user.league_admin? || current_user.team_admin? || current_user.admin?)

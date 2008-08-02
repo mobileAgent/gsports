@@ -1,0 +1,25 @@
+%h3 Admin
+
+%ul.list.checks
+  %li= link_to "Leagues", leagues_path
+  %li= link_to "Teams", teams_path
+  %li= link_to "Full Game Videos", video_assets_path
+  %li= link_to "Clips", video_clips_path
+  %li= link_to "Reels", video_reels_path
+  %li= link_to "Vidavee Parameters", vidavees_path
+  -if false
+    %li= link_to "Features", homepage_features_path
+  - if false && feature_enabled?('categories')
+    %li= link_to "Categories", categories_path
+  - if false && feature_enabled?('contests')
+    %li= link_to "Contests", contests_path
+  - if false
+    %li= link_to "Metro areas", metro_areas_path
+  - if false && feature_enabled?('skills')
+    %li= link_to "Skills", new_skill_path 
+  - if false && feature_enabled?('events')
+    %li= link_to "Events", events_path
+  -if false
+    %li= link_to "Statistics", statistics_path
+  - if false
+    %li= link_to "Ads", ads_path 

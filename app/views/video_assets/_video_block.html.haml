@@ -7,7 +7,7 @@
   %br
   = "#{h video_asset.league.name if video_asset.league}, #{h video_asset.team.name if video_asset.team}, #{h video_asset.sport}, #{video_asset.game_date}"
   
-  - if current_user.league_admin? || current_user.team_admin? || current_user.admin?
+  - if current_user && (current_user.league_admin? || current_user.team_admin? || current_user.admin?)
     %br  
     = link_to 'Edit', edit_video_asset_path(video_asset)
     |
