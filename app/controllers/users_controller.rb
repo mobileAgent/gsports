@@ -1,18 +1,18 @@
 class UsersController < BaseController
   protect_from_forgery :only => [:create, :update, :destroy]
-  
-  def show  
+
+  def show
     @friend_count = @user.accepted_friendships.count
     @accepted_friendships = @user.accepted_friendships.find(:all, :limit => 5).collect{|f| f.friend }
     @pending_friendships_count = @user.pending_friendships.count()
-    
+
     fav_cond = { :user_id => @user.id }
     @favorites = Favorite.find(:all, :limit=>5, :conditions=>fav_cond, :order => 'created_at DESC')
     @favorites_more = Favorite.count( :conditions=>fav_cond ) > 5
 
     @comments = @user.comments.find(:all, :limit => 10, :order => 'created_at DESC')
     @photo_comments = Comment.find_photo_comments_for(@user)
-    
+
     @users_comments = Comment.find_comments_by_user(@user, :limit => 5)
 
     @recent_posts = @user.posts.find(:all, :limit => 2, :order => "published_at DESC")
@@ -20,8 +20,8 @@ class UsersController < BaseController
     @photos = @user.photos.find(:all, :limit => 5)
     @comment = Comment.new(params[:comment])
     update_view_count(@user) unless current_user && current_user.eql?(@user)
-  end 
-  
+  end
+
   # registration step 1
   def register
   end
@@ -48,6 +48,8 @@ class UsersController < BaseController
 
     @user = User.new(params[:user])
     @user.role = @role || Role[:member]
+    team = Team.find(:first)
+    @user.team = team
     @user.save!
     create_friendship_with_inviter(@user, params)
 
@@ -85,25 +87,16 @@ class UsersController < BaseController
     end
 
     gateway = ActiveMerchant::Billing::PayflowGateway.new({
-      :login => 'markdr_1217114297_biz@gmail.com',
-      :password => 'markrmarkr',
-      :partner => 'PayPal'
+      :login => Active_Merchant_payflow_gateway_username,
+      :password => Active_Merchant_payflow_gateway_password,
+      :partner => Active_Merchant_payflow_gateway_partner
     })
     @response = gateway.purchase(@user.role.plan.cost, @credit_card)
 
 #    if (@response.success?)  # Test gateway is a bit flakey
-      m = Membership.new
-      m.billing_method = Membership::CREDIT_CARD_BILLING_METHOD
-      m.cost = @user.role.plan.cost
-      m.name = @user.firstname + " " + @user.minitial + " " + @user.lastname
+      @user.make_member(Membership::CREDIT_CARD_BILLING_METHOD,nil,@response)
+      @user.set_payment(@credit_card)
 
-      # Note that this member has paid the first month
-      history = MembershipBillingHistory.new
-      history.authorization_reference_number = "sample"
-      history.payment_method = Membership::CREDIT_CARD_BILLING_METHOD
-      m.membership_billing_histories << history
-      @user.memberships << m
-      @user.save
 #    else
 #      render :action => 'billing', :userid => @user.id
 #    end
@@ -132,7 +125,7 @@ class UsersController < BaseController
     end
     redirect_to user_photo_path(@user, @photo)
   end
-  
+
   def change_league_photo
     @user = User.find(params[:id])
     if ((@user.league_staff? && current_user.id == @user.id) || current_user.admin?)
@@ -153,5 +146,5 @@ class UsersController < BaseController
     end
     redirect_to user_photo_path(@user, @photo)
   end
-  
+
 end
