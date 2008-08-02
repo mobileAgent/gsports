@@ -6,7 +6,7 @@ Requirements:
   - ImageMagick
   - RAILS VERSION 2.1
   - MySql 5
-
+ 
 Required Gems:  
       rmagick
       hpricot
