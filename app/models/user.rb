@@ -6,14 +6,14 @@ class User < ActiveRecord::Base
   validates_presence_of :firstname
   #validates_presence_of :minitial
   validates_presence_of :lastname
-    
+
   validates_presence_of :address1
   #validates_presence_of :address2
   validates_presence_of :city
-    
-  #validates_presence_of :state 
+
+  #validates_presence_of :state
   #validates_presence_of :country
-    
+
   validates_presence_of :phone
   validates_presence_of :team_id
 
@@ -43,8 +43,8 @@ class User < ActiveRecord::Base
       User.find_by_email(ADMIN_EMAIL).team.avatar
     end
   end
-      
-  
+
+
   def team_admin?
     role && role.eql?(Role[:team])
   end
@@ -52,7 +52,7 @@ class User < ActiveRecord::Base
   def team_staff?
     role && (role.eql?(Role[:team_staff]) || team_admin? )
   end
-  
+
   def league_admin?
     role && role.eql?(Role[:league])
   end
@@ -60,17 +60,30 @@ class User < ActiveRecord::Base
   def league_staff?
     role && (role.eql?(Role[:league_staff]) || league_admin?)
   end
-  
+
   def scout_admin?
     role && role.eql?(Role[:scout])
   end
-  
+
   def scout_staff?
     role && (role.eql?(Role[:scout_staff]) || scount_admin?)
   end
-  
+
   def full_name
     "#{firstname} #{lastname}"
   end
-  
+
+  def make_member(billing_method, address,payment_authorization)
+    mem = Membership.new(:billing_method=>billing_method)
+    mem.cost = role.plan.cost
+    mem.name = firstname + " " + minitial + " " + lastname
+
+    history = MembershipBillingHistory.new
+    history.authorization_reference_number = "sample"
+    history.payment_method = billing_method
+    mem.membership_billing_histories << history
+
+    memberships << mem
+    save
+  end
 end

@@ -26,6 +26,8 @@ class UsersController < BaseController
 
     @user = User.new(params[:user])
     @user.role = @role || Role[:member]
+    team = Team.find(:first)
+    @user.team = team
     @user.save!
     create_friendship_with_inviter(@user, params)
 
@@ -70,18 +72,8 @@ class UsersController < BaseController
     @response = gateway.purchase(@user.role.plan.cost, @credit_card)
 
 #    if (@response.success?)  # Test gateway is a bit flakey
-      m = Membership.new
-      m.billing_method = Membership::CREDIT_CARD_BILLING_METHOD
-      m.cost = @user.role.plan.cost
-      m.name = @user.firstname + " " + @user.minitial + " " + @user.lastname
+      @user.make_member(Membership::CREDIT_CARD_BILLING_METHOD,nil,@response)
 
-      # Note that this member has paid the first month
-      history = MembershipBillingHistory.new
-      history.authorization_reference_number = "sample"
-      history.payment_method = Membership::CREDIT_CARD_BILLING_METHOD
-      m.membership_billing_histories << history
-      @user.memberships << m
-      @user.save
 #    else
 #      render :action => 'billing', :userid => @user.id
 #    end
@@ -102,7 +94,7 @@ class UsersController < BaseController
       end
     end
   end
-  
+
   def change_league_photo
     @user = User.find(params[:id])
     if ((@user.league_staff? && current_user.id == @user.id) || current_user.admin?)
@@ -115,5 +107,5 @@ class UsersController < BaseController
       end
     end
   end
-  
+
 end
