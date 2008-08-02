@@ -5,7 +5,8 @@
   %br
   = "#{h video_clip.description} - #{h video_clip.video_length}"
   %br
-  -unless skip_controls
+  - skip_controls ||= false
+  - unless skip_controls
     = link_to 'Parent Video', video_asset_path(video_clip.video_asset_id)
     -if current_user && current_user.can_edit?(video_clip)
       %br

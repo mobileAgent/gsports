@@ -5,7 +5,8 @@
   %br
   = "#{h video_reel.description} - #{h video_reel.video_length}"
   %br
-  -unless skip_controls
+  - skip_controls ||= false
+  - unless skip_controls
     -if current_user && current_user.can_edit?(video_reel)
       %br
       = link_to 'Edit', edit_video_reel_path(video_reel)

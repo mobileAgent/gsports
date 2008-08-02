@@ -7,7 +7,8 @@
   %br
   = "#{h video_asset.league.name if video_asset.league}, #{h video_asset.team.name if video_asset.team}, #{h video_asset.sport}, #{video_asset.game_date}"
   
-  -unless skip_controls
+  - skip_controls ||= false
+  - unless skip_controls
     - if current_user && current_user.can_edit?(video_asset)
       %br  
       = link_to 'Edit', edit_video_asset_path(video_asset)
