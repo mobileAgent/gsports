@@ -11,4 +11,8 @@ class VideoClip < ActiveRecord::Base
   # Every clip needs a title
   validates_presence_of :title
 
+  # For the sake of symmetry
+  named_scope :for_user,
+    lambda { |user| { :conditions => ["user_id = ?",user.id] } }
+  
 end
