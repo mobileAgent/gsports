@@ -12,7 +12,10 @@
   = render :partial => 'shared/favorite_item', :locals => { :item => @video_clip }
   = render :partial => 'shared/favorite_count', :locals => { :item => @video_clip }
   = render :partial => 'shared/inappropriate_item', :locals => { :item => @video_clip }
+  -if current_user && current_user.can_edit?(@video_clip)
+    %br
+    = link_to 'Edit', edit_video_clip_path(@video_clip)
+    |
+    = link_to 'Destroy', @video_clip, :confirm => 'Are you sure?', :method => :delete
 - else
   %p = "This clip could not be found"
-
-= link_to 'Back', video_clips_path

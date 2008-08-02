@@ -46,6 +46,11 @@
   border: 1px solid black;
 }
   
+.mainContentArea .video_thumbnail {
+  display: inline;
+  margin: 5px;
+}
+
 
 
 .warning, #errorExplanation, .errorExplanation{

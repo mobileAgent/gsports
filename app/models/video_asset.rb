@@ -5,7 +5,7 @@ class VideoAsset < ActiveRecord::Base
   belongs_to :user
   belongs_to :home_team, :class_name => 'Team', :foreign_key => 'home_team_id'
   belongs_to :visiting_team, :class_name => 'Team', :foreign_key => 'visiting_team_id'
-  has_many :video_clips
+  has_many :video_clips, :dependent => :destroy
   
   acts_as_commentable
   acts_as_taggable
@@ -22,6 +22,9 @@ class VideoAsset < ActiveRecord::Base
 
   # Video upload repository
   VIDEO_REPOSITORY = VIDEO_BASE+"/uploaded"
+
+  named_scope :for_user,
+    lambda { |user| { :conditions => ["team_id = ? || league_id = ?",user.team_id, user.league_id] } }
 
   def self.video_repository
     VIDEO_REPOSITORY
