@@ -10,11 +10,13 @@
   %p
     %b City
     %br
-    = f.text_field :city 
+    = f.text_field :city
+    
   %p
     %b State
-    %br
-    = f.text_field :state 
+    %br/
+    =collection_select("league","state_id",State.all,"id","name",{ :selected => @league.state_name })
+    
   %p
     %b Description
     %br

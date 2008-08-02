@@ -34,6 +34,9 @@ class User < ActiveRecord::Base
     delegate method, :to => :team
   end
 
+  named_scope :admin,
+    :conditions => ["email = ?",ADMIN_EMAIL]
+
   def team_or_league_avatar
     if team && team.avatar_id?
       team.avatar
