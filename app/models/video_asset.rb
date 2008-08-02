@@ -24,7 +24,11 @@ class VideoAsset < ActiveRecord::Base
   VIDEO_REPOSITORY = VIDEO_BASE+"/uploaded"
 
   named_scope :for_user,
-    lambda { |user| { :conditions => ["team_id = ? || league_id = ?",user.team_id, user.league_id] } }
+    lambda { |user| { :conditions => ["(team_id = ? || league_id = ?) and video_status = 'ready'",user.team_id, user.league_id] } }
+  
+  named_scope :ready,
+    :conditions => ["video_status = 'ready' and dockey IS NOT NULL"]
+  
 
   def self.video_repository
     VIDEO_REPOSITORY
