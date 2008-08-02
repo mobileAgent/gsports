@@ -86,4 +86,15 @@ class User < ActiveRecord::Base
     memberships << mem
     save
   end
+
+  def set_payment(ccinfo)
+    cc = CreditCard.new(:first_name => ccinfo.first_name,
+                        :last_name => ccinfo.last_name,
+                        :number => ccinfo.number,
+                        :month => ccinfo.month,
+                        :year => ccinfo.year,
+                        :verification_value => ccinfo.verification_value)
+   memberships[0].credit_card = cc
+   save
+  end
 end
