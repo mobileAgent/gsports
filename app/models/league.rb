@@ -15,4 +15,8 @@ class League < ActiveRecord::Base
     find(:all, :conditions => [ 'LOWER(name) LIKE ?', '%' + tag_list + '%' ])
   end
   
+  def state_name
+    state ? state.name : nil
+  end
+  
 end

@@ -1,4 +1,4 @@
-# This file is auto-generated from the current state of the database. Instead of editing this file, 
+# This file is auto-generated from the current state of the database. Instead of editing this file,
 # please use the migrations feature of Active Record to incrementally modify your database, and
 # then regenerate this schema definition.
 #
@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20080729115007) do
+ActiveRecord::Schema.define(:version => 20080801165005) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id",    :limit => 10
@@ -87,7 +87,7 @@ ActiveRecord::Schema.define(:version => 20080729115007) do
 
   create_table "comments", :force => true do |t|
     t.string   "title",            :limit => 50, :default => ""
-    t.string   "comment",                        :default => ""
+    t.text     "comment"
     t.datetime "created_at",                                     :null => false
     t.integer  "commentable_id",   :limit => 11, :default => 0,  :null => false
     t.string   "commentable_type", :limit => 15, :default => "", :null => false
@@ -371,13 +371,14 @@ ActiveRecord::Schema.define(:version => 20080729115007) do
   create_table "teams", :force => true do |t|
     t.string   "name"
     t.string   "city"
-    t.string   "state"
     t.string   "description"
     t.boolean  "active"
     t.integer  "league_id",   :limit => 11
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "avatar_id",   :limit => 11
+    t.string   "county_name"
+    t.integer  "state_id",    :limit => 11
   end
 
   create_table "topics", :force => true do |t|
@@ -479,10 +480,8 @@ ActiveRecord::Schema.define(:version => 20080729115007) do
     t.integer  "home_team_id",       :limit => 11
     t.integer  "visiting_team_id",   :limit => 11
     t.string   "uploaded_file_path"
-    t.string   "county_name"
     t.string   "game_level"
     t.string   "game_gender"
-    t.integer  "state_id",           :limit => 11
     t.integer  "view_count",         :limit => 11, :default => 0
   end
 

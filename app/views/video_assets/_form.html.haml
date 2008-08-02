@@ -1,46 +1,66 @@
-- form_for @video_asset do |f|
+= f.error_messages
 
-  = f.error_messages
+%p
+  = f.label :title
+  %br/
+  = f.text_field :title
+%p
+  = f.label :description
+  %br/
+  = f.text_field :description
+  
+%p
+  = f.label :sport
+  %br/
+  = text_field_with_auto_complete :video_asset, :sport, :autocomplete => "off"
+%p
+  = f.label "Game Date (yyyy-mm-dd)"
+  %br/
+  = text_field :video_asset, :game_date, :value => "#{ @video_asset.game_date? ? @video_asset.game_date.to_s(:game_date) : '' }"
+  
+%p
+  %label{:for=>"video_asset[home_team_name]"} Home Team
+  %br/
+  = text_field_with_auto_complete :video_asset, :home_team_name, :autocomplete => "off"
+    
+%p
+  %label{:for=>"video_asset[visiting_team_name]"} Visitng Team
+  %br/
+  = text_field_with_auto_complete :video_asset, :visiting_team_name, :autocomplete => "off"
 
-  %p
-    = f.label :dockey
-    %br/
-    = f.text_field :dockey
-  %p
-    = f.label :title
-    %br/
-    = f.text_field :title
-  %p
-    = f.label :description
-    %br/
-    = f.text_field :description
-  %p
-    = f.label :video_length
-    %br/
-    = f.text_field :video_length
-  %p
-    = f.label :video_type
-    %br/
-    = f.text_field :video_type
-  %p
-    = f.label :video_status
-    %br/
-    = f.text_field :video_status
-  %p
-    = f.label :league_id
-    %br/
-    = f.text_field :league_id
-  %p
-    = f.label :team_id
-    %br/
-    = f.text_field :team_id
-  %p
-    = f.label :sport
-    %br/
-    = f.text_field :sport
-  %p
-    = f.label :game_date
-    %br/
-    = f.text_field :game_date
-  %p
-    = f.submit "Submit"
+%p
+  =f.label :tags
+  %br/
+  = text_field_tag 'tag_list', @video_asset.tags.collect{|t| t.name}.join(" "), {:autocomplete => "off", :size => 35}
+  #tag_list_auto_complete.auto_complete
+  = auto_complete_field 'tag_list', {:url => { :controller => "tags", :action => 'auto_complete_for_tag_name'}, :tokens => [',', ' ']  }
+  
+- if current_user.admin?
+  %fieldset
+    %legend="Advanced Fields (Admin Only)"
+    %p
+      = f.label :league_name
+      %br/
+      = text_field_with_auto_complete :video_asset, :league_name, :autocomplete => "off"
+    %p
+      = f.label :team_name
+      %br/
+      = text_field_with_auto_complete :video_asset, :team_name, :autocomplete => "off"
+    %p
+      = f.label :dockey
+      %br/
+      = f.text_field :dockey
+    %p
+      = f.label :video_length
+      %br/
+      = f.text_field :video_length
+    %p
+      = f.label :video_type
+      %br/
+      = f.text_field :video_type
+    %p
+      = f.label :video_status
+      %br/
+      = f.text_field :video_status
+    
+%p

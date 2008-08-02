@@ -2,6 +2,7 @@ log/*.log
 nbproject
 .DS_Store
 tmp/**/*
+tmp/*.pid
 videos
 public/photos
 public/assets

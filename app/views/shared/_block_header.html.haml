@@ -2,7 +2,7 @@
   %h1.headerBrand
     Global Sports
   .headerSchoolLogo
-    = render :partial => "photos/photo_block", :locals => {:photo => current_user.team_or_league_avatar}
+    = render :partial => "photos/photo_block", :locals => {:photo => current_user.team_or_league_avatar, :options=>{:size => "100x100"} }
   .headerAd1
     %img{ :src => "/gs/placeholders/header_ad_1.jpg", :alt => "##TEXT EQUIVALENT##" }
   .headerAccountControl
