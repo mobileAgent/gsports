@@ -87,9 +87,9 @@ class UsersController < BaseController
     end
 
     gateway = ActiveMerchant::Billing::PayflowGateway.new({
-      :login => 'markdr_1217114297_biz@gmail.com',
-      :password => 'markrmarkr',
-      :partner => 'PayPal'
+      :login => Active_Merchant_payflow_gateway_username,
+      :password => Active_Merchant_payflow_gateway_password,
+      :partner => Active_Merchant_payflow_gateway_partner
     })
     @response = gateway.purchase(@user.role.plan.cost, @credit_card)
 
