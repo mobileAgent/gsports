@@ -22,7 +22,7 @@
 
 %p
   %b Game Date:
-  =h(@video_asset.game_date? ? @video_asset.game_date.to_s(:game_date) : '')
+  =h game_date(@video_asset.game_date)
 
 %p
   %b Sport:
