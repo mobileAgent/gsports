@@ -85,13 +85,13 @@ class Vidavee < ActiveRecord::Base
     s = url_for('file/GetFileThumbnailLow')
     "#{s}?#{DOCKEY_PARAM}=#{dockey}"
   end
-    
+  
   # Returns the thumbnail url for the dockey
   def file_thumbnail_medium(dockey)
     s = url_for('file/GetFileThumbnailMedium')
     "#{s}?#{DOCKEY_PARAM}=#{dockey}"
   end
-    
+  
   # Returns the thumbnail url for the dockey
   def file_thumbnail(dockey)
     s = url_for('file/GetFileThumbnail')
@@ -159,7 +159,11 @@ class Vidavee < ActiveRecord::Base
   def vtags_for_asset(sessionid,dockey,extra_params = {})
     extra_params[DOCKEY_PARAM] = dockey
     response = vrequest('gallery/GetGalleryVtagsByAsset',sessionid,extra_params,false)
-    extract(response.content,'//vtag')
+    if (response)
+      extract(response.content,'//vtag')
+    else
+      nil
+    end
   end
 
   # Get details for a reel (vidavee calls this a playlist)
@@ -174,8 +178,11 @@ class Vidavee < ActiveRecord::Base
     desc = h.search(vpel).attr('description')
     length = h.search(vpel).attr('length')
     part_count = h.search('//item').size
-    thumbnail_dockey = h.search('//item').attr('id')
-    { :title => title, :description => desc, :video_length => length, :part_count => part_count, :thumbnail_dockey => thumbnail_dockey }
+    if (part_count > 0)
+      first_item = h.search('//item')
+      thumbnail_dockey=first_item.attr('id') if first_item
+    end
+    { :title => title, :description => desc, :video_length => length, :thumbnail_dockey => thumbnail_dockey }
   end
 
   # Load gallery assets from vidavee xml into our video_assets models
@@ -184,10 +191,8 @@ class Vidavee < ActiveRecord::Base
   # Returns [count_found, count_loaded]
   def load_gallery_assets(sessionid, asset_type='videoAsset', extra_params = {})
     assets = gallery_assets(sessionid,asset_type,extra_params)
-    if assets.nil?
-      return [0,0]
-    end
-    admin = User.find_by_email(ADMIN_EMAIL)
+    return [0,0] if assets.nil?
+    admin = User.admin.first
     save_count = 0
     assets.each do |a|
       v = VideoAsset.new
@@ -210,7 +215,34 @@ class Vidavee < ActiveRecord::Base
     end
     [assets.size, save_count]
   end
-
+  
+  # Load gallery playlists from vidavee xml into our video_reels models
+  # Use rowsPerPage to change the default of 15, set to 0 for all
+  # It's a two step process, We get the playlist dockey in a paged list
+  # then we have to look up the details on that in a separate call
+  # Returns [count_found, count_loaded]
+  def load_gallery_playlists(sessionid, user_id, extra_params = {})
+    assets = gallery_playlists(sessionid,extra_params)
+    return [0,0] if assets.nil?
+    save_count,found_count = 0,0
+    assets.each do |a|
+      playlist_dockey = a.search('//dockey')
+      next if playlist_dockey.nil?
+      playlist_dockey=playlist_dockey.text
+      found_count+=1
+      next if VideoReel.find_by_dockey(playlist_dockey)
+      v = VideoReel.new(reel_details(sessionid,playlist_dockey))
+      if v.title.nil? || v.title.size == 0
+        v.title = 'no title supplied'
+      end
+      v.user_id = user_id
+      if v.save!
+        save_count+=1
+      end
+    end
+    [found_count,save_count]
+  end
+  
   def update_asset_record(sessionid,video_asset)
     response = vrequest('assets/GetDetailsAssetContent',sessionid, { DOCKEY_PARAM => video_asset.dockey })
     if response && response.content
@@ -225,7 +257,7 @@ class Vidavee < ActiveRecord::Base
     end
     video_asset
   end
-    
+  
 
   # Load the vtags for the specified dockey into
   # our database by querying the vidavee backend
@@ -238,7 +270,7 @@ class Vidavee < ActiveRecord::Base
       vt = VideoClip.new
       vt.dockey= v.search('//dockey').text
       vt.title= v.search('//title').text
-      vt.length= v.search('//length').text
+      vt.video_length= v.search('//length').text
       vt.description= v.search('//description').text
       vt.video_asset_id = video_asset.id
       vt.user_id = video_asset.user_id
@@ -369,8 +401,7 @@ class Vidavee < ActiveRecord::Base
   def self.load_backend_video (limit = -1)
     v = Vidavee.first
     token = v.login
-    save_count = 0
-    find_count = 0
+    save_count,find_count = 0,0
     fc = -1
     page = 1
     rowsPerPage = 50
@@ -391,7 +422,7 @@ class Vidavee < ActiveRecord::Base
   # Load clips up from the vidavee backend
   # that correspond to the video_assets passed in
   # or all video_assets
-  def self.load_backend_clips(video_assets = VideoAssets.find(:all))
+  def self.load_backend_clips(video_assets = VideoAsset.all)
     v = Vidavee.first
     token = v.login
     total_found, total_saved = 0,0
@@ -402,7 +433,30 @@ class Vidavee < ActiveRecord::Base
       total_saved += saved
     end
     [total_found, total_saved]
-  end    
+  end
+  
+  # Load reels up from the vidavee backend
+  def self.load_backend_reels(limit=-1,user_id=User.admin.first.id)
+    v = Vidavee.first
+    token = v.login
+    total_found, total_saved = 0,0
+    fc = -1
+    page = 1
+    rowsPerPage = 50
+    while fc != 0
+      if limit > 0 && rowsPerPage > (limit-find_count)
+        rowsPerPage = limit-find_count
+      end
+      fc,sc =
+        v.load_gallery_playlists(token,user_id,'rowsPerPage' => rowsPerPage,'AF_page' => page)
+      total_saved += sc
+      total_found += fc
+      page += 1
+      break if limit > 0 && find_count >= limit
+    end
+    puts "Pulled #{total_found} and saved #{total_saved} reels from Vidavee"
+    [total_found, total_saved]
+  end
 
   #### Internal methods follow here
   protected

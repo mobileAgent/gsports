@@ -9,6 +9,11 @@ namespace :vidavee do
   task :load_video_clips => :environment do
     Vidavee.load_backend_clips
   end
+  
+  desc "Load or update all video reels (playlists) from the vidavee backend"
+  task :load_video_reels => :environment do
+    Vidavee.load_backend_reels
+  end
 
   desc "Update the status of the specified video asset from the vidavee backend"
   task :update_video_asset_status => :environment do

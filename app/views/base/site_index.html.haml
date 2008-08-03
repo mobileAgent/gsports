@@ -16,7 +16,13 @@
         = "#{game1.team.name} - #{game1.team.league.name}"
         %br/
       - v.each do |video_asset|
-        = render :partial => 'video_assets/video_block', :locals => { :video_asset => video_asset }
+        - case video_asset.class.to_s
+          - when 'VideoAsset'
+            = render :partial => 'video_assets/video_block', :locals => { :video_asset => video_asset }
+          - when 'VideoClip'
+            = render :partial => 'video_clips/video_block', :locals => { :video_clip => video_asset }
+          - when 'VideoReel'
+            = render :partial => 'video_reels/video_block', :locals => { :video_reel => video_asset }
         
 .yui-b
   .box
