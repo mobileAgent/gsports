@@ -24,6 +24,7 @@ class VideoClipsControllerTest < ActionController::TestCase
   end
 
   def test_should_get_new
+    login_as :quentin
     get :new
     assert_response :success
   end
