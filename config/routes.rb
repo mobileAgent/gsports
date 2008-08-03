@@ -1,5 +1,5 @@
 ActionController::Routing::Routes.draw do |map|
-  
+
   map.resources :members
   map.resources :pages
   map.resources :teams
@@ -9,13 +9,14 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :video_clips
   map.resources :video_reels
   map.resources :messages
+  map.resources :billing
 
   map.register         'register',        :controller => 'users', :action => 'register'
   map.forgot_password  'forgot_password', :controller => 'users', :action => 'forgot_password'
-  
+
   # Override CE on this one by getting mine in there first
   map.admin_dashboard  '/admin/dashboard', :controller => 'admin', :action => 'dashboard'
-  
+
   # Turn on community engine routes
   map.from_plugin :community_engine
 
@@ -31,7 +32,7 @@ ActionController::Routing::Routes.draw do |map|
     user.resources :photos, :collection => {:swfupload => :post, :slideshow => :get}
   end
 
-  
+
   # Turn on the static pages with permalink routes
   map.info 'info/:permalink', :controller => 'pages', :action => 'show'
 
@@ -41,5 +42,5 @@ ActionController::Routing::Routes.draw do |map|
   map.connect ':controller/:action/:id'
   map.connect ':controller/:action/:id.:format'
 end
-  
+
 
