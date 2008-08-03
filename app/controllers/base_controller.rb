@@ -22,7 +22,29 @@ class BaseController < ApplicationController
   
   def site_index
     redirect_to(dashboard_user_path(current_user)) if logged_in?
+
+    # Not logged in, show the games of the week
+    @games_of_the_week = GameOfTheWeek.find || []
+    logger.debug "The specified param is #{params[:id]} choices are #{@games_of_the_week.collect(&:id).join(',')}"
+    # Play the specified game
+    if params[:id]
+      @games_of_the_week.each do |video|
+        if video.id.to_s == params[:id]
+          logger.debug "Got a hit at #{params[:id]}"
+          @games_of_the_week.delete(video)
+          @games_of_the_week.unshift(video)
+          break
+        else
+          logger.debug "Miss for param #{params[:id]} video id #{video.id}"
+        end
+      end
+    end
+
+    # First on the list if non specified or specified one not found
+    logger.debug "Revised list is #{@games_of_the_week.collect(&:id).join(',')}"
+    @now_playing = @games_of_the_week.shift
+    logger.debug "The now_playing id is #{@now_playing.id}"
+    
   end
-  
 
 end

@@ -5,24 +5,20 @@
   .yui-b
     .box.hfeed
       %h3 Games of the Week
-      - v = GameOfTheWeek.find || []
-      - game1 = v.shift
-      - if game1 && game1.dockey
-        = render :partial => 'shared/maverick_video_player', :locals  => { :dockey => game1.dockey }
-        = game1.title
+      - if @now_playing && @now_playing.dockey
+        .videoPlayer
+          = render :partial => 'shared/site_video_player', :locals  => { :dockey => @now_playing.dockey }
+          %br/
+          = @now_playing.title
+          %br/
+          = @now_playing.description
+          %br/
+          -if @now_playing.class.to_s == 'VideoAsset' && @now_playing.home_team_id? && @now_playing.visiting_team_id?
+            = "#{@now_playing.visiting_team.name} vs. #{@now_playing.home_team.name} #{game_date(@now_playing.game_date)}"
+          
+      - @games_of_the_week.each do |v|
+        = render :partial => 'shared/site_video_teaser', :locals => { :item => v }
         %br/
-        = game1.description
-        %br/
-        = "#{game1.team.name} - #{game1.team.league.name}"
-        %br/
-      - v.each do |video_asset|
-        - case video_asset.class.to_s
-          - when 'VideoAsset'
-            = render :partial => 'video_assets/video_block', :locals => { :video_asset => video_asset }
-          - when 'VideoClip'
-            = render :partial => 'video_clips/video_block', :locals => { :video_clip => video_asset }
-          - when 'VideoReel'
-            = render :partial => 'video_reels/video_block', :locals => { :video_reel => video_asset }
         
 .yui-b
   .box
