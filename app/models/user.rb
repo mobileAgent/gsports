@@ -34,6 +34,9 @@ class User < ActiveRecord::Base
     delegate method, :to => :team
   end
 
+  named_scope :admin,
+    :conditions => ["email = ?",ADMIN_EMAIL]
+
   def team_or_league_avatar
     if team && team.avatar_id?
       team.avatar
@@ -73,6 +76,27 @@ class User < ActiveRecord::Base
     "#{firstname} #{lastname}"
   end
 
+  # Never let the login slug appear in urls or paths
+  def to_param
+    id.to_s
+  end
+  
+
+  # Determine if this user can edit the specified video item
+  def can_edit?(v)
+    return true if self.admin?
+    case v.class.to_s
+    when 'VideoAsset'
+      return true if (v.team_id && self.team_id == v.team_id && self.team_staff?)
+      return true if (v.league_id && self.league_id == v.league_id && self.league_staff?)
+    when 'VideoClip'
+      return true if v.user_id == self.id
+    when 'VideoReel'
+      return true if v.user_id == self.id
+    end
+    return false
+  end
+  
   def make_member(billing_method, address,payment_authorization)
     mem = Membership.new(:billing_method=>billing_method)
     mem.cost = role.plan.cost
@@ -97,4 +121,5 @@ class User < ActiveRecord::Base
    memberships[0].credit_card = cc
    save
   end
+  
 end

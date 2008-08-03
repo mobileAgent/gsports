@@ -1,0 +1,22 @@
+%h2
+  My Videos 
+- for video_asset in @video_assets
+  =render :partial => 'video_assets/video_block', :locals => { :video_asset => video_asset, :skip_controls => true }
+  = render :partial => 'shared/favorite_item', :locals => { :item => video_asset }
+= link_to "More...", user_video_assets_path(current_user)
+
+%h2
+  My Clips 
+- for video_clip in @video_clips
+  =render :partial => 'video_clips/video_block', :locals => { :video_clip => video_clip, :skip_controls => true }
+  = render :partial => 'shared/favorite_item', :locals => { :item => video_clip }
+= link_to "More...", user_video_clips_path(current_user)
+
+%h2
+  My Reels
+- for video_reel in @video_reels
+  =render :partial => 'video_reels/video_block', :locals => { :video_reel => video_reel, :skip_controls => true }
+  = render :partial => 'shared/favorite_item', :locals => { :item => video_reel }
+= link_to "More...", user_video_reels_path(current_user)
+
+    

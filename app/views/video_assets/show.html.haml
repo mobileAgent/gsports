@@ -22,7 +22,7 @@
 
 %p
   %b Game Date:
-  =h @video_asset.game_date.to_s(:game_date)  
+  =h(@video_asset.game_date? ? @video_asset.game_date.to_s(:game_date) : '')
 
 %p
   %b Sport:
@@ -30,10 +30,10 @@
   
 %br/
 
-- if(current_user.league_admin? || current_user.team_admin? || current_user.admin?)
+- if current_user && current_user.can_edit?(@video_asset)
   = link_to 'Edit', edit_video_asset_path(@video_asset) |
+  = link_to 'Destroy', @video_asset, :confirm => 'Are you sure?', :method => :delete
   
-= link_to 'Back', video_assets_path
 = render :partial => 'shared/favorite_item', :locals => { :item => @video_asset }
 = render :partial => 'shared/favorite_count', :locals => { :item => @video_asset }
 = render :partial => 'shared/inappropriate_item', :locals => { :item => @video_asset }

@@ -8,7 +8,7 @@
 
 %p
   %b State:
-  =h @league.state 
+  =h(@league.state_id? ? @league.state.name : '')
 
 %p
   %b Description:

@@ -10,7 +10,7 @@
               My Network
       %li.divider
         %span#gnavMyVideos.ROLLOVERIMAGE
-          %a{ :href => user_video_assets_path(current_user.id) }
+          %a{ :href => url_for(:controller => 'search', :action => 'my_videos') }
             %span
               My Videos
       %li.divider
