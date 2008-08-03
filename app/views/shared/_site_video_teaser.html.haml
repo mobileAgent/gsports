@@ -1,0 +1,10 @@
+.video_thumbnail
+  - case item.class.to_s
+  - when 'VideoReel'
+    - thumbnail_dockey = item.thumbnail_dockey
+  - else
+    - thumbnail_dockey = item.dockey
+      
+  = link_to "<img src='#{@vidavee.file_thumbnail_medium(thumbnail_dockey)}' title='#{h item.title}'>", url_for({ :controller => 'base', :action => 'site_index', :id => item })
+  %br/
+  =h item.title

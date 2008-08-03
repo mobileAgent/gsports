@@ -51,7 +51,12 @@
   margin: 5px;
 }
 
-
+.mainContentArea .videoPlayer {
+  border: 3px solid blue;
+  float right;
+  width: 550px;
+  height: 375px;
+}
 
 .warning, #errorExplanation, .errorExplanation{
 	padding: 1em 1em 1em 1em;
@@ -78,7 +83,7 @@
    width: 6em;
 }
 #videoFindCounty {
-   width: 8em;
+ p  width: 8em;
 }
 #videoFindLeague {
   width: 10em;

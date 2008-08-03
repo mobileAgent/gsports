@@ -1,5 +1,6 @@
 class VideoClipsController < BaseController
   
+  before_filter :login_required
   before_filter :vidavee_login
   
   # GET /video_clips
