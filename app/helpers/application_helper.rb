@@ -21,7 +21,7 @@ include UsersHelper
 
   def game_date(dtm)
     return '' if dtm.nil?
-    return dtm.to_s :game_date
+    return dtm.to_s(:game_date)
   end
     
   
