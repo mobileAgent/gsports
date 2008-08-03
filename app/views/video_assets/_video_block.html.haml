@@ -5,7 +5,7 @@
   %br
   = "#{h video_asset.description} - #{h video_asset.video_length}"
   %br
-  = "#{h video_asset.league.name if video_asset.league}, #{h video_asset.team.name if video_asset.team}, #{h video_asset.sport}, #{video_asset.game_date}"
+  = "#{h video_asset.league.name if video_asset.league}, #{h video_asset.team.name if video_asset.team}, #{h video_asset.sport}, #{game_date(video_asset.game_date)}"
   
   - skip_controls ||= false
   - unless skip_controls

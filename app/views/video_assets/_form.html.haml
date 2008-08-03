@@ -16,7 +16,7 @@
 %p
   = f.label "Game Date (yyyy-mm-dd)"
   %br/
-  = text_field :video_asset, :game_date, :value => "#{ @video_asset.game_date? ? @video_asset.game_date.to_s(:game_date) : '' }"
+  = text_field :video_asset, :game_date, :value => game_date(@video_asset.game_date)
   
 %p
   %label{:for=>"video_asset[home_team_name]"} Home Team

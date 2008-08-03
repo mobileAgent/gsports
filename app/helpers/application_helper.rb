@@ -18,5 +18,11 @@ include UsersHelper
     page.select("#flash_notice span").first.replace("<span>#{msg}</span>")
     page.select("#flash_notice").first.show
   end
+
+  def game_date(dtm)
+    return '' if dtm.nil?
+    return dtm.to_s :game_date
+  end
+    
   
 end
