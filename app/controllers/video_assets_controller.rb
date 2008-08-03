@@ -8,6 +8,7 @@ class VideoAssetsController < BaseController
   skip_before_filter :verify_authenticity_token, :only => [:auto_complete_for_video_asset_home_team_name,
                                                            :auto_complete_for_video_asset_visiting_team_name,
                                                            :auto_complete_for_video_asset_team_name,
+                                                           :auto_complete_for_video_asset_league_name,
                                                            :auto_complete_for_video_asset_sport ]
   
   session :cookie_only => false, :only => [:swfupload]
@@ -66,6 +67,7 @@ class VideoAssetsController < BaseController
   def create
     @video_asset = VideoAsset.new(params[:video_asset])
     @video_asset.video_status = 'unknown'
+      
     respond_to do |format|
       if @video_asset.save!
         flash[:notice] = 'VideoAsset was successfully created.'
@@ -85,6 +87,7 @@ class VideoAssetsController < BaseController
 
     respond_to do |format|
       @video_asset.tag_with(params[:tag_list] || '') 
+      @video_asset = add_team_and_league_relations(@video_asset,params)
       if @video_asset.update_attributes(params[:video_asset])
         flash[:notice] = 'VideoAsset was successfully updated.'
         format.html { redirect_to(@video_asset) }
@@ -132,23 +135,7 @@ class VideoAssetsController < BaseController
     # Set up things that don't come naturally from the form
     @video_asset.video_status = 'saving'
     @video_asset.user_id = current_user.id
-
-    # Set up team (should only come from admin form)
-    if(current_user.admin? && params[:video_asset][:team_name])
-      @video_asset.team_name= params[:video_asset][:team_name]
-    else
-      @video_asset.team= current_user.team
-    end
-    
-    # Set up league (should only come from admin form)
-    if(current_user.admin? && params[:video_asset][:league_name])
-      @video_asset.league_name= params[:video_asset][:league_name]
-      if (@video_asset.team_id?)
-        @video_asset.team.league_id = @video_asset.league_id
-      end
-    else    
-      @video_asset.league= @video_asset.team.league
-    end
+    @video_asset = add_team_and_league_relations(@video_asset,params)
     
     @video_asset.tag_with(params[:tag_list] || '') 
 
@@ -179,11 +166,38 @@ class VideoAssetsController < BaseController
     render :inline => auto_complete_team_field(params[:video_asset][:visiting_team_name])
   end
 
+  def auto_complete_for_video_asset_league_name
+    @leagues = League.find(:all, :conditions => ["LOWER(name) like ?", params[:video_asset][:league_name].downcase + '%' ], :order => "name ASC", :limit => 10 )
+    choices = "<%= content_tag(:ul, @leagues.map { |l| content_tag(:li, h(l.name)) }) %>"    
+    render :inline => choices
+  end
+  
   private
 
   def auto_complete_team_field(team_name_start)
     @teams = Team.find(:all, :conditions => ["LOWER(name) like ?", team_name_start.downcase + '%' ], :order => "name ASC", :limit => 10 )
     "<%= content_tag(:ul, @teams.map { |t| content_tag(:li, h(t.name)) }) %>"    
+  end
+
+  def add_team_and_league_relations(video_asset,params)
+    
+    # Set up team (should only come from admin form)
+    if(current_user.admin? && params[:video_asset][:team_name])
+      video_asset.team_name= params[:video_asset][:team_name]
+    else
+      video_asset.team= current_user.team
+    end
+    
+    # Set up league (should only come from admin form)
+    if(current_user.admin? && params[:video_asset][:league_name])
+      video_asset.league_name= params[:video_asset][:league_name]
+      if (video_asset.team_id?)
+        video_asset.team.league_id = video_asset.league_id
+      end
+    else    
+      video_asset.league= video_asset.team.league
+    end
+    video_asset
   end
   
 end

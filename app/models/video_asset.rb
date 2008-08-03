@@ -5,7 +5,7 @@ class VideoAsset < ActiveRecord::Base
   belongs_to :user
   belongs_to :home_team, :class_name => 'Team', :foreign_key => 'home_team_id'
   belongs_to :visiting_team, :class_name => 'Team', :foreign_key => 'visiting_team_id'
-  has_many :video_clips
+  has_many :video_clips, :dependent => :destroy
   
   acts_as_commentable
   acts_as_taggable
@@ -22,6 +22,13 @@ class VideoAsset < ActiveRecord::Base
 
   # Video upload repository
   VIDEO_REPOSITORY = VIDEO_BASE+"/uploaded"
+
+  named_scope :for_user,
+    lambda { |user| { :conditions => ["(team_id = ? || league_id = ?) and video_status = 'ready'",user.team_id, user.league_id] } }
+  
+  named_scope :ready,
+    :conditions => ["video_status = 'ready' and dockey IS NOT NULL"]
+  
 
   def self.video_repository
     VIDEO_REPOSITORY
@@ -102,7 +109,7 @@ class VideoAsset < ActiveRecord::Base
   end
 
   def team_name= team_name
-    self.team= Team.find_or_create_by_name team_name
+    self.team= find_or_create_team_by_name team_name
   end
 
   def team_name
@@ -110,7 +117,7 @@ class VideoAsset < ActiveRecord::Base
   end
 
   def league_name= league_name
-    self.league= League.find_or_create_by_name league_name
+    self.league= find_or_create_league_by_name league_name
   end
 
   def league_name
@@ -118,7 +125,7 @@ class VideoAsset < ActiveRecord::Base
   end
 
   def home_team_name= team_name
-    self.home_team = Team.find_or_create_by_name team_name
+    self.home_team = find_or_create_team_by_name team_name
   end
 
   def home_team_name
@@ -126,12 +133,30 @@ class VideoAsset < ActiveRecord::Base
   end
   
   def visiting_team_name= team_name
-    self.visiting_team = Team.find_or_create_by_name team_name
+    self.visiting_team = find_or_create_team_by_name team_name
   end
 
   def visiting_team_name
     visiting_team ? visiting_team.name : nil
   end
 
+  private
+  
+  def find_or_create_team_by_name team_name
+    t = Team.find_or_create_by_name team_name
+    if t.new_record?
+      t.league_id = (self.league_id? ? self.league_id : User.admin.first.league_id)
+      t.save!
+    end
+    t
+  end
+  
+  def find_or_create_league_by_name league_name
+    t = League.find_or_create_by_name league_name
+    if t.new_record?
+      t.save!
+    end
+    t
+  end
   
 end

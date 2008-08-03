@@ -2,11 +2,11 @@
   - when 'clippings'
     = render :partial => "clippings/clipping", :locals => {:clipping => favorite.favoritable}
   - when 'video_assets'
-    = render :partial => "video_assets/video_block", :locals => {:video_asset => favorite.favoritable}
+    = render :partial => "video_assets/video_block", :locals => {:video_asset => favorite.favoritable, :skip_controls => true}
   - when 'video_clips'
-    = render :partial => "video_clips/video_block", :locals => {:video_clip => favorite.favoritable}
+    = render :partial => "video_clips/video_block", :locals => {:video_clip => favorite.favoritable, :skip_controls => true }
   - when 'video_reels'
-    = render :partial => "video_reels/video_block", :locals => {:video_reel => favorite.favoritable}
+    = render :partial => "video_reels/video_block", :locals => {:video_reel => favorite.favoritable, :skip_controls => true }
   - when 'posts'
     = render :partial => "posts/favorited_post", :locals => {:post => favorite.favoritable}
   - when 'photos'
