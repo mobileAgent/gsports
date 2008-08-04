@@ -1,0 +1,35 @@
+%h1
+  Editing video_clip
+
+- form_for(@video_clip) do |f|
+  = f.error_messages
+
+  %p
+    = f.label :title
+    %br/
+    = f.text_field :title
+  
+  %p
+    = f.label :description
+    %br/
+    = f.text_field :description
+
+  - if current_user && current_user.admin?
+    %p
+      = f.label :user_id
+      %br/
+      = f.text_field :user_id
+
+  %p
+    =f.label :tags
+    %br/
+    = text_field_tag 'tag_list', @video_clip.tags.collect{|t| t.name}.join(" "), {:autocomplete => "off", :size => 35}
+    #tag_list_auto_complete.auto_complete
+    = auto_complete_field 'tag_list', {:url => { :controller => "tags", :action => 'auto_complete_for_tag_name'}, :tokens => [',', ' ']  }
+  
+  %p
+    = f.submit "Update"
+
+= link_to 'Show', @video_clip
+= "|"
+= link_to 'Back', video_clips_path
