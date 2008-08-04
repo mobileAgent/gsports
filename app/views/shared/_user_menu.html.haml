@@ -9,11 +9,12 @@
     %li= link_to "View profile", user_path(current_user.id)
   %hr
   %ul
-    %li= link_to 'Blog', manage_user_posts_path(current_user.id)
-    %li= link_to 'Clips', user_video_clips_path(current_user.id)
-    %li= link_to 'Reels', user_video_reels_path(current_user.id)
+    %li= link_to 'Videos', url_for(:controller => 'search', :action => 'my_video_assets')
+    %li= link_to 'Clips', url_for(:controller => 'search', :action => 'my_video_clips')
+    %li= link_to 'Reels', url_for(:controller => 'search', :action => 'my_video_reels')
     %li= link_to 'Photos', user_photos_path(current_user.id)
     %li= link_to 'Friends', accepted_user_friendships_path(current_user.id)
+    %li= link_to 'Blog', manage_user_posts_path(current_user.id)
 
 %script{:type => "text/javascript"}
   :plain

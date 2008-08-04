@@ -25,6 +25,6 @@ config.action_view.cache_template_loading            = true
 # Configuration for community engine
 APP_URL = "http://globalsports.net"
 
-# Caching, use memory for dev/test, memcache on localhost for production
+# Caching, memcache on localhost for production
 config.cache_store = :mem_cache_store
 #ActionController::Base.cache_store = :mem_cache_store, "localhost"
