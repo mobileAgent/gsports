@@ -1,6 +1,16 @@
 class FavoritesController < BaseController
   
   before_filter :login_required
+  after_filter :expire_home_page, :only => [:create, :destroy, :remove]
+
+  def expire_home_page
+    # Admins video favs change the home page
+    if current_user.admin? && @favorite && !@favorite.new_record? &&
+        @favorite.video_type?
+      logger.debug "Clearing gotw cache due to admin favorite #{@favorite.id}"
+      Rails.cache.delete('games_of_the_week')
+    end
+  end
   
   def remove
     @favorite = Favorite.user(current_user).item_type_id(params[:favoritable_type],params[:favoritable_id]).first

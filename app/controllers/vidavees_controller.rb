@@ -3,6 +3,12 @@ class VidaveesController < BaseController
   # Only admin can edit this table
   # Those just wishing to use the values, see vidapi_controller
   before_filter :admin_required
+
+  after_filter :expire_vidavee_cache, :only => [:update, :create, :destroy]
+
+  def expire_vidavee_cache
+    Rails.cache.delete('vidavee')
+  end
   
   # GET /vidavees
   # GET /vidavees.xml

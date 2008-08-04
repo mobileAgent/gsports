@@ -11,11 +11,11 @@ class GameOfTheWeek
       begin
         case v.favoritable_type
         when 'VideoAsset'
-          list << VideoAsset.find(v.id)
+          list << VideoAsset.find(v.favoritable_id)
         when 'VideoReel'
-          list << VideoReel.find(v.id)
+          list << VideoReel.find(v.favoritable_id)
         when 'VideoClip'
-          list << VideoClip.find(v.id)
+          list << VideoClip.find(v.favoritable_id)
         end
       rescue
       end
