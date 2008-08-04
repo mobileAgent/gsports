@@ -6,7 +6,7 @@ class VidapiController < BaseController
   # Cancel our token with the back end
   def logout
     if (session[:vidavee])
-      @vidavee = Vidavee.first
+      @vidavee = Rails.cache.fetch('vidavee') { Vidavee.first }
       @vidavee.logout(session[:vidavee])
       session[:vidavee] = nil
       session[:vidavee_expires] = Time.now
