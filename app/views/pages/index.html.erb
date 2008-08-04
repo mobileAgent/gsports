@@ -10,7 +10,7 @@
     <tr>
       <td><%=h page.name %></td>
       <td><%=h page.permalink %></td>
-      <td><%=  page.html_content[0,40] %></td>
+      <td><%= truncate_words(page.html_content, 10) %></td>
       <td><%= link_to "Show", page %></td>
       <td><%= link_to "Edit", edit_page_path(page) %></td>
       <td><%= link_to "Destroy", page, :confirm => 'Are you sure?', :method => :delete %></td>
