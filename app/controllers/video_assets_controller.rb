@@ -171,7 +171,7 @@ class VideoAssetsController < BaseController
     choices = "<%= content_tag(:ul, @leagues.map { |l| content_tag(:li, h(l.name)) }) %>"    
     render :inline => choices
   end
-  
+
   private
 
   def auto_complete_team_field(team_name_start)
@@ -199,5 +199,5 @@ class VideoAssetsController < BaseController
     end
     video_asset
   end
-  
+
 end

@@ -52,18 +52,20 @@
 #user-menu-tip
   %ul
     %li= link_to('Admin', admin_dashboard_path) if current_user.admin?
+    %li= link_to('Upload Video', new_video_asset_path) if (current_user.can_upload?)
   %hr
   %ul
-    %li= link_to "Dashboard", dashboard_user_path(current_user.id)
-    %li= link_to "Edit account", edit_account_user_path(current_user.id)
+    %li= link_to "Dashboard", dashboard_user_path(current_user)
+    %li= link_to "Edit account", edit_account_user_path(current_user)
   %hr
   %ul
-    %li= link_to "View profile", user_path(current_user.id)
-    %li= link_to 'Blog', manage_user_posts_path(current_user.id)
-    %li= link_to 'Clips', user_video_clips_path(current_user.id)
-    %li= link_to 'Reels', user_video_reels_path(current_user.id)
-    %li= link_to 'Photos', user_photos_path(current_user.id)
-    %li= link_to 'Friends', accepted_user_friendships_path(current_user.id)        
+    %li= link_to "View profile", user_path(current_user)
+    %li= link_to 'Videos', url_for(:controller => 'search', :action => 'my_video_assets')
+    %li= link_to 'Clips', url_for(:controller => 'search', :action => 'my_video_clips')
+    %li= link_to 'Reels', url_for(:controller => 'search', :action => 'my_video_reels')
+    %li= link_to 'Photos', user_photos_path(current_user)
+    %li= link_to 'Friends', accepted_user_friendships_path(current_user)
+    %li= link_to 'Blog', manage_user_posts_path(current_user)
 
 %script{:type => "text/javascript"}
   :plain

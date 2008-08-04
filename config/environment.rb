@@ -83,9 +83,11 @@ Rails::Initializer.run do |config|
   config.gem "rake", :version => ">= 0.8.1"
   config.gem "mocha", :version => ">= 0.9.0"
   config.gem "haml", :version => ">= 2.0.0"
-#  config.gem "mime-types", :version => ">= 1.15" # this one fails for some reason
+  #config.gem "mime-types", :version => ">= 1.15" # this one fails for some reason
   config.gem "mysql", :version => "= 2.7"
   config.gem "uuid", :version => ">= 1.0.4"
+  config.gem "will_paginate", :version => ">= 2.2.2"
+  config.gem "htmlentities", :version => ">= 4.0.0"
 end
 
 

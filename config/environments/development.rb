@@ -19,9 +19,8 @@ config.action_mailer.raise_delivery_errors = false
 # Configuration for community engine
 APP_URL = "http://localhost:3000"
 
-# Caching, use memory for dev/test
-# config.cache_store = :file_store, "#{RAILS_ROOT}/tmp/cache"
-config.cache_store = :memory_store
+# Caching, memcache on localhost for development
+config.cache_store = :mem_cache_store
 
 # THis thing is unbelievably noisy and log cluttering
 

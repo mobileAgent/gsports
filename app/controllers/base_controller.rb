@@ -11,8 +11,15 @@ class BaseController < ApplicationController
   # unauthenticate users, so that they can see videos with a
   # valid vidavee sessionid and dockey.
   def vidavee_login
+
+    begin
+      @vidavee = Rails.cache.fetch('vidavee') { Vidavee.first }
+    rescue
+      logger.debug "Vidavee in cache is bad, replacing"
+      Rails.cache.delete('vidavee')
+      @vidavee = Rails.cache.fetch('vidavee') { Vidavee.first }
+    end
     
-    @vidavee = Rails.cache.fetch('vidavee') { Vidavee.first }
     if (session[:vidavee].nil? || 
         session[:vidavee_expires].nil? || session[:vidavee_expires] < Time.now)
       session[:vidavee] = @vidavee.login

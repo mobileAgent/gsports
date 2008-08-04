@@ -72,6 +72,10 @@ class User < ActiveRecord::Base
     role && (role.eql?(Role[:scout_staff]) || scount_admin?)
   end
 
+  def can_upload?
+    admin? || team_staff? || league_staff?
+  end
+
   def full_name
     "#{firstname} #{lastname}"
   end
