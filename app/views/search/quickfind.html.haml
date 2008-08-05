@@ -1,6 +1,9 @@
-%p= "#{@pages.item_count} videos match your criteria"
+%p= "There are #{@video_assets.total_entries} videos matching your criteria"
 - for video_asset in @video_assets
   = render :partial => 'video_assets/video_block', :locals => { :video_asset => video_asset }
   = render :partial => 'shared/favorite_item', :locals => { :item => video_asset }
+  %br/
 
-%p= pagination_links_for @pages, { :link_to_current_page => true } if @pages.length > 1
+- if @video_assets.respond_to?('total_pages')
+  .apple_pagination
+    = will_paginate @video_assets
