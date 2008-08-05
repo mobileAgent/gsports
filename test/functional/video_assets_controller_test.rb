@@ -41,11 +41,11 @@ class VideoAssetsControllerTest < ActionController::TestCase
   def test_should_create_video_asset_with_team_name
     login_as :admin
     assert_difference(VideoAsset,:count,1) do
-      post :create, :video_asset => {:dockey => 'abc123def456', :title=> 'this is the title', :description => 'this is the description', :team_name => teams(:one).name }
+      post :create, :video_asset => {:dockey => 'abc123def456', :title=> 'this is the title', :description => 'this is the description', :team_name => teams(:two).name, :league_name => leagues(:one).name, :home_team_name => teams(:one).name, :visiting_team_name => teams(:two).name }
     end
     
     assert_redirected_to video_asset_path(assigns(:video_asset))
-    #assert_equal VideoAsset.find_by_dockey('abc123def456').team_id,teams(:one).id
+    #assert_equal VideoAsset.find_by_dockey('abc123def456').team_id,teams(:two).id
   end
 
   def test_should_create_video_asset_but_ignore_team_name

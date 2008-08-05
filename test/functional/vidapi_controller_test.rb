@@ -6,6 +6,8 @@ class VidapiController; def rescue_action(e) raise e end; end
 
 class VidapiControllerTest < ActionController::TestCase
 
+  fixtures :users, :roles
+
   def setup
     @request = ActionController::TestRequest.new
     @response = ActionController::TestResponse.new
@@ -16,7 +18,7 @@ class VidapiControllerTest < ActionController::TestCase
   def test_logout
     vidavee = stub_everything
     vidavee.stubs(:logout).returns(true)
-    Vidavee.stubs(:find).with(:first).returns(vidavee)
+    Rails.cache.stubs(:fetch).with('vidavee').returns(vidavee)
     get :logout
     assert_response :success
     assert @request.session[:vidavee].nil?

@@ -45,6 +45,15 @@
 .mainContentArea table.unstyled {
   border: 1px solid black;
 }
+
+.mainContentArea table.unstyled thead tr {
+  background-color: #99ccff;
+  border: 0px;
+}
+
+.mainContentArea table.unstyled tbody tr:hover {
+  background-color: #ccffff
+}
   
 .mainContentArea .video_thumbnail {
   display: inline;
