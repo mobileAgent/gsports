@@ -1,11 +1,6 @@
 .footer
   .footerAds
-    %span.footerAd
-      =render :partial => "shared/bottom_ad"
-    %span.footerAd
-      =render :partial => "shared/bottom_ad"
-    %span.footerAd
-      =render :partial => "shared/bottom_ad"
-    %span.footerAd
-      =render :partial => "shared/bottom_ad"
+    - 4.times do |i|
+      %span.footerAd
+        =render :partial => "shared/bottom_ad"
 
