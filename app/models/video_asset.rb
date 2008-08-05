@@ -109,7 +109,9 @@ class VideoAsset < ActiveRecord::Base
   end
 
   def team_name= team_name
-    self.team= find_or_create_team_by_name team_name
+    if (team_name && team_name.size > 0)
+      self.team= find_or_create_team_by_name team_name
+    end
   end
 
   def team_name
@@ -117,7 +119,9 @@ class VideoAsset < ActiveRecord::Base
   end
 
   def league_name= league_name
-    self.league= find_or_create_league_by_name league_name
+    if (league_name && league_name.size > 0)
+      self.league= find_or_create_league_by_name league_name
+    end
   end
 
   def league_name
@@ -125,7 +129,9 @@ class VideoAsset < ActiveRecord::Base
   end
 
   def home_team_name= team_name
-    self.home_team = find_or_create_team_by_name team_name
+    if (team_name && team_name.size > 0)
+      self.home_team = find_or_create_team_by_name team_name
+    end
   end
 
   def home_team_name
@@ -133,7 +139,9 @@ class VideoAsset < ActiveRecord::Base
   end
   
   def visiting_team_name= team_name
-    self.visiting_team = find_or_create_team_by_name team_name
+    if (team_name && team_name.size > 0)
+      self.visiting_team = find_or_create_team_by_name team_name
+    end
   end
 
   def visiting_team_name

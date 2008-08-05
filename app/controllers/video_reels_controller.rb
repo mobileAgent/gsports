@@ -13,7 +13,7 @@ class VideoReelsController < BaseController
       cond.append ['tags.name = ?', params[:tag_name]]
     end
     
-    @pages, @video_reels = paginate :video_reels, :conditions => cond.to_sql, :order => "created_at DESC", :include => :tags
+    @video_reels = VideoReel.paginate(:conditions => cond.to_sql, :page => params[:page], :order => "created_at DESC", :include => :tags)
     @tags = VideoReel.tags_count :user_id => @user.id, :limit => 20
 
     respond_to do |format|

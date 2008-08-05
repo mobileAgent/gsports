@@ -1,3 +1,5 @@
+require 'active_record/fixtures'
+
 class CreateLeagues < ActiveRecord::Migration
   def self.up
     create_table :leagues do |t|
@@ -10,13 +12,9 @@ class CreateLeagues < ActiveRecord::Migration
 
       t.timestamps 
     end
-    league = League.new
-    league.name= 'Global Sports League'
-    league.city= 'Allover'
-    league.state= 'State'
-    league.description= 'League for Global Sports Admin and Team'
-    league.active= true
-    league.save!
+
+    execute "insert into leagues (name,logo_uri,city,state,description,active,created_at,updated_at) values ('Global Sports League','','Allover','Maryland','League for Global Sports Admin and Team',1,'#{Time.now.to_s :db}','#{Time.now.to_s :db}')"
+
   end
 
   def self.down

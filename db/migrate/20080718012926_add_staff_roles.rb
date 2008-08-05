@@ -8,8 +8,8 @@ class AddStaffRoles < ActiveRecord::Migration
 
   def self.down
     Role.enumeration_model_updates_permitted = true
-    Role.destroy(:name => 'team_staff')
-    Role.destroy(:name => 'league_staff')
-    Role.destroy(:name => 'scout_staff')
+    Role[:team_staff].destroy()
+    Role[:league_staff].destroy()
+    Role[:scout_staff].destroy()
   end
 end

@@ -1,3 +1,5 @@
+require 'active_record/fixtures'
+
 class CreateTeams < ActiveRecord::Migration
   def self.up
     create_table :teams do |t|
@@ -11,14 +13,7 @@ class CreateTeams < ActiveRecord::Migration
 
       t.timestamps 
     end
-    team = Team.new
-    team.name= 'Global Sports Home Team'
-    team.city= 'Allover'
-    team.state= 'State'
-    team.description= 'Default team for the admin user'
-    team.active= true
-    team.league_id= League.find_by_name('Global Sports League').id
-    team.save!
+    execute "insert into teams (name,logo_uri,city,state,description,active,league_id,created_at,updated_at) values ('Global Sports Home Team','','Allover','Maryland','Default Team for the Admin User',1,(select id from leagues limit 1),'#{Time.now.to_s :db}','#{Time.now.to_s :db}')"
   end
 
   def self.down

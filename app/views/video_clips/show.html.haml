@@ -8,6 +8,10 @@
   %br
   = h @video_clip.video_length
   %br
+  
+  %p= @video_clip.tags.collect{|t| link_to( h(t.name), tag_url(t.name), :class => 'tag') }.join(" ")
+  %br/
+  
   = link_to 'Parent video',video_asset_path(@video_clip.video_asset_id)  
   = render :partial => 'shared/favorite_item', :locals => { :item => @video_clip }
   = render :partial => 'shared/favorite_count', :locals => { :item => @video_clip }

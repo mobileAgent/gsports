@@ -14,7 +14,7 @@ class VideoClipsController < BaseController
       cond.append ['tags.name = ?', params[:tag_name]]
     end
     
-    @pages, @video_clips = paginate :video_clips, :order => "title ASC"
+    @video_clips = VideoClip.paginate(:conditions => cond.to_sql, :page => params[:page], :order => 'created_at DESC')
     @tags = VideoClip.tags_count :user_id => @user.id, :limit => 20
 
     respond_to do |format|
