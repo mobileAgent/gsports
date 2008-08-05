@@ -1,0 +1,25 @@
+about:
+  name: About Us
+  permalink: about
+  content: Initial content for the about us page
+terms:
+  name: Terms Of Service
+  permalink: terms
+  content: Initial content for the about us page
+privacy:
+  name: Privacy Policy
+  permalink: privacy
+  content: Initial content for the about us page
+contact:
+  name: Contact Us
+  permalink: contact
+  content: Initial content for the about us page
+help:
+  name: Help
+  permalink: help
+  content: Initial content for the about us page
+ad:
+  name: Advertising Opportunities
+  permalink: advertising
+  content: Initial content for the about us page
+  

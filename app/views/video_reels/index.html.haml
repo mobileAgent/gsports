@@ -1,6 +1,8 @@
 - for video_reel in @video_reels
   = render :partial => 'video_block', :locals => { :video_reel => video_reel }
   = render :partial => 'shared/favorite_item', :locals => { :item => video_reel }
+  %br/
   
-%p= pagination_links_for @pages, { :link_to_current_page => true } if @pages.length > 1
-%br/
+- if @video_reels.respond_to?('total_pages')
+  .apple_pagination
+    = will_paginate @video_reels

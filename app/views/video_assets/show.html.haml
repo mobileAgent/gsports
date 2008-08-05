@@ -28,6 +28,7 @@
   %b Sport:
   =h @video_asset.sport
   
+%p= @video_asset.tags.collect{|t| link_to( h(t.name), tag_url(t.name), :class => 'tag') }.join(" ")
 %br/
 
 - if current_user && current_user.can_edit?(@video_asset)

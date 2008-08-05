@@ -27,7 +27,7 @@ class VideoAssetsController < BaseController
     end
     cond.append ['video_status = ?','ready']
     
-    @pages, @video_assets = paginate :video_assets, :conditions => cond.to_sql, :order => "created_at DESC", :include => :tags
+    @video_assets = VideoAsset.paginate(:conditions => cond.to_sql, :page => params[:page], :order => "created_at DESC", :include => :tags)
     @tags = VideoAsset.tags_count :user_id => @user.id, :limit => 20
 
     respond_to do |format|
@@ -182,14 +182,14 @@ class VideoAssetsController < BaseController
   def add_team_and_league_relations(video_asset,params)
     
     # Set up team (should only come from admin form)
-    if(current_user.admin? && params[:video_asset][:team_name])
+    if(current_user.admin? && !params[:video_asset][:team_name].blank?)
       video_asset.team_name= params[:video_asset][:team_name]
     else
       video_asset.team= current_user.team
     end
     
     # Set up league (should only come from admin form)
-    if(current_user.admin? && params[:video_asset][:league_name])
+    if(current_user.admin? && !params[:video_asset][:league_name].blank?)
       video_asset.league_name= params[:video_asset][:league_name]
       if (video_asset.team_id?)
         video_asset.team.league_id = video_asset.league_id

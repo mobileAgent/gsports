@@ -3,7 +3,7 @@
 one:
   title: MyString
   description: MyString
-  user_id: 1
+  user: quentin
   video_length: 1:35
   view_count: 1
   dockey: abcdef1234568
@@ -13,7 +13,7 @@ one:
 two:
   title: MyString
   description: MyString
-  user_id: 1
+  user: quentin
   video_length: 1:53
   view_count: 0
   dockey: 998877abcdef1234568

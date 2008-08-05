@@ -1,11 +1,7 @@
 class EnsureVideoAssetsHaveLeagueAndTeam < ActiveRecord::Migration
   def self.up
-    admin = User.admin.first
-    VideoAsset.find(:all, :conditions => "team_id IS NULL or league_id IS NULL").each do |v|
-      v.team_id = admin.team_id if v.team_id.nil?
-      v.league_id = admin.league_id 
-      v.save!
-    end
+    execute 'update video_assets set team_id = (select id from teams limit 1) where team_id is null'
+    execute 'update video_assets set league_id = (select id from leagues limit 1) where league_id is null'
   end
 
   def self.down

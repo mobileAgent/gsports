@@ -40,3 +40,4 @@ Other:
    - Active MQ must be installed and running
      for the background video upload and checking
      http://activemq.apache.com/
+  - Memcached would be a good idea too
