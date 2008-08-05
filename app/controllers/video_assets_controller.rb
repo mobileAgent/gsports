@@ -1,5 +1,5 @@
 class VideoAssetsController < BaseController
-  
+  include Viewable
   include ActiveMessaging::MessageSender
   publishes_to :push_video_files
 
@@ -40,6 +40,7 @@ class VideoAssetsController < BaseController
   # GET /video_assets/1.xml
   def show
     @video_asset = VideoAsset.find(params[:id])
+    update_view_count(@video_asset)
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @video_asset }

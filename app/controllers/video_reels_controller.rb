@@ -1,4 +1,5 @@
 class VideoReelsController < BaseController
+  include Viewable
   
   before_filter :login_required
   before_filter :vidavee_login
@@ -26,6 +27,7 @@ class VideoReelsController < BaseController
   # GET /video_reels/1.xml
   def show
     @video_reel = VideoReel.find(params[:id])
+    update_view_count(@video_reel)
 
     respond_to do |format|
       format.html # show.html.erb
