@@ -14,7 +14,6 @@ class Team < ActiveRecord::Base
   
   alias_method :team_avatar, :avatar
   
-  
   def self.find_list(tag_list)
     find(:all, :conditions => [ 'LOWER(name) LIKE ?', '%' + tag_list + '%' ])
   end
@@ -52,6 +51,10 @@ class Team < ActiveRecord::Base
   
   def league_name= league_name
     self.league= League.find_or_create_by_name league_name
+  end
+
+  def team_name
+    self.name
   end
   
 end
