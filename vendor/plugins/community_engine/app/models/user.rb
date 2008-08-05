@@ -26,7 +26,7 @@ class User < ActiveRecord::Base
   validates_presence_of     :password_confirmation,      :if => :password_required?
   validates_length_of       :password, :within => 6..20, :if => :password_required?
   validates_confirmation_of :password,                   :if => :password_required?
-  validates_presence_of     :metro_area,                 :if => Proc.new { |user| user.state }
+  #validates_presence_of     :metro_area,                 :if => Proc.new { |user| user.state }
   validates_length_of       :login,    :within => 5..20
   validates_length_of       :email,    :within => 3..100
   validates_format_of       :email, :with => /^([^@\s]+)@((?:[-a-z0-9A-Z]+\.)+[a-zA-Z]{2,})$/
