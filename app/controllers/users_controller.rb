@@ -1,7 +1,11 @@
 class UsersController < BaseController
   
   protect_from_forgery :only => [:create, :update, :destroy]
-  before_filter :login_required
+  before_filter :login_required, :only => [:edit, :edit_account, :update,
+                                           :welcome_photo, :welcome_about, :welcome_invite,
+                                           :return_admin, :assume, :featured, 
+                                           :toggle_featured, :edit_pro_details, :update_pro_details,
+                                           :dashboard, :show ]
 
   def show
     @friend_count = @user.accepted_friendships.count
