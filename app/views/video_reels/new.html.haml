@@ -1,0 +1,16 @@
+%h1
+  New video_reel
+
+- form_for(@video_reel) do |f|
+  = f.error_messages
+  = render :partial => "form", :locals => { :f => f }
+
+  -if current_user.admin?
+    %p
+      = f.label :user_id
+      %br/
+      = f.text_field :user_id
+    
+  %p= f.submit "Create"
+
+= link_to 'Back', video_reels_path

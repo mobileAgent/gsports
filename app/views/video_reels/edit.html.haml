@@ -1,0 +1,11 @@
+%h1="Editing Reel #{h @video_reel.title}"
+
+- form_for(@video_reel) do |f|
+  = f.error_messages
+  = render :partial => "form", :locals => { :f => f }
+  %p= f.submit "Update"
+  
+
+= link_to 'Show', @video_reel
+= "|"
+= link_to 'Back', video_reels_path
