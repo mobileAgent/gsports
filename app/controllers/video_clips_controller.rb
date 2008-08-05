@@ -54,6 +54,7 @@ class VideoClipsController < BaseController
   # POST /video_clips.xml
   def create
     @video_clip = VideoClip.new(params[:video_clip])
+    @video_clip.tag_with(params[:tag_list] || '') 
 
     respond_to do |format|
       if @video_clip.save
@@ -71,6 +72,7 @@ class VideoClipsController < BaseController
   # PUT /video_clips/1.xml
   def update
     @video_clip = VideoClip.find(params[:id])
+    @video_clip.tag_with(params[:tag_list] || '') 
 
     respond_to do |format|
       if @video_clip.update_attributes(params[:video_clip])
