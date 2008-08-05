@@ -1,0 +1,23 @@
+%ul
+  %li=link_to 'Dashboard', dashboard_user_path(@user)
+  %li=link_to 'Profile', user_path(@user.id)  
+  %li=link_to 'Blog', user_posts_path(@user.id)
+  %li=link_to 'Clips', user_video_clips_path(@user.id)
+  %li=link_to 'Reels', user_video_reels_path(@user.id)
+  %li=link_to 'Photos', user_photos_path(@user.id)
+  %li=link_to 'Friends', accepted_user_friendships_path(@user.id)
+
+%br
+%ul
+  %li=link_to 'Edit Profile', edit_user_path(@user.id)
+  %li=link_to 'Edit Account', edit_account_user_path(@user.id)
+  %li=link_to 'Blog posts', manage_user_posts_path(@user.id)
+
+
+- if current_user && current_user.admin?  
+  %br
+  %ul
+    %li= link_to( "Assume ID", assume_user_path(@user) )
+    %li= link_to( "Delete user", user_path(@user), {:method => :delete, :confirm => 'Are you sure you want to permanently delete this user?'} )
+    
+    
