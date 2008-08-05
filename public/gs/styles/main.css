@@ -48,7 +48,6 @@
 	padding-bottom: 18px;
 }
 .friendSearchColumn{
-	display: block;
 	width: 50px;
 	height: 15px;
 	float:left;
@@ -203,11 +202,6 @@ label.verbalSemantic { /* used for <label> tags that are needed for semantic com
 	padding-bottom: 10px;
 	width:100%;
 }
-.headerAd1{
-	margin-right: 7px;
-	margin-top: 7px;
-	float: right;
-}
 .headerBrand {
 	position: absolute;
 	opacity: 0;
@@ -222,6 +216,8 @@ label.verbalSemantic { /* used for <label> tags that are needed for semantic com
 .headerAccountControl, .headerAccountControlLinks{
 	height: 105px;
 	width: 300px;
+	font-size: 95%;
+	margin-right: 68px;
 }
 .headerAccountControl span {
 	position: absolute; /* absolute positioning is not actually absolute here; is used ONLY to anchor this object to the bottom of its parent */
@@ -229,12 +225,6 @@ label.verbalSemantic { /* used for <label> tags that are needed for semantic com
 	right: 20px;
 }
 .headerAccountControl .content {
-}
-.headerSchoolLogo {
-	margin-right: 7px;
-	margin-top: 7px;
-	float: right;
-	display: inline;
 }
 a.logout {
 	color: #FFFFFF;
@@ -244,6 +234,32 @@ a.logout {
 	border-right: 1px solid #FFFFFF;
 }
 a.logout:hover { }
+/* .headerAd1 and .headerSchoolLogo deprecated in favor of .headerPosition1 and .headerPosition2 */
+.headerPosition1, .headerPosition2 {
+	text-align: center;
+	width: 234px;
+	height: 100px;
+	margin-top: 10px;
+	float: right;
+	display: inline;
+	display: table;
+	position: relative;
+	/* overflow: hidden; */
+	padding-right: 34px;
+}
+.headerPosition1 span, .headerPosition2 span {
+	display: block;
+	# position: absolute;
+	# top: 50%;
+	display: table-cell;
+	vertical-align: middle;
+}
+.headerPosition1 span div, .headerPosition2 span div {
+	# position: relative;
+	# top: -50%;
+	# left: -50%;
+	display: inline;
+}
 
 /* top nav */
 .topNav{
@@ -457,6 +473,9 @@ span.ROLLOVERIMAGE a span { display: none; visibility: hide; }
 	background: url("/gs/images/left_nav_header.gif") repeat-x scroll left top;
 	width:115px;
 }
+.leftNavCol{
+	width:125px; /*new jjs*/
+}
 .leftNav{
 	background: #999999;
 	width:125px;
@@ -559,6 +578,7 @@ span.ROLLOVERIMAGE a span { display: none; visibility: hide; }
 	margin-left: 10px;
 	margin-right: 10px;
 	float:left;
+	display:inline;
 }
 
 /* right content */
@@ -660,9 +680,9 @@ span.ROLLOVERIMAGE a span { display: none; visibility: hide; }
 	margin-left:135px;
 	padding-top:20px;
 }
-.profilePageHeader h1{
+.profilePageHeader h2.columnDescriptor{
 	font-size:140%;
-	color: #666666;
+	color: #333333;
 }
 .profilePageHeader span{
 	color: #0081C0;	
@@ -708,6 +728,7 @@ span.ROLLOVERIMAGE a span { display: none; visibility: hide; }
 	margin-bottom:7px;
 	width: 60px;
 	height: 40px;
+	display:inline;
 }
 .fileName{
 	display:block;
@@ -769,3 +790,106 @@ span.ROLLOVERIMAGE a span { display: none; visibility: hide; }
 	margin-top: 2px;
 	margin-bottom: 2px;
 }
+
+/*search results*/
+.searchResultsContent{
+	width:805px;
+	padding: 20px 0px 10px 0px;
+	float:left;
+	background-color: #ffffff;
+	display:inline;
+}
+.searchResultsContent .mainCol1 .contentBox, .searchResultsContent .mainCol2 .contentBox, .searchResultsContent .mainCol3 .contentBox{
+	height: 100px;
+	width: 258px;
+	padding-bottom: 8px;
+	margin-bottom:10px;
+}
+.searchResultsContent .mainCol1 .contentBox .featureSummaryText, .searchResultsContent .mainCol2 .contentBox .featureSummaryText, .searchResultsContent .mainCol3 .contentBox .featureSummaryText{
+	font-size: 90%;
+}
+.searchResultsContent .mainCol1 .contentBox .profileSubHeading, .searchResultsContent .mainCol2 .contentBox .profileSubHeading, .searchResultsContent .mainCol3 .contentBox .profileSubHeading{
+	color: #536338;
+	font-size:110%;
+}
+.profileContentArea .searchResultsContent .mainCol1 .contentBox{
+	color: #ffffff;
+	background-color: #111528;
+}
+.profileContentArea .searchResultsContent .mainCol1 .contentBox .featureText{
+	color: #999999;
+}
+.profileContentArea .searchResultsContent .mainCol1 .contentBox .profileSubHeading{
+	color: #ffffff;
+	font-weight: normal;
+}
+.profileContentArea .searchResultsContent .mainCol3 .contentBox .fileThumb{
+	margin-top:25px;
+}
+.profileContentArea .searchResultsContent h2.columnDescriptor{
+	font-size:140%;
+	color: #333333;
+	margin-left: 10px;
+	margin-bottom: 5px;
+}
+.searchResultsContent .friendSearchWidgetArea{
+	margin-top:18px;
+	padding-bottom: 18px;
+	margin-bottom: 0px;
+	float:left;
+}
+.searchResultsContent .mainCol1, .searchResultsContent .mainCol2, .searchResultsContent .mainCol3{
+	padding-top: 0px;
+}
+.advancedSearchTools{
+	float: right;
+	text-align:right;
+	font-size: 120%;
+	line-height: 230%;
+	margin-right: 15px;
+	margin-top: 12px;
+	color: #333333;
+	width:280px;
+}
+.advancedSearchTools img{
+	margin-left: 5px;
+	margin-top: 5px;
+	display:inline;
+	float:right;
+}
+.advancedSearchTools span{
+	/*display:block;*/
+	width: 225px;
+	margin-bottom:4px;
+	padding-left: 5px;
+	float:right;
+}
+.hdSearchPreview{
+	margin-top:16px;
+}
+.fileSearchPreview{
+	padding-left: 10px;
+	padding-right: 6px;
+	display:inline;
+}
+/*
+.advancedSearchTools div{
+	width: 250px;
+	position:absolute;
+	border: solid 1px purple;
+}
+.advancedSearchTools span{
+	position:absolute;
+	display:block;
+	width: 260px;
+	bottom: 4px;
+	left:0px;
+	border: solid 1px blue;
+}
+.advancedSearchTools div.absoluteTextCont{
+	width: 240px;
+	height: 30px;
+	position:static;
+	border: solid 1px green;
+}
+*/
