@@ -12,6 +12,8 @@
 = "|"
 = render :partial => 'shared/favorite_count', :locals => { :item => @video_reel }
 = "|"
+= render :partial => 'shared/view_count', :locals => { :item => @video_reel }
+= "|"
 = render :partial => 'shared/inappropriate_item', :locals => { :item => @video_reel }
 - if current_user && current_user.can_edit?(@video_asset)
   = "|"

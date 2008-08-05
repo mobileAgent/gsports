@@ -1,4 +1,5 @@
 class BaseController < ApplicationController
+  include Viewable
 
   before_filter :vidavee_login, :includes => [ :site_index ]
 
@@ -47,7 +48,9 @@ class BaseController < ApplicationController
 
     # First on the list if non specified or specified one not found
     @now_playing = @games_of_the_week.shift
-    
+    if @now_playing
+      update_view_count(@now_playing)
+    end
   end
 
 end
