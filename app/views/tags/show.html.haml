@@ -63,4 +63,18 @@
         - @video_assets.each do |va|
           =link_to "<img src='#{@vidavee.file_thumbnail_medium(va.dockey)}' title='{#va.title}'>", video_asset_path(va)
         %h6.all= link_to "All videos tagged #{@tag.name}", tag_path(:id => @tag.name, :type => 'VideoAsset')
+
+    - unless @video_clips.empty?
+      .blog
+        %h3 Clips
+        - @video_clips.each do |va|
+          =link_to "<img src='#{@vidavee.file_thumbnail_medium(va.dockey)}' title='{#va.title}'>", video_clip_path(va)
+        %h6.all= link_to "All clips tagged #{@tag.name}", tag_path(:id => @tag.name, :type => 'VideoCLip')
+
+    - unless @video_reels.empty?
+      .blog
+        %h3 Reels
+        - @video_reels.each do |va|
+          =link_to "<img src='#{@vidavee.file_thumbnail_medium(va.thumbnail_dockey)}' title='{#va.title}'>", video_reel_path(va)
+        %h6.all= link_to "All reels tagged #{@tag.name}", tag_path(:id => @tag.name, :type => 'VideoReel')
              

@@ -53,6 +53,7 @@ class VideoReelsController < BaseController
   # POST /video_reels.xml
   def create
     @video_reel = VideoReel.new(params[:video_reel])
+    @video_reel.tag_with(params[:tag_list] || '') 
 
     respond_to do |format|
       if @video_reel.save
@@ -72,6 +73,7 @@ class VideoReelsController < BaseController
     @video_reel = VideoReel.find(params[:id])
 
     respond_to do |format|
+      @video_reel.tag_with(params[:tag_list] || '') 
       if @video_reel.update_attributes(params[:video_reel])
         flash[:notice] = 'VideoReel was successfully updated.'
         format.html { redirect_to(@video_reel) }
