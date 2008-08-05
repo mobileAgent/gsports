@@ -1,11 +1,7 @@
 class AddTeamLeagueToUser < ActiveRecord::Migration
   def self.up
     add_column :users, :team_id, :integer
-    team = Team.find(:first)
-    User.find(:all).each do |u|
-      u.team= team
-      u.save!
-    end
+    execute 'update users set team_id = (select id from teams order by id limit 1)'
   end
 
   def self.down

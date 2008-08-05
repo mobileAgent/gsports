@@ -1,9 +1,7 @@
 class PullVideoAssetsFromVidavee < ActiveRecord::Migration
   def self.up
-
-    # Just get a few of them here, see the utility
-    # method referenced to get them all
-    Vidavee.load_backend_video(50)
+    puts "Nah, this is a bad idea. See the rake task for doing it right."
+    # Vidavee.load_backend_video(50)
   end
 
   def self.down
