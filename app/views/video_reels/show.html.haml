@@ -4,6 +4,10 @@
 %br/
 = "Owner #{h @video_reel.user.full_name}"
 %br/
+
+%p= @video_reel.tags.collect{|t| link_to( h(t.name), tag_url(t.name), :class => 'tag') }.join(" ")
+%br/
+
 = render :partial => 'shared/favorite_item', :locals => { :item => @video_reel }
 = "|"
 = render :partial => 'shared/favorite_count', :locals => { :item => @video_reel }
