@@ -28,3 +28,5 @@ APP_URL = "http://globalsports.net"
 # Caching, memcache on localhost for production
 config.cache_store = :mem_cache_store
 #ActionController::Base.cache_store = :mem_cache_store, "localhost"
+
+AD_SERVER_BASE = 'www.danmcardle.com/openx/www/delivery/ajs.php'

@@ -30,7 +30,7 @@ class User < ActiveRecord::Base
   # and the change the fixures/users.yml to use role_id instead of role
   belongs_to :role
 
-  [:team_avatar, :league_avatar, :league, :league_id].each do |method|
+  [:team_avatar, :league_avatar, :league, :league_id, :ad_zone].each do |method|
     delegate method, :to => :team
   end
 
