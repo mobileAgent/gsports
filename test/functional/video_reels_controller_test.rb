@@ -60,4 +60,12 @@ class VideoReelsControllerTest < ActionController::TestCase
 
     assert_redirected_to video_reels_path
   end
+  
+  def test_update_tags
+    login_as :admin
+    tags = VideoReel.find(video_reels(:one).id).tags.collect(&:name)
+    put :update, :id => video_reels(:one).id, :video_reel => {}, :tag_list => "newcat bluecat #{tags.join(' ')}"
+    assert_redirected_to video_reel_path(assigns(:video_reel))
+    assert_equal(tags.size+2, VideoReel.find(video_reels(:one).id).tags.size)
+  end
 end
