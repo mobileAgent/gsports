@@ -1,4 +1,5 @@
 class VideoReelsController < BaseController
+  include Viewable
   
   before_filter :login_required
   before_filter :vidavee_login
@@ -26,6 +27,7 @@ class VideoReelsController < BaseController
   # GET /video_reels/1.xml
   def show
     @video_reel = VideoReel.find(params[:id])
+    update_view_count(@video_reel)
 
     respond_to do |format|
       format.html # show.html.erb
@@ -53,6 +55,7 @@ class VideoReelsController < BaseController
   # POST /video_reels.xml
   def create
     @video_reel = VideoReel.new(params[:video_reel])
+    @video_reel.tag_with(params[:tag_list] || '') 
 
     respond_to do |format|
       if @video_reel.save
@@ -72,6 +75,7 @@ class VideoReelsController < BaseController
     @video_reel = VideoReel.find(params[:id])
 
     respond_to do |format|
+      @video_reel.tag_with(params[:tag_list] || '') 
       if @video_reel.update_attributes(params[:video_reel])
         flash[:notice] = 'VideoReel was successfully updated.'
         format.html { redirect_to(@video_reel) }

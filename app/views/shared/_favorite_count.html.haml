@@ -1,3 +1,2 @@
-%span#favorite_count
-  - fc=Favorite.count_for_item(item)
-  = "Favorited #{fc} #{fc==1 ? 'time' : 'times'}"
+%span.favorite_count
+  = "Favorited #{pluralize(Favorite.count_for_item(item),'time')}"

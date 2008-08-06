@@ -12,7 +12,7 @@ class SessionsController < BaseController
 
   def create
     self.current_user = User.authenticate(params[:login], params[:password])
-    if logged_in?
+    if logged_in? && current_user.enabled?
       if params[:remember_me] == "1"
         self.current_user.remember_me
         cookies[:auth_token] = { :value => self.current_user.remember_token , :expires => self.current_user.remember_token_expires_at }
@@ -22,9 +22,14 @@ class SessionsController < BaseController
       flash[:notice] = "Thanks! You're now logged in."
       current_user.track_activity(:logged_in)
     else
-      flash[:notice] = "Uh oh. We couldn't log you in with the username and password you entered. Try again?"      
-      redirect_to teaser_path and return if AppConfig.closed_beta_mode        
-      render :action => 'new'
+      if !current_user.nil? && !current_user.enabled?
+        flash[:notice] = "Your account is not enabled.  Please contact the gspor
+ts administrator."
+      else
+        flash[:notice] = "Uh oh. We couldn't log you in with the username and password you entered. Try again?"      
+      end
+        redirect_to teaser_path and return if AppConfig.closed_beta_mode        
+        render :action => 'new'
     end
   end
 

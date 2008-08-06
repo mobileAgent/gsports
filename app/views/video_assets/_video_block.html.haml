@@ -1,6 +1,6 @@
 .profileFeature
   .featureSummaryThumb
-    = link_to "<img src='#{@vidavee.file_thumbnail_medium(video_asset.dockey)}' title='#{h video_asset.title}'>", video_asset_path(video_asset)
+    = link_to "<img src='#{@vidavee.file_thumbnail_medium(video_asset.dockey)}' title='#{h(video_asset.title).gsub(/\'/,'')}' alt='Video'/>", video_asset_path(video_asset)
   .featureText
     %span.profileSubHeading
       = h video_asset.title

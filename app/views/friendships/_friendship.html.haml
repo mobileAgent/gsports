@@ -5,7 +5,7 @@
   .yui-g
     .yui-u.first
       %h2= link_to user.full_name, user_path(user)
-      = "from #{user.location}<br/>" if user.metro_area      
+      = "from #{user.city}, #{user.state_id ? user.state.name : ''}<br/>"
       = friendship.friendship_status.name
       \: 
       requested 

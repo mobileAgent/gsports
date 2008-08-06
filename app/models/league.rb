@@ -18,5 +18,9 @@ class League < ActiveRecord::Base
   def state_name
     state ? state.name : nil
   end
+
+  def league_name
+    self.name
+  end
   
 end

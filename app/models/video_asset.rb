@@ -23,6 +23,15 @@ class VideoAsset < ActiveRecord::Base
   # Video upload repository
   VIDEO_REPOSITORY = VIDEO_BASE+"/uploaded"
 
+  # Game metadata
+  def self.GAME_LEVELS
+    ["Varsity","JV","Recreational","Other"]
+  end
+
+  def self.GAME_GENDERS
+    ["Mens","Womens","Coed"]
+  end
+  
   named_scope :for_user,
     lambda { |user| { :conditions => ["(team_id = ? || league_id = ?) and video_status = 'ready'",user.team_id, user.league_id] } }
   
