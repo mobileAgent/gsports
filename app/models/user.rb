@@ -125,5 +125,9 @@ class User < ActiveRecord::Base
    memberships[0].credit_card = cc
    save
   end
+
+  def enabled?
+    true # TODO: add enabled (boolean) field to User and use that field; Registration or Activation should set that field
+  end
   
 end
