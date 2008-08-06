@@ -11,7 +11,7 @@ class User < ActiveRecord::Base
   #validates_presence_of :address2
   validates_presence_of :city
 
-  #validates_presence_of :state
+  validates_presence_of :state
   #validates_presence_of :country
 
   validates_presence_of :phone
@@ -40,17 +40,6 @@ class User < ActiveRecord::Base
 
   named_scope :admin,
     :conditions => ["email = ?",ADMIN_EMAIL]
-
-  def team_or_league_avatar
-    if team && team.avatar_id?
-      team.avatar
-    elsif league && league.avatar_id?
-      league.avatar
-    else
-      User.find_by_email(ADMIN_EMAIL).team.avatar
-    end
-  end
-
 
   def team_admin?
     role && role.eql?(Role[:team])
