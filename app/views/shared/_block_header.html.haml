@@ -4,13 +4,17 @@
   .headerPosition2
     %span
       %div
-        %a{ :href => "#" }
-          = render :partial => "photos/photo_block", :locals => {:photo => current_user.team_or_league_avatar, :options=>{:size => "100x100"} }
+        - if AdSlot.header_slot2_is_logo(current_user)
+          = link_to AdSlot.header_slot2_img_tag(current_user),team_path(current_user.team)
+        - else
+          = render :partial => "shared/top_ad"
   .headerPosition1
     %span
       %div
-        %a{ :href => "#" }
-          %img{ :src => "/gs/placeholders/header_ad_1.jpg", :alt => "##TEXT EQUIVALENT##" }/
+        - if AdSlot.header_slot1_is_logo(current_user)
+          = link_to AdSlot.header_slot1_img_tag(current_user),league_path(current_user.league)
+        - else
+          = render :partial => "shared/top_ad"
   .headerAccountControl
     .headerAccountControlLinks
       %span
