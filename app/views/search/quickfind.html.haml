@@ -1,9 +1,164 @@
-%p= "There are #{@video_assets.total_entries} videos matching your criteria"
-- for video_asset in @video_assets
-  = render :partial => 'video_assets/video_block', :locals => { :video_asset => video_asset }
-  = render :partial => 'shared/favorite_item', :locals => { :item => video_asset }
-  %br/
 
-- if @video_assets.respond_to?('total_pages')
-  .apple_pagination
-    = will_paginate @video_assets
+
+.profileContentArea
+  .profilePageHeader
+    %h2.columnDescriptor
+      SEARCH RESULTS (
+      = @video_assets.total_entries
+      \)
+  .leftNavCol
+  .searchResultsContent
+    .contentBox.tanBackground
+      .contentBoxHeader.yellowHeader
+        %h2.boxDescription
+          Search My Clips and Reels
+      .advancedSearchTools
+        %a{ :href => "" }
+          %img{ :src => "/gs/images/top_nav_search.gif" }/
+        %span
+          VIDEO ADVANCED SEARCH
+        .clearDiv
+        %a{ :href => "" }
+          %img{ :src => "/gs/images/top_nav_search.gif" }/
+        %span
+          NETWORK ADVANCED SEARCH
+      .contentBoxContent.friendSearchWidgetArea
+        %span.friendSearchColumn
+          Search:
+        %span.friendSearchWidgetColumn
+          the rolling stones
+        .clearDiv
+        %span.friendSearchColumn
+          Sort by:
+        %span.friendSearchWidgetColumn
+          %label.verbalSemantic{ :for => "friendFindSortBy" }
+            Sort by
+          %select#friendFindSortBy{ :name => "sortBy" }
+            %option{ :value => "" }
+              Recent Updates
+            %option{ :value => "" }
+              Option
+            %option{ :value => "" }
+              Option
+            %option{ :value => "" }
+              Option
+          %br/
+        .clearDiv
+        %span.friendSearchColumn
+          Show:
+        %span.friendSearchWidgetColumn
+          %label.verbalSemantic{ :for => "friendFindShowNet" }
+            Show Network
+          %select#friendFindShowNet{ :name => "sortBy" }
+            %option{ :value => "" }
+              Recent Updates
+            %option{ :value => "" }
+              Option
+            %option{ :value => "" }
+              Option
+            %option{ :value => "" }
+              Option
+          %br/
+      .clearDiv
+    .clearDiv
+    /
+      col1 content
+    .mainCol1
+      %h2.columnDescriptor
+        VIDEOS
+      
+      - for video_asset in @video_assets  
+        .contentBox.tanBackground
+          .contentBoxContent
+            = render :partial => 'video_assets/video_block', :locals => { :video_asset => video_asset, :skip_controls=>true }
+      
+    /
+      col2 content
+    .mainCol2
+      %h2.columnDescriptor
+        NETWORK
+      .contentBox.tanBackground
+        .contentBoxContent
+          .profileFeature
+            .featureSummaryThumb
+              %img{ :src => "/placeholders/profile_search_res_pic.jpg" }/
+            .featureText
+              %span.profileSubHeading
+                Liz Waters
+              %br/
+              %span.featureSummaryText
+                Mezeek HS
+              %br/
+            .clearDiv
+      .contentBox.tanBackground
+        .contentBoxContent
+          .profileFeature
+            .featureSummaryThumb
+              %img{ :src => "/placeholders/profile_search_res_pic.jpg" }/
+            .featureText
+              %span.profileSubHeading
+                Liz Waters
+              %br/
+              %span.featureSummaryText
+                Mezeek HS
+              %br/
+            .clearDiv
+    /
+      col3 content
+    .mainCol3
+      %h2.columnDescriptor
+        EVERYTHING ELSE
+      .contentBox.tanBackground
+        .contentBoxContent
+          .profileFeature
+            .featureSummaryThumb.hdSearchPreview
+              %img{ :src => "/placeholders/thumbnail_81x54.jpg" }/
+            .featureText
+              %span.profileSubHeading
+                Liz Waters
+              %br/
+              %span.featureSummaryText
+                Mezeek HS
+              %br/
+            .clearDiv
+      .contentBox.tanBackground
+        .contentBoxContent
+          .profileFeature
+            .featureSummaryThumb.fileSearchPreview
+              .fileThumb
+                %a.fileName{ :href => "" }
+                  %span
+                    File na...
+            .featureText
+              %span.profileSubHeading
+                Liz Waters
+              %br/
+              %span.featureSummaryText
+                Mezeek HS
+              %br/
+            .clearDiv
+      .contentBox.tanBackground
+        .contentBoxContent
+          .profileFeature
+            .featureSummaryThumb.fileSearchPreview
+              .fileThumb
+                %a.fileName{ :href => "" }
+                  %span
+                    File na...
+            .featureText
+              %span.profileSubHeading
+                Liz Waters
+              %br/
+              %span.featureSummaryText
+                Mezeek HS
+              %br/
+            .clearDiv
+  .clearDiv
+  
+
+  - if @video_assets.respond_to?('total_pages')
+    .apple_pagination
+      = will_paginate @video_assets
+
+  
+    
