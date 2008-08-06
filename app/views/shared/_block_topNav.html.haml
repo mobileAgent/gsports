@@ -1,61 +1,62 @@
-.topNav
+%form{ :action => "#", :method => "get" }
+  .topNav
 
-  - if logged_in?
+    - if logged_in?
 
-    %ul.leftTopNav
-      %li
-        %span#gnavMyNetwork.ROLLOVERIMAGE
-          %a{ :href => accepted_user_friendships_path(current_user.id) }
-            %span
-              My Network
-      %li.divider
-        %span#gnavMyVideos.ROLLOVERIMAGE
-          %a{ :href => url_for(:controller => 'search', :action => 'my_videos') }
-            %span
-              My Videos
-      %li.divider
-        %span#gnavMyProfile.ROLLOVERIMAGE
-          %a{ :href => user_path(current_user.id) }
-            %span
-              My Profile
-    %form.rightTopNav{ :action => "#", :method => "get" }
-      %h2
-        Search Site
-      %label.verbalSemantic{ :for => "searchCategory" }
-        Category
-      %select#searchCategory{ :name => "category" }
-        %option{ :value => "" }
-          All Categories
-        %option{ :value => "" }
+      %ul.leftTopNav
+        %li
+          %span#gnavMyNetwork.ROLLOVERIMAGE
+            %a{ :href => accepted_user_friendships_path(current_user.id) }
+              %span
+                My Network
+        %li.divider
+          %span#gnavMyVideos.ROLLOVERIMAGE
+            %a{ :href => url_for(:controller => 'search', :action => 'my_videos') }
+              %span
+                My Videos
+        %li.divider
+          %span#gnavMyProfile.ROLLOVERIMAGE
+            %a{ :href => user_path(current_user.id) }
+              %span
+                My Profile
+      .rightTopNav
+        %h2
+          Search Site
+        %label.verbalSemantic{ :for => "searchCategory" }
           Category
-        %option{ :value => "" }
-          Category
-        %option{ :value => "" }
-          Category
-      %label.verbalSemantic{ :for => "searchTerms" }
-        Search Terms
-      %input#searchTerms{ :name => "terms", :type => "text" }/
-      %input.submit{ :name => "submit", :src => "/gs/images/top_nav_search.gif", :type => "image", :value => "search", :alt => "Search" }/
+        %select#searchCategory{ :name => "category" }
+          %option{ :value => "" }
+            All Categories
+          %option{ :value => "" }
+            Category
+          %option{ :value => "" }
+            Category
+          %option{ :value => "" }
+            Category
+        %label.verbalSemantic{ :for => "searchTerms" }
+          Search Terms
+        %input#searchTerms{ :name => "terms", :type => "text" }/
+        %input.submit{ :name => "submit", :src => "/gs/images/top_nav_search.gif", :type => "image", :value => "search", :alt => "Search" }/
 
 
 
-  -else
-    %ul.leftTopNav
-      %li
-        %span
-          %a{ :href => '/info/about' }
-            %span
-              About Global Sports
-      %li.divider
-        %span
-          %a{ :href => '/info/about' }
-            %span
-              Membership
-      %li.divider
-        %span
-          %a{ :href => register_path }
-            %span
-              Registration
+    -else
+      %ul.leftTopNav
+        %li
+          %span
+            %a{ :href => '/info/about' }
+              %span
+                About Global Sports
+        %li.divider
+          %span
+            %a{ :href => '/info/about' }
+              %span
+                Membership
+        %li.divider
+          %span
+            %a{ :href => register_path }
+              %span
+                Registration
       
       
 
