@@ -2,14 +2,14 @@
   %h1.headerBrand
     Global Sports
   .headerPosition2
-    %span
+    .structuralContainer
       %div
         - if AdSlot.header_slot2_is_logo(current_user)
           = link_to AdSlot.header_slot2_img_tag(current_user),team_path(current_user.team)
         - else
           = render :partial => "shared/top_ad"
   .headerPosition1
-    %span
+    .structuralContainer
       %div
         - if AdSlot.header_slot1_is_logo(current_user)
           = link_to AdSlot.header_slot1_img_tag(current_user),league_path(current_user.league)

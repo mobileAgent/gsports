@@ -1,6 +1,6 @@
 .videoFindChat
-  .videoFind
-    - form_for :search_video_asset, VideoAsset.new, :url => {:controller => 'search', :action => 'quickfind' } do |f|
+  - form_for :search_video_asset, VideoAsset.new, :url => {:controller => 'search', :action => 'quickfind' }, :html => {:id=>'videoFind'} do |f|
+    .videoFind
       =collection_select("search_video_asset","game_date",VideoAsset.seasons(),"year","year",{:prompt => '-Season-', :selected => '-Season-'}, {:id => "videoFindSeason", :name => 'season'})
       %label.verbalSemantic{ :for => "videoFindSeason" }
         Season
