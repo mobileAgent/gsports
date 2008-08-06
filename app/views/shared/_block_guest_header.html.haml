@@ -6,7 +6,7 @@
     
   .headerLogin
     - form_tag sessions_path, :class => 'MainForm' do
-      %label{"for"=>"username"} Email Address
+      %label{"for"=>"login"} Email Address
       %br
       = text_field_tag 'login', nil, :size => 25
       %br
@@ -22,7 +22,7 @@
       %nobr
       %br
       =link_to 'Sign Up', register_path
-      |
+      ="|"
       =link_to 'Forgot Password?', forgot_password_path
 
   .clearDiv
