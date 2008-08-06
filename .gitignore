@@ -7,3 +7,12 @@ videos
 public/photos
 public/assets
 art
+.loadpath
+.project
+public/.htaccess
+public/blank.html
+public/images/active_scaffold/
+public/javascripts/active_scaffold/
+public/plugin_assets/active_scaffold/
+public/stylesheets/active_scaffold/
+vendor/plugins/community_engine/.gitignore
