@@ -30,7 +30,8 @@
         .mainContentArea
           = @content_for_layout
         
-        = render :partial => "shared/block_weeklyFeature"
+        - if @show_weekly_feature
+          = render :partial => "shared/block_weeklyFeature"
         = render :partial => "shared/block_footer"
         = render :partial => "shared/block_legal"
         
