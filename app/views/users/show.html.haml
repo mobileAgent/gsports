@@ -45,11 +45,9 @@
       .contentBoxContent
         .profileFeature
           .profileInfo
-            %span.profileSubHeading
-              Gender:
+            %span.profileSubHeading="Gender: #{@user.gender}"
             %br/
-            %span.profileSubHeading
-              Birthday:
+            %span.profileSubHeading="Birthday: #{@user.birthday.to_s(:readable)}"
             %br/
             - if @user.description
               = @user.description
@@ -120,22 +118,11 @@
       .contentBoxContent
         .profileFeature
           .profileInfo
-            %span.profileSubHeading
-              Location:
-            Verona Junction, TU
+            %span.profileSubHeading="Location: #{@user.city}, #{@user.state_id ? @user.state.name : ''}"
             %br/
-            %span.profileSubHeading
-              Contact:
-            %a{ :href => "mailto:" }
-              nobody@veronaHS.biz
+            %span.profileSubHeading="Team: #{@user.team_name}"
             %br/
-            %span.profileSubHeading
-              Sponsor:
-            Cadillac
-            %br/
-            %span.profileSubHeading
-              Member Organization:
-            Framing
+            %span.profileSubHeading="League: #{@user.league_name}"
             %br/
             %br/
             %h2.profileHeading

@@ -16,7 +16,7 @@
       =collection_select("search_video_asset","sport",VideoAsset.sports(),"sport","sport",{:prompt => "-Sport-", :selected => '-Sport-'}, {:id => 'videoFindSport', :name => 'sport'})
       %label.verbalSemantic{ :for => "videoFindSport" }
         Sport
-      %input#videoFindSubmit.submit{ :name => "submit", :src => "/gs/images/video_find_submit.gif", :type => "image", :value => "search", :alt => "Search" }
+      %input#videoFindSubmit.submit{ :name => "submit", :src => "/gs/images/video_find_submit.gif", :type => "image", :value => "search", :alt => "Search" }/
       %label.verbalSemantic{ :for => "videoFindSubmit" }
         Video Find
   .chat

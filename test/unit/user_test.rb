@@ -27,6 +27,18 @@ class UserTest < ActiveSupport::TestCase
     assert_not_nil u.avatar
     assert_not_nil u.team_avatar
     assert_not_nil u.league_avatar
+    assert_not_nil u.team_name
+    assert_not_nil u.league_name
+    assert_not_nil u.team.league_name
+  end
+
+  def test_metro_area_validation_turned_off
+    u = users(:gsports_admin)
+    u.metro_area_id=nil
+    u.state = states(:maryland)
+    u.password= "testpass"
+    u.password_confirmation= "testpass"
+    assert(u.save!)
   end
 
 end

@@ -11,7 +11,7 @@ class User < ActiveRecord::Base
   #validates_presence_of :address2
   validates_presence_of :city
 
-  #validates_presence_of :state
+  validates_presence_of :state
   #validates_presence_of :country
 
   validates_presence_of :phone
@@ -30,23 +30,16 @@ class User < ActiveRecord::Base
   # and the change the fixures/users.yml to use role_id instead of role
   belongs_to :role
 
-  [:team_avatar, :league_avatar, :league, :league_id].each do |method|
+  [:team_avatar, :league_avatar, :league, :league_id, :ad_zone, :team_name].each do |method|
     delegate method, :to => :team
+  end
+
+  [:league_name].each do |method|
+    delegate method, :to => :league
   end
 
   named_scope :admin,
     :conditions => ["email = ?",ADMIN_EMAIL]
-
-  def team_or_league_avatar
-    if team && team.avatar_id?
-      team.avatar
-    elsif league && league.avatar_id?
-      league.avatar
-    else
-      User.find_by_email(ADMIN_EMAIL).team.avatar
-    end
-  end
-
 
   def team_admin?
     role && role.eql?(Role[:team])
@@ -124,6 +117,10 @@ class User < ActiveRecord::Base
                         :verification_value => ccinfo.verification_value)
    memberships[0].credit_card = cc
    save
+  end
+
+  def enabled?
+    enabled
   end
   
 end

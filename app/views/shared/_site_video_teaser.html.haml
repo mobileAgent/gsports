@@ -5,6 +5,6 @@
   - else
     - thumbnail_dockey = item.dockey
       
-  = link_to "<img src='#{@vidavee.file_thumbnail_medium(thumbnail_dockey)}' title='#{h item.title}'>", url_for({ :controller => 'base', :action => 'site_index', :id => item })
+  = link_to "<img src='#{@vidavee.file_thumbnail_medium(thumbnail_dockey)}' title='#{h(item.title).gsub(/\'/,'')}' alt='Video'/>", url_for({ :controller => 'base', :action => 'site_index', :id => item })
   %br/
   =h item.title

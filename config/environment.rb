@@ -107,3 +107,5 @@ VIDEO_BASE = "#{RAILS_ROOT}/videos"
 # Email addr for the admin account
 ADMIN_EMAIL = "admin@globalsports.net"
 
+FOOTER_AD_COUNT = 3
+
