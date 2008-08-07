@@ -16,3 +16,4 @@ public/javascripts/active_scaffold/
 public/plugin_assets/active_scaffold/
 public/stylesheets/active_scaffold/
 vendor/plugins/community_engine/.gitignore
+pust-test
