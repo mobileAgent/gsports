@@ -23,8 +23,7 @@ class SessionsController < BaseController
       current_user.track_activity(:logged_in)
     else
       if !current_user.nil? && !current_user.enabled?
-        flash[:notice] = "Your account is not enabled.  Please contact the gspor
-ts administrator."
+        flash[:notice] = "Your account is not enabled.  Please contact the gsports administrator."
       else
         flash[:notice] = "Uh oh. We couldn't log you in with the username and password you entered. Try again?"      
       end

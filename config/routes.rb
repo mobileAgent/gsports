@@ -1,4 +1,6 @@
 ActionController::Routing::Routes.draw do |map|
+  map.resources :monikers
+
 
   map.resources :members
   map.resources :pages
