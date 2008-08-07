@@ -43,6 +43,18 @@ class User < ActiveRecord::Base
   named_scope :admin,
     :conditions => ["email = ?",ADMIN_EMAIL]
 
+  named_scope :team_admin,
+    lambda { |team_id| { :conditions => ["team_id = ? and role_id = ?",team_id,Role[:team].id] } }
+  
+#  named_scope :league_admin,
+#    lambda { |league_id| { :conditions => ["league_id = ? and role_id = ?",league_id,Role[:league].id] } }
+
+  named_scope :team_staff,
+    lambda { |team_id| { :conditions => ["team_id = ? and role_id IN (?)",team_id,[Role[:team_staff].id,Role[:team].id]] } }
+
+#  named_scope :league_staff,
+#    lambda { |league_id| { :conditions => ["league_id = ? and role_id = ?",league_id,Role[:team_staff].id] } }
+
   def team_admin?
     role && role.eql?(Role[:team])
   end

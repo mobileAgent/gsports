@@ -20,6 +20,27 @@ class VideoAssetsController < BaseController
   def index
 
     @user = params[:user_id] ? User.find(params[:user_id]) : current_user
+    
+    # Only admin, league and team staff have video_assets
+    # If user isn't one of those, redirect to video_clips
+    if(!current_user.admin? && !current_user.team_staff? && !current_user.league_staff?)
+      redirect_to user_video_clips_path(@user)
+      return
+    end
+
+    # Team and league staff can only manage their own accounts
+    if (current_user.team_staff? &&
+        ! User.team_staff(current_user.team_id).collect(&:id).member?(current_user.id))
+      redirect_to_user_video_clips_path(@user)
+      return
+    end
+    
+#    if (current_user.league_staff? &&
+#        ! User.league_staff(current_user.league_id).collect(&:id).member?(current_user.id))
+#      redirect_to_user_video_clips_path(@user)
+#      return
+#    end
+
     cond = Caboose::EZ::Condition.new
     cond.user_id == @user.id
     if params[:tag_name]    
