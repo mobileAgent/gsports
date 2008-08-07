@@ -1,0 +1,13 @@
+<p>
+  <b>Name:</b>
+  <%=h @moniker.name %>
+</p>
+
+<p>
+  <b>User generated:</b>
+  <%=h @moniker.user_generated %>
+</p>
+
+
+<%= link_to 'Edit', edit_moniker_path(@moniker) %> |
+<%= link_to 'Back', monikers_path %>

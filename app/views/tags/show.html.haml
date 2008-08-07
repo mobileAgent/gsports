@@ -41,11 +41,16 @@
       %h6.all= link_to "All photos tagged #{@tag.name}", tag_path(:id => @tag.name, :type => 'Photo')
       
       
-    - if @users.any?
+    - if @users.any? || @applied_monikers.any?
+      - used_ids=[]
       .user
         %h3 Users
         - @users.each do |user|
-          = link_to image_tag(user.avatar_photo_url(:thumb), :class => "polaroid"), user_path(user), :title => user.login
+          = link_to image_tag(user.avatar_photo_url(:thumb), :class => "polaroid"), user_path(user), :title => user.full_name
+          - used_ids << user.id
+        - @applied_monikers.each do |am|
+          - if( ! used_ids.member?(@am.user_id))
+            = link_to image_tag(am.user.avatar_photo_url(:thumb), :class => "polaroid"), user_path(am.user), :title => am.user.full_name
         %h6.all= link_to "All users tagged #{@tag.name}", tag_path(:id => @tag.name, :type => 'User')
 
 

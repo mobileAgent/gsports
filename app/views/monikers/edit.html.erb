@@ -1,0 +1,20 @@
+<h1>Editing moniker</h1>
+
+<% form_for(@moniker) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :name %><br />
+    <%= f.text_field :name %>
+  </p>
+  <p>
+    <%= f.label :user_generated %><br />
+    <%= f.check_box :user_generated %>
+  </p>
+  <p>
+    <%= f.submit "Update" %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @moniker %> |
+<%= link_to 'Back', monikers_path %>
