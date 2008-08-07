@@ -1,9 +1,12 @@
-- for video_clip in @video_clips
-  = render :partial => 'video_block', :locals => {:video_clip => video_clip }
-  = render :partial => 'shared/favorite_item', :locals => { :item => video_clip }
-  %br
+- if @video_clips.any?
+  - for video_clip in @video_clips
+    = render :partial => 'video_block', :locals => {:video_clip => video_clip }
+    = render :partial => 'shared/favorite_item', :locals => { :item => video_clip }
+    %br
 
-- if @video_clips.respond_to?('total_pages')
-  .apple_pagination
-    = will_paginate @video_clips
-
+  - if @video_clips.respond_to?('total_pages')
+    .apple_pagination
+      = will_paginate @video_clips
+      
+-else
+  = "You don't have any video clips yet"
