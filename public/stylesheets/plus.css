@@ -7,7 +7,7 @@
 	background-color: #ffffff;
 }
 
-.mainContentArea input[type='text'], .mainContentArea input[type='password'], .mainContentArea select, .mainContentArea input[type='radio'] {
+.mainContentArea input[type='text'], .mainContentArea input[type='password'], .mainContentArea select, .mainContentArea input[type='radio'], .mainContentArea textarea {
   background-color: #feb;
   border: 1px solid #26a;
   margin-bottom: 4px;
@@ -119,7 +119,6 @@
 #videoFindSport {
   width: 8em;
 }
-
 
 
 .prototip .gs { margin:0 10px 0 10px; border: 1px solid #2a1301; color: #fff; font: 11px Arial, Helvetica, sans-serif; border-top: none;}
