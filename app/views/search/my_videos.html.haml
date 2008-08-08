@@ -1,17 +1,15 @@
-
 .profileContentArea.listingPage
   .profilePageHeader
     %h2.columnDescriptor
       %span
         My Videos
-      = @user.full_name()
+      = @user.full_name
   .leftNavCol
     %h2.yellowHeader
       My Profile
     .leftNav
       =render :partial => "users/profile_nav"
-          
-          
+
   .listings
     .contentBox.tanBackground
       .contentBoxHeader.yellowHeader
@@ -62,7 +60,7 @@
       %span.moreLink
   
     -if @video_assets && @video_assets.size > 0
-      .listingItem
+      -#.listingItem
         %h2
           My Videos 
       - for video_asset in @video_assets
