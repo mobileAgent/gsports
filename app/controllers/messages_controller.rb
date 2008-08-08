@@ -20,9 +20,8 @@ class MessagesController < ApplicationController
   # GET /messages/new
   def new  
     @message = Message.new()
-    if params[:to]
-      @message.to_id = params[:to]
-    end
+    @message.to_id = params[:to] if params[:to]
+    @message.title = params[:title] if params[:title]
   end
 
 
@@ -49,19 +48,23 @@ class MessagesController < ApplicationController
   # DELETE /messages/1
   # DELETE /messages/1.xml
   def destroy
-    #TODO delete and cascade to replies (comments?)
+    @message = Message.find(params[:id])
+    @message.destroy
+    @msgs = Message.inbox(current_user)
+    render :action => 'inbox'
   end
   
   
 
   def show
+    @message = Message.find(params[:id])
+    if (! (current_user.admin? || current_user.id == @message.to_id))
+      redirect_to user_path(current_user)
+      return
+    end
   end
 
   def sent
   end
-
-
-
-
-
+  
 end

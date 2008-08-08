@@ -1,0 +1,25 @@
+<h1>Listing monikers</h1>
+
+<table class="unstyled">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>User generated</th>
+    </tr>
+  </thead>
+  <tbody>
+<% for moniker in @monikers %>
+  <tr>
+    <td><%=h moniker.name %></td>
+    <td><%=h moniker.user_generated %></td>
+    <td><%= link_to 'Show', moniker %></td>
+    <td><%= link_to 'Edit', edit_moniker_path(moniker) %></td>
+    <td><%= link_to 'Destroy', moniker, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+  </tbody>
+</table>
+
+<br />
+
+<%= link_to 'New moniker', new_moniker_path %>

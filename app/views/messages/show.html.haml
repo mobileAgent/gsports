@@ -1,0 +1,30 @@
+%br/
+.profileContentArea
+  .contentBox.tanBackground
+    .contentBoxHeader.yellowHeader
+      %h2 Inbox Message
+    %span.profileSubHeading From:
+    = "#{@message.sender.full_name}"
+    %br/
+    %span.profileSubHeading Date:
+    = "#{@message.created_at.to_s(:readable)}"
+    %br/
+    %span.profileSubHeading Subject:
+    = h @message.title
+    %br/
+    %br/
+    = "#{@message.body}"
+  %br/
+
+.yui-b
+  .box
+    %h3 Controls
+    %ul.list.checks
+      %li= link_to 'Delete Message', message_path(@message), :confirm => 'Are you sure?', :method => :delete
+  
+.yui-b  
+  .box
+    %h3 Mailbox
+    %ul.list.checks
+      %li= link_to 'Inbox', messages_path
+      %li= link_to 'Sent Messages', messages_path(:box=>:sent)

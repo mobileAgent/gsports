@@ -23,6 +23,8 @@ class User < ActiveRecord::Base
   has_many :video_assets
   has_many :video_clips
   has_many :video_reels
+  has_many :applied_monikers
+  has_many :monikers, :through => :applied_monikers
 
   # Base model uses has_enumerated here, but at least fixtures
   # don't work with that. This takes care of the foxy fixtures
@@ -40,6 +42,18 @@ class User < ActiveRecord::Base
 
   named_scope :admin,
     :conditions => ["email = ?",ADMIN_EMAIL]
+
+  named_scope :team_admin,
+    lambda { |team_id| { :conditions => ["team_id = ? and role_id = ?",team_id,Role[:team].id] } }
+  
+#  named_scope :league_admin,
+#    lambda { |league_id| { :conditions => ["league_id = ? and role_id = ?",league_id,Role[:league].id] } }
+
+  named_scope :team_staff,
+    lambda { |team_id| { :conditions => ["team_id = ? and role_id IN (?)",team_id,[Role[:team_staff].id,Role[:team].id]] } }
+
+#  named_scope :league_staff,
+#    lambda { |league_id| { :conditions => ["league_id = ? and role_id = ?",league_id,Role[:team_staff].id] } }
 
   def team_admin?
     role && role.eql?(Role[:team])
@@ -121,6 +135,18 @@ class User < ActiveRecord::Base
 
   def enabled?
     enabled
+  end
+
+  def tag_moniker(moniker_name,tag_list)
+    # May need to create the user_generated moniker
+    m = Moniker.find_or_create_by_name(moniker_name)
+    self.monikers << m if (!self.monikers.member?(m))
+    am = self.applied_monikers.find_or_create_by_moniker_id(m.id)
+    am.tag_with(tag_list)
+  end
+
+  def moniker_hash
+    self.applied_monikers.inject({}) { |s,am| s.merge( { am.name => am.tags.collect(&:name) } ) }
   end
   
 end

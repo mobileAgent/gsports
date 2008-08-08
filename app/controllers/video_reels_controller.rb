@@ -33,6 +33,9 @@ class VideoReelsController < BaseController
       format.html # show.html.erb
       format.xml  { render :xml => @video_reel }
     end
+  rescue ActiveRecord::RecordNotFound
+    flash[:notice] = 'That reel could not be found.'
+    redirect_to url_for({ :controller => "search", :action => "my_videos" })
   end
 
   # GET /video_reels/new
@@ -49,6 +52,9 @@ class VideoReelsController < BaseController
   # GET /video_reels/1/edit
   def edit
     @video_reel = VideoReel.find(params[:id])
+  rescue ActiveRecord::RecordNotFound
+    flash[:notice] = 'That reel could not be found.'
+    redirect_to url_for({ :controller => "search", :action => "my_videos" })
   end
 
   # POST /video_reels
@@ -85,6 +91,9 @@ class VideoReelsController < BaseController
         format.xml  { render :xml => @video_reel.errors, :status => :unprocessable_entity }
       end
     end
+  rescue ActiveRecord::RecordNotFound
+    flash[:notice] = 'That reel could not be found.'
+    redirect_to url_for({ :controller => "search", :action => "my_videos" })
   end
 
   # DELETE /video_reels/1
@@ -97,5 +106,8 @@ class VideoReelsController < BaseController
       format.html { redirect_to(video_reels_url) }
       format.xml  { head :ok }
     end
+  rescue ActiveRecord::RecordNotFound
+    flash[:notice] = 'That reel could not be found.'
+    redirect_to url_for({ :controller => "search", :action => "my_videos" })
   end
 end

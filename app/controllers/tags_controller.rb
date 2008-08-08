@@ -11,6 +11,7 @@ class TagsController < BaseController
     @video_assets = popular_tags(75, ' count DESC', 'VideoAsset')
     @video_clips = popular_tags(75, ' count DESC', 'VideoClip')
     @video_reels = popular_tags(75, ' count DESC', 'VideoReel')
+    @applied_monikers = popular_tags(75, ' count DESC', 'AppliedMoniker')
   end
   
   def show
@@ -26,7 +27,8 @@ class TagsController < BaseController
       cond.append ['tags.name = ?', @tag.name]
       @posts, @photos, @users, @clippings = [], [], [], []
       @video_assets, @video_clips, @video_reels = [], [], []
-
+      @applied_monikers = []
+      
       case params[:type]
         when 'Post'
           @pages, @posts = paginate :posts, :order => "published_at DESC", :conditions => cond.to_sql, :include => :tags, :per_page => 20
@@ -34,6 +36,7 @@ class TagsController < BaseController
           @pages, @photos = paginate :photos, :order => "created_at DESC", :conditions => cond.to_sql, :include => :tags, :per_page => 30
         when 'User'
           @pages, @users = paginate :users, :order => "created_at DESC", :conditions => cond.to_sql, :include => :tags, :per_page => 30
+          @bogus_pages, @applied_monikers = paginate :applied_monikers, :order => "created_at DESC", :conditions => cond.to_sql, :include => :tags, :per_page => 30
         when 'Clipping'
           @pages, @clippings = paginate :clippings, :order => "created_at DESC", :conditions => cond.to_sql, :include => :tags, :per_page => 30      
         when 'VideoAsset'
@@ -42,7 +45,8 @@ class TagsController < BaseController
           @pages, @video_clips = paginate :video_clips, :order => "created_at DESC", :conditions => cond.to_sql, :include => :tags, :per_page => 30      
         when 'VideoReel'
           @pages, @video_reels = paginate :video_reels, :order => "created_at DESC", :conditions => cond.to_sql, :include => :tags, :per_page => 30
-            @posts, @photos, @users = [], [], []          
+        when 'AppliedMoniker'
+          @pages, @applied_monikers = paginate :applied_monikers, :order => "created_at DESC", :conditions => cond.to_sql, :include => :tags, :per_page => 30
         end
     else
       @posts = Post.find_tagged_with(@tag.name, :limit => 5, :order => 'published_at DESC', :sql => " AND published_as = 'live'")
@@ -52,6 +56,7 @@ class TagsController < BaseController
       @video_assets = VideoAsset.find_tagged_with(@tag.name, :limit => 10, :order => 'created_at DESC')
       @video_clips = VideoClip.find_tagged_with(@tag.name, :limit => 10, :order => 'created_at DESC')
       @video_reels = VideoReel.find_tagged_with(@tag.name, :limit => 10, :order => 'created_at DESC')
+      @applied_monikers = AppliedMoniker.find_tagged_with(@tag.name, :limit => 10, :order => 'created_at DESC')
     end
   end
   

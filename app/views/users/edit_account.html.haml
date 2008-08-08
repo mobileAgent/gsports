@@ -61,10 +61,10 @@
           Make my profile public
           %br
           %em
-            When checked, your profile will be visible to anyone.
+            When checked, your profile will be visible to anyone logged into 
+            = "#{AppConfig.community_name}."
           %br
           %em
-            When unchecked, your profile will only be visible to people who are logged in to
-            = "#{AppConfig.community_name}."
+            When unchecked, your profile will only be visible to you and your friends
       %p= submit_tag 'Save Changes'  
             
