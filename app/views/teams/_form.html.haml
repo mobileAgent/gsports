@@ -1,38 +1,38 @@
-  %p
+  %div
     %b Name
     %br/
-    = f.text_field :name , :tabindex => 1
-  %p
+    = f.text_field :name
+  %div
     %b City
     %br/
-    = f.text_field :city, :tabindex => 2
+    = f.text_field :city
     
-  %p
+  %div
     %b County
     %br/
-    = f.text_field :county_name, :tabindex => 3
+    = f.text_field :county_name
     
-  %p
+  %div
     %b State
     %br/
-    =collection_select("team","state_id",State.all,"id","name",{ :selected => @team.state_name } , { :tabindex => 4 })
+    =collection_select("team","state_id",State.all,"id","name",{ :selected => @team.state_name })
     
-  %p
+  %div
     %b Description
     %br/
-    = f.text_field :description , :size => 65, :tabindex => 5
+    = f.text_field :description , :size => 65
 
-  %p
+  %div
     %b League
     %br/
-    = text_field_with_auto_complete :team, :league_name, :autocomplete => "off", :tabindex => 6
+    = text_field_with_auto_complete :team, :league_name, :autocomplete => "off"
     
-  %p
-    %b Active
+  %div
+    %b Active Team
     %br/
     = f.check_box :active
 
-  %p
+  %div
     %b Ad Zone (Be sure to coordinate with ad server zones)
     %br/
     = f.text_field :ad_zone
