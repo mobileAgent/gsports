@@ -44,6 +44,9 @@ ActionController::Routing::Routes.draw do |map|
   # Install the default routes as the lowest priority.
   map.connect ':controller/:action/:id'
   map.connect ':controller/:action/:id.:format'
+
+  # A catch all route
+  map.connect '*path', :controller => 'base', :action => 'site_index'
 end
 
 
