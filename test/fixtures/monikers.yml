@@ -1,0 +1,9 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  name: SystemGenerated
+  user_generated: false
+
+two:
+  name: UserGenerated
+  user_generated: true

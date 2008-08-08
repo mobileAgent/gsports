@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20080806012837) do
+ActiveRecord::Schema.define(:version => 20080808004000) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id",    :limit => 10
@@ -46,6 +46,13 @@ ActiveRecord::Schema.define(:version => 20080806012837) do
     t.boolean  "published",                      :default => false
     t.boolean  "time_constrained",               :default => false
     t.string   "audience",                       :default => "all"
+  end
+
+  create_table "applied_monikers", :force => true do |t|
+    t.integer  "moniker_id", :limit => 11, :null => false
+    t.integer  "user_id",    :limit => 11, :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "assets", :force => true do |t|
@@ -253,6 +260,13 @@ ActiveRecord::Schema.define(:version => 20080806012837) do
   end
 
   add_index "moderatorships", ["forum_id"], :name => "index_moderatorships_on_forum_id"
+
+  create_table "monikers", :force => true do |t|
+    t.string   "name",                             :null => false
+    t.boolean  "user_generated", :default => true
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "monitorships", :force => true do |t|
     t.integer "topic_id", :limit => 11
@@ -485,8 +499,8 @@ ActiveRecord::Schema.define(:version => 20080806012837) do
     t.string   "video_length"
     t.string   "video_type"
     t.string   "video_status"
-    t.integer  "sponsor_id",         :limit => 11
-    t.integer  "member_id",          :limit => 11
+    t.integer  "league_id",          :limit => 11
+    t.integer  "team_id",            :limit => 11
     t.integer  "user_id",            :limit => 11
     t.string   "sport"
     t.datetime "game_date"
@@ -498,8 +512,7 @@ ActiveRecord::Schema.define(:version => 20080806012837) do
     t.string   "game_level"
     t.string   "game_gender"
     t.integer  "view_count",         :limit => 11, :default => 0
-    t.integer  "team_id",            :limit => 11
-    t.integer  "league_id",          :limit => 11
+    t.boolean  "public_video",                     :default => true
   end
 
   create_table "video_clips", :force => true do |t|
@@ -512,6 +525,7 @@ ActiveRecord::Schema.define(:version => 20080806012837) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "view_count",     :limit => 11, :default => 0
+    t.boolean  "public_video",                 :default => true
   end
 
   create_table "video_reels", :force => true do |t|
@@ -524,6 +538,7 @@ ActiveRecord::Schema.define(:version => 20080806012837) do
     t.string   "video_length"
     t.string   "thumbnail_dockey"
     t.integer  "view_count",       :limit => 11, :default => 0
+    t.boolean  "public_video",                   :default => true
   end
 
   create_table "votes", :force => true do |t|

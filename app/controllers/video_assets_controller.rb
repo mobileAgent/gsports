@@ -20,6 +20,27 @@ class VideoAssetsController < BaseController
   def index
 
     @user = params[:user_id] ? User.find(params[:user_id]) : current_user
+    
+    # Only admin, league and team staff have video_assets
+    # If user isn't one of those, redirect to video_clips
+    if(!current_user.admin? && !current_user.team_staff? && !current_user.league_staff?)
+      redirect_to user_video_clips_path(@user)
+      return
+    end
+
+    # Team and league staff can only manage their own accounts
+    if (current_user.team_staff? &&
+        ! User.team_staff(current_user.team_id).collect(&:id).member?(current_user.id))
+      redirect_to_user_video_clips_path(@user)
+      return
+    end
+    
+#    if (current_user.league_staff? &&
+#        ! User.league_staff(current_user.league_id).collect(&:id).member?(current_user.id))
+#      redirect_to_user_video_clips_path(@user)
+#      return
+#    end
+
     cond = Caboose::EZ::Condition.new
     cond.user_id == @user.id
     if params[:tag_name]    
@@ -45,6 +66,9 @@ class VideoAssetsController < BaseController
       format.html # show.html.erb
       format.xml  { render :xml => @video_asset }
     end
+  rescue ActiveRecord::RecordNotFound
+    flash[:notice] = 'That video could not be found.'
+    redirect_to url_for({ :controller => "search", :action => "my_videos" })
   end
 
   # GET /video_assets/new
@@ -61,6 +85,9 @@ class VideoAssetsController < BaseController
   # GET /video_assets/1/edit
   def edit
     @video_asset = VideoAsset.find(params[:id])
+  rescue ActiveRecord::RecordNotFound
+    flash[:notice] = 'That video could not be found.'
+    redirect_to url_for({ :controller => "search", :action => "my_videos" })
   end
 
   # POST /video_assets
@@ -98,6 +125,9 @@ class VideoAssetsController < BaseController
         format.xml  { render :xml => @video_asset.errors, :status => :unprocessable_entity }
       end
     end
+  rescue ActiveRecord::RecordNotFound
+    flash[:notice] = 'That video could not be found.'
+    redirect_to url_for({ :controller => "search", :action => "my_videos" })
   end
 
   # DELETE /video_assets/1
@@ -110,6 +140,9 @@ class VideoAssetsController < BaseController
       format.html { redirect_to(video_assets_url) }
       format.xml  { head :ok }
     end
+  rescue ActiveRecord::RecordNotFound
+    flash[:notice] = 'That video could not be found.'
+    redirect_to url_for({ :controller => "search", :action => "my_videos" })
   end
 
   # POST /video_assets/swfupload comes from the video_uploader.js 

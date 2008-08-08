@@ -10,6 +10,7 @@ class SearchController < BaseController
     cond.append ['sport = ?', params[:sport]]
     cond.append ['teams.state_id = ?', params[:state]]
     cond.append ['teams.county_name = ?', params[:county_name]]
+    cond.append ['public_video = ?', true]
     @video_assets = VideoAsset.paginate(:conditions => cond.to_sql, :page => params[:page], :order => 'video_assets.updated_at DESC', :include => [:team,:tags])
   end
 

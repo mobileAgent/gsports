@@ -1,64 +1,7 @@
-/*========================================================*/
-/* COLOR GUIDE                                            */
-/*========================================================*/
-/*
-dark grey #464337
-light grey #a2a19b
-
-blue link #06f
-
-h3 yellow border #ffd735
-
-alt blue light #e1ecff
-
-alt blue dark #94beff
-
-========================================================= */
-
-
-/*========================================================*/
-/*    Cascading Style Sheet for the Community Engine      */
-/*========================================================*/
-
-/*========================================================*/
-/*                  Table of Contents                     */
-/*========================================================*/
-/*  1. UNIVERSAL THINGS                                   */
-/*  2. HEADER                                             */
-/*  3. WELCOME                                            */
-/*  4. BOX and ALTBOX                                     */
-/*  5. BODY                                               */
-/*  6. SIDEBAR                                            */ 
-/*  7. FOOTER                                             */
-/*  8. COMMUNITY FOOTER                                   */
-/*  9. CLEARFIX                                           */
-/*  10. SORTABLES                                         */
-/*  11. PAGINTATION                                       */
-/*  12. CLIPPINGS                                         */
-/*  13. TAG CLOUDS                                        */
-/*  14. USER LIST                                         */
-/*========================================================*/
-
-
-/* =============================================== */
-/* 1. UNIVERSAL THINGS                             */
-/* =============================================== */
-
-body{
-}
-
 #doc2{
 color: #464337;
 	background-color: white;
 }
-
-a{color: #06f;}
-
-a:hover{color: #06f;
-text-decoration: none;
-}
-
-p{margin: 0 0 1em 0;}
 
 div.auto_complete {
   width: 350px;
@@ -183,26 +126,6 @@ background: #fff url(/plugin_assets/community_engine/images/search.gif) no-repea
 border: none;
 }
 
-/* VideoQuickfind */
-
-#VideoQuickfind{
-	background: #aba8a3 url(/plugin_assets/community_engine/images/bg_navbar.gif) repeat-x 0 0;
-	border-top: 1px solid #d9d6d3;
-	clear: both;
-	
-}
-
-
-#VideoQuickfind select{
-border: none;
-}
-
-/* NavChat */
-
-#NavChat{
-}
-
-
 
 /* =============================================== */
 /* 3. WELCOME                                      */
@@ -272,7 +195,8 @@ font-size: 123.1%;
 font-weight: bold;
 text-transform: uppercase;
 border-bottom: 1px solid #ffd735;
-margin:1.5em 0 1em 0;
+margin:0;
+padding: 1em 0 1em 0;
 }
 
 .alt{
@@ -290,7 +214,8 @@ color: #38465b;
 }
 
 .first_alt {
-	margin-top:3.25em;
+	margin-top:0;
+        padding-top: 1.25em;
 	}
 
 
@@ -613,7 +538,7 @@ margin-right: 1em;
 
 .warning, #errorExplanation, .errorExplanation{
 padding: 1em 1em 1em 1em;
-margin: 1em 0;
+/*margin: 1em 0; */
 border: 1px solid #fc0;
 background: #fff3c5;
 color: #6b5e2b;
