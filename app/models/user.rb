@@ -32,7 +32,9 @@ class User < ActiveRecord::Base
   # and the change the fixures/users.yml to use role_id instead of role
   belongs_to :role
 
-  [:team_avatar, :league_avatar, :league, :league_id, :ad_zone, :team_name].each do |method|
+  attr_protected :team_name, :league_name
+
+  [:team_avatar, :league_avatar, :league, :league_id, :ad_zone].each do |method|
     delegate method, :to => :team
   end
 
@@ -147,6 +149,10 @@ class User < ActiveRecord::Base
 
   def moniker_hash
     self.applied_monikers.inject({}) { |s,am| s.merge( { am.name => am.tags.collect(&:name) } ) }
+  end
+
+  def team_name
+    team_id? ? team.name : ''
   end
   
 end
