@@ -54,8 +54,16 @@ class UsersController < BaseController
 
     @user = User.new(params[:user])
     @user.role = @role || Role[:member]
-    team = Team.find(:first)
-    @user.team = team
+    @team = Team.find_or_create_by_name(params[:user][:team_name])
+
+    # Assign any new teams coming in this way to the admin league
+    if (@team.new_record?)
+      @team.league_id = User.admin.first.league_id
+      @team.save! 
+    end
+    
+    @user.team_id = @team.id
+    @user.login= "gs#{Time.now.to_i}#{rand(100)}" # We never use this
     @user.save!
     create_friendship_with_inviter(@user, params)
 
@@ -152,5 +160,11 @@ class UsersController < BaseController
     end
     redirect_to user_photo_path(@user, @photo)
   end
+
+  def auto_complete_for_user_team_name
+    @teams = Team.find(:all, :conditions => ["LOWER(name) like ?", '%' + params[:user][:team_name].downcase + '%'], :order => "name ASC", :limit => 10)
+    choices = "<%= content_tag(:ul, @teams.map { |t| content_tag(:li, h(t.name)) }) %>"    
+    render :inline => choices
+end
 
 end

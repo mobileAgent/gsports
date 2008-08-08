@@ -3,9 +3,9 @@
 .header
   %h1.headerBrand
     Global Sports
-    
+
   .headerLogin
-    - form_tag sessions_path, :class => 'MainForm' do
+    - form_tag sessions_path, :class => 'loginForm' do
       %label{"for"=>"login"} Email Address
       %br
       = text_field_tag 'login', nil, :size => 25
@@ -21,19 +21,17 @@
           Remember me
       %nobr
       %br
-      =link_to 'Sign Up', register_path
-      ="|"
       =link_to 'Forgot Password?', forgot_password_path
 
   .clearDiv
 
 
 
-%div
+#NavBar
   %a{ :href => '/info/about' }
     About Global Sports
   |
-  = link_to 'Membership', ''
+  = link_to 'Membership', '#Need_to_fill_this_in'
   |
   = link_to 'Registration', register_path
 
