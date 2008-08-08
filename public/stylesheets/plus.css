@@ -1,5 +1,9 @@
 
 /* notice warning flash_message */
+#flash_notice, #flash_error, #flash_info {
+  background-color: #ffffff;
+  border: 0px;
+}
 
 /* aaron */
 
