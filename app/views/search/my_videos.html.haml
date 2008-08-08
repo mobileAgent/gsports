@@ -1,47 +1,111 @@
--if @video_assets && @video_assets.size > 0
-  %h2
-    My Videos 
-  - for video_asset in @video_assets
-    =render :partial => 'video_assets/video_block', :locals => { :video_asset => video_asset, :skip_controls => true }
-    %br/
-    = render :partial => 'shared/favorite_item', :locals => { :item => video_asset }
-    %br/
-  - if @video_assets.respond_to?('total_pages')
-    .apple_pagination
-      = will_paginate @video_assets
-  - else
-    %strong
-      = link_to "More Videos...", url_for(:controller => 'search', :action => 'my_video_assets')
+
+.profileContentArea.listingPage
+  .profilePageHeader
+    %h2.columnDescriptor
+      %span
+        My Videos
+      = current_user.full_name()
+  .leftNavCol
+    %h2.yellowHeader
+      My Profile
+    .leftNav
+      =render :partial => "users/profile_nav"
+          
+          
+  .listings
+    .contentBox.tanBackground
+      .contentBoxHeader.yellowHeader
+        %h2.boxDescription
+          Friends
+      .contentBoxContent.friendSearchWidgetArea
+        %span.friendSearchColumn
+          Search:
+        %span.friendSearchWidgetColumn
+          %label.verbalSemantic{ :for => "friendSearchTerms" }
+            Search Terms
+          %input#friendSearchTerms{ :name => "terms", :type => "text" }/
+          %input.submit{ :name => "submit", :src => "images/top_nav_search.gif", :type => "image", :value => "search", :alt => "Search" }/
+          %br/
+        .clearDiv
+        %span.friendSearchColumn
+          Sort by:
+        %span.friendSearchWidgetColumn
+          %label.verbalSemantic{ :for => "friendFindSortBy" }
+            Sort by
+          %select#friendFindSortBy{ :name => "sortBy" }
+            %option{ :value => "" }
+              Recent Updates
+            %option{ :value => "" }
+              Option
+            %option{ :value => "" }
+              Option
+            %option{ :value => "" }
+              Option
+          %br/
+        .clearDiv
+        %span.friendSearchColumn
+          Show:
+        %span.friendSearchWidgetColumn
+          %label.verbalSemantic{ :for => "friendFindShowNet" }
+            Show Network
+          %select#friendFindShowNet{ :name => "sortBy" }
+            %option{ :value => "" }
+              Recent Updates
+            %option{ :value => "" }
+              Option
+            %option{ :value => "" }
+              Option
+            %option{ :value => "" }
+              Option
+          %br/
+    -#.clearDiv.moreLinkArea
+      %span.moreLink
+  
+    -if @video_assets && @video_assets.size > 0
+      .listingItem
+        %h2
+          My Videos 
+      - for video_asset in @video_assets
+        =render :partial => 'video_assets/video_listing', :locals => { :video_asset => video_asset, :skip_controls => false }
+    
+      - if @video_assets.respond_to?('total_pages')
+        .apple_pagination
+          = will_paginate @video_assets
+      - else
+        %strong
+          = link_to "More Videos...", url_for(:controller => 'search', :action => 'my_video_assets')
 
   
--if @video_clips && @video_clips.size > 0
-  %h2
-    My Clips 
-  - for video_clip in @video_clips
-    =render :partial => 'video_clips/video_block', :locals => { :video_clip => video_clip, :skip_controls => true }
-    %br/
-    = render :partial => 'shared/favorite_item', :locals => { :item => video_clip }
-    %br/
-  - if @video_clips.respond_to?('total_pages')
-    .apple_pagination
-      = will_paginate @video_clips
-  - else
-    %strong
-      = link_to "More Clips...", url_for(:controller => 'search', :action => 'my_video_clips')
+    -if @video_clips && @video_clips.size > 0
+      .listingItem
+        %h2
+          My Clips 
+      - for video_clip in @video_clips
+        =render :partial => 'video_clips/video_block', :locals => { :video_clip => video_clip, :skip_controls => false }
+        %br/
+        = render :partial => 'shared/favorite_item', :locals => { :item => video_clip }
+        %br/
+      - if @video_clips.respond_to?('total_pages')
+        .apple_pagination
+          = will_paginate @video_clips
+      - else
+        %strong
+          = link_to "More Clips...", url_for(:controller => 'search', :action => 'my_video_clips')
 
-- if @video_reels && @video_reels.size > 0  
-  %h2
-    My Reels
-  - for video_reel in @video_reels
-    =render :partial => 'video_reels/video_block', :locals => { :video_reel => video_reel, :skip_controls => true }
-    %br/
-    = render :partial => 'shared/favorite_item', :locals => { :item => video_reel }
-    %br/
-  - if @video_reels.respond_to?('total_pages')
-    .apple_pagination
-      = will_paginate @video_reels
-  - else
-    %strong
-      = link_to "More Reels...", url_for(:controller => 'search', :action => 'my_video_reels')
+    - if @video_reels && @video_reels.size > 0  
+      .listingItem
+        %h2
+          My Reels
+      - for video_reel in @video_reels
+        =render :partial => 'video_reels/video_block', :locals => { :video_reel => video_reel, :skip_controls => false }
+        %br/
+        = render :partial => 'shared/favorite_item', :locals => { :item => video_reel }
+        %br/
+      - if @video_reels.respond_to?('total_pages')
+        .apple_pagination
+          = will_paginate @video_reels
+      - else
+        %strong
+          = link_to "More Reels...", url_for(:controller => 'search', :action => 'my_video_reels')
 
-    
+  .clearDiv

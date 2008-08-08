@@ -1,0 +1,35 @@
+.listingItem
+  .listingImage
+    = link_to "<img src='#{@vidavee.file_thumbnail_medium(video_asset.dockey)}' title='#{h(video_asset.title).gsub(/\'/,'')}' alt='Video'/>", video_asset_path(video_asset)
+  .listingDescription
+    %h4
+      = h video_asset.title
+    .schoolName
+      = "#{h video_asset.league.name if video_asset.league}, #{h video_asset.team.name if video_asset.team}, #{h video_asset.sport}, #{game_date(video_asset.game_date)}"
+    .recentFriendFeed
+      = "#{h video_asset.description} - #{h video_asset.video_length}"
+  - skip_controls ||= false
+  %ul.listingActions
+
+    - if video_asset.user
+      %li
+        %a.genericButton{ :href => user_path( video_asset.user.id )  }
+          %span
+            View Profile
+      %li
+        %a.genericButton{ :href => new_message_path(:to => video_asset.user.id) }
+          %span
+            Send Message
+    %li
+      = render :partial => 'shared/favorite_item', :locals => { :item => video_asset }
+
+    - if current_user && current_user.can_edit?(video_asset)
+      %li
+        %a.genericButton{ :href => edit_video_asset_path(video_asset) }
+          %span
+            Edit
+      %li
+        = link_to 'Destroy', video_asset, :confirm => 'Are you sure?', :method => :delete, :html_options=>{:class=>'genericButton'}
+      %li
+  .clearDiv
+.clearDiv
