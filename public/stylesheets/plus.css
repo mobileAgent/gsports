@@ -32,13 +32,13 @@
   text-align: left;
 }
 
-.mainContentArea fieldset {
+.xxmainContentArea fieldset {
   border: 2px solid darkblue;
   margin-left: 4%;
   margin-right: 4%;
 }
 
-.mainContentArea fieldset legend {
+.xxmainContentArea fieldset legend {
    font-weight: bold;
 }
 
