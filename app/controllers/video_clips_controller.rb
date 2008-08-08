@@ -34,6 +34,9 @@ class VideoClipsController < BaseController
       format.html # show.html.erb
       format.xml  { render :xml => @video_clip }
     end
+  rescue ActiveRecord::RecordNotFound
+    flash[:notice] = 'That clip could not be found.'
+    redirect_to url_for({ :controller => "search", :action => "my_videos" })
   end
 
   # GET /video_clips/new
@@ -50,6 +53,9 @@ class VideoClipsController < BaseController
   # GET /video_clips/1/edit
   def edit
     @video_clip = VideoClip.find(params[:id])
+  rescue ActiveRecord::RecordNotFound
+    flash[:notice] = 'That clip could not be found.'
+    redirect_to url_for({ :controller => "search", :action => "my_videos" })
   end
 
   # POST /video_clips
@@ -86,6 +92,9 @@ class VideoClipsController < BaseController
         format.xml  { render :xml => @video_clip.errors, :status => :unprocessable_entity }
       end
     end
+  rescue ActiveRecord::RecordNotFound
+    flash[:notice] = 'That clip could not be found.'
+    redirect_to url_for({ :controller => "search", :action => "my_videos" })
   end
 
   # DELETE /video_clips/1
@@ -98,6 +107,9 @@ class VideoClipsController < BaseController
       format.html { redirect_to(video_clips_url) }
       format.xml  { head :ok }
     end
+  rescue ActiveRecord::RecordNotFound
+    flash[:notice] = 'That clip could not be found.'
+    redirect_to url_for({ :controller => "search", :action => "my_videos" })
   end
   
   def thumbnail
