@@ -28,6 +28,7 @@ ActionController::Routing::Routes.draw do |map|
     :change_team_photo => :put,
     :change_league_photo => :put,
   } do |user|
+    user.resources :messages
     user.resources :video_assets
     user.resources :video_clips
     user.resources :video_reels
