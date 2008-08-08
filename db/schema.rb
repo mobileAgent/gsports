@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20080806120115) do
+ActiveRecord::Schema.define(:version => 20080808004000) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id",    :limit => 10
@@ -512,6 +512,7 @@ ActiveRecord::Schema.define(:version => 20080806120115) do
     t.string   "game_level"
     t.string   "game_gender"
     t.integer  "view_count",         :limit => 11, :default => 0
+    t.boolean  "public_video",                     :default => true
   end
 
   create_table "video_clips", :force => true do |t|
@@ -524,6 +525,7 @@ ActiveRecord::Schema.define(:version => 20080806120115) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "view_count",     :limit => 11, :default => 0
+    t.boolean  "public_video",                 :default => true
   end
 
   create_table "video_reels", :force => true do |t|
@@ -536,6 +538,7 @@ ActiveRecord::Schema.define(:version => 20080806120115) do
     t.string   "video_length"
     t.string   "thumbnail_dockey"
     t.integer  "view_count",       :limit => 11, :default => 0
+    t.boolean  "public_video",                   :default => true
   end
 
   create_table "votes", :force => true do |t|
