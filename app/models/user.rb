@@ -45,17 +45,21 @@ class User < ActiveRecord::Base
   named_scope :admin,
     :conditions => ["email = ?",ADMIN_EMAIL]
 
+  # The billing entity for the team account
   named_scope :team_admin,
     lambda { |team_id| { :conditions => ["team_id = ? and role_id = ?",team_id,Role[:team].id] } }
-  
+
+  # The billing entity for the league account
 #  named_scope :league_admin,
 #    lambda { |league_id| { :conditions => ["league_id = ? and role_id = ?",league_id,Role[:league].id] } }
 
+  # Those who can do things for the team account
   named_scope :team_staff,
-    lambda { |team_id| { :conditions => ["team_id = ? and role_id IN (?)",team_id,[Role[:team_staff].id,Role[:team].id]] } }
+    lambda { |team_id| { :conditions => ["team_id = ? and role_id IN (?)",team_id,[Role[:team_staff].id,Role[:team].id, Role[:admin].id] ] } }
 
+  # Those who can do things for the league account
 #  named_scope :league_staff,
-#    lambda { |league_id| { :conditions => ["league_id = ? and role_id = ?",league_id,Role[:team_staff].id] } }
+#    lambda { |league_id| { :conditions => ["league_id = ? and role_id IN (?)",league_id,[Role[:league_staff].id, Role[:league].id, Role[:admin].id] ] } }
 
   def team_admin?
     role && role.eql?(Role[:team])

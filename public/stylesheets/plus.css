@@ -124,6 +124,13 @@
   width: 8em;
 }
 
+/* Fix up to make photos in posts wrap in text */
+.entry-content img {
+  float: left;
+  padding-right: 2em;
+}
+
+
 
 .prototip .gs { margin:0 10px 0 10px; border: 1px solid #2a1301; color: #fff; font: 11px Arial, Helvetica, sans-serif; border-top: none;}
 .prototip .gs .toolbar { background: #2e2e2e; color: #fff; font-weight: bold; }

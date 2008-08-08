@@ -16,11 +16,36 @@
       = file_field :avatar, :uploaded_data, :size => "20"
       
       %h3 Location
-      = render :partial => 'shared/location_chooser', :locals => {:selected_country => @user.country_id, :selected_state => @user.state_id, :selected_metro_area => @user.metro_area_id, :states => @states, :metro_areas => @metro_areas}
+      
+      %label{"for"=>"address1"} 
+        Address Line One
+        %em (Required: )
+      = text_field :user, :address1
+       
+      %label{"for"=>"address2"} 
+        Address Line Two
+      = text_field :user, :address2
+        
+      %label{"for"=>"city"} 
+        City
+        %em (Required: )
+      = text_field :user, :city
+        
+      %label{"for"=>"state"} 
+        State
+        %em (Required: )
+      =collection_select(:user ,:state_id,State.all,"id","name", { :prompt => 'Choose State', :selected => (@user.state_id? ? @user.state.name : '') })
+        
+      %label{"for"=>"zip"} 
+        Zip/Postal Code:
+        %em (Required: )
+      = text_field :user, :zip
+        
+      %label{"for"=>"phone"} 
+        Phone
+        %em (Required: )
+      = text_field :user, :phone
 
-      %label
-        ZIP/Postal code:
-      = text_field :user, :zip, :style=>"width:90px"
 
       %h3 Birthday & Gender
       %fieldset
