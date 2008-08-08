@@ -6,14 +6,10 @@
   = error_messages_for :user
 
   .yui-b.box
-    %h3 Username
-    = text_field :user, :login, :size => "28"
-
-    
     %h3 First Name
     = text_field :user, :firstname, :size => "28"
     
-    %h3 M.I.
+    %h3 Middle Initial
     = text_field :user, :minitial, :size => "2"
     
     %h3 Last Name
@@ -28,6 +24,38 @@
 
     %label Confirm Password
     = password_field :user, :password_confirmation, :size => "28"
+
+    %h3 Location
+      
+    %label{"for"=>"address1"} 
+      Address Line One
+      %em (Required: )
+    = text_field :user, :address1
+       
+    %label{"for"=>"address2"} 
+      Address Line Two
+    = text_field :user, :address2
+        
+    %label{"for"=>"city"} 
+      City
+      %em (Required: )
+    = text_field :user, :city
+        
+    %label{"for"=>"state"} 
+      State
+      %em (Required: )
+    =collection_select(:user ,:state_id,State.all,"id","name", { :prompt => 'Choose State', :selected => (@user.state_id? ? @user.state.name : '') })
+        
+    %label{"for"=>"zip"} 
+      Zip/Postal Code:
+      %em (Required: )
+    = text_field :user, :zip
+        
+    %label{"for"=>"phone"} 
+      Phone
+      %em (Required: )
+    = text_field :user, :phone
+    
 
   #yui-main
     .yui-b.box

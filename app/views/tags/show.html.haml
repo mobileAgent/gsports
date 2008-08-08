@@ -29,7 +29,7 @@
         %ul.list.page
           - @posts.each do |post|
             %li
-              = link_to( truncate(post.display_title, 75), user_post_path(post.user, post), :title => "by #{post.user.login}" )
+              = link_to( truncate(post.display_title, 75), user_post_path(post.user, post), :title => "by #{post.user.full_name}" )
               %p.post_excerpt= truncate_words(post.post, 35, '...' )
         %h6.all= link_to "All posts tagged #{@tag.name}", tag_path(:id => @tag.name, :type => 'Post')              
 
@@ -37,7 +37,7 @@
       %br.clear
       %h3 Photos
       - @photos.each do |photo|
-        = link_to image_tag(photo.public_filename(:thumb), :title => "#{photo.description} (uploaded by #{photo.user.login})", :class => "polaroid"), user_photo_path(photo.user, photo)
+        = link_to image_tag(photo.public_filename(:thumb), :title => "#{photo.description} (uploaded by #{photo.user.full_name})", :class => "polaroid"), user_photo_path(photo.user, photo)
       %h6.all= link_to "All photos tagged #{@tag.name}", tag_path(:id => @tag.name, :type => 'Photo')
       
       

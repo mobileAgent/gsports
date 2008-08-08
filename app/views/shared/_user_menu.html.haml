@@ -1,4 +1,4 @@
-="Logged in as #{link_to current_user.login, dashboard_user_path(current_user.id), :id => 'user-menu'}"
+="Logged in as #{link_to current_user.full_name, dashboard_user_path(current_user.id), :id => 'user-menu'}"
 #user-menu-tip
   %ul
     %li= link_to('Admin', admin_dashboard_path) if current_user.admin?

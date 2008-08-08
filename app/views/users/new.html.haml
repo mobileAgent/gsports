@@ -63,7 +63,7 @@
         =collection_select(:user ,:state_id,State.all,"id","name", { :prompt => 'Choose State'})
         
         %label{"for"=>"zip"} 
-          ZipCode
+          Zip/Postal Code
           %em (Required: )
         = f.text_field :zip
         
