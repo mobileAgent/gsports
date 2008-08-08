@@ -197,4 +197,16 @@ class UsersController < BaseController
     render :action => 'edit'
   end
   
+  def update_account
+    @user = current_user
+    @user.attributes = params[:user]
+
+    if @user.save!
+      flash[:notice] = "Your changes were saved."
+      redirect_to user_path(@user)
+    end
+  rescue ActiveRecord::RecordInvalid
+    render :action => 'edit_account'
+  end
+  
 end
