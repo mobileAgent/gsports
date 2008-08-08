@@ -5,7 +5,7 @@ class UsersController < BaseController
                                            :welcome_photo, :welcome_about, :welcome_invite,
                                            :return_admin, :assume, :featured, 
                                            :toggle_featured, :edit_pro_details, :update_pro_details,
-                                           :dashboard, :show ]
+                                           :dashboard, :show, :index, :change_team_photo, :change_league_photo ]
 
   def show
     @friend_count = @user.accepted_friendships.count
@@ -25,6 +25,13 @@ class UsersController < BaseController
     @clippings = @user.clippings.find(:all, :limit => 5)
     @photos = @user.photos.find(:all, :limit => 5)
     @comment = Comment.new(params[:comment])
+    @clips = @user.video_clips.find(:all, :limit => 2, :order => "created_at DESC")
+    @reels = @user.video_reels.find(:all, :limit => 2, :order => "created_at DESC")
+    @profile_clips_and_reels = []
+    while(@profile_clips_and_reels.size < 2 && (@clips.size + @reels.size > 0))
+      @profile_clips_and_reels << @clips.shift if @clips.size > 0
+      @profile_clips_and_reels << @reels.shift if @reels.size > 0
+    end
     update_view_count(@user) unless current_user && current_user.eql?(@user)
   end
 
@@ -165,6 +172,29 @@ class UsersController < BaseController
     @teams = Team.find(:all, :conditions => ["LOWER(name) like ?", '%' + params[:user][:team_name].downcase + '%'], :order => "name ASC", :limit => 10)
     choices = "<%= content_tag(:ul, @teams.map { |t| content_tag(:li, h(t.name)) }) %>"    
     render :inline => choices
-end
+  end
 
+  def update
+    @user.attributes = params[:user]
+    @avatar = Photo.new(params[:avatar])
+    @avatar.user = @user
+    if @avatar.save
+      @user.avatar = @avatar
+    end
+    
+    if @user.save!
+      @user.track_activity(:updated_profile)
+      
+      @user.tag_with(params[:tag_list] || '')     
+      flash[:notice] = "Your changes were saved."
+      unless params[:welcome] 
+        redirect_to user_path(@user)
+      else
+        redirect_to :action => "welcome_#{params[:welcome]}", :id => @user
+      end
+    end
+  rescue ActiveRecord::RecordInvalid
+    render :action => 'edit'
+  end
+  
 end

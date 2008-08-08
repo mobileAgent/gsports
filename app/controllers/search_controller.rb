@@ -15,25 +15,29 @@ class SearchController < BaseController
   end
 
   def my_videos
-    @video_assets = VideoAsset.for_user(current_user).all(:limit => 10, :order => 'updated_at DESC')
-    @video_clips = VideoClip.for_user(current_user).all(:limit => 10, :order => 'updated_at DESC')
-    @video_reels = VideoReel.for_user(current_user).all(:limit => 10, :order => 'updated_at DESC')
+    @user = params[:user_id] ? User.find(params[:user_id]) : current_user
+    @video_assets = VideoAsset.for_user(@user).all(:limit => 10, :order => 'updated_at DESC')
+    @video_clips = VideoClip.for_user(@user).all(:limit => 10, :order => 'updated_at DESC')
+    @video_reels = VideoReel.for_user(@user).all(:limit => 10, :order => 'updated_at DESC')
   end
 
   # This is not as straight-forward as video assets where the user_id is the
   # current user. That has it's place, but we need more.
   def my_video_assets
-    @video_assets = VideoAsset.for_user(current_user).paginate(:page => params[:page], :order => 'updated_at DESC')
+    @user = params[:user_id] ? User.find(params[:user_id]) : current_user
+    @video_assets = VideoAsset.for_user(@user).paginate(:page => params[:page], :order => 'updated_at DESC')
     render:action => "my_videos"
   end
   
   def my_video_clips
-    @video_clips = VideoClip.for_user(current_user).paginate(:page => params[:page], :order => 'updated_at DESC')
+    @user = params[:user_id] ? User.find(params[:user_id]) : current_user
+    @video_clips = VideoClip.for_user(@user).paginate(:page => params[:page], :order => 'updated_at DESC')
     render:action => "my_videos"
   end
   
   def my_video_reels
-    @video_reels = VideoReel.for_user(current_user).paginate(:page => params[:page], :order => 'updated_at DESC')
+    @user = params[:user_id] ? User.find(params[:user_id]) : current_user
+    @video_reels = VideoReel.for_user(@user).paginate(:page => params[:page], :order => 'updated_at DESC')
     render:action => "my_videos"
   end
     

@@ -137,29 +137,21 @@
           %a{ :href => "#", :onclick => "return profile_minimize(this)" }
             minimize -
         %h2.boxDescription
-          Description
+          My Clips and Reels
       .contentBoxContent
         .profileFeature.myClips
-          .featureSummaryThumb
-            %img{ :src => "/gs/placeholders/my_clip_thumb.jpg" }/
-            %a{ :href => "" }
+          - for v in @profile_clips_and_reels
+            .featureSummaryThumb
+              - if v.class.to_s == "VideoClip"
+                = "<a href='#{user_video_clip_path(v.user_id,v)}'><img src='#{@vidavee.file_thumbnail_medium(v.dockey)}' title='#{h(v.title).gsub(/\'/,'')}' alt='Clip'/></a>"
+              - else
+                = "<a href='#{user_video_reel_path(v.user_id,v)}'><img src='#{@vidavee.file_thumbnail_medium(v.thumbnail_dockey)}' title='#{h(v.title).gsub(/\'/,'')}' alt='Reel'/></a>"
               %h3
-                Headline ?
-            %span.date
-              Neverembuary 44, 1981
-            %br/
-          .featureSummaryThumb
-            %img{ :src => "/gs/placeholders/my_clip_thumb.jpg" }/
-            %a{ :href => "" }
-              %h3
-                Headline ?
-            %span.date
-              Neverembuary 44, 1981
-            %br/
+                = link_to truncate(h(v.title),20),user_video_clip_path(v.user_id,v)
+              %span.date="#{v.created_at.to_s(:readable)}"
+              %br/
           .clearDiv.moreLinkArea
-            %span.moreLink
-              %a{ :href => "" }
-                more?
+            %span.moreLink= link_to("more?", url_for({:controller => 'search', :action => 'my_videos', :user_id => v.user_id}))
                 
                 
     =render :partial => "users/profile_activity"
