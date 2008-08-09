@@ -34,13 +34,13 @@
           %span.chatNotify
             %span.chatInfo
               Coming Soon...
-            %a.popLink{ :href => "#" }
+            -#%a.popLink{ :href => "#" }
     .chatToolLinks
       =link_to "send invites", '/invite'
       |
       =link_to "my account", edit_account_user_path(current_user.id), :id => 'user-menu'
       |
-      - unread = Message.unread(current_user)
+      - unread = Message.unread(current_user.id)
       - mcount = (unread > 0) ? "(#{unread})" : ''
       =link_to "mailbox #{mcount}", messages_path()
 
