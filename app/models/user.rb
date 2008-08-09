@@ -20,6 +20,7 @@ class User < ActiveRecord::Base
   has_many :subscriptions
   has_many :memberships, :through => :subscriptions
   belongs_to :team
+  belongs_to :league
   has_many :video_assets
   has_many :video_clips
   has_many :video_reels
@@ -34,12 +35,8 @@ class User < ActiveRecord::Base
 
   attr_protected :team_name, :league_name
 
-  [:team_avatar, :league_avatar, :league, :league_id, :ad_zone].each do |method|
+  [:team_avatar, :ad_zone].each do |method|
     delegate method, :to => :team
-  end
-
-  [:league_name].each do |method|
-    delegate method, :to => :league
   end
 
   named_scope :admin,
@@ -50,16 +47,24 @@ class User < ActiveRecord::Base
     lambda { |team_id| { :conditions => ["team_id = ? and role_id = ?",team_id,Role[:team].id] } }
 
   # The billing entity for the league account
-#  named_scope :league_admin,
-#    lambda { |league_id| { :conditions => ["league_id = ? and role_id = ?",league_id,Role[:league].id] } }
+  named_scope :league_admin,
+   lambda { |league_id| { :conditions => ["league_id = ? and role_id = ?",league_id,Role[:league].id] } }
 
   # Those who can do things for the team account
   named_scope :team_staff,
     lambda { |team_id| { :conditions => ["team_id = ? and role_id IN (?)",team_id,[Role[:team_staff].id,Role[:team].id, Role[:admin].id] ] } }
 
   # Those who can do things for the league account
-#  named_scope :league_staff,
-#    lambda { |league_id| { :conditions => ["league_id = ? and role_id IN (?)",league_id,[Role[:league_staff].id, Role[:league].id, Role[:admin].id] ] } }
+  named_scope :league_staff,
+    lambda { |league_id| { :conditions => ["league_id = ? and role_id IN (?)",league_id,[Role[:league_staff].id, Role[:league].id, Role[:admin].id] ] } }
+
+  def self.league_staff_ids(league_id)
+    User.league_staff(league_id).collect(&:id)
+  end
+
+  def self.team_staff_ids(team_id)
+    User.team_staff(team_id).collect(&:id)
+  end
 
   def team_admin?
     role && role.eql?(Role[:team])
@@ -175,5 +180,23 @@ class User < ActiveRecord::Base
   def team_name
     team_id? ? team.name : ''
   end
-  
+
+  # Unless the role is league or league_staff, use team->league
+  def league_name
+    return team.league_name unless league_staff?
+    return League.find(league_id).name
+  end
+
+  # Unless the role is league or league_staff, use team->league
+  def league_avatar
+    return team.league_avatar unless league_staff?
+    return League.find(league_id).avatar
+  end
+
+  # Unless the role is league or league_staff, use team->league
+  def league
+    return team.league unless league_staff?
+    return League.find(league_id)
+  end
+    
 end
