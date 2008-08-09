@@ -1,0 +1,21 @@
+.contentBox.tanBackground
+  .contentBoxHeader.yellowHeader
+    %span.moreLink
+      %a{ :href => "#", :onclick => "return profile_minimize(this)" }
+        minimize -
+    %h2.boxDescription
+      My Files
+  .contentBoxContent.topRowFixHeight
+    .profileFeature.fileFeatures
+      - unless @photos.empty?
+        - @photos.each do |photo|
+          .fileThumb
+            = link_to image_tag( photo.public_filename(:icon), :class => "fileName"), user_photo_path(@user, photo)
+            
+      .clearDiv.moreLinkArea
+        %span.moreLink
+          = link_to "more?", user_photos_path(@user)
+          -if @is_current_user
+            = link_to "add?", new_user_photo_path(@user)
+            
+            

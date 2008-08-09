@@ -1,0 +1,24 @@
+.contentBox.tanBackground
+  .contentBoxHeader.yellowHeader
+    %span.moreLink
+      %a{ :href => "#", :onclick => "return profile_minimize(this)" }
+        minimize -
+    %h2.boxDescription
+      Information
+  .contentBoxContent
+    .profileFeature
+      .profileInfo
+        %span.profileSubHeading Location:
+        = "#{@user.city}, #{@user.state_id ? @user.state.name : ''}"
+        %br/
+        %span.profileSubHeading Team:
+        ="#{@user.team_name}"
+        %br/
+        %span.profileSubHeading League:
+        = "#{@user.league_name}"
+        %br/
+        %br/
+        %h2.profileHeading Sports Played:
+        - if @user.moniker_hash["sports"]
+          %span.profileSubHeading= "#{@user.moniker_hash["sports"].join(', ')}"
+        %br/

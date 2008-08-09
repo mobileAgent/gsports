@@ -57,7 +57,7 @@ class AthleteOfTheWeek < Post
     return if self.post.nil?
     img = first_image_in_body()
     if img
-      img.gsub!(/(normal|large|medium)/,'thumb')
+      img.gsub!(/_\w+\.jpg/,'_thumb.jpg')
     end
     img
   end

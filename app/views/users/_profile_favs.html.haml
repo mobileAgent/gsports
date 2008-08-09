@@ -7,22 +7,60 @@
       Favorites
   .contentBoxContent
     .profileFeature
-    
       - @favorites.each() do |fav|
-        = render :partial => "favorites/favorite", :locals => {:favorite => fav}
-      
-      -# tellart template
-        .featureSummaryThumb
-          %img{ :src => "placeholders/story_thumb.jpg" }/
-        .featureText
-          %span.profileSubHeading
-            Liz
-          %br/
-          Mezeek HS
-          %br/
-        
-      - if @favorites_more
-        .clearDiv.moreLinkArea
-          %span.moreLink
-            %a{ :href => "" }
-              more?
+        - f=fav.favoritable
+        - case f.class.to_s.tableize
+        - when 'video_assets'
+          .featureSummaryThumb
+            = link_to "<img src='#{@vidavee.file_thumbnail_medium(f.dockey)}' title='#{h(f.title).gsub(/\'/,'')}' alt='Video' width='81' height='61'/>", video_asset_path(f)
+          .featureText
+            %span.profileSubHeading
+              =truncate(h(f.title),18)
+              %br/
+            =game_date(f.game_date)
+            %br/
+          .clearDiv
+        - when 'video_clips'
+          .featureSummaryThumb
+            = "<a href='#{user_video_clip_path(f.user_id,f)}'><img src='#{@vidavee.file_thumbnail_medium(f.dockey)}' title='#{h(f.title).gsub(/\'/,'')}' alt='Clip' width='81' height='61'/></a>"
+          .featureText
+            %span.profileSubHeading
+              =truncate(h(f.title),18)
+              %br/
+            =f.user.firstname
+            %br/
+          .clearDiv
+        - when 'video_reels'
+          .featureSummaryThumb
+            = "<a href='#{user_video_reel_path(f.user_id,f)}'><img src='#{@vidavee.file_thumbnail_medium(f.thumbnail_dockey)}' title='#{h(f.title).gsub(/\'/,'')}' alt='Reel' width='81' height='61'/></a>"
+          .featureText
+            %span.profileSubHeading
+              =truncate(h(f.title),18)
+              %br/
+            =f.user.firstname
+            %br/
+          .clearDiv
+        - when 'posts'
+          .featureSummaryThumb
+            = link_to image_tag((f.image_for_excerpt), {:style=>"width:81px; height:61px"}), user_post_path(f.user,f)
+          .featureText
+            %span.profileSubHeading
+              =truncate(h(f.title),18)
+              %br/
+            =f.user.firstname
+            %br/
+          .clearDiv
+        - when 'photos'
+          .featureSummaryThumb
+            = link_to image_tag(f.public_filename(:icon), {:alt=>'User Photo',:title=>f.description}), user_photo_path(f.user, f)
+          .featureText
+            %span.profileSubHeading
+              =truncate(h(f.description),18)
+              %br/
+            =f.user.firstname
+            %br/
+          .clearDiv
+          
+      .clearDiv.moreLinkArea
+        %span.moreLink
+          = link_to "more?", user_favorites_path(@user)
