@@ -1,0 +1,20 @@
+- @section = (params[:metro_area_id] ? 'metro_area' : 'users')
+
+
+#yui-main
+  .yui-b
+    .box.user_list
+      %h3= "#{AppConfig.community_name} Memberships"
+
+  
+      %br.clear
+      %table
+        %tr
+          %th Membership Name 
+          %th Billing Method
+          %th Cost
+          %th Joined
+          %th Users
+        = render :partial => "billing/membership", :collection => @memberships
+      
+      %br.clear
