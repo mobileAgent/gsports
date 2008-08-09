@@ -139,7 +139,8 @@ class User < ActiveRecord::Base
                         :number => ccinfo.number,
                         :month => ccinfo.month,
                         :year => ccinfo.year,
-                        :verification_value => ccinfo.verification_value)
+                        :verification_value => ccinfo.verification_value,
+                        :displayable_number => ccinfo.number[(ccinfo.number.length - 4)..ccinfo.number.length])
    memberships[0].credit_card = cc
    save
   end
