@@ -93,7 +93,6 @@ class UsersController < BaseController
   def submit_billing
     @user = User.find(params[:userid].to_i)
     billing_info = params[:billing]
-
     @credit_card = ActiveMerchant::Billing::CreditCard.new({
       :first_name => billing_info[:firstname],
       :last_name => billing_info[:lastname],
