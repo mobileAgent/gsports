@@ -209,4 +209,14 @@ class UsersController < BaseController
     render :action => 'edit_account'
   end
   
+  def dashboard
+    @user = current_user
+    @network_activity = @user.network_activity
+    @recommended_posts = @user.recommended_posts
+    @featured_athletes_for_team = AthleteOfTheWeek.for_team(@user.team_id)
+    # @featured_athletes_for_league = AthleteOfTheWeek.for_league(@user.team.league_id)
+    @featured_game_for_team = GameOfTheWeek.for_team(@user.team_id).first
+    # @featured_game_for_league = GameOfTheWeek.for_league(@user.team.league_id).first
+  end
+  
 end

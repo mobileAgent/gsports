@@ -13,6 +13,9 @@ class Favorite < ActiveRecord::Base
   named_scope :user,
      lambda { |user| { :conditions => ["user_id = ?",user.id] } }
 
+  named_scope :users,
+     lambda { |user_ids| { :conditions => ["user_id IN (?)",user_ids] } }
+
   named_scope :item,
     lambda { |item| { :conditions => ["favoritable_type = ? and favoritable_id = ?",
                                       item.class.to_s,item.id] } }
@@ -23,6 +26,9 @@ class Favorite < ActiveRecord::Base
   
   named_scope :videos, 
      :conditions => ["favoritable_type IN (?)",VIDEO_FAVORITE_TYPES]
+
+  named_scope :featured_games,
+    lambda {|userids| {:conditions => ["user_id IN (?) and favoritable_type = ?",userids,VideoAsset.to_s], :order => "created_at DESC", :limit => 2} }
 
   def self.favorite? (user, item)
     Favorite.user(user).item(item).count > 0
