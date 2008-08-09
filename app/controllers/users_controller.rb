@@ -113,7 +113,7 @@ class UsersController < BaseController
       :partner => Active_Merchant_payflow_gateway_partner
     })
     @response = gateway.purchase(@user.role.plan.cost, @credit_card)
-
+#
 #    if (@response.success?)  # Test gateway is a bit flakey
       @user.make_member(Membership::CREDIT_CARD_BILLING_METHOD,nil,@response)
       @user.set_payment(@credit_card)
