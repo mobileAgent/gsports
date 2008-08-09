@@ -1,0 +1,21 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+funny_post:
+  user: quentin
+  title: Building communities is all about love.
+  raw_post: Seriously, how can you build a good group of people around hatred?
+  post: Seriously, how can you build a good group of people around hatred?
+  category: news
+  created_at: <%= 5.days.ago.to_s :db %>
+  updated_at: <%= 4.days.ago.to_s :db %>
+  published_as: live
+  published_at: <%= 5.days.ago.to_s :db %>    
+not_funny_post:
+  user: kyle
+  title: Ten ways to boost your audience
+  post: "First Post. \r\n<p><img src=\"http://localhost:3000/photos/0000/0063/photo_1_medium.jpg?1218217183\" border=\"0\" alt=\"created on: 08/08/08\" width=\"290\" height=\"320\" /></p>\r\nLast Post"
+  raw_post: "First Post. \r\n<p><img src=\"http://localhost:3000/photos/0000/0063/photo_1_medium.jpg?1218217183\" border=\"0\" alt=\"created on: 08/08/08\" width=\"290\" height=\"320\" /></p>\r\nLast Post"
+  category: aotw
+  created_at: <%= 4.days.ago.to_s :db %>
+  updated_at: <%= 3.days.ago.to_s :db %>
+  published_at: <%= 4.days.ago.to_s :db %>  
+  published_as: live  
