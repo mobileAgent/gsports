@@ -152,7 +152,24 @@ class User < ActiveRecord::Base
   end
 
   def moniker_hash
-    self.applied_monikers.inject({}) { |s,am| s.merge( { am.name => am.tags.collect(&:name) } ) }
+    mh = self.applied_monikers.inject({}) { |s,am| s.merge( { am.name => am.tags.collect(&:name) } ) }
+    Moniker.system.each do |sysmoniker|
+      if (! mh.has_key?(sysmoniker.name))
+        mh[sysmoniker.name] = []
+      end
+    end
+    mh
+  end
+
+  # Quick hack to get auto complete access to system monikers
+  # until I can figure out more metaprogramming juju
+  Moniker.system.collect(&:name).each do |mname|
+    define_method "moniker_#{mname}_tag_list" do
+      moniker_hash["#{mname}"].join(", ")
+    end
+    define_method "moniker_#{mname}_tag_list=" do |tag_list|
+      tag_moniker("#{mname}",tag_list)
+    end
   end
 
   def team_name

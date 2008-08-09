@@ -2,6 +2,19 @@ class TagsController < BaseController
   before_filter :login_required
   skip_before_filter :verify_authenticity_token, :only => [:auto_complete_for_tag_name]
 
+  def auto_complete_for_tag_name
+    look_for = params[:id] || params[:tag_list]
+    if (look_for.nil?)
+      look_for = params.entries.first
+      if look_for.class.to_s == "Array" && look_for.size == 2
+        look_for = look_for[1].values.first
+      end
+    end
+    logger.debug "Tag completion searching for '#{look_for}'"
+    @tags = Tag.find_list(look_for)
+    render :inline => "<%= auto_complete_result(@tags, 'name') %>"
+  end
+  
   def index  
     @tags = popular_tags(100, ' count DESC')
     @user_tags = popular_tags(75, ' count DESC', 'User')
