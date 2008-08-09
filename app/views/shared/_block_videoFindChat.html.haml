@@ -40,7 +40,7 @@
       |
       =link_to "my account", edit_account_user_path(current_user.id), :id => 'user-menu'
       |
-      - unread = Message.unread(current_user.id)
+      - unread = Message.unread(current_user)
       - mcount = (unread > 0) ? "(#{unread})" : ''
       =link_to "mailbox #{mcount}", messages_path()
 

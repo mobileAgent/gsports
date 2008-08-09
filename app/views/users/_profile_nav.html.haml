@@ -9,9 +9,10 @@
 
 %br
 %ul
-  %li=link_to 'Edit Profile', edit_user_path(current_user.id)
-  %li=link_to 'Edit Account', edit_account_user_path(current_user.id)
-  %li=link_to 'Blog posts', manage_user_posts_path(current_user.id)
+  %li=link_to 'Edit Profile', edit_user_path(current_user)
+  %li=link_to 'Edit Account', edit_account_user_path(current_user)
+  %li=link_to 'Blog posts', manage_user_posts_path(current_user)
+
 
 
 - if current_user && current_user.admin?  
@@ -19,5 +20,10 @@
   %ul
     %li= link_to( "Assume ID", assume_user_path(current_user) )
     %li= link_to( "Delete user", user_path(current_user), {:method => :delete, :confirm => 'Are you sure you want to permanently delete this user?'} )
+    
+- if current_user && current_user.can_upload?
+  %br
+  %ul
+    %li= link_to 'Uploads', user_video_assets_path(current_user)
     
     

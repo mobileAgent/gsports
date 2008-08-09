@@ -6,6 +6,12 @@ class UsersController < BaseController
                                            :return_admin, :assume, :featured, 
                                            :toggle_featured, :edit_pro_details, :update_pro_details,
                                            :dashboard, :show, :index, :change_team_photo, :change_league_photo ]
+  
+  uses_tiny_mce(:options => AppConfig.default_mce_options.merge({:editor_selector => "rich_text_editor"}), 
+                :only => [:new, :create, :update, :edit, :welcome_about])
+  
+  uses_tiny_mce(:options => AppConfig.narrow_mce_options.merge({:width => 330}),
+                :only => [:show])
 
   def show
     @friend_count = @user.accepted_friendships.count
@@ -154,9 +160,9 @@ class UsersController < BaseController
       h=@photo.height
       w=@photo.width
       if ((h==100 && w==100) || (h==60 && w=234))
-        @league = @user.team.league
+        @league = League.find(@user.league_id)
         @league.avatar= @photo
-        if @team.save!
+        if @league.save!
           flash[:notice] = "Your changes were saved."
         else
           flash[:notice] = "The change could not be saved: #{@league.errors}"
@@ -213,10 +219,12 @@ class UsersController < BaseController
     @user = current_user
     @network_activity = @user.network_activity
     @recommended_posts = @user.recommended_posts
-    @featured_athletes_for_team = AthleteOfTheWeek.for_team(@user.team_id)
-    # @featured_athletes_for_league = AthleteOfTheWeek.for_league(@user.team.league_id)
-    @featured_game_for_team = GameOfTheWeek.for_team(@user.team_id).first
-    # @featured_game_for_league = GameOfTheWeek.for_league(@user.team.league_id).first
+    # For league staff choose from among their teams
+    team_id = @user.league_staff? ? @user.league.team_ids[rand(@user.league.team_ids.size)] : @user.team_id
+    @featured_athletes_for_team = AthleteOfTheWeek.for_team(team_id)
+    @featured_athletes_for_league = AthleteOfTheWeek.for_league(@user.league_id)
+    @featured_game_for_team = GameOfTheWeek.for_team(team_id).first
+    @featured_game_for_league = GameOfTheWeek.for_league(@user.league_id).first
   end
   
 end

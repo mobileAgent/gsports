@@ -12,7 +12,10 @@
     - skip_controls ||= false
     - unless skip_controls
       - if current_user && current_user.can_edit?(video_asset)
-        %br  
+        %br
+        - if (video_asset.video_status != 'ready')
+          = "Video Status is #{video_asset.video_status}"
+        %br
         = link_to 'Edit', edit_video_asset_path(video_asset)
         |
         = link_to 'Destroy', video_asset, :confirm => 'Are you sure?', :method => :delete
