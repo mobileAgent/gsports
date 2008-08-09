@@ -17,25 +17,23 @@
           About Me
       .contentBoxContent
       
-        %fieldset
-          %legend
-            Gender
-          %label
-            = radio_button :user, :gender, User::MALE
-            Male
-          %label
-            = radio_button :user, :gender, User::FEMALE
-            Female
-
-        %label
-          Birthday:
-        = date_select :user, :birthday, {:start_year => 1926, :end_year => Time.now.year - 1}
-
-
+        = error_messages_for :user
 
         - form_tag user_url(@user), :method => 'put', :multipart =>true, :class => 'MainForm' do
-          
-          = error_messages_for :user
+        
+          %fieldset
+            %legend
+              Gender
+            %label
+              = radio_button :user, :gender, User::MALE
+              Male
+            %label
+              = radio_button :user, :gender, User::FEMALE
+              Female
+
+            %label
+              Birthday:
+              = date_select :user, :birthday, {:start_year => 1926, :end_year => Time.now.year - 12}
 
           .yui-b
             #profile_details.box
@@ -45,7 +43,6 @@
               %label
                 Choose a photo for your profile:
               = file_field :avatar, :uploaded_data, :size => "20"
-      
 
           #yui-main
             .yui-b

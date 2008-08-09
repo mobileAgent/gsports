@@ -9,3 +9,5 @@ talk:
   name: Talk
 news:
   name: News
+aotw:  
+  name: <%= AthleteOfTheWeek.to_s.titleize %>
