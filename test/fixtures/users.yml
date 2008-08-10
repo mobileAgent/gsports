@@ -15,6 +15,7 @@ quentin:
   role: member
   team: one
   avatar: library_pic
+  league: one
 aaron:
   login: aaron
   email: aaron@example.com
@@ -31,6 +32,7 @@ aaron:
   role: member
   team: one
   avatar: library_pic
+  league: one
 kevin:
   login: kevin
   email: kevin@example.com
@@ -45,6 +47,7 @@ kevin:
   role: member
   team: two
   avatar: library_pic
+  league: two
 admin:
   login: admin
   email: admin@example.com
@@ -59,6 +62,7 @@ admin:
   role: admin
   team: one
   avatar: library_pic
+  league: one
 dwr:
   login: dwreach
   email: dwr@example.com
@@ -74,6 +78,7 @@ dwr:
   role: member
   team: one
   avatar: library_pic
+  league: one
 leopoldo:
   login: leopoldo
   email: leopoldo@example.com
@@ -88,6 +93,7 @@ leopoldo:
   role: member  
   team: one
   avatar: library_pic
+  league: one
 florian:
   login: florian
   email: florian@example.com
@@ -102,6 +108,7 @@ florian:
   role: member
   team: one
   avatar: library_pic
+  league: one
 super_writer:
   login: superwriter
   email: superwriter@example.com
@@ -117,6 +124,7 @@ super_writer:
   role: member
   team: one
   avatar: library_pic
+  league: one
 plumberbob:
   login: plumberbob
   email: plumberbob@example.com
@@ -132,6 +140,7 @@ plumberbob:
   role: member
   team: one
   avatar: library_pic
+  league: one
 privateuser:
   login: privateuser
   email: privateuser@example.com
@@ -148,6 +157,7 @@ privateuser:
   role: member
   team: one
   avatar: library_pic
+  league: one
 sam:
   login: sam
   login_slug: sam  
@@ -160,6 +170,7 @@ sam:
   role: member    
   team: one
   avatar: library_pic
+  league: one
 joe:
   login: joe
   login_slug: joe  
@@ -172,6 +183,7 @@ joe:
   role: member    
   team: one
   avatar: library_pic
+  league: one
 kyle:
   login: kyle
   login_slug: kyle  
@@ -183,6 +195,7 @@ kyle:
   role: league
   team: one
   avatar: library_pic
+  league: two
 mark:
   login: mark
   login_slug: mark
@@ -196,6 +209,7 @@ mark:
   role: team
   team: one
   avatar: library_pic
+  league: one
 gsports_admin:
   email: admin@globalsports.net
   activated_at: <%= DateTime.now.to_s :db %>
@@ -211,4 +225,5 @@ gsports_admin:
   phone: 301.555.1212
   team: one
   avatar: library_pic
+  league: one
   

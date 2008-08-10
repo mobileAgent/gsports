@@ -18,6 +18,12 @@ class UserTest < ActiveSupport::TestCase
     assert u.league_staff?
   end
 
+  def test_league_staff_relationship_not_through_team
+    u = users(:kyle)
+    assert(u.league_name == leagues(:two).name)
+    assert(u.team_name == teams(:one).name)
+  end
+
   def test_delegation_methods_setup_properly
     u = users(:kyle)
     assert_not_nil u.team_id

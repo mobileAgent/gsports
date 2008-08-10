@@ -28,7 +28,7 @@
 
 			// Register buttons
 			ed.addButton('image', {
-				title : 'curblyadvimage.image_desc',
+				title : 'Insert Image',
 				cmd : 'mceCurblyAdvImage'
 			});
 		},

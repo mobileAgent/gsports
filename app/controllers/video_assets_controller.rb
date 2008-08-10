@@ -24,29 +24,27 @@ class VideoAssetsController < BaseController
     # Only admin, league and team staff have video_assets
     # If user isn't one of those, redirect to video_clips
     if(!current_user.admin? && !current_user.team_staff? && !current_user.league_staff?)
-      redirect_to user_video_clips_path(@user)
-      return
+      redirect_to user_video_clips_path(@user) and return
     end
 
-    # Team and league staff can only manage their own accounts
+    # Team staff can only manage their own accounts
     if (current_user.team_staff? &&
-        ! User.team_staff(current_user.team_id).collect(&:id).member?(current_user.id))
-      redirect_to_user_video_clips_path(@user)
-      return
+        ! User.team_staff_ids(current_user.team_id).member?(current_user.id))
+      redirect_to_user_video_clips_path(@user) and return
     end
     
-#    if (current_user.league_staff? &&
-#        ! User.league_staff(current_user.league_id).collect(&:id).member?(current_user.id))
-#      redirect_to_user_video_clips_path(@user)
-#      return
-#    end
+    # Leagu staff can only manage their own accounts
+   if (current_user.league_staff? &&
+       ! User.league_staff_ids(current_user.league_id).member?(current_user.id))
+     redirect_to_user_video_clips_path(@user) and return
+   end
 
     cond = Caboose::EZ::Condition.new
     cond.user_id == @user.id
     if params[:tag_name]    
       cond.append ['tags.name = ?', params[:tag_name]]
     end
-    cond.append ['video_status = ?','ready']
+    #cond.append ['video_status = ?','ready']
     
     @video_assets = VideoAsset.paginate(:conditions => cond.to_sql, :page => params[:page], :order => "created_at DESC", :include => :tags)
     @tags = VideoAsset.tags_count :user_id => @user.id, :limit => 20
@@ -74,6 +72,11 @@ class VideoAssetsController < BaseController
   # GET /video_assets/new
   # GET /video_assets/new.xml
   def new
+    unless current_user.can_upload?
+      flash[:notice] = "You don't have permission to upload videos"
+      redirect_to url_for({ :controller => "search", :action => "my_videos" }) and return
+    end
+    
     @video_asset = VideoAsset.new
 
     respond_to do |format|
@@ -85,6 +88,11 @@ class VideoAssetsController < BaseController
   # GET /video_assets/1/edit
   def edit
     @video_asset = VideoAsset.find(params[:id])
+    unless (current_user.can_edit?(@video_asset))
+      @video_asset = nil
+      flash[:notice] = "You don't have permission edit that video"
+      redirect_to url_for({ :controller => "search", :action => "my_videos" }) and return
+    end
   rescue ActiveRecord::RecordNotFound
     flash[:notice] = 'That video could not be found.'
     redirect_to url_for({ :controller => "search", :action => "my_videos" })
@@ -93,6 +101,12 @@ class VideoAssetsController < BaseController
   # POST /video_assets
   # POST /video_assets.xml
   def create
+    
+    unless current_user.can_upload?
+      flash[:notice] = "You don't have permission to upload video"
+      redirect_to url_for({ :controller => "search", :action => "my_videos" }) and return
+    end
+    
     @video_asset = VideoAsset.new(params[:video_asset])
     @video_asset.video_status = 'unknown'
       
@@ -112,6 +126,11 @@ class VideoAssetsController < BaseController
   # PUT /video_assets/1.xml
   def update
     @video_asset = VideoAsset.find(params[:id])
+    unless (current_user.can_edit?(@video_asset))
+      @video_asset = nil
+      flash[:notice] = "You don't have permission edit that video"
+      redirect_to url_for({ :controller => "search", :action => "my_videos" }) and return
+    end
 
     respond_to do |format|
       @video_asset.tag_with(params[:tag_list] || '') 
@@ -134,6 +153,11 @@ class VideoAssetsController < BaseController
   # DELETE /video_assets/1.xml
   def destroy
     @video_asset = VideoAsset.find(params[:id])
+    unless (current_user.can_edit?(@video_asset))
+      flash[:notice] = "You don't have permission delete that video"
+      redirect_to url_for({ :controller => "search", :action => "my_videos" })  and return
+    end
+    
     @video_asset.destroy
 
     respond_to do |format|
@@ -226,10 +250,10 @@ class VideoAssetsController < BaseController
     if(current_user.admin? && !params[:video_asset][:league_name].blank?)
       video_asset.league_name= params[:video_asset][:league_name]
       if (video_asset.team_id?)
-        video_asset.team.league_id = video_asset.league_id
+        video_asset.team.league_id= video_asset.league_id
       end
-    else    
-      video_asset.league= video_asset.team.league
+    else
+      video_asset.league_id= current_user.league_id
     end
     video_asset
   end

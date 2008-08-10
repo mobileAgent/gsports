@@ -10,7 +10,7 @@
     .schoolName
       = "#{h user.team.name}"
     .recentFriendFeed
-      = "#{h user.description}"
+      = "#{user.description}"
 
   %ul.listingActions
     - friendship_control_links(friendship).each do |anchor, href, options|

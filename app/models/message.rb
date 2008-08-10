@@ -6,7 +6,7 @@ class Message < ActiveRecord::Base
   validates_presence_of :from_id
   
   def self.unread(user)
-    count(:conditions => ["to_id = ?", user.id])
+    count(:conditions => ["to_id = ? and 'read' = ?", user.id,false])
   end
   
   def self.inbox(user)
