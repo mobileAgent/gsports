@@ -1,6 +1,8 @@
 !!! Strict
 %html{ "xml:lang" => "en", :lang => "en", :xmlns => "http://www.w3.org/1999/xhtml" }
   %head
+    %title
+      \###PAGE TITLE HERE###
     %link{ :href => "styles/main.css", :rel => "stylesheet" }/
     /
       [if IE 6]>
@@ -8,7 +10,6 @@
       \.contentBoxHeader { background-image: none; }
       </style>
       <![endif]
-    %meta{ :content => "text/html;charset=utf-8", "http-equiv" => "Content-Type" }/
     %script{ :type => "text/javascript", :src => "scripts/profile.js" }/
   %body
     .backgroundContainer
@@ -26,22 +27,22 @@
             |
             %a{ :href => "" }
               logout
-            %img{ :src => "images/lock.gif", :alt => "Padlock Icon" }/
+            %img{ :src => "images/lock.gif" }/
         /
           header/ads
         .header
           %h1.headerBrand
             Global Sports
           .headerPosition2
-            .structuralContainer
+            %span
               %div
                 %a{ :href => "#" }
                   %img{ :src => "placeholders/header_school_logo.jpg", :alt => "##TEXT EQUIVALENT##" }/
           .headerPosition1
-            .structuralContainer
+            %span
               %div
-                %a{ :href => "#" }
-                  %img{ :src => "placeholders/header_ad_1.jpg", :alt => "##TEXT EQUIVALENT##" }/
+                %a{ :href => "#" }/
+                %img{ :src => "placeholders/header_ad_1.jpg", :alt => "##TEXT EQUIVALENT##" }/
           .headerAccountControl
             .headerAccountControlLinks
               %span
@@ -53,49 +54,48 @@
           end header/ads
         /
           top-nav
-        %form{ :action => "#", :method => "get" }
-          .topNav
-            %ul.leftTopNav
-              %li
-                %span#gnavMyNetwork.ROLLOVERIMAGE
-                  %a{ :href => "#" }
-                    %span
-                      My Network
-              %li.divider
-                %span#gnavMyVideos.ROLLOVERIMAGE
-                  %a{ :href => "#" }
-                    %span
-                      My Videos
-              %li.divider
-                %span#gnavMyProfile.ROLLOVERIMAGE
-                  %a{ :href => "#" }
-                    %span
-                      My Profile
-            .rightTopNav
-              %h2
-                Search Site
-              %label.verbalSemantic{ :for => "searchCategory" }
+        .topNav
+          %ul.leftTopNav
+            %li
+              %span#gnavMyNetwork.ROLLOVERIMAGE
+                %a{ :href => "#" }
+                  %span
+                    My Network
+            %li.divider
+              %span#gnavMyVideos.ROLLOVERIMAGE
+                %a{ :href => "#" }
+                  %span
+                    My Videos
+            %li.divider
+              %span#gnavMyProfile.ROLLOVERIMAGE
+                %a{ :href => "#" }
+                  %span
+                    My Profile
+          %form.rightTopNav{ :action => "#", :method => "get" }
+            %h2.columnDescriptor
+              Search Site
+            %label.verbalSemantic{ :for => "searchCategory" }
+              Category
+            %select#searchCategory{ :name => "category" }
+              %option{ :value => "" }
+                All Categories
+              %option{ :value => "" }
                 Category
-              %select#searchCategory{ :name => "category" }
-                %option{ :value => "" }
-                  All Categories
-                %option{ :value => "" }
-                  Category
-                %option{ :value => "" }
-                  Category
-                %option{ :value => "" }
-                  Category
-              %label.verbalSemantic{ :for => "searchTerms" }
-                Search Terms
-              %input#searchTerms{ :name => "terms", :type => "text" }/
-              %input.submit{ :name => "submit", :src => "images/top_nav_search.gif", :type => "image", :value => "search", :alt => "Search" }/
+              %option{ :value => "" }
+                Category
+              %option{ :value => "" }
+                Category
+            %label.verbalSemantic{ :for => "searchTerms" }
+              Search Terms
+            %input#searchTerms{ :name => "terms", :type => "text" }/
+            %input.submit{ :name => "submit", :type => "image", :src => "images/top_nav_search.gif", :value => "search", :alt => "Search" }/
         /
           end top-nav
         /
           find/chat
         .videoFindChat
-          %form#videoFind{ :action => "#", :method => "get" }
-            .videoFind
+          .videoFind
+            %form#videoFind{ :action => "#", :method => "get" }
               %select#videoFindSeason{ :name => "season" }
                 %option{ :value => "" }
                   \-Season-
@@ -151,7 +151,7 @@
                   Option
               %label.verbalSemantic{ :for => "videoFindSport" }
                 Sport
-              %input#videoFindSubmit.submit{ :name => "submit", :src => "images/video_find_submit.gif", :type => "image", :value => "search", :alt => "Search" }/
+              %input#videoFindSubmit.submit{ :name => "submit", :type => "image", :src => "images/video_find_submit.gif", :value => "search", :alt => "Search" }/
               %label.verbalSemantic{ :for => "videoFindSubmit" }
                 Video Find
           .chat
@@ -196,12 +196,12 @@
                   Search My Clips and Reels
               .advancedSearchTools
                 %a{ :href => "" }
-                  %img{ :src => "images/top_nav_search.gif", :alt => "Video Advanced Search Button" }/
+                  %img{ :src => "images/top_nav_search.gif" }/
                 %span
                   VIDEO ADVANCED SEARCH
                 .clearDiv/
                 %a{ :href => "" }
-                  %img{ :src => "images/top_nav_search.gif", :alt => "Video Advanced Search Button" }/
+                  %img{ :src => "images/top_nav_search.gif" }/
                 %span
                   NETWORK ADVANCED SEARCH
               .contentBoxContent.friendSearchWidgetArea
@@ -252,7 +252,7 @@
                 .contentBoxContent
                   .profileFeature
                     .featureSummaryThumb
-                      %img{ :src => "placeholders/large_story_thumb.jpg", :alt => "Story Image" }/
+                      %img{ :src => "placeholders/large_story_thumb.jpg" }/
                     .featureText
                       %span.profileSubHeading
                         Grid Iron Slam Bam
@@ -265,7 +265,7 @@
                 .contentBoxContent
                   .profileFeature
                     .featureSummaryThumb
-                      %img{ :src => "placeholders/large_story_thumb.jpg", :alt => "Story Image" }/
+                      %img{ :src => "placeholders/large_story_thumb.jpg" }/
                     .featureText
                       %span.profileSubHeading
                         Grid Iron Slam Bam
@@ -278,7 +278,7 @@
                 .contentBoxContent
                   .profileFeature
                     .featureSummaryThumb
-                      %img{ :src => "placeholders/large_story_thumb.jpg", :alt => "Story Image" }/
+                      %img{ :src => "placeholders/large_story_thumb.jpg" }/
                     .featureText
                       %span.profileSubHeading
                         Grid Iron Slam Bam
@@ -291,7 +291,7 @@
                 .contentBoxContent
                   .profileFeature
                     .featureSummaryThumb
-                      %img{ :src => "placeholders/large_story_thumb.jpg", :alt => "Story Image" }/
+                      %img{ :src => "placeholders/large_story_thumb.jpg" }/
                     .featureText
                       %span.profileSubHeading
                         Grid Iron Slam Bam
@@ -304,7 +304,7 @@
                 .contentBoxContent
                   .profileFeature
                     .featureSummaryThumb
-                      %img{ :src => "placeholders/large_story_thumb.jpg", :alt => "Story Image" }/
+                      %img{ :src => "placeholders/large_story_thumb.jpg" }/
                     .featureText
                       %span.profileSubHeading
                         Grid Iron Slam Bam
@@ -317,7 +317,7 @@
                 .contentBoxContent
                   .profileFeature
                     .featureSummaryThumb
-                      %img{ :src => "placeholders/large_story_thumb.jpg", :alt => "Story Image" }/
+                      %img{ :src => "placeholders/large_story_thumb.jpg" }/
                     .featureText
                       %span.profileSubHeading
                         Grid Iron Slam Bam
@@ -335,7 +335,7 @@
                 .contentBoxContent
                   .profileFeature
                     .featureSummaryThumb
-                      %img{ :src => "placeholders/profile_search_res_pic.jpg", :alt => "Friend Photograph" }/
+                      %img{ :src => "placeholders/profile_search_res_pic.jpg" }/
                     .featureText
                       %span.profileSubHeading
                         Liz Waters
@@ -348,7 +348,7 @@
                 .contentBoxContent
                   .profileFeature
                     .featureSummaryThumb
-                      %img{ :src => "placeholders/profile_search_res_pic.jpg", :alt => "Friend Photograph" }/
+                      %img{ :src => "placeholders/profile_search_res_pic.jpg" }/
                     .featureText
                       %span.profileSubHeading
                         Liz Waters
@@ -361,7 +361,7 @@
                 .contentBoxContent
                   .profileFeature
                     .featureSummaryThumb
-                      %img{ :src => "placeholders/profile_search_res_pic.jpg", :alt => "Friend Photograph" }/
+                      %img{ :src => "placeholders/profile_search_res_pic.jpg" }/
                     .featureText
                       %span.profileSubHeading
                         Liz Waters
@@ -374,7 +374,7 @@
                 .contentBoxContent
                   .profileFeature
                     .featureSummaryThumb
-                      %img{ :src => "placeholders/profile_search_res_pic.jpg", :alt => "Friend Photograph" }/
+                      %img{ :src => "placeholders/profile_search_res_pic.jpg" }/
                     .featureText
                       %span.profileSubHeading
                         Liz Waters
@@ -387,7 +387,7 @@
                 .contentBoxContent
                   .profileFeature
                     .featureSummaryThumb
-                      %img{ :src => "placeholders/profile_search_res_pic.jpg", :alt => "Friend Photograph" }/
+                      %img{ :src => "placeholders/profile_search_res_pic.jpg" }/
                     .featureText
                       %span.profileSubHeading
                         Liz Waters
@@ -400,7 +400,7 @@
                 .contentBoxContent
                   .profileFeature
                     .featureSummaryThumb
-                      %img{ :src => "placeholders/profile_search_res_pic.jpg", :alt => "Friend Photograph" }/
+                      %img{ :src => "placeholders/profile_search_res_pic.jpg" }/
                     .featureText
                       %span.profileSubHeading
                         Liz Waters
@@ -418,7 +418,7 @@
                 .contentBoxContent
                   .profileFeature
                     .featureSummaryThumb.hdSearchPreview
-                      %img{ :src => "placeholders/thumbnail_81x54.jpg", :alt => "Video Clip Preview" }/
+                      %img{ :src => "placeholders/thumbnail_81x54.jpg" }/
                     .featureText
                       %span.profileSubHeading
                         Liz Waters
@@ -447,7 +447,7 @@
                 .contentBoxContent
                   .profileFeature
                     .featureSummaryThumb.hdSearchPreview
-                      %img{ :src => "placeholders/thumbnail_81x54.jpg", :alt => "Video Clip Preview" }/
+                      %img{ :src => "placeholders/thumbnail_81x54.jpg" }/
                     .featureText
                       %span.profileSubHeading
                         Liz Waters
@@ -513,13 +513,13 @@
         .footer
           .footerAds
             %span.footerAd
-              %img{ :src => "placeholders/ad1.jpg", :alt => "advertisment" }/
+              %img{ :src => "placeholders/ad1.jpg" }/
             %span.footerAd
-              %img{ :src => "placeholders/ad2.jpg", :alt => "advertisment" }/
+              %img{ :src => "placeholders/ad2.jpg" }/
             %span.footerAd
-              %img{ :src => "placeholders/ad3.jpg", :alt => "advertisment" }/
+              %img{ :src => "placeholders/ad3.jpg" }/
             %span.footerAd
-              %img{ :src => "placeholders/ad4.jpg", :alt => "advertisment" }/
+              %img{ :src => "placeholders/ad4.jpg" }/
         /
           end footer/ads
         .legal

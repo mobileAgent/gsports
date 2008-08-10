@@ -7,7 +7,7 @@ class UsersController < BaseController
                                            :toggle_featured, :edit_pro_details, :update_pro_details,
                                            :dashboard, :show, :index, :change_team_photo, :change_league_photo ]
   
-  uses_tiny_mce(:options => AppConfig.default_mce_options.merge({:editor_selector => "rich_text_editor"}), 
+  uses_tiny_mce(:options => AppConfig.gsdefault_mce_options.merge({:editor_selector => "rich_text_editor"}), 
                 :only => [:new, :create, :update, :edit, :welcome_about])
   
   uses_tiny_mce(:options => AppConfig.narrow_mce_options.merge({:width => 330}),
