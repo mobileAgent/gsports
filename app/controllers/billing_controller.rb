@@ -4,6 +4,7 @@ class BillingController < BaseController
 
   def index
     @memberships = Membership.find :all
+    @users = User.find :all
   end
 
   def member_billing_history
