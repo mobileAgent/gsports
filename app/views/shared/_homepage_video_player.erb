@@ -1,0 +1,10 @@
+<script type="text/javascript">
+  var flashvars = {
+    p1: encodeURIComponent('<%=@vidavee.file_flv_const session[:vidavee],dockey-%>')
+  };
+  var params = {};
+  var attributes = {};
+  var testPlayer = "/gs/scripts/swfobject/test.swf";
+  var demoPlayer = "/players/playerTest.swf";
+  swfobject.embedSWF(testPlayer,'<%=target-%>',"580","395","9.0.28","/gs/scripts/swfobject/expressInstall.swf", flashvars, params, attributes);
+</script>

@@ -1,39 +1,87 @@
 .util
+%form#login{ :action => sessions_path, :method => "post" }
+  .headerHome
+    %h1.headerBrand= "#{AppConfig.community_name}"
+    .loginBox
+      %label{:for => "login"} USERNAME
+      = text_field_tag 'login', nil, :class => 'loginFormInput'
+      %br/
+      %label{:for => "password"} PASSWORD
+      %br/
+      = password_field_tag 'password', nil, :class => 'loginFormPassword'
+      %input#loginButton.submit{ :name => "submit", :src => "/gs/images/top_nav_login.gif", :type => "image", :value => "Login", :alt => "Login" }/
+      %br/
+      %span.loginHelp
+        %a{ :href => signup_path }
+          signup &raquo;
+        |
+        %a{ :href => forgot_password_path }
+          password help &raquo;
+    .clearDiv
 
-.header
-  %h1.headerBrand
-    Global Sports
-
-  .headerLogin
-    - form_tag sessions_path, :class => 'loginForm' do
-      %label{"for"=>"login"} Email Address
-      %br
-      = text_field_tag 'login', nil, :size => 25
-      %br
-      %label{"for"=>"password"} Password
-      %br
-      = password_field_tag 'password', nil, :size => 15
-      = submit_tag 'Log in'
-      %br
-      %nobr
-        %label{"for"=>"remember_me"}
-          = check_box_tag 'remember_me'
-          Remember me
-      %nobr
-      %br
-      =link_to 'Forgot Password?', forgot_password_path
-
-  .clearDiv
-
-
-
-#NavBar
-  %a{ :href => '/info/about' }
-    About Global Sports
-  |
-  = link_to 'Membership', '#Need_to_fill_this_in'
-  |
-  = link_to 'Registration', register_path
-
-
-
+.topNav
+  %ul.leftTopNav
+    %li
+      %span#gnavAboutGlobalSports.ROLLOVERIMAGE
+        %a{ :href => "/info/about" }
+          %span
+            About Global Sports
+    %li.divider
+      %span#gnavMembership.ROLLOVERIMAGE
+        %a{ :href => url_for(:controller => 'users', :action => 'register')  }
+          %span
+            Membership
+    %li.divider
+      %span#gnavRegistration.ROLLOVERIMAGE
+        %a{ :href => signup_path}
+          %span
+            Registration
+  -#%form.rightTopNav{ :action => "#", :method => "get" }
+    %div
+      %h2
+        Search for My School
+      %label.verbalSemantic{ :for => "searchState" }
+        State
+      %select#searchState{ :name => "state" }
+        %option{ :value => "" }
+          \- State -
+        %option{ :value => "" }
+          State
+        %option{ :value => "" }
+          State
+        %option{ :value => "" }
+          State
+      %label.verbalSemantic{ :for => "searchCounty" }
+        County
+      %select#searchCounty{ :name => "county" }
+        %option{ :value => "" }
+          \- County -
+        %option{ :value => "" }
+          County
+        %option{ :value => "" }
+          County
+        %option{ :value => "" }
+          County
+      %label.verbalSemantic{ :for => "searchCity" }
+        City
+      %select#searchCity{ :name => "city" }
+        %option{ :value => "" }
+          \- City -
+        %option{ :value => "" }
+          City
+        %option{ :value => "" }
+          City
+        %option{ :value => "" }
+          City
+      %label.verbalSemantic{ :for => "searchSchool" }
+        School
+      %select#searchSchool{ :name => "school" }
+        %option{ :value => "" }
+          \- School -
+        %option{ :value => "" }
+          School
+        %option{ :value => "" }
+          School
+        %option{ :value => "" }
+          School
+      %input.submit{ :name => "submit", :type => "image", :src => "images/top_nav_search.gif", :value => "search", :alt => "Search" }/
