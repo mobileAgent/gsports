@@ -30,9 +30,14 @@
           %span.date= athlete.published_at.to_s(:readable)
           %br/
       .clearDiv
+  - if @featured_athletes_for_league && @featured_athletes_for_league.any?
     .featureCol.featureFloat.weeklyCol3
       %span.yellowHeader
         %h3
-          Longer Weekly Headline Here
+          League Highlights
+        - for fa in @featured_athletes_for_league
+          .featureText
+            %span.profileSubHeading
+              = link_to(truncate(h(fa.title),35), user_post_path(fa.user_id,fa))
       %a.arrowButton{ :href => "" }
         %img{ :src => "/gs/images/top_nav_search.gif", :alt => "Search" }/
