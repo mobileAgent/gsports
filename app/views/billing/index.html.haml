@@ -4,6 +4,7 @@
 #yui-main
   .yui-b
     .box.user_list
+      %h3= "#{AppConfig.community_name} Billing Central"
       %h3= "#{AppConfig.community_name} Memberships"
 
   
@@ -19,3 +20,11 @@
         = render :partial => "billing/membership", :collection => @memberships
       
       %br.clear
+      %h3= "#{AppConfig.community_name} Users"
+      %table{:border => 1}
+        %tr
+          %th User Name
+          %th Joined
+          %th Enabled
+          %th Member of
+        = render :partial => "billing/userlist", :collection => @users
