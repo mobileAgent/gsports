@@ -12,11 +12,11 @@
   
     = render :partial => "shared/scripts_and_styles"
     
-    - if @rss_title && @rss_url
+    -# if @rss_title && @rss_url
       = auto_discovery_link_tag(:rss, @rss_url, {:title => @rss_title})
     
   %body
-    .backgroundContainer
+    %div{:class => (logged_in? ? 'backgroundContainer' : 'backgroundContainerHome')}
       .outerContainer
         - if logged_in?
           = render :partial => "shared/block_util"
@@ -27,12 +27,16 @@
           = render :partial => "shared/block_guest_header"
         
         = render :partial => "shared/messages"
-        .mainContentArea
+        
+        %div{:class => (logged_in? ? 'mainContentArea' : 'landingContentArea')}
           = @content_for_layout
         
-        - if @show_weekly_feature
-          = render :partial => "shared/block_weeklyFeature"
-        = render :partial => "shared/block_footer"
-        = render :partial => "shared/block_legal"
-        
-        
+      -if logged_in?
+        = render :partial => "shared/block_weeklyFeature"
+      -else
+        - if (current_page?(:controller => 'base', :action => 'site_index'))
+          = render :partial => "shared/block_guest_features"
+          
+      = render :partial => "shared/block_footer"
+      = render :partial => "shared/block_legal"
+      

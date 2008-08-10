@@ -1,0 +1,71 @@
+.homeFeature
+  /
+    Left Col
+  .homeFeatureLeft
+    %h2
+      Athletes of the week
+    /
+      Athletes of the week
+    .AthletesWeek
+      %img.AthletesPic{ :src => "/gs/placeholders/athletespic.jpg", :height => "65", :alt => "", :width => "103" }/
+      .AthletesDescrip
+        %p
+          %strong
+            Jane Nalgon
+        %p
+          Short Stop
+      %img.AthletesLogo{ :src => "/gs/placeholders/teamlogo.jpg", :height => "65", :alt => "", :width => "65" }/
+    .AthletesWeek
+      %img.AthletesPic{ :src => "/gs/placeholders/athletespic.jpg", :height => "65", :alt => "", :width => "103" }/
+      .AthletesDescrip
+        %p
+          %strong
+            Jane Nalgon
+        %p
+          Short Stop
+      %img.AthletesLogo{ :src => "/gs/placeholders/teamlogo.jpg", :height => "65", :alt => "", :width => "65" }/
+    /
+      end Athletes of the week
+  /
+    end left col
+  /
+    middle col
+  .homeFeatureMiddle
+    %h2
+      Become a Member
+    %a{ :href => "#" }
+      %img{ :src => "/gs/images/Home_Athletes_Coaches_Family.png", :height => "28", :alt => "Athletes, Coaches, Family & Fans", :width => "288" }/
+    %br/
+    %a{ :href => "#" }
+      %img{ :src => "/gs/images/Home_Leagues_Conferences.png", :height => "28", :alt => "Leagues and Conferences", :width => "288" }/
+    %br/
+    %a{ :href => "#" }
+      %img{ :src => "/gs/images/Home_Schools_Clubs.png", :height => "28", :alt => "Schools & Clubs", :width => "288" }/
+    %br/
+    %a{ :href => "#" }
+      %img{ :src => "/gs/images/Home_recruiters_scouts.png", :height => "28", :alt => "Recruiters and Scouts", :width => "288" }/
+  /
+    end middle col
+  /
+    right col
+  -#.homeFeatureRight TURN THIS ON WHEN READY TO SEND INVITES FROM THE HOME PAGE
+    %h2
+      Send Invites
+    .SendInvites
+      %form#Invite{ :action => "#", :method => "get" }
+        %div
+          %label{ :for => "InviteTo" }
+            ENTER 'TO' EMAIL
+          %br/
+          %input#InviteTo.InviteTo{ :type => "text" }/
+          %br/
+          %label{ :for => "InviteMessage" }
+            ENTER A MESSAGE
+          %br/
+          %textarea#InviteMessage.InviteMessage{ :rows => "3", :cols => "35" }
+          %br/
+          %label{ :for => "InviteSender" }
+            YOUR NAME
+          %br/
+          %input#InviteSender.InviteSender{ :type => "text" }/
+          %input.InvitePreview{ :name => "preview", :type => "image", :src => "/gs/images/Home_Preview.gif" }/

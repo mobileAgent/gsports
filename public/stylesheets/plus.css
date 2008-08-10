@@ -130,6 +130,14 @@
   padding-right: 2em;
 }
 
+/* Work around a tellart bug */
+object#homeFlash {
+	float:right;
+	width:580px;
+	height:395px;
+	background-image: url(../gs/images/videoplayer_background.png);
+	background-repeat: no-repeat;
+}
 
 
 .prototip .gs { margin:0 10px 0 10px; border: 1px solid #2a1301; color: #fff; font: 11px Arial, Helvetica, sans-serif; border-top: none;}
