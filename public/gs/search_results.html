@@ -3,30 +3,30 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 	<head>
+        <title>###PAGE TITLE HERE###</title>
 		<link rel="stylesheet" href="styles/main.css" />
 		<!--[if IE 6]>
 		<style type="text/css">
 		.contentBoxHeader { background-image: none; }
 		</style>
 		<![endif]-->
-	        <meta http-equiv="Content-Type" content="text/html;charset=utf-8"  />
 		<script type="text/javascript" src="scripts/profile.js"></script>
 	</head>
 	<body>
 	<div class="backgroundContainer">
 		<div class="outerContainer">
 			<div class="util">
-				<span><a href="">about</a> | <a href="">contact</a> | <a href="">help</a> | <a href="">logout</a> <img src="images/lock.gif" alt="Padlock Icon" /></span>
+				<span><a href="">about</a> | <a href="">contact</a> | <a href="">help</a> | <a href="">logout</a> <img src="images/lock.gif"></span>
 			</div>
 			<!-- header/ads -->
 			<div class="header">
 				<h1 class="headerBrand">Global Sports</h1>
-				<div class="headerPosition2"><div class="structuralContainer"><div>
+				<div class="headerPosition2"><span><div>
 					<a href="#"><img src="placeholders/header_school_logo.jpg" alt="##TEXT EQUIVALENT##" /></a>
-				</div></div></div>
-				<div class="headerPosition1"><div class="structuralContainer"><div>
-					<a href="#"><img src="placeholders/header_ad_1.jpg" alt="##TEXT EQUIVALENT##" /></a>
-				</div></div></div>
+				</div></span></div>
+				<div class="headerPosition1"><span><div>
+					<a href="#"></a><img src="placeholders/header_ad_1.jpg" alt="##TEXT EQUIVALENT##" /></a>
+				</div></span></div>
 				<div class="headerAccountControl">
 					<div class="headerAccountControlLinks">
 						<span>Logged in as Norman Gale <a href="#" class="logout">logout</a></span>
@@ -37,34 +37,32 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 			<!-- end header/ads -->
 	
 			<!-- top-nav -->
-			<form action="#" method="get">
-				<div class="topNav">
-					<ul class="leftTopNav">
-						<li><span class="ROLLOVERIMAGE" id="gnavMyNetwork"><a href="#"><span>My Network</span></a></span></li>
-						<li class="divider"><span class="ROLLOVERIMAGE" id="gnavMyVideos"><a href="#"><span>My Videos</span></a></span></li>
-						<li class="divider"><span class="ROLLOVERIMAGE" id="gnavMyProfile"><a href="#"><span>My Profile</span></a></span></li>
-					</ul>
-					<div class="rightTopNav">
-						<h2>Search Site</h2>
-						<label for="searchCategory" class="verbalSemantic">Category</label>
-						<select name="category" id="searchCategory">
-							<option value="">All Categories</option>
-							<option value="">Category</option>
-							<option value="">Category</option>
-							<option value="">Category</option>
-						</select>
-						<label for="searchTerms" class="verbalSemantic">Search Terms</label>
-						<input name="terms" id="searchTerms" type="text" />
-						<input name="submit" class="submit" type="image" alt="Search" value="search" src="images/top_nav_search.gif" />
-					</div>
-				</div>
-			</form>
+			<div class="topNav">
+				<ul class="leftTopNav">
+					<li><span class="ROLLOVERIMAGE" id="gnavMyNetwork"><a href="#"><span>My Network</span></a></span></li>
+					<li class="divider"><span class="ROLLOVERIMAGE" id="gnavMyVideos"><a href="#"><span>My Videos</span></a></span></li>
+					<li class="divider"><span class="ROLLOVERIMAGE" id="gnavMyProfile"><a href="#"><span>My Profile</span></a></span></li>
+				</ul>
+				<form class="rightTopNav" action="#" method="get">
+					<h2 class="columnDescriptor">Search Site</h2>
+					<label for="searchCategory" class="verbalSemantic">Category</label>
+					<select name="category" id="searchCategory">
+						<option value="">All Categories</option>
+						<option value="">Category</option>
+						<option value="">Category</option>
+						<option value="">Category</option>
+					</select>
+					<label for="searchTerms" class="verbalSemantic">Search Terms</label>
+					<input name="terms" id="searchTerms" type="text" />
+					<input name="submit" class="submit" type="image" alt="Search" value="search" src="images/top_nav_search.gif" />
+				</form>
+			</div>
 			<!-- end top-nav -->
 	
 			<!-- find/chat -->
 			<div class="videoFindChat">
-				<form id="videoFind" action="#" method="get">
-					<div class="videoFind">
+				<div class="videoFind">
+					<form id="videoFind" action="#" method="get">
 						<select name="season" id="videoFindSeason">
 							<option value="">-Season-</option>
 							<option value="">Option</option>
@@ -102,8 +100,8 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 						<label for="videoFindSport" class="verbalSemantic">Sport</label>
 						<input id="videoFindSubmit" name="submit" class="submit" type="image" alt="Search" value="search" src="images/video_find_submit.gif" />
 						<label for="videoFindSubmit" class="verbalSemantic">Video Find</label>
-					</div>
-				</form>
+					</form>
+				</div>
 				<div class="chat">
 						<!-- note that this seemingly overcomplicated layout helps the text scale nicely when the user increases the font size -->
 					<div class="chatHeader"><div><span>CHAT</span></div></div>
@@ -122,7 +120,6 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 				</div>
 			</div>
 			<!-- end find/chat -->
-
 			<!-- 3 col content -->
 			<div class="profileContentArea">
 				<div class="profilePageHeader"><h2 class="columnDescriptor">SEARCH RESULTS</h2></div>			
@@ -133,9 +130,9 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 							<h2 class="boxDescription">Search My Clips and Reels</h2>
 						</div>
 						<div class="advancedSearchTools">
-							<a href=""><img src="images/top_nav_search.gif" alt="Video Advanced Search Button"/></a><span>VIDEO ADVANCED SEARCH</span>
+							<a href=""><img src="images/top_nav_search.gif"></a><span>VIDEO ADVANCED SEARCH</span>
 							<div class="clearDiv"></div>
-							<a href=""><img src="images/top_nav_search.gif" alt="Video Advanced Search Button"/></a><span>NETWORK ADVANCED SEARCH</span>
+							<a href=""><img src="images/top_nav_search.gif"></a><span>NETWORK ADVANCED SEARCH</span>
 						</div>
 						<div class="contentBoxContent friendSearchWidgetArea">
 							<span class="friendSearchColumn">Search:</span>
@@ -176,7 +173,7 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 						<div class="contentBox tanBackground">
 							<div class="contentBoxContent">
 								<div class="profileFeature">
-									<div class="featureSummaryThumb"><img src="placeholders/large_story_thumb.jpg" alt="Story Image"/></div>
+									<div class="featureSummaryThumb"><img src="placeholders/large_story_thumb.jpg"></div>
 									<div class="featureText">
 										<span class="profileSubHeading">Grid Iron Slam Bam</span><br/>
 										<span class="featureSummaryText">Wednesday 3/4/5</span><br/>
@@ -188,7 +185,7 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 						<div class="contentBox tanBackground">
 							<div class="contentBoxContent">
 								<div class="profileFeature">
-									<div class="featureSummaryThumb"><img src="placeholders/large_story_thumb.jpg" alt="Story Image"/></div>
+									<div class="featureSummaryThumb"><img src="placeholders/large_story_thumb.jpg"></div>
 									<div class="featureText">
 										<span class="profileSubHeading">Grid Iron Slam Bam</span><br/>
 										<span class="featureSummaryText">Wednesday 3/4/5</span><br/>
@@ -200,7 +197,7 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 						<div class="contentBox tanBackground">
 							<div class="contentBoxContent">
 								<div class="profileFeature">
-									<div class="featureSummaryThumb"><img src="placeholders/large_story_thumb.jpg" alt="Story Image"/></div>
+									<div class="featureSummaryThumb"><img src="placeholders/large_story_thumb.jpg"></div>
 									<div class="featureText">
 										<span class="profileSubHeading">Grid Iron Slam Bam</span><br/>
 										<span class="featureSummaryText">Wednesday 3/4/5</span><br/>
@@ -212,7 +209,7 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 						<div class="contentBox tanBackground">
 							<div class="contentBoxContent">
 								<div class="profileFeature">
-									<div class="featureSummaryThumb"><img src="placeholders/large_story_thumb.jpg" alt="Story Image"/></div>
+									<div class="featureSummaryThumb"><img src="placeholders/large_story_thumb.jpg"></div>
 									<div class="featureText">
 										<span class="profileSubHeading">Grid Iron Slam Bam</span><br/>
 										<span class="featureSummaryText">Wednesday 3/4/5</span><br/>
@@ -224,7 +221,7 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 						<div class="contentBox tanBackground">
 							<div class="contentBoxContent">
 								<div class="profileFeature">
-									<div class="featureSummaryThumb"><img src="placeholders/large_story_thumb.jpg" alt="Story Image"/></div>
+									<div class="featureSummaryThumb"><img src="placeholders/large_story_thumb.jpg"></div>
 									<div class="featureText">
 										<span class="profileSubHeading">Grid Iron Slam Bam</span><br/>
 										<span class="featureSummaryText">Wednesday 3/4/5</span><br/>
@@ -236,7 +233,7 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 						<div class="contentBox tanBackground">
 							<div class="contentBoxContent">
 								<div class="profileFeature">
-									<div class="featureSummaryThumb"><img src="placeholders/large_story_thumb.jpg" alt="Story Image"/></div>
+									<div class="featureSummaryThumb"><img src="placeholders/large_story_thumb.jpg"></div>
 									<div class="featureText">
 										<span class="profileSubHeading">Grid Iron Slam Bam</span><br/>
 										<span class="featureSummaryText">Wednesday 3/4/5</span><br/>
@@ -252,7 +249,7 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 						<div class="contentBox tanBackground">
 							<div class="contentBoxContent">
 								<div class="profileFeature">
-									<div class="featureSummaryThumb"><img src="placeholders/profile_search_res_pic.jpg" alt="Friend Photograph"/></div>
+									<div class="featureSummaryThumb"><img src="placeholders/profile_search_res_pic.jpg"></div>
 									<div class="featureText">
 										<span class="profileSubHeading">Liz Waters</span><br/>
 										<span class="featureSummaryText">Mezeek HS</span><br/>
@@ -264,7 +261,7 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 						<div class="contentBox tanBackground">
 							<div class="contentBoxContent">
 								<div class="profileFeature">
-									<div class="featureSummaryThumb"><img src="placeholders/profile_search_res_pic.jpg" alt="Friend Photograph"/></div>
+									<div class="featureSummaryThumb"><img src="placeholders/profile_search_res_pic.jpg"></div>
 									<div class="featureText">
 										<span class="profileSubHeading">Liz Waters</span><br/>
 										<span class="featureSummaryText">Mezeek HS</span><br/>
@@ -276,7 +273,7 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 						<div class="contentBox tanBackground">
 							<div class="contentBoxContent">
 								<div class="profileFeature">
-									<div class="featureSummaryThumb"><img src="placeholders/profile_search_res_pic.jpg" alt="Friend Photograph"/></div>
+									<div class="featureSummaryThumb"><img src="placeholders/profile_search_res_pic.jpg"></div>
 									<div class="featureText">
 										<span class="profileSubHeading">Liz Waters</span><br/>
 										<span class="featureSummaryText">Mezeek HS</span><br/>
@@ -288,7 +285,7 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 						<div class="contentBox tanBackground">
 							<div class="contentBoxContent">
 								<div class="profileFeature">
-									<div class="featureSummaryThumb"><img src="placeholders/profile_search_res_pic.jpg" alt="Friend Photograph"/></div>
+									<div class="featureSummaryThumb"><img src="placeholders/profile_search_res_pic.jpg"></div>
 									<div class="featureText">
 										<span class="profileSubHeading">Liz Waters</span><br/>
 										<span class="featureSummaryText">Mezeek HS</span><br/>
@@ -300,7 +297,7 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 						<div class="contentBox tanBackground">
 							<div class="contentBoxContent">
 								<div class="profileFeature">
-									<div class="featureSummaryThumb"><img src="placeholders/profile_search_res_pic.jpg" alt="Friend Photograph"/></div>
+									<div class="featureSummaryThumb"><img src="placeholders/profile_search_res_pic.jpg"></div>
 									<div class="featureText">
 										<span class="profileSubHeading">Liz Waters</span><br/>
 										<span class="featureSummaryText">Mezeek HS</span><br/>
@@ -312,7 +309,7 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 						<div class="contentBox tanBackground">
 							<div class="contentBoxContent">
 								<div class="profileFeature">
-									<div class="featureSummaryThumb"><img src="placeholders/profile_search_res_pic.jpg" alt="Friend Photograph"/></div>
+									<div class="featureSummaryThumb"><img src="placeholders/profile_search_res_pic.jpg"></div>
 									<div class="featureText">
 										<span class="profileSubHeading">Liz Waters</span><br/>
 										<span class="featureSummaryText">Mezeek HS</span><br/>
@@ -328,7 +325,7 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 						<div class="contentBox tanBackground">
 							<div class="contentBoxContent">
 								<div class="profileFeature">
-									<div class="featureSummaryThumb hdSearchPreview"><img src="placeholders/thumbnail_81x54.jpg" alt="Video Clip Preview"/></div>
+									<div class="featureSummaryThumb hdSearchPreview"><img src="placeholders/thumbnail_81x54.jpg"></div>
 									<div class="featureText">
 										<span class="profileSubHeading">Liz Waters</span><br/>
 										<span class="featureSummaryText">Mezeek HS</span><br/>
@@ -354,7 +351,7 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 						<div class="contentBox tanBackground">
 							<div class="contentBoxContent">
 								<div class="profileFeature">
-									<div class="featureSummaryThumb hdSearchPreview"><img src="placeholders/thumbnail_81x54.jpg" alt="Video Clip Preview"/></div>
+									<div class="featureSummaryThumb hdSearchPreview"><img src="placeholders/thumbnail_81x54.jpg"></div>
 									<div class="featureText">
 										<span class="profileSubHeading">Liz Waters</span><br/>
 										<span class="featureSummaryText">Mezeek HS</span><br/>
@@ -416,10 +413,10 @@ PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 			<!-- footer/ads -->
 			<div class="footer">
 				<div class="footerAds">
-					<span class="footerAd"><img src="placeholders/ad1.jpg" alt="advertisment"/></span>
-					<span class="footerAd"><img src="placeholders/ad2.jpg" alt="advertisment"/></span>
-					<span class="footerAd"><img src="placeholders/ad3.jpg" alt="advertisment"/></span>
-					<span class="footerAd"><img src="placeholders/ad4.jpg" alt="advertisment"/></span>
+					<span class="footerAd"><img src="placeholders/ad1.jpg" /></span>
+					<span class="footerAd"><img src="placeholders/ad2.jpg" /></span>
+					<span class="footerAd"><img src="placeholders/ad3.jpg" /></span>
+					<span class="footerAd"><img src="placeholders/ad4.jpg" /></span>
 				</div>
 			</div>
 			<!-- end footer/ads -->
