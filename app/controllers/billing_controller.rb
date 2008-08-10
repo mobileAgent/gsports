@@ -5,4 +5,9 @@ class BillingController < BaseController
   def index
     @memberships = Membership.find :all
   end
+
+  def member_billing_history
+    @member_name = Membership.find (params[:id]).name
+    @billings = MembershipBillingHistory.find_all_by_membership_id(params[:id]) 
+  end
 end

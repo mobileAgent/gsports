@@ -1,0 +1,18 @@
+- @section = (params[:metro_area_id] ? 'metro_area' : 'users')
+
+
+#yui-main
+  .yui-b
+    .box.user_list
+      %h3= "#{AppConfig.community_name} Billing History for #{@member_name}"
+
+  
+      %br.clear
+      %table{:border => 1}
+        %tr
+          %th Authorization Reference Number 
+          %th Date 
+        = render :partial => "billing/billing_history", :collection => @billings
+
+      
+      %br.clear

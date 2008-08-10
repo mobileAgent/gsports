@@ -8,13 +8,14 @@
 
   
       %br.clear
-      %table
+      %table{:border => 1}
         %tr
           %th Membership Name 
           %th Billing Method
           %th Cost
           %th Joined
           %th Users
+          %th History
         = render :partial => "billing/membership", :collection => @memberships
       
       %br.clear
