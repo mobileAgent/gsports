@@ -32,25 +32,3 @@
 /
   end col 2
 .clearDiv/
-
-                  
--# This is turned off, the pre-tellart way, just for reference
--#yui-main
-  .yui-b
-    .box.hfeed
-      %h3 Games of the Week
-      - if @now_playing && @now_playing.dockey
-        .videoPlayer
-          = render :partial => 'shared/site_video_player', :locals  => { :dockey => @now_playing.dockey }
-          %br/
-          = @now_playing.title
-          %br/
-          = @now_playing.description
-          %br/
-          -if @now_playing.class.to_s == 'VideoAsset' && @now_playing.home_team_id? && @now_playing.visiting_team_id?
-            = "#{@now_playing.visiting_team.name} vs. #{@now_playing.home_team.name} #{game_date(@now_playing.game_date)}"
-          
-      - @games_of_the_week.each do |v|
-        = render :partial => 'shared/site_video_teaser', :locals => { :item => v }
-        %br/
-        

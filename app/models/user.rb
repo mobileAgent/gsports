@@ -199,5 +199,10 @@ class User < ActiveRecord::Base
     return team.league unless league_staff?
     return League.find(league_id)
   end
+
+  def byline
+    tlname = league_staff? ? (League.find(league_id).name) : team_name
+    "#{full_name}, #{tlname}"
+  end
     
 end

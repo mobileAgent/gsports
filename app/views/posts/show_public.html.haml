@@ -1,0 +1,11 @@
+.homeText
+  %h1.homeTextWelcome
+    Global Sports Athlete Of The Week
+  %br/
+  %p
+    %strong= @post.title
+    %br/
+    = "#{@post.published_at.to_s(:readable)} by #{@post.user.byline}"
+    %br/
+    %br/
+= @post.post
