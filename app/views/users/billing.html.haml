@@ -18,6 +18,7 @@
       %h3 Part 3: Billing Information
       %h3= "The cost for this membership is $"+ @user.role.plan.cost.to_s + " per month"
       = error_messages_for :credit_card
+      = error_messages_for :user
       %form{:action=>'/users/submit_billing',:class => 'MainForm',:method => :post}
 
         %label{"for"=>"firstname"}

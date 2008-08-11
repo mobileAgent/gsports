@@ -94,7 +94,6 @@ class UsersController < BaseController
   def billing
     @user = User.find(params[:userid].to_i)
     logger.debug "USER session object(billing):" + @user.id.to_s
-
   end
 
   #
@@ -110,7 +109,8 @@ class UsersController < BaseController
       :month => billing_info["date(2i)"],
       :year => billing_info["date(1i)"],
       :verification_value => billing_info[:verificationnumber]
-    })
+                                                           })
+    
     if (!@credit_card.valid?)
       render :action => 'billing', :userid => @user.id
       return
@@ -120,19 +120,24 @@ class UsersController < BaseController
       :login => Active_Merchant_payflow_gateway_username,
       :password => Active_Merchant_payflow_gateway_password,
       :partner => Active_Merchant_payflow_gateway_partner
-    })
-    @response = gateway.purchase(@user.role.plan.cost, @credit_card)
-#
-#    if (@response.success?)  # Test gateway is a bit flakey
+                                                          })
+
+    cost_for_gateway = (@user.role.plan.cost * 100).to_i
+    @response = gateway.purchase(cost_for_gateway, @credit_card)
+    
+    if (@response.success?)
+      logger.debug "Gatway response is success #{@response.inspect}"
       @user.make_member(Membership::CREDIT_CARD_BILLING_METHOD,nil,@response)
       @user.set_payment(@credit_card)
-
-#    else
-#      render :action => 'billing', :userid => @user.id
-#    end
-    flash[:notice] = "Thanks for signing up! You should receive an e-mail confirmation shortly at #{@user.email}"
-
-    redirect_to signup_completed_user_path(@user)
+      @user.enabled = true
+      @user.save!
+      flash[:notice] = "Successfully charged $#{@user.role.plan.cost} to card #{@credit_card.display_number}"
+      redirect_to signup_completed_user_path(@user)
+    else
+      logger.debug "Bad response from gateway #{@response.inspect}"
+      flash.now[:warning] = @response.message
+      render :action => 'billing', :userid => @user.id
+    end
   end
 
   def change_team_photo
