@@ -3,3 +3,7 @@
 <h1><%=@page.name%></h1>
 
 <%= @page.html_content %>
+
+<%if current_user.nil?%>
+  <div class="clearDiv"/>
+<% end %>  
