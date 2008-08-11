@@ -6,7 +6,7 @@ class UsersController < BaseController
                                            :return_admin, :assume, :featured, 
                                            :toggle_featured, :edit_pro_details, :update_pro_details,
                                            :dashboard, :show, :index, :change_team_photo, :change_league_photo ]
-  
+
   uses_tiny_mce(:options => AppConfig.gsdefault_mce_options.merge({:editor_selector => "rich_text_editor"}), 
                 :only => [:new, :create, :update, :edit, :welcome_about])
   
@@ -224,6 +224,21 @@ class UsersController < BaseController
     @featured_athletes_for_league = AthleteOfTheWeek.for_league(@user.league_id)
     @featured_game_for_team = GameOfTheWeek.for_team(team_id).first
     @featured_game_for_league = GameOfTheWeek.for_league(@user.league_id).first
+  end
+
+  def forgot_password  
+    @user = User.find_by_email(params[:email])  
+    return unless request.post?   
+    if @user
+      if @user.reset_password
+        UserNotifier.deliver_reset_password(@user)
+        @user.save
+        flash[:info] = "Your password has been reset and emailed to you."
+        redirect_to url_for({:controller => 'base', :action => 'site_index'}) 
+      end
+    else
+      flash[:error] = "Sorry. We don't recognize that email address."
+    end 
   end
   
 end
