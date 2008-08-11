@@ -1,7 +1,7 @@
 community_name: "Global Sports"
 community_tagline: "Full game video, your highlight reels and more"
 community_description:  "The Best Place for Athletes and Fans"
-support_email:  "gs_support@integratedcc.com"
+support_email:  "admin@globalsports.net"
 meta_description: 'A description of your community for use in META tags.'
 meta_keywords: "football, baseball, quarterback, fun, lazy, friendly, soccer, wild"
 sections_enabled: ['photos', 'posts', 'clippings', 'contests', 'categories', 'events']
@@ -55,6 +55,7 @@ clipping:
     max_size: 3
     thumbnails: {thumb: "100x100!", medium_square: "200x200!", medium: "200>"}
     storage: 'file_system'
-    content_type: ['image/jpg', 'image/jpeg', 'image/pjpeg', 'image/gif', 'image/png', 'image/x-png']
+    content_ty
+pe: ['image/jpg', 'image/jpeg', 'image/pjpeg', 'image/gif', 'image/png', 'image/x-png']
 
 theme: gsbasic
