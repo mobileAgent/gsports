@@ -1,7 +1,4 @@
 ActionController::Routing::Routes.draw do |map|
-  map.resources :monikers
-
-
   map.resources :members
   map.resources :pages
   map.resources :teams
@@ -12,6 +9,8 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :video_reels
   map.resources :messages
   map.resources :billing
+  map.resources :monikers
+  map.resources :subscription_plans
 
   map.register         'register',        :controller => 'users', :action => 'register'
   map.forgot_password  'forgot_password', :controller => 'users', :action => 'forgot_password'

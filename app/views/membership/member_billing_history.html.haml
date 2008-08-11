@@ -9,11 +9,14 @@
 
   
       %br.clear
-      %table{:border => 1}
-        %tr
-          %th Authorization Reference Number 
-          %th Date 
-        = render :partial => "membership/billing_history", :collection => @billings
+      %table.unstyled
+        %thead
+          %tr
+            %th Authorization Reference Number 
+            %th Date
+        %tbody
+          = render :partial => "membership/billing_history", :collection => @billings
 
       
       %br.clear
+.clearDiv/

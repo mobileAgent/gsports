@@ -1,0 +1,19 @@
+<p>
+  <b>Name:</b>
+  <%=h @subscription_plan.name %>
+</p>
+
+<p>
+  <b>Cost:</b>
+  <%=h @subscription_plan.cost %>
+</p>
+
+<p>
+  <b>Description:</b>
+  <%=h @subscription_plan.description %>
+</p>
+
+
+<%= link_to 'Edit', edit_subscription_plan_path(@subscription_plan) %> |
+<%= link_to 'Back', subscription_plans_path %>
+<div class="clearDiv"/>
