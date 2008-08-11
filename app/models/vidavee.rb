@@ -501,8 +501,8 @@ class Vidavee < ActiveRecord::Base
     params = build_request_params(action,sessionid,extra_params,login)
     begin
       response = CLIENT.post(query_url(url,params))
-    rescue TimeoutError
-      logger.error "Could not contact Vidavee backend"
+    rescue 
+      logger.error "Could not contact Vidavee backend for #{url}"
       nil
     end
   end
