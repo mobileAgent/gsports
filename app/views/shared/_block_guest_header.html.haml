@@ -12,7 +12,7 @@
       %input#loginButton.submit{ :name => "submit", :src => "/gs/images/top_nav_login.gif", :type => "image", :value => "Login", :alt => "Login" }/
       %br/
       %span.loginHelp
-        %a{ :href => signup_path }
+        %a{ :href => url_for(:controller => 'users', :action => 'register')  }
           signup &raquo;
         |
         %a{ :href => forgot_password_path }
@@ -28,12 +28,12 @@
             About Global Sports
     %li.divider
       %span#gnavMembership.ROLLOVERIMAGE
-        %a{ :href => url_for(:controller => 'users', :action => 'register')  }
+        %a{ :href =>  '/info/membership' }
           %span
             Membership
     %li.divider
       %span#gnavRegistration.ROLLOVERIMAGE
-        %a{ :href => signup_path}
+        %a{ :href => url_for(:controller => 'users', :action => 'register')  }
           %span
             Registration
   -#%form.rightTopNav{ :action => "#", :method => "get" }
