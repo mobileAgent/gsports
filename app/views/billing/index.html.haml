@@ -18,13 +18,14 @@
           %th Users
           %th History
         = render :partial => "billing/membership", :collection => @memberships
-      
-      %br.clear
-      %h3= "#{AppConfig.community_name} Users"
-      %table{:border => 1}
-        %tr
-          %th User Name
-          %th Joined
-          %th Enabled
-          %th Member of
-        = render :partial => "billing/userlist", :collection => @users
+
+      - if @users && @users.any
+        %br.clear
+        %h3= "#{AppConfig.community_name} Users"
+        %table{:border => 1}
+          %tr
+            %th User Name
+            %th Joined
+            %th Enabled
+            %th Member of
+          = render :partial => "billing/userlist", :collection => @users
