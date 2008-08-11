@@ -1,43 +1,87 @@
-.yui-main
-  .box
-    %h3 Part 1: Account Type 
-
-    %form{:action=>'/users/new'}
-      %table
-        %tr
-          %td{ :style=>"width:60px;", :align=>"center" }
-            %input{:type=>:radio, :name=>:role, :value=>"" }
-          %td
-            %b Athletes, Coaches, Parents, and Fans
+.RegContent
+  .SideBar
+    %h1
+      Registration
+    %p
+      The Registration process lus auctor eleifend mi.
+    %p
+      Quisque et arcu. Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consecteteur, adipisci velit.
+    %p
+      Aenean ac lacus. Vestibulum commodo metus dictum quam. Vestibulum a erat at ligula blandit euismod.
+    %p
+      %a{ :href => "#" }
+        Read more about types &raquo;
+        
+  .RegistrationContent
+    .RegistrationTrail
+      %span.RegistrationComplete
+        PART 1: ACCOUNT TYPE > >
+      PART 2: USER INFORMATION > > PART 3: BILLING INFORMATION
+    .AcountType
+      %form#AccountType{ :action => "/users/new", :method => "post" }
+        %h1
+          Part 1: Account Type
+        %h2
+          ACCOUNT TYPE
+        .SelectedAccount
+          %label.verbalSemantic{ :for => "Ath" }
+            Athletes Coaches, Parents, and Fans
+          .AccountRadio
+            %input#Ath{ :name => :role, :checked => "checked", :type => "radio", :value => "", :onchange => "updateSelectedAccount(this)" }/
+          .AccountIllustration
+            %img{ :src => "/gs/images/account_athletes.jpg", :height => "99", :alt => "Athletes Illustration", :onclick => "return selectThisAcocunt(this)", :width => "131" }/
+          .AccountDescriptionAthletes
+            %h2
+              Athletes, Coaches, Parents and Fans.
             %p
-              Etiam pharetra bibendum neque. In viverra dictum leo. Maecenas aliquet facilisis magna. Phasellus semper. 
-              Vestibulum turpis massa, congue commodo, euismod at, mollis ac, augue. Ut varius. 
-        %tr
-          %td{ :style=>"width:60px;", :align=>"center" }
-            %input{:type=>:radio, :name=>:role, :value=>Role[:team].id }
-          %td
-            %b Schools and Private Clubs 
+              Vestibulum quis est id arcu tincidunt ultrices. Nulla vestibulum euismod leo. Sed et elit. Ut aliquet, mi eu volutpat elementum, sem arcu suscipit nunc. Nunc turpis nulla, porttitor id, tempus at condimentum elementum, sem. Sed tempor eros.
             %p
-              Mauris ante nisi, hendrerit in, facilisis ac, aliquet quis, libero. 
-              Nunc varius pharetra libero. Integer iaculis viverra lorem. Proin non pede sed nisi luctus rhoncus. 
-        %tr
-          %td{ :style=>"width:60px;", :align=>"center" }
-            %input{:type=>:radio, :name=>:role, :value=>Role[:league].id }
-          %td
-            %b Leagues and Conferences 
+              ?
+        .UnSelectedAccount
+          %label.verbalSemantic{ :for => "School" }
+            Schools and Private Clubs
+          .AccountRadio
+            %input#School{ :name => :role, :type => "radio", :value => Role[:team].id, :onchange => "updateSelectedAccount(this)" }/
+          .AccountIllustration
+            %img{ :src => "/gs/images/accout_school_illu.jpg", :height => "99", :alt => "Teams Illustration", :onclick => "return selectThisAcocunt(this)", :width => "131" }/
+          .AccountDescriptionSchools
+            %h2
+              Athletes, Coaches, Parents and Fans.
             %p
-              Cras iaculis, arcu ac pulvinar hendrerit, felis magna vehicula nisl, sed tempor mi sem ac enim. 
-              Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Quisque vel magna. 
-        %tr
-          %td{ :style=>"width:60px;", :align=>"center" }
-            %input{:type=>:radio, :name=>:role, :value=>Role[:scout].id }
-          %td
-            %b Scouts and Recruiters 
+              Vestibulum quis est id arcu tincidunt ultrices. Nulla vestibulum euismod leo. Sed et elit. Ut aliquet, mi eu volutpat elementum, sem arcu suscipit nunc. Nunc turpis nulla, porttitor id, tempus at condimentum elementum, sem. Sed tempor eros.
             %p
-              Morbi tempus lorem. Curabitur consectetuer hendrerit felis. Aliquam eget risus. Integer lacus purus, accumsan in, dapibus id, ullamcorper in, leo. 
-              Aliquam libero. Suspendisse rutrum. Nullam ac orci non lacus rutrum egestas. 
-      %br
-  
-      %input{:type=>:submit, :value=>"CONTINUE TO USER INFORMATION"}
-
-%br
+              ?
+        .UnSelectedAccount
+          %label.verbalSemantic{ :for => "Leagues" }
+            Leagues and Conferences
+          .AccountRadio
+            %input#Leagues{ :name => :role, :type => "radio", :value => Role[:league].id, :onchange => "updateSelectedAccount(this)" }/
+          .AccountIllustration
+            %img{ :src => "/gs/images/accout_league_illu.jpg", :height => "99", :alt => "Leagues Illustration", :onclick => "return selectThisAcocunt(this)", :width => "131" }/
+          .AccountDescriptionLeagues
+            %h2
+              Athletes, Coaches, Parents and Fans.
+            %p
+              Vestibulum quis est id arcu tincidunt ultrices. Nulla vestibulum euismod leo. Sed et elit. Ut aliquet, mi eu volutpat elementum, sem arcu suscipit nunc. Nunc turpis nulla, porttitor id, tempus at condimentum elementum, sem. Sed tempor eros.
+            %p
+              ?
+        .UnSelectedAccount
+          %label.verbalSemantic{ :for => "Scouts" }
+            Scouts and Recruiters
+          .AccountRadio
+            %input#Scouts{ :name => :role, :type => "radio", :value => Role[:scout].id, :onchange => "updateSelectedAccount(this)" }/
+          .AccountIllustration
+            %img{ :src => "/gs/images/account_scouts.jpg", :height => "99", :alt => "Recruiters Illustration", :onclick => "return selectThisAcocunt(this)", :width => "131" }/
+          .AccountDescriptionScouts
+            %h2
+              Athletes, Coaches, Parents and Fans.
+            %p
+              Vestibulum quis est id arcu tincidunt ultrices. Nulla vestibulum euismod leo. Sed et elit. Ut aliquet, mi eu volutpat elementum, sem arcu suscipit nunc. Nunc turpis nulla, porttitor id, tempus at condimentum elementum, sem. Sed tempor eros.
+            %p
+              ?
+        .accountContinue
+          %p
+            %input{ :name => "Continue", :type => "image", :src => "/gs/images/account_continue.png", :value => "Contine", :alt => "Continue" }/
+          %p
+            (Lorem ipsum dolor sit amet)
+.clearDiv/
