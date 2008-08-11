@@ -3,33 +3,13 @@
     Left Col
   .homeFeatureLeft
     %h2
-      Athletes of the week
-    /
-      Athletes of the week
-    .AthletesWeek
-      %img.AthletesPic{ :src => "/gs/placeholders/athletespic.jpg", :height => "65", :alt => "", :width => "103" }/
-      .AthletesDescrip
-        %p
-          %strong
-            Jane Nalgon
-        %p
-          Short Stop
-      %img.AthletesLogo{ :src => "/gs/placeholders/teamlogo.jpg", :height => "65", :alt => "", :width => "65" }/
-    .AthletesWeek
-      %img.AthletesPic{ :src => "/gs/placeholders/athletespic.jpg", :height => "65", :alt => "", :width => "103" }/
-      .AthletesDescrip
-        %p
-          %strong
-            Jane Nalgon
-        %p
-          Short Stop
-      %img.AthletesLogo{ :src => "/gs/placeholders/teamlogo.jpg", :height => "65", :alt => "", :width => "65" }/
-    /
-      end Athletes of the week
-  /
-    end left col
-  /
-    middle col
+      Athletes of the Week
+      
+    - if @athletes_of_the_week && @athletes_of_the_week.size > 0
+      =render :partial => "shared/block_featured_athlete", :locals => {:story => @athletes_of_the_week[0]}
+    - if @athletes_of_the_week && @athletes_of_the_week.size > 1
+      =render :partial => "shared/block_featured_athlete", :locals => {:story => @athletes_of_the_week[1]}
+
   .homeFeatureMiddle
     %h2
       Become a Member

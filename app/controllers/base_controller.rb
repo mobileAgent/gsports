@@ -32,8 +32,9 @@ class BaseController < ApplicationController
   def site_index
     redirect_to(dashboard_user_path(current_user)) if logged_in?
 
-    # Not logged in, show the games of the week
+    # Not logged in, show featured games and athletes
     @games_of_the_week = Rails.cache.fetch('games_of_the_week') { GameOfTheWeek.for_home_page || []}
+    @athletes_of_the_week = AthleteOfTheWeek.for_home_page
     
     # Play the specified game
     if params[:id]
