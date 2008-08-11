@@ -23,7 +23,7 @@ photo:
     #options - 's3', 'file_system', 'db_system' - see attachment_fu for details
     storage: 'file_system'
     content_type: ['image/jpg', 'image/jpeg', 'image/pjpeg', 'image/gif', 'image/png', 'image/x-png']
-      
+
 feature:
   use_thumbs: true
   dimensions: [150, 635]
@@ -55,7 +55,6 @@ clipping:
     max_size: 3
     thumbnails: {thumb: "100x100!", medium_square: "200x200!", medium: "200>"}
     storage: 'file_system'
-    content_ty
-pe: ['image/jpg', 'image/jpeg', 'image/pjpeg', 'image/gif', 'image/png', 'image/x-png']
+    content_type: ['image/jpg', 'image/jpeg', 'image/pjpeg', 'image/gif', 'image/png', 'image/x-png']
 
 theme: gsbasic
