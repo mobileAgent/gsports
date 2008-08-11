@@ -2,8 +2,12 @@
 # Likewise, all the methods added will be available for all controllers.
 
 class ApplicationController < ActionController::Base
+
   helper :all # include all helpers, all the time
 
+  # Help with ssl switching
+  include SslRequirement
+  
   # The Community Engine overridden layout needs this
   include AuthenticatedSystem
 

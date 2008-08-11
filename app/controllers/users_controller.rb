@@ -1,4 +1,8 @@
 class UsersController < BaseController
+
+  if RAILS_ENV == 'production'
+    ssl_required :billing, :submit_billing
+  end
   
   protect_from_forgery :only => [:create, :update, :destroy]
   before_filter :login_required, :only => [:edit, :edit_account, :update,
