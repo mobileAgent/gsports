@@ -9,15 +9,17 @@
 
   
       %br.clear
-      %table{:border => 1}
-        %tr
-          %th Membership Name 
-          %th Billing Method
-          %th Cost
-          %th Joined
-          %th Users
-          %th History
-        = render :partial => "billing/membership", :collection => @memberships
+      %table.unstyled
+        %thead
+          %tr
+            %th Membership Name 
+            %th Billing Method
+            %th Cost
+            %th Joined
+            %th Users
+            %th History
+        %tbody  
+          = render :partial => "billing/membership", :collection => @memberships
 
       - if @users && @users.any
         %br.clear
@@ -29,3 +31,4 @@
             %th Enabled
             %th Member of
           = render :partial => "billing/userlist", :collection => @users
+.clearDiv/

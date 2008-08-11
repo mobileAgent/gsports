@@ -59,7 +59,7 @@ class AthleteOfTheWeek < Post
     img = first_image_in_body()
     if img
       # chaange the size fromw whatever it was to :feature size
-      img.gsub!(/_[a-z]+\.jpg$/,'_feature.jpg')
+      img.gsub!(/_[a-z]+\.jpg/,'_feature.jpg')
     end
     img
   end
