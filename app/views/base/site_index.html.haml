@@ -5,7 +5,7 @@
     Sorry, we could not start the video player. To view video content you will need to have Adobe Flash player installed and  JavaScript enabled on your browser.
 
 - if @now_playing && @now_playing.dockey
-  = render :partial => 'shared/homepage_video_player', :locals => {:target => 'homeFlash', :dockey => @now_playing.dockey }
+  = render :partial => 'shared/_video_player', :locals => {:target => 'homeFlash', :dockey => @now_playing.dockey }
 
 .homeText
   %h1.homeTextWelcome= "Welcome to #{AppConfig.community_name}!"
