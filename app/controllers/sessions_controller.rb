@@ -27,8 +27,8 @@ class SessionsController < BaseController
       else
         flash[:notice] = "Uh oh. We couldn't log you in with the username and password you entered. Try again?"      
       end
-        redirect_to teaser_path and return if AppConfig.closed_beta_mode        
-        render :action => 'new'
+      redirect_to teaser_path and return if AppConfig.closed_beta_mode        
+      redirect_to :controller => 'base', :action => 'site_index' and return
     end
   end
 
