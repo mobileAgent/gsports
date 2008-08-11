@@ -2,7 +2,7 @@
   %td
     =membership.name
   %td
-    =membership.billing_method
+    =link_to membership.billing_method,:controller => :membership, :action => :member_billing_method_info ,:id => membership.id
   %td
     ="$" + membership.cost.to_s
   %td
@@ -10,4 +10,4 @@
   %td
     =membership.users.length
   %td
-    =link_to "Billing History", :controller => "billing", :action => "member_billing_history", :id => membership.id 
+    =link_to "Billing History", :controller => :membership, :action => "member_billing_history", :id => membership.id 
