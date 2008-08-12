@@ -1,0 +1,51 @@
+.homeFeature
+  /
+    Left Col
+  .homeFeatureLeft
+    %h2
+      Athletes of the Week
+      
+    - if @athletes_of_the_week && @athletes_of_the_week.size > 0
+      =render :partial => "shared/block_featured_athlete", :locals => {:story => @athletes_of_the_week[0]}
+    - if @athletes_of_the_week && @athletes_of_the_week.size > 1
+      =render :partial => "shared/block_featured_athlete", :locals => {:story => @athletes_of_the_week[1]}
+
+  .homeFeatureMiddle
+    %h2
+      Become a Member
+    %a{ :href => "/info/membership" }
+      %img{ :src => "/gs/images/Home_Athletes_Coaches_Family.png", :height => "28", :alt => "Athletes, Coaches, Family & Fans", :width => "288" }/
+    %br/
+    %a{ :href => "/info/membership#leagues" }
+      %img{ :src => "/gs/images/Home_Leagues_Conferences.png", :height => "28", :alt => "Leagues and Conferences", :width => "288" }/
+    %br/
+    %a{ :href => "/info/membership#teams" }
+      %img{ :src => "/gs/images/Home_Schools_Clubs.png", :height => "28", :alt => "Schools & Clubs", :width => "288" }/
+    %br/
+    %a{ :href => "/info/membership#scouts" }
+      %img{ :src => "/gs/images/Home_recruiters_scouts.png", :height => "28", :alt => "Recruiters and Scouts", :width => "288" }/
+  /
+    end middle col
+  /
+    right col
+  -#.homeFeatureRight TURN THIS ON WHEN READY TO SEND INVITES FROM THE HOME PAGE
+    %h2
+      Send Invites
+    .SendInvites
+      %form#Invite{ :action => "#", :method => "get" }
+        %div
+          %label{ :for => "InviteTo" }
+            ENTER 'TO' EMAIL
+          %br/
+          %input#InviteTo.InviteTo{ :type => "text" }/
+          %br/
+          %label{ :for => "InviteMessage" }
+            ENTER A MESSAGE
+          %br/
+          %textarea#InviteMessage.InviteMessage{ :rows => "3", :cols => "35" }
+          %br/
+          %label{ :for => "InviteSender" }
+            YOUR NAME
+          %br/
+          %input#InviteSender.InviteSender{ :type => "text" }/
+          %input.InvitePreview{ :name => "preview", :type => "image", :src => "/gs/images/Home_Preview.gif" }/

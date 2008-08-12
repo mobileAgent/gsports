@@ -20,9 +20,8 @@
       %span.right= pagination_info_for @pages
       = pagination_links_for @pages, {:link_to_current_page => true} if @pages.length > 1
     
-    .clearDiv
 
     = render :partial => "friendships/friendship", :collection => @friendships
 
     
-  .clearDiv
+  .clearDiv/

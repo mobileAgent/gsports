@@ -1,0 +1,23 @@
+- @section = (params[:metro_area_id] ? 'metro_area' : 'users')
+
+
+#yui-main
+  .yui-b
+    .box.user_list
+      %h3= link_to_unless_current "Billing Home", :controller => :billing
+      %h3= "#{AppConfig.community_name} Billing Method details for #{@member.name}"
+
+  
+      %br.clear
+      %table{:border => 1}
+        %tr
+          %th Number(partial) 
+          %th Expiration date (Month/year)
+        %tr
+          %td
+            =@member.credit_card.displayable_number
+          %td
+            ="#{@member.credit_card.month}/#{@member.credit_card.year}"
+      
+      %br.clear
+.clearDiv
