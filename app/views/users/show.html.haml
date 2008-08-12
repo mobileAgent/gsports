@@ -1,7 +1,6 @@
 - @section = @user.eql?(current_user) ? 'my_profile' : 'users'
 - @sidebar_left = true
 
-
 .profileContentArea
   .profilePageHeader
     %h2.columnDescriptor
@@ -13,154 +12,32 @@
       My Profile
     .leftNav
       =render :partial => "users/profile_nav"
-          
-        
-            
   /
     col1 content
   .mainCol1
-    .contentBox.tanBackground
-      .contentBoxHeader.yellowHeader
-        %span.moreLink
-          %a{ :href => "#", :onclick => "return profile_minimize(this)" }
-            minimize -
-        %h2.boxDescription
-          Photo
-      .contentBoxContent.topRowFixHeight
-        = image_tag( @user.avatar_photo_url(:medium), :class => 'polaroid', :width => '215', :height => '215')
-        - if !@user.avatar and @is_current_user
-          %br
-          No profile photo?
-          = link_to "Click here to upload one!", edit_user_path(@user)
-        
-        
-        
-    .contentBox.tanBackground
-      .contentBoxHeader.yellowHeader
-        %span.moreLink
-          %a{ :href => "#", :onclick => "return profile_minimize(this)" }
-            minimize -
-        %h2.boxDescription
-          About Me
-      .contentBoxContent
-        .profileFeature
-          .profileInfo
-            %span.profileSubHeading Gender:
-            = "#{@user.gender}"
-            %br/
-            %span.profileSubHeading Birthday:
-            ="#{@user.birthday.to_s(:readable)}"
-            %br/
-            - if @user.description
-              = truncate_words(@user.description,25)
-            %br/
-            %br/
-            %h2.profileHeading Favorites:
-            %span.profileSubHeading Teams:
-            - if @user.moniker_hash["teams"]
-              = "#{@user.moniker_hash["teams"].join(', ')}"
-            %br/
-            %span.profileSubHeading Music:
-            - if @user.moniker_hash["music"]
-              = "#{@user.moniker_hash["music"].join(', ')}"
-            %br/
-            - for mname in @user.moniker_hash.keys
-              - next if (mname == "music" || mname == "sports" || mname == "teams")
-              %span.profileSubHeading= "#{mname.capitalize}:"
-              = "#{@user.moniker_hash[mname].join(', ')}"
-              %br/
+    =render :partial => "users/profile_photo"
+
+    =render :partial => "users/profile_about"
   
     =render :partial => "users/profile_friends"
-    
-          
   /
     col2 content
   .mainCol2
-    .contentBox.tanBackground
-      .contentBoxHeader.yellowHeader
-        %span.moreLink
-          %a{ :href => "#", :onclick => "return profile_minimize(this)" }
-            minimize -
-        %h2.boxDescription
-          My Files
-      .contentBoxContent.topRowFixHeight
-        .profileFeature.fileFeatures
-          - unless @photos.empty?
-            - @photos.each do |photo|
-              .fileThumb
-                = link_to image_tag( photo.public_filename(:thumb), :class => "fileName"), user_photo_path(@user, photo)
-                %span
-                  File na...
-                
-          .clearDiv.moreLinkArea
-            -if @is_current_user
-              %span.moreLink
-                = link_to "more?", user_photos_path(@user)
-              %span.moreLink
-                = link_to "add?", new_user_photo_path(@user)
-                
-                
+    =render :partial => "users/profile_myfiles"
                 
     =render :partial => "users/profile_favs"
-
-       
   /
     col3 content
   .mainCol3
-    .contentBox.tanBackground
-      .contentBoxHeader.yellowHeader
-        %span.moreLink
-          %a{ :href => "#", :onclick => "return profile_minimize(this)" }
-            minimize -
-        %h2.boxDescription
-          Information
-      .contentBoxContent
-        .profileFeature
-          .profileInfo
-            %span.profileSubHeading Location:
-            = "#{@user.city}, #{@user.state_id ? @user.state.name : ''}"
-            %br/
-            %span.profileSubHeading Team:
-            ="#{@user.team_name}"
-            %br/
-            %span.profileSubHeading League:
-            = "#{@user.league_name}"
-            %br/
-            %br/
-            %h2.profileHeading Sports Played:
-            - if @user.moniker_hash["sports"]
-              %span.profileSubHeading= "#{@user.moniker_hash["sports"].join(', ')}"
-            %br/
-    .contentBox.tanBackground
-      .contentBoxHeader.yellowHeader
-        %span.moreLink
-          %a{ :href => "#", :onclick => "return profile_minimize(this)" }
-            minimize -
-        %h2.boxDescription
-          My Clips and Reels
-      .contentBoxContent
-        .profileFeature.myClips
-          - for v in @profile_clips_and_reels
-            .featureSummaryThumb
-              - if v.class.to_s == "VideoClip"
-                = "<a href='#{user_video_clip_path(v.user_id,v)}'><img src='#{@vidavee.file_thumbnail_medium(v.dockey)}' title='#{h(v.title).gsub(/\'/,'')}' alt='Clip'/></a>"
-              - else
-                = "<a href='#{user_video_reel_path(v.user_id,v)}'><img src='#{@vidavee.file_thumbnail_medium(v.thumbnail_dockey)}' title='#{h(v.title).gsub(/\'/,'')}' alt='Reel'/></a>"
-              %h3
-                = link_to truncate(h(v.title),20),user_video_clip_path(v.user_id,v)
-              %span.date="#{v.created_at.to_s(:readable)}"
-              %br/
-          .clearDiv.moreLinkArea
-            %span.moreLink= link_to("more?", url_for({:controller => 'search', :action => 'my_videos', :user_id => v.user_id}))
-                
+    =render :partial => "users/profile_info"
+
+    =render :partial => "users/profile_clips_reels"
                 
     =render :partial => "users/profile_activity"
-                
                 
     =render :partial => "users/profile_testify"
      
      
-  .clearDiv
-
+.clearDiv/
 
 

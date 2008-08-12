@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20080808121837) do
+ActiveRecord::Schema.define(:version => 20080811031837) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id",    :limit => 10
@@ -472,6 +472,7 @@ ActiveRecord::Schema.define(:version => 20080808121837) do
     t.string   "phone"
     t.integer  "team_id",                   :limit => 11
     t.boolean  "enabled"
+    t.integer  "league_id",                 :limit => 11
   end
 
   add_index "users", ["avatar_id"], :name => "index_users_on_avatar_id"

@@ -1,4 +1,8 @@
 class UsersController < BaseController
+
+  if RAILS_ENV == 'production'
+    ssl_required :billing, :submit_billing
+  end
   
   protect_from_forgery :only => [:create, :update, :destroy]
   before_filter :login_required, :only => [:edit, :edit_account, :update,
@@ -6,6 +10,12 @@ class UsersController < BaseController
                                            :return_admin, :assume, :featured, 
                                            :toggle_featured, :edit_pro_details, :update_pro_details,
                                            :dashboard, :show, :index, :change_team_photo, :change_league_photo ]
+
+  uses_tiny_mce(:options => AppConfig.gsdefault_mce_options.merge({:editor_selector => "rich_text_editor"}), 
+                :only => [:new, :create, :update, :edit, :welcome_about])
+  
+  uses_tiny_mce(:options => AppConfig.narrow_mce_options.merge({:width => 330}),
+                :only => [:show])
 
   def show
     @friend_count = @user.accepted_friendships.count
@@ -84,7 +94,6 @@ class UsersController < BaseController
   def billing
     @user = User.find(params[:userid].to_i)
     logger.debug "USER session object(billing):" + @user.id.to_s
-
   end
 
   #
@@ -93,7 +102,6 @@ class UsersController < BaseController
   def submit_billing
     @user = User.find(params[:userid].to_i)
     billing_info = params[:billing]
-
     @credit_card = ActiveMerchant::Billing::CreditCard.new({
       :first_name => billing_info[:firstname],
       :last_name => billing_info[:lastname],
@@ -101,7 +109,8 @@ class UsersController < BaseController
       :month => billing_info["date(2i)"],
       :year => billing_info["date(1i)"],
       :verification_value => billing_info[:verificationnumber]
-    })
+                                                           })
+    
     if (!@credit_card.valid?)
       render :action => 'billing', :userid => @user.id
       return
@@ -111,19 +120,24 @@ class UsersController < BaseController
       :login => Active_Merchant_payflow_gateway_username,
       :password => Active_Merchant_payflow_gateway_password,
       :partner => Active_Merchant_payflow_gateway_partner
-    })
-    @response = gateway.purchase(@user.role.plan.cost, @credit_card)
-#
-#    if (@response.success?)  # Test gateway is a bit flakey
+                                                          })
+
+    cost_for_gateway = (@user.role.plan.cost * 100).to_i
+    @response = gateway.purchase(cost_for_gateway, @credit_card)
+    
+    if (@response.success?)
+      logger.debug "Gatway response is success #{@response.inspect}"
       @user.make_member(Membership::CREDIT_CARD_BILLING_METHOD,nil,@response)
       @user.set_payment(@credit_card)
-
-#    else
-#      render :action => 'billing', :userid => @user.id
-#    end
-    flash[:notice] = "Thanks for signing up! You should receive an e-mail confirmation shortly at #{@user.email}"
-
-    redirect_to signup_completed_user_path(@user)
+      @user.enabled = true
+      @user.save!
+      flash[:notice] = "Successfully charged $#{@user.role.plan.cost} to card #{@credit_card.display_number}"
+      redirect_to signup_completed_user_path(@user)
+    else
+      logger.debug "Bad response from gateway #{@response.inspect}"
+      flash.now[:warning] = @response.message
+      render :action => 'billing', :userid => @user.id
+    end
   end
 
   def change_team_photo
@@ -154,9 +168,9 @@ class UsersController < BaseController
       h=@photo.height
       w=@photo.width
       if ((h==100 && w==100) || (h==60 && w=234))
-        @league = @user.team.league
+        @league = League.find(@user.league_id)
         @league.avatar= @photo
-        if @team.save!
+        if @league.save!
           flash[:notice] = "Your changes were saved."
         else
           flash[:notice] = "The change could not be saved: #{@league.errors}"
@@ -213,10 +227,27 @@ class UsersController < BaseController
     @user = current_user
     @network_activity = @user.network_activity
     @recommended_posts = @user.recommended_posts
-    @featured_athletes_for_team = AthleteOfTheWeek.for_team(@user.team_id)
-    # @featured_athletes_for_league = AthleteOfTheWeek.for_league(@user.team.league_id)
-    @featured_game_for_team = GameOfTheWeek.for_team(@user.team_id).first
-    # @featured_game_for_league = GameOfTheWeek.for_league(@user.team.league_id).first
+    # For league staff choose from among their teams
+    team_id = @user.league_staff? ? @user.league.team_ids[rand(@user.league.team_ids.size)] : @user.team_id
+    @featured_athletes_for_team = AthleteOfTheWeek.for_team(team_id)
+    @featured_athletes_for_league = AthleteOfTheWeek.for_league(@user.league_id)
+    @featured_game_for_team = GameOfTheWeek.for_team(team_id).first
+    @featured_game_for_league = GameOfTheWeek.for_league(@user.league_id).first
+  end
+
+  def forgot_password  
+    @user = User.find_by_email(params[:email])  
+    return unless request.post?   
+    if @user
+      if @user.reset_password
+        UserNotifier.deliver_reset_password(@user)
+        @user.save
+        flash[:info] = "Your password has been reset and emailed to you."
+        redirect_to url_for({:controller => 'base', :action => 'site_index'}) 
+      end
+    else
+      flash[:error] = "Sorry. We don't recognize that email address."
+    end 
   end
   
 end

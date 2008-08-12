@@ -65,7 +65,11 @@ module BaseHelper
         title = 'Find experts &raquo; ' + app_base + tagline            
       end
     when 'sessions'
-      title = 'Login &raquo; ' + app_base + tagline            
+      title = 'Login &raquo; ' + app_base + tagline
+    when 'pages'
+      if @page and @page.name
+        title = @page.name + ' &raquo; ' + app_base + tagline
+      end
     end
 
     if @page_title

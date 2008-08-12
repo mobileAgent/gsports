@@ -1,5 +1,6 @@
 - if @vidavee && session[:vidavee] && @video_clip.dockey
-  = render(:partial => 'shared/maverick_video_player', :locals => { :dockey => @video_clip.dockey })
+  .flashArea#flashArea/
+  = render(:partial => 'shared/video_player', :locals => { :dockey => @video_clip.dockey, :target => 'flashArea' })
   = @vidavee.asset_embed_code(session[:vidavee], @video_clip.dockey) if false
   %br
   = h @video_clip.title

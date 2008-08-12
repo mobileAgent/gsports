@@ -12,6 +12,7 @@ class AdSlot
   end
 
   def self.header_slot2_is_logo(u)
+    return false if u.league_staff?
     return u.team && u.team.avatar_id?
   end
 

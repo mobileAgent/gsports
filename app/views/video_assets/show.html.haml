@@ -1,12 +1,10 @@
 -if @vidavee && session[:vidavee] && @video_asset.dockey
 
-%p
-  = render(:partial => 'shared/maverick_video_player', :locals => { :dockey => @video_asset.dockey })
-  = @vidavee.asset_embed_code(session[:vidavee], @video_asset.dockey) if false
+  .flashArea#flashArea/
+  = render :partial => 'shared/video_player', :locals => { :dockey => @video_asset.dockey, :target => 'flashArea' }
   
 -else
   = "Your video is still loading."
--end  
   
 %p
   %b Title:
@@ -42,3 +40,4 @@
 = render :partial => 'shared/view_count', :locals => { :item => @video_asset }
 = "|"
 = render :partial => 'shared/inappropriate_item', :locals => { :item => @video_asset }
+.clearDiv/

@@ -1,0 +1,15 @@
+.contentBox.tanBackground
+  .contentBoxHeader.yellowHeader
+    %span.moreLink
+      %a{ :href => "#", :onclick => "return profile_minimize(this)" }
+        minimize -
+    %h2.boxDescription
+      Photo
+  .contentBoxContent.topRowFixHeight
+    = image_tag( @user.avatar_photo_url(:medium), :class => 'polaroid', :width => '215', :height => '215')
+    - if !@user.avatar and @is_current_user
+      %br
+      No profile photo?
+      = link_to "Click here to upload one!", edit_user_path(@user)
+    
+    
