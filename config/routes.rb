@@ -11,7 +11,8 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :billing
   map.resources :monikers
   map.resources :subscription_plans
-
+  map.resources :staffs
+  
   map.register         'register',        :controller => 'users', :action => 'register'
   map.forgot_password  'forgot_password', :controller => 'users', :action => 'forgot_password'
 

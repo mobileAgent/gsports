@@ -1,0 +1,64 @@
+%label{"for"=>"firstname"} 
+  First Name
+  %em (Required: )
+= f.text_field :firstname
+
+%label{"for"=>"minitial"} 
+  Middle Initial
+= f.text_field :minitial, :length => 1
+
+%label{"for"=>"lastname"} 
+  Last Name
+  %em (Required: )
+= f.text_field :lastname
+
+%label{"for"=>"address1"} 
+  Address Line One
+  %em (Required: )
+= f.text_field :address1
+
+%label{"for"=>"address2"} 
+  Address Line Two
+= f.text_field :address2
+
+%label{"for"=>"city"} 
+  City
+  %em (Required: )
+= f.text_field :city
+
+%label{"for"=>"state"} 
+  State
+  %em (Required: )
+=collection_select(:staff ,:state_id,State.all,"id","name", { :prompt => 'Choose State', :selected => (@staff.state_id ? @staff.state.name : '')})
+
+%label{"for"=>"zip"} 
+  Zip/Postal Code
+  %em (Required: )
+= f.text_field :zip
+
+%label{"for"=>"phone"} 
+  Phone
+  %em (Required: )
+= f.text_field :phone
+
+%label{"for"=>"email"}
+  E-mail address
+  %em (Required: )
+= f.text_field :email
+
+%label{"for"=>"birthdate"}
+  Birthday:
+  %em (Required: must be at least 13 years old.)
+= date_select :staff, :birthday, {:start_year => 1926, :end_year => Time.now.year - 13}
+
+- if include_password
+  %label{"for"=>"password"}
+    Type the password:
+  = f.password_field :password
+  %label{"for"=>"password_confirmation"}
+    Re-type the password to confirm:
+  = f.password_field :password_confirmation
+
+%label{"for"=>"enabled"}
+  Account Enabled?
+= f.check_box :enabled

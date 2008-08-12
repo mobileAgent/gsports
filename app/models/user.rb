@@ -205,4 +205,12 @@ class User < ActiveRecord::Base
     "#{full_name}, #{tlname}"
   end
     
+  # Authenticates a user by their login name and unencrypted password.  Returns the user or nil.
+  # We only do this by email and we also handle disabled user accounts
+  def self.authenticate(login, password)
+    # hide records with a nil activated_at
+    u = find :first, :conditions => ['email = ? and activated_at IS NOT NULL and enabled = true', login] if u.nil?
+    u && u.authenticated?(password) && u.update_last_login ? u : nil
+  end
+  
 end

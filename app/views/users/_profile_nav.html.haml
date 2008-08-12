@@ -25,5 +25,8 @@
   %br
   %ul
     %li= link_to 'Uploads', user_video_assets_path(current_user)
+-if current_user.team_admin? || current_user.league_admin?
+  %ul
+    %li= link_to 'Staff Accounts', staffs_path
     
     
