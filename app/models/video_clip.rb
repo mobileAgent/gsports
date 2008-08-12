@@ -10,6 +10,13 @@ class VideoClip < ActiveRecord::Base
   
   # Every clip needs a title
   validates_presence_of :title
+  
+  # set indexes for sphinx
+  define_index do
+    indexes title, :sortable => true
+    indexes description
+    indexes updated_at, :sortable => true
+  end
 
   # For the sake of symmetry
   named_scope :for_user,
