@@ -1,98 +1,105 @@
 - form_tag update_account_user_url(@user), :method => 'put', :class => "MainForm", :multipart => true do
-  .box.alt.first_alt
-    %h3 You're editing your account.
-    = link_to "Edit your user profile?", edit_user_path(@user)
-
+  %h3
+    You're editing your account.
+  %h4
+    = link_to 'Edit your profile?', edit_user_path(@user)
+    = " | "
+    = link_to 'Edit your billing information?', url_for({:controller => 'users', :action => 'edit_billing', :id => @user })
+  %br/
+  
   = error_messages_for :user
 
-  .yui-b.box
-    %h3 First Name
-    = text_field :user, :firstname, :size => "28"
+  %h3 First Name
+  = text_field :user, :firstname, :size => "28"
     
-    %h3 Middle Initial
-    = text_field :user, :minitial, :size => "2"
+  %h3 Middle Initial
+  = text_field :user, :minitial, :size => "2"
     
-    %h3 Last Name
-    = text_field :user, :lastname, :size => "28"
+  %h3 Last Name
+  = text_field :user, :lastname, :size => "28"
     
 
-    %h3 E-mail Address
-    = text_field :user, :email, :size => "28"
+  %h3 E-mail Address
+  = text_field :user, :email, :size => "28"
 
-    %h3 Password
-    = password_field :user, :password, :size => "28"
+  %h3 Password
+  = password_field :user, :password, :size => "28"
 
-    %label Confirm Password
-    = password_field :user, :password_confirmation, :size => "28"
+  %label{:for => :password_confirmation}
+    %h3 Confirm Password
+  = password_field :user, :password_confirmation, :size => "28"
 
-    %h3 Location
+  %h3 Location
       
-    %label{"for"=>"address1"} 
+  %label{"for"=>"address1"} 
+    %h3
       Address Line One
       %em (Required: )
-    = text_field :user, :address1
+  = text_field :user, :address1
        
-    %label{"for"=>"address2"} 
-      Address Line Two
-    = text_field :user, :address2
+  %label{"for"=>"address2"} 
+    %h3 Address Line Two
+  = text_field :user, :address2
         
-    %label{"for"=>"city"} 
+  %label{"for"=>"city"} 
+    %h3
       City
       %em (Required: )
-    = text_field :user, :city
+  = text_field :user, :city
         
-    %label{"for"=>"state"} 
+  %label{"for"=>"state"} 
+    %h3
       State
       %em (Required: )
-    =collection_select(:user ,:state_id,State.all,"id","name", { :prompt => 'Choose State', :selected => (@user.state_id? ? @user.state.name : '') })
+  =collection_select(:user ,:state_id,State.all,"id","name", { :prompt => 'Choose State', :selected => (@user.state_id? ? @user.state.name : '') })
         
-    %label{"for"=>"zip"} 
+  %label{"for"=>"zip"} 
+    %h3
       Zip/Postal Code:
       %em (Required: )
-    = text_field :user, :zip
+  = text_field :user, :zip
         
-    %label{"for"=>"phone"} 
+  %label{"for"=>"phone"} 
+    %h3
       Phone
       %em (Required: )
-    = text_field :user, :phone
+  = text_field :user, :phone
     
 
-  #yui-main
-    .yui-b.box
-      %h3 E-mail Notification
+  %h3 E-mail Notification
 
-      %fieldset
-        %label 
-          = check_box :user, :notify_friend_requests        
-          Notify me when
-          = AppConfig.community_name
-          members request friendship.
+  %fieldset
+    %label 
+      = check_box :user, :notify_friend_requests        
+      Notify me when
+      = AppConfig.community_name
+      members request friendship.
 
-        %label
-          = check_box :user, :notify_comments         
-          Notify me when
-          = AppConfig.community_name
-          members comment on my profile, blog, or photos.
+    %label
+      = check_box :user, :notify_comments         
+      Notify me when
+      = AppConfig.community_name
+      members comment on my profile, blog, or photos.
 
 
-        %label
-          = check_box :user, :notify_community_news
-          Send me occasional news and updates from the
-          = AppConfig.community_name
-          Team.
+    %label
+      = check_box :user, :notify_community_news
+      Send me occasional news and updates from the
+      = AppConfig.community_name
+      Team.
 
-      %h3 Profile Privacy
+  %h3 Profile Privacy
 
-      %fieldset
-        %label
-          = check_box :user, :profile_public
-          Make my profile public
-          %br
-          %em
-            When checked, your profile will be visible to anyone logged into 
-            = "#{AppConfig.community_name}."
-          %br
-          %em
-            When unchecked, your profile will only be visible to you and your friends
-      %p= submit_tag 'Save Changes'  
+  %fieldset
+    %label
+      = check_box :user, :profile_public
+      Make my profile public
+      %br
+      %em
+        When checked, your profile will be visible to anyone logged into 
+        = "#{AppConfig.community_name}."
+      %br
+      %em
+        When unchecked, your profile will only be visible to you and your friends
+  %p= submit_tag 'Save Changes'  
             
