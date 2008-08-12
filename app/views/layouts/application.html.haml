@@ -30,13 +30,14 @@
         
         %div{:class => (logged_in? ? 'mainContentArea' : 'landingContentArea')}
           = @content_for_layout
+          .clearDiv/
         
-        -if logged_in?
-          = render :partial => "shared/block_weeklyFeature"
-        -else
-          - if (current_page?(:controller => 'base', :action => 'site_index'))
-            = render :partial => "shared/block_guest_features"
+      -if logged_in?
+        = render :partial => "shared/block_weeklyFeature"
+      -else
+        - if (current_page?(:controller => 'base', :action => 'site_index'))
+          = render :partial => "shared/block_guest_features"
           
-        = render :partial => "shared/block_footer"
-        = render :partial => "shared/block_legal"
+      = render :partial => "shared/block_footer"
+      = render :partial => "shared/block_legal"
       
