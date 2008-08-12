@@ -23,7 +23,7 @@ class BaseController < ApplicationController
     
     if (session[:vidavee].nil? || 
         session[:vidavee_expires].nil? || session[:vidavee_expires] < Time.now)
-      session[:vidavee] = @vidavee.login
+      session[:vidavee] = @vidavee.username
       session[:vidavee_expires] = 5.minutes.from_now
     end
     @vidavee
