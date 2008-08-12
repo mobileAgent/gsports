@@ -18,6 +18,11 @@ class VideoClipsController < BaseController
     @video_clips = VideoClip.paginate(:conditions => cond.to_sql, :page => params[:page], :order => 'created_at DESC')
     @tags = VideoClip.tags_count :user_id => @user.id, :limit => 20
 
+    # Remove private clips from results
+    if (! current_user.admin? )
+      @video_clips.reject!{|v| v.public_video == false && v.user_id != current_user.id}
+    end
+    
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @video_clips }
