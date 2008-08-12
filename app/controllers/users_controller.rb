@@ -130,6 +130,7 @@ class UsersController < BaseController
       @user.make_member(Membership::CREDIT_CARD_BILLING_METHOD,nil,@response)
       @user.set_payment(@credit_card)
       @user.enabled = true
+      @user.activated_at = Time.now
       @user.save!
       flash[:notice] = "Successfully charged $#{@user.role.plan.cost} to card #{@credit_card.display_number}"
       redirect_to signup_completed_user_path(@user)

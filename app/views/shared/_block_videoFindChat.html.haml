@@ -53,6 +53,7 @@
   %ul
     %li= link_to('Admin', admin_dashboard_path) if current_user.admin?
     %li= link_to('Upload Video', new_video_asset_path) if (current_user.can_upload?)
+    %li= link_to('Manage Staff', staffs_path) if (current_user.team_admin? || current_user.league_admin?)
   %hr
   %ul
     %li= link_to "Dashboard", dashboard_user_path(current_user)
