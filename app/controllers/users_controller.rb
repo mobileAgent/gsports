@@ -1,11 +1,12 @@
 class UsersController < BaseController
 
   if RAILS_ENV == 'production'
-    ssl_required :billing, :submit_billing
+    ssl_required :billing, :submit_billing, :edit_billing, :update_billing
   end
   
   protect_from_forgery :only => [:create, :update, :destroy]
   before_filter :login_required, :only => [:edit, :edit_account, :update,
+                                           :edit_billing, :update_billing,
                                            :welcome_photo, :welcome_about, :welcome_invite,
                                            :return_admin, :assume, :featured, 
                                            :toggle_featured, :edit_pro_details, :update_pro_details,
@@ -249,6 +250,68 @@ class UsersController < BaseController
     else
       flash[:error] = "Sorry. We don't recognize that email address."
     end 
+  end
+
+  def edit_billing
+    id = params[:id] || current_user.id
+    @user = User.find(id)
+    unless (@user.id == current_user.id || current_user.admin?)
+      @user = nil
+      flash[:notice] = "Insufficient permission to edit"
+      redirect_to dashboard_user_path(current_user) and return
+    end
+    @memberships = @user.memberships
+    if @memberships && @memberships.size > 0
+      @credit_card = @memberships[0].credit_card
+    else
+      @credit_card = CreditCard.new
+    end
+  end
+
+  def update_billing
+    id = params[:id] || current_user.id
+    @user = User.find(id)
+    @memberships = @user.memberships
+    if (@user.id == current_user.id || current_user.admin?)
+      # Have to test with an AM::B:CC in order to validate
+      cc=params[:credit_card]
+      logger.debug "CC params inbound are #{cc.inspect}"
+      @credit_card = ActiveMerchant::Billing::CreditCard.new({
+        :first_name => cc[:first_name],
+        :last_name => cc[:last_name],
+        :number => cc[:number],
+        :month => cc["expiration_date(2i)"],
+        :year => cc["expiration_date(1i)"],
+        :verification_value => cc[:verification_value]})
+
+      
+      if (!@credit_card.valid?)
+        # Have to have one of ours on the form
+        @am_credit_card = @credit_card
+        if @memberships && @memberships.size > 0
+          @credit_card = @memberships[0].credit_card
+        else
+          @credit_card = CreditCard.new(params[:credit_card])
+        end
+
+        logger.debug "Failed validation on #{@am_credit_card.errors}, new CC setup as #{@credit_card.inspect}"
+        render :action => 'edit_billing' and return
+      end
+
+      unless @memberships && @memberships.size > 0
+        @user.make_member(Membership::CREDIT_CARD_BILLING_METHOD,nil,'pending')
+      end
+      @user.set_payment(@credit_card)
+      
+      if @user.save!
+        flash[:notice] = "Billing updates have been saved"
+        redirect_to edit_account_user_path(@user) and return
+      end
+    else
+      @user = nil
+      flash[:notice] = "Insufficient permission to udpate"
+      redirect_to dashboard_user_path(@user) and return
+    end
   end
   
 end

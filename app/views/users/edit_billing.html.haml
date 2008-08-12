@@ -1,0 +1,39 @@
+%h2= "Update #{(current_user.admin? ? @user.full_name : 'your')} payment information"
+
+%form{:action => '/users/update_billing', :class => 'MainForm', :method => :post}
+  = error_messages_for :credit_card, :am_credit_card, :user, :object_name => 'Credit Card'
+
+  = hidden_field_tag "id", @user.id
+
+  %label{:for=>:first_name}
+  First Name
+  %em (Required: )
+  %br/
+  = text_field :credit_card, :first_name
+
+  %label{:for=>:last_name}
+  Last Name
+  %em (Required: )
+  %br/
+  = text_field :credit_card,:last_name
+
+  %label{:for=>:expiration_date}
+  Expiration Date:
+  %em (Required: )
+  %br/
+  = date_select :credit_card, :expiration_date, {:start_year => Time.now.year, :end_year => Time.now.year+10, :discard_day => true}
+
+  %label{:for=>:number}
+  Card Number
+  %em (Required: )
+  %br/
+  = text_field :credit_card, :number, { :size => 16, :maxlength => 16 }
+
+  %label{:for=>:verification_value}
+  Verification number
+  %em (Required: )
+  %br/
+  = text_field :credit_card, :verification_value, {:size => 4, :maxlength => 4}
+
+  %p
+    = submit_tag 'Save Changes'
