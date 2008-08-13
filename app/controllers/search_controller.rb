@@ -1,7 +1,7 @@
 class SearchController < BaseController
   
   skip_before_filter :verify_authenticity_token, :only => [ :quickfind ]
-  before_filter :login_required
+  before_filter :login_required, :except => [:sphinx_search]
   after_filter :protect_private_videos
   
   def quickfind
@@ -13,6 +13,19 @@ class SearchController < BaseController
     cond.append ['teams.county_name = ?', params[:county_name]]
     cond.append ['public_video = ?', true]
     @video_assets = VideoAsset.paginate(:conditions => cond.to_sql, :page => params[:page], :order => 'video_assets.updated_at DESC', :include => [:team,:tags])
+  end
+  
+  def sphinx_search
+    if params[:search] and params[:search][:keyword]
+      @video_assets = VideoAsset.search params[:search][:keyword], :limit => 10, :order => 'updated_at DESC'
+      @video_clips = VideoClip.search params[:search][:keyword], :limit => 10, :order => 'updated_at DESC'
+      @video_reels = VideoReel.search params[:search][:keyword], :limit => 10, :order => 'updated_at DESC'
+    else
+      @video_assets = VideoAsset.find :all, :limit => 10, :order => 'updated_at DESC'
+      @video_clips = VideoClip.find :all, :limit => 10, :order => 'updated_at DESC'
+      @video_reels = VideoReel.find :all, :limit => 10, :order => 'updated_at DESC'
+    end
+    render:action => "my_videos"
   end
 
   def my_videos
