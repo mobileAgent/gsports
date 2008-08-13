@@ -22,6 +22,13 @@ class VideoAsset < ActiveRecord::Base
 
   # Video upload repository
   VIDEO_REPOSITORY = VIDEO_BASE+"/uploaded"
+  
+  # set indexes for sphinx
+  define_index do
+    indexes title, :sortable => true
+    indexes description
+    indexes updated_at, :sortable => true
+  end
 
   # Game metadata
   def self.GAME_LEVELS
