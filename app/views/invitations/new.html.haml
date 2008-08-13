@@ -1,0 +1,21 @@
+%h1
+  = "New invitation from #{@user.full_name}"
+
+= error_messages_for :invitation
+
+- form_for(:invitation, :url => user_invitations_path) do |f|
+  %p
+    %label{:for=>"email_addresses"}
+      Email Addresses
+      %em (Separate multiple addresses with commas)
+    %br/
+    = f.text_area :email_addresses, :cols => 75, :rows => 5
+  %p
+    %label{:for=>"message"}
+      Message
+    %br/
+    = f.text_area :message, :cols => 75, :rows => 15
+  %p
+    = submit_tag "Send Invitation"
+
+= link_to 'Back', user_path(@user)
