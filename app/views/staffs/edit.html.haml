@@ -1,0 +1,14 @@
+#yui-main
+  .yui-b
+    .box
+
+      %h1= "Editing Staff Account - #{@staff.full_name}"
+      = error_messages_for :staff
+
+      - form_for @staff, :html => {:class => 'MainForm'} do |f|
+        = render :partial => "form", :locals => { :f => f, :include_password => false }
+        %p= f.submit "Update"
+  
+      = link_to 'Show', staff_path(@staff)
+      = link_to 'Back', staffs_path
+

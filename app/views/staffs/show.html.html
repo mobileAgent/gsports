@@ -1,0 +1,24 @@
+%h1= "Staff Account Details - #{@staff.full_name}"
+
+%p
+  %b Email:
+  =h @staff.email
+%p
+  %b.Last login:
+  = @staff.last_login_at.to_s
+%p
+  %b Phone:
+  =h @staff.phone
+%p
+  %b Address:
+  =h "#{@staff.address1} , #{@staff.city}, #{@staff.state.name}, #{@staff.zip}"
+%p
+  %b Birthday:
+  = @staff.birthday.to_s(:readable)
+%p
+  %b Enabled?
+  =h @staff.enabled
+
+= link_to 'Edit', edit_staff_path(@staff)
+= link_to 'Back', staffs_path
+  

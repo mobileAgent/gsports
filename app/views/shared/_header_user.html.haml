@@ -1,0 +1,34 @@
+
+#UserPanel
+  = render :partial => 'shared/user_menu'
+
+#Banner
+  %a{:href=>"/", :title=>"#{AppConfig.community_name}"}
+    %img{:src=>"/images/gs_logo.png", :width=>312, :height=>91, :alt=>"Global Sports"}
+  %img.sponsor{:src=>"/images/gs_sponsor.png", :width=>360, :height=>76, :alt=>"sponsor logo"}
+
+
+#NavBar
+  %ul
+    = topnav_tab "My Network", { :url => users_path, :section => 'my_network' }
+    = topnav_tab "My Videos", { :url => video_assets_path, :section => 'my_videos' }
+    = topnav_tab "My Profile", { :url => user_path(current_user), :section => 'my_profile' }
+    
+    -#
+      - Category.find(:all).each do |c|
+        = topnav_tab c.name, {:url => category_path(c), :section => c.name}
+      = topnav_tab "Forums", { :url => forums_path, :section => 'forums' }
+      = topnav_tab "Popular", { :url => popular_path, :section => 'popular' }
+      = topnav_tab "People", { :url => users_path, :section => 'users' }
+      - if current_user 
+        = topnav_tab "My Profile", { :url => user_path(current_user), :section => 'my_profile'}   
+    
+  = render :partial => 'shared/simple_search'
+  
+.yui-gc
+  .yui-u.first
+    = render :partial => 'shared/video_quickfind'
+  .yui-u
+    = render :partial => 'shared/chat'
+
+  

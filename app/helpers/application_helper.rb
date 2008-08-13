@@ -23,6 +23,33 @@ include UsersHelper
     return '' if dtm.nil?
     return dtm.to_s(:game_date)
   end
-    
+
+  class Pair
+    attr_accessor :name, :number
+  end
+
+  def cc_years
+    arr = Array.new
+    for i in (Time.now.year .. Time.now.year+12) do
+      p = Pair.new
+      p.name = i
+      p.number = i
+      arr << p
+    end
+    arr
+  end
+
+  def cc_months
+    names = ["January","February","March","April","May","June",
+             "July","August","September","October","November","December"]
+    arr = Array.new
+    for i in (0..11) do
+      p = Pair.new
+      p.name="#{names[i]} (#{i+1})"
+      p.number=(i+1)
+      arr << p
+    end
+    arr
+  end
   
 end
