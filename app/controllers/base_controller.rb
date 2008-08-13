@@ -30,7 +30,14 @@ class BaseController < ApplicationController
   end
   
   def site_index
-    redirect_to(dashboard_user_path(current_user)) if logged_in?
+
+    # What does a logged in user see first?
+    if(logged_in?)
+      if (current_user.admin?)
+        redirect_to(admin_dashboard_path) and return
+      end
+      redirect_to(dashboard_user_path(current_user)) and return
+    end
 
     # Not logged in, show featured games and athletes
     @games_of_the_week = Rails.cache.fetch('games_of_the_week') { GameOfTheWeek.for_home_page || []}
