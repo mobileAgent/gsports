@@ -1,0 +1,124 @@
+8
+
+dir
+13
+svn://dev.endax.com:8080/client_gsports/trunk/vendor/plugins/thinking-sphinx
+svn://dev.endax.com:8080/client_gsports
+
+
+
+2008-08-13T03:56:46.456955Z
+13
+bang
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+ab2e7d3a-c97c-41af-865a-8be87009e92b
+
+LICENCE
+file
+
+
+
+
+2008-08-13T05:26:50.000000Z
+47195c2bfb5d6647222c3aa5b1c11021
+2008-08-13T03:56:46.456955Z
+13
+bang
+
+Rakefile
+file
+
+
+
+
+2008-08-13T05:26:50.000000Z
+164864fbbbd6d349a27840e05a4e001b
+2008-08-13T03:56:46.456955Z
+13
+bang
+
+thinking-sphinx.gemspec
+file
+
+
+
+
+2008-08-13T05:26:50.000000Z
+7c59331974c40af46d3731ca9b5f025c
+2008-08-13T03:56:46.456955Z
+13
+bang
+
+tasks
+dir
+
+.gitignore
+file
+
+
+
+
+2008-08-13T05:26:50.000000Z
+cf9cbc2ecdbb2d89c28c6bfef148ea3c
+2008-08-13T03:56:46.456955Z
+13
+bang
+
+init.rb
+file
+
+
+
+
+2008-08-13T05:26:50.000000Z
+32d5436c26800cff6bc7d744e7b818b6
+2008-08-13T03:56:46.456955Z
+13
+bang
+
+lib
+dir
+
+rails
+dir
+
+spec
+dir
+
+README.textile
+file
+
+
+
+
+2008-08-13T05:26:50.000000Z
+ce7935993c040d73775bc0b6a0a35e0b
+2008-08-13T03:56:46.456955Z
+13
+bang
+
+README
+file
+
+
+
+
+2008-08-13T05:26:50.000000Z
+fdd8d3510e0c9d11450965ee5aea1930
+2008-08-13T03:56:46.456955Z
+13
+bang
+
