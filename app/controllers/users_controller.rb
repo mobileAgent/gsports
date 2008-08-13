@@ -135,8 +135,7 @@ class UsersController < BaseController
 
     gateway = ActiveMerchant::Billing::PayflowGateway.new({
       :login => Active_Merchant_payflow_gateway_username,
-      :password => Active_Merchant_payflow_gateway_password,
-      :partner => Active_Merchant_payflow_gateway_partner
+      :password => Active_Merchant_payflow_gateway_password
                                                           })
 
     cost_for_gateway = (@user.role.plan.cost * 100).to_i
