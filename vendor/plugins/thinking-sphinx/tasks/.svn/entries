@@ -1,0 +1,52 @@
+8
+
+dir
+13
+svn://dev.endax.com:8080/client_gsports/trunk/vendor/plugins/thinking-sphinx/tasks
+svn://dev.endax.com:8080/client_gsports
+
+
+
+2008-08-13T03:56:46.456955Z
+13
+bang
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+ab2e7d3a-c97c-41af-865a-8be87009e92b
+
+thinking_sphinx_tasks.rake
+file
+
+
+
+
+2008-08-13T05:26:50.000000Z
+f3fc35fad8a792cbd2e8bf875ec388dc
+2008-08-13T03:56:46.456955Z
+13
+bang
+
+thinking_sphinx_tasks.rb
+file
+
+
+
+
+2008-08-13T05:26:50.000000Z
+f334207abf81c37bad9c54f1db004e4d
+2008-08-13T03:56:46.456955Z
+13
+bang
+
