@@ -64,27 +64,38 @@ class UsersController < BaseController
   def create
     @role = nil
     begin
-      @requested_role = params[:role]
-      return if @requested_role == Role[:admin] or @requested_role == Role[:moderator]
+      @requested_role = params[:role].to_i
+      return if (Role[:admin].id  == @requested_role or Role[:moderator].id == @requested_role)
       @role = Role[@requested_role]
     rescue
+      logger.debug "Could not set role from #{params[:role]}"
+      @role = Role[:member]
     end
 
     @user = User.new(params[:user])
-    @user.role = @role || Role[:member]
-    @team = Team.find_or_create_by_name(params[:user][:team_name])
+    @user.role_id = @role.id
+    logger.debug "Setting role for #{@user.email} to #{@user.role_id}"
 
-    # Assign any new teams coming in this way to the admin league
-    if (@team.new_record?)
-      @team.league_id = User.admin.first.league_id
-      @team.save! 
+    if @user.role_id == Role[:league].id
+      # Special handling for league role coming in
+      @league = League.find_or_create_by_name(params[:user][:league_name])
+      @league.save! if @league.new_record?
+      @user.league_id = @league.id
+      @user.team_id = User.admin.first.team_id
+    else
+      # Handling for Team and member roles coming in
+      @team = Team.find_or_create_by_name(params[:user][:team_name])
+      if (@team.new_record?)
+        @team.league_id = User.admin.first.league_id
+        @team.save! 
+      end
+      @user.team_id = @team.id
+      @user.league_id = @team.league_id
     end
     
-    @user.team_id = @team.id
     @user.login= "gs#{Time.now.to_i}#{rand(100)}" # We never use this
     @user.save!
     create_friendship_with_inviter(@user, params)
-
     redirect_to :action => 'billing', :userid => @user.id
 
   rescue ActiveRecord::RecordInvalid
@@ -94,6 +105,10 @@ class UsersController < BaseController
   # registration step 3
   def billing
     @user = User.find(params[:userid].to_i)
+    @billing_address = Address.new(params[:billing_address])
+    @credit_card = ActiveMerchant::Billing::CreditCard.new(params[:credit_card])
+    @credit_card.first_name = @user.firstname if (! @credit_card.first_name) 
+    @credit_card.last_name = @user.lastname if (! @credit_card.last_name) 
     logger.debug "USER session object(billing):" + @user.id.to_s
   end
 
@@ -102,17 +117,18 @@ class UsersController < BaseController
   #
   def submit_billing
     @user = User.find(params[:userid].to_i)
-    billing_info = params[:billing]
+    cc = params[:credit_card]
     @credit_card = ActiveMerchant::Billing::CreditCard.new({
-      :first_name => billing_info[:firstname],
-      :last_name => billing_info[:lastname],
-      :number => billing_info[:cardnumber],
-      :month => billing_info["date(2i)"],
-      :year => billing_info["date(1i)"],
-      :verification_value => billing_info[:verificationnumber]
-                                                           })
+      :first_name => cc[:first_name],
+      :last_name => cc[:last_name],
+      :number => cc[:number],
+      :month => cc[:month],
+      :year => cc[:year],
+      :verification_value => cc[:verification_value]})
+    @billing_address = params[:skip_billing_address] ? nil : Address.new(params[:billing_address])
     
     if (!@credit_card.valid?)
+      @billing_address ||= Address.new
       render :action => 'billing', :userid => @user.id
       return
     end
@@ -126,9 +142,11 @@ class UsersController < BaseController
     cost_for_gateway = (@user.role.plan.cost * 100).to_i
     @response = gateway.purchase(cost_for_gateway, @credit_card)
     
+    logger.debug "Response from gateway #{@response.inspect} for #{@user.full_name} at #{cost_for_gateway}"
+    
     if (@response.success?)
       logger.debug "Gatway response is success #{@response.inspect}"
-      @user.make_member(Membership::CREDIT_CARD_BILLING_METHOD,nil,@response)
+      @user.make_member(Membership::CREDIT_CARD_BILLING_METHOD,@billing_address,@response)
       @user.set_payment(@credit_card)
       @user.enabled = true
       @user.activated_at = Time.now
@@ -136,8 +154,9 @@ class UsersController < BaseController
       flash[:notice] = "Successfully charged $#{@user.role.plan.cost} to card #{@credit_card.display_number}"
       redirect_to signup_completed_user_path(@user)
     else
-      logger.debug "Bad response from gateway #{@response.inspect}"
-      flash.now[:warning] = @response.message
+      @billing_address ||= Address.new
+      flash.now[:warning] = "Sorry, we are having technical difficulties contacting our payment gateway. Try again in a few minutes."
+      @billing_gateway_error = "#{flash.now[:warning]} (#{@response.message})"
       render :action => 'billing', :userid => @user.id
     end
   end
@@ -187,6 +206,12 @@ class UsersController < BaseController
   def auto_complete_for_user_team_name
     @teams = Team.find(:all, :conditions => ["LOWER(name) like ?", '%' + params[:user][:team_name].downcase + '%'], :order => "name ASC", :limit => 10)
     choices = "<%= content_tag(:ul, @teams.map { |t| content_tag(:li, h(t.name)) }) %>"    
+    render :inline => choices
+  end
+  
+  def auto_complete_for_user_league_name
+    @leagues = League.find(:all, :conditions => ["LOWER(name) like ?", '%' + params[:user][:league_name].downcase + '%'], :order => "name ASC", :limit => 10)
+    choices = "<%= content_tag(:ul, @leagues.map { |l| content_tag(:li, h(l.name)) }) %>"    
     render :inline => choices
   end
 
@@ -263,54 +288,68 @@ class UsersController < BaseController
     @memberships = @user.memberships
     if @memberships && @memberships.size > 0
       @credit_card = @memberships[0].credit_card
+      @billing_address = @memberships[0].address || Address.new
     else
       @credit_card = CreditCard.new
+      @billing_address = Address.new
     end
   end
 
   def update_billing
     id = params[:id] || current_user.id
     @user = User.find(id)
-    @memberships = @user.memberships
-    if (@user.id == current_user.id || current_user.admin?)
-      # Have to test with an AM::B:CC in order to validate
-      cc=params[:credit_card]
-      logger.debug "CC params inbound are #{cc.inspect}"
-      @credit_card = ActiveMerchant::Billing::CreditCard.new({
-        :first_name => cc[:first_name],
-        :last_name => cc[:last_name],
-        :number => cc[:number],
-        :month => cc["expiration_date(2i)"],
-        :year => cc["expiration_date(1i)"],
-        :verification_value => cc[:verification_value]})
-
-      
-      if (!@credit_card.valid?)
-        # Have to have one of ours on the form
-        @am_credit_card = @credit_card
-        if @memberships && @memberships.size > 0
-          @credit_card = @memberships[0].credit_card
-        else
-          @credit_card = CreditCard.new(params[:credit_card])
-        end
-
-        logger.debug "Failed validation on #{@am_credit_card.errors}, new CC setup as #{@credit_card.inspect}"
-        render :action => 'edit_billing' and return
-      end
-
-      unless @memberships && @memberships.size > 0
-        @user.make_member(Membership::CREDIT_CARD_BILLING_METHOD,nil,'pending')
-      end
-      @user.set_payment(@credit_card)
-      
-      if @user.save!
-        flash[:notice] = "Billing updates have been saved"
-        redirect_to edit_account_user_path(@user) and return
-      end
-    else
+    unless (@user.id == current_user.id || current_user.admin?)
       @user = nil
       flash[:notice] = "Insufficient permission to udpate"
       redirect_to dashboard_user_path(@user) and return
+    end
+    
+    # Have to test with an AM::B:CC in order to validate
+    cc=params[:credit_card]
+    logger.debug "CC params inbound are #{cc.inspect}"
+    @merchant_credit_card = ActiveMerchant::Billing::CreditCard.new({
+                             :first_name => cc[:first_name],
+                             :last_name => cc[:last_name],
+                             :number => cc[:number],
+                             :month => cc["expiration_date(2i)"],
+                             :year => cc["expiration_date(1i)"],
+                             :verification_value => cc[:verification_value]})
+
+    # Have to have one of ours on the form and db
+    @memberships = @user.memberships
+    if @memberships && @memberships.size > 0
+      @credit_card = @memberships[0].credit_card
+      @billing_address = @memberships[0].address || Address.new
+    end
+
+    @billing_address = params[:skip_billing_address] ? nil : Address.new(params[:billing_address])
+    @credit_card ||= CreditCard.new # Can't create card from params due to date issues
+    @credit_card.attributes = ({:first_name => cc[:first_name],
+                                 :last_name => cc[:last_name],
+                                 :number => cc[:number],
+                                 :month => cc["expiration_date(2i)"],
+                                 :year => cc["expiration_date(1i)"],
+                                 :verification_value => cc[:verification_value]})
+
+    
+    if (!@merchant_credit_card.valid?)
+      render :action => 'edit_billing' and return
+    end
+    
+    unless @memberships && @memberships.size > 0
+      @user.make_member(Membership::CREDIT_CARD_BILLING_METHOD,@billing_address,'pending')
+    end
+    
+    @user.memberships[0].credit_card = @credit_card
+    @user.memberships[0].address = @billing_address if @billing_address
+    
+    if @user.save!
+      flash[:notice] = "Billing updates have been saved"
+      if current_user.admin?
+        redirect_to url_for({:controller => 'users', :action => 'edit_account', :id => @user}) and return
+      else
+        redirect_to edit_account_user_path(@user) and return
+      end
     end
   end
   

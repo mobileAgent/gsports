@@ -184,8 +184,12 @@ class User < ActiveRecord::Base
 
   # Unless the role is league or league_staff, use team->league
   def league_name
-    return team.league_name unless league_staff?
-    return League.find(league_id).name
+    if (league_staff?)
+      return League.find(league_id).name if league_id?
+      return nil
+    end
+    return nil if team_id.nil?
+    return team.league_name
   end
 
   # Unless the role is league or league_staff, use team->league
