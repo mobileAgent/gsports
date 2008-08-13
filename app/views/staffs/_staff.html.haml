@@ -1,0 +1,16 @@
+- unless staff.nil?
+  %tr
+    %td= link_to staff.full_name, edit_staff_path(staff)
+    %td= staff.email
+    %td= staff.created_at.to_s(:readable)
+    %td= staff.last_login_at.to_s(:readable)
+    %td= staff.phone
+    %td.numeric= staff.video_assets.count
+    %td.numeric= (staff.video_clips.count + staff.video_reels.count)
+    %td.numeric= staff.posts.count
+    %td.numeric= staff.photos.count
+    %td= staff.enabled
+    - if current_user.id == staff.id
+      %td/
+    -else 
+      %td= link_to 'Destroy', staff_path(staff), :confirm => 'Are you sure?', :method => :delete

@@ -1,0 +1,23 @@
+%h1= "Staff Accounts"
+%h2= "Managed by #{current_user.byline}"
+
+%table.unstyled
+  %thead
+    %tr
+      %th Name
+      %th Email
+      %th Since
+      %th Last Login
+      %th Phone
+      %th #Uploads
+      %th #Clips/Reels
+      %th #Posts
+      %th #Photos
+      %th Enabled
+      %th
+        / Actions
+  %tbody
+    = render :partial => 'staff', :collection => @staffs
+    
+= link_to "Create New Staff Member", new_staff_path
+    

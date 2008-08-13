@@ -16,6 +16,11 @@ class VideoReelsController < BaseController
     
     @video_reels = VideoReel.paginate(:conditions => cond.to_sql, :page => params[:page], :order => "created_at DESC", :include => :tags)
     @tags = VideoReel.tags_count :user_id => @user.id, :limit => 20
+    
+    # Remove private reels from results
+    if (! current_user.admin? )
+      @video_reels.reject!{|v| v.public_video == false && v.user_id != current_user.id}
+    end
 
     respond_to do |format|
       format.html # index.html.erb

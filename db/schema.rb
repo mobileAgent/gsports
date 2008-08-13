@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20080811031837) do
+ActiveRecord::Schema.define(:version => 20080812185913) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id",    :limit => 10
@@ -32,6 +32,9 @@ ActiveRecord::Schema.define(:version => 20080811031837) do
     t.string   "email"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "zip"
+    t.integer  "addressable_id",   :limit => 11
+    t.string   "addressable_type"
   end
 
   create_table "ads", :force => true do |t|

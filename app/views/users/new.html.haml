@@ -3,18 +3,10 @@
     %h3
       Registration
     %ul.list.checks
-      = "<!-- User wants to be a #{requested_role_name()} -->"
+      = "<!-- User wants to be a #{requested_role_name} -->"
 
   .box.alt
     %h3 Tips
-    %p
-      After signing up,
-      %strong
-        you'll receive an e-mail confirmation message.
-    %p
-      %strong
-        Click the activation link in the e-mail
-      to log in.
     %p= link_to "Already have an account?", "/login"
 
 #yui-main
@@ -72,19 +64,29 @@
           %em (Required: )
         = f.text_field :phone
 
-        %h3 Team Association
-
-        %label{"for" => "team_name"}
-          Team you want to associate with
-          %em (Required: )
+        - if @requested_role.to_i == Role[:league].id
+          %h3 League Association
           
-        = text_field_with_auto_complete :user, :team_name, :autocomplete => 'off'
+          %label{"for" => "league_name"}
+            League you are representing
+            %em (Required: )
+            
+          = text_field_with_auto_complete :user, :league_name, :autocomplete => 'off'
+          
+        - else
+          %h3 Team Association
+          
+          %label{"for" => "team_name"}
+            Team you want to associate with
+            %em (Required: )
+            
+          = text_field_with_auto_complete :user, :team_name, :autocomplete => 'off'
         
         %h3 Account Details
         
         %label{"for"=>"email"}
           E-mail address
-          %em (Required: We will send a confirmation e-mail to the address you enter.)
+          %em (Required: )
         = f.text_field :email
 
         %label{"for"=>"birthdate"}
