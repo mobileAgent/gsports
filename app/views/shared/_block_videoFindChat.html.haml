@@ -36,7 +36,7 @@
               Coming Soon...
             -#%a.popLink{ :href => "#" }
     .chatToolLinks
-      =link_to "send invites", '/invite'
+      =link_to "send invites", new_user_invitation_path(current_user)
       |
       =link_to "my account", edit_account_user_path(current_user.id), :id => 'user-menu'
       |
