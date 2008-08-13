@@ -184,8 +184,12 @@ class User < ActiveRecord::Base
 
   # Unless the role is league or league_staff, use team->league
   def league_name
-    return team.league_name unless league_staff?
-    return League.find(league_id).name
+    if (league_staff?)
+      return League.find(league_id).name if league_id?
+      return nil
+    end
+    return nil if team_id.nil?
+    return team.league_name
   end
 
   # Unless the role is league or league_staff, use team->league
@@ -205,4 +209,12 @@ class User < ActiveRecord::Base
     "#{full_name}, #{tlname}"
   end
     
+  # Authenticates a user by their login name and unencrypted password.  Returns the user or nil.
+  # We only do this by email and we also handle disabled user accounts
+  def self.authenticate(login, password)
+    # hide records with a nil activated_at
+    u = find :first, :conditions => ['email = ? and activated_at IS NOT NULL and enabled = true', login] if u.nil?
+    u && u.authenticated?(password) && u.update_last_login ? u : nil
+  end
+  
 end
