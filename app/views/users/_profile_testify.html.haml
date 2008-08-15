@@ -9,7 +9,7 @@
     .profileFeature
       .profileInfo
         #newest_comment
-        = render :partial => 'profile_comment', :collection => @comments
+        = render :partial => 'comments/comment', :collection => @comments
       
         = render :partial => 'users/profile_comment_form', :locals => {:commentable => @user}
       
