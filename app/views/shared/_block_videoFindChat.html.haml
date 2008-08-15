@@ -65,6 +65,7 @@
     %li= link_to 'Clips', url_for(:controller => 'search', :action => 'my_video_clips')
     %li= link_to 'Reels', url_for(:controller => 'search', :action => 'my_video_reels')
     %li= link_to 'Photos', user_photos_path(current_user)
+    %li= link_to 'Forums', forums_path
     %li= link_to 'Friends', accepted_user_friendships_path(current_user)
     %li= link_to 'Blog', manage_user_posts_path(current_user)
 
