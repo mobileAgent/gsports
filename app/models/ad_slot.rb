@@ -8,12 +8,12 @@ class AdSlot
   # This class just helps sort out the mess
 
   def self.header_slot1_is_logo(u)
-    return u.league && u.league.avatar_id?
+    return u.league && u.league.avatar_id? && u.league.avatar
   end
 
   def self.header_slot2_is_logo(u)
     return false if u.league_staff?
-    return u.team && u.team.avatar_id?
+    return u.team && u.team.avatar_id? && u.team.avatar
   end
 
   def self.header_slot1_img_tag(u)
@@ -21,6 +21,7 @@ class AdSlot
   end    
 
   def self.header_slot2_img_tag(u)
+
     "<img src='#{u.team.avatar.public_filename}' title='#{u.team_name}' alt='#{u.team_name}'/>"
   end
   
