@@ -122,13 +122,15 @@ class User < ActiveRecord::Base
   def make_member(billing_method, address,payment_authorization)
     mem = Membership.new(:billing_method=>billing_method)
     mem.cost = role.plan.cost
-    mem.name = firstname + " " + minitial + " " + lastname
+    mem.name = full_name
 
-    history = MembershipBillingHistory.new
-    history.authorization_reference_number = "sample"
-    history.payment_method = billing_method
-    mem.membership_billing_histories << history
-
+    if payment_authorization # else we may just be updating cc info
+      history = MembershipBillingHistory.new
+      pf = payment_authorization.params
+      history.authorization_reference_number = "#{pf['pn_ref']}/#{pf['auth_code']}"
+      history.payment_method = billing_method
+      mem.membership_billing_histories << history
+    end
     memberships << mem
     save
   end

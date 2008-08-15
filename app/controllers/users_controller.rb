@@ -336,7 +336,7 @@ class UsersController < BaseController
     end
     
     unless @memberships && @memberships.size > 0
-      @user.make_member(Membership::CREDIT_CARD_BILLING_METHOD,@billing_address,'pending')
+      @user.make_member(Membership::CREDIT_CARD_BILLING_METHOD,@billing_address,nil)
     end
     
     @user.memberships[0].credit_card = @credit_card

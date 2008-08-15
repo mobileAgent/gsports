@@ -1,0 +1,12 @@
+development:
+  key: GS-development-encryption-key
+  salt: gs-development-salt
+
+test:
+  key: GS-test-encryption-key
+  salt: gs-test-salt
+
+production:
+  key: key
+  salt: salt
+
