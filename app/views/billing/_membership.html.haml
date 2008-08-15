@@ -8,6 +8,4 @@
   %td
     =membership.created_at.to_date
   %td
-    =membership.users.length
-  %td
     =link_to "Billing History", :controller => :membership, :action => "member_billing_history", :id => membership.id 
