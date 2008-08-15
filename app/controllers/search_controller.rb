@@ -1,7 +1,7 @@
 class SearchController < BaseController
   
   skip_before_filter :verify_authenticity_token, :only => [ :quickfind ]
-  before_filter :login_required, :except => [:sphinx_search]
+  before_filter :login_required
   after_filter :protect_private_videos
   
   def quickfind
@@ -16,6 +16,7 @@ class SearchController < BaseController
   end
   
   def sphinx_search
+    @user = params[:user_id] ? User.find(params[:user_id]) : current_user
     if params[:search] and params[:search][:keyword]
       @video_assets = VideoAsset.search params[:search][:keyword], :limit => 10, :order => 'updated_at DESC'
       @video_clips = VideoClip.search params[:search][:keyword], :limit => 10, :order => 'updated_at DESC'

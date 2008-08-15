@@ -1,4 +1,4 @@
-%form{ :action => "#", :method => "get" }
+%form{ :action => url_for({:controller => 'search', :action => "sphinx_search"}), :method => 'get'}
   .topNav
 
     - if logged_in?
@@ -22,20 +22,14 @@
       .rightTopNav
         %h2
           Search Site
-        %label.verbalSemantic{ :for => "searchCategory" }
+        %label.verbalSemantic{ :for => "search[category]" }
           Category
-        %select#searchCategory{ :name => "category" }
-          %option{ :value => "" }
-            All Categories
-          %option{ :value => "" }
-            Category
-          %option{ :value => "" }
-            Category
-          %option{ :value => "" }
-            Category
-        %label.verbalSemantic{ :for => "searchTerms" }
+        %select#searchCategory{ :name => "search[category]" }
+          %option{ :value => "0" }
+            Videos, Clips, Reels
+        %label.verbalSemantic{ :for => "search[keyword]" }
           Search Terms
-        %input#searchTerms{ :name => "terms", :type => "text" }/
+        %input#searchTerms{ :name => "search[keyword]", :type => "text" }/
         %input.submit{ :name => "submit", :src => "/gs/images/top_nav_search.gif", :type => "image", :value => "search", :alt => "Search" }/
 
 
