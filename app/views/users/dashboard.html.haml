@@ -250,24 +250,13 @@
   /
     col3 content
   .mainCol3
-    .rightContentItem
-      %span.moreLink
-        %a{ :href => "" }
-          more>>
-      %h2
-        Item
-      %a.articleLink{ :href => "" }
-        very very long link goes in here for testing purposes
-    .rightContentItem
-      %span.moreLink
-        %a{ :href => "" }
-          more>>
-      %h2
-        Item
-      %a.articleLink{ :href => "" }
-        very very long link goes in here for testing purposes
-
-
+    - team_posts().each() do |post|
+      .rightContentItem
+        %span.moreLink
+          = link_to 'more>>', user_post_path(post.user, post), :rel => 'bookmark'
+        %h2
+          = post.title
+        = truncate_words(post.post, 75, '...' )
 
 
                 
