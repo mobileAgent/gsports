@@ -70,7 +70,7 @@ class Membership < ActiveRecord::Base
 }
 
   def last_billed
-    membership_billing_histories.first
+    membership_billing_histories.first.created_at
   end
 
 end
