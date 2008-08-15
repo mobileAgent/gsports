@@ -1,0 +1,12 @@
+%p
+  %b To :
+  = @invitation.email_addresses
+%p
+  %b Date:
+  = @invitation.created_at
+%hr
+%p
+  %b Message :
+  = @invitation.message
+
+= link_to 'Back', user_invitations_path
