@@ -1,0 +1,21 @@
+%h1
+  Listing Your Invitations
+
+%table.unstyled
+  %thead
+    %tr
+      %th Sent Date
+      %th Sent To
+      %th{:colspan => 2}
+        /Actions
+  %tbody
+    - for invitation in @invitations
+      %tr
+        %td= invitation.created_at.to_s(:readable)
+        %td= truncate(h(invitation.email_addresses),55)
+        %td= link_to 'Show', user_invitation_path(current_user, invitation)
+        %td= link_to 'Destroy', user_invitation_path(current_user, invitation), :confirm => 'Are you sure?', :method => :delete
+
+%br/
+
+= link_to 'New invitation', new_user_invitation_path(current_user)

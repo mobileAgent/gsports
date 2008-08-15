@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20080812185913) do
+ActiveRecord::Schema.define(:version => 20080815013921) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id",    :limit => 10
@@ -130,7 +130,6 @@ ActiveRecord::Schema.define(:version => 20080812185913) do
   create_table "credit_cards", :force => true do |t|
     t.string   "first_name"
     t.string   "last_name"
-    t.string   "number"
     t.string   "month"
     t.string   "year"
     t.string   "verification_value"
@@ -138,6 +137,7 @@ ActiveRecord::Schema.define(:version => 20080812185913) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "displayable_number"
+    t.binary   "number_encrypted"
   end
 
   create_table "events", :force => true do |t|

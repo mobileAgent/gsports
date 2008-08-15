@@ -1,5 +1,10 @@
 class CreditCard < ActiveRecord::Base
   belongs_to :membership
+  # Enable lucifer encryption on the number in the db
+  # The db column is number_encrypted, and lucifer just
+  # adds virtual attribute called number. The data in the db
+  # is encrypted but we never need to worry about it
+  encrypt_attributes :suffix=>'_encrypted', :key_file=>'lucifer.yml'
 
 
   def expiration_date=(date)

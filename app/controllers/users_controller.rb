@@ -135,8 +135,7 @@ class UsersController < BaseController
 
     gateway = ActiveMerchant::Billing::PayflowGateway.new({
       :login => Active_Merchant_payflow_gateway_username,
-      :password => Active_Merchant_payflow_gateway_password,
-      :partner => Active_Merchant_payflow_gateway_partner
+      :password => Active_Merchant_payflow_gateway_password
                                                           })
 
     cost_for_gateway = (@user.role.plan.cost * 100).to_i
@@ -337,7 +336,7 @@ class UsersController < BaseController
     end
     
     unless @memberships && @memberships.size > 0
-      @user.make_member(Membership::CREDIT_CARD_BILLING_METHOD,@billing_address,'pending')
+      @user.make_member(Membership::CREDIT_CARD_BILLING_METHOD,@billing_address,nil)
     end
     
     @user.memberships[0].credit_card = @credit_card
