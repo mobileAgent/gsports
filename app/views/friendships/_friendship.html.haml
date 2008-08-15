@@ -15,10 +15,7 @@
   %ul.listingActions
     - friendship_control_links(friendship).each do |anchor, href, options|
       %li
-        -#link_to anchor, href, options
-        %a.genericButton{ :href => href  }
-          %span
-            = anchor
+        = link_to anchor, href, options
 
   .clearDiv
 .clearDiv
