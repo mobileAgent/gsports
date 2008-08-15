@@ -1,12 +1,23 @@
-- if @video_clips.any?
-  - for video_clip in @video_clips
-    = render :partial => 'video_block', :locals => {:video_clip => video_clip }
-    = render :partial => 'shared/favorite_item', :locals => { :item => video_clip }
-    %br
+.profileContentArea.listingPage
+  .profilePageHeader
+    %h2.columnDescriptor
+      %span
+        = "MY CLIPS"
+      = @user.full_name
+  .leftNavCol
+    %h2.yellowHeader
+      My Profile
+    .leftNav
+      =render :partial => "users/profile_nav"
 
-  - if @video_clips.respond_to?('total_pages')
-    .apple_pagination
-      = will_paginate @video_clips
-      
--else
-  = "You don't have any video clips yet"
+  .listings
+    - if @video_clips.any?
+      = render :partial => 'video_block', :collection => @video_clips
+    
+      - if @video_clips.respond_to?('total_pages')
+        .apple_pagination
+          = will_paginate @video_clips
+          
+    -else
+      = "You don't have any video clips yet"
+    
