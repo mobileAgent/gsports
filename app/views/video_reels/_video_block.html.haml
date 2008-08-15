@@ -1,13 +1,12 @@
-.video_thumbnail
-  = "<a href='#{user_video_reel_path(video_reel.user_id,video_reel)}'><img src='#{@vidavee.file_thumbnail_medium(video_reel.thumbnail_dockey)}' title='#{h(video_reel.title).gsub(/\'/,'')}' alt='Reel'/></a>"
-  %br
-  = h video_reel.title
-  %br
+.listingItem
+  .listingImage
+    = "<a href='#{user_video_reel_path(video_reel.user_id,video_reel)}'><img src='#{@vidavee.file_thumbnail_medium(video_reel.thumbnail_dockey)}' title='#{h(video_reel.title).gsub(/\'/,'')}' alt='Reel'/></a>"
+  .listingDescription
+    %h4= h video_reel.title
   = "#{h video_reel.description} - #{h video_reel.video_length}"
-  %br
   - skip_controls ||= false
   - unless skip_controls
     -if current_user && current_user.can_edit?(video_reel)
-      %br
-      = link_to 'Edit', edit_video_reel_path(video_reel)
-      = link_to 'Destroy', video_reel, :confirm => 'Are you sure?', :method => :delete
+      %ul.listingActions
+        = link_to 'Edit', edit_video_reel_path(video_reel)
+        = link_to 'Destroy', video_reel, :confirm => 'Are you sure?', :method => :delete

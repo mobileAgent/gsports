@@ -5,6 +5,7 @@ class SearchController < BaseController
   after_filter :protect_private_videos
   
   def quickfind
+    @user = current_user
     cond = Caboose::EZ::Condition.new
     cond.append ['year(game_date) = ?',params[:season]]
     cond.append ['video_assets.league_id = ?', params[:league]]
@@ -13,6 +14,9 @@ class SearchController < BaseController
     cond.append ['teams.county_name = ?', params[:county_name]]
     cond.append ['public_video = ?', true]
     @video_assets = VideoAsset.paginate(:conditions => cond.to_sql, :page => params[:page], :order => 'video_assets.updated_at DESC', :include => [:team,:tags])
+    @is_search_result = true
+    @title = 'Video Quickfind Results'
+    render :action => 'my_videos'
   end
   
   def sphinx_search
@@ -26,6 +30,8 @@ class SearchController < BaseController
       @video_clips = VideoClip.find :all, :limit => 10, :order => 'updated_at DESC'
       @video_reels = VideoReel.find :all, :limit => 10, :order => 'updated_at DESC'
     end
+    @is_search_result = true
+    @title = 'Search Results'
     render:action => "my_videos"
   end
 

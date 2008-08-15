@@ -1,5 +1,5 @@
 .profileFeature
-  .featureSummaryThumb
+  .featureSummaryThumbx
     = link_to "<img src='#{@vidavee.file_thumbnail_medium(video_asset.dockey)}' title='#{h(video_asset.title).gsub(/\'/,'')}' alt='Video'/>", video_asset_path(video_asset)
   .featureText
     %span.profileSubHeading
@@ -21,4 +21,3 @@
         = link_to 'Destroy', video_asset, :confirm => 'Are you sure?', :method => :delete
         |
         = render :partial => 'shared/favorite_item', :locals => { :item => video_asset }
-.clearDiv/

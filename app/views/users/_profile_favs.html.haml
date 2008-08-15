@@ -55,9 +55,9 @@
             = link_to image_tag(f.public_filename(:icon), {:alt=>'User Photo',:title=>f.description}), user_photo_path(f.user, f)
           .featureText
             %span.profileSubHeading
-              =truncate(h(f.description),18)
+              =truncate(h(f.display_name),18)
               %br/
-            =f.user.firstname
+            =f.user.full_name
             %br/
           .clearDiv
           
