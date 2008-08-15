@@ -2,7 +2,7 @@ class Membership < ActiveRecord::Base
    has_one :address, :as => :addressable, :dependent => :destroy
    has_many :subscriptions
    has_many :users, :through => :subscriptions
-   has_many :membership_billing_histories
+   has_many :membership_billing_histories, :order => "created_at DESC"
    has_one  :credit_card
 
   CREDIT_CARD_BILLING_METHOD = "cc"
@@ -68,5 +68,9 @@ class Membership < ActiveRecord::Base
   'WI' => 'Wisconsin',
   'WY' => 'Wyoming'
 }
+
+  def last_billed
+    membership_billing_histories.first
+  end
 
 end
