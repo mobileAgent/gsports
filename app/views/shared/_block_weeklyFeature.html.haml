@@ -6,7 +6,7 @@
       .featureSummaryThumb
         = link_to "<img src='#{@vidavee.file_thumbnail_medium(@featured_game_for_team.dockey)}' title='#{h(@featured_game_for_team.title).gsub(/\'/,'')}' alt='Video' height='65' width=103'/>", video_asset_path(@featured_game_for_team)
       .featureText
-        - if @featured_game_for_team.visiting_team_name && @featured_game_for_team.home_team_hame
+        - if @featured_game_for_team.visiting_team_name && @featured_game_for_team.home_team_name
           %h3= "#{@featured_game_for_team.visiting_team_name} vs #{@featured_game_for_team.home_team_name}"
         - else
           %h3= "#{@featured_game_for_team.team.name}"
