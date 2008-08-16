@@ -72,5 +72,42 @@ class Membership < ActiveRecord::Base
   def last_billed
     membership_billing_histories.first.created_at
   end
+#
+# Bill this member
+#
+def bill_recurring
+# Enable this once we really start encrypting CC numbers
+#    crypt_key = EzCrypto::Key.with_password CC_CRYPT_PASSWORD,CC_CRYPT_SALT
+#    decrypted_card_number = crypt_key.decrypt credit_card.number
 
+    return nil if credit_card.nil? # No credit card no billing (for now)
+
+    decrypted_card_number = credit_card.number # remove this and enable crypt lines once we start encrypting numbers
+    credit_card = ActiveMerchant::Billing::CreditCard.new({
+      :first_name => credit_card.first_name,
+      :last_name => credit_card.last_name,
+      :number => decrypted_card_number,
+      :month => credit_card.month,
+      :year => credit_card.year,
+      :verification_value => credit_card.verification_value})
+
+    gateway = ActiveMerchant::Billing::PayflowGateway.new({
+      :login => Active_Merchant_payflow_gateway_username,
+      :password => Active_Merchant_payflow_gateway_password
+                                                          })
+    cost_for_gateway = (cost * 100).to_i
+    response = gateway.purchase(cost_for_gateway, credit_card)
+   
+    logger.debug "Response from gateway #{@response.inspect} for #{@user.full_name} at #{cost_for_gateway}"
+   
+    if (response.success?)
+      history = MembershipBillingHistory.new
+      pf = response.params
+      history.authorization_reference_number = "#{pf['pn_ref']}/#{pf['auth_code']}"
+      history.payment_method = billing_method
+      membership_billing_histories << history
+      save
+    end
+    response
+end
 end
