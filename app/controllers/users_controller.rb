@@ -19,6 +19,10 @@ class UsersController < BaseController
                 :only => [:show])
 
   def show
+    unless current_user.admin? || current_user.id == @user.id || @user.profile_public
+      render :action => 'private'
+    end
+    
     @friend_count = @user.accepted_friendships.count
     @accepted_friendships = @user.accepted_friendships.find(:all, :limit => 5).collect{|f| f.friend }
     @pending_friendships_count = @user.pending_friendships.count()
