@@ -13,9 +13,11 @@ class CreateRoles < ActiveRecord::Migration
     add_column :users, :role_id, :integer
 
     #set all existing users to 'member'
-    User.update_all("role_id = #{Role[:member].id}", ["admin = ?", false])
+    # User.update_all("role_id = #{Role[:member].id}", ["admin = ?", false])
+    execute "update users set role_id = (select id from roles where name = 'member') where admin != 1"
     #set admins to 'admin'
-    User.update_all("role_id = #{Role[:admin].id}", ["admin = ?", true])    
+    # User.update_all("role_id = #{Role[:admin].id}", ["admin = ?", true])
+    execute "update users set role_id = (select id from roles where name = 'admin') where admin = 1"
 
     remove_column :users, :admin
   end
