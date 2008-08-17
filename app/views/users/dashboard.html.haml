@@ -10,7 +10,7 @@
           %a{ :href => "" }
             more>>
         %h2.boxDescription
-          WHAT MY FRIENDS ARE WATCHING 
+          WHAT MY FRIENDS ARE WATCHING
       .contentBoxContent
         .featureSummary
           .featureSummaryThumb
@@ -70,7 +70,7 @@
           %a{ :href => "" }
             more>>
         %h2.boxDescription
-          MY FRIENDS RECENT CLIPS & HIGHLIGHTS
+          MY FRIENDS RECENT CLIPS & HIGHLIGHTS 
       .contentBoxContent
         .featureSummary
           .featureSummaryThumb
@@ -133,7 +133,7 @@
           %a{ :href => "" }
             more>>
         %h2.boxDescription
-          MOST POPULAR GS VIDEOS 
+          MOST POPULAR VIDEOS
       .contentBoxContent
         .featureSummary
           .featureSummaryThumb
@@ -193,7 +193,7 @@
           %a{ :href => "" }
             more>>
         %h2.boxDescription
-          RECENT FULL GAME UPLOADS 
+          RECENT FULL GAME UPLOADS
       .contentBoxContent
         .featureSummary
           .featureSummaryThumb
@@ -250,25 +250,13 @@
   /
     col3 content
   .mainCol3
-    .rightContentItem
-      %span.moreLink
-        %a{ :href => "" }
-          more>>
-      %h2
-        Item
-      %a.articleLink{ :href => "" }
-        very very long link goes in here for testing purposes
-    .rightContentItem
-      %span.moreLink
-        %a{ :href => "" }
-          more>>
-      %h2
-        Item
-      %a.articleLink{ :href => "" }
-        very very long link goes in here for testing purposes
-  .clearDiv
-
-
+    - team_posts().each() do |post|
+      .rightContentItem
+        %span.moreLink
+          = link_to 'more>>', user_post_path(post.user, post), :rel => 'bookmark'
+        %h2
+          = post.title
+        = truncate_words(post.post, 75, '...' )
 
 
                 

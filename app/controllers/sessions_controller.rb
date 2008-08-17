@@ -6,7 +6,7 @@ class SessionsController < BaseController
   
   # render new.rhtml
   def new
-    redirect_to user_path(current_user.id) if current_user
+    redirect_to dashboard_user_path(current_user.id) if current_user
     render :layout => 'beta' if AppConfig.closed_beta_mode
   end
 
@@ -23,12 +23,13 @@ class SessionsController < BaseController
       current_user.track_activity(:logged_in)
     else
       if !current_user.nil? && !current_user.enabled?
-        flash[:notice] = "Your account is not enabled.  Please contact the gsports administrator."
+        current_user = nil
+        flash[:notice] = "Your account is not enabled.  Please contact the administrator."
       else
-        flash[:notice] = "Uh oh. We couldn't log you in with the username and password you entered. Try again?"      
+        flash[:notice] = "Uh oh. We couldn't log you in with the username and password you entered. Your username is your email address. Try again?"      
       end
-        redirect_to teaser_path and return if AppConfig.closed_beta_mode        
-        render :action => 'new'
+      redirect_to teaser_path and return if AppConfig.closed_beta_mode        
+      redirect_to :controller => 'base', :action => 'site_index' and return
     end
   end
 

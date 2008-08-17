@@ -17,25 +17,23 @@
           About Me
       .contentBoxContent
       
-        %fieldset
-          %legend
-            Gender
-          %label
-            = radio_button :user, :gender, User::MALE
-            Male
-          %label
-            = radio_button :user, :gender, User::FEMALE
-            Female
-
-        %label
-          Birthday:
-        = date_select :user, :birthday, {:start_year => 1926, :end_year => Time.now.year - 1}
-
-
+        = error_messages_for :user
 
         - form_tag user_url(@user), :method => 'put', :multipart =>true, :class => 'MainForm' do
-          
-          = error_messages_for :user
+        
+          %fieldset
+            %legend
+              Gender
+            %label
+              = radio_button :user, :gender, User::MALE
+              Male
+            %label
+              = radio_button :user, :gender, User::FEMALE
+              Female
+
+            %label
+              Birthday:
+              = date_select :user, :birthday, {:start_year => 1926, :end_year => Time.now.year - 12}
 
           .yui-b
             #profile_details.box
@@ -45,7 +43,6 @@
               %label
                 Choose a photo for your profile:
               = file_field :avatar, :uploaded_data, :size => "20"
-      
 
           #yui-main
             .yui-b
@@ -54,9 +51,20 @@
                 = text_area :user, :description, :class => "rich_text_editor", :style => "width:40%"
         
               
-      
+
               .box
-                %h3 Tags
+                - mh = @user.moniker_hash
+                %h3 Teams
+                = text_field_with_auto_complete :user, :moniker_teams_tag_list, {:autocomplete => "off"}, {:url => { :controller => 'tags', :action => 'auto_complete_for_tag_name'}, :tokens => [',', ' ']  }
+                %h3 Sports
+                = text_field_with_auto_complete :user, :moniker_sports_tag_list, {:autocomplete => "off"}, {:url => { :controller => 'tags', :action => 'auto_complete_for_tag_name'}, :tokens => [',', ' ']  }
+                %h3 Music
+                = text_field_with_auto_complete :user, :moniker_music_tag_list, {:autocomplete => "off"}, {:url => { :controller => 'tags', :action => 'auto_complete_for_tag_name'}, :tokens => [',', ' ']  } 
+                %h3 Movies
+                = text_field_with_auto_complete :user, :moniker_movies_tag_list, {:autocomplete => "off"}, {:url => { :controller => 'tags', :action => 'auto_complete_for_tag_name'}, :tokens => [',', ' ']  }
+                
+              .box
+                %h3 Personal Tags
                 #user_tags
                   = text_field_tag 'tag_list', @user.tags.collect{|t| t.name}.join(", "), {:autocomplete => "off"}
                   #tag_list_auto_complete.auto_complete
@@ -78,4 +86,3 @@
 
               %p
                 = submit_tag 'Save Changes'
-  .clearDiv

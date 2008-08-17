@@ -1,0 +1,34 @@
+.contentBox.tanBackground
+  .contentBoxHeader.yellowHeader
+    %span.moreLink
+      %a{ :href => "#", :onclick => "return profile_minimize(this)" }
+        minimize -
+    %h2.boxDescription
+      About Me
+  .contentBoxContent
+    .profileFeature
+      .profileInfo
+        %span.profileSubHeading Gender:
+        = "#{@user.gender}"
+        %br/
+        %span.profileSubHeading Birthday:
+        ="#{@user.birthday.to_s(:readable)}"
+        %br/
+        - if @user.description
+          = truncate_words(@user.description,25)
+        %br/
+        %br/
+        %h2.profileHeading Favorites:
+        %span.profileSubHeading Teams:
+        - if @user.moniker_hash["teams"]
+          = "#{@user.moniker_hash["teams"].join(', ')}"
+        %br/
+        %span.profileSubHeading Music:
+        - if @user.moniker_hash["music"]
+          = "#{@user.moniker_hash["music"].join(', ')}"
+        %br/
+        - for mname in @user.moniker_hash.keys
+          - next if (mname == "music" || mname == "sports" || mname == "teams")
+          %span.profileSubHeading= "#{mname.capitalize}:"
+          = "#{@user.moniker_hash[mname].join(', ')}"
+          %br/

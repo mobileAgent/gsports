@@ -8,7 +8,8 @@
   .contentBoxContent
     .profileFeature
       .profileInfo
-        = render :partial => 'profile_comment', :collection => @comments
+        #newest_comment
+        = render :partial => 'comments/comment', :collection => @comments
       
         = render :partial => 'users/profile_comment_form', :locals => {:commentable => @user}
       

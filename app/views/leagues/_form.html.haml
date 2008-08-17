@@ -1,20 +1,20 @@
-  %div
-    %b Name
-    %br/
-    = f.text_field :name 
-  %div
-    %b City
-    %br/
-    = f.text_field :city 
-  %div
-    %b State
-    %br/
-    =collection_select("league","state_id",State.all,"id","name",{ :selected => @league.state_name })
-  %div
-    %b Description
-    %br/
-    = f.text_field :description, :size => 65
-  %div
-    %b Active
-    %br/
-    = f.check_box :active 
+%div
+  %b Name
+  %br/
+  = f.text_field :name 
+%div
+  %b City
+  %br/
+  = f.text_field :city 
+%div
+  %b State
+  %br/
+  =collection_select("league","state_id",State.all,"id","name",{ :selected => @league.state_name })
+%div
+  %b Description
+  %br/
+  = f.text_field :description, :size => 65
+%div
+  %b Active
+  %br/
+  = f.check_box :active 

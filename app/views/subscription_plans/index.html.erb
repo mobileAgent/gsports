@@ -1,0 +1,28 @@
+<h1>Listing Subscription Plans</h1>
+
+<table class="unstyled">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Cost</th>
+      <th>Description</th>
+      <th><!-- Actions --></th>
+    </tr>
+  </thead>
+  <tbody>
+
+  <% for subscription_plan in @subscription_plans %>
+    <tr>
+      <td><%=link_to subscription_plan.name, edit_subscription_plan_path(subscription_plan) %></td>
+      <td class="numeric">$<%=h subscription_plan.cost %></td>
+      <td><%=truncate(h(subscription_plan.description),35) %></td>
+      <td><%= link_to 'Destroy', subscription_plan, :confirm => 'Are you sure?', :method => :delete %></td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+
+<br />
+
+<%= link_to 'New subscription_plan', new_subscription_plan_path %>
+

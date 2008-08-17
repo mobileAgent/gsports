@@ -1,22 +1,33 @@
+#homeFlash.homeFlash
+  %h1
+    Problems Starting Video Player.
+  %p
+    Sorry, we could not start the video player. To view video content you will need to have Adobe Flash player installed and  JavaScript enabled on your browser.
 
-=render :partial => 'base/homepage_banner_message'
+- if @now_playing && @now_playing.dockey
+  = render :partial => 'shared/video_player', :locals => {:target => 'homeFlash', :dockey => @now_playing.dockey }
 
-#yui-main
-  .yui-b
-    .box.hfeed
-      %h3 Games of the Week
-      - if @now_playing && @now_playing.dockey
-        .videoPlayer
-          = render :partial => 'shared/site_video_player', :locals  => { :dockey => @now_playing.dockey }
-          %br/
-          = @now_playing.title
-          %br/
-          = @now_playing.description
-          %br/
-          -if @now_playing.class.to_s == 'VideoAsset' && @now_playing.home_team_id? && @now_playing.visiting_team_id?
-            = "#{@now_playing.visiting_team.name} vs. #{@now_playing.home_team.name} #{game_date(@now_playing.game_date)}"
-          
-      - @games_of_the_week.each do |v|
-        = render :partial => 'shared/site_video_teaser', :locals => { :item => v }
-        %br/
-        
+.homeText
+  %h1.homeTextWelcome= "Welcome to #{AppConfig.community_name}!"
+  %br/
+  %br/
+  %p
+    %strong
+      Full Game Video
+    dolor sit amet, consectetuer elit. Nullam tincidunt Donec justo urna, pharetra in, euismod laoreet.  In hac habitasse platea dictumst. Maecenas porttitor quam id pede.
+  %p
+    %strong
+      Safe and Secure
+    vestibulum ante ipsum in fe; Praesent a erat. Morbi ante. Pellentesque habitant morbi tristique senectus et.
+  %p
+    %strong
+      Stay up to date
+    viverra vel, rutrum ut, aliquam quis, ectus eu eros!  Netus et malesuada fames ac turpis egestas.
+  %p
+    %strong
+      Create and Edit
+    consecteteur elit, pellentesque ut erum lorem. Etiam eget augue. Vestibulum liquam dolor sit amet. Mauris leo turpis, auctor nec, ultricies vel, placerat ultrices, orci. Nunc non neque. Nullam mollis eros accumsan nunc.
+    %a{ :href => "/players/gsdemo.swf" }
+      %img{ :src => "/gs/images/watch_demo.gif", :longdesc => "#", :alt => "Click here to watch the demo video and learn more about Global Sports..." }/
+/
+  end col 2

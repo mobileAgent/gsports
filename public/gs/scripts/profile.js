@@ -1,3 +1,4 @@
+/* minimize a block on a user's profile */
 function profile_minimize(o) {
 	if (o.isMinimized == true) {
 		o.innerHTML = "minimize +";

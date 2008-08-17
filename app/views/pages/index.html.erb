@@ -6,17 +6,16 @@
       <th>Name</th>
       <th>Permalink</th>
       <th>Html Content</th>
-      <th colspan="3"><!-- Actions --></th>
+      <th colspan="2"><!-- Actions --></th>
     </tr>
   </thead>
   <tbody>
     <% for page in @pages %>
       <tr>
-        <td><%=h page.name %></td>
+        <td><%=link_to page.name, edit_page_path(page) %></td>
         <td><%=h page.permalink %></td>
         <td><%= truncate_words(page.html_content, 10) %></td>
-        <td><%= link_to "Show", page %></td>
-        <td><%= link_to "Edit", edit_page_path(page) %></td>
+        <td><%= link_to "Preview", "/info/#{page.permalink}", {:target => "_new"}%></td>
         <td><%= link_to "Destroy", page, :confirm => 'Are you sure?', :method => :delete %></td>
       </tr>
     <% end %>

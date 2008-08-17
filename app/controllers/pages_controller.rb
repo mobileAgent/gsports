@@ -37,7 +37,7 @@ class PagesController < BaseController
     @page = Page.find(params[:id])
     if @page.update_attributes(params[:page])
       flash[:notice] = "Successfully updated page."
-      redirect_to @page
+      redirect_to pages_url
     else
       render :action => 'edit'
     end

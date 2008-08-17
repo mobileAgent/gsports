@@ -9,8 +9,14 @@
   </p>
   <p>
     <%= f.label :content %><br />
-    <%= f.text_area :content %>
-    <i><a href='http://hobix.com/textile/' target='_new'>Help with textile markup</a></li>
+    <%= f.text_area :content, :rows => 30, :cols => 95 %>
+    <br/>
+    <ul>
+      <li><i><a href='http://hobix.com/textile/' target='_new'>Help with textile markup</a></i></li>
+      <li>To break out into raw html wrap with <b>notexttile.. &lt;div&gt;</b> and <b>&lt;/div&gt;</b> and indent </li>
+    </ul>
+    <br/>   
+    
   </p>
   <p><%= f.submit "Submit" %></p>
 <% end %>

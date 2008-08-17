@@ -19,10 +19,6 @@ Rails::Initializer.run do |config|
   # -- all .rb files in that directory are automatically loaded.
   # See Rails::Configuration for more options.
 
-  #resource_hacks required here to ensure routes like /:login_slug work
-  config.plugins = [:engines, :community_engine, :white_list, :all]
-  config.plugin_paths += ["#{RAILS_ROOT}/vendor/plugins/community_engine/engine_plugins"]
-
   # Skip frameworks you're not going to use. To use Rails without a database
   # you must remove the Active Record framework.
   # config.frameworks -= [ :active_record, :active_resource, :action_mailer ]
@@ -79,7 +75,7 @@ Rails::Initializer.run do |config|
   config.gem "hpricot", :version => ">= 0.6"
   config.gem "stomp" , :version => ">= 1.0.5"
   config.gem "reliable-msg", :version => ">= 1.1.0"
-  config.gem "rmagick", :version => ">= 2.5.1"
+  #config.gem "rmagick", :version => ">= 2.5.1" # this blows up on fedora 9
   config.gem "rake", :version => ">= 0.8.1"
   config.gem "mocha", :version => ">= 0.9.0"
   config.gem "haml", :version => ">= 2.0.0"
@@ -88,6 +84,12 @@ Rails::Initializer.run do |config|
   config.gem "uuid", :version => ">= 1.0.4"
   config.gem "will_paginate", :version => ">= 2.2.2"
   config.gem "htmlentities", :version => ">= 4.0.0"
+  config.gem "ezcrypto", :version => "= 0.7"
+  
+  #resource_hacks required here to ensure routes like /:login_slug work
+  config.plugins = [:engines, :community_engine, :white_list, :all]
+  config.plugin_paths += ["#{RAILS_ROOT}/vendor/plugins/community_engine/engine_plugins"]
+
 end
 
 

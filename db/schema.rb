@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20080808121837) do
+ActiveRecord::Schema.define(:version => 20080815013921) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id",    :limit => 10
@@ -32,6 +32,9 @@ ActiveRecord::Schema.define(:version => 20080808121837) do
     t.string   "email"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "zip"
+    t.integer  "addressable_id",   :limit => 11
+    t.string   "addressable_type"
   end
 
   create_table "ads", :force => true do |t|
@@ -127,7 +130,6 @@ ActiveRecord::Schema.define(:version => 20080808121837) do
   create_table "credit_cards", :force => true do |t|
     t.string   "first_name"
     t.string   "last_name"
-    t.string   "number"
     t.string   "month"
     t.string   "year"
     t.string   "verification_value"
@@ -135,6 +137,7 @@ ActiveRecord::Schema.define(:version => 20080808121837) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "displayable_number"
+    t.binary   "number_encrypted"
   end
 
   create_table "events", :force => true do |t|
@@ -472,6 +475,7 @@ ActiveRecord::Schema.define(:version => 20080808121837) do
     t.string   "phone"
     t.integer  "team_id",                   :limit => 11
     t.boolean  "enabled"
+    t.integer  "league_id",                 :limit => 11
   end
 
   add_index "users", ["avatar_id"], :name => "index_users_on_avatar_id"
@@ -499,8 +503,8 @@ ActiveRecord::Schema.define(:version => 20080808121837) do
     t.string   "video_length"
     t.string   "video_type"
     t.string   "video_status"
-    t.integer  "sponsor_id",         :limit => 11
-    t.integer  "member_id",          :limit => 11
+    t.integer  "league_id",          :limit => 11
+    t.integer  "team_id",            :limit => 11
     t.integer  "user_id",            :limit => 11
     t.string   "sport"
     t.datetime "game_date"
@@ -512,8 +516,6 @@ ActiveRecord::Schema.define(:version => 20080808121837) do
     t.string   "game_level"
     t.string   "game_gender"
     t.integer  "view_count",         :limit => 11, :default => 0
-    t.integer  "team_id",            :limit => 11
-    t.integer  "league_id",          :limit => 11
     t.boolean  "public_video",                     :default => true
   end
 

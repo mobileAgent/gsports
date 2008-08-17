@@ -25,10 +25,10 @@
           .box.alt
             = link_to "Make this my profile photo", change_profile_photo_user_path({:id => @user.id, :photo_id => @photo}), :method => :put
             |
-            - if @user.league_staff?
+            - if @user.league_staff? || @user.admin?
               = link_to "Make this the league photo", change_league_photo_user_path({:id => @user.id, :photo_id => @photo}), :method => :put
               |
-            - if @user.team_staff?
+            - if @user.team_staff? || @user.admin?
               = link_to "Make this the team photo", change_team_photo_user_path({:id => @user.id, :photo_id => @photo}), :method => :put
               |
             = link_to "Edit this photo's details", edit_user_photo_path(@user, @photo) if @is_current_user

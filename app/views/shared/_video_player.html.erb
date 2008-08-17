@@ -1,0 +1,12 @@
+<%- height ||= 395 %>
+<%- width ||= 580 %>
+<%- player_name ||= '/players/playerTest.swf' %>
+<script type="text/javascript">
+  var flashvars = {
+    p1: encodeURIComponent('<%=@vidavee.file_flv_const session[:vidavee],dockey-%>')
+  };
+  var params = {};
+  var attributes = {};
+  var testPlayer = "/gs/scripts/swfobject/test.swf";
+  swfobject.embedSWF('<%=player_name-%>','<%=target-%>','<%=width-%>','<%=height%>',"9.0.28","/gs/scripts/swfobject/expressInstall.swf", flashvars, params, attributes);
+</script>

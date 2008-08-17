@@ -22,6 +22,13 @@ class VideoAsset < ActiveRecord::Base
 
   # Video upload repository
   VIDEO_REPOSITORY = VIDEO_BASE+"/uploaded"
+  
+  # set indexes for sphinx
+  define_index do
+    indexes title, :sortable => true
+    indexes description
+    indexes updated_at, :sortable => true
+  end
 
   # Game metadata
   def self.GAME_LEVELS
@@ -33,7 +40,7 @@ class VideoAsset < ActiveRecord::Base
   end
   
   named_scope :for_user,
-    lambda { |user| { :conditions => ["(team_id = ? || league_id = ?) and video_status = 'ready'",user.team_id, user.league_id] } }
+    lambda { |user| { :conditions => ["(team_id IN (?) || league_id IN (?)) and video_status = 'ready' and (public_video = ? || user_id = ?)",(user.league_staff? ? user.league.team_ids : [ user.team_id ]), [ user.league_id ], true, user.id ] } }
   
   named_scope :ready,
     :conditions => ["video_status = 'ready' and dockey IS NOT NULL"]

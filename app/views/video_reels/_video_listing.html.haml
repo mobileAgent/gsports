@@ -1,0 +1,32 @@
+.listingItem
+  .listingImage
+    = "<a href='#{user_video_reel_path(video_listing.user_id,video_listing)}'><img src='#{@vidavee.file_thumbnail_medium(video_listing.thumbnail_dockey)}' title='#{h(video_listing.title).gsub(/\'/,'')}' alt='Reel'/></a>"
+  .listingDescription
+    %h4
+      = h video_listing.title
+    .schoolName
+      = truncate_words("#{h video_listing.description} - #{h video_listing.video_length}",35)
+      %br/
+      = video_listing.tags.collect{|t| link_to( h(t.name), tag_url(t.name), :class => 'tag') }.join(" ")
+  - skip_controls ||= false
+  %ul.listingActions
+    - if video_listing.user
+      %li
+        %a.genericButton{ :href => user_path( video_listing.user.id )  }
+          %span
+            View Profile
+      %li
+        %a.genericButton{ :href => new_message_path(:to => video_listing.user.id) }
+          %span
+            Send Message
+    %li
+      = render :partial => 'shared/favorite_item', :locals => { :item => video_listing }
+    -if current_user && current_user.can_edit?(video_listing)
+      %li
+        %a.genericButton{ :href => edit_video_reel_path(video_listing) }
+          %span
+            Edit
+      %li
+        = link_to 'Destroy', video_listing, :confirm => 'Are you sure?', :method => :delete, :class=>'genericButton'
+  .clearDiv
+.clearDiv

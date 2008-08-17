@@ -1,0 +1,263 @@
+!!! Strict
+%html{ "xml:lang" => "en", :lang => "en", :xmlns => "http://www.w3.org/1999/xhtml" }
+  %head
+    %title
+      \###PAGE TITLE HERE###
+    %meta{ :content => "text/html;charset=utf-8", "http-equiv" => "Content-Type" }/
+    %link{ :href => "styles/main.css", :rel => "stylesheet" }/
+    /
+      [if IE 6]>
+      <style type="text/css">
+      \.contentBoxHeader { background-image: none; }
+      </style>
+      <![endif]
+    /
+      SWFObject - http://code.google.com/p/swfobject/
+    %script{ :type => "text/javascript", :src => "/scripts/swfobject/swfobject.js" }/
+  %body
+    .backgroundContainerHome
+      .outerContainer
+        .util
+        /
+          header/ads
+        %form#login{ :action => "#", :method => "post" }
+          .headerHome
+            %h1.headerBrand
+              Lorem ipsum dolor sit amet.
+            /
+              Login Box
+            .loginBox
+              %label{ :for => "loginUsername" }
+                USERNAME
+              %input#loginUsername.loginFormInput{ :type => "text" }/
+              %br/
+              %label{ :for => "loginPassword" }
+                PASSWORD
+              %input#loginPassword.loginFormPassword{ :type => "password" }/
+              %input.loginButton{ :name => "submit", :type => "image", :src => "images/top_nav_login.gif", :value => "Login", :alt => "Login" }/
+              %br/
+              %span.loginHelp
+                %a{ :href => "#" }
+                  signup >>
+                |
+                %a{ :href => "#" }
+                  password help >>
+            /
+              End Login Box
+            .clearDiv/
+        /
+          end header/ads
+        /
+          top-nav
+        .topNav
+          %ul.leftTopNav
+            %li
+              %span#gnavAboutGlobalSports.ROLLOVERIMAGE
+                %a{ :href => "#" }
+                  %span
+                    About Global Sports
+            %li.divider
+              %span#gnavMembership.ROLLOVERIMAGE
+                %a{ :href => "#" }
+                  %span
+                    Membership
+            %li.divider
+              %span#gnavRegistration.ROLLOVERIMAGE
+                %a{ :href => "#" }
+                  %span
+                    Registration
+          %form.rightTopNav{ :action => "#", :method => "get" }
+            %div
+              %h2
+                Search for My School
+              %label.verbalSemantic{ :for => "searchState" }
+                State
+              %select#searchState{ :name => "state" }
+                %option{ :value => "" }
+                  \- State -
+                %option{ :value => "" }
+                  State
+                %option{ :value => "" }
+                  State
+                %option{ :value => "" }
+                  State
+              %label.verbalSemantic{ :for => "searchCounty" }
+                County
+              %select#searchCounty{ :name => "county" }
+                %option{ :value => "" }
+                  \- County -
+                %option{ :value => "" }
+                  County
+                %option{ :value => "" }
+                  County
+                %option{ :value => "" }
+                  County
+              %label.verbalSemantic{ :for => "searchCity" }
+                City
+              %select#searchCity{ :name => "city" }
+                %option{ :value => "" }
+                  \- City -
+                %option{ :value => "" }
+                  City
+                %option{ :value => "" }
+                  City
+                %option{ :value => "" }
+                  City
+              %label.verbalSemantic{ :for => "searchSchool" }
+                School
+              %select#searchSchool{ :name => "school" }
+                %option{ :value => "" }
+                  \- School -
+                %option{ :value => "" }
+                  School
+                %option{ :value => "" }
+                  School
+                %option{ :value => "" }
+                  School
+              %input.submit{ :name => "submit", :type => "image", :src => "images/top_nav_search.gif", :value => "search", :alt => "Search" }/
+        /
+          end top-nav
+        /
+          Content
+        .landingContentArea
+          .TextContent
+            .AboutPlayer
+              #AboutVideoPlayer.AboutVideoPlayer
+                %h1
+                  Problem Starting Video Player.
+                %p
+                  Sorry, we could not start the video player. To view video content you will need to have Adobe Flash player installed and  JavaScript enabled on your browser.
+              .AboutVideoPlayerCaption
+                %p
+                  Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nulla vestibulum sollicitudin lorem. Nullam orci turpis, ultricies et, suscipit ornare, consequat eget, risus. Integer dignissim orci.
+            /
+              About Content Text
+            %h1
+              About Global Sports
+            %strong
+              Vestibulum magna. Suspendisse dapibus tortor eget magna.
+              Curabitur suscipit? Socis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.
+            %br/
+            %p
+              Nulla blandit erat non massa. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nulla vestibulum sollicitudin lorem. Nullam orci turpis, ultricies et, suscipit ornare, consequat eget, risus. Integer viverra dignissim orci.
+            %p
+              Suspendisse scelerisque viverra nisl. Nullam sed nisi. Ut pulvinar, pede et mollis tincidunt, sem arcu aliquam velit, et consequat sem massa et dui.  Cras faucibus pulvinar enim. Nulla imperdiet, est at interdum hendrerit, magna ipsum pulvinar dolor, ac rhoncus mauris metus id massa.
+            %p
+              Praesent quis ligula at turpis scelerisque interdum. Etiam pulvinar porttitor dolor. In feugiat congue erat. Donec arcu. Etiam vitae velit. In neque orci, scelerisque et, varius eget, feugiat at, leo. Quisque urna nulla, bibendum eget, fringilla quis, sollicitudin in, nisi.
+            %p
+              Nulla quis ligula ut nisi bibendum tincidunt. Aliquam faucibus orci at nisi. Donec vitae arcu. Aliquam libero diam, porta eget, sollicitudin nec, ultricies vel, est.
+            %p.AboutSummary
+              ?
+          /
+            SWFObject
+          %script{ :type => "text/javascript" }
+            var so = new SWFObject("movie.swf", "mymovie", "400", "316", "8", "#FFFFFF");
+            so.write("AboutVideoPlayer");
+          .clearDiv/
+        /
+          end 2 col content
+        /
+          weekly features
+        .homeFeature
+          /
+            Left Col
+          .homeFeatureLeft
+            %h2
+              Athletes of the week
+            /
+              Athletes of the week
+            .AthletesWeek
+              %img.AthletesPic{ :src => "placeholders/athletespic.jpg", :height => "65", :alt => "", :width => "103" }/
+              .AthletesDescrip
+                %p
+                  %strong
+                    Jane Nalgon
+                %p
+                  Short Stop
+              %img.AthletesLogo{ :src => "placeholders/teamlogo.jpg", :height => "65", :alt => "", :width => "65" }/
+            .AthletesWeek
+              %img.AthletesPic{ :src => "placeholders/athletespic.jpg", :height => "65", :alt => "", :width => "103" }/
+              .AthletesDescrip
+                %p
+                  %strong
+                    Jane Nalgon
+                %p
+                  Short Stop
+              %img.AthletesLogo{ :src => "placeholders/teamlogo.jpg", :height => "65", :alt => "", :width => "65" }/
+            /
+              end Athletes of the week
+          /
+            end left col
+          /
+            middle col
+          .homeFeatureMiddle
+            %h2
+              Become a Member
+            %a{ :href => "#" }
+              %img{ :src => "images/Home_Athletes_Coaches_Family.png", :height => "28", :alt => "Athletes, Coaches, Family & Fans", :width => "288" }/
+            %br/
+            %a{ :href => "#" }
+              %img{ :src => "images/Home_Leagues_Conferences.png", :height => "28", :alt => "Leagues and Conferences", :width => "288" }/
+            %br/
+            %a{ :href => "#" }
+              %img{ :src => "images/Home_Schools_Clubs.png", :height => "28", :alt => "Schools & Clubs", :width => "288" }/
+            %br/
+            %a{ :href => "#" }
+              %img{ :src => "images/Home_recruiters_scouts.png", :height => "28", :alt => "Recruiters and Scouts", :width => "288" }/
+          /
+            end middle col
+          /
+            right col
+          .homeFeatureRight
+            %h2
+              Send Invites
+            .SendInvites
+              %form#Invite{ :action => "#", :method => "get" }
+                %div
+                  %label{ :for => "InviteTo" }
+                    ENTER 'TO' EMAIL
+                  %br/
+                  %input#InviteTo.InviteTo{ :type => "text" }/
+                  %br/
+                  %label{ :for => "InviteMessage" }
+                    ENTER A MESSAGE
+                  %br/
+                  %textarea#InviteMessage.InviteMessage{ :rows => "3", :cols => "35" }/
+                  %br/
+                  %label{ :for => "InviteSender" }
+                    YOUR NAME
+                  %br/
+                  %input#InviteSender.InviteSender{ :type => "text" }/
+                  %input.InvitePreview{ :name => "preview", :type => "image", :src => "images/Home_Preview.gif" }/
+          /
+            end right col
+        /
+          end weekly features
+        /
+          footer/ads
+        .footer
+          .footerAds
+            %span.footerAd
+              %img{ :src => "placeholders/ad1.jpg" }/
+            %span.footerAd
+              %img{ :src => "placeholders/ad2.jpg" }/
+            %span.footerAd
+              %img{ :src => "placeholders/ad3.jpg" }/
+            %span.footerAd
+              %img{ :src => "placeholders/ad4.jpg" }/
+        /
+          end footer/ads
+        .legal
+          %span
+            ? Global Sports 2008 |
+            %a{ :href => "" }
+              Terms of Use
+            |
+            %a{ :href => "" }
+              Privacy Policy
+            |
+            %a{ :href => "" }
+              Advertising Opportunities
+            |
+            %a{ :href => "" }
+              Contact Us

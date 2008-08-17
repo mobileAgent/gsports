@@ -1,35 +1,36 @@
 .listingItem
   .listingImage
-    = link_to "<img src='#{@vidavee.file_thumbnail_medium(video_asset.dockey)}' title='#{h(video_asset.title).gsub(/\'/,'')}' alt='Video'/>", video_asset_path(video_asset)
+    = link_to "<img src='#{@vidavee.file_thumbnail_medium(video_listing.dockey)}' title='#{h(video_listing.title).gsub(/\'/,'')}' alt='Video'/>", video_asset_path(video_listing)
   .listingDescription
     %h4
-      = h video_asset.title
+      = h video_listing.title
     .schoolName
-      = "#{h video_asset.league.name if video_asset.league}, #{h video_asset.team.name if video_asset.team}, #{h video_asset.sport}, #{game_date(video_asset.game_date)}"
+      = "#{h video_listing.league.name if video_listing.league}, #{h video_listing.team.name if video_listing.team}, #{h video_listing.sport}, #{game_date(video_listing.game_date)}"
     .recentFriendFeed
-      = "#{h video_asset.description} - #{h video_asset.video_length}"
+      = truncate_words("#{h video_listing.description} - #{h video_listing.video_length}",35)
+      %br/
+      = video_listing.tags.collect{|t| link_to( h(t.name), tag_url(t.name), :class => 'tag') }.join(" ")
   - skip_controls ||= false
   %ul.listingActions
-
-    - if video_asset.user
+    - if video_listing.user
       %li
-        %a.genericButton{ :href => user_path( video_asset.user.id )  }
+        %a.genericButton{ :href => user_path( video_listing.user.id )  }
           %span
             View Profile
       %li
-        %a.genericButton{ :href => new_message_path(:to => video_asset.user.id) }
+        %a.genericButton{ :href => new_message_path(:to => video_listing.user.id) }
           %span
             Send Message
     %li
-      = render :partial => 'shared/favorite_item', :locals => { :item => video_asset }
+      = render :partial => 'shared/favorite_item', :locals => { :item => video_listing }
 
-    - if current_user && current_user.can_edit?(video_asset)
+    - if current_user && current_user.can_edit?(video_listing)
       %li
-        %a.genericButton{ :href => edit_video_asset_path(video_asset) }
+        %a.genericButton{ :href => edit_video_asset_path(video_listing) }
           %span
             Edit
       %li
-        = link_to 'Destroy', video_asset, :confirm => 'Are you sure?', :method => :delete, :html_options=>{:class=>'genericButton'}
+        = link_to 'Destroy', video_listing, :confirm => 'Are you sure?', :method => :delete,  :class=>'genericButton'
       %li
   .clearDiv
 .clearDiv

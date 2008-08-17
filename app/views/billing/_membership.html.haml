@@ -1,0 +1,11 @@
+%tr
+  %td
+    =membership.name
+  %td
+    =link_to membership.billing_method,:controller => :membership, :action => :member_billing_method_info ,:id => membership.id
+  %td
+    ="$" + membership.cost.to_s
+  %td
+    =membership.created_at.to_date
+  %td
+    =link_to "Billing History", :controller => :membership, :action => "member_billing_history", :id => membership.id 

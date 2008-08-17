@@ -1,0 +1,9 @@
+%tr
+  %td
+    ="#{userlist.lastname},#{userlist.firstname}, #{userlist.minitial}"
+  %td
+    =userlist.created_at.to_date
+  %td
+    =userlist.enabled? ? "Y" : "N"
+  %td
+    =userlist.memberships[0].nil? ? "NA" : userlist.memberships[0].name

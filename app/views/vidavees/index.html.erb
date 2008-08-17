@@ -1,6 +1,8 @@
 <h1>Listing Vidavee Login Parameters</h1>
 
+<em>There should only be one record in the system at any time</em>
 <table class="unstyled">
+  <thead>
   <tr>
     <th>Uri</th>
     <th>Servlet</th>
@@ -8,7 +10,8 @@
     <th>Context</th>
     <th>Username</th>
   </tr>
-
+  </thead>
+  <tbody>
 <% for vidavee in @vidavees %>
   <tr>
     <td><%=link_to(vidavee.uri, edit_vidavee_path(vidavee))%></td>
@@ -18,5 +21,6 @@
     <td><%=h vidavee.username %></td>
   </tr>
 <% end %>
+  </tbody>
 </table>
 

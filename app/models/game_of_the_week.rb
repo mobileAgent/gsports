@@ -1,13 +1,33 @@
 class GameOfTheWeek
+  
   # This is a wrapper around the admin users favorite videos
-  def self.find
-    videos = Favorite.user(User.admin.first).videos.all(:order => "created_at DESC", :limit => 6)
+  def self.for_home_page
+    video_favorites = Favorite.user(User.admin.first).videos.all(:order => "created_at DESC", :limit => 6)
     # Add a last resort to keep the whole site from being borked
-    if videos.size == 0
-      videos << VideoAsset.ready.first
+    if video_favorites.size == 0
+      video_favorites << VideoAsset.ready.first
     end
-    
-    videos.inject([]) do |list,v|
+    convert_favorites_to_videos(video_favorites)
+  end
+
+  # Team staff favorites
+  def self.for_team(team_id)
+    team_staff_ids = User.team_staff(team_id).collect(&:id)
+    favs = Favorite.featured_games(team_staff_ids)
+    convert_favorites_to_videos(favs)
+  end
+
+  # League staff favorites
+  def self.for_league(league_id)
+    league_staff_ids = User.league_staff(league_id).collect(&:id)
+    favs = Favorite.featured_games(league_staff_ids)
+    convert_favorites_to_videos(favs)
+  end
+
+  private
+
+  def self.convert_favorites_to_videos(video_favorites)
+    video_favorites.inject([]) do |list,v|
       begin
         case v.favoritable_type
         when 'VideoAsset'
@@ -22,4 +42,5 @@ class GameOfTheWeek
       list
     end
   end
+    
 end

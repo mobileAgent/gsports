@@ -20,6 +20,7 @@ class User < ActiveRecord::Base
   has_many :subscriptions
   has_many :memberships, :through => :subscriptions
   belongs_to :team
+  belongs_to :league
   has_many :video_assets
   has_many :video_clips
   has_many :video_reels
@@ -34,12 +35,8 @@ class User < ActiveRecord::Base
 
   attr_protected :team_name, :league_name
 
-  [:team_avatar, :league_avatar, :league, :league_id, :ad_zone].each do |method|
+  [:team_avatar, :ad_zone].each do |method|
     delegate method, :to => :team
-  end
-
-  [:league_name].each do |method|
-    delegate method, :to => :league
   end
 
   named_scope :admin,
@@ -50,16 +47,24 @@ class User < ActiveRecord::Base
     lambda { |team_id| { :conditions => ["team_id = ? and role_id = ?",team_id,Role[:team].id] } }
 
   # The billing entity for the league account
-#  named_scope :league_admin,
-#    lambda { |league_id| { :conditions => ["league_id = ? and role_id = ?",league_id,Role[:league].id] } }
+  named_scope :league_admin,
+   lambda { |league_id| { :conditions => ["league_id = ? and role_id = ?",league_id,Role[:league].id] } }
 
   # Those who can do things for the team account
   named_scope :team_staff,
     lambda { |team_id| { :conditions => ["team_id = ? and role_id IN (?)",team_id,[Role[:team_staff].id,Role[:team].id, Role[:admin].id] ] } }
 
   # Those who can do things for the league account
-#  named_scope :league_staff,
-#    lambda { |league_id| { :conditions => ["league_id = ? and role_id IN (?)",league_id,[Role[:league_staff].id, Role[:league].id, Role[:admin].id] ] } }
+  named_scope :league_staff,
+    lambda { |league_id| { :conditions => ["league_id = ? and role_id IN (?)",league_id,[Role[:league_staff].id, Role[:league].id, Role[:admin].id] ] } }
+
+  def self.league_staff_ids(league_id)
+    User.league_staff(league_id).collect(&:id)
+  end
+
+  def self.team_staff_ids(team_id)
+    User.team_staff(team_id).collect(&:id)
+  end
 
   def team_admin?
     role && role.eql?(Role[:team])
@@ -117,13 +122,15 @@ class User < ActiveRecord::Base
   def make_member(billing_method, address,payment_authorization)
     mem = Membership.new(:billing_method=>billing_method)
     mem.cost = role.plan.cost
-    mem.name = firstname + " " + minitial + " " + lastname
+    mem.name = full_name
 
-    history = MembershipBillingHistory.new
-    history.authorization_reference_number = "sample"
-    history.payment_method = billing_method
-    mem.membership_billing_histories << history
-
+    if payment_authorization # else we may just be updating cc info
+      history = MembershipBillingHistory.new
+      pf = payment_authorization.params
+      history.authorization_reference_number = "#{pf['pn_ref']}/#{pf['auth_code']}"
+      history.payment_method = billing_method
+      mem.membership_billing_histories << history
+    end
     memberships << mem
     save
   end
@@ -134,7 +141,8 @@ class User < ActiveRecord::Base
                         :number => ccinfo.number,
                         :month => ccinfo.month,
                         :year => ccinfo.year,
-                        :verification_value => ccinfo.verification_value)
+                        :verification_value => ccinfo.verification_value,
+                        :displayable_number => ccinfo.number[(ccinfo.number.length - 4)..ccinfo.number.length])
    memberships[0].credit_card = cc
    save
   end
@@ -152,11 +160,63 @@ class User < ActiveRecord::Base
   end
 
   def moniker_hash
-    self.applied_monikers.inject({}) { |s,am| s.merge( { am.name => am.tags.collect(&:name) } ) }
+    mh = self.applied_monikers.inject({}) { |s,am| s.merge( { am.name => am.tags.collect(&:name) } ) }
+    Moniker.system.each do |sysmoniker|
+      if (! mh.has_key?(sysmoniker.name))
+        mh[sysmoniker.name] = []
+      end
+    end
+    mh
+  end
+
+  # Quick hack to get auto complete access to system monikers
+  # until I can figure out more metaprogramming juju
+  Moniker.system.collect(&:name).each do |mname|
+    define_method "moniker_#{mname}_tag_list" do
+      moniker_hash["#{mname}"].join(", ")
+    end
+    define_method "moniker_#{mname}_tag_list=" do |tag_list|
+      tag_moniker("#{mname}",tag_list)
+    end
   end
 
   def team_name
     team_id? ? team.name : ''
+  end
+
+  # Unless the role is league or league_staff, use team->league
+  def league_name
+    if (league_staff?)
+      return League.find(league_id).name if league_id?
+      return nil
+    end
+    return nil if team_id.nil?
+    return team.league_name
+  end
+
+  # Unless the role is league or league_staff, use team->league
+  def league_avatar
+    return team.league_avatar unless league_staff?
+    return League.find(league_id).avatar
+  end
+
+  # Unless the role is league or league_staff, use team->league
+  def league
+    return team.league unless league_staff?
+    return League.find(league_id)
+  end
+
+  def byline
+    tlname = league_staff? ? (League.find(league_id).name) : team_name
+    "#{full_name}, #{tlname}"
+  end
+    
+  # Authenticates a user by their login name and unencrypted password.  Returns the user or nil.
+  # We only do this by email and we also handle disabled user accounts
+  def self.authenticate(login, password)
+    # hide records with a nil activated_at
+    u = find :first, :conditions => ['email = ? and activated_at IS NOT NULL and enabled = true', login] if u.nil?
+    u && u.authenticated?(password) && u.update_last_login ? u : nil
   end
   
 end

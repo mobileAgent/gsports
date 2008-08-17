@@ -1,13 +1,24 @@
-- if(current_user.league_admin? || current_user.team_admin? || current_user.admin?)
-  %p= link_to('Upload a new video', new_video_asset_path)
-  
-- for video_asset in @video_assets
-  = render :partial => 'video_block', :locals => { :video_asset => video_asset }
-  = render :partial => 'shared/favorite_item', :locals => { :item => video_asset }
-  %br/
-  
-- if @video_assets.respond_to?('total_pages')
-  .apple_pagination
-    = will_paginate @video_assets
+.profileContentArea.listingPage
+  .profilePageHeader
+    %h2.columnDescriptor
+      %span
+        = "MY VIDEOS"
+      = @user.full_name
+  .leftNavCol
+    %h2.yellowHeader
+      My Profile
+    .leftNav
+      =render :partial => "users/profile_nav"
+  .listings
+    - if current_user.can_upload?
+      .listingItem
+        = link_to 'Upload a new video', new_video_asset_path, :class => 'genericButton'
+      
+      = render :partial => 'video_listing', :collection => @video_assets
+      
+      - if @video_assets.respond_to?('total_pages')
+        .apple_pagination
+          = will_paginate @video_assets
+        
     
-
+    
