@@ -31,6 +31,7 @@ class SentMessagesController < ApplicationController
     respond_to do |format|
       format.html { redirect_to(sent_messages_url) }
       format.xml  { head :ok }
+      format.js
     end
   end
 end
