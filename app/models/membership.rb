@@ -76,17 +76,13 @@ class Membership < ActiveRecord::Base
 # Bill this member
 #
 def bill_recurring
-# Enable this once we really start encrypting CC numbers
-#    crypt_key = EzCrypto::Key.with_password CC_CRYPT_PASSWORD,CC_CRYPT_SALT
-#    decrypted_card_number = crypt_key.decrypt credit_card.number
 
     return nil if credit_card.nil? # No credit card no billing (for now)
 
-    decrypted_card_number = credit_card.number # remove this and enable crypt lines once we start encrypting numbers
     credit_card = ActiveMerchant::Billing::CreditCard.new({
       :first_name => credit_card.first_name,
       :last_name => credit_card.last_name,
-      :number => decrypted_card_number,
+      :number => credit_card.number,
       :month => credit_card.month,
       :year => credit_card.year,
       :verification_value => credit_card.verification_value})
