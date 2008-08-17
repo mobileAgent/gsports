@@ -1,6 +1,6 @@
 class SentMessage < ActiveRecord::Base
   
-  belongs_to :user, :foreign_key => 'from_id'
+  belongs_to :user, :foreign_key => :from_id
 
   named_scope :sent_by,
     lambda { |user| { :conditions => ["from_id = ?",user.id] } }

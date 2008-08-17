@@ -4,7 +4,7 @@ class Message < ActiveRecord::Base
   validates_presence_of :body
   validates_presence_of :to_id
   validates_presence_of :from_id
-  belongs_to :user, :foreign_key => 'to_id'
+  belongs_to :user, :foreign_key => :to_id
 
   attr_protected :to_ids, :to_name
 
