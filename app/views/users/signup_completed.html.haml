@@ -1,18 +1,34 @@
-.box
-  %h3 Go check your e-mail!
-  %ul.list.checks
-    %li
-      = "Your credit card has been successfuly charged for $"+ @user.role.plan.cost.to_s
-    %li
-      This charge will occur every month.  It will appear on your credit card statement as GSports Inc.
-    %li
-      We just sent an e-mail to
-      %strong
-        = @user.email
-      that will let you activate your account. </li
-      %li
-        Look for a message from
-        = AppConfig.community_name
-        (check your junk mail folder too, just in case).
-      %li
-        See you back here in a short while...
+.profileContentArea
+  .profilePageHeader
+    %h2.columnDescriptor
+      %span
+        = "Welcome to #{AppConfig.community_name}, #{@user.full_name}!"
+
+  .listings
+    .contentBox.tanBackground
+      .contentBoxHeader.yellowHeader
+        %h2.boxDescription
+          Your Next Steps
+
+    .listingItem
+      Your credit card has been successfuly charged
+      = number_to_currency(@user.role.plan.cost)
+      and this charge will occur every month about this time.
+      It will appear on your credit card statement as
+      = "'#{AppConfig.community_name}'."
+
+    .listingItem
+
+      We have sent an email to the email address you provided
+      during registration. Please take a look around for it, check
+      your spam folder just in case. Make sure to add the
+      = AppConfig.community_name
+      sender to your contacts list so
+      you continue to get important information about your
+      account.
+
+    .listingItem
+      Head on over and
+      = link_to "start filling out your profile.", edit_user_path(@user)
+      You can upload a picture, find your friends, tag your self,
+      and look at some of the cool videos we have.

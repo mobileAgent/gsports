@@ -154,7 +154,8 @@ class UsersController < BaseController
       @user.enabled = true
       @user.activated_at = Time.now
       @user.save!
-      flash[:notice] = "Successfully charged $#{@user.role.plan.cost} to card #{@credit_card.display_number}"
+      self.current_user = @user # Log them in right now!
+      UserNotifier.deliver_welcome(@user)
       redirect_to signup_completed_user_path(@user)
     else
       @billing_address ||= Address.new
