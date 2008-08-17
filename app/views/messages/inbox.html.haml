@@ -1,3 +1,18 @@
+.profileContentArea.listingPage
+  .profilePageHeader
+    %h2.columnDescriptor
+      %span
+        = @title || "Inbox"
+  .leftNavCol
+    %h2.yellowHeader
+      My Profile
+    .leftNav
+      =render :partial => "users/profile_nav"
+
+  .listings
+    .listingItem
+      = link_to 'Sent Messages', sent_messages_path
+      = link_to 'Compose', new_message_path
 
 #yui-main
   .yui-b
@@ -9,7 +24,5 @@
   .box
     %h3 Mailbox
     %ul.list.checks
-      %li= link_to 'Sent Messages', messages_path(:box=>:sent)
-        
+      %li= link_to 'Sent Messages', sent_messages_path
 
-  =render :partial => "contacts"

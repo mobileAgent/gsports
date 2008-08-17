@@ -1,51 +1,31 @@
-.yui-b
-  .box
-    %h3 Messages
+.profileContentArea.listingPage
+  .profilePageHeader
+    %h2.columnDescriptor
+      %span
+        New Message
+  .leftNavCol
+    %h2.yellowHeader
+      My Profile
+    .leftNav
+      =render :partial => "users/profile_nav"
 
-#yui-main
-  .yui-b
-    .box
-      %h3 New Message
-
-      = error_messages_for :message
+  .listings
+    = error_messages_for :message
       
-      - form_for(@message, :html => {:class => "MainForm"}) do |f|
-        .yui-g
-          .yui-u
-        
-            %label
-              To:
-              #message_to_box
-                %table
-                  - current_user.accepted_friendships.each do |friendship|
-                    - user = friendship.friend
-                    %tr
-                      %td{ :valign=>:middle }
-                        - chk = (@message.to_id.to_i == user.id) ? true : nil
-                        %input{:type=>'radio', :id=>"message_to_#{user.id}", :class=>"message_to_class", :name=>"message[to_id]", :value=>user.id, :checked=>chk }
-                      %td
-                        %label{:for=>"message_to_#{user.id}"}
-                          = image_tag(user.avatar_photo_url(:thumb), :alt => "#{user.full_name}", :width => '50', :height => '50')
-                      %td
-                        %label{:for=>"message_to_#{user.id}"}
-                          = h("#{user.full_name}")
-                          %br
-                          = truncate_words( user.description, 20, '...')
+    - form_for(@message, :html => {:class => "MainForm"}) do |f|
+      %label
+        To:
+        %em (required, separate multiple names with commas)
+      = text_field_with_auto_complete :message, :to_name, {:autocomplete => 'off'},{:url => { :controller => 'messages', :action => 'auto_complete_for_friend_full_name'}, :tokens => [',']}
+      %label
+        Subject 
+        %em (required)
+      = f.text_field :title
 
-          .yui-u.first
-            %label
-              Title 
-              %em (required)
-            = f.text_field :title
+      %label
+        Body Text 
+        %em (required)
+      = f.text_area :body, :rows => 10, :style => "width:100%;"
 
-        %label
-          Body Text 
-          %em (required)
-        = f.text_area :body, :rows => 10, :style => "width:100%;"
-
-        %p
-          = submit_tag "Send"
-
-
-  -#= observe_field  "post_category_id", {:url => {:controller => 'categories', :action => 'show_tips'}, :with => "id", :update => "category_tips", :complete => visual_effect(:highlight, "category_tips", :duration => 0.5)}
-
+      %p
+        = submit_tag "Send"

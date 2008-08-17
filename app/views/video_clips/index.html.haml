@@ -12,7 +12,7 @@
 
   .listings
     - if @video_clips.any?
-      = render :partial => 'video_block', :collection => @video_clips
+      = render :partial => 'video_listing', :collection => @video_clips
     
       - if @video_clips.respond_to?('total_pages')
         .apple_pagination

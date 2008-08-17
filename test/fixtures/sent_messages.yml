@@ -1,0 +1,13 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  title: MyString
+  from_id: 1
+  to_ids: 2/3/4
+  body: MyText
+
+two:
+  title: MyString
+  from_id: 1
+  to_ids: 4
+  body: MyText

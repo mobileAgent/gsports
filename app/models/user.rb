@@ -26,6 +26,8 @@ class User < ActiveRecord::Base
   has_many :video_reels
   has_many :applied_monikers
   has_many :monikers, :through => :applied_monikers
+  has_many :messages, :foreign_key => 'to_id'
+  has_many :sent_messages, :foreign_key => 'from_id'
 
   # Base model uses has_enumerated here, but at least fixtures
   # don't work with that. This takes care of the foxy fixtures

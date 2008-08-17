@@ -1,0 +1,36 @@
+.profileContentArea.listingPage
+  .profilePageHeader
+    %h2.columnDescriptor
+      %span
+        = @title || "Sent Messages"
+  .leftNavCol
+    %h2.yellowHeader
+      My Profile
+    .leftNav
+      =render :partial => "users/profile_nav"
+
+  .listings
+    .listingItem
+      = link_to 'Inbox', messages_path
+      = link_to 'Compose', new_message_path
+
+    - for sent_message in @sent_messages
+      .listingItem{:id => "message_#{sent_message.id}"}
+        = link_to'Destroy', sent_message, :confirm => 'Are you sure?', :method => :delete, :style => "float:right"
+        .msgHeader
+          = "Date: "
+          %span.msgField
+            = sent_message.created_at.to_s(:game_date)
+        .msgHeader
+          = "To: "
+          %span.msgField
+            = truncate(h(sent_message.to_ids_user_names_array.join(", ")),85)
+        .msgHeader
+          = "Subject: "
+          %span.msgField
+            = truncate(h(sent_message.title),85)
+        .msgBody
+          = truncate_words (h(sent_message.body),50)
+          %br/
+          = link_to "more?",sent_message, :class => "morelink"
+

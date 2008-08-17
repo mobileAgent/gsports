@@ -16,7 +16,7 @@
 
 
 
-- if current_user && current_user.admin? && @user.id != current_user.id
+- if current_user && current_user.admin? && (@user.nil? || @user.id != current_user.id)
   %br
   %ul
     %li= link_to( "Assume ID", assume_user_path(@user) )
