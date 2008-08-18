@@ -31,12 +31,5 @@ module UsersHelper
     )
   end
   
-  def team_posts()
-    Post.find(:all,
-      :joins=>"JOIN users ON user_id = users.id",
-      :conditions=>["users.team_id = ?", @user.team_id],
-      :limit=>10
-      )
-  end
   
 end

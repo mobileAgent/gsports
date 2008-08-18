@@ -250,7 +250,7 @@
   /
     col3 content
   .mainCol3
-    - team_posts().each() do |post|
+    - team_posts(@user.team_id).each() do |post|
       .rightContentItem
         %span.moreLink
           = link_to 'more>>', user_post_path(post.user, post), :rel => 'bookmark'
