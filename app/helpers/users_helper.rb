@@ -31,5 +31,17 @@ module UsersHelper
     )
   end
   
+  def load_features(team=nil)
+    team ||= current_user.team
+    @featured_team = team
+    
+    @featured_athletes_for_team = AthleteOfTheWeek.for_team(team.id)
+    @featured_athletes_for_league = AthleteOfTheWeek.for_league(team.league_id)
+    @featured_game_for_team = GameOfTheWeek.for_team(team.id).first
+    @featured_game_for_league = GameOfTheWeek.for_league(team.league_id).first
+    
+    @show_weekly_feature = true
+  end
+  
   
 end
