@@ -42,7 +42,7 @@ class RecurringBilling
     mships = Membership.find :all
     @billing_logger.info "Found #{mships.length} memberships to process"
     mships.each {|m|
-      due << m if time_diff_in_days(m.last_billed) > PAYMENT_DUE_CYCLE
+      due << m if ((time_diff_in_days(m.last_billed) > PAYMENT_DUE_CYCLE) && (m.billing_method.eql?Membership::CREDIT_CARD_BILLING_METHOD))
     }
     due
   end
