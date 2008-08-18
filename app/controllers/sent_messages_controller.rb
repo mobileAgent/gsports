@@ -14,6 +14,10 @@ class SentMessagesController < ApplicationController
   # GET /sent_messages/1.xml
   def show
     @sent_message = SentMessage.find(params[:id])
+    if (! (current_user.admin? || current_user.id == @sent_message.from_id))
+      redirect_to user_path(current_user)
+      return
+    end
 
     respond_to do |format|
       format.html # show.html.erb
@@ -26,6 +30,10 @@ class SentMessagesController < ApplicationController
   # DELETE /sent_messages/1.xml
   def destroy
     @sent_message = SentMessage.find(params[:id])
+    if (! (current_user.admin? || current_user.id == @sent_message.from_id))
+      redirect_to user_path(current_user)
+      return
+    end
     @sent_message.destroy
 
     respond_to do |format|
