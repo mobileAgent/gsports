@@ -62,6 +62,10 @@ class MessagesController < ApplicationController
   # DELETE /messages/1.xml
   def destroy
     @message = Message.find(params[:id])
+    if (! (current_user.admin? || current_user.id == @message.to_id))
+      redirect_to user_path(current_user)
+      return
+    end
     @message.destroy
     @msgs = Message.inbox(current_user)
     respond_to do |format|
