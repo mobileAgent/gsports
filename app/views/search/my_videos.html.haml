@@ -56,9 +56,10 @@
           %span.moreLink
   
     -if @video_assets && @video_assets.size > 0
-      .listingItem
-        %h2
-          Videos
+      .contentBox.tanBackground
+        .contentBoxHeader.yellowHeader
+          %h2.boxDescription
+            Videos
       =render :partial => 'video_assets/video_listing', :collection => @video_assets, :locals => { :skip_controls => false }
     
       - if @video_assets.respond_to?('total_pages')
@@ -70,9 +71,10 @@
 
   
     -if @video_clips && @video_clips.size > 0
-      .listingItem
-        %h2
-          Clips 
+      .contentBox.tanBackground
+        .contentBoxHeader.yellowHeader
+          %h2.boxDescription
+            Clips
       =render :partial => 'video_clips/video_listing', :collection => @video_clips, :locals => {:skip_controls => false }
       
       - if @video_clips.respond_to?('total_pages')
@@ -83,9 +85,10 @@
           = link_to "More Clips...", url_for(:controller => 'search', :action => 'my_video_clips')
 
     - if @video_reels && @video_reels.size > 0  
-      .listingItem
-        %h2
-          Reels
+      .contentBox.tanBackground
+        .contentBoxHeader.yellowHeader
+          %h2.boxDescription
+            Reels
       =render :partial => 'video_reels/video_listing', :collection => @video_reels, :locals => { :skip_controls => false }
       
       - if @video_reels.respond_to?('total_pages')

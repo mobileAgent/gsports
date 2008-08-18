@@ -18,7 +18,7 @@
       %span.msgField
         = truncate(h(message.title),85)
     .msgBody
-      = truncate_words (h(message.body),50)
+      = truncate_words message.body,50
       %br/
       = link_to "more?", message, :class => "morelink"
   .clearDiv

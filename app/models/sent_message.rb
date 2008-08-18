@@ -18,6 +18,10 @@ class SentMessage < ActiveRecord::Base
     self.to_ids= ary.to_param
   end
 
+  def to_id=(id)
+    self.to_ids= id.to_s
+  end
+
   def to_ids_user_names_array
     users = User.find(:all, :conditions => ["id IN (?)", to_ids_array])
     ary = users.inject([]) { |a,u| a << u.full_name}

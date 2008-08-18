@@ -21,8 +21,12 @@ class MessagesController < ApplicationController
   # POST /messages
   # POST /messages.xml
   def create
-    recipient_ids,is_alias =
-      Message.get_message_recipient_ids(params[:message][:to_name], current_user)
+    if (params[:message][:to_name])
+      recipient_ids,is_alias =
+        Message.get_message_recipient_ids(params[:message][:to_name], current_user)
+    else
+      recipient_ids,is_alias = params[:message][:to_id],false
+    end
     logger.debug "Sending message from #{current_user.id} to #{recipient_ids.to_json}"
     # Now we have all the ids, sent the message to each one
     @message = nil # pull out to scope for rescue render
