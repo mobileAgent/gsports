@@ -26,6 +26,7 @@ class Message < ActiveRecord::Base
   def self.unread(user)
     count(:conditions => ["to_id = ? and 'read' = ?", user.id,false])
   end
+  #" -- reset emacs lame ruby-mode hilight --
   
   def self.inbox(user)
     msgs = []
@@ -50,5 +51,33 @@ class Message < ActiveRecord::Base
   def sent_on_display(format = "%Y/%m/%d")
      created_at.strftime(format)
   end
+
+  # Useful for grabbing a set of names and aliases from the 
+  # compose form and generating a list of ids that the message
+  # gets sent to.
+  def self.get_message_recipient_ids(names,current_user)
+    recipient_ids = []
+    to_names = names.split(',')
+    to_names.each do |recipient|
+      if recipient == 'all' && current_user.admin?
+        users = User.find(:all,:conditions => ['enabled = ?',true])
+        users.each { |user| recipient_ids << user.id }
+      elsif recipient == 'team' && current_user.team_staff?
+        users = User.find(:all, :conditions => ['team_id = ?',current_user.team_id])
+        users.each { |user| recipient_ids << user.id }
+        
+      elsif recipient == 'league' && current_user.league_staff?
+        users = User.find(:all, :conditions => ['league_id = ?',current_user.league_id])
+        users.each { |user| recipient_ids << user.id }
+        
+      else # normal case
+        fn,ln = full_name.split(' ')
+        user = User.find(:first, :conditions => ['firstname = ? and lastname = ?',fn,ln])
+        recipient_ids << user.id if user
+      end
+    end
+    recipient_ids
+  end
+  
 
 end

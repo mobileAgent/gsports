@@ -21,33 +21,36 @@ class MessagesController < ApplicationController
   # POST /messages
   # POST /messages.xml
   def create
-    to_names = params[:message][:to_name].split(',')
-    to_ids = []
-    to_names.each do |recipient|
+    recipient_ids =
+      Message.get_message_recipient_ids(params[:message][:to_name], current_user)
+    logger.debug "Sending message from #{current_user.id} to #{recipient_ids.to_json}"
+    # Now we have all the ids, sent the message to each one
+    @message = nil # pull out to scope for rescue render
+    recipient_ids.each do |recipient_id|
       @message = Message.new(params[:message])
       @message.from_id= current_user.id
-      @message.to_name= recipient
-      to_ids << @message.to_id
+      @message.to_id= recipient_id
       @message.save!
     end
 
-    sent_message = SentMessage.new
+    # And finally drop a sent message for the sender
+    logger.debug "Doing the sent message for #{current_user.id}"
+    sent_message = SentMessage.new(params[:message])
     sent_message.from_id= current_user.id
-    sent_message.title= params[:message][:title]
-    sent_message.body= params[:message][:body]
-    sent_message.to_ids_array= to_ids
+    sent_message.to_ids_array= recipient_ids
     sent_message.save!
-    
+
+    logger.debug "The sent message was saved"
+
     respond_to do |format|
       format.html { 
         flash[:notice] = "Your message was sent successfully."
-        redirect_to messages_path() and return
+        redirect_to messages_url and return
       }
       format.js
     end
-    return
   rescue
-    logger.debug("In rescue block ZZZ");
+    logger.debug("In rescue block ZZZ: " + $! );
     respond_to do |format|
       format.html { render :action => "new" }
       format.js

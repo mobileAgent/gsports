@@ -12,10 +12,19 @@
   .listings
     = error_messages_for :message
       
-    - form_for(@message, :html => {:class => "MainForm"}) do |f|
+    - form_for(@message ||= Message.new, :html => {:class => "MainForm"}) do |f|
       %label
         To:
         %em (required, separate multiple names with commas)
+        -if current_user.admin?
+          %br/
+          %em (you can enter the keyword 'all' to send to all users, it will take a while)
+        - if current_user.team_staff?
+          %br/
+          %em= "(you can enter the keyword 'team' to send to all users associated with #{current_user.team.name})"
+        - if current_user.league_staff?
+          %br/
+          %em= "(you can enter the keyword 'league' to send to all users associated with #{current_user.league.name})"
       = text_field_with_auto_complete :message, :to_name, {:autocomplete => 'off'},{:url => { :controller => 'messages', :action => 'auto_complete_for_friend_full_name'}, :tokens => [',']}
       %label
         Subject 
