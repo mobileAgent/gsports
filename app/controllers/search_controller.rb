@@ -61,6 +61,24 @@ class SearchController < BaseController
     @video_reels = VideoReel.for_user(@user).paginate(:page => params[:page], :order => 'updated_at DESC')
     render:action => "my_videos"
   end
+  
+  def team_video_assets
+    @user = current_user
+    @team = Team.find(params[:team_id])
+    @title = @team.name
+    @video_assets = VideoAsset.for_team(@team).paginate(:page => params[:page], :order => 'updated_at DESC')
+    render:action => "my_videos"
+  end
+
+  def league_video_assets
+    @user = current_user
+    @league = League.find(params[:league_id])
+    @title = @league.name
+    @video_assets = VideoAsset.for_league(@league).paginate(:page => params[:page], :order => 'updated_at DESC')
+    render:action => "my_videos"
+  end
+
+    
     
 
   protected
