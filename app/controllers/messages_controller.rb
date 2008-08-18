@@ -21,7 +21,7 @@ class MessagesController < ApplicationController
   # POST /messages
   # POST /messages.xml
   def create
-    recipient_ids =
+    recipient_ids,is_alias =
       Message.get_message_recipient_ids(params[:message][:to_name], current_user)
     logger.debug "Sending message from #{current_user.id} to #{recipient_ids.to_json}"
     # Now we have all the ids, sent the message to each one
@@ -37,7 +37,8 @@ class MessagesController < ApplicationController
     logger.debug "Doing the sent message for #{current_user.id}"
     sent_message = SentMessage.new(params[:message])
     sent_message.from_id= current_user.id
-    sent_message.to_ids_array= recipient_ids
+    to_ids,uses_alias = (is_alias ? Message.get_message_recipient_ids(params[:message][:to_name],current_user,true) : recipient_ids)
+    sent_message.to_ids_array= to_ids
     sent_message.save!
 
     logger.debug "The sent message was saved"
@@ -49,12 +50,12 @@ class MessagesController < ApplicationController
       }
       format.js
     end
-  rescue
-    logger.debug("In rescue block ZZZ: " + $! );
-    respond_to do |format|
-      format.html { render :action => "new" }
-      format.js
-    end
+#   rescue
+#     logger.debug("In rescue block ZZZ: " + $! );
+#     respond_to do |format|
+#       format.html { render :action => "new" }
+#       format.js
+#     end
   end
   
   

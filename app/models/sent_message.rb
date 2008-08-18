@@ -20,7 +20,11 @@ class SentMessage < ActiveRecord::Base
 
   def to_ids_user_names_array
     users = User.find(:all, :conditions => ["id IN (?)", to_ids_array])
-    users.inject([]) { |a,u| a << u.full_name}
+    ary = users.inject([]) { |a,u| a << u.full_name}
+    ary << 'all' if to_ids.index('-1')
+    ary << 'team' if to_ids.index('-2')
+    ary << 'league' if to_ids.index('-3')
+    ary
   end
 
   
