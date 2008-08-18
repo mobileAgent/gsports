@@ -260,6 +260,11 @@ class UsersController < BaseController
     @recommended_posts = @user.recommended_posts
     # For league staff choose from among their teams
     team_id = @user.league_staff? ? @user.league.team_ids[rand(@user.league.team_ids.size)] : @user.team_id
+    @recent_uploads = Dashboard.recent_uploads(@user)
+    @popular_videos = Dashboard.popular_videos(@user)
+    @network_recent = Dashboard.network_recent(@user)
+    @network_favorites = Dashboard.network_favorites(@user)
+    
   end
 
   def forgot_password  

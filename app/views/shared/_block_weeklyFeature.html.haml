@@ -13,7 +13,7 @@
             %h3= "#{@featured_game_for_team.team.name}"
           %span.sportName= "#{(@featured_game_for_team.sport? ? @featured_game_for_team.sport.capitalize : '')}"
           %br/
-          %span.date= "#{@featured_game_for_team.game_date}"
+          %span.date= game_date(@featured_game_for_team.game_date)
           %br/
         .clearDiv
     - if @featured_athletes_for_team && @featured_athletes_for_team.any?

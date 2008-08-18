@@ -42,6 +42,5 @@ module UsersHelper
     
     @show_weekly_feature = true
   end
-  
-  
+
 end
