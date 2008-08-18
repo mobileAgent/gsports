@@ -14,15 +14,5 @@
       = link_to 'Sent Messages', sent_messages_path
       = link_to 'Compose', new_message_path
 
-#yui-main
-  .yui-b
-    .box.hfeed
-      %h3 Inbox
-      = render :partial => 'messages/message', :collection => @msgs
-
-.yui-b  
-  .box
-    %h3 Mailbox
-    %ul.list.checks
-      %li= link_to 'Sent Messages', sent_messages_path
+    = render :partial => 'messages/message', :collection => @msgs
 

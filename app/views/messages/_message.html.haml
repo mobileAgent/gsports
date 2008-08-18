@@ -1,18 +1,25 @@
-.hentry
-  %h4.entry-title{:id=>"message_#{ message.id}"}
-    = link_to h(truncate_words(message.title,15)) , message_path(message)
-
-  .vcard.author
-    %h5
-      %a{:href=>"#{user_path(message.sender)}", :class=>"photo"}
-        =image_tag(message.sender.avatar_photo_url(:thumb), :alt=>"", :width=>"50", :height=>"50")
-
-    %ul
-      %li.fn=link_to "#{message.sender.full_name}", user_path(message.sender)
-      %li.update
-        %abbr.published{:title=>"#{message.created_at}"}= message.sent_on_display("%B %d, %Y")
-
-  .entry-content
-    = truncate_words(message.body, 75, '...' )
+.listingItem{:id => "message_#{message.id}"}
+  = link_to_remote 'Destroy', {:url => { :controller => 'messages', :action => 'destroy', :id => message}, :method => :delete} , :style => "float:right", :class => 'genericButton'
+  .listingImage
+    %a{:href=>"#{user_path(message.sender)}", :class=>"photo"}
+      =image_tag(message.sender.avatar_photo_url(:thumb), :alt=>"", :width=>"50", :height=>"50")
+  .listingDescription
     
-    %h6=link_to 'Reply', new_message_path(:to => message.sender.id, :title => "Re: #{message.title}" )
+    .msgHeader
+      = "Date: "
+      %span.msgField
+        = message.created_at.to_s(:game_date)
+    .msgHeader
+      = "From: "
+      %span.msgField
+        =h message.user.full_name
+    .msgHeader
+      = "Subject: "
+      %span.msgField
+        = truncate(h(message.title),85)
+    .msgBody
+      = truncate_words (h(message.body),50)
+      %br/
+      = link_to "more?", message, :class => "morelink"
+  .clearDiv
+.clearDiv

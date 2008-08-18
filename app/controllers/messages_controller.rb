@@ -61,7 +61,10 @@ class MessagesController < ApplicationController
     @message = Message.find(params[:id])
     @message.destroy
     @msgs = Message.inbox(current_user)
-    render :action => 'inbox'
+    respond_to do |format|
+      format.html { render :action => 'inbox' }
+      format.js
+    end
   end
   
   

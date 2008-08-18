@@ -16,7 +16,7 @@
 
     - for sent_message in @sent_messages
       .listingItem{:id => "message_#{sent_message.id}"}
-        = link_to_remote 'Destroy', {:url => { :controller => 'sent_messages', :action => 'destroy', :id => sent_message}, :method => :delete} , :style => "float:right"
+        = link_to_remote 'Destroy', {:url => { :controller => 'sent_messages', :action => 'destroy', :id => sent_message}, :method => :delete} , :style => "float:right", :class => 'genericButton'
         .msgHeader
           = "Date: "
           %span.msgField
