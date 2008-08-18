@@ -12,58 +12,20 @@
         %h2.boxDescription
           WHAT MY FRIENDS ARE WATCHING
       .contentBoxContent
-        .featureSummary
-          .featureSummaryThumb
-            %img{ :src => "placeholders/story_thumb.jpg" }/
-          .featureText
-            %h3
-              Headline
-            %span.sportName
-              Foosball
-            %br/
-            %span.date
-              Neverembuary 44, 1981
-            %br/
-          .clearDiv
-        .featureSummary
-          .featureSummaryThumb
-            %img{ :src => "placeholders/story_thumb.jpg" }/
-          .featureText
-            %h3
-              Headline
-            %span.sportName
-              Foosball
-            %br/
-            %span.date
-              Neverembuary 44, 1981
-            %br/
-          .clearDiv
-        .featureSummary
-          .featureSummaryThumb
-            %img{ :src => "placeholders/story_thumb.jpg" }/
-          .featureText
-            %h3
-              Headline
-            %span.sportName
-              Foosball
-            %br/
-            %span.date
-              Neverembuary 44, 1981
-            %br/
-          .clearDiv
-        .featureSummary
-          .featureSummaryThumb
-            %img{ :src => "placeholders/story_thumb.jpg" }/
-          .featureText
-            %h3
-              Headline
-            %span.sportName
-              Foosball
-            %br/
-            %span.date
-              Neverembuary 44, 1981
-            %br/
-          .clearDiv
+        - for video in @network_favorites
+          .featureSummary
+            .featureSummaryThumb
+              %img{ :src => "#{@vidavee.file_thumbnail_medium(video.dockey)}" }
+            .featureText
+              %h3
+                =h video.title
+              %span.sportName
+                =truncate_words(h(video.description),15)
+                %br/
+              %span.date
+                =game_date(video.created_at)
+              %br/
+            .clearDiv
     .contentBox.tanBackground
       .contentBoxHeader.yellowHeader
         %span.moreLink
@@ -72,58 +34,20 @@
         %h2.boxDescription
           MY FRIENDS RECENT CLIPS & HIGHLIGHTS 
       .contentBoxContent
-        .featureSummary
-          .featureSummaryThumb
-            %img{ :src => "placeholders/story_thumb.jpg" }/
-          .featureText
-            %h3
-              Headline
-            %span.sportName
-              Foosball
-            %br/
-            %span.date
-              Neverembuary 44, 1981
-            %br/
-          .clearDiv
-        .featureSummary
-          .featureSummaryThumb
-            %img{ :src => "placeholders/story_thumb.jpg" }/
-          .featureText
-            %h3
-              Headline
-            %span.sportName
-              Foosball
-            %br/
-            %span.date
-              Neverembuary 44, 1981
-            %br/
-          .clearDiv
-        .featureSummary
-          .featureSummaryThumb
-            %img{ :src => "placeholders/story_thumb.jpg" }/
-          .featureText
-            %h3
-              Headline
-            %span.sportName
-              Foosball
-            %br/
-            %span.date
-              Neverembuary 44, 1981
-            %br/
-          .clearDiv
-        .featureSummary
-          .featureSummaryThumb
-            %img{ :src => "placeholders/story_thumb.jpg" }/
-          .featureText
-            %h3
-              Headline
-            %span.sportName
-              Foosball
-            %br/
-            %span.date
-              Neverembuary 44, 1981
-            %br/
-          .clearDiv
+        - for video in @network_recent
+          .featureSummary
+            .featureSummaryThumb
+              %img{ :src => "#{@vidavee.file_thumbnail_medium(video.dockey)}" }
+            .featureText
+              %h3
+                = video.title
+              %span.sportName
+                =truncate_words(h(video.description),15)
+              %br/
+              %span.date
+                =game_date(video.created_at)
+              %br/
+            .clearDiv
   /
     col2 content
   .mainCol2
@@ -135,58 +59,20 @@
         %h2.boxDescription
           MOST POPULAR VIDEOS
       .contentBoxContent
-        .featureSummary
-          .featureSummaryThumb
-            %img{ :src => "placeholders/story_thumb.jpg" }/
-          .featureText
-            %h3
-              Headline
-            %span.sportName
-              Foosball
-            %br/
-            %span.date
-              Neverembuary 44, 1981
-            %br/
-          .clearDiv
-        .featureSummary
-          .featureSummaryThumb
-            %img{ :src => "placeholders/story_thumb.jpg" }/
-          .featureText
-            %h3
-              Headline
-            %span.sportName
-              Foosball
-            %br/
-            %span.date
-              Neverembuary 44, 1981
-            %br/
-          .clearDiv
-        .featureSummary
-          .featureSummaryThumb
-            %img{ :src => "placeholders/story_thumb.jpg" }/
-          .featureText
-            %h3
-              Headline
-            %span.sportName
-              Foosball
-            %br/
-            %span.date
-              Neverembuary 44, 1981
-            %br/
-          .clearDiv
-        .featureSummary
-          .featureSummaryThumb
-            %img{ :src => "placeholders/story_thumb.jpg" }/
-          .featureText
-            %h3
-              Headline
-            %span.sportName
-              Foosball
-            %br/
-            %span.date
-              Neverembuary 44, 1981
-            %br/
-          .clearDiv
+        - for video in @popular_videos
+          .featureSummary
+            .featureSummaryThumb
+              %img{ :src => "#{@vidavee.file_thumbnail_medium(video.dockey)}" }
+            .featureText
+              %h3
+                =h video.title
+              %span.sportName
+                =truncate_words(h(video.description),15)
+              %br/
+              %span.date
+                =game_date(video.created_at)
+              %br/
+            .clearDiv
     .contentBox.tanBackground
       .contentBoxHeader.yellowHeader
         %span.moreLink
@@ -195,58 +81,20 @@
         %h2.boxDescription
           RECENT FULL GAME UPLOADS
       .contentBoxContent
-        .featureSummary
-          .featureSummaryThumb
-            %img{ :src => "placeholders/story_thumb.jpg" }/
-          .featureText
-            %h3
-              Headline
-            %span.sportName
-              Foosball
-            %br/
-            %span.date
-              Neverembuary 44, 1981
-            %br/
-          .clearDiv
-        .featureSummary
-          .featureSummaryThumb
-            %img{ :src => "placeholders/story_thumb.jpg" }/
-          .featureText
-            %h3
-              Headline
-            %span.sportName
-              Foosball
-            %br/
-            %span.date
-              Neverembuary 44, 1981
-            %br/
-          .clearDiv
-        .featureSummary
-          .featureSummaryThumb
-            %img{ :src => "placeholders/story_thumb.jpg" }/
-          .featureText
-            %h3
-              Headline
-            %span.sportName
-              Foosball
-            %br/
-            %span.date
-              Neverembuary 44, 1981
-            %br/
-          .clearDiv
-        .featureSummary
-          .featureSummaryThumb
-            %img{ :src => "placeholders/story_thumb.jpg" }/
-          .featureText
-            %h3
-              Headline
-            %span.sportName
-              Foosball
-            %br/
-            %span.date
-              Neverembuary 44, 1981
-            %br/
-          .clearDiv
+        - for video in @recent_uploads
+          .featureSummary
+            .featureSummaryThumb
+              %img{ :src => "#{@vidavee.file_thumbnail_medium(video.dockey)}" }
+            .featureText
+              %h3
+                =h video.title
+              %span.sportName
+                =truncate_words(h(video.description),15)
+              %br/
+              %span.date
+                =game_date(video.created_at)
+              %br/
+            .clearDiv
   /
     col3 content
   .mainCol3
