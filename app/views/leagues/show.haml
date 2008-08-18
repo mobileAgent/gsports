@@ -1,24 +1,65 @@
-%p
-  %b Name:
-  =h @league.name 
+.landingContentArea
+  /
+    col1 content
+  .mainCol1
+    .contentBox.tanBackground
+      .contentBoxHeader.yellowHeader
+        %h2.boxDescription
+          =h @league.name 
+      .contentBoxContent
+        .featureSummary
 
-%p
-  %b City:
-  =h @league.city 
+          %b City:
+          =h @league.city 
 
-%p
-  %b State:
-  =h(@league.state_id? ? @league.state.name : '')
+        %p
+          %b State:
+          =h(@league.state_id? ? @league.state.name : '')
 
-%p
-  %b Description:
-  =h @league.description 
+        %p
+          %b Description:
+          =h @league.description 
 
-%p
-  %b Active:
-  =h @league.active 
+        %p
+          %b Active:
+          =h @league.active 
 
 
-= link_to 'Edit', edit_league_path(@league)
-= link_to 'Back', leagues_path
+        = link_to 'Edit', edit_league_path(@league)
+        = link_to 'Back', leagues_path
 
+        
+  /
+    col2 content
+  .mainCol2
+    .contentBox.tanBackground
+      .contentBoxHeader.yellowHeader
+        %h2.boxDescription
+          RECENT FULL GAME UPLOADS 
+      .contentBoxContent
+        =render :partial => 'video_assets/video_feature', :collection => league_videos()
+
+        - if @video_assets.respond_to?('total_pages')
+          .apple_pagination
+            = will_paginate @video_assets
+        - else
+          = link_to "More Videos...", url_for(:controller => 'search', :action => 'league_video_assets', :league_id => @league.id)
+      
+          
+  /
+    col3 content
+  .mainCol3
+    %h2.boxDescription
+      Latest News
+    - league_posts().each() do |post|
+      .rightContentItem
+        %span.moreLink
+          = link_to 'more>>', user_post_path(post.user, post), :rel => 'bookmark'
+        %h2
+          = post.title
+        = truncate_words(post.post, 75, '...' )
+
+
+                
+                
+                

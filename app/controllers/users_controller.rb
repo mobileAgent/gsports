@@ -260,10 +260,6 @@ class UsersController < BaseController
     @recommended_posts = @user.recommended_posts
     # For league staff choose from among their teams
     team_id = @user.league_staff? ? @user.league.team_ids[rand(@user.league.team_ids.size)] : @user.team_id
-    @featured_athletes_for_team = AthleteOfTheWeek.for_team(team_id)
-    @featured_athletes_for_league = AthleteOfTheWeek.for_league(@user.league_id)
-    @featured_game_for_team = GameOfTheWeek.for_team(team_id).first
-    @featured_game_for_league = GameOfTheWeek.for_league(@user.league_id).first
   end
 
   def forgot_password  
