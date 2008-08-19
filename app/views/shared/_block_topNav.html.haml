@@ -1,57 +1,33 @@
 %form{ :action => url_for({:controller => 'search', :action => "sphinx_search"}), :method => 'get'}
   .topNav
 
-    - if logged_in?
+    %ul.leftTopNav
+      %li
+        %span#gnavMyNetwork.ROLLOVERIMAGE
+          %a{ :href => accepted_user_friendships_path(current_user.id) }
+            %span
+              My Network
+      %li.divider
+        %span#gnavMyVideos.ROLLOVERIMAGE
+          %a{ :href => url_for(:controller => 'search', :action => 'my_videos') }
+            %span
+              My Videos
+      %li.divider
+        %span#gnavMyProfile.ROLLOVERIMAGE
+          %a{ :href => user_path(current_user.id) }
+            %span
+              My Profile
+    .rightTopNav
+      %h2
+        Search Site
+      %label.verbalSemantic{ :for => "search[category]" }
+        Category
+      %select#searchCategory{ :name => "search[category]" }
+        %option{ :value => "0" }
+          Videos, Clips, Reels
+      %label.verbalSemantic{ :for => "search[keyword]" }
+        Search Terms
+      %input#searchTerms{ :name => "search[keyword]", :type => "text"}/
+      %input.submit{ :name => "submit", :src => "/gs/images/top_nav_search.gif", :type => "image", :value => "search", :alt => "Search" }/
 
-      %ul.leftTopNav
-        %li
-          %span#gnavMyNetwork.ROLLOVERIMAGE
-            %a{ :href => accepted_user_friendships_path(current_user.id) }
-              %span
-                My Network
-        %li.divider
-          %span#gnavMyVideos.ROLLOVERIMAGE
-            %a{ :href => url_for(:controller => 'search', :action => 'my_videos') }
-              %span
-                My Videos
-        %li.divider
-          %span#gnavMyProfile.ROLLOVERIMAGE
-            %a{ :href => user_path(current_user.id) }
-              %span
-                My Profile
-      .rightTopNav
-        %h2
-          Search Site
-        %label.verbalSemantic{ :for => "search[category]" }
-          Category
-        %select#searchCategory{ :name => "search[category]" }
-          %option{ :value => "0" }
-            Videos, Clips, Reels
-          %option{ :value => "1" }
-            Users
-        %label.verbalSemantic{ :for => "search[keyword]" }
-          Search Terms
-        %input#searchTerms{ :name => "search[keyword]", :type => "text"}/
-        %input.submit{ :name => "submit", :src => "/gs/images/top_nav_search.gif", :type => "image", :value => "search", :alt => "Search" }/
-
-
-    -else
-      %ul.leftTopNav
-        %li
-          %span
-            %a{ :href => '/info/about' }
-              %span
-                About Global Sports
-        %li.divider
-          %span
-            %a{ :href => '/info/about' }
-              %span
-                Membership
-        %li.divider
-          %span
-            %a{ :href => register_path }
-              %span
-                Registration
-      
-      
 

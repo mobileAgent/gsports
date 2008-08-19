@@ -10,33 +10,23 @@
           =h @team.name 
       .contentBoxContent
         .featureSummary
-
           %p
             %b City:
             =h @team.city 
-
           %p
             %b County:
             =h @team.county_name
-
           %p
             %b State:
             =h @team.state_id? ? @team.state.name : ""
-
           %p
             %b Description:
             =h @team.description 
 
-          %p
-            %b Active:
-            =h @team.active 
+          - if current_user && current_user.team_admin?(@team)
+            = link_to 'Edit', edit_team_path(@team)
+            = link_to 'Back', teams_path
 
-
-          = link_to 'Edit', edit_team_path(@team)
-          = link_to 'Back', teams_path
-
-
-        
   /
     col2 content
   .mainCol2

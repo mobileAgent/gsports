@@ -40,6 +40,34 @@ class Team < ActiveRecord::Base
                 :order => 'county_name ASC')
     end
   end
+  
+  def self.cities(county_id=-1)
+    if (county_id > -1)
+      Team.find(:all, 
+                :select => "DISTINCT city", 
+                :conditions => "county_id = #{county_id} AND city IS NOT NULL",
+                :order => 'city ASC')
+    else
+      Team.find(:all, 
+                :select => "DISTINCT city", 
+                :conditions => "city IS NOT NULL",
+                :order => 'city ASC')
+    end
+  end
+
+  def self.schools(city_id=-1)
+    if (city_id > -1)
+      Team.find(:all, 
+                :select => "DISTINCT name", 
+                :conditions => "city_id = #{city_id} AND name IS NOT NULL",
+                :order => 'name ASC')
+    else
+      Team.find(:all, 
+                :select => "DISTINCT name", 
+                :conditions => "name IS NOT NULL",
+                :order => 'name ASC')
+    end
+  end
 
   def state_name
     state ? state.name : nil
