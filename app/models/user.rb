@@ -60,6 +60,18 @@ class User < ActiveRecord::Base
   named_scope :league_staff,
     lambda { |league_id| { :conditions => ["league_id = ? and role_id IN (?)",league_id,[Role[:league_staff].id, Role[:league].id, Role[:admin].id] ] } }
 
+# set indexes for sphinx
+  define_index do
+    indexes [firstname,lastname], :as => :full_name, :sortable => true
+    indexes :description
+    indexes updated_at, :sortable => true
+    indexes [address1, address2, city, zip, state.name], :as => :address
+    indexes team.name, :as => :team_name
+    indexes league.name, :as => :league_name
+    indexes tags.name, :as => :tags_content
+    has created_at, updated_at, profile_public
+  end
+
   def self.league_staff_ids(league_id)
     User.league_staff(league_id).collect(&:id)
   end
