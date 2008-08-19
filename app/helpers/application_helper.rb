@@ -23,6 +23,11 @@ include UsersHelper
     return '' if dtm.nil?
     return dtm.to_s(:game_date)
   end
+  
+  def human_date(dtm)
+    return '' if dtm.nil?
+    return dtm.to_s(:readable)
+  end
 
   class Pair
     attr_accessor :name, :number

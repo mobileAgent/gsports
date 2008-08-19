@@ -5,7 +5,8 @@
     %p
       %strong
         =link_to(truncate(h(story.title),55), url_for({:controller => 'posts', :action => 'show_public', :id => story.id}))
-        
-    %p= "#{story.published_at.to_s(:readable)}"
+
+    %p= story.logo_title
+    %p= human_date(story.published_at)
   .athleteFIT
     = image_tag(story.logo_thumbnail_for_post, {:title => h(story.logo_title), :alt => h(story.logo_title), :class => 'AthletesLogo'})
