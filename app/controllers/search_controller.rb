@@ -16,16 +16,19 @@ class SearchController < BaseController
   end
   
   def sphinx_search
+    @user = params[:user_id] ? User.find(params[:user_id]) : current_user
     if params[:search] and params[:search][:keyword]
-      @video_assets = VideoAsset.search params[:search][:keyword], :limit => 10, :order => 'updated_at DESC'
-      @video_clips = VideoClip.search params[:search][:keyword], :limit => 10, :order => 'updated_at DESC'
-      @video_reels = VideoReel.search params[:search][:keyword], :limit => 10, :order => 'updated_at DESC'
+      @videos = ThinkingSphinx::Search.search params[:search][:keyword], :per_page => 10, :page => params[:page]
+      
+      # @video_assets = VideoAsset.search params[:search][:keyword], :limit => 10, :order => 'updated_at DESC'
+      # @video_clips = VideoClip.search params[:search][:keyword], :limit => 10, :order => 'updated_at DESC'
+      # @video_reels = VideoReel.search params[:search][:keyword], :limit => 10, :order => 'updated_at DESC'
     else
-      @video_assets = VideoAsset.find :all, :limit => 10, :order => 'updated_at DESC'
-      @video_clips = VideoClip.find :all, :limit => 10, :order => 'updated_at DESC'
-      @video_reels = VideoReel.find :all, :limit => 10, :order => 'updated_at DESC'
-    end
-    render:action => "my_videos"
+      @videos = ThinkingSphinx::Search.search '*', :per_page => 10, :page => params[:page]
+      # @video_assets = VideoAsset.find :all, :limit => 10, :order => 'updated_at DESC'
+      # @video_clips = VideoClip.find :all, :limit => 10, :order => 'updated_at DESC'
+      # @video_reels = VideoReel.find :all, :limit => 10, :order => 'updated_at DESC'
+    end    
   end
 
   def my_videos

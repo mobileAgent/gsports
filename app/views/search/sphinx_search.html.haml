@@ -1,0 +1,86 @@
+.profileContentArea.listingPage
+  .profilePageHeader
+    %h2.columnDescriptor
+      %span
+        My Videos
+      = @user.full_name
+  .leftNavCol
+    %h2.yellowHeader
+      My Profile
+    .leftNav
+      =render :partial => "users/profile_nav"
+
+  .listings
+    .contentBox.tanBackground
+      .contentBoxHeader.yellowHeader
+        %h2.boxDescription
+          Friends
+      .contentBoxContent.friendSearchWidgetArea
+        %span.friendSearchColumn
+          Search:
+        %span.friendSearchWidgetColumn
+          %label.verbalSemantic{ :for => "friendSearchTerms" }
+            Search Terms
+          %input#friendSearchTerms{ :name => "terms", :type => "text" }/
+          %input.submit{ :name => "submit", :src => "/gs/images/top_nav_search.gif", :type => "image", :value => "search", :alt => "Search" }/
+          %br/
+        .clearDiv
+        %span.friendSearchColumn
+          Sort by:
+        %span.friendSearchWidgetColumn
+          %label.verbalSemantic{ :for => "friendFindSortBy" }
+            Sort by
+          %select#friendFindSortBy{ :name => "sortBy" }
+            %option{ :value => "" }
+              Recent Updates
+            %option{ :value => "" }
+              Option
+            %option{ :value => "" }
+              Option
+            %option{ :value => "" }
+              Option
+          %br/
+        .clearDiv
+        %span.friendSearchColumn
+          Show:
+        %span.friendSearchWidgetColumn
+          %label.verbalSemantic{ :for => "friendFindShowNet" }
+            Show Network
+          %select#friendFindShowNet{ :name => "sortBy" }
+            %option{ :value => "" }
+              Recent Updates
+            %option{ :value => "" }
+              Option
+            %option{ :value => "" }
+              Option
+            %option{ :value => "" }
+              Option
+          %br/
+    -#.clearDiv.moreLinkArea
+      %span.moreLink
+  
+    -if @videos && @videos.size > 0
+      -#.listingItem
+        %h2
+          My Videos 
+      - for video in @videos
+        -if video.class == VideoAsset
+          =render :partial => 'video_assets/video_listing', :locals => { :video_asset => video, :skip_controls => false }
+          
+        -if video.class == VideoClip
+          =render :partial => 'video_clips/video_block', :locals => { :video_clip => video, :skip_controls => false }
+          %br/
+          = render :partial => 'shared/favorite_item', :locals => { :item => video }
+        
+        -if video.class == VideoReel
+          =render :partial => 'video_reels/video_block', :locals => { :video_reel => video, :skip_controls => false }
+          %br/
+          = render :partial => 'shared/favorite_item', :locals => { :item => video }
+        
+        %br/
+        
+      - if @videos.respond_to?('total_pages')
+        .apple_pagination
+          = will_paginate @videos      
+
+.clearDiv/
