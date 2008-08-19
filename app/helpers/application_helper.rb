@@ -51,5 +51,21 @@ include UsersHelper
     end
     arr
   end
+
+  def video_image_link(video)
+    title = h(video.title.gsub(/\'/,''))
+    target = '#'
+    case video.class.to_s
+    when VideoAsset.to_s
+      target = video_asset_path(video)
+    when VideoClip.to_s
+      target = video_clip_path(video)
+    when VideoReel.to_s
+      target = video_reel_path(video)
+    end
+    
+    vsrc = @vidavee.file_thumbnail_medium(video.thumbnail_dockey)
+    link_to "<img src='#{vsrc}' title='#{title}' alt='Video'/>", target
+  end
   
 end
