@@ -14,8 +14,8 @@
       .contentBoxContent
         - for video in @network_favorites
           .featureSummary
-            .featureSummaryThumb
-              %img{ :src => "#{@vidavee.file_thumbnail_medium(video.dockey)}" }
+            .featureSummaryThumb.favFIT
+              %img{ :src => "#{@vidavee.file_thumbnail_medium(video.thumbnail_dockey)}" }
             .featureText
               %h3
                 =h video.title
@@ -36,8 +36,8 @@
       .contentBoxContent
         - for video in @network_recent
           .featureSummary
-            .featureSummaryThumb
-              %img{ :src => "#{@vidavee.file_thumbnail_medium(video.dockey)}" }
+            .featureSummaryThumb.favFIT
+              %img{ :src => "#{@vidavee.file_thumbnail_medium(video.thumbnail_dockey)}" }
             .featureText
               %h3
                 = video.title
@@ -61,8 +61,8 @@
       .contentBoxContent
         - for video in @popular_videos
           .featureSummary
-            .featureSummaryThumb
-              %img{ :src => "#{@vidavee.file_thumbnail_medium(video.dockey)}" }
+            .featureSummaryThumb.favFIT
+              %img{ :src => "#{@vidavee.file_thumbnail_medium(video.thumbnail_dockey)}" }
             .featureText
               %h3
                 =h video.title
@@ -83,8 +83,8 @@
       .contentBoxContent
         - for video in @recent_uploads
           .featureSummary
-            .featureSummaryThumb
-              %img{ :src => "#{@vidavee.file_thumbnail_medium(video.dockey)}" }
+            .featureSummaryThumb.favFIT
+              %img{ :src => "#{@vidavee.file_thumbnail_medium(video.thumbnail_dockey)}" }
             .featureText
               %h3
                 =h video.title

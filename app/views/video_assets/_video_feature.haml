@@ -1,5 +1,5 @@
 .featureSummary
-  .featureSummaryThumb
+  .featureSummaryThumb.favFIT
     = link_to "<img src='#{@vidavee.file_thumbnail_medium(video_feature.dockey)}' title='#{h(video_feature.title).gsub(/\'/,'')}' alt='Video'/>", video_asset_path(video_feature)
   .featureText
     %h3

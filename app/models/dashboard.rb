@@ -6,10 +6,10 @@ class Dashboard
     videos = VideoAsset.ready.for_user(user).find(:all, :limit => limit)
     if videos.size < limit
       exclude = videos.collect(&:id)
-      videos << VideoAsset.ready.find(:all,
-                                   :conditions => ["id NOT IN (?) and public_video = ?",exclude,true],
-                                   :order => 'created_at DESC',
-                                   :limit => (limit-videos.size))
+      VideoAsset.ready.find(:all,
+                            :conditions => ["id NOT IN (?) and public_video = ?",exclude,true],
+                            :order => 'created_at DESC',
+                            :limit => (limit-videos.size)).each { |v| videos << v}
     end
     videos
   end
@@ -33,7 +33,7 @@ class Dashboard
         videos << VideoReel.find(fav.favoritable_id)
       end
     end
-    videos.flatten
+    videos
   end
 
   # Get recent clips and reels by friends of the user
@@ -45,10 +45,10 @@ class Dashboard
                             :limit => limit)
     
     if (videos.size < limit)
-      videos << VideoClip.find(:all,
-                               :contisions => ['user_id in (?) and public_video = ?',friend_ids,true],
-                               :order => 'created_at DESC',
-                               :limit => (limit - videos.size))
+      VideoClip.find(:all,
+                     :conditions => ['user_id in (?) and public_video = ?',friend_ids,true],
+                     :order => 'created_at DESC',
+                     :limit => (limit - videos.size)).each { |v| videos << v }
     end
     videos
   end
@@ -73,7 +73,7 @@ class Dashboard
         videos << VideoReel.find(fav.favoritable_id)
       end
     end
-    videos.flatten
+    videos
     
   end
 

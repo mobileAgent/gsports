@@ -4,8 +4,8 @@
       .featureCol.featureVertRule.featureFloat.weeklyCol1
         %span.yellowHeader
           %h3= "#{truncate_words(@featured_team.name,1)} Game Of The Week"
-        .featureSummaryThumb
-          = link_to "<img src='#{@vidavee.file_thumbnail_medium(@featured_game_for_team.dockey)}' title='#{h(@featured_game_for_team.title).gsub(/\'/,'')}' alt='Video' height='65' width=103'/>", video_asset_path(@featured_game_for_team)
+        .featureSummaryThumb.featureFIT
+          = link_to "<img src='#{@vidavee.file_thumbnail_medium(@featured_game_for_team.dockey)}' title='#{h(@featured_game_for_team.title).gsub(/\'/,'')}' alt='Video'/>", video_asset_path(@featured_game_for_team)
         .featureText
           - if @featured_game_for_team.visiting_team_name && @featured_game_for_team.home_team_name
             %h3= "#{@featured_game_for_team.visiting_team_name} vs #{@featured_game_for_team.home_team_name}"
@@ -22,9 +22,9 @@
           %h3
             = "#{truncate_words(@featured_team.name,1)} Athletes Of The Week"
         - for athlete in @featured_athletes_for_team
-          .featureSummaryThumb
+          .featureSummaryThumb.featureFIT
             - if (athlete.image_thumbnail_for_post)
-              = link_to image_tag(athlete.image_thumbnail_for_post, {:title => h(athlete.title), :alt => "Athlete Of The Week Photo", :height => '65', :width => '103'}), user_post_path(athlete.user_id,athlete)
+              = link_to image_tag(athlete.image_thumbnail_for_post, {:title => h(athlete.title), :alt => "Athlete Of The Week Photo"}), user_post_path(athlete.user_id,athlete)
           .featureText
             %h3= truncate(h(athlete.title),20)
             %br/

@@ -22,4 +22,8 @@ class VideoClip < ActiveRecord::Base
   named_scope :for_user,
     lambda { |user| { :conditions => ["user_id = ?",user.id] } }
   
+  def thumbnail_dockey
+    dockey
+  end
+  
 end

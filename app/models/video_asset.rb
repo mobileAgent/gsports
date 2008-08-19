@@ -171,6 +171,10 @@ class VideoAsset < ActiveRecord::Base
     visiting_team ? visiting_team.name : nil
   end
 
+  def thumbnail_dockey
+    dockey
+  end
+  
   private
   
   def find_or_create_team_by_name team_name
@@ -189,5 +193,5 @@ class VideoAsset < ActiveRecord::Base
     end
     t
   end
-  
+
 end

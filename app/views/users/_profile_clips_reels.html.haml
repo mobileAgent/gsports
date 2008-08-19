@@ -8,11 +8,11 @@
   .contentBoxContent
     .profileFeature.myClips
       - for v in @profile_clips_and_reels
-        .featureSummaryThumb
+        .featureSummaryThumb.profileFIT
           - if v.class.to_s == "VideoClip"
-            = "<a href='#{user_video_clip_path(v.user_id,v)}'><img src='#{@vidavee.file_thumbnail_medium(v.dockey)}' title='#{h(v.title).gsub(/\'/,'')}' alt='Clip' height='90' width='150'/></a>"
+            = "<a href='#{user_video_clip_path(v.user_id,v)}'><img src='#{@vidavee.file_thumbnail_medium(v.dockey)}' title='#{h(v.title).gsub(/\'/,'')}' alt='Clip'/></a>"
           - else
-            = "<a href='#{user_video_reel_path(v.user_id,v)}'><img src='#{@vidavee.file_thumbnail_medium(v.thumbnail_dockey)}' title='#{h(v.title).gsub(/\'/,'')}' alt='Reel' height='90' width='150'/></a>"
+            = "<a href='#{user_video_reel_path(v.user_id,v)}'><img src='#{@vidavee.file_thumbnail_medium(v.thumbnail_dockey)}' title='#{h(v.title).gsub(/\'/,'')}' alt='Reel'/></a>"
           %h3
             = link_to truncate(h(v.title),20),user_video_clip_path(v.user_id,v)
           %span.date="#{v.created_at.to_s(:readable)}"
