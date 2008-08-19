@@ -10,7 +10,7 @@ class UsersController < BaseController
                                            :welcome_photo, :welcome_about, :welcome_invite,
                                            :return_admin, :assume, :featured, 
                                            :toggle_featured, :edit_pro_details, :update_pro_details,
-                                           :dashboard, :show, :index, :change_team_photo, :change_league_photo ]
+                                           :dashboard, :show, :index, :change_team_photo, :change_league_photo]
 
   uses_tiny_mce(:options => AppConfig.gsdefault_mce_options.merge({:editor_selector => "rich_text_editor"}), 
                 :only => [:new, :create, :update, :edit, :welcome_about])
@@ -357,5 +357,5 @@ class UsersController < BaseController
       end
     end
   end
-  
+
 end

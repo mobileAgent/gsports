@@ -1,0 +1,18 @@
+.listingItem
+  .listingImage
+    = link_to image_tag( user_listing.avatar_photo_url(:thumb), :class => "polaroid" ), user_path(user_listing)
+  .listingDescription
+    %h4
+      = user_listing.full_name
+    .schoolName
+      = "#{h user_listing.team.name}"
+    = "<p class='userTags'>" + user_listing.tags[0...6].collect{|t| link_to( t.name, tag_url(t.name), :class => "tag") if t }.join(" ") + "</p>" unless user_listing.tags.empty?
+    
+    .recentFriendFeed
+      = "#{user_listing.description}"
+  %ul.listingActions
+    - if current_user.can_request_friendship_with(user_listing)
+      %li
+        =link_to 'Request Friendship',url_for({ :controller => 'friendships', :action => 'create', :user_id => current_user.id, :friend_id => user_listing.id}), {:method => :post, :class => 'genericButton'}
+  .clearDiv
+.clearDiv

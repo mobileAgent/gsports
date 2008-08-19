@@ -2,8 +2,10 @@
   .profilePageHeader
     %h2.columnDescriptor
       %span
-        My Network
-      = @user.full_name()
+        User Search Results
+      = current_user.full_name
+    %h3
+      = pluralize(@users.total_entries, 'result')
   .leftNavCol
     %h2.yellowHeader
       My Profile
@@ -12,11 +14,11 @@
 
 
   .listings
-    .contentBox.tanBackground
+    -#.contentBox.tanBackground
       .contentBoxHeader.yellowHeader
         %h2.boxDescription
-          Friends
-      -#.contentBoxContent.friendSearchWidgetArea
+          Search Results 
+      .contentBoxContent.friendSearchWidgetArea
         %span.friendSearchColumn
           Search:
         %span.friendSearchWidgetColumn
@@ -60,16 +62,10 @@
     -#.clearDiv.moreLinkArea
       %span.moreLink      
 
-    - if  (@pending_friendships_count > 0)
-      .listingItem
-        = link_to("(#{@pending_friendships_count} pending)", pending_user_friendships_path(@user), :class => 'genericButton') 
-     
-    .listingItem
-      .pagination
-        %span= pagination_info_for @pages
-        = pagination_links_for @pages, {:link_to_current_page => true} if @pages.length > 1
-    
+    = render :partial => "users/user_listing", :collection => @users
 
-    = render :partial => "friendships/friendship", :collection => @friendships
+    .apple_pagination
+      = will_paginate @users
+
 
     
