@@ -80,20 +80,28 @@ class User < ActiveRecord::Base
     User.team_staff(team_id).collect(&:id)
   end
 
-  def team_admin?
-    role && role.eql?(Role[:team])
+  def team_admin?(chk_team=nil)
+    pass = role && role.eql?(Role[:team])
+    pass &&= (chk_team == team) if(chk_team)
+    pass
   end
 
-  def team_staff?
-    role && (role.eql?(Role[:team_staff]) || team_admin? )
+  def team_staff?(chk_team=nil)
+    pass = role && (role.eql?(Role[:team_staff]) || team_admin? )
+    pass &&= (chk_team == team) if(chk_team)
+    pass
   end
 
-  def league_admin?
-    role && role.eql?(Role[:league])
+  def league_admin?(chk_league=nil)
+    pass = role && role.eql?(Role[:league])
+    pass &&= (chk_league == league) if(chk_league)
+    pass
   end
 
-  def league_staff?
-    role && (role.eql?(Role[:league_staff]) || league_admin?)
+  def league_staff?(chk_league=nil)
+    pass = role && (role.eql?(Role[:league_staff]) || league_admin?)
+    pass &&= (chk_league == league) if(chk_league)
+    pass
   end
 
   def scout_admin?

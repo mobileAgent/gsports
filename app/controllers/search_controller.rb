@@ -1,7 +1,7 @@
 class SearchController < BaseController
   
   skip_before_filter :verify_authenticity_token, :only => [ :quickfind ]
-  before_filter :login_required
+  before_filter :login_required, :except => [:teamfind]
   after_filter :protect_private_videos
   
   def quickfind
@@ -34,6 +34,19 @@ class SearchController < BaseController
     @title = 'Search Results'
     render:action => "my_videos"
   end
+  
+  
+  def teamfind
+    cond = Caboose::EZ::Condition.new
+    cond.append ['state_id = ?',params[:state]]
+    cond.append ['county_name = ?', params[:county]]
+    cond.append ['city = ?', params[:city]]
+    #cond.append ['name = ?', params[:name]]
+    
+    @teams = Team.paginate(:conditions => cond.to_sql, :page => params[:page], :order => 'teams.name DESC')
+
+  end
+  
 
   def my_videos
     @user = params[:user_id] ? User.find(params[:user_id]) : current_user
@@ -78,7 +91,6 @@ class SearchController < BaseController
     render:action => "my_videos"
   end
 
-    
     
 
   protected

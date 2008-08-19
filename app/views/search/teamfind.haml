@@ -1,0 +1,48 @@
+.profileContentArea.listingPage
+  .profilePageHeader
+    %h2.columnDescriptor
+      %span
+        Team Search
+
+  .leftNavCol
+  
+  .listings
+      
+    -if @teams && @teams.size > 0
+
+      - @teams.each do |team|
+        - if team.active
+          .listingItem
+            .listingImage
+              - if team.avatar
+                %a{:href=>team_path(team)}
+                  %img{ :src=>team.avatar.public_filename, :title=>team.name, :alt=>team.name }
+            
+            .listingDescription
+              %h4.schoolName
+                = link_to h(team.name), team_path(team)
+              %p
+                %b City:
+                =h team.city 
+              %p
+                %b County:
+                =h team.county_name
+              %p
+                %b State:
+                =h team.state_id? ? team.state.name : ""
+              %p
+                %b Description:
+                =h team.description 
+                          
+            .clearDiv
+          .clearDiv
+  
+  
+      - if @teams.respond_to?('total_pages')
+        .apple_pagination
+          = will_paginate @teams
+
+    -else
+      No Teams Match Your Search
+  
+.clearDiv/

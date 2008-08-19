@@ -8,26 +8,17 @@
           =h @league.name 
       .contentBoxContent
         .featureSummary
-
           %b City:
           =h @league.city 
-
-        %p
-          %b State:
-          =h(@league.state_id? ? @league.state.name : '')
-
-        %p
-          %b Description:
-          =h @league.description 
-
-        %p
-          %b Active:
-          =h @league.active 
-
-
-        = link_to 'Edit', edit_league_path(@league)
-        = link_to 'Back', leagues_path
-
+          %p
+            %b State:
+            =h(@league.state_id? ? @league.state.name : '')
+          %p
+            %b Description:
+            =h @league.description 
+          - if current_user && current_user.league_admin?(@league)
+            = link_to 'Edit', edit_league_path(@league)
+            = link_to 'Back', leagues_path
         
   /
     col2 content
