@@ -1,7 +1,7 @@
  class SearchController < BaseController
    
    skip_before_filter :verify_authenticity_token, :only => [ :quickfind ]
-   before_filter :login_required
+   before_filter :login_required, :except => [:teamfind]
    after_filter :protect_private_videos
    
    def quickfind
