@@ -69,6 +69,7 @@ class User < ActiveRecord::Base
     indexes team.name, :as => :team_name
     indexes league.name, :as => :league_name
     indexes tags.name, :as => :tags_content
+    #indexes monikers.tags.name, :as => :moniker_content
     has created_at, updated_at, profile_public
   end
 
@@ -232,5 +233,5 @@ class User < ActiveRecord::Base
     u = find :first, :conditions => ['email = ? and activated_at IS NOT NULL and enabled = true', login] if u.nil?
     u && u.authenticated?(password) && u.update_last_login ? u : nil
   end
-  
+
 end
