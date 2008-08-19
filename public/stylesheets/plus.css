@@ -144,6 +144,10 @@ object#homeFlash {
 	background-repeat: no-repeat;
 }
 
+/* These FIT classes force images into the given size
+   without changing the aspect ratio, we just end up
+   with a view port into the real image */
+
 div.athleteFIT {
   height: 65px;
   width: 65px;
@@ -170,6 +174,11 @@ div.profileFIT {
   overflow: hidden;
   display: inline;
 }
+
+.loginFormPassword, .loginFormInput {
+  float: left;
+}
+
 
 
 .prototip .gs { margin:0 10px 0 10px; border: 1px solid #2a1301; color: #fff; font: 11px Arial, Helvetica, sans-serif; border-top: none;}
