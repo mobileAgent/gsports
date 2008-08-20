@@ -27,6 +27,9 @@
      elsif @category == 1
        logger.debug "Routing search to user category"
        sphinx_search_users and return
+     elsif @category == 2
+       logger.debug "Routing search to blog category"
+       sphinx_search_blogs and return
      end
      
      flash[:notice] = "No such search category"
@@ -41,6 +44,16 @@
                           :order => :full_name)
      @is_search_result = true
      render:action => "user_listing"
+   end
+   
+   def sphinx_search_blogs
+     logger.debug "Running blog search for #{params[:search][:keyword]}"
+     @posts = Post.search(params[:search][:keyword],
+                          :conditions => { :published_as => 'live' },
+                          :page => (params[:page] || 1),
+                          :order => :published_at, :sort_mode => :desc)
+     @is_search_result = true
+     render:action => "post_listing"
    end
 
    def sphinx_search_videos

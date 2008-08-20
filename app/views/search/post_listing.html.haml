@@ -2,10 +2,10 @@
   .profilePageHeader
     %h2.columnDescriptor
       %span
-        User Search Results
+        Search Results
       = current_user.full_name
     %h3
-      = pluralize(@users.total_entries, 'result')
+      = pluralize(@posts.total_entries, 'result')
   .leftNavCol
     %h2.yellowHeader
       My Profile
@@ -62,10 +62,10 @@
     -#.clearDiv.moreLinkArea
       %span.moreLink
 
-    - if @users && @users.any?
-      = render :partial => "users/user_listing", :collection => @users
+    - if @posts && @posts.any?
+      = render :partial => "posts/post_listing", :collection => @posts
       .apple_pagination
-        = will_paginate @users
+        = will_paginate @posts
     -else
       .listingItem
         There were no results from your search

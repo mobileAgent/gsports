@@ -24,7 +24,11 @@
         Category
       %select#searchCategory{ :name => "search[category]" }
         %option{ :value => "0" }
-          Videos, Clips, Reels
+          Videos
+        %option{ :value => "1" }
+          Users
+        %option{ :value => "2" }
+          Blogs
       %label.verbalSemantic{ :for => "search[keyword]" }
         Search Terms
       %input#searchTerms{ :name => "search[keyword]", :type => "text"}/
