@@ -2,8 +2,9 @@
    
    skip_before_filter :verify_authenticity_token, :only => [ :quickfind ]
    before_filter :login_required, :except => [:teamfind]
-   after_filter :protect_private_videos
-   
+   after_filter :protect_private_videos, :except => [:q, :teamfind]
+
+   # Video quickfind
    def quickfind
      @user = current_user
      cond = Caboose::EZ::Condition.new
@@ -18,60 +19,37 @@
      @title = 'Video Quickfind Results'
      render :action => 'my_videos'
    end
-   
-   def sphinx_search
-     @category = (params[:search][:category] || "1").to_i
-     if @category == 0
-       logger.debug "Routing search to video category"
-       sphinx_search_videos and return
-     elsif @category == 1
-       logger.debug "Routing search to user category"
-       sphinx_search_users and return
-     elsif @category == 2
-       logger.debug "Routing search to blog category"
-       sphinx_search_blogs and return
-     end
+
+   # Main site search
+   def q
+     @category = (params[:search][:category] || "0").to_i
+     @is_search_result = true
      
-     flash[:notice] = "No such search category"
-     redirect_to user_path(@user) and return
-   end
-   
-   def sphinx_search_users
-     logger.debug "Running user search for #{params[:search][:keyword]}"
-     @users = User.search(params[:search][:keyword],
-                          :conditions => { :profile_public => 1 },
-                          :page => (params[:page] || 1),
-                          :order => :full_name)
-     @is_search_result = true
-     render:action => "user_listing"
-   end
-   
-   def sphinx_search_blogs
-     logger.debug "Running blog search for #{params[:search][:keyword]}"
-     @posts = Post.search(params[:search][:keyword],
-                          :conditions => { :published_as => 'live' },
-                          :page => (params[:page] || 1),
-                          :order => :published_at, :sort_mode => :desc)
-     @is_search_result = true
-     render:action => "post_listing"
-   end
-
-   def sphinx_search_videos
-     @user = params[:user_id] ? User.find(params[:user_id]) : current_user
-     if params[:search] && params[:search][:keyword]
-       @video_assets = VideoAsset.search params[:search][:keyword], :limit => 10, :order => 'updated_at DESC'
-       @video_clips = VideoClip.search params[:search][:keyword], :limit => 10, :order => 'updated_at DESC'
-       @video_reels = VideoReel.search params[:search][:keyword], :limit => 10, :order => 'updated_at DESC'
-     else
-       @video_assets = VideoAsset.find :all, :limit => 10, :order => 'updated_at DESC'
-       @video_clips = VideoClip.find :all, :limit => 10, :order => 'updated_at DESC'
-       @video_reels = VideoReel.find :all, :limit => 10, :order => 'updated_at DESC'
+     if @category == 1 || @category == 0
+       logger.debug "Routing search to video category"
+       @videos = sphinx_search_videos
+       @title = 'Search Results'
+       render_name = 'my_videos'
      end
-     @is_search_result = true
-     @title = 'Search Results'
-     render:action => "my_videos"
-   end
+     if @category == 2 || @category == 0
+       logger.debug "Routing search to user category"
+       @users = sphinx_search_users
+       render_name = 'user_listing'
+     end
+     if @category == 3 || @category == 0
+       logger.debug "Routing search to blog category"
+       @posts = sphinx_search_blogs
+       render_name = 'post_listing'
+     end
 
+     # Search all categories
+     if @category > 0
+       render :action => render_name and return
+     else
+       render :action => 'search'
+     end
+   end
+   
    def my_videos
      @user = params[:user_id] ? User.find(params[:user_id]) : current_user
      @video_assets = VideoAsset.for_user(@user).all(:limit => 10, :order => 'updated_at DESC')
@@ -126,9 +104,37 @@
      @teams = Team.paginate(:conditions => cond.to_sql, :page => params[:page], :order => 'teams.name DESC')
    end
 
-   
 
    protected
+
+   def sphinx_search_users
+     logger.debug "Running user search for #{params[:search][:keyword]}"
+     @users = User.search(params[:search][:keyword],
+                          :conditions => { :profile_public => 1 },
+                          :page => (params[:page] || 1),
+                          :order => :full_name)
+   end
+   
+   def sphinx_search_blogs
+     logger.debug "Running blog search for #{params[:search][:keyword]}"
+     @posts = Post.search(params[:search][:keyword],
+                          :conditions => { :published_as => 'live' },
+                          :page => (params[:page] || 1),
+                          :order => :published_at, :sort_mode => :desc)
+   end
+
+   def sphinx_search_videos
+     @user = params[:user_id] ? User.find(params[:user_id]) : current_user
+     if params[:search] && params[:search][:keyword]
+       @video_assets = VideoAsset.search params[:search][:keyword], :limit => 10, :order => 'updated_at DESC'
+       @video_clips = VideoClip.search params[:search][:keyword], :limit => 10, :order => 'updated_at DESC'
+       @video_reels = VideoReel.search params[:search][:keyword], :limit => 10, :order => 'updated_at DESC'
+     else
+       @video_assets = VideoAsset.find :all, :limit => 10, :order => 'updated_at DESC'
+       @video_clips = VideoClip.find :all, :limit => 10, :order => 'updated_at DESC'
+       @video_reels = VideoReel.find :all, :limit => 10, :order => 'updated_at DESC'
+     end
+   end
 
    def protect_private_videos
      # Remove private video assets from results
