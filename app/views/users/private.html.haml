@@ -1,0 +1,42 @@
+- @section = @user.eql?(current_user) ? 'my_profile' : 'users'
+- @sidebar_left = true
+
+.profileContentArea
+  .profilePageHeader
+    %h2.columnDescriptor
+      %span
+        PROFILE
+      = @user.full_name
+  .leftNavCol
+    %h2.yellowHeader
+      My Profile
+    .leftNav
+      =render :partial => "users/profile_nav"
+  /
+  .listings
+    .contentBox.tanBackground
+      .contentBoxHeader.yellowHeader
+        %h2.boxDescription
+          Private User Profile
+      .contentBoxContent
+        .listingItem
+          %br/
+          This user's profile page is private.
+          %br/
+          %br/
+          %br/
+          %br/
+          %br/
+          %br/
+          %br/
+          %br/
+          %br/
+          %br/
+          %br/
+          %br/
+          %br/
+          %br/
+          %br/
+          %br/
+
+

@@ -1,10 +1,11 @@
 .AthletesWeek
-  = image_tag(story.image_thumbnail_for_post, {:title => h(story.title), :alt => h(story.title), :height => '65', :width => '103', :class => 'AthletesPic'})
+  .featureFIT
+    = image_tag(story.image_thumbnail_for_post, {:title => h(story.title), :alt => h(story.title), :height => '65', :width => '103', :class => 'AthletesPic'})
   .AthletesDescrip
     %p
       %strong
         =link_to(truncate(h(story.title),55), url_for({:controller => 'posts', :action => 'show_public', :id => story.id}))
         
     %p= "#{story.published_at.to_s(:readable)}"
-
-  = image_tag(story.logo_thumbnail_for_post, {:title => h(story.logo_title), :alt => h(story.logo_title), :height => '65', :width => '65', :class => 'AthletesLogo'})
+  .athleteFIT
+    = image_tag(story.logo_thumbnail_for_post, {:title => h(story.logo_title), :alt => h(story.logo_title), :class => 'AthletesLogo'})

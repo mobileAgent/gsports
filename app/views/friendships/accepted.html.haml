@@ -3,7 +3,7 @@
     %h2.columnDescriptor
       %span
         My Network
-      = current_user.full_name()
+      = @user.full_name()
   .leftNavCol
     %h2.yellowHeader
       My Profile
@@ -11,14 +11,63 @@
       =render :partial => "users/profile_nav"
 
 
-  .listings          
+  .listings
+    .contentBox.tanBackground
+      .contentBoxHeader.yellowHeader
+        %h2.boxDescription
+          Friends
+      .contentBoxContent.friendSearchWidgetArea
+        %span.friendSearchColumn
+          Search:
+        %span.friendSearchWidgetColumn
+          %label.verbalSemantic{ :for => "friendSearchTerms" }
+            Search Terms
+          %input#friendSearchTerms{ :name => "terms", :type => "text" }/
+          %input.submit{ :name => "submit", :src => "images/top_nav_search.gif", :type => "image", :value => "search", :alt => "Search" }/
+          %br/
+        .clearDiv
+        %span.friendSearchColumn
+          Sort by:
+        %span.friendSearchWidgetColumn
+          %label.verbalSemantic{ :for => "friendFindSortBy" }
+            Sort by
+          %select#friendFindSortBy{ :name => "sortBy" }
+            %option{ :value => "" }
+              Recent Updates
+            %option{ :value => "" }
+              Option
+            %option{ :value => "" }
+              Option
+            %option{ :value => "" }
+              Option
+          %br/
+        .clearDiv
+        %span.friendSearchColumn
+          Show:
+        %span.friendSearchWidgetColumn
+          %label.verbalSemantic{ :for => "friendFindShowNet" }
+            Show Network
+          %select#friendFindShowNet{ :name => "sortBy" }
+            %option{ :value => "" }
+              Recent Updates
+            %option{ :value => "" }
+              Option
+            %option{ :value => "" }
+              Option
+            %option{ :value => "" }
+              Option
+          %br/
+    -#.clearDiv.moreLinkArea
+      %span.moreLink      
 
-    = link_to "(#{@pending_friendships_count} pending)", pending_user_friendships_path(@user) if  (@pending_friendships_count > 0)
+    - if  (@pending_friendships_count > 0)
+      .listingItem
+        = link_to("(#{@pending_friendships_count} pending)", pending_user_friendships_path(@user), :class => 'genericButton') 
      
-
-    .pagination
-      %span.right= pagination_info_for @pages
-      = pagination_links_for @pages, {:link_to_current_page => true} if @pages.length > 1
+    .listingItem
+      .pagination
+        %span= pagination_info_for @pages
+        = pagination_links_for @pages, {:link_to_current_page => true} if @pages.length > 1
     
 
     = render :partial => "friendships/friendship", :collection => @friendships

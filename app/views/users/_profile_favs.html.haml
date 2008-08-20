@@ -11,8 +11,8 @@
         - f=fav.favoritable
         - case f.class.to_s.tableize
         - when 'video_assets'
-          .featureSummaryThumb
-            = link_to "<img src='#{@vidavee.file_thumbnail_medium(f.dockey)}' title='#{h(f.title).gsub(/\'/,'')}' alt='Video' width='81' height='61'/>", video_asset_path(f)
+          .featureSummaryThumb.favFIT
+            = link_to "<img src='#{@vidavee.file_thumbnail_medium(f.dockey)}' title='#{h(f.title).gsub(/\'/,'')}' alt='Video'/>", video_asset_path(f)
           .featureText
             %span.profileSubHeading
               =truncate(h(f.title),18)
@@ -21,8 +21,8 @@
             %br/
           .clearDiv
         - when 'video_clips'
-          .featureSummaryThumb
-            = "<a href='#{user_video_clip_path(f.user_id,f)}'><img src='#{@vidavee.file_thumbnail_medium(f.dockey)}' title='#{h(f.title).gsub(/\'/,'')}' alt='Clip' width='81' height='61'/></a>"
+          .featureSummaryThumb.favFIT
+            = "<a href='#{user_video_clip_path(f.user_id,f)}'><img src='#{@vidavee.file_thumbnail_medium(f.dockey)}' title='#{h(f.title).gsub(/\'/,'')}' alt='Clip'/></a>"
           .featureText
             %span.profileSubHeading
               =truncate(h(f.title),18)
@@ -31,8 +31,8 @@
             %br/
           .clearDiv
         - when 'video_reels'
-          .featureSummaryThumb
-            = "<a href='#{user_video_reel_path(f.user_id,f)}'><img src='#{@vidavee.file_thumbnail_medium(f.thumbnail_dockey)}' title='#{h(f.title).gsub(/\'/,'')}' alt='Reel' width='81' height='61'/></a>"
+          .featureSummaryThumb.favFIT
+            = "<a href='#{user_video_reel_path(f.user_id,f)}'><img src='#{@vidavee.file_thumbnail_medium(f.thumbnail_dockey)}' title='#{h(f.title).gsub(/\'/,'')}' alt='Reel'/></a>"
           .featureText
             %span.profileSubHeading
               =truncate(h(f.title),18)
@@ -41,8 +41,8 @@
             %br/
           .clearDiv
         - when 'posts'
-          .featureSummaryThumb
-            = link_to image_tag((f.image_for_excerpt), {:style=>"width:81px; height:61px"}), user_post_path(f.user,f)
+          .featureSummaryThumb.favFIT
+            = link_to image_tag(f.image_for_excerpt), user_post_path(f.user,f)
           .featureText
             %span.profileSubHeading
               =truncate(h(f.title),18)
@@ -55,9 +55,9 @@
             = link_to image_tag(f.public_filename(:icon), {:alt=>'User Photo',:title=>f.description}), user_photo_path(f.user, f)
           .featureText
             %span.profileSubHeading
-              =truncate(h(f.description),18)
+              =truncate(h(f.display_name),18)
               %br/
-            =f.user.firstname
+            =f.user.full_name
             %br/
           .clearDiv
           

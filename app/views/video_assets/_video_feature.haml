@@ -1,0 +1,13 @@
+.featureSummary
+  .featureSummaryThumb.favFIT
+    = link_to "<img src='#{@vidavee.file_thumbnail_medium(video_feature.dockey)}' title='#{h(video_feature.title).gsub(/\'/,'')}' alt='Video'/>", video_asset_path(video_feature)
+  .featureText
+    %h3
+      = h video_feature.title
+    %span.sportName
+      = h video_feature.sport
+    %br/
+    %span.date
+      = game_date(video_feature.game_date)
+    %br/
+  .clearDiv

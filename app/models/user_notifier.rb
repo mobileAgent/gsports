@@ -86,6 +86,12 @@ class UserNotifier < ActionMailer::Base
     @body[:url]  = "#{APP_URL}"
   end
   
+  def welcome(user)
+    setup_email(user)
+    @subject += "Your account has been created!"
+    @body[:url]  = "#{APP_URL}"
+  end
+  
   def reset_password(user)
     setup_email(user)
     @subject    += "#{AppConfig.community_name} User information"

@@ -1,27 +1,74 @@
-%p
-  %b Name:
-  =h @team.name 
+- load_features(@team)
 
-%p
-  %b City:
-  =h @team.city 
+.landingContentArea
+  /
+    col1 content
+  .mainCol1
+    .contentBox.tanBackground
+      .contentBoxHeader.yellowHeader
+        %h2.boxDescription
+          =h @team.name 
+      .contentBoxContent
+        .featureSummary
 
-%p
-  %b County:
-  =h @team.county_name
+          %p
+            %b City:
+            =h @team.city 
 
-%p
-  %b State:
-  =h @team.state_id? ? @team.state.name : ""
+          %p
+            %b County:
+            =h @team.county_name
 
-%p
-  %b Description:
-  =h @team.description 
+          %p
+            %b State:
+            =h @team.state_id? ? @team.state.name : ""
 
-%p
-  %b Active:
-  =h @team.active 
+          %p
+            %b Description:
+            =h @team.description 
+
+          %p
+            %b Active:
+            =h @team.active 
 
 
-= link_to 'Edit', edit_team_path(@team)
-= link_to 'Back', teams_path
+          = link_to 'Edit', edit_team_path(@team)
+          = link_to 'Back', teams_path
+
+
+        
+  /
+    col2 content
+  .mainCol2
+    .contentBox.tanBackground
+      .contentBoxHeader.yellowHeader
+        %h2.boxDescription
+          RECENT FULL GAME UPLOADS 
+      .contentBoxContent
+        =render :partial => 'video_assets/video_feature', :collection => team_videos()
+
+        - if @video_assets.respond_to?('total_pages')
+          .apple_pagination
+            = will_paginate @video_assets
+        - else
+          = link_to "More Videos...", url_for(:controller => 'search', :action => 'team_video_assets', :team_id => @team.id)
+
+      
+          
+  /
+    col3 content
+  .mainCol3
+    %h2.boxDescription
+      Latest News
+    - team_posts().each() do |post|
+      .rightContentItem
+        %span.moreLink
+          = link_to 'more>>', user_post_path(post.user, post), :rel => 'bookmark'
+        %h2
+          = post.title
+        = truncate_words(post.post, 75, '...' )
+
+
+                
+                
+                

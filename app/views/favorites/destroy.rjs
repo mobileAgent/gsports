@@ -1,4 +1,3 @@
-flashnow(page,'Your favorite has been removed')
 if @favorite
   case @favorite.favoritable.class.to_s.tableize
     when 'clippings'
@@ -10,8 +9,20 @@ if @favorite
         element.replace(render(:partial => 'clippings/meta.html.haml', :locals => {:clipping => @favorite.favoritable}))    
       end
 
+    when 'photos'
+      page.replace("favorite_#{@favorite.favoritable_type}_#{@favorite.favoritable_id}", :partial => 'shared/favorite_item', :locals => {:item => @favorite.favoritable })
+    when 'video_assets'
+      page.replace("favorite_#{@favorite.favoritable_type}_#{@favorite.favoritable_id}", :partial => 'shared/favorite_item', :locals => {:item => @favorite.favoritable })
+    when 'video_clips'
+      page.replace("favorite_#{@favorite.favoritable_type}_#{@favorite.favoritable_id}", :partial => 'shared/favorite_item', :locals => {:item => @favorite.favoritable })
+    when 'video_reels'
+      page.replace("favorite_#{@favorite.favoritable_type}_#{@favorite.favoritable_id}", :partial => 'shared/favorite_item', :locals => {:item => @favorite.favoritable })
+      
     when 'posts'
       page.replace "post_#{@favorite.favoritable.id}_meta", :partial => 'posts/meta', :locals => {:post => @favorite.favoritable}
-       
+
+    else
+      flashnow(page,'Your favorite has been removed')
+    
   end
 end

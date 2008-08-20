@@ -72,5 +72,38 @@ class Membership < ActiveRecord::Base
   def last_billed
     membership_billing_histories.first.created_at
   end
+#
+# Bill this member
+#
+def bill_recurring
 
+    return nil if credit_card.nil? # No credit card no billing (for now)
+
+    credit_card = ActiveMerchant::Billing::CreditCard.new({
+      :first_name => credit_card.first_name,
+      :last_name => credit_card.last_name,
+      :number => credit_card.number,
+      :month => credit_card.month,
+      :year => credit_card.year,
+      :verification_value => credit_card.verification_value})
+
+    gateway = ActiveMerchant::Billing::PayflowGateway.new({
+      :login => Active_Merchant_payflow_gateway_username,
+      :password => Active_Merchant_payflow_gateway_password
+                                                          })
+    cost_for_gateway = (cost * 100).to_i
+    response = gateway.purchase(cost_for_gateway, credit_card)
+   
+    logger.debug "Response from gateway #{@response.inspect} for #{@user.full_name} at #{cost_for_gateway}"
+   
+    if (response.success?)
+      history = MembershipBillingHistory.new
+      pf = response.params
+      history.authorization_reference_number = "#{pf['pn_ref']}/#{pf['auth_code']}"
+      history.payment_method = billing_method
+      membership_billing_histories << history
+      save
+    end
+    response
+end
 end

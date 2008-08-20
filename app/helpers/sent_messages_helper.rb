@@ -1,0 +1,2 @@
+module SentMessagesHelper
+end

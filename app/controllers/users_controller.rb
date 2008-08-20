@@ -19,6 +19,10 @@ class UsersController < BaseController
                 :only => [:show])
 
   def show
+    unless current_user.admin? || current_user.id == @user.id || @user.profile_public
+      render :action => 'private'
+    end
+    
     @friend_count = @user.accepted_friendships.count
     @accepted_friendships = @user.accepted_friendships.find(:all, :limit => 5).collect{|f| f.friend }
     @pending_friendships_count = @user.pending_friendships.count()
@@ -150,7 +154,8 @@ class UsersController < BaseController
       @user.enabled = true
       @user.activated_at = Time.now
       @user.save!
-      flash[:notice] = "Successfully charged $#{@user.role.plan.cost} to card #{@credit_card.display_number}"
+      self.current_user = @user # Log them in right now!
+      UserNotifier.deliver_welcome(@user)
       redirect_to signup_completed_user_path(@user)
     else
       @billing_address ||= Address.new
@@ -255,10 +260,11 @@ class UsersController < BaseController
     @recommended_posts = @user.recommended_posts
     # For league staff choose from among their teams
     team_id = @user.league_staff? ? @user.league.team_ids[rand(@user.league.team_ids.size)] : @user.team_id
-    @featured_athletes_for_team = AthleteOfTheWeek.for_team(team_id)
-    @featured_athletes_for_league = AthleteOfTheWeek.for_league(@user.league_id)
-    @featured_game_for_team = GameOfTheWeek.for_team(team_id).first
-    @featured_game_for_league = GameOfTheWeek.for_league(@user.league_id).first
+    @recent_uploads = Dashboard.recent_uploads(@user)
+    @popular_videos = Dashboard.popular_videos(@user)
+    @network_recent = Dashboard.network_recent(@user)
+    @network_favorites = Dashboard.network_favorites(@user)
+    
   end
 
   def forgot_password  

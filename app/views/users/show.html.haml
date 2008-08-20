@@ -1,3 +1,5 @@
+- load_features()
+
 - @section = @user.eql?(current_user) ? 'my_profile' : 'users'
 - @sidebar_left = true
 
@@ -7,6 +9,7 @@
       %span
         PROFILE
       = @user.full_name
+      = " (( PRIVATE PROFILE )) " unless @user.profile_public?
   .leftNavCol
     %h2.yellowHeader
       My Profile

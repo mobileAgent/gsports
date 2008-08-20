@@ -32,5 +32,4 @@ Active_Merchant_payflow_gateway_password = 'MarkDR1'
 #Active_Merchant_payflow_gateway_password = 'markrmarkr'
 Active_Merchant_payflow_gateway_partner = 'PayPal'
 
-
 AD_SERVER_BASE = 'www.danmcardle.com'

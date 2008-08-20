@@ -35,10 +35,17 @@ class AthleteOfTheWeek < Post
   # chosen randomly from among recent team and league
   # athletes of the week.
   def self.for_home_page
-    ids = User.find(:all, :conditions => ["role_id IN (?)",[Role[:league].id,Role[:league_staff].id,Role[:team].id,Role[:team_staff].id,Role[:admin].id]]).collect(&:id)
+    legal_role_ids = [
+                      Role[:league].id,
+                      Role[:league_staff].id,
+                      Role[:team].id,
+                      Role[:team_staff].id,
+                      Role[:admin].id
+                     ]
+    ids = User.find(:all, :conditions => ["role_id IN (?)",legal_role_ids]).collect(&:id)
     return [] if (my_category.nil? || ids.empty?)
     posts = AthleteOfTheWeek.find(:all,
-                      :conditions => ["category_id = ? and user_id IN (?) and published_at > ?",my_category.id,ids,8.days.ago],
+                      :conditions => ["category_id = ? and user_id IN (?) and published_at > ?",my_category.id,ids,14.days.ago],
                       :order => "published_at DESC")
 
     # If we have none, 1 or 2, just let them go
