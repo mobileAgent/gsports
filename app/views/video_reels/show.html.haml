@@ -1,6 +1,7 @@
 .flashArea#flashArea
 
-= render(:partial => 'shared/video_player', :locals => { :player_name => '/players/reel.swf', :dockey => @video_reel.dockey, :target => 'flashArea', :fvars => {:dockeys => @video_reel.dockey } })
+= render(:partial => 'shared/video_player', :locals => { :fvars => { :dockeys => "#{@video_reel.dockey}"}, :target => 'flashArea', :player_name => '/players/reelmaker.swf', :height => 550, :width => 945})
+-#= render(:partial => 'shared/video_player', :locals => { :player_name => '/players/reel.swf', :dockey => @video_reel.dockey, :target => 'flashArea', :fvars => {:dockeys => @video_reel.dockey } })
 %br
 
 =h @video_reel.title

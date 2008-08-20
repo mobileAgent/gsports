@@ -3,6 +3,7 @@ class VideoReelsController < BaseController
   
   before_filter :login_required
   before_filter :vidavee_login
+  skip_before_filter :verify_authenticity_token, :only => [:create]
   
   # GET /video_reels
   # GET /video_reels.xml
