@@ -1,1 +1,118 @@
-%p= "Find me in app/views/search/search.html.haml"
+.profileContentArea
+  .profilePageHeader
+    %h2.columnDescriptor
+      SEARCH RESULTS
+  .leftNavCol
+  /
+  .searchResultsContent
+    -#.contentBox.tanBackground
+      .contentBoxHeader.yellowHeader
+        %h2.boxDescription
+          Search My Clips and Reels
+      .advancedSearchTools
+        %a{ :href => "" }
+          %img{ :src => "/gs/images/top_nav_search.gif" }/
+        %span
+          VIDEO ADVANCED SEARCH
+        .clearDiv
+        /
+        %a{ :href => "" }
+          %img{ :src => "/gs/images/top_nav_search.gif" }/
+        %span
+          NETWORK ADVANCED SEARCH
+          
+      .contentBoxContent.friendSearchWidgetArea
+        %span.friendSearchColumn
+          Search:
+        %span.friendSearchWidgetColumn
+          = params[:search][:keyword]
+        .clearDiv
+        /
+        %span.friendSearchColumn
+          Sort by:
+        %span.friendSearchWidgetColumn
+          %label.verbalSemantic{ :for => "friendFindSortBy" }
+            Sort by
+          %select#friendFindSortBy{ :name => "sortBy" }
+            %option{ :value => "" }
+              Recent Updates
+          %br/
+        .clearDiv
+        /
+        %span.friendSearchColumn
+          Show:
+        %span.friendSearchWidgetColumn
+          %label.verbalSemantic{ :for => "friendFindShowNet" }
+            Show Network
+          %select#friendFindShowNet{ :name => "sortBy" }
+            %option{ :value => "" }
+              Recent Updates
+          %br/
+      .clearDiv
+      /
+    .clearDiv
+    /
+    .mainCol1
+      %h2.columnDescriptor
+        = link_to 'VIDEOS', url_for({:controller => 'search', :action => 'q', 'search[category]' => 1, 'search[keyword]' => params[:search][:keyword]})
+      - for video in @video_assets
+        .contentBox.tanBackground
+          .contentBoxContent
+            .profileFeature
+              .featureSummaryThumb.featureFIT
+                = video_image_link(video)
+              .featureText
+                %span.profileSubHeading
+                  = h video.title
+                %br/
+                %span.featureSummaryText
+                  = human_date( video.game_date || video.updated_at)
+                %br/
+                .clearDiv
+                /
+              
+    .mainCol2
+      %h2.columnDescriptor
+        = link_to 'NETWORK', url_for({:controller => 'search', :action => 'q', 'search[category]' => 2, 'search[keyword]' => params[:search][:keyword]})
+      - for user in @users
+        .contentBox.tanBackground
+          .contentBoxContent
+            .profileFeature
+              .featureSummaryThumb.thumbFIT
+                = link_to image_tag( user.avatar_photo_url(:thumb), :class => "polaroid" ), user_path(user)
+              .featureText
+                %span.profileSubHeading
+                  = h user.full_name
+                %br/
+                %span.featureSummaryText
+                  = user.team.name
+                %br/
+                .clearDiv
+                /
+              
+    .mainCol3
+      %h2.columnDescriptor
+        = link_to 'BLOGS', url_for({:controller => 'search', :action => 'q', 'search[category]' => 3, 'search[keyword]' => params[:search][:keyword]})
+      - for post in @posts
+        .contentBox.tanBackground
+          .contentBoxContent
+            .profileFeature
+              .featureSummaryThumb.hdSearchPreview.favFIT
+                %a{:href=>"#{user_post_path(post.user, post)}", :class=>"photo", :rel=>"bookmark"}
+                  =image_tag((post.image_thumbnail_for_post || post.user.avatar_photo_url(:thumb)), :alt=>"image")
+              .featureText
+                %span.profileSubHeading
+                  = post.user.full_name
+                %br/
+                %span.featureSummaryText
+                  = truncate(h( post.title),25)
+                  %br/
+                  = human_date post.published_at
+                %br/
+                .clearDiv
+                /
+              
+  .clearDiv
+  /
+.clearDiv
+/

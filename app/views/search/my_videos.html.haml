@@ -11,7 +11,7 @@
       =render :partial => "users/profile_nav"
 
   .listings
-    - if @is_search_result
+    -#- if @is_search_result
       %form{ :action => url_for({:controller => 'search', :action => "sphinx_search"}), :method => 'get'}
         .contentBox.tanBackground
           .contentBoxHeader.yellowHeader

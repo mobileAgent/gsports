@@ -1,22 +1,26 @@
 set :application, "gsports"
+set :rails_env, "production"
 
 # Set up for github
-default_run_options[:pty] = true
+#default_run_options[:pty] = true
+set :scm, 'git'
 set :repository,  "git@github.com:mobileAgent/gsports.git"
-set :scm, "git"
-#set :scm_passphrase, "copilot" #This is your custom users password
+set :repository_cache, "git_master"
+set :deploy_via, :remote_cache
+#set :deploy_vid, :copy
+#set :copy_remote_dir, "/usr/local/gsports/git_master"
 set :user, "mjflest"
 set :branch, "master"
-set :deploy_via, :remote_cache
 set :git_shallow_clone, 1
 set :scm_verbose, true
 
-set :repository,  "set your repository location here"
+set :app_symlinks, %w(files photos videos assets)
+set :rails_config_files, %w(database.yml mailer.yml application.yml lucifer.yml broker.yml)
 
 # If you aren't deploying to /u/apps/#{application} on the target
 # servers (which is the default), you can specify the actual location
 # via the :deploy_to variable:
-set :deploy_to, "/usr/local/gsports"
+set :deploy_to, "/usr/local/#{application}"
 
 role :app, "gsports.integratedcc.com"
 role :web, "gsports.integratedcc.com"
@@ -43,4 +47,4 @@ namespace :sphinx do
   end
 end
 
-after "deploy:update_code", "sphinx:configure"
+after "deploy:update_code", "thinking_sphinx:configure", "thinking_sphinx:index"

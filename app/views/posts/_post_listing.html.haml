@@ -1,0 +1,23 @@
+.listingItem{:id => "post_#{post_listing.id}"}
+  %ul.listingActions
+    %li
+      =link_to 'Read',user_post_path(post_listing.user,post_listing), :rel => 'bookmark', :class => 'genericButton'
+    - if current_user.can_request_friendship_with(post_listing.user)
+      %li
+        =link_to 'Request Friendship',url_for({ :controller => 'friendships', :action => 'create', :user_id => current_user.id, :friend_id => user_listing.id}), {:method => :post, :class => 'genericButton'}
+  .listingImage.thumbFIT
+    %a{:href=>"#{user_post_path(post_listing.user, post_listing)}", :class=>"photo", :rel=>"bookmark"}
+      =image_tag((post_listing.image_thumbnail_for_post || post_listing.user.avatar_photo_url(:thumb)), :alt=>"image")
+  .listingDescriptionp
+    %h4
+      = post_listing.title
+    .schoolName
+      = link_to post_listing.user.full_name, user_path(post_listing.user)
+      = human_date(post_listing.published_at)
+    .recentFriendFeed
+      = "#{pluralize(post_listing.view_count,'view')}"
+      = link_to "#{pluralize(post_listing.comments.size,'comment')}", user_post_path(post_listing.user,post_listing)+'#comments'
+    .entryContent
+      = truncate_words(post_listing.post,75)
+  .clearDiv
+.clearDiv      

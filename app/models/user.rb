@@ -60,6 +60,19 @@ class User < ActiveRecord::Base
   named_scope :league_staff,
     lambda { |league_id| { :conditions => ["league_id = ? and role_id IN (?)",league_id,[Role[:league_staff].id, Role[:league].id, Role[:admin].id] ] } }
 
+  # set indexes for sphinx
+  define_index do
+    indexes [firstname,lastname], :as => :full_name, :sortable => true
+    indexes :description
+    indexes updated_at, :sortable => true
+    indexes [address1, address2, city, zip, state.name], :as => :address
+    indexes team.name, :as => :team_name
+    indexes league.name, :as => :league_name
+    indexes tags.name, :as => :tags_content
+    #indexes monikers.tags.name, :as => :moniker_content
+    has created_at, updated_at, profile_public
+  end
+
   def self.league_staff_ids(league_id)
     User.league_staff(league_id).collect(&:id)
   end
@@ -68,20 +81,28 @@ class User < ActiveRecord::Base
     User.team_staff(team_id).collect(&:id)
   end
 
-  def team_admin?
-    role && role.eql?(Role[:team])
+  def team_admin?(chk_team=nil)
+    pass = role && role.eql?(Role[:team])
+    pass &&= (chk_team == team) if(chk_team)
+    pass
   end
 
-  def team_staff?
-    role && (role.eql?(Role[:team_staff]) || team_admin? )
+  def team_staff?(chk_team=nil)
+    pass = role && (role.eql?(Role[:team_staff]) || team_admin? )
+    pass &&= (chk_team == team) if(chk_team)
+    pass
   end
 
-  def league_admin?
-    role && role.eql?(Role[:league])
+  def league_admin?(chk_league=nil)
+    pass = role && role.eql?(Role[:league])
+    pass &&= (chk_league == league) if(chk_league)
+    pass
   end
 
-  def league_staff?
-    role && (role.eql?(Role[:league_staff]) || league_admin?)
+  def league_staff?(chk_league=nil)
+    pass = role && (role.eql?(Role[:league_staff]) || league_admin?)
+    pass &&= (chk_league == league) if(chk_league)
+    pass
   end
 
   def scout_admin?
@@ -220,5 +241,5 @@ class User < ActiveRecord::Base
     u = find :first, :conditions => ['email = ? and activated_at IS NOT NULL and enabled = true', login] if u.nil?
     u && u.authenticated?(password) && u.update_last_login ? u : nil
   end
-  
+
 end

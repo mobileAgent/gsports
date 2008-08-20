@@ -397,11 +397,11 @@ class User < ActiveRecord::Base
   def self.currently_online
     User.find(:all, :conditions => ["sb_last_seen_at > ?", Time.now.utc-5.minutes])
   end
-  def self.search(query, options = {})
-    with_scope :find => { :conditions => build_search_conditions(query) } do
-      find :all, options
-    end
-  end
+  #def self.search(query, options = {})
+  #  with_scope :find => { :conditions => build_search_conditions(query) } do
+  #    find :all, options
+  #  end
+  #end
   def self.build_search_conditions(query)
     # query && ['LOWER(display_name) LIKE :q OR LOWER(login) LIKE :q', {:q => "%#{query}%"}]
     query

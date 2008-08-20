@@ -15,12 +15,13 @@
         - for video in @network_favorites
           .featureSummary
             .featureSummaryThumb.favFIT
-              %img{ :src => "#{@vidavee.file_thumbnail_medium(video.thumbnail_dockey)}" }
+              = video_image_link(video)
+              -#%img{ :src => "#{@vidavee.file_thumbnail_medium(video.thumbnail_dockey)}" }
             .featureText
               %h3
                 =h video.title
               %span.sportName
-                =truncate_words(h(video.description),15)
+                = video.user.full_name
                 %br/
               %span.date
                 =game_date(video.created_at)
@@ -37,12 +38,13 @@
         - for video in @network_recent
           .featureSummary
             .featureSummaryThumb.favFIT
-              %img{ :src => "#{@vidavee.file_thumbnail_medium(video.thumbnail_dockey)}" }
+              = video_image_link(video)
+              -#%img{ :src => "#{@vidavee.file_thumbnail_medium(video.thumbnail_dockey)}" }
             .featureText
               %h3
                 = video.title
               %span.sportName
-                =truncate_words(h(video.description),15)
+                = video.user.full_name
               %br/
               %span.date
                 =game_date(video.created_at)
@@ -62,12 +64,13 @@
         - for video in @popular_videos
           .featureSummary
             .featureSummaryThumb.favFIT
-              %img{ :src => "#{@vidavee.file_thumbnail_medium(video.thumbnail_dockey)}" }
+              = video_image_link(video)
+              -#%img{ :src => "#{@vidavee.file_thumbnail_medium(video.thumbnail_dockey)}" }
             .featureText
               %h3
                 =h video.title
               %span.sportName
-                =truncate_words(h(video.description),15)
+                =h video.user.full_name
               %br/
               %span.date
                 =game_date(video.created_at)
@@ -84,12 +87,13 @@
         - for video in @recent_uploads
           .featureSummary
             .featureSummaryThumb.favFIT
-              %img{ :src => "#{@vidavee.file_thumbnail_medium(video.thumbnail_dockey)}" }
+              = video_image_link(video)
+              -#%img{ :src => "#{@vidavee.file_thumbnail_medium(video.thumbnail_dockey)}" }
             .featureText
               %h3
                 =h video.title
               %span.sportName
-                =truncate_words(h(video.description),15)
+                =h video.team_name
               %br/
               %span.date
                 =game_date(video.created_at)

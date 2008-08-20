@@ -175,6 +175,13 @@ div.profileFIT {
   display: inline;
 }
 
+div.thumbFIT {
+  height: 100px;
+  width: 100px;
+  overflow: hidden;
+  display: inline;
+}
+
 .loginFormPassword, .loginFormInput {
   float: left;
 }
