@@ -47,7 +47,8 @@ class VideoReelsController < BaseController
   # GET /video_reels/new.xml
   def new
     @video_reel = VideoReel.new
-
+    @user_clip_dockeys = VideoClip.for_user(current_user).find(:all, :order => 'created_at DESC', :limit => 100).collect(&:dockey).join(',')
+    logger.debug("Found user clip dockeys #{@user_clip_dockeys}")
     respond_to do |format|
       format.html # new.html.erb
       format.xml  { render :xml => @video_reel }
@@ -57,6 +58,8 @@ class VideoReelsController < BaseController
   # GET /video_reels/1/edit
   def edit
     @video_reel = VideoReel.find(params[:id])
+    @user_clip_dockeys = VideoClip.for_user(current_user).find(:all, :order => 'created_at DESC', :limit => 100).collect(&:dockey).join(',')
+    logger.debug("Found user clip dockeys #{@user_clip_dockeys}")
   rescue ActiveRecord::RecordNotFound
     flash[:notice] = 'That reel could not be found.'
     redirect_to url_for({ :controller => "search", :action => "my_videos" })

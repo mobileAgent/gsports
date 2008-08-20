@@ -4,8 +4,7 @@
   %p
     Sorry, we could not start the video player. To view video content you will need to have Adobe Flash player installed and  JavaScript enabled on your browser.
 
-- if @now_playing && @now_playing.dockey
-  = render :partial => 'shared/video_player', :locals => {:target => 'homeFlash', :dockey => @now_playing.dockey }
+= render :partial => 'shared/video_player', :locals => {:target => 'homeFlash', :player_name => '/players/main.swf', :fvars => {:dockeys => @game_dockey_string } }
 
 .homeText
   %h1.homeTextWelcome= "Welcome to #{AppConfig.community_name}!"
@@ -27,7 +26,7 @@
     %strong
       Create and Edit
     consecteteur elit, pellentesque ut erum lorem. Etiam eget augue. Vestibulum liquam dolor sit amet. Mauris leo turpis, auctor nec, ultricies vel, placerat ultrices, orci. Nunc non neque. Nullam mollis eros accumsan nunc.
-    %a{ :href => "/players/gsdemo.swf" }
+    %a{ :href => "/info/demo" }
       %img{ :src => "/gs/images/watch_demo.gif", :longdesc => "#", :alt => "Click here to watch the demo video and learn more about Global Sports..." }/
 /
   end col 2
