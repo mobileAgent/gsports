@@ -1,8 +1,4 @@
 .flashArea#flashArea
-= render(:partial => 'shared/video_player', :locals => { :fvars => { :dockeys => "#{@user_clip_dockeys}"}, :target => 'flashArea', :player_name => '/players/reelmaker.swf', :height => 550, :width => 925})
--#-@myd = "2AAD274794A00A719096FA490B3BA901,018F8DACEFE48C219653F781EE72690F,DFC91C990EA4EE9C551DA7AD12251697,DDF4F282F7443DADEFAA8EBA29B4014F,2AAD274794A00A719096FA490B3BA901"
--#-@myd="DFC91C990EA4EE9C551DA7AD12251697,DDF4F282F7443DADEFAA8EBA29B4014F"
--#= render(:partial => 'shared/video_player', :locals => { :fvars => { :dockeys => "#{@myd}"}, :target => 'flashArea', :player_name => '/players/reelmaker.swf', :height => 550, :width => 925 })
-
+= render(:partial => 'shared/video_player', :locals => { :fvars => { :dockeys => "#{@user_clip_dockeys}"}, :target => 'flashArea', :player_name => '/players/reelmaker.swf', :height => 550, :width => 945})
 
 = link_to 'Back', video_reels_path
