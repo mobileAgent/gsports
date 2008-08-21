@@ -9,14 +9,24 @@ class PagesController < BaseController
   def show
     if params[:permalink]
       @page = Page.find_by_permalink(params[:permalink])
-      raise ActiveRecord::RecordNotFound, "Page not found" if @page.nil?
+      if @page.nil?
+        if (current_user && current_user.admin?)
+          redirect_to(:action => 'new', :permalink => params[:permalink]) and return
+        else
+          raise ActiveRecord::RecordNotFound, "Page not found" 
+        end
+      end
     else
       @page = Page.find(params[:id])
+    end
+    if (current_user && current_user.admin?)
+      flash[:notice] = "<a href='/pages/edit/#{@page.id}'>Edit this page</a>"
     end
   end
   
   def new
     @page = Page.new
+    @page.permalink= params[:permalink]
   end
   
   def create
