@@ -49,7 +49,7 @@
           = link_to image_tag(user.avatar_photo_url(:thumb), :class => "polaroid"), user_path(user), :title => user.full_name
           - used_ids << user.id
         - @applied_monikers.each do |am|
-          - if( ! used_ids.member?(@am.user_id))
+          - if( ! used_ids.member?(am.user_id))
             = link_to image_tag(am.user.avatar_photo_url(:thumb), :class => "polaroid"), user_path(am.user), :title => am.user.full_name
         %h6.all= link_to "All users tagged #{@tag.name}", tag_path(:id => @tag.name, :type => 'User')
 
@@ -66,7 +66,7 @@
       .blog
         %h3 Videos
         - @video_assets.each do |va|
-          =link_to "<img src='#{@vidavee.file_thumbnail_medium(va.dockey)}' title='{#va.title}'>", video_asset_path(va)
+          =link_to "<img src='#{@vidavee.file_thumbnail_medium(va.dockey)}' title='#{va.title}'>", video_asset_path(va)
         %h6.all= link_to "All videos tagged #{@tag.name}", tag_path(:id => @tag.name, :type => 'VideoAsset')
 
     - unless @video_clips.empty?
