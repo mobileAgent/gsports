@@ -1,6 +1,12 @@
 !!! Strict
 %html{:xmlns=>"http://www.w3.org/1999/xhtml", 'xml:lang'=>"en", :lang=>"en"}
   %head
+    /
+      [if IE 6]>
+      <style type="text/css">
+      \.contentBoxHeader { background-image: none; }
+      </style>
+      <![endif]
     %link{:rel=>"shortcut icon", :href=>"/favicon.ico"}/
     %meta{"http-equiv"=>"Content-Type", :content=>"text/html;charset=utf-8"}/
   
