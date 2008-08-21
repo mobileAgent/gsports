@@ -1,0 +1,49 @@
+%dl{:class => (dashboard_activity.item_type && dashboard_activity.item_type.humanize.downcase) }
+  %dt
+    =time_ago_in_words_or_date(dashboard_activity.created_at)
+  %dd
+    =link_to "#{dashboard_activity.user.full_name}", user_path(dashboard_activity.user_id), :class=>'articleLink'
+    - if dashboard_activity.item
+      - case dashboard_activity.item_type
+        - when 'Post'
+          =" wrote a post: "
+          = link_to dashboard_activity.item.title, user_post_path(dashboard_activity.item.user_id, dashboard_activity.item), :class=>'articleLink'
+        - when 'Photo'
+          =" uploaded a photo: "
+          = link_to image_tag(dashboard_activity.item.public_filename(:thumb), :width => '50px'), user_photo_path(dashboard_activity.item.user_id, dashboard_activity.item), :class=>'articleLink'
+        - when 'Topic'
+          =" started a topic: "
+          -topic = dashboard_activity.item
+          = link_to truncate_words(topic.title), forum_topic_path(topic.forum, topic), :class=>'articleLink'
+        - when 'SbPost'
+          =" added to a forum topic: "
+          - topic = dashboard_activity.item.topic
+          = link_to truncate_words(dashboard_activity.item.body), forum_topic_path(topic.forum, topic), :class=>'articleLink'
+        - when 'Comment'
+          =" left a comment: "
+          = link_to truncate_words(dashboard_activity.item.comment), dashboard_activity.item.generate_commentable_url, :class=>'articleLink'
+        - when 'Favorite'
+          =" favorited"
+          = link_to " a #{dashboard_activity.item.favoritable.class.to_s.humanize.downcase}", user_favorite_path(dashboard_activity.item.user_id, dashboard_activity.item), :class=>'articleLink'
+        - when 'Clipping'
+          =" added a clipping: "
+          = link_to image_tag( dashboard_activity.item.image_uri(:thumb), :width => '50px'), user_clipping_path(dashboard_activity.item.user_id, dashboard_activity.item), :class=>'articleLink'
+        - when 'VideoAsset'
+          =" uploaded a new video "
+          = link_to truncate_words(dashboard_activity.item.title), user_video_asset_path(dashboard_activity.item.user_id,dashboard_activity.item), :class=>'articleLink'
+        - when 'VideoClip'
+          =" created a new clip "
+          = link_to truncate_words(dashboard_activity.item.title), user_video_clip_path(dashboard_activity.item.user_id,dashboard_activity.item), :class=>'articleLink'
+        - when 'VideoReel'
+          =" created a new video reel "
+          = link_to truncate_words(dashboard_activity.item.title), user_video_reel_path(dashboard_activity.item.user_id,dashboard_activity.item), :class=>'articleLink'
+    - else
+      - case dashboard_activity.action
+        - when 'updated_profile'
+          updated their profile
+        - when 'logged_in'
+          logged into the site
+        - else
+          = " #{dashboard_activity.action.sub("_", " ") }"
+          
+        
