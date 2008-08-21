@@ -78,6 +78,8 @@ class VideoReelsController < BaseController
       @video_reel.description = params[:description]
       @video_reel.dockey = params[:dockey]
       @video_reel.public_video = params[:public_video]
+      @video_reel.thumbnail_dockey = params[:thumbnail_dockey]
+      @video_reel.video_length = params[:video_length]
       @video_reel.tag_with(params[:tag_list])
     else
       @video_reel = VideoReel.new(params[:video_reel])
