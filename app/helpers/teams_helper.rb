@@ -4,8 +4,9 @@ module TeamsHelper
     team ||= @team
     
     options = {
-      :joins=>"JOIN users ON user_id = users.id",
-      :conditions=>["users.team_id = ?", team.id],
+      #:joins=>"JOIN users ON user_id = users.id",
+      #:conditions=>["users.team_id = ?", team.id],
+      :conditions=>["team_id = ?", team.id],
       :limit=>10
     }.merge opts
     
