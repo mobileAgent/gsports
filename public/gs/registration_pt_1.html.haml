@@ -1,0 +1,240 @@
+!!! Strict
+%html{ "xml:lang" => "en", :lang => "en", :xmlns => "http://www.w3.org/1999/xhtml" }
+  %head
+    %title
+      \###PAGE TITLE HERE###
+    %meta{ :content => "text/html;charset=utf-8", "http-equiv" => "Content-Type" }/
+    %link{ :href => "styles/main.css", :rel => "stylesheet" }/
+    /
+      [if IE 6]>
+      <style type="text/css">
+      \.contentBoxHeader { background-image: none; }
+      </style>
+      <![endif]
+    %script{ :type => "text/javascript", :src => "scripts/registration.js" }/
+  %body
+    .backgroundContainerHome
+      .outerContainer
+        .util
+        /
+          header/ads
+        %form#login{ :action => "#", :method => "post" }
+          .headerHome
+            %h1.headerBrand
+              Lorem ipsum dolor sit amet.
+            /
+              Login Box
+            .loginBox
+              %label{ :for => "loginUsername" }
+                USERNAME
+              %input#loginUsername.loginFormInput{ :type => "text" }/
+              %br/
+              %label{ :for => "loginPassword" }
+                PASSWORD
+              %input#loginPassword.loginFormPassword{ :type => "password" }/
+              %input.loginButton{ :name => "submit", :src => "images/top_nav_login.gif", :type => "image", :value => "Login", :alt => "Login" }/
+              %br/
+              %span.loginHelp
+                %a{ :href => "#" }
+                  signup >>
+                |
+                %a{ :href => "#" }
+                  password help >>
+            /
+              End Login Box
+            .clearDiv/
+        /
+          end header/ads
+        /
+          top-nav
+        .topNav
+          %ul.leftTopNav
+            %li
+              %span#gnavAboutGlobalSports.ROLLOVERIMAGE
+                %a{ :href => "#" }
+                  %span
+                    About Global Sports
+            %li.divider
+              %span#gnavMembership.ROLLOVERIMAGE
+                %a{ :href => "#" }
+                  %span
+                    Membership
+            %li.divider
+              %span#gnavRegistration.ROLLOVERIMAGE
+                %a{ :href => "#" }
+                  %span
+                    Registration
+          %form.rightTopNav{ :action => "#", :method => "get" }
+            %div
+              %h2
+                Search for My School
+              %label.verbalSemantic{ :for => "searchState" }
+                State
+              %select#searchState{ :name => "state" }
+                %option{ :value => "" }
+                  \- State -
+                %option{ :value => "" }
+                  State
+                %option{ :value => "" }
+                  State
+                %option{ :value => "" }
+                  State
+              %label.verbalSemantic{ :for => "searchCounty" }
+                County
+              %select#searchCounty{ :name => "county" }
+                %option{ :value => "" }
+                  \- County -
+                %option{ :value => "" }
+                  County
+                %option{ :value => "" }
+                  County
+                %option{ :value => "" }
+                  County
+              %label.verbalSemantic{ :for => "searchCity" }
+                City
+              %select#searchCity{ :name => "city" }
+                %option{ :value => "" }
+                  \- City -
+                %option{ :value => "" }
+                  City
+                %option{ :value => "" }
+                  City
+                %option{ :value => "" }
+                  City
+              %label.verbalSemantic{ :for => "searchSchool" }
+                School
+              %select#searchSchool{ :name => "school" }
+                %option{ :value => "" }
+                  \- School -
+                %option{ :value => "" }
+                  School
+                %option{ :value => "" }
+                  School
+                %option{ :value => "" }
+                  School
+              %input.submit{ :name => "submit", :src => "images/top_nav_search.gif", :type => "image", :value => "search", :alt => "Search" }/
+        /
+          end top-nav
+        .landingContentArea
+          .RegContent
+            /
+              Content
+            .SideBar
+              /
+                Sidebar Content
+              %h1
+                Registration
+              %p
+                The Registration process lus auctor eleifend mi.
+              %p
+                Quisque et arcu. Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consecteteur, adipisci velit.
+              %p
+                Aenean ac lacus. Vestibulum commodo metus dictum quam. Vestibulum a erat at ligula blandit euismod.
+              %p
+                %a{ :href => "#" }
+                  Read more about types »
+              %p
+                ?
+              /
+                End Sidebar Content
+            .RegistrationContent
+              .RegistrationTrail
+                %span.RegistrationComplete
+                  PART 1: ACCOUNT TYPE > >
+                PART 2: USER INFORMATION > > PART 3: BILLING INFORMATION
+              .AcountType
+                %form#AccountType{ :action => "#", :method => "post" }
+                  %h1
+                    Part 1: Account Type
+                  %h2
+                    ACCOUNT TYPE
+                  .SelectedAccount
+                    %label.verbalSemantic{ :for => "Ath" }
+                      Athletes Coaches, Parents, and Fans
+                    .AccountRadio
+                      %input#Ath{ :checked => "checked", :name => "radio", :type => "radio", :value => "Ath", :onchange => "updateSelectedAccount(this)" }/
+                    .AccountIllustration
+                      %img{ :src => "images/account_athletes.jpg", :height => "99", :onclick => "return selectThisAcocunt(this)", :alt => "Athletes Illustration", :width => "131" }/
+                    .AccountDescriptionAthletes
+                      %h2
+                        Athletes, Coaches, Parents and Fans.
+                      %p
+                        Vestibulum quis est id arcu tincidunt ultrices. Nulla vestibulum euismod leo. Sed et elit. Ut aliquet, mi eu volutpat elementum, sem arcu suscipit nunc. Nunc turpis nulla, porttitor id, tempus at condimentum elementum, sem. Sed tempor eros.
+                      %p
+                        ?
+                  .UnSelectedAccount
+                    %label.verbalSemantic{ :for => "School" }
+                      Schools and Private Clubs
+                    .AccountRadio
+                      %input#School{ :name => "radio", :type => "radio", :value => "School", :onchange => "updateSelectedAccount(this)" }/
+                    .AccountIllustration
+                      %img{ :src => "images/accout_school_illu.jpg", :height => "99", :onclick => "return selectThisAcocunt(this)", :alt => "Athletes Illustration", :width => "131" }/
+                    .AccountDescriptionSchools
+                      %h2
+                        Athletes, Coaches, Parents and Fans.
+                      %p
+                        Vestibulum quis est id arcu tincidunt ultrices. Nulla vestibulum euismod leo. Sed et elit. Ut aliquet, mi eu volutpat elementum, sem arcu suscipit nunc. Nunc turpis nulla, porttitor id, tempus at condimentum elementum, sem. Sed tempor eros.
+                      %p
+                        ?
+                  .UnSelectedAccount
+                    %label.verbalSemantic{ :for => "Leagues" }
+                      Leagues and Conferences
+                    .AccountRadio
+                      %input#Leagues{ :name => "radio", :type => "radio", :value => "Leagues", :onchange => "updateSelectedAccount(this)" }/
+                    .AccountIllustration
+                      %img{ :src => "images/accout_league_illu.jpg", :height => "99", :onclick => "return selectThisAcocunt(this)", :alt => "Athletes Illustration", :width => "131" }/
+                    .AccountDescriptionLeagues
+                      %h2
+                        Athletes, Coaches, Parents and Fans.
+                      %p
+                        Vestibulum quis est id arcu tincidunt ultrices. Nulla vestibulum euismod leo. Sed et elit. Ut aliquet, mi eu volutpat elementum, sem arcu suscipit nunc. Nunc turpis nulla, porttitor id, tempus at condimentum elementum, sem. Sed tempor eros.
+                      %p
+                        ?
+                  .UnSelectedAccount
+                    %label.verbalSemantic{ :for => "Scouts" }
+                      Scouts and Recruiters
+                    .AccountRadio
+                      %input#Scouts{ :name => "radio", :type => "radio", :value => "Scouts", :onchange => "updateSelectedAccount(this)" }/
+                    .AccountIllustration
+                      %img{ :src => "images/account_scouts.jpg", :height => "99", :onclick => "return selectThisAcocunt(this)", :alt => "Athletes Illustration", :width => "131" }/
+                    .AccountDescriptionScouts
+                      %h2
+                        Athletes, Coaches, Parents and Fans.
+                      %p
+                        Vestibulum quis est id arcu tincidunt ultrices. Nulla vestibulum euismod leo. Sed et elit. Ut aliquet, mi eu volutpat elementum, sem arcu suscipit nunc. Nunc turpis nulla, porttitor id, tempus at condimentum elementum, sem. Sed tempor eros.
+                      %p
+                        ?
+                  .accountContinue
+                    %p
+                      %input{ :name => "Continue", :src => "images/account_continue.png", :type => "image", :value => "Contine", :alt => "Continue" }/
+                    %p
+                      (Lorem ipsum dolor sit amet)
+          .clearDiv/
+        /
+          footer/ads
+        .footer
+          .footerAds
+            %span.footerAd
+              %img{ :src => "placeholders/ad1.jpg" }/
+            %span.footerAd
+              %img{ :src => "placeholders/ad2.jpg" }/
+            %span.footerAd
+              %img{ :src => "placeholders/ad3.jpg" }/
+            %span.footerAd
+              %img{ :src => "placeholders/ad4.jpg" }/
+        /
+          end footer/ads
+        .legal
+          %span
+            ? Global Sports 2008 |
+            %a{ :href => "" }
+              Terms of Use
+            |
+            %a{ :href => "" }
+              Privacy Policy
+            |
+            %a{ :href => "" }
+              Advertising Opportunities
+            |
+            %a{ :href => "" }
+              Contact Us
