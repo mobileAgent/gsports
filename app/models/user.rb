@@ -69,6 +69,7 @@ class User < ActiveRecord::Base
     indexes team.name, :as => :team_name
     indexes league.name, :as => :league_name
     indexes tags.name, :as => :tags_content
+    indexes comments.comment, :as => :comment_comments
     #indexes monikers.tags.name, :as => :moniker_content
     has created_at, updated_at, profile_public
   end

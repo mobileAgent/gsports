@@ -58,10 +58,10 @@
   
         - skip_billing = (@billing_address.nil? || @billing_address.address1.blank?)
         - if skip_billing
-          %label{:for => 'skip_billing_address'}
-          Use primary account address as billing address
-          %br/
-          %input{:type => 'checkbox', :checked => (skip_billing ? 'checked' : ''), :name => 'skip_billing_address', :id => 'skip_billing_address', :onclick => "this.checked ? $$('#billingAddress')[0].hide() : $$('#billingAddress')[0].show()"}
+          %fieldset.inline
+            %input{:type => 'checkbox', :checked => (skip_billing ? 'checked' : ''), :name => 'skip_billing_address', :id => 'skip_billing_address', :onclick => "this.checked ? $$('#billingAddress')[0].hide() : $$('#billingAddress')[0].show()"}
+            %label{:for => 'skip_billing_address'}
+              Use primary account address as billing address
         - elsif @billing_address
           = hidden_field_tag 'billing_address[id]', @billing_address.id
       
@@ -93,11 +93,12 @@
           %br/
           = text_field :billing_address, :zip
           / end of billing address 
-          
-        %label{:for => "tos"}
-        <input id="tos" name="tos" type="checkbox" value="tos"/>
-        I have read and agree to the
-        =link_to("#{AppConfig.community_name} Terms of Service", '/info/terms', {:target => "_blank"})
+
+        %fieldset.inline
+          <input id="tos" name="tos" type="checkbox" value="tos"/>
+          %label{:for => "tos"}
+            I have read and agree to the
+            =link_to("#{AppConfig.community_name} Terms of Service", '/info/terms', {:target => "_blank"})
   
         = hidden_field_tag :inviter_id, params[:inviter_id]
         = hidden_field_tag :inviter_code, params[:inviter_code]
