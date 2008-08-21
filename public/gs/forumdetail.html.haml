@@ -1,6 +1,8 @@
 !!! Strict
 %html{ "xml:lang" => "en", :lang => "en", :xmlns => "http://www.w3.org/1999/xhtml" }
   %head
+    %title
+      \###PAGE TITLE HERE###
     %link{ :href => "styles/main.css", :rel => "stylesheet" }/
     /
       [if IE 6]>
@@ -9,23 +11,24 @@
       </style>
       <![endif]
     %meta{ :content => "text/html;charset=utf-8", "http-equiv" => "Content-Type" }/
+    %link{ :href => "favicon.ico", :rel => "icon", :type => "image/png" }/
   %body
     .backgroundContainer
       .outerContainer
         .util
           %span
-            %a{ :href => "" }
+            %a{ :href => "#" }
               about
             |
-            %a{ :href => "" }
+            %a{ :href => "#" }
               contact
             |
-            %a{ :href => "" }
+            %a{ :href => "#" }
               help
             |
-            %a{ :href => "" }
+            %a{ :href => "#" }
               logout
-            %img{ :src => "images/lock.gif", :alt => "Paddlock Icon" }/
+            %img{ :src => "images/lock.gif", :alt => "alt" }/
         /
           header/ads
         .header
@@ -171,13 +174,13 @@
                     %a.popLink{ :href => "#" }
                       pop out +
             .chatToolLinks
-              %a{ :href => "" }
+              %a{ :href => "#" }
                 send invites
               |
-              %a{ :href => "" }
+              %a{ :href => "#" }
                 my account
               |
-              %a{ :href => "" }
+              %a{ :href => "#" }
                 mailbox (2)
         /
           end find/chat
@@ -185,160 +188,164 @@
           .profilePageHeader
             %h2.columnDescriptor
               %span
-                PROFILE
-              NORMAN GALE
+                FORUMS
+              GENERAL
           .leftNavCol
             .clearDiv.moreLinkArea
               %span.moreLink
-                %a{ :href => "" }
-                  ? back to full profile
+                %a{ :href => "#" }
+                  ? back to forum index
             %h2.yellowHeader
-              My Profile
+              My Network
             .leftNav
               %ul
                 %li.hilighted
-                  %a{ :href => "" }
+                  %a{ :href => "#" }
                     Test
                 %li
-                  %a{ :href => "" }
+                  %a{ :href => "#" }
                     More test
-          .listings
-            .contentBox.tanBackground
-              .contentBoxHeader.yellowHeader
-                %h2.boxDescription
-                  Friends
-              .contentBoxContent.friendSearchWidgetArea
-                %span.friendSearchColumn
-                  Search:
-                %span.friendSearchWidgetColumn
-                  %label.verbalSemantic{ :for => "friendSearchTerms" }
-                    Search Terms
-                  %input#friendSearchTerms{ :name => "terms", :type => "text" }/
-                  %input.submit{ :name => "submit", :src => "images/top_nav_search.gif", :type => "image", :value => "search", :alt => "Search" }/
-                  %br/
-                .clearDiv/
-                %span.friendSearchColumn
-                  Sort by:
-                %span.friendSearchWidgetColumn
-                  %label.verbalSemantic{ :for => "friendFindSortBy" }
-                    Sort by
-                  %select#friendFindSortBy{ :name => "sortBy" }
-                    %option{ :value => "" }
-                      Recent Updates
-                    %option{ :value => "" }
-                      Option
-                    %option{ :value => "" }
-                      Option
-                    %option{ :value => "" }
-                      Option
-                  %br/
-                .clearDiv/
-                %span.friendSearchColumn
-                  Show:
-                %span.friendSearchWidgetColumn
-                  %label.verbalSemantic{ :for => "friendFindShowNet" }
-                    Show Network
-                  %select#friendFindShowNet{ :name => "sortBy" }
-                    %option{ :value => "" }
-                      Recent Updates
-                    %option{ :value => "" }
-                      Option
-                    %option{ :value => "" }
-                      Option
-                    %option{ :value => "" }
-                      Option
-                  %br/
-            .clearDiv.moreLinkArea
-              %span.moreLink
-                %a{ :href => "" }
-                  ? previous
-                | 1-24 |
-                %a{ :href => "" }
-                  25-48
-                |
-                %a{ :href => "" }
-                  49-72
-                |
-                %a{ :href => "" }
-                  next ?
-            /
-              listing item
-            .listingItem
-              .listingImage
-                %img{ :src => "placeholders/thumbnail_81x78.jpg", :alt => "##TEXT EQUIVALENT##" }/
-              .listingDescription
-                %h4
-                  Cedar Knolls
-                .schoolName
-                  Meyzeek High School
-                .recentFriendFeed
-                  Created a new highlight reel called "Softball Strike-outs Spring 2008"
-                  %span.moreLink
-                    %a{ :href => "" }
-                      view ?
-              %ul.listingActions
-                %li
-                  %a.genericButton{ :href => "#" }
-                    %span
-                      View Profile
-                %li
-                  %a.genericButton{ :href => "#" }
-                    %span
-                      Send Message
-                %li
-                  %a.genericButton{ :href => "#" }
-                    %span
-                      Add To Favorites
+          %form#Forum{ :action => "#", :method => "post" }
+            .forumContainer
+              .forumContentBox
+                .forumBoxHeader
+                  %h2
+                    This is copy text but not Latin
+                /
+                  Forum Layout
+                /
+                  Start Forum Post
+                .forumPost
+                  .forumPoster
+                    %img{ :src => "placeholders/forumProfile.jpg", :height => "80", :alt => "Profile Picture", :width => "81" }/
+                    %br/
+                    %a{ :href => "#" }
+                      Jane Doe
+                  .forumPostSummary
+                    .forumPostSummaryDate
+                      1:23pm Tuesday 05/27
+                    .forumPostSummaryBody
+                      %p
+                        This is copy text written to replace latin copy text. It has no other function in life than that of filling space. It comes from the same genus as foam packing beans. Imagine that, its sole function is just to take up space.
+                      %p
+                        This is a new paragraph of copy text. That makes is slightly less exciting than the first paragraph of copy text, as you already know its copy text. It is however, better than being the third paragraph of copy text.
+                  .forumActions
+                    %a.genericButton{ :href => "#" }
+                      Reply to this Post
+                    %br/
+                    %a.genericButton{ :href => "#" }
+                      Mark Inappropriate
+                  .clearDiv
+                .forumIEfix
+                  ?
+                .forumPost
+                  .forumPoster
+                    %img{ :src => "placeholders/forumProfile.jpg", :height => "80", :alt => "Profile Picture", :width => "81" }/
+                    %br/
+                    %a{ :href => "#" }
+                      Jane Doe
+                  .forumPostSummary
+                    .forumPostSummaryDate
+                      1:23pm Tuesday 05/27
+                    .forumPostSummaryBody
+                      %p
+                        This is copy text written to replace latin copy text. It has no other function in life than that of filling space. It comes from the same genus as foam packing beans. Imagine that, its sole function is just to take up space.
+                      %p
+                        This is a new paragraph of copy text. That makes is slightly less exciting than the first paragraph of copy text, as you already know its copy text. It is however, better than being the third paragraph of copy text.
+                  .forumActions
+                    %a.genericButton{ :href => "#" }
+                      Reply to this Post
+                    %br/
+                    %a.genericButton{ :href => "#" }
+                      Mark Inappropriate
+                  .clearDiv
+                /
+                  END Forum Post
+                .clearDiv
               .clearDiv/
-            /
-              end listing item
-            .clearDiv/
-            /
-              listing item
-            .listingItem
-              .listingImage
-                %img{ :src => "placeholders/thumbnail_81x78.jpg", :alt => "##TEXT EQUIVALENT##" }/
-              .listingDescription
-                %h4
-                  Cedar Knolls
-                .schoolName
-                  Meyzeek High School
-                .recentFriendFeed
-                  Created a new highlight reel called "Softball Strike-outs Spring 2008"
-                  %span.moreLink
-                    %a{ :href => "" }
-                      view ?
-              %ul.listingActions
-                %li
-                  %a.genericButton{ :href => "#" }
-                    %span
-                      View Profile
-                %li
-                  %a.genericButton{ :href => "#" }
-                    %span
-                      Send Message
-                %li
-                  %a.genericButton{ :href => "#" }
-                    %span
-                      Add To Favorites
               .clearDiv/
-            /
-              end listing item
-            .clearDiv/
           .clearDiv/
         /
           end content
+        /
+          Weekly Features
+        .weeklyFeature
+          .featureCol.featureVertRule.featureFloat.weeklyCol1
+            .yellowHeader
+              %h3
+                Weekly Headline Here
+            .featureSummaryThumb
+              %img{ :src => "placeholders/large_story_thumb.jpg", :alt => "alt" }/
+            .featureText
+              %h3
+                Headline
+              %span.sportName
+                Foosball
+              %br/
+              %span.date
+                Neverembuary 44, 1981
+              %br/
+            .clearDiv/
+          .featureCol.featureVertRule.featureFloat.weeklyCol2
+            .yellowHeader
+              %h3
+                Weekly Headline Here
+            .featureSummaryThumb
+              %img{ :src => "placeholders/large_story_thumb.jpg", :alt => "alt" }/
+            .featureText
+              %h3
+                Headline
+              %span.sportName
+                Foosball
+              %br/
+              %span.date
+                Neverembuary 44, 1981
+              %br/
+            .featureSummaryThumb
+              %img{ :src => "placeholders/large_story_thumb.jpg", :alt => "alt" }/
+            .featureText
+              %h3
+                Headline
+              %span.sportName
+                Foosball
+              %br/
+              %span.date
+                Neverembuary 44, 1981
+              %br/
+            .clearDiv/
+          .featureCol.featureFloat.weeklyCol3
+            .yellowHeader
+              %h3
+                Longer Weekly Headline Here
+            %a.arrowButton{ :href => "#" }
+              %img{ :src => "images/top_nav_search.gif", :alt => "alt" }/
+        /
+          end weekly features
+        /
+          footer/ads
+        .footer
+          .footerAds
+            %span.footerAd
+              %img{ :src => "placeholders/ad1.jpg", :alt => "alt" }/
+            %span.footerAd
+              %img{ :src => "placeholders/ad2.jpg", :alt => "alt" }/
+            %span.footerAd
+              %img{ :src => "placeholders/ad3.jpg", :alt => "alt" }/
+            %span.footerAd
+              %img{ :src => "placeholders/ad4.jpg", :alt => "alt" }/
+        /
+          end footer/ads
         .legal
           %span
             ? Global Sports 2008 |
-            %a{ :href => "" }
+            %a{ :href => "#" }
               Terms of Use
             |
-            %a{ :href => "" }
+            %a{ :href => "#" }
               Privacy Policy
             |
-            %a{ :href => "" }
+            %a{ :href => "#" }
               Advertising Opportunities
             |
-            %a{ :href => "" }
+            %a{ :href => "#" }
               Contact Us

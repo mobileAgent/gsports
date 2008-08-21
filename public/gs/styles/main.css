@@ -1,3 +1,474 @@
+/* mailbox styles */
+
+
+
+.mailSelectSort {
+	width: 90px;
+}
+
+.mailSearchColumn{
+	width: 50px;
+	height: 15px;
+	float:left;
+	margin-left:18px;
+	font-size: 110%;
+	position: relative;
+	top: 3px;
+}
+
+.mailSortBy {
+	width: 125px;
+
+}
+
+.mailItemSelected {
+	background-color: #E2E4A7;
+	width: auto;
+	display: block;
+	height: auto;
+	border: 2px solid #333333;
+}
+
+.mailItem {
+	background-color: #E2E4A7;
+	width: auto;
+	display: block;
+	height: auto;
+}
+
+
+.mailIEFix {
+	height: 10px;
+}
+.mailReadMessage a {
+	color: #666666;
+}
+
+.mailReadMessage {
+	font-size: 90%;
+	text-align: right;
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+
+.mailPostSummary {
+	float: left;
+	width: 490px;
+	padding: 10px;
+}
+.mailPostSummaryBody strong {
+	font-size: 115%;
+}
+
+.mailPostSummaryDate {
+	padding-bottom: 10px;
+}
+
+.mailPostSummaryBody {
+	background-color: #FFFFFF;
+	padding: 10px;
+}
+
+
+.mailPostSummaryBody p {
+	background-color: #FFFFFF;
+	display: block;
+}
+
+.mailSenderSelect {
+	float: left;
+	width: 25px;
+	padding-top: 50px;
+	text-align: center;
+	padding-left: 3px;
+}
+
+.mailPoster {
+	width: 85px;
+	float: left;
+	padding-top: 10px;
+	padding-right: 5px;
+	padding-bottom: 5px;
+	padding-left: 5px;
+	text-align: center;
+}
+.mailPosterImg a {
+	border: 2px solid #666666;
+}
+
+.mailPosterImg a:hover {
+	border: 2px solid #0066CC;
+}
+
+.mailPoster a {
+	font-size: 110%;
+	color: #333333;
+	text-align: left;
+	display: block;
+	margin-top: 5px;
+}
+
+.mailPoster a:hover {
+	font-size: 110%;
+	color: #333333;
+	text-decoration: none;	
+}
+
+.mailContainer{
+	width:801px;
+	float:left;
+	background-color: #ffffff;
+	padding-right: 0px;
+	padding-bottom: 10px;
+	padding-left: 0px;
+	}
+
+#mailSearchTerms{
+	width:88px;
+}
+
+.mailMoreLink {
+	margin-right:7px;
+	text-align: left;
+	padding-left: 10px;
+	clear: both;
+	padding-bottom: 4px;
+}
+
+.mailMoreLink a{
+	color: #666666;
+}
+
+.mailSearchWidget {
+	display: block;
+	width: 300px;
+	height: 25px;
+	
+}
+
+.mailSelect {
+	font-size: 110%;
+	margin-right: 10px;
+	display: block;
+	float: left;
+		position: relative;
+	top: 3px;
+	}
+
+
+.mailSearchOptions {
+	width: 460px;
+	float: right;
+}
+
+
+.mailSearchOptionsLeft {
+	width: 300px;
+	float: left;
+}
+
+.mailButtonsRight {
+	float: right;
+	width: 135px;
+}
+
+.mailButtonsLeft {
+	float: right;
+	width: 135px;
+}
+.mailSearchWidgetColumn{
+	display: block;
+	width: 220px;
+	height: 25px;
+}
+
+.mailSelectLeft {
+	width: 185px;
+}
+
+.mailSearchBox {
+	height: 17px;
+	border: 1px solid #666666;
+}
+
+.mailSubmit {
+	position: relative;
+	top: 2px;
+}
+
+.mailMarginTop {
+	height: 20px;
+}
+/* forum styles */
+
+.forumContainer{
+	width:801px;
+	padding: 20px 0px 10px 0px;
+	float:left;
+	background-color: #ffffff;	
+	}
+
+.forumIEfix {
+	background-color: #FFFFFF;
+}
+
+.forumContentBox {
+	margin-left: 10px;
+	margin-bottom:20px;
+}
+
+.forumBoxHeader h2 {
+	padding-bottom: 10px;
+	font-size: 15px;
+	font-family: Arial, Helvetica, sans-serif;
+	padding-top: 5px;
+}
+
+.forumPost {
+	background-color: #E2E4A7;
+	width: auto;
+	display: block;
+	height: auto;
+}
+
+.forumPostSummaryBody p {
+	background-color: #FFFFFF;
+	display: block;
+	margin-bottom: 20px;
+}
+
+.forumPoster {
+	height: 150px;
+	width: 90px;
+	float: left;
+	padding-top: 25px;
+	padding-right: 5px;
+	padding-bottom: 5px;
+	padding-left: 5px;
+	text-align: center;
+}
+.forumPoster img {
+	border: 1px solid #666666;
+}
+
+.forumPoster a {
+	font-size: 110%;
+	color: #333333;
+	display: block;
+	text-align: left;
+	padding-left: 6px;
+	padding-top: 5px;
+}
+
+.forumPoster a:hover {
+	font-size: 110%;
+	color: #333333;
+	
+}
+
+.forumPostSummary {
+	float: left;
+	width: 515px;
+	padding-top: 25px;
+	padding-right: 10px;
+	padding-bottom: 25px;
+	padding-left: 10px;
+}
+
+.forumPostSummaryDate {
+	padding-bottom: 10px;
+}
+
+.forumPostSummaryBody {
+	background-color: #FFFFFF;
+	padding: 10px;
+}
+
+.forumActions {
+	float: right;
+	width: 135px;
+	padding-top: 30px;
+	padding-left: 15px;
+}
+
+
+/* image replacement button */
+
+.InputButtonFP {
+	font-size: 10px;
+	font-family: Arial, Helvetica, sans-serif;
+	color: #FFFFFF;
+	background-color: #141C35;
+	border: 1px solid #FFFFFF;
+	cursor: pointer;
+	padding: 3px;
+	margin-left: 3px;
+}
+
+
+.InputButtonFP:hover {
+	font-size: 10px;
+	font-family: Arial, Helvetica, sans-serif;
+	color: #FFFFFF;
+	background-color: #205F97;
+	border: 1px solid #FFFFFF;
+	cursor: pointer;
+	padding: 3px;
+	margin-left: 3px;
+}
+
+.InputButton {
+	font-size: 11px;
+	font-family: Arial, Helvetica, sans-serif;
+	color: #999999;
+	background-color: #333333;
+	border: 1px solid #000000;
+	padding-top: 2px;
+	padding-right: 5px;
+	padding-bottom: 2px;
+	padding-left: 5px;
+	cursor: pointer;
+}
+
+.InputButton:hover {
+	font-size: 11px;
+	font-family: Arial, Helvetica, sans-serif;
+	color: #ffffff;
+	background-color: #333333;
+	border: 1px solid #333333;
+	padding-top: 2px;
+	padding-right: 5px;
+	padding-bottom: 2px;
+	padding-left: 5px;
+	cursor: pointer;
+}
+
+/* image replacement button experiments */
+
+.ImageButton {
+	background-image: url(../images/account_continue.png);
+	background-repeat: no-repeat;
+	height: 36px;
+	width: 238px;
+
+}
+
+.genericFormButton, .genericFormButton:visited {
+	color: #FFEF0A;
+	text-align: center;
+	/* display: block; */
+	width: 116px;
+	padding-top: 2px;
+	height: 17px;
+	background-image: url("/gs/images/generic_button.gif");
+	background-repeat: no-repeat;
+	background-position: left top;
+	text-decoration: none;
+	font-size: 90%;
+	vertical-align: middle;
+}
+.genericFormButton:active {
+	background-position: right top;
+}
+
+
+/* Profile Edit Styles */
+
+
+.profileLeftCol {
+	width: 370px;
+	position: relative;
+	left: 0px;
+	float: left;
+	padding-left: 15px;
+}
+
+
+.profileRightCol {
+	width: 365px;
+	float: right;
+	padding-right: 15px;
+}
+
+
+.profileBirthday {
+	padding-left: 25px;
+	font-size: 120%;
+	margin-top: 25px;
+	padding-bottom: 25px;
+	border-bottom-width: 1px;
+	border-bottom-style: dotted;
+	border-bottom-color: #999999;
+}
+
+.profileBirthday select {
+	margin-left: 10px;	
+}
+
+
+.profileContentBox {
+
+	margin-left: 20px;
+	margin-bottom:20px;
+	background-color: #E2E4A7;
+}
+
+.ProfileFav {
+	padding-top: 10px;
+}
+
+.ProfileFav label {
+	font-size: 110%;
+	color: #333333;
+	display: block;
+	padding-top: 2px;
+	padding-left: 5px;
+}
+
+.ProfileFav textarea {
+	border: 1px solid #666666;
+	width: 360px;
+	margin-left: 5px;
+	overflow: auto;
+}
+
+.ProfileYourCat {
+	
+	padding-top: 10px;
+}
+
+.ProfileCatLabel {
+	width: 80px;
+	height: 20px;
+	float: left;
+	font-size: 130%;
+}
+
+.ProfileCatInput {
+	width: 265px;
+	border: 1px solid #666666;
+	font-size: 110%;
+	overflow: auto;
+}
+
+.ProfileCat {
+	background-color: #C1C38F;
+	padding: 5px;
+}
+
+.profileRem {
+	text-align: right;
+	padding: 10px;
+}
+
+.ProfileSave {
+	padding: 15px;
+	text-align: right;
+	border-top-width: 1px;
+	border-top-style: dotted;
+	border-top-color: #999999;
+}
+
 /* Registration Styles */
 
 .AcountType h2 {
@@ -312,7 +783,7 @@
 
 .homeFeature{
 	height: 198px;
-	background:transparent url("../images/homeFeature_background.png") repeat-x scroll left bottom;
+	background:transparent url("/gs/images/homeFeature_background.png") repeat-x scroll left bottom;
 	color: #ffffff;
 	width: 956px;
 	margin: auto;
@@ -546,6 +1017,30 @@
 	border: 1px solid #2980CA;
 }
 /* generic button */
+
+.genericButtonLight, .genericButtonLight:visited {
+	color: #FFEF0A;
+	text-align: center;
+	display: block;
+	width: 116px;
+	padding-top: 2px;
+	height: 15px;
+	background-image: url("/gs/images/generic_button_light.gif");
+	background-repeat: no-repeat;
+	background-position: left top;
+	text-decoration: none;
+	font-size: 100%;
+}
+.genericButtonLight:active {
+	background-position: right top;
+}
+
+
+
+
+
+
+
 .genericButton, .genericButton:visited {
 	color: #FFEF0A;
 	text-align: center;
@@ -553,7 +1048,7 @@
 	width: 116px;
 	padding-top: 2px;
 	height: 15px;
-	background-image: url("../images/generic_button.gif");
+	background-image: url("/gs/images/generic_button.gif");
 	background-repeat: no-repeat;
 	background-position: left top;
 	text-decoration: none;
@@ -688,7 +1183,7 @@ body{
 	margin: 0;
 }
 .backgroundContainer{
-	background-image: url("../images/football_background_shadow.jpg");	
+	background-image: url("/gs/images/football_background_shadow.jpg");	
 	background-repeat: no-repeat;
 	background-position: center top;
 	margin: auto;
@@ -696,7 +1191,7 @@ body{
 }
 /* Used for Home Page */
 .backgroundContainerHome{
-	background-image: url("../images/footballplayers_background.jpg");	
+	background-image: url("/gs/images/footballplayers_background.jpg");	
 	background-repeat: no-repeat;
 	background-position: center top;
 	margin: auto;
@@ -750,7 +1245,7 @@ label.verbalSemantic { /* used for <label> tags that are needed for semantic com
 
 /* head */
 .header {
-	background: #000000 url("../images/header_brand.jpg") no-repeat top left;
+	background: #000000 url("/gs/images/header_brand.jpg") no-repeat top left;
 	font-size: 100%; /* = 10px @ 100% browser zoom */
 	color: #B3B3B3;
 	padding-bottom: 10px;
@@ -758,7 +1253,7 @@ label.verbalSemantic { /* used for <label> tags that are needed for semantic com
 }
 /* header used for the homepage template with larger logo */
 .headerHome {
-	background: #000000 url("../images/header_brand_home.jpg") no-repeat top left;
+	background: #000000 url("/gs/images/header_brand_home.jpg") no-repeat top left;
 	font-size: 100%; /* = 10px @ 100% browser zoom */
 	color: #B3B3B3;
 	padding-bottom: 10px;
@@ -812,12 +1307,14 @@ a.logout:hover { }
 }
 .headerPosition1 .structuralContainer, .headerPosition2 .structuralContainer {
 	display: block;
+    /* the following out-of-spec #'s are necessary to allow the header to accept square logos as well as banner ads */
 	# position: absolute;
 	# top: 50%;
 	display: table-cell;
 	vertical-align: middle;
 }
 .headerPosition1 .structuralContainer div, .headerPosition2 .structuralContainer div {
+    /* the following out-of-spec #'s are necessary to allow the header to accept square logos as well as banner ads */
 	# position: relative;
 	# top: -50%;
 	# left: -50%;
@@ -828,7 +1325,7 @@ a.logout:hover { }
 .topNav{
 	width: inherit;
 	height: 35px;
-	background-image: url("../images/top_nav_background.gif");
+	background-image: url("/gs/images/top_nav_background.gif");
 	padding-top: 0;
 	margin-top: 0;
 }
@@ -849,7 +1346,7 @@ a.logout:hover { }
 	/* height: 35px; */
 }
 .leftTopNav li.divider {
-	background-image: url("../images/top_nav_divider.gif");
+	background-image: url("/gs/images/top_nav_divider.gif");
 	background-position-x: 0;
 	background-position-y: 0;
 	background-repeat: no-repeat;
@@ -900,15 +1397,15 @@ a.logout:hover { }
 
 /* Begin Global Navigation *********************************************************************/
 
-#gnavMyNetwork, #gnavMyNetwork a				{ background-image: url("../images/gnav_my_network.gif");		width: 70px; height: 10px; }
-#gnavMyVideos, #gnavMyVideos a					{ background-image: url("../images/gnav_my_videos.gif");		width: 56px; height: 10px; }
-#gnavMyProfile, #gnavMyProfile a				{ background-image: url("../images/gnav_my_profile.gif");		width: 59px; height: 10px; }
+#gnavMyNetwork, #gnavMyNetwork a				{ background-image: url("/gs/images/gnav_my_network.gif");		width: 70px; height: 10px; }
+#gnavMyVideos, #gnavMyVideos a					{ background-image: url("/gs/images/gnav_my_videos.gif");		width: 56px; height: 10px; }
+#gnavMyProfile, #gnavMyProfile a				{ background-image: url("/gs/images/gnav_my_profile.gif");		width: 59px; height: 10px; }
 
 /* Home Page Global Navigation syles */
 
-#gnavAboutGlobalSports, #gnavAboutGlobalSports a	{ background-image: url("../images/gnav_about_globalsports.gif");		width: 121px; height: 10px; }
-#gnavMembership, #gnavMembership a					{ background-image: url("../images/gnav_membership.gif");		width: 70px; height: 10px; }
-#gnavRegistration, #gnavRegistration a				{ background-image: url("../images/gnav_registration.gif");		width: 74px; height: 10px; }
+#gnavAboutGlobalSports, #gnavAboutGlobalSports a	{ background-image: url("/gs/images/gnav_about_globalsports.gif");		width: 121px; height: 10px; }
+#gnavMembership, #gnavMembership a					{ background-image: url("/gs/images/gnav_membership.gif");		width: 70px; height: 10px; }
+#gnavRegistration, #gnavRegistration a				{ background-image: url("/gs/images/gnav_registration.gif");		width: 74px; height: 10px; }
 
 /* global navigation utility classes *********/
 span.ROLLOVERIMAGE { background-position: top right; }
@@ -921,11 +1418,13 @@ span.ROLLOVERIMAGE a span { display: none; visibility: hide; }
 .videoFindChat{
 	height: 55px;
 }
-.videoFind{
+/* tb: .videoFind{ */
+#videoFind { /* bh */
 	height: 55px;
 	width: 682px;
-	background:#ffffff url("../images/video_find_background.gif") no-repeat scroll left bottom;
+	background:#ffffff url("/gs/images/video_find_background.gif") no-repeat scroll left bottom;
 	float: left;
+    display: block; /* bh */
 }
 .videoFind select {
 	margin-right: 5px;
@@ -937,12 +1436,14 @@ span.ROLLOVERIMAGE a span { display: none; visibility: hide; }
 .videoFind option {
 	font-size: 110%;
 }
-.videoFind form {
+/* tb: .videoFind form { */
+.videoFind {
 	margin-top: 17px;
 	margin-right: 15px;
 	float:right;
 }
-.videoFind form select, .videoFind form submit{
+/* tb: .videoFind form select, .videoFind form submit{ */
+.videoFind select, .videoFind submit{ /* bh */
 	margin-top: 3px;
 	float: left;
 }
@@ -955,7 +1456,7 @@ span.ROLLOVERIMAGE a span { display: none; visibility: hide; }
 .chat{
 	height: 42px;
 	width: 274px;
-	background:#ffffff url("../images/chat_tab_background.gif") no-repeat scroll left bottom;
+	background:#ffffff url("/gs/images/chat_tab_background.gif") no-repeat scroll left bottom;
 	padding-top: 13px;
 	float: left;
 }
@@ -1039,7 +1540,7 @@ span.ROLLOVERIMAGE a span { display: none; visibility: hide; }
 	height:17px;
 	font-size: 120%;
 	font-weight: normal;
-	background: url("../images/left_nav_header.gif") repeat-x scroll left top;
+	background: url("/gs/images/left_nav_header.gif") repeat-x scroll left top;
 	width:115px;
 }
 .leftNavCol{
@@ -1093,7 +1594,7 @@ span.ROLLOVERIMAGE a span { display: none; visibility: hide; }
 	background-color: #E2E4A7;
 }
 .contentBoxHeader{
-	background: url("../images/content_box_header.png") repeat-x scroll left bottom;
+	background: url("/gs/images/content_box_header.png") repeat-x scroll left bottom;
 	background-color: #68A34E;
 	border-bottom: 2px solid #b7baa3;
 	height: 18px;
@@ -1171,7 +1672,7 @@ span.ROLLOVERIMAGE a span { display: none; visibility: hide; }
 /* weekly feature */
 .weeklyFeature{
 	height: 128px;
-	background:transparent url("../images/weekly_background.gif") repeat-x scroll left bottom;
+	background:transparent url("/gs/images/weekly_background.gif") repeat-x scroll left bottom;
 	color: #ffffff;
 }
 .weeklyFeature .yellowHeader{
@@ -1220,7 +1721,7 @@ span.ROLLOVERIMAGE a span { display: none; visibility: hide; }
 }
 /* footerAds */
 .footer{
-	background:transparent url("../images/footer_advert_background.png") no-repeat scroll left bottom;
+	background:transparent url("/gs/images/footer_advert_background.png") no-repeat scroll left bottom;
 	margin-top: 20px;
 	height: 110px;
 	padding-top: 10px;
@@ -1301,7 +1802,7 @@ span.ROLLOVERIMAGE a span { display: none; visibility: hide; }
 }
 .fileName{
 	display:block;
-	background-image: url("../placeholders/file.gif");	
+	background-image: url("/gs/placeholders/file.gif");	
 	padding: 0;
 	width:60px;
 	height:40px;

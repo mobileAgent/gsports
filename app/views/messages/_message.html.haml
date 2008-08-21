@@ -1,25 +1,27 @@
-.listingItem{:id => "message_#{message.id}"}
-  = link_to_remote 'Destroy', {:url => { :controller => 'messages', :action => 'destroy', :id => message}, :method => :delete} , :style => "float:right", :class => 'genericButton'
-  .listingImage
-    %a{:href=>"#{user_path(message.sender)}", :class=>"photo"}
-      =image_tag(message.sender.avatar_photo_url(:thumb), :alt=>"", :width=>"50", :height=>"50")
-  .listingDescription
-    
-    .msgHeader
-      = "Date: "
-      %span.msgField
-        = message.created_at.to_s(:game_date)
-    .msgHeader
-      = "From: "
-      %span.msgField
-        =h message.user.full_name
-    .msgHeader
-      = "Subject: "
-      %span.msgField
-        = truncate(h(message.title),85)
-    .msgBody
-      = truncate_words message.body,50
-      %br/
-      = link_to "more?", message, :class => "morelink"
+.mailItem{:id => "message_#{message.id}"}
+  .mailSenderSelect
+    %input{ :name => "mailSelct", :type => "checkbox", :value => message.id, :onchange => "selectThisMessage(this)" }/
+  .mailPoster
+    %span.mailPosterImg
+      %a{:href=>"#{user_path(message.sender)}", :class=>"photo"}
+        =image_tag(message.sender.avatar_photo_url(:thumb), :alt=>"Profile Picture", :width=>"80", :height=>"80")
+    %a{ :href => "#" }
+      = link_to message.user.full_name, user_path(message.sender)
+  .mailPostSummary
+    .mailPostSummaryDate
+      = message.created_at.to_s(:game_date)
+    .mailPostSummaryBody
+      %p
+        %strong
+          Subject: 
+          = truncate(h(message.title),85)
+        %br/
+        = truncate_words message.body,260
+    .mailReadMessage
+      = link_to "read full message &raquo;", message, :class => "morelink"
+  .forumActions
+    = link_to 'Reply', {:url => { :controller => 'messages', :action => 'new'}}, :style => "float:right", :class => 'genericButton'
+    %br
+    %br
+    = link_to_remote 'Delete', {:url => { :controller => 'messages', :action => 'destroy', :id => message}, :method => :delete} , :style => "float:right", :class => 'genericButton'
   .clearDiv
-.clearDiv

@@ -32,7 +32,7 @@
               %label{ :for => "loginPassword" }
                 PASSWORD
               %input#loginPassword.loginFormPassword{ :type => "password" }/
-              %input.loginButton{ :name => "submit", :type => "image", :src => "images/top_nav_login.gif", :value => "Login", :alt => "Login" }/
+              %input.loginButton{ :name => "submit", :src => "images/top_nav_login.gif", :type => "image", :value => "Login", :alt => "Login" }/
               %br/
               %span.loginHelp
                 %a{ :href => "#" }
@@ -112,7 +112,7 @@
                   School
                 %option{ :value => "" }
                   School
-              %input.submit{ :name => "submit", :type => "image", :src => "images/top_nav_search.gif", :value => "search", :alt => "Search" }/
+              %input.submit{ :name => "submit", :src => "images/top_nav_search.gif", :type => "image", :value => "search", :alt => "Search" }/
         /
           end top-nav
         .landingContentArea
@@ -152,9 +152,9 @@
                     %label.verbalSemantic{ :for => "Ath" }
                       Athletes Coaches, Parents, and Fans
                     .AccountRadio
-                      %input#Ath{ :name => "radio", :checked => "checked", :type => "radio", :value => "Ath", :onchange => "updateSelectedAccount(this)" }/
+                      %input#Ath{ :checked => "checked", :name => "radio", :type => "radio", :value => "Ath", :onchange => "updateSelectedAccount(this)" }/
                     .AccountIllustration
-                      %img{ :src => "images/account_athletes.jpg", :height => "99", :alt => "Athletes Illustration", :onclick => "return selectThisAcocunt(this)", :width => "131" }/
+                      %img{ :src => "images/account_athletes.jpg", :height => "99", :onclick => "return selectThisAcocunt(this)", :alt => "Athletes Illustration", :width => "131" }/
                     .AccountDescriptionAthletes
                       %h2
                         Athletes, Coaches, Parents and Fans.
@@ -168,7 +168,7 @@
                     .AccountRadio
                       %input#School{ :name => "radio", :type => "radio", :value => "School", :onchange => "updateSelectedAccount(this)" }/
                     .AccountIllustration
-                      %img{ :src => "images/accout_school_illu.jpg", :height => "99", :alt => "Athletes Illustration", :onclick => "return selectThisAcocunt(this)", :width => "131" }/
+                      %img{ :src => "images/accout_school_illu.jpg", :height => "99", :onclick => "return selectThisAcocunt(this)", :alt => "Athletes Illustration", :width => "131" }/
                     .AccountDescriptionSchools
                       %h2
                         Athletes, Coaches, Parents and Fans.
@@ -182,7 +182,7 @@
                     .AccountRadio
                       %input#Leagues{ :name => "radio", :type => "radio", :value => "Leagues", :onchange => "updateSelectedAccount(this)" }/
                     .AccountIllustration
-                      %img{ :src => "images/accout_league_illu.jpg", :height => "99", :alt => "Athletes Illustration", :onclick => "return selectThisAcocunt(this)", :width => "131" }/
+                      %img{ :src => "images/accout_league_illu.jpg", :height => "99", :onclick => "return selectThisAcocunt(this)", :alt => "Athletes Illustration", :width => "131" }/
                     .AccountDescriptionLeagues
                       %h2
                         Athletes, Coaches, Parents and Fans.
@@ -196,7 +196,7 @@
                     .AccountRadio
                       %input#Scouts{ :name => "radio", :type => "radio", :value => "Scouts", :onchange => "updateSelectedAccount(this)" }/
                     .AccountIllustration
-                      %img{ :src => "images/account_scouts.jpg", :height => "99", :alt => "Athletes Illustration", :onclick => "return selectThisAcocunt(this)", :width => "131" }/
+                      %img{ :src => "images/account_scouts.jpg", :height => "99", :onclick => "return selectThisAcocunt(this)", :alt => "Athletes Illustration", :width => "131" }/
                     .AccountDescriptionScouts
                       %h2
                         Athletes, Coaches, Parents and Fans.
@@ -206,7 +206,7 @@
                         ?
                   .accountContinue
                     %p
-                      %input{ :name => "Continue", :type => "image", :src => "images/account_continue.png", :value => "Contine", :alt => "Continue" }/
+                      %input{ :name => "Continue", :src => "images/account_continue.png", :type => "image", :value => "Contine", :alt => "Continue" }/
                     %p
                       (Lorem ipsum dolor sit amet)
           .clearDiv/

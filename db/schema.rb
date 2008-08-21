@@ -330,6 +330,8 @@ ActiveRecord::Schema.define(:version => 20080821121129) do
     t.integer  "favorited_count", :limit => 11, :default => 0
     t.string   "published_as",    :limit => 16, :default => "draft"
     t.datetime "published_at"
+    t.integer  "team_id",         :limit => 11
+    t.integer  "league_id",       :limit => 11
   end
 
   add_index "posts", ["category_id"], :name => "index_posts_on_category_id"
@@ -512,8 +514,8 @@ ActiveRecord::Schema.define(:version => 20080821121129) do
     t.string   "video_length"
     t.string   "video_type"
     t.string   "video_status"
-    t.integer  "league_id",          :limit => 11
-    t.integer  "team_id",            :limit => 11
+    t.integer  "sponsor_id",         :limit => 11
+    t.integer  "member_id",          :limit => 11
     t.integer  "user_id",            :limit => 11
     t.string   "sport"
     t.datetime "game_date"
@@ -525,6 +527,8 @@ ActiveRecord::Schema.define(:version => 20080821121129) do
     t.string   "game_level"
     t.string   "game_gender"
     t.integer  "view_count",         :limit => 11, :default => 0
+    t.integer  "team_id",            :limit => 11
+    t.integer  "league_id",          :limit => 11
     t.boolean  "public_video",                     :default => true
   end
 
