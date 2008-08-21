@@ -1,0 +1,45 @@
+.profileContentArea.listingPage
+  .profilePageHeader
+    %h2.columnDescriptor
+      %span
+        Announcements
+      = @user.full_name
+      of
+      = @user.team.name
+
+  .mailContainer
+    %br
+
+    .forumContentBox
+      .forumBoxHeader
+        .mailItem
+          .mailPoster
+            = render :partial => 'posts/author_profile', :locals => {:user => @user}
+          .mailPostSummary
+            %h3
+              =Inflector.underscore(@commentable.class).capitalize
+              Comments for
+              = link_to @title, @comments.first.generate_commentable_url(false)
+          .clearDiv
+        .clearDiv
+      %div
+        \&nbsp;
+        %br/
+
+      #comments
+      
+
+        %a#newest_comment
+          = render :partial => 'comments/comment', :collection => @comments
+
+        %h3  Add Your Comment
+        %p= render :partial => 'comments/comment_form', :locals => {:commentable => @commentable}
+        
+
+      .clearDiv
+    .clearDiv
+
+
+  .clearDiv
+
+
