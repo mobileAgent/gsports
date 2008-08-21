@@ -70,7 +70,7 @@ Rails::Initializer.run do |config|
   # config.active_record.observers = :cacher, :garbage_collector
   
   # Make sure we get super red cloth
-  config.gem "RedCloth", :version => ">= 3.301", :source => "http://code.whytheluckystiff.net/"
+  config.gem "RedCloth", :version => ">= 4.0.3"
   config.gem "httpclient", :version => ">= 2.1.2"
   config.gem "hpricot", :version => ">= 0.6"
   config.gem "stomp" , :version => ">= 1.0.5"
@@ -85,6 +85,7 @@ Rails::Initializer.run do |config|
   config.gem "will_paginate", :version => ">= 2.2.2"
   config.gem "htmlentities", :version => ">= 4.0.0"
   config.gem "ezcrypto", :version => "= 0.7"
+  config.gem "daemons", :version => ">= 1.0.9"
   
   #resource_hacks required here to ensure routes like /:login_slug work
   config.plugins = [:engines, :community_engine, :white_list, :all]
