@@ -8,7 +8,6 @@
       %th County
       %th State
       %th Description
-      %th Active
       %th Users
       %th/
 
@@ -20,8 +19,7 @@
       %td=h team.county_name
       %td=h team.state_id? ? team.state.name : ""
       %td=truncate h(team.description),45
-      %td=h team.active
-      %td= team.users.count
+      %td.numeric= team.users.count
   
       %td= link_to 'Destroy', team_path(team), :confirm => 'Are you sure?', :method => :delete
     

@@ -7,7 +7,6 @@
       %th City
       %th State
       %th Description
-      %th Active
       %th Teams
       %th/
 
@@ -18,8 +17,7 @@
         %td=h league.city
         %td=h(league.state_id? ? league.state.name : '')
         %td=truncate(h(league.description),45)
-        %td=h league.active
-        %td= league.teams.count
+        %td.numeric= league.teams.count
   
         %td= link_to 'Destroy', league_path(league), :confirm => 'Are you sure?', :method => :delete
    
