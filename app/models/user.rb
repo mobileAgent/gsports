@@ -71,6 +71,7 @@ class User < ActiveRecord::Base
     indexes tags.name, :as => :tags_content
     #indexes monikers.tags.name, :as => :moniker_content
     has created_at, updated_at, profile_public
+    set_property :delta => true
   end
 
   def self.league_staff_ids(league_id)

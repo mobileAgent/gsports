@@ -17,6 +17,7 @@ class VideoReel < ActiveRecord::Base
     indexes updated_at, :sortable => true
     indexes tags.name, :as => :tag_names
     indexes comments.comment, :as => :comment_comments
+    set_property :delta => true
   end
   
   # For the sake of symmetry
