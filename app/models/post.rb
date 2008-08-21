@@ -1,7 +1,10 @@
 require 'vendor/plugins/community_engine/app/models/post'
 
 class Post < ActiveRecord::Base
-
+  
+  belongs_to :team
+  belongs_to :league
+  
   # set indexes for sphinx
   define_index do
     indexes published_at, :sortable => true

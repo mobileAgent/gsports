@@ -41,24 +41,10 @@ class BaseController < ApplicationController
 
     # Not logged in, show featured games and athletes
     @games_of_the_week = Rails.cache.fetch('games_of_the_week') { GameOfTheWeek.for_home_page || []}
+    @game_dockey_string = @games_of_the_week.collect(&:dockey).join(",")
     @athletes_of_the_week = AthleteOfTheWeek.for_home_page
     
-    # Play the specified game
-    if params[:id]
-      @games_of_the_week.each do |video|
-        if video.id.to_s == params[:id]
-          @games_of_the_week.delete(video)
-          @games_of_the_week.unshift(video)
-          break
-        end
-      end
-    end
 
-    # First on the list if non specified or specified one not found
-    @now_playing = @games_of_the_week.shift
-    if @now_playing
-      update_view_count(@now_playing)
-    end
   end
 
 end

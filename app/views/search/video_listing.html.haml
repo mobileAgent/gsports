@@ -1,0 +1,78 @@
+.profileContentArea.listingPage
+  .profilePageHeader
+    %h2.columnDescriptor
+      %span
+        = @title || "My Videos"
+      = "#{@user.full_name}" unless @title
+  .leftNavCol
+    %h2.yellowHeader
+      My Profile
+    .leftNav
+      =render :partial => "users/profile_nav"
+
+  .listings
+    -#- if @is_search_result
+      %form{ :action => url_for({:controller => 'search', :action => "sphinx_search"}), :method => 'get'}
+        .contentBox.tanBackground
+          .contentBoxHeader.yellowHeader
+            %h2.boxDescription
+              Search 
+          .contentBoxContent.friendSearchWidgetArea
+            %span.friendSearchColumn
+              Search:
+            %span.friendSearchWidgetColumn
+              %label.verbalSemantic{ :for => "search[keyword]" }
+                Search Terms
+              %input#friendSearchTerms{ :name => "search[keyword]", :type => "text", :value => "#{params[:search] ? params[:search][:keyword] : '' }", :size => 55 }/
+              %input.submit{ :name => "submit", :src => "/gs/images/top_nav_search.gif", :type => "image", :value => "search", :alt => "Search" }/
+              %br/
+            .clearDiv
+            %span.friendSearchColumn
+              Sort by:
+            %span.friendSearchWidgetColumn
+              %label.verbalSemantic{ :for => "friendFindSortBy" }
+                Sort by
+              %select#friendFindSortBy{ :name => "sortBy" }
+                %option{ :value => "" }
+                  Recent Updates
+              %br/
+            .clearDiv
+            -#%span.friendSearchColumn
+              Show:
+            -#%span.friendSearchWidgetColumn
+              %label.verbalSemantic{ :for => "friendFindShowNet" }
+                Show Network
+              %select#friendFindShowNet{ :name => "sortBy" }
+                %option{ :value => "" }
+                  Recent Updates
+                %option{ :value => "" }
+                  Option
+                %option{ :value => "" }
+                  Option
+                %option{ :value => "" }
+                  Option
+              %br/
+        -#.clearDiv.moreLinkArea
+          %span.moreLink
+  
+    -if @videos && @videos.size > 0
+      .contentBox.tanBackground
+        .contentBoxHeader.yellowHeader
+          %h2.boxDescription
+            Videos
+      -  for video in @videos
+        - case video.class.to_s
+        - when 'VideoAsset'
+          =render :partial => 'video_assets/video_listing', :locals => { :video_listing => video, :skip_controls => false }
+        - when 'VideoClip'
+          =render :partial => 'video_clips/video_listing', :locals => { :video_listing => video, :skip_controls => false }
+        - when 'VideoReel'
+          =render :partial => 'video_reels/video_listing', :locals => { :video_listing => video, :skip_controls => false }
+
+      - if @videos.respond_to?('total_pages')
+        .apple_pagination
+          = will_paginate @videos
+    - else
+      There were no results
+
+.clearDiv/

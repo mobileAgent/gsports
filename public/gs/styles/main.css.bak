@@ -1,5 +1,1046 @@
+/* mailbox styles */
 
+
+
+.mailSelectSort {
+	width: 90px;
+}
+
+.mailSearchColumn{
+	width: 50px;
+	height: 15px;
+	float:left;
+	margin-left:18px;
+	font-size: 110%;
+	position: relative;
+	top: 3px;
+}
+
+.mailSortBy {
+	width: 125px;
+
+}
+
+.mailItemSelected {
+	background-color: #E2E4A7;
+	width: auto;
+	display: block;
+	height: auto;
+	border: 2px solid #333333;
+}
+
+.mailItem {
+	background-color: #E2E4A7;
+	width: auto;
+	display: block;
+	height: auto;
+}
+
+
+.mailIEFix {
+	height: 10px;
+}
+.mailReadMessage a {
+	color: #666666;
+}
+
+.mailReadMessage {
+	font-size: 90%;
+	text-align: right;
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+
+.mailPostSummary {
+	float: left;
+	width: 490px;
+	padding: 10px;
+}
+.mailPostSummaryBody strong {
+	font-size: 115%;
+}
+
+.mailPostSummaryDate {
+	padding-bottom: 10px;
+}
+
+.mailPostSummaryBody {
+	background-color: #FFFFFF;
+	padding: 10px;
+}
+
+
+.mailPostSummaryBody p {
+	background-color: #FFFFFF;
+	display: block;
+}
+
+.mailSenderSelect {
+	float: left;
+	width: 25px;
+	padding-top: 50px;
+	text-align: center;
+	padding-left: 3px;
+}
+
+.mailPoster {
+	width: 85px;
+	float: left;
+	padding-top: 10px;
+	padding-right: 5px;
+	padding-bottom: 5px;
+	padding-left: 5px;
+	text-align: center;
+}
+.mailPosterImg a {
+	border: 2px solid #666666;
+}
+
+.mailPosterImg a:hover {
+	border: 2px solid #0066CC;
+}
+
+.mailPoster a {
+	font-size: 110%;
+	color: #333333;
+	text-align: left;
+	display: block;
+	margin-top: 5px;
+}
+
+.mailPoster a:hover {
+	font-size: 110%;
+	color: #333333;
+	text-decoration: none;	
+}
+
+.mailContainer{
+	width:801px;
+	float:left;
+	background-color: #ffffff;
+	padding-right: 0px;
+	padding-bottom: 10px;
+	padding-left: 0px;
+	}
+
+#mailSearchTerms{
+	width:88px;
+}
+
+.mailMoreLink {
+	margin-right:7px;
+	text-align: left;
+	padding-left: 10px;
+	clear: both;
+	padding-bottom: 4px;
+}
+
+.mailMoreLink a{
+	color: #666666;
+}
+
+.mailSearchWidget {
+	display: block;
+	width: 300px;
+	height: 25px;
+	
+}
+
+.mailSelect {
+	font-size: 110%;
+	margin-right: 10px;
+	display: block;
+	float: left;
+		position: relative;
+	top: 3px;
+	}
+
+
+.mailSearchOptions {
+	width: 460px;
+	float: right;
+}
+
+
+.mailSearchOptionsLeft {
+	width: 300px;
+	float: left;
+}
+
+.mailButtonsRight {
+	float: right;
+	width: 135px;
+}
+
+.mailButtonsLeft {
+	float: right;
+	width: 135px;
+}
+.mailSearchWidgetColumn{
+	display: block;
+	width: 220px;
+	height: 25px;
+}
+
+.mailSelectLeft {
+	width: 185px;
+}
+
+.mailSearchBox {
+	height: 17px;
+	border: 1px solid #666666;
+}
+
+.mailSubmit {
+	position: relative;
+	top: 2px;
+}
+
+.mailMarginTop {
+	height: 20px;
+}
+/* forum styles */
+
+.forumContainer{
+	width:801px;
+	padding: 20px 0px 10px 0px;
+	float:left;
+	background-color: #ffffff;	
+	}
+
+.forumIEfix {
+	background-color: #FFFFFF;
+}
+
+.forumContentBox {
+	margin-left: 10px;
+	margin-bottom:20px;
+}
+
+.forumBoxHeader h2 {
+	padding-bottom: 10px;
+	font-size: 15px;
+	font-family: Arial, Helvetica, sans-serif;
+	padding-top: 5px;
+}
+
+.forumPost {
+	background-color: #E2E4A7;
+	width: auto;
+	display: block;
+	height: auto;
+}
+
+.forumPostSummaryBody p {
+	background-color: #FFFFFF;
+	display: block;
+	margin-bottom: 20px;
+}
+
+.forumPoster {
+	height: 150px;
+	width: 90px;
+	float: left;
+	padding-top: 25px;
+	padding-right: 5px;
+	padding-bottom: 5px;
+	padding-left: 5px;
+	text-align: center;
+}
+.forumPoster img {
+	border: 1px solid #666666;
+}
+
+.forumPoster a {
+	font-size: 110%;
+	color: #333333;
+	display: block;
+	text-align: left;
+	padding-left: 6px;
+	padding-top: 5px;
+}
+
+.forumPoster a:hover {
+	font-size: 110%;
+	color: #333333;
+	
+}
+
+.forumPostSummary {
+	float: left;
+	width: 515px;
+	padding-top: 25px;
+	padding-right: 10px;
+	padding-bottom: 25px;
+	padding-left: 10px;
+}
+
+.forumPostSummaryDate {
+	padding-bottom: 10px;
+}
+
+.forumPostSummaryBody {
+	background-color: #FFFFFF;
+	padding: 10px;
+}
+
+.forumActions {
+	float: right;
+	width: 135px;
+	padding-top: 30px;
+	padding-left: 15px;
+}
+
+
+/* image replacement button */
+
+.InputButtonFP {
+	font-size: 10px;
+	font-family: Arial, Helvetica, sans-serif;
+	color: #FFFFFF;
+	background-color: #141C35;
+	border: 1px solid #FFFFFF;
+	cursor: pointer;
+	padding: 3px;
+	margin-left: 3px;
+}
+
+
+.InputButtonFP:hover {
+	font-size: 10px;
+	font-family: Arial, Helvetica, sans-serif;
+	color: #FFFFFF;
+	background-color: #205F97;
+	border: 1px solid #FFFFFF;
+	cursor: pointer;
+	padding: 3px;
+	margin-left: 3px;
+}
+
+.InputButton {
+	font-size: 11px;
+	font-family: Arial, Helvetica, sans-serif;
+	color: #999999;
+	background-color: #333333;
+	border: 1px solid #000000;
+	padding-top: 2px;
+	padding-right: 5px;
+	padding-bottom: 2px;
+	padding-left: 5px;
+	cursor: pointer;
+}
+
+.InputButton:hover {
+	font-size: 11px;
+	font-family: Arial, Helvetica, sans-serif;
+	color: #ffffff;
+	background-color: #333333;
+	border: 1px solid #333333;
+	padding-top: 2px;
+	padding-right: 5px;
+	padding-bottom: 2px;
+	padding-left: 5px;
+	cursor: pointer;
+}
+
+/* image replacement button experiments */
+
+.ImageButton {
+	background-image: url(../images/account_continue.png);
+	background-repeat: no-repeat;
+	height: 36px;
+	width: 238px;
+
+}
+
+.genericFormButton, .genericFormButton:visited {
+	color: #FFEF0A;
+	text-align: center;
+	/* display: block; */
+	width: 116px;
+	padding-top: 2px;
+	height: 17px;
+	background-image: url("../images/generic_button.gif");
+	background-repeat: no-repeat;
+	background-position: left top;
+	text-decoration: none;
+	font-size: 90%;
+	vertical-align: middle;
+}
+.genericFormButton:active {
+	background-position: right top;
+}
+
+
+/* Profile Edit Styles */
+
+
+.profileLeftCol {
+	width: 370px;
+	position: relative;
+	left: 0px;
+	float: left;
+	padding-left: 15px;
+}
+
+
+.profileRightCol {
+	width: 365px;
+	float: right;
+	padding-right: 15px;
+}
+
+
+.profileBirthday {
+	padding-left: 25px;
+	font-size: 120%;
+	margin-top: 25px;
+	padding-bottom: 25px;
+	border-bottom-width: 1px;
+	border-bottom-style: dotted;
+	border-bottom-color: #999999;
+}
+
+.profileBirthday select {
+	margin-left: 10px;	
+}
+
+
+.profileContentBox {
+
+	margin-left: 20px;
+	margin-bottom:20px;
+	background-color: #E2E4A7;
+}
+
+.ProfileFav {
+	padding-top: 10px;
+}
+
+.ProfileFav label {
+	font-size: 110%;
+	color: #333333;
+	display: block;
+	padding-top: 2px;
+	padding-left: 5px;
+}
+
+.ProfileFav textarea {
+	border: 1px solid #666666;
+	width: 360px;
+	margin-left: 5px;
+	overflow: auto;
+}
+
+.ProfileYourCat {
+	
+	padding-top: 10px;
+}
+
+.ProfileCatLabel {
+	width: 80px;
+	height: 20px;
+	float: left;
+	font-size: 130%;
+}
+
+.ProfileCatInput {
+	width: 265px;
+	border: 1px solid #666666;
+	font-size: 110%;
+	overflow: auto;
+}
+
+.ProfileCat {
+	background-color: #C1C38F;
+	padding: 5px;
+}
+
+.profileRem {
+	text-align: right;
+	padding: 10px;
+}
+
+.ProfileSave {
+	padding: 15px;
+	text-align: right;
+	border-top-width: 1px;
+	border-top-style: dotted;
+	border-top-color: #999999;
+}
+
+/* Registration Styles */
+
+.AcountType h2 {
+	font-family: Helvetica, Arial, sans-serif;
+	font-size: 15px;
+	font-style: normal;
+	font-weight: bold;
+	color: #333333;
+	margin-top: 20px;
+	margin-bottom: 5px;
+}
+
+.accountContinue {
+	text-align: right;
+	margin-top: 20px;
+	margin-bottom: 35px;
+}
+
+.accountContinue p {
+	margin-top: 10px;
+	font-size: 11px;
+	font-style: italic;
+	color: #666666;
+}
+
+.AccountDescriptionAthletes {
+	width: 515px;
+	float: right;
+	padding-right: 10px;
+	margin: 0px;
+	padding-top: 30px;
+	padding-bottom: 0px;
+	padding-left: 0px;
+	background-image: url(../images/account_athletes_coaches_parents.gif);
+	background-repeat: no-repeat;
+	background-position: 0px 5px;
+}
+
+.AccountDescriptionSchools {
+	width: 515px;
+	float: right;
+	padding-right: 10px;
+	margin: 0px;
+	padding-top: 30px;
+	padding-bottom: 0px;
+	padding-left: 0px;
+	background-image: url(../images/account_schools_and_clubs.gif);
+	background-repeat: no-repeat;
+	background-position: 0px 5px;
+}
+
+.AccountDescriptionLeagues {
+	width: 515px;
+	float: right;
+	padding-right: 10px;
+	margin: 0px;
+	padding-top: 30px;
+	padding-bottom: 0px;
+	padding-left: 0px;
+	background-image: url(../images/account_leagues_conferences.gif);
+	background-repeat: no-repeat;
+	background-position: 0px 5px;
+}
+
+.AccountDescriptionScouts {
+	width: 515px;
+	float: right;
+	padding-right: 10px;
+	margin: 0px;
+	padding-top: 30px;
+	padding-bottom: 0px;
+	padding-left: 0px;
+	background-image: url(../images/account_scouts.gif);
+	background-repeat: no-repeat;
+	background-position: 0px 5px;
+}
+
+.SelectedAccount h2 { /* Hides the h2 in account description for image replacement */
+	opacity: 0;
+	filter: alpha(opacity=0);
+	padding: 0px;
+	margin-bottom: 20px;	
+	position: absolute; left: -9000px
+}
+
+.UnSelectedAccount h2 { /* Hides the h2 in account description for image replacement */
+	opacity: 0;
+	filter: alpha(opacity=0);
+	padding: 0px;
+	margin-bottom: 20px;
+	position: absolute; left: -9000px	
+}
+
+.SelectedAccount p {
+	font-size: 11px;
+	color: #666666;
+	margin: 0px;
+	padding: 0px;
+}
+
+.AccountIllustration {
+	height: 99px;
+	width: 131px;
+	position: relative;
+	float: left;
+}
+
+.AccountRadio {
+	margin: 0px;
+	width: 50px;
+	height: 59px;
+	position: relative;
+	text-align: center;
+	padding-top: 40px;
+	padding-right: 0px;
+	padding-bottom: 0px;
+	padding-left: 0px;
+	float: left;
+}
+
+.SelectedAccount {
+	width: 715px;
+	height: 99px;
+	background-color: #F4F6CD;
+	margin-top: 10px;
+}
+
+.UnSelectedAccount {
+	width: 715px;
+	height: 99px;
+	background-color: #FFFFFF;
+	margin-top: 10px;
+	border: 1px solid #CCCCCC;
+}
+
+.SideBar h1 {
+	font-size: 13pt;
+
+}
+
+.AcountType {
+	margin-top: 35px;
+	width: 715px;
+}
+
+.AcountType h1{
+	font-size: 15pt;
+	width: 715px;
+	border-top-width: 0px;
+	border-right-width: 0px;
+	border-bottom-width: 5px;
+	border-left-width: 0px;
+	border-top-style: solid;
+	border-right-style: solid;
+	border-bottom-style: solid;
+	border-left-style: solid;
+	border-bottom-color: #000000;
+}
+
+.RegContent { /* Set Text Margins Here */
+	margin: 0px;
+	padding-top: 15px;
+	padding-right: 20px;
+	padding-left: 20px;
+	padding-bottom: 15px;
+
+}
+
+.RegistrationTrail {
+	font-size: 8pt;
+	color: #999999;
+	margin-top: 5px;
+}
+
+.RegistrationComplete {
+
+	color: #000000;
+}
+
+.RegistrationContent {
+	width: 715px;
+	float: right;
+}
+
+.SideBar {
+	width: 175px;
+	float: left;
+}
+
+.SideBar p {
+	color: #999999;
+	margin-top: 1em;
+}
+
+.SideBar a {
+	color: #999999;
+}
+
+/* Login Box */
+.loginBox {
+	width:255px;
+	float:right;
+	margin-top:20px;
+	margin-right:2px;
+}
+
+.loginFormInput {
+	width:160px;
+	height:17px;
+	border:1px solid #666666;
+	margin-bottom: 5px;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-left: 0px;
+}
+
+.loginFormPassword {
+	width:100px;
+	height:17px;
+	border:1px solid #666666;
+	margin-left: 0px;
+}
+
+.loginBox label {
+	float: left;
+	text-align: right;
+	margin-right: 5px;
+	margin-top: 5px;
+	display: block;
+	width: 65px;
+}
+.loginButton {
+	margin: 0px;
+	padding: 0px;
+	top: 4px;
+	position: relative;
+}
+
+.loginHelp {
+	margin-left:70px;
+	margin-top: 10px;
+}
+
+.loginHelp a {
+	color: #ffffff;
+}
+
+/*home page layout */
+
+.homeFlash {
+	float:right;
+	width:580px;
+	height:395px;
+	background-image: url(../images/videoplayer_background.png);
+	background-repeat: no-repeat;
+}
+
+
+.homeFlash h1 { /* Styles for the Error message displayed if JavaScript is disabled or SWFObject Fails */
+	color:#ffffff;
+	background-image: url(../images/error_icon.gif);
+	background-repeat: no-repeat;
+	height: 45px;
+	margin-top: 25px;
+	margin-right: 25px;
+	margin-bottom: 25px;
+	margin-left: 25px;
+	padding-left: 55px;
+	padding-top: 6px;
+}
+
+.homeFlash p {
+	margin-left: 25px;
+	margin-right: 25px;
+	color:#ffffff;
+}
+
+.homeText {
+	width:330px;
+	margin: 0px;
+	padding-top: 25px;
+	padding-right: 20px;
+	padding-bottom: 25px;
+	padding-left: 20px;
+	background-image: url(../images/home_welcome_to_global_sports.gif);
+	background-repeat: no-repeat;
+	background-position: 15px 20px;
+	color:#4D4D4D;
+	font-family: Arial, Helvetica, sans-serif;
+}
+
+/*hides the Welcome <h1> so we can replace it with an image, for some reason the standard method failed here in IE, so added an extra rule below */
+.homeTextWelcome, .homeTextWelcome h1 { 
+	opacity: 0;
+	filter: alpha(opacity=0);
+	position: absolute; left: -9000px
+}
+
+.homeText p {
+	font-size: 11px;
+	margin-top: 2em;
+	margin-right: 0em;
+	margin-bottom: 0em;
+	margin-left: 0em;
+}
+
+.homeText strong {
+	font-size: 14pt;
+}
+
+/* home page three col feature layout */
+
+.homeFeature{
+	height: 198px;
+	background:transparent url("../images/homeFeature_background.png") repeat-x scroll left bottom;
+	color: #ffffff;
+	width: 956px;
+	margin: auto;
+	text-align: left;
+}
+
+.homeFeature h2 {  /* hides the <h1> so we can replace it with an image */
+	opacity: 0;
+	filter: alpha(opacity=0);
+	padding: 0px;
+	height: 35px;
+}
+
+
+.homeFeatureLeft {
+	float: left;
+	width: 350px;
+	background-image: url(../images/home_athletes_of_the_week.gif);
+	background-repeat: no-repeat;
+	background-position: 20px 10px;
+	margin: 0px;
+	padding: 0px;
+}
+
+.homeFeatureMiddle {
+	background-image: url(../images/home_become_a_member.gif);
+	background-repeat: no-repeat;
+	background-position: 20px 10px;
+	width: 315px;
+	padding: 0px;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+	margin-left: 0px;
+	float: left;
+}
+
+.homeFeatureRight {
+	background-image: url(../images/home_send_invites.gif);
+	background-repeat: no-repeat;
+	background-position: 20px 10px;
+	width: 289px;
+	float: right;
+	margin: 0px;
+	padding: 0px;
+}
+
+/* About Styles */
+
+.TextContent { /* Set Text Margins Here */
+	margin: 0px;
+	padding-top: 15px;
+	padding-right: 20px;
+	padding-left: 20px;
+	padding-bottom: 15px;
+
+}
+
+/* Font Styles */
+
+.TextContent p {
+	font-family: Helvetica, Arial, sans-serif;
+	color: #999999;
+	margin-top: 1em;
+	font-size: 10pt;
+}
+
+.TextContent h1 {
+	font-family: Helvetica, Arial, sans-serif;
+	font-size: 16pt;
+	color: #000000;
+	margin-bottom: 6pt;
+}
+
+
+.AboutVideoPlayer {
+	height: 316px;
+	width: 400px;
+}
+.TextContent strong {
+	font-family: Helvetica, Arial, sans-serif;
+	font-style: normal;
+	font-size: 11pt;
+	font-weight: normal;
+	color: #666666;
+}
+
+.AboutVideoPlayer h1 { /* Styles for the Error message displayed if JavaScript is disabled or SWFObject Fails */
+	background-image: url(../images/error_icon.png);
+	background-repeat: no-repeat;
+	height: 45px;
+	margin-top: 25px;
+	margin-right: 25px;
+	margin-bottom: 25px;
+	margin-left: 25px;
+	padding-left: 55px;
+	padding-top: 6px;
+	font-size: 14px;
+}
+
+.AboutVideoPlayer p {  /* Styles for the Error message displayed if JavaScript is disabled or SWFObject Fails */
+	padding-left: 20px;
+	color: #870505;
+}
+
+
+
+.AboutPlayer {
+	float: right;
+	width: 400px;
+	margin-left: 20px;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-bottom: 20px;
+}
+
+.AboutVideoPlayerCaption {
+	margin-top: 10px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+	margin-left: 0px;
+}
+
+.AboutVideoPlayerCaption p {
+	font-family: Helvetica, Arial, sans-serif;
+	font-style: italic;
+	font-size: 11px;
+	color: #333333;
+}
+
+/* Invite Form */
+
+.SendInviteButton {
+	
+}
+
+
+.SendInvites { /* Container Div */
+	width: 260px;
+	margin-left: 20px;	
+}
+
+/* Form Field Rules */
+
+.InviteTo { 
+	width: 250px;
+	margin-bottom: 5px;
+	height: 20px;
+	border: 1px solid #141C35;
+}
+
+.InviteMessage {
+	width: 250px;
+	height: 35px;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-bottom: 5px;
+	margin-left: 0px;
+	border: 1px solid #141C35;
+}
+
+.InviteSender {
+	width: 175px;
+	height: 20px;
+	border: 1px solid #141C35;
+	float: left;
+	margin: 0px;
+	padding: 0px;
+}
+
+
+.InvitePreview { /* Won't render in IE? */
+	height: 17px;
+	width: 72px;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+	margin-left: 5px;
+}
+
+
+.AthletesWeek {
+	background-color: #bac4d0;
+	height: 65px;
+	width: 325px;
+	margin-left: 20px;
+	margin-top: 8px;
+}
+
+/* Athletes of the week */
+
+.AthletesPic {
+	Float:left;
+	height: 63px;
+	width: 105px;	
+	margin: 0px;
+	padding: 0px;
+}
+
+.AthletesDescrip {
+	color: #000000;
+	margin: 0px;
+	padding: 0px;
+	position: relative;
+	top: 5px;
+	width: 145px;
+	float: left;
+	left: 5px;
+}
+
+.AthletesLogo {
+	Float:right;
+	margin: 0px;
+	padding: 0px;
+	height: 65px;
+	width: 65px;
+}
+
+.homeFeatureMiddle img {
+	padding: 0px;
+	margin-top: 6px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+	margin-left: 20px;
+	border: 1px solid #162A49;	
+}
+
+
+
+.homeFeatureMiddle img:hover {
+	border: 1px solid #2980CA;
+}
 /* generic button */
+
+.genericButtonLight, .genericButtonLight:visited {
+	color: #FFEF0A;
+	text-align: center;
+	display: block;
+	width: 116px;
+	padding-top: 2px;
+	height: 15px;
+	background-image: url("../images/generic_button_light.gif");
+	background-repeat: no-repeat;
+	background-position: left top;
+	text-decoration: none;
+	font-size: 100%;
+}
+.genericButtonLight:active {
+	background-position: right top;
+}
+
+
+
+
+
+
+
 .genericButton, .genericButton:visited {
 	color: #FFEF0A;
 	text-align: center;
@@ -148,6 +1189,14 @@ body{
 	margin: auto;
 	width:1098px;
 }
+/* Used for Home Page */
+.backgroundContainerHome{
+	background-image: url("../images/footballplayers_background.jpg");	
+	background-repeat: no-repeat;
+	background-position: center top;
+	margin: auto;
+	width:1098px;
+}
 .outerContainer{
 	width:956px;
 	margin: auto;
@@ -201,6 +1250,15 @@ label.verbalSemantic { /* used for <label> tags that are needed for semantic com
 	color: #B3B3B3;
 	padding-bottom: 10px;
 	width:100%;
+}
+/* header used for the homepage template with larger logo */
+.headerHome {
+	background: #000000 url("../images/header_brand_home.jpg") no-repeat top left;
+	font-size: 100%; /* = 10px @ 100% browser zoom */
+	color: #B3B3B3;
+	padding-bottom: 10px;
+	width:100%;
+	height:117px;
 }
 .headerBrand {
 	position: absolute;
@@ -343,6 +1401,12 @@ a.logout:hover { }
 #gnavMyVideos, #gnavMyVideos a					{ background-image: url("../images/gnav_my_videos.gif");		width: 56px; height: 10px; }
 #gnavMyProfile, #gnavMyProfile a				{ background-image: url("../images/gnav_my_profile.gif");		width: 59px; height: 10px; }
 
+/* Home Page Global Navigation syles */
+
+#gnavAboutGlobalSports, #gnavAboutGlobalSports a	{ background-image: url("../images/gnav_about_globalsports.gif");		width: 121px; height: 10px; }
+#gnavMembership, #gnavMembership a					{ background-image: url("../images/gnav_membership.gif");		width: 70px; height: 10px; }
+#gnavRegistration, #gnavRegistration a				{ background-image: url("../images/gnav_registration.gif");		width: 74px; height: 10px; }
+
 /* global navigation utility classes *********/
 span.ROLLOVERIMAGE { background-position: top right; }
 span.ROLLOVERIMAGE a { background-position: top left; display: block; }
@@ -354,12 +1418,13 @@ span.ROLLOVERIMAGE a span { display: none; visibility: hide; }
 .videoFindChat{
 	height: 55px;
 }
-#videoFind{
+/* tb: .videoFind{ */
+#videoFind { /* bh */
 	height: 55px;
 	width: 682px;
 	background:#ffffff url("../images/video_find_background.gif") no-repeat scroll left bottom;
 	float: left;
-	display:block;
+    display: block; /* bh */
 }
 .videoFind select {
 	margin-right: 5px;
@@ -371,12 +1436,14 @@ span.ROLLOVERIMAGE a span { display: none; visibility: hide; }
 .videoFind option {
 	font-size: 110%;
 }
+/* tb: .videoFind form { */
 .videoFind {
 	margin-top: 17px;
 	margin-right: 15px;
 	float:right;
 }
-.videoFind select, .videoFind submit{
+/* tb: .videoFind form select, .videoFind form submit{ */
+.videoFind select, .videoFind submit{ /* bh */
 	margin-top: 3px;
 	float: left;
 }
@@ -538,7 +1605,7 @@ span.ROLLOVERIMAGE a span { display: none; visibility: hide; }
 .yellowHeader{
 	color: #FFEF0A;
 }
-h3.yellowHeader{
+.yellowHeader h3{
 	font-size: 110%;
 }
 .contentBoxHeader a, .contentBoxHeader a:visited {
@@ -561,7 +1628,6 @@ h3.yellowHeader{
 .featureSummary h3{
 	margin-bottom: 3px;
 	color: #536338;
-	font-size:110%;
 }
 .featureSummary .sportName{
 	color: #000000;
@@ -587,7 +1653,7 @@ h3.yellowHeader{
 
 /* right content */
 .rightContentItem {
-	width: 260px;
+	width: 270px;
 	margin: 10px 0px 0px 20px;
 }
 .rightContentItem .moreLink a, .rightContentItem .moreLink a:visited {
@@ -822,7 +1888,6 @@ h3.yellowHeader{
 }
 .profileContentArea .searchResultsContent .mainCol1 .contentBox .featureText{
 	color: #999999;
-	width:110px;
 }
 .profileContentArea .searchResultsContent .mainCol1 .contentBox .profileSubHeading{
 	color: #ffffff;

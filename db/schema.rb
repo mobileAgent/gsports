@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20080817031840) do
+ActiveRecord::Schema.define(:version => 20080821121129) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id",    :limit => 10
@@ -330,6 +330,8 @@ ActiveRecord::Schema.define(:version => 20080817031840) do
     t.integer  "favorited_count", :limit => 11, :default => 0
     t.string   "published_as",    :limit => 16, :default => "draft"
     t.datetime "published_at"
+    t.integer  "team_id",         :limit => 11
+    t.integer  "league_id",       :limit => 11
   end
 
   add_index "posts", ["category_id"], :name => "index_posts_on_category_id"

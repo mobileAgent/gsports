@@ -1,8 +1,6 @@
 !!! Strict
 %html{ "xml:lang" => "en", :lang => "en", :xmlns => "http://www.w3.org/1999/xhtml" }
   %head
-    %title
-      \###PAGE TITLE HERE###
     %link{ :href => "styles/main.css", :rel => "stylesheet" }/
     /
       [if IE 6]>
@@ -10,6 +8,7 @@
       \.contentBoxHeader { background-image: none; }
       </style>
       <![endif]
+    %meta{ :content => "text/html;charset=utf-8", "http-equiv" => "Content-Type" }/
   %body
     .backgroundContainer
       .outerContainer
@@ -26,22 +25,22 @@
             |
             %a{ :href => "" }
               logout
-            %img{ :src => "images/lock.gif" }/
+            %img{ :src => "images/lock.gif", :alt => "Paddlock Icon" }/
         /
           header/ads
         .header
           %h1.headerBrand
             Global Sports
           .headerPosition2
-            %span
+            .structuralContainer
               %div
                 %a{ :href => "#" }
                   %img{ :src => "placeholders/header_school_logo.jpg", :alt => "##TEXT EQUIVALENT##" }/
           .headerPosition1
-            %span
+            .structuralContainer
               %div
-                %a{ :href => "#" }/
-                %img{ :src => "placeholders/header_ad_1.jpg", :alt => "##TEXT EQUIVALENT##" }/
+                %a{ :href => "#" }
+                  %img{ :src => "placeholders/header_ad_1.jpg", :alt => "##TEXT EQUIVALENT##" }/
           .headerAccountControl
             .headerAccountControlLinks
               %span
@@ -53,48 +52,49 @@
           end header/ads
         /
           top-nav
-        .topNav
-          %ul.leftTopNav
-            %li
-              %span#gnavMyNetwork.ROLLOVERIMAGE
-                %a{ :href => "#" }
-                  %span
-                    My Network
-            %li.divider
-              %span#gnavMyVideos.ROLLOVERIMAGE
-                %a{ :href => "#" }
-                  %span
-                    My Videos
-            %li.divider
-              %span#gnavMyProfile.ROLLOVERIMAGE
-                %a{ :href => "#" }
-                  %span
-                    My Profile
-          %form.rightTopNav{ :action => "#", :method => "get" }
-            %h2
-              Search Site
-            %label.verbalSemantic{ :for => "searchCategory" }
-              Category
-            %select#searchCategory{ :name => "category" }
-              %option{ :value => "" }
-                All Categories
-              %option{ :value => "" }
+        %form{ :action => "#", :method => "get" }
+          .topNav
+            %ul.leftTopNav
+              %li
+                %span#gnavMyNetwork.ROLLOVERIMAGE
+                  %a{ :href => "#" }
+                    %span
+                      My Network
+              %li.divider
+                %span#gnavMyVideos.ROLLOVERIMAGE
+                  %a{ :href => "#" }
+                    %span
+                      My Videos
+              %li.divider
+                %span#gnavMyProfile.ROLLOVERIMAGE
+                  %a{ :href => "#" }
+                    %span
+                      My Profile
+            .rightTopNav
+              %h2
+                Search Site
+              %label.verbalSemantic{ :for => "searchCategory" }
                 Category
-              %option{ :value => "" }
-                Category
-              %option{ :value => "" }
-                Category
-            %label.verbalSemantic{ :for => "searchTerms" }
-              Search Terms
-            %input#searchTerms{ :name => "terms", :type => "text" }/
-            %input.submit{ :name => "submit", :type => "image", :src => "images/top_nav_search.gif", :value => "search", :alt => "Search" }/
+              %select#searchCategory{ :name => "category" }
+                %option{ :value => "" }
+                  All Categories
+                %option{ :value => "" }
+                  Category
+                %option{ :value => "" }
+                  Category
+                %option{ :value => "" }
+                  Category
+              %label.verbalSemantic{ :for => "searchTerms" }
+                Search Terms
+              %input#searchTerms{ :name => "terms", :type => "text" }/
+              %input.submit{ :name => "submit", :src => "images/top_nav_search.gif", :type => "image", :value => "search", :alt => "Search" }/
         /
           end top-nav
         /
           find/chat
         .videoFindChat
-          .videoFind
-            %form#videoFind{ :action => "#", :method => "get" }
+          %form#videoFind{ :action => "#", :method => "get" }
+            .videoFind
               %select#videoFindSeason{ :name => "season" }
                 %option{ :value => "" }
                   \-Season-
@@ -150,7 +150,7 @@
                   Option
               %label.verbalSemantic{ :for => "videoFindSport" }
                 Sport
-              %input#videoFindSubmit.submit{ :name => "submit", :type => "image", :src => "images/video_find_submit.gif", :value => "search", :alt => "Search" }/
+              %input#videoFindSubmit.submit{ :name => "submit", :src => "images/video_find_submit.gif", :type => "image", :value => "search", :alt => "Search" }/
               %label.verbalSemantic{ :for => "videoFindSubmit" }
                 Video Find
           .chat
@@ -214,7 +214,7 @@
                   %label.verbalSemantic{ :for => "friendSearchTerms" }
                     Search Terms
                   %input#friendSearchTerms{ :name => "terms", :type => "text" }/
-                  %input.submit{ :name => "submit", :type => "image", :src => "images/top_nav_search.gif", :value => "search", :alt => "Search" }/
+                  %input.submit{ :name => "submit", :src => "images/top_nav_search.gif", :type => "image", :value => "search", :alt => "Search" }/
                   %br/
                 .clearDiv/
                 %span.friendSearchColumn

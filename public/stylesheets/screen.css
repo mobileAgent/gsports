@@ -480,7 +480,11 @@ border-color: #777;
 background: #fff;
 }
 
-.MainForm input.wrong, .MainForm .fieldWithErrors input {
+.MainForm div.fieldWithErrors {
+  display: inline;
+}
+
+.MainForm input.wrong, .MainForm .fieldWithErrors input, .MainForm .fieldWithErrors select {
 border-color: #f00;
 color: #f00;
 background: #ffd5d5;

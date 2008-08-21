@@ -18,6 +18,7 @@ class VideoReel < ActiveRecord::Base
     indexes tags.name, :as => :tag_names
     indexes comments.comment, :as => :comment_comments
     set_property :delta => true
+    has created_at, updated_at, public_video
   end
   
   # For the sake of symmetry

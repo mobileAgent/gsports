@@ -5,7 +5,7 @@
 #
 class RecurringBilling
   SECONDS_PER_DAY = 86400
-  PAYMENT_DUE_CYCLE = 1 # In days This needs to be 30 in Production
+  PAYMENT_DUE_CYCLE = 0 # In days This needs to be 30 in Production
 
   # Put the log here
   @billing_logger = Logger.new("#{File.dirname(__FILE__)}/recurring_billing.log")
@@ -22,11 +22,14 @@ class RecurringBilling
       @billing_logger.info "Need to bill #{mdue.name}"
       # Bill the member 
       billing_result = mdue.bill_recurring
+
       if !billing_result.nil? && billing_result.success?
         @billing_logger.info "Successfully billed #{mdue.name}"
+        MembershipNotifier.deliver_billing_success(mdue.address.email,mdue)
       else
         @billing_logger.info "Unable to bill #{mdue.name} response is nil" if billing_result.nil?
 @billing_logger.info "Unable to bill #{mdue.name} response: #{billing_result.inspect}" if !billing_result.nil?
+       # Need to check for a specific status here before we send an email to the membership
       end
     # Send an email
     }
@@ -42,7 +45,7 @@ class RecurringBilling
     mships = Membership.find :all
     @billing_logger.info "Found #{mships.length} memberships to process"
     mships.each {|m|
-      due << m if ((time_diff_in_days(m.last_billed) > PAYMENT_DUE_CYCLE) && (m.billing_method.eql?Membership::CREDIT_CARD_BILLING_METHOD))
+      due << m if ((time_diff_in_days(m.last_billed) >= PAYMENT_DUE_CYCLE) && (m.billing_method.eql?Membership::CREDIT_CARD_BILLING_METHOD))
     }
     due
   end

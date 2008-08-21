@@ -10,7 +10,7 @@ class MembershipNotifier < ActionMailer::Base
     @recipients  = "#{email}"
     @subject     = "Your #{AppConfig.community_name} monthly membership fee has been billed"
     @sent_on     = Time.now
-    @body[:message] = "#{membership.first_name}, your credit card ending in #{membership.credit_card.displayable_number} has been billed successfully. Thank You"
+    @body[:message] = "#{membership.name}, your credit card ending in #{membership.credit_card.displayable_number} has been billed successfully. Thank You"
     @body[:url] = "#{APP_URL}
   end
 
@@ -20,17 +20,14 @@ class MembershipNotifier < ActionMailer::Base
     @recipients  = "#{email}"
     @subject     = "There was a problem billing your #{AppConfig.community_name} monthly membership fee"
     @sent_on     = Time.now
-    @body[:message] = "#{membership.first_name}, There was a problem billing your credit card ending in ...#{membership.credit_card.displayable_number}. Please login and update your Profile biling information. Thank you!"
+    @body[:message] = "#{membership.name}, There was a problem billing your credit card ending in ...#{membership.credit_card.displayable_number}. Please login and update your Profile biling information. Thank you!"
     @body[:url] = "#{APP_URL}"
   end
 
   protected
   def setup_email(user)
-    @recipients  = "#{user.email}"
     setup_sender_info
-    @subject     = "[#{AppConfig.community_name} registration] "
     @sent_on     = Time.now
-    @body[:user] = user
   end
  
   def setup_sender_info

@@ -41,7 +41,7 @@
     col3 content
   .mainCol3
     %h2.boxDescription
-      Latest News
+      = link_to 'Post News', new_user_post_path(current_user)
     - league_posts().each() do |post|
       .rightContentItem
         %span.moreLink
