@@ -69,11 +69,30 @@ class VideoReelsController < BaseController
   # POST /video_reels
   # POST /video_reels.xml
   def create
-    @video_reel = VideoReel.new(params[:video_reel])
-    @video_reel.tag_with(params[:tag_list] || '') 
+    if (params[:dockey])
+      logger.debug("reel creation from flash")
+      from_flash = true
+      @video_reel = VideoReel.new
+      @video_reel.user = current_user
+      @video_reel.title = params[:title]
+      @video_reel.description = params[:description]
+      @video_reel.dockey = params[:dockey]
+      @video_reel.public_video = params[:public_video]
+      @video_reel.tag_with(params[:tag_list])
+    else
+      @video_reel = VideoReel.new(params[:video_reel])
+      @video_reel.tag_with(params[:tag_list] || '')
+    end
+    
+    saved = @video_reel.save!
 
+    if (from_flash)
+      render :inline => saved ? "#{@video_reel.to_xml}" : "<error>#{@video_reel.errors.join(',')}</error>"
+      return
+    end
+    
     respond_to do |format|
-      if @video_reel.save
+      if (saved)
         flash[:notice] = 'VideoReel was successfully created.'
         format.html { redirect_to(@video_reel) }
         format.xml  { render :xml => @video_reel, :status => :created, :location => @video_reel }

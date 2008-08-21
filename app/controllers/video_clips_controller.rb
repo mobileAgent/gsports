@@ -3,6 +3,7 @@ class VideoClipsController < BaseController
   
   before_filter :login_required
   before_filter :vidavee_login
+  skip_before_filter :verify_authenticity_token, :only => [:create]
   
   # GET /video_clips
   # GET /video_clips.xml
@@ -66,11 +67,30 @@ class VideoClipsController < BaseController
   # POST /video_clips
   # POST /video_clips.xml
   def create
-    @video_clip = VideoClip.new(params[:video_clip])
-    @video_clip.tag_with(params[:tag_list] || '') 
+    if (params[:dockey])
+      logger.debug("reel creation from flash")
+      from_flash = true
+      @video_clip = VideoClip.new
+      @video_clip.user = current_user
+      @video_clip.title = params[:title]
+      @video_clip.description = params[:description]
+      @video_clip.dockey = params[:dockey]
+      @video_clip.public_video = params[:public_video]
+      @video_clip.tag_with(params[:tag_list])
+    else
+      @video_clip = VideoClip.new(params[:video_clip])
+      @video_clip.tag_with(params[:tag_list] || '') 
+    end
+    
+    saved = @video_clip.save!
 
+    if (from_flash)
+      render :inline => saved ? "#{@video_clip.to_xml}" : "<error>#{@video_clip.errors.join(',')}</error>"
+      return
+    end
+    
     respond_to do |format|
-      if @video_clip.save
+      if saved
         flash[:notice] = 'VideoClip was successfully created.'
         format.html { redirect_to(@video_clip) }
         format.xml  { render :xml => @video_clip, :status => :created, :location => @video_clip }

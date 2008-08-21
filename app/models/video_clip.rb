@@ -18,6 +18,7 @@ class VideoClip < ActiveRecord::Base
     indexes updated_at, :sortable => true
     indexes tags.name, :as => :tag_names
     indexes comments.comment, :as => :comment_comments
+    has created_at, updated_at, public_video
   end
 
   # For the sake of symmetry

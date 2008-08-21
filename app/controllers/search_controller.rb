@@ -1,18 +1,9 @@
 class SearchController < BaseController
   
    skip_before_filter :verify_authenticity_token, :only => [ :quickfind ]
-   before_filter :login_required, :except => [:sphinx_search, :teamfind]
-   after_filter :protect_private_videos, :except => [:q, :teamfind]
+   before_filter :login_required, :except => [:teamfind]
+   after_filter :protect_private_videos, :except => [:teamfind]
   
-   def sphinx_search
-     @user = params[:user_id] ? User.find(params[:user_id]) : current_user
-     if params[:search] and params[:search][:keyword]
-       @videos = ThinkingSphinx::Search.search params[:search][:keyword], :per_page => 10, :page => params[:page]
-     else
-       @videos = ThinkingSphinx::Search.search '*', :per_page => 10, :page => params[:page]
-     end    
-   end
-
    # Video quickfind
    def quickfind
      @user = current_user
@@ -38,7 +29,7 @@ class SearchController < BaseController
        logger.debug "Routing search to video category"
        @videos = sphinx_search_videos
        @title = 'Search Results'
-       render_name = 'my_videos'
+       render_name = 'video_listing'
      end
      if @category == 2 || @category == 0
        logger.debug "Routing search to user category"
@@ -55,12 +46,22 @@ class SearchController < BaseController
      if @category > 0
        render :action => render_name and return
      else
-       render :action => 'search'
+       # The search layout looks dumb if two columns are empty
+       if @users.size + @posts.size == 0
+         render :action => 'video_listing'
+       elsif @users.size + @videos.size == 0
+         render :action => 'post_listing'
+       elsif @posts.size + @videos.size == 0
+         render :action => 'user_listing'
+       else
+         render :action => 'search'
+       end
      end
    end
    
    def my_videos
      @user = params[:user_id] ? User.find(params[:user_id]) : current_user
+     
      @video_assets = VideoAsset.for_user(@user).all(:limit => 10, :order => 'updated_at DESC')
      @video_clips = VideoClip.for_user(@user).all(:limit => 10, :order => 'updated_at DESC')
      @video_reels = VideoReel.for_user(@user).all(:limit => 10, :order => 'updated_at DESC')
@@ -113,13 +114,13 @@ class SearchController < BaseController
      @teams = Team.paginate(:conditions => cond.to_sql, :page => params[:page], :order => 'teams.name DESC')
    end
 
-
    protected
 
    def sphinx_search_users
      logger.debug "Running user search for #{params[:search][:keyword]}"
      @users = User.search(params[:search][:keyword],
                           :conditions => { :profile_public => 1 },
+                          :per_page => 30,
                           :page => (params[:page] || 1),
                           :order => :full_name)
    end
@@ -129,20 +130,23 @@ class SearchController < BaseController
      @posts = Post.search(params[:search][:keyword],
                           :conditions => { :published_as => 'live' },
                           :page => (params[:page] || 1),
+                          :per_page => 30,
                           :order => :published_at, :sort_mode => :desc)
    end
 
    def sphinx_search_videos
      @user = params[:user_id] ? User.find(params[:user_id]) : current_user
+     @search_keyword = '*'
      if params[:search] && params[:search][:keyword]
-       @video_assets = VideoAsset.search params[:search][:keyword], :limit => 10, :order => 'updated_at DESC'
-       @video_clips = VideoClip.search params[:search][:keyword], :limit => 10, :order => 'updated_at DESC'
-       @video_reels = VideoReel.search params[:search][:keyword], :limit => 10, :order => 'updated_at DESC'
-     else
-       @video_assets = VideoAsset.find :all, :limit => 10, :order => 'updated_at DESC'
-       @video_clips = VideoClip.find :all, :limit => 10, :order => 'updated_at DESC'
-       @video_reels = VideoReel.find :all, :limit => 10, :order => 'updated_at DESC'
+       @search_keyword = params[:search][:keyword]
      end
+     
+     @videos = ThinkingSphinx::Search.search(params[:search][:keyword],
+                                             :per_page => 30,
+                                             :page => (params[:page] || 1),
+                                             :classes => [VideoAsset, VideoReel, VideoClip],
+                                             # :conditions => { :public_video => 1 },
+                                             :order => 'updated_at DESC')
    end
 
    def protect_private_videos
