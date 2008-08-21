@@ -14,7 +14,8 @@ class Post < ActiveRecord::Base
     indexes tags.name, :as => :tags_content
     indexes category.name, :as => :category_name
     indexes published_as # can't be used as an attr
-  end
+    set_property :delta => true
+   end
 
   def image_thumbnail_for_post
     return nil if self.post.nil?

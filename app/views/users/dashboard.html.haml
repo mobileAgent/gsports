@@ -103,7 +103,7 @@
     col3 content
   .mainCol3    
     %h2.boxDescription
-      = link_to 'Post News', new_user_post_path(current_user)
+      = link_to 'Post News', new_user_post_path(current_user), :class=>'articleLink'
     
     .rightContentItem
       %span.moreLink
@@ -132,14 +132,18 @@
         = link_to 'more>>', 'user_post_path(post.user, post)', :rel => 'bookmark'
       %h2
         Site Activity
-      %br
+      = render :partial => 'activities/dashboard_activity', :collection => @user.network_activity().to_a[0,3]
 
     .rightContentItem
       %span.moreLink
         = link_to 'more>>', 'user_post_path(post.user, post)', :rel => 'bookmark'
       %h2
         My News
-      %br
+      - post = @user.posts.first
+      %a.articleLink{:href=>user_post_path(post.user, post)}
+        =post.title
+        %br
+        = truncate_words(post.post, 75, '...' )
             
                 
                 

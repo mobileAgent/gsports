@@ -45,37 +45,49 @@
       =link_to "mailbox #{mcount}", messages_path()
 
 
-
-
-
-
 #user-menu-tip
-  %ul
-    %li= link_to('Admin', admin_dashboard_path) if current_user.admin?
+  -if current_user.admin?
+    %ul
+      %li=link_to 'Admin', admin_dashboard_path               
+    %hr
+    
+  %ul   
     %li= link_to('Upload Video', new_video_asset_path) if (current_user.can_upload?)
     %li= link_to('Manage Staff', staffs_path) if (current_user.team_admin? || current_user.league_admin?)
+    
+    %li= link_to 'Dashboard', "#{dashboard_user_path(current_user)}"
+    %li
+      %nobr
+        = link_to 'Profile', user_path(current_user)
+        = link_to '(edit)', edit_user_path(current_user)
+
+    %li= link_to 'Account', edit_account_user_path(current_user)    
   %hr
   %ul
-    %li= link_to "Dashboard", dashboard_user_path(current_user)
-    %li= link_to "Edit account", edit_account_user_path(current_user)
-  %hr
-  %ul
-    %li= link_to "View profile", user_path(current_user)
-    %li= link_to 'Videos', url_for(:controller => 'search', :action => 'my_video_assets')
-    %li= link_to 'Clips', url_for(:controller => 'search', :action => 'my_video_clips')
-    %li= link_to 'Reels', url_for(:controller => 'search', :action => 'my_video_reels')
-    %li= link_to 'Photos', user_photos_path(current_user)
+    %li My...
+    %li= link_to '&nbsp;Videos', url_for(:controller => 'search', :action => 'my_video_assets')
+    %li= link_to '&nbsp;&nbsp;Clips', url_for(:controller => 'search', :action => 'my_video_clips')
+    %li= link_to '&nbsp;&nbsp;Reels', url_for(:controller => 'search', :action => 'my_video_reels')
+    %li= link_to '&nbsp;Friends', accepted_user_friendships_path(current_user)
+    %li= link_to '&nbsp;Photos', user_photos_path(current_user)
+    %li= link_to '&nbsp;Posts', manage_user_posts_path(current_user)
     %li= link_to 'Forums', forums_path
-    %li= link_to 'Friends', accepted_user_friendships_path(current_user)
-    %li= link_to 'Blog', manage_user_posts_path(current_user)
+  %hr
+  %ul
+    =link_to 'Logout', logout_path
+
 
 %script{:type => "text/javascript"}
   :plain
     new Tip('user-menu', $('user-menu-tip'), {
       hook:{target: 'bottomRight', tip: 'topRight'},
       hideOn: false, 
-      hideAfter: 1.5,  
+      hideAfter: 0.4,  
       className: 'gs',
       offset: {y:2, x:12}
       });
+
+
+
+
 
