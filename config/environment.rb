@@ -112,3 +112,5 @@ ADMIN_EMAIL = "admin@globalsports.net"
 
 FOOTER_AD_COUNT = 3
 
+# Misc constants
+SECONDS_PER_DAY = 86400
