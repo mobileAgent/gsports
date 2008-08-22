@@ -1,19 +1,38 @@
 .listingItem{:id => "message_#{message.id}"}
   = link_to_remote 'Delete', {:url => { :controller => 'sent_messages', :action => 'destroy', :id => message}, :method => :delete} , :style => "float:right", :class => 'genericButton'
-  .msgHeader
-    = "Date: "
-    %span.msgField
-      = message.created_at.to_s(:game_date)
-  .msgHeader
-    = "To: "
-    %span.msgField
-      = truncate(h(message.to_ids_user_names_array.join(", ")),85)
-  .msgHeader
-    = "Subject: "
-    %span.msgField
-      = truncate(h(message.title),85)
-  .msgBody
-    = truncate_words (message.body,50)
-    %br/
-    = link_to "read full message &raquo;",message, :class => "morelink"
+  .messageSummary{:id => "mail_summary_#{message.id}"}
+    .msgHeader
+      = "Date: "
+      %span.msgField
+        = message.created_at.to_s(:game_date)
+    .msgHeader
+      = "To: "
+      %span.msgField
+        = truncate(h(message.to_ids_user_names_array.join(", ")),85)
+    .msgHeader
+      = "Subject: "
+      %span.msgField
+        = truncate(h(message.title),85)
+    .msgBody
+      = truncate_words (message.body,50)
+      %br/
+    .mailReadMessage
+      = link_to "read full message &raquo;", '#', :class => "morelink", :onclick => "$$('div#mail_summary_#{message.id}')[0].hide();$$('div#mail_full_#{message.id}')[0].show();return false;"
+  .messageSummary{:id => "mail_full_#{message.id}", :style => "display:none"}
+    .msgHeader
+      = "Date: "
+      %span.msgField
+        = message.created_at.to_s(:game_date)
+    .msgHeader
+      = "To: "
+      %span.msgField
+        =h message.to_ids_user_names_array.join(", ")
+    .msgHeader
+      = "Subject: "
+      %span.msgField
+        =h message.title
+    .msgBody
+      = message.body
+    .mailReadMessage
+      = link_to "close full message &raquo;", '#', :class => "morelink", :onclick => "$$('div#mail_full_#{message.id}')[0].hide();$$('div#mail_summary_#{message.id}')[0].show();return false;"
     
