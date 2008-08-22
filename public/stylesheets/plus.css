@@ -195,7 +195,11 @@ div.thumbFIT {
 .profileFeature .featureText {
   width: 92px;
   overflow: hidden;
-} 
+}
+
+.profileFeature a.genericButton:visited, .profileFeature a.genericButton {
+   color: #FFEF0A;
+}
 
 
 .prototip .gs { border: 1px solid #ccc; color: #fff; font: 11px Arial, Helvetica, sans-serif; }

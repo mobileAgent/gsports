@@ -89,7 +89,11 @@ class VideoReelsController < BaseController
     saved = @video_reel.save!
 
     if (from_flash)
-      render :inline => saved ? "#{@video_reel.to_xml}" : "<error>#{@video_reel.errors.join(',')}</error>"
+      if (saved)
+        render :inline => video_reels_path
+      else
+        render :inline => @video_reel.errors.join(','), :status => 400
+      end
       return
     end
     

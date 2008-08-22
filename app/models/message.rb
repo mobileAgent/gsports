@@ -79,6 +79,7 @@ class Message < ActiveRecord::Base
   # gets sent to.
   def self.get_message_recipient_ids(names,current_user,use_alias_id= false)
     recipient_ids = []
+    friend_ids = current_user.accepted_friendships.collect(&:friend_id)
     is_alias = false
     to_names = names.split(',')
     to_names.each do |recipient|
@@ -106,9 +107,11 @@ class Message < ActiveRecord::Base
           users.each { |user| recipient_ids << user.id }
           is_alias = true
         end
-      else # normal case
+      else # normal case, one of current_user's friendships
         fn,ln = recipient.split(' ')
-        user = User.find(:first, :conditions => ['firstname = ? and lastname = ?',fn,ln])
+        user = User.find(:first,
+                         :conditions => ['firstname = ? and lastname = ? and id in (?)',
+                                         fn,ln,friend_ids])
         recipient_ids << user.id if user
       end
     end

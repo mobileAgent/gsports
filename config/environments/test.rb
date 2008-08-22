@@ -28,3 +28,11 @@ APP_URL = "http://localhost:3000"
 config.cache_store = :memory_store
 
 AD_SERVER_BASE = 'www.danmcardle.com'
+
+# Billing values
+ActiveMerchant::Billing::Base.mode = :test
+Active_Merchant_payflow_gateway_username = 'markdr'
+Active_Merchant_payflow_gateway_password = 'MarkDR1'
+Active_Merchant_payflow_gateway_partner = 'PayPal'
+
+PAYMENT_DUE_CYCLE = 10 # How often to bill in days

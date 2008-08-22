@@ -1,38 +1,33 @@
-  %div
-    %b Name
-    %br/
-    = f.text_field :name
-  %div
-    %b City
-    %br/
-    = f.text_field :city
+%div
+  %b Name
+  %br/
+  = f.text_field :name
+%div
+  %b City
+  %br/
+  = f.text_field :city
     
-  %div
-    %b County
-    %br/
-    = f.text_field :county_name
+%div
+  %b County
+  %br/
+  = f.text_field :county_name
     
-  %div
-    %b State
-    %br/
-    =collection_select("team","state_id",State.all,"id","name",{ :selected => @team.state_name })
+%div
+  %b State
+  %br/
+  =collection_select("team","state_id",State.all,"id","name",{ :selected => @team.state_name })
     
-  %div
-    %b Description
-    %br/
-    = f.text_field :description , :size => 65
+%div
+  %b Description
+  %br/
+  = f.text_field :description , :size => 65
 
-  %div
-    %b League
-    %br/
-    = text_field_with_auto_complete :team, :league_name, :autocomplete => "off"
+%div
+  %b League
+  %br/
+  = text_field_with_auto_complete :team, :league_name, :autocomplete => "off"
     
-  %div
-    %b Active Team
-    %br/
-    = f.check_box :active
-
-  %div
-    %b Ad Zone (Be sure to coordinate with ad server zones)
-    %br/
-    = f.text_field :ad_zone
+%div
+  %b Ad Zone (Be sure to coordinate with ad server zones)
+  %br/
+  = f.text_field :ad_zone

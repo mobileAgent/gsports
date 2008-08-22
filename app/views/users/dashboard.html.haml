@@ -139,11 +139,12 @@
         = link_to 'more>>', 'user_post_path(post.user, post)', :rel => 'bookmark'
       %h2
         My News
-      - post = @user.posts.first
-      %a.articleLink{:href=>user_post_path(post.user, post)}
-        =post.title
-        %br
-        = truncate_words(post.post, 75, '...' )
+      - if @user.posts.any?
+        - post = @user.posts.first
+        %a.articleLink{:href=>user_post_path(post.user, post)}
+          =post.title
+          %br
+          = truncate_words(post.post, 75, '...' )
             
                 
                 

@@ -4,6 +4,7 @@
 class ApplicationController < ActionController::Base
 
   helper :all # include all helpers, all the time
+  before_filter :preload_models
 
   # Help with ssl switching
   include SslRequirement
@@ -20,4 +21,23 @@ class ApplicationController < ActionController::Base
   # from your application log (in this case, all fields with names like "password"). 
   filter_parameter_logging :password, :password_confirm, :verification_value, :cardnumber, :verificationnumber, :credit_card
 
+
+  # Allow these models to be memcached
+  def preload_models
+    Role
+    Tag
+    Team
+    League
+    Moniker
+    User
+    VideoAsset
+    VideoClip
+    VideoReel
+    GameOfTheWeek
+    AthleteOfTheWeek
+    Vidavee
+    Post
+    Message
+    Staff
+  end
 end
