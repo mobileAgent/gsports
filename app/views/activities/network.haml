@@ -1,0 +1,31 @@
+- load_features()
+
+- @section = @user.eql?(current_user) ? 'my_profile' : 'users'
+- @sidebar_left = true
+
+.profileContentArea
+  .profilePageHeader
+    %h2.columnDescriptor
+      %span
+        PROFILE
+      = @user.full_name
+      = " (( PRIVATE PROFILE )) " unless @user.profile_public?
+  .leftNavCol
+    %h2.yellowHeader
+      My Profile
+    .leftNav
+      =render :partial => "users/profile_nav"
+
+  .listings    
+    .contentBox.tanBackground
+      .contentBoxHeader.yellowHeader
+        %h2.boxDescription
+          Activity from your network
+      .contentBoxContent
+      -unless @activities.empty?
+        =render :partial => "activities/activity", :collection => @activities
+        -if @activities.page_count > 1
+          .pagination= paginating_links @activities, :link_to_current_page => true
+      -else
+        You have no network activity yet. 
+        = link_to "Add some friends to get started!", users_path
