@@ -6,8 +6,8 @@
       %a{:href=>"#{user_path(message.sender)}", :class=>"photo"}
         =image_tag(message.sender.avatar_photo_url(:thumb), :alt=>"Profile Picture", :width=>"80", :height=>"80")
     %a{ :href => "#" }
-      = link_to message.user.full_name, user_path(message.sender)
-  .mailPostSummary
+      = link_to message.sender.full_name, user_path(message.sender)
+  .mailPostSummary{:id => "mail_summary_#{message.id}"}
     .mailPostSummaryDate
       = message.created_at.to_s(:game_date)
     .mailPostSummaryBody
@@ -16,9 +16,21 @@
           Subject: 
           = truncate(h(message.title),85)
         %br/
-        = truncate_words message.body,260
+        = truncate_words message.body,40
     .mailReadMessage
-      = link_to "read full message &raquo;", message, :class => "morelink"
+      = link_to "read full message &raquo;", '#', :class => "morelink", :onclick => "$$('div#mail_summary_#{message.id}')[0].hide();$$('div#mail_full_#{message.id}')[0].show();return false;"
+  .mailPostSummary{:id => "mail_full_#{message.id}", :style => "display:none"}
+    .mailPostSummaryDate
+      = message.created_at.to_s(:game_date)
+    .mailPostSummaryBody
+      %p
+        %strong
+          Subject: 
+          = h message.title
+        %br/
+        = message.body
+    .mailReadMessage
+      = link_to "close full message &raquo;", '#', :class => "morelink", :onclick => "$$('div#mail_full_#{message.id}')[0].hide();$$('div#mail_summary_#{message.id}')[0].show();return false;"
   .forumActions
     = link_to 'Reply', {:url => { :controller => 'messages', :action => 'new'}}, :style => "float:right", :class => 'genericButton'
     %br
