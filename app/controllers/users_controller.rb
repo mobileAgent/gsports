@@ -97,7 +97,7 @@ class UsersController < BaseController
       @user.league_id = @team.league_id
     end
     
-    @user.login= "gs#{Time.now.to_i}#{rand(100)}" # We never use this
+    @user.login= "gs#{Time.now.to_i}#{rand(1000)}" # We never use this
     @user.save!
     create_friendship_with_inviter(@user, params)
     redirect_to :action => 'billing', :userid => @user.id
