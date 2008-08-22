@@ -2,7 +2,7 @@ class SentMessagesController < ApplicationController
   # GET /sent_messages
   # GET /sent_messages.xml
   def index
-    @sent_messages = SentMessage.sent_by(current_user).find(:all, :order => 'created_at DESC')
+    @sent_messages = SentMessage.paginate(:all, :conditions => ["from_id = ?",current_user.id], :order => 'created_at DESC', :page => params[:page])
 
     respond_to do |format|
       format.html # index.html.erb

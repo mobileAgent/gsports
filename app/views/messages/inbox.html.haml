@@ -20,7 +20,7 @@
         .contentBoxHeader.yellowHeader
           %h2.boxDescription
             Messages
-        .contentBoxContent.friendSearchWidgetArea
+        -#.contentBoxContent.friendSearchWidgetArea
           .mailSearchOptions
             .mailButtonsRight
               %a.genericButtonLight{ :href => "#" }
@@ -82,17 +82,9 @@
         = link_to 'Sent Messages', sent_messages_path
         = link_to 'Compose', new_message_path
         %br
-        %a{ :href => "#" }
-          ? previous
-        | 1-24 |
-        %a{ :href => "#" }
-          25-48
-        |
-        %a{ :href => "#" }
-          49-72
-        |
-        %a{ :href => "#" }
-          next ?
+        - if @msgs.respond_to?('total_pages') && @msgs.total_pages > 1
+          .apple_pagination
+            = will_paginate @msgs
           
           
       .forumContentBox

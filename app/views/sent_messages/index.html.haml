@@ -2,35 +2,35 @@
   .profilePageHeader
     %h2.columnDescriptor
       %span
-        = @title || "Sent Messages"
+        MAILBOX
+      = @title || "Sent Messages"
   .leftNavCol
     %h2.yellowHeader
       My Profile
     .leftNav
       =render :partial => "users/profile_nav"
 
-  .listings
-    .listingItem
-      = link_to 'Inbox', messages_path
-      = link_to 'Compose', new_message_path
+  %form#Forum{ :action => "#", :method => "post" }
+    .mailContainer
+      /
+        Search
+      .mailMarginTop
+      .contentBox.tanBackground
+        .contentBoxHeader.yellowHeader
+          %h2.boxDescription
+            Sent Messages
+            
+      .mailMoreLink
+        = link_to 'Inbox', messages_path
+        = link_to 'Compose', new_message_path
+        %br/
+        - if @sent_messages.respond_to?('total_pages') && @sent_messages.total_pages > 1
+          .apple_pagination
+            = will_paginate @sent_messages
+            
+      .forumContentBox
+        .forumBoxHeader
 
-    - for sent_message in @sent_messages
-      .listingItem{:id => "message_#{sent_message.id}"}
-        = link_to_remote 'Destroy', {:url => { :controller => 'sent_messages', :action => 'destroy', :id => sent_message}, :method => :delete} , :style => "float:right", :class => 'genericButton'
-        .msgHeader
-          = "Date: "
-          %span.msgField
-            = sent_message.created_at.to_s(:game_date)
-        .msgHeader
-          = "To: "
-          %span.msgField
-            = truncate(h(sent_message.to_ids_user_names_array.join(", ")),85)
-        .msgHeader
-          = "Subject: "
-          %span.msgField
-            = truncate(h(sent_message.title),85)
-        .msgBody
-          = truncate_words (h(sent_message.body),50)
-          %br/
-          = link_to "more?",sent_message, :class => "morelink"
+        = render :partial => 'sent_messages/message', :collection => @sent_messages
+
 

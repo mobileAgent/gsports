@@ -6,7 +6,7 @@ class MessagesController < ApplicationController
   # GET /messages
   # GET /messages.xml
   def index
-    @msgs = Message.inbox(current_user)
+    @msgs = Message.paginate(:all, :conditions => ["to_id = ?", current_user.id], :order => "created_at DESC", :page => params[:page])
     render :action => 'inbox'
   end
   
