@@ -23,7 +23,7 @@ production:
   adapter: mysql
   database: gsports_production
   username: gspro
-  password:
+  password: gspro
   host: 
   session_key: gsports
   secret: gsdb504824dcc51b6add9831913df8582c5f72543eicci
