@@ -1,3 +1,4 @@
+require 'fileutils'
 class UpdateVideoStatusProcessor < ApplicationProcessor
 
   subscribes_to :update_video_status
@@ -28,7 +29,7 @@ class UpdateVideoStatusProcessor < ApplicationProcessor
           vidavee.update_asset_record(session_token,video_asset)
           video_asset.save!
           if video_asset.uploaded_file_path
-            File.rm_f video_asset.uploaded_file_path
+            FileUtils.rm_f video_asset.uploaded_file_path
           end
         else
           video_asset.video_status = new_status

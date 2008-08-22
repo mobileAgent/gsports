@@ -1,3 +1,4 @@
+require 'fileutils'
 class VideoAsset < ActiveRecord::Base
   
   belongs_to :league
@@ -63,7 +64,7 @@ class VideoAsset < ActiveRecord::Base
 
   # Move the swfuploaded tmp file into the repo with the user specified name
   def self.move_upload_to_repository(tmpfile,filename)
-    File.makedirs VIDEO_REPOSITORY if ! File.exists?(VIDEO_REPOSITORY)
+    FileUtils.makedirs VIDEO_REPOSITORY if ! File.exists?(VIDEO_REPOSITORY)
     fname = self.sanitize_filename(filename)
     if File.exists? "#{VIDEO_REPOSITORY}/#{fname}"
       dup=2
@@ -80,7 +81,7 @@ class VideoAsset < ActiveRecord::Base
       fname = "#{base}(#{dup}).#{ext}"
     end
     full_path = "#{VIDEO_REPOSITORY}/#{fname}"
-    if File.mv(tmpfile.path,full_path)
+    if FileUtils.mv(tmpfile.path,full_path)
       full_path
     else
       nil
