@@ -58,6 +58,50 @@ class SearchController < BaseController
        end
      end
    end
+
+   # The flash player uses this to get metadata for
+   # any video object by dockey
+   def d
+     dockey = params[:dockey]
+     @video = VideoAsset.find_by_dockey(dockey)
+     if @video
+       xstr = @video.to_xml(:except => [:uploaded_file_path, :league_id, :team_id, :user_id, :delta, :video_type, :visiting_team_id, :home_team_id] ) do |xml|
+         xml.league_name @video.league_name
+         xml.team_name @video.team_name
+         xml.user_name @video.user.full_name if @video.user_id
+         xml.visiting_team.name @video.visiting_team.name if @video.visiting_team_id
+         xml.home_team.name @video.home_team.name if @video.home_team_id
+         xml.tags @video.tags.collect(&:name).join(', ')
+         xml.favorite_count @video.favorites.size
+         xml.type 'VideoAsset'
+       end
+       render :xml => xstr and return
+     end
+     @video = VideoClip.find_by_dockey(dockey)
+     if @video
+       xstr = @video.to_xml(:except => [:user_id, :delta, :video_asset_id] ) do |xml|
+         xml.type 'VideoClip'
+         xml.parent_dockey @video.video_asset.dockey
+         xml.parent_name @video.video_asset.title
+         xml.parent_id @video.video_asset_id
+         xml.usef_name @video.user.full_name if @video.user_id
+         xml.favorite_count @video.favorites.size
+         xml.tags @video.tags.collect(&:name).join(', ')
+       end
+       render :xml => xstr and return
+     end
+     @video = VideoReel.find_by_dockey(dockey)
+     if @video
+       xstr = @video.to_xml(:except => [:user_id, :delta]) do |xml|
+         xml.type 'VideoReel'
+         xml.user_name @video.user.full_name if @video.user_id
+         xml.favorite_count @video.favorites.size
+         xml.tags @video.tags.collect(&:name).join(', ')
+       end
+       render :xml => xstr and return
+     end
+     render :inline => '<video-asset>not found</video-asset>' and return
+   end
    
    def my_videos
      @user = params[:user_id] ? User.find(params[:user_id]) : current_user
