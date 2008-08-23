@@ -70,6 +70,7 @@ class Membership < ActiveRecord::Base
 }
 
   def last_billed
+    return nil if membership_billing_histories.empty?
     membership_billing_histories.first.created_at
   end
 #

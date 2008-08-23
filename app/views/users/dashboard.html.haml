@@ -129,14 +129,14 @@
         
     .rightContentItem
       %span.moreLink
-        = link_to 'more>>', 'user_post_path(post.user, post)', :rel => 'bookmark'
+        = link_to 'more>>', 'activities/network', :rel => 'bookmark'
       %h2
         Site Activity
       = render :partial => 'activities/dashboard_activity', :collection => @user.network_activity().to_a[0,3]
 
     .rightContentItem
       %span.moreLink
-        = link_to 'more>>', 'user_post_path(post.user, post)', :rel => 'bookmark'
+        = link_to 'more>>', user_posts_path(@user), :rel => 'bookmark'
       %h2
         My News
       - if @user.posts.any?

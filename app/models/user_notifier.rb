@@ -102,6 +102,13 @@ class UserNotifier < ActionMailer::Base
     @subject    += "#{AppConfig.community_name} User information"
   end
 
+  def generic(email, subject, message)
+    setup_sender_info
+    @recipients  = "#{email}"
+    @subject     = "#{subject}"
+    @sent_on     = Time.now
+    @body[:message] = message
+  end
   
   protected
   def setup_email(user)

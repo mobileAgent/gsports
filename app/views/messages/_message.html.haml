@@ -5,7 +5,7 @@
     %span.mailPosterImg
       %a{:href=>"#{user_path(message.sender)}", :class=>"photo"}
         =image_tag(message.sender.avatar_photo_url(:thumb), :alt=>"Profile Picture", :width=>"80", :height=>"80")
-    %a{ :href => "#" }
+    %a{ :href => "#{user_path(message.sender)}" }
       = link_to message.sender.full_name, user_path(message.sender)
   .mailPostSummary{:id => "mail_summary_#{message.id}"}
     .mailPostSummaryDate

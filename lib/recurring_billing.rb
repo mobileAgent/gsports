@@ -4,8 +4,6 @@
 # ruby ./script/runner "RecurringBilling.bill_memberships"
 #
 class RecurringBilling
-  SECONDS_PER_DAY = 86400
-  PAYMENT_DUE_CYCLE = 0 # In days This needs to be 30 in Production
 
   # Put the log here
   @billing_logger = Logger.new("#{File.dirname(__FILE__)}/recurring_billing.log")
@@ -18,21 +16,29 @@ class RecurringBilling
     members_due = find_memberships_to_bill
     @billing_logger.info "Found #{members_due.length} Memberships to bill"
 
+    billed_success = 0
+    billed_error = 0
     members_due.each {|mdue| 
       @billing_logger.info "Need to bill #{mdue.name}"
       # Bill the member 
       billing_result = mdue.bill_recurring
 
       if !billing_result.nil? && billing_result.success?
+        billed_success += 1
         @billing_logger.info "Successfully billed #{mdue.name}"
-        MembershipNotifier.deliver_billing_success(mdue.address.email,mdue)
+        MembershipNotifier.deliver_billing_success(mdue.address.email,mdue) if !mdue.address.nil?
       else
+        billed_error += 1
         @billing_logger.info "Unable to bill #{mdue.name} response is nil" if billing_result.nil?
-@billing_logger.info "Unable to bill #{mdue.name} response: #{billing_result.inspect}" if !billing_result.nil?
-       # Need to check for a specific status here before we send an email to the membership
+
+        if !billing_result.nil?
+          @billing_logger.info "Unable to bill #{mdue.name} response: #{billing_result.inspect}" 
+          MembershipNotifier.deliver_billing_failure(mdue.address.email,mdue, billing_result.params['message']) if !mdue.address.nil?
+        end
       end
-    # Send an email
     }
+    # Send an email
+    UserNotifier.deliver_generic(ADMIN_EMAIL, "Nightly Billing for #{Time.now}", "Recurring billing completed. #{billed_success} billed successfully, #{billed_error} billing failed") 
   end 
 
   #
@@ -42,10 +48,10 @@ class RecurringBilling
   # 
   def self.find_memberships_to_bill
     due = []
-    mships = Membership.find :all
+    mships = Membership.find_all_by_billing_method(Membership::CREDIT_CARD_BILLING_METHOD)
     @billing_logger.info "Found #{mships.length} memberships to process"
     mships.each {|m|
-      due << m if ((time_diff_in_days(m.last_billed) >= PAYMENT_DUE_CYCLE) && (m.billing_method.eql?Membership::CREDIT_CARD_BILLING_METHOD))
+      due << m if (m.last_billed.nil? || (time_diff_in_days(m.last_billed) >= PAYMENT_DUE_CYCLE))
     }
     due
   end
