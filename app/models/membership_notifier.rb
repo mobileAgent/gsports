@@ -15,7 +15,7 @@ class MembershipNotifier < ActionMailer::Base
   end
 
 
-  def billing_failure(email, membership)
+  def billing_failure(email, membership, reason)
     setup_sender_info
     @recipients  = "#{email}"
     @subject     = "There was a problem billing your #{AppConfig.community_name} monthly membership fee"
