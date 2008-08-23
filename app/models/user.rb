@@ -72,7 +72,7 @@ class User < ActiveRecord::Base
     indexes comments.comment, :as => :comment_comments
     #indexes monikers.tags.name, :as => :moniker_content
     has created_at, updated_at, profile_public
-    set_property :delta => true
+  #  set_property :delta => true
   end
 
   def self.league_staff_ids(league_id)
@@ -148,6 +148,7 @@ class User < ActiveRecord::Base
     mem = Membership.new(:billing_method=>billing_method)
     mem.cost = role.plan.cost
     mem.name = full_name
+    mem.address = address
 
     if payment_authorization # else we may just be updating cc info
       history = MembershipBillingHistory.new
