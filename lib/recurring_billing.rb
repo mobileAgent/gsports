@@ -30,12 +30,15 @@ class RecurringBilling
       else
         billed_error += 1
         @billing_logger.info "Unable to bill #{mdue.name} response is nil" if billing_result.nil?
-@billing_logger.info "Unable to bill #{mdue.name} response: #{billing_result.inspect}" if !billing_result.nil?
-       Membership_notifier.deliver_billing_failure(mdue.address.email,mdue, billing_result.params['message']) if !mdue.address.nil?
+
+        if !billing_result.nil?
+          @billing_logger.info "Unable to bill #{mdue.name} response: #{billing_result.inspect}" 
+          MembershipNotifier.deliver_billing_failure(mdue.address.email,mdue, billing_result.params['message']) if !mdue.address.nil?
+        end
       end
+    }
     # Send an email
     UserNotifier.deliver_generic(ADMIN_EMAIL, "Nightly Billing for #{Time.now}", "Recurring billing completed. #{billed_success} billed successfully, #{billed_error} billing failed") 
-    }
   end 
 
   #
