@@ -6,6 +6,7 @@ class VideoReel < ActiveRecord::Base
   acts_as_taggable
   has_many :favorites, :as => :favoritable, :dependent => :destroy
   acts_as_activity :user
+  before_destroy :save_deleted_video
   
   # Every reel needs a title
   validates_presence_of :title
@@ -25,4 +26,14 @@ class VideoReel < ActiveRecord::Base
   named_scope :for_user,
     lambda { |user| { :conditions => ["user_id = ?",user.id] } }
   
+  def save_deleted_video
+    vd = DeletedVideo.new
+    vd.dockey = self.dockey
+    vd.video_id = self.id
+    vd.title = self.title
+    vd.video_type = VideoReel.to_s
+    vd.deleted_by = self.user_id
+    vd.deleted_at = Time.now
+    vd.save!
+  end
 end

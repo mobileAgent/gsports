@@ -2,6 +2,7 @@ class SearchController < BaseController
   
    skip_before_filter :verify_authenticity_token, :only => [ :quickfind ]
    before_filter :login_required, :except => [:teamfind]
+   before_filter :vidavee_login
    after_filter :protect_private_videos, :except => [:teamfind]
   
    # Video quickfind
@@ -73,6 +74,7 @@ class SearchController < BaseController
          xml.home_team_name @video.home_team.name if @video.home_team_id
          xml.tags @video.tags.collect(&:name).join(', ')
          xml.favorite_count @video.favorites.size
+         xml.thumbnail_url @vidavee.file_thumbnail_medium(@video.dockey)
          xml.type 'VideoAsset'
        end
        render :xml => xstr and return
@@ -87,6 +89,7 @@ class SearchController < BaseController
          xml.user_name @video.user.full_name if @video.user_id
          xml.favorite_count @video.favorites.size
          xml.tags @video.tags.collect(&:name).join(', ')
+         xml.thumbnail_url @vidavee.file_thumbnail_medium(@video.dockey)
        end
        render :xml => xstr and return
      end
@@ -97,6 +100,7 @@ class SearchController < BaseController
          xml.user_name @video.user.full_name if @video.user_id
          xml.favorite_count @video.favorites.size
          xml.tags @video.tags.collect(&:name).join(', ')
+         xml.thumbnail_url @vidavee.file_thumbnail_medium(@video.thumbnail_dockey)
        end
        render :xml => xstr and return
      end

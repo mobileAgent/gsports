@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20080823202547) do
+ActiveRecord::Schema.define(:version => 20080824040116) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id",    :limit => 10
@@ -138,6 +138,15 @@ ActiveRecord::Schema.define(:version => 20080823202547) do
     t.datetime "updated_at"
     t.string   "displayable_number"
     t.binary   "number_encrypted"
+  end
+
+  create_table "deleted_videos", :force => true do |t|
+    t.integer  "video_id",   :limit => 11, :null => false
+    t.string   "dockey",                   :null => false
+    t.string   "title"
+    t.integer  "deleted_by", :limit => 11
+    t.string   "video_type"
+    t.datetime "deleted_at"
   end
 
   create_table "events", :force => true do |t|

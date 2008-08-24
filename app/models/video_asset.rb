@@ -14,6 +14,7 @@ class VideoAsset < ActiveRecord::Base
   acts_as_activity :user, :if => Proc.new{|r| r.video_status == 'ready' }
   
   attr_protected :team_name, :league_name
+  before_destroy :save_deleted_video
   
   # Every video needs a title
   validates_presence_of :title
@@ -199,4 +200,15 @@ class VideoAsset < ActiveRecord::Base
     t
   end
 
+  def save_deleted_video
+    vd = DeletedVideo.new
+    vd.dockey = self.dockey
+    vd.video_id = self.id
+    vd.title = self.title
+    vd.video_type = VideoAsset.to_s
+    vd.deleted_by = self.user_id
+    vd.deleted_at = Time.now
+    vd.save!
+  end
+  
 end

@@ -7,6 +7,7 @@ class VideoClip < ActiveRecord::Base
   acts_as_taggable
   has_many :favorites, :as => :favoritable, :dependent => :destroy
   acts_as_activity :user
+  before_destroy :save_deleted_video
   
   # Every clip needs a title
   validates_presence_of :title
@@ -28,6 +29,17 @@ class VideoClip < ActiveRecord::Base
   
   def thumbnail_dockey
     dockey
+  end
+  
+  def save_deleted_video
+    vd = DeletedVideo.new
+    vd.dockey = self.dockey
+    vd.video_id = self.id
+    vd.title = self.title
+    vd.video_type = VideoClip.to_s
+    vd.deleted_by = self.user_id
+    vd.deleted_at = Time.now
+    vd.save!
   end
   
 end
