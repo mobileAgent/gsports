@@ -2,7 +2,8 @@ class TeamsController < BaseController
 
   auto_complete_for :team, :name
   skip_before_filter :verify_authenticity_token, :only => [:auto_complete_for_team_name, :auto_complete_for_team_league_name ]
-  before_filter :admin_required, :except => [:auto_complete_for_team_name, :show, :auto_complete_for_team_league_name ]
+  before_filter :admin_required, :except => [:auto_complete_for_team_name, :show, :show_public, :auto_complete_for_team_league_name ]
+  before_filter :login_required, :except => [:show_public]
   
   # GET /team
   # GET /team.xml
@@ -18,6 +19,15 @@ class TeamsController < BaseController
   # GET /team/1
   # GET /team/1.xml
   def show
+    @team = Team.find(params[:id])
+
+    respond_to do |format|
+      format.html # show.haml
+      format.xml  { render :xml => @team }
+    end
+  end
+  
+  def show_public
     @team = Team.find(params[:id])
 
     respond_to do |format|

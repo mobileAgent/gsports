@@ -20,29 +20,19 @@
             
             .listingDescription
               %h4.schoolName
-                = link_to h(team.name), team_path(team)
+                = link_to h(team.name), url_for({:controller => 'teams', :action => 'show_public', :id => team })
               %p
-                %b City:
-                =h team.city 
-              %p
-                %b County:
-                =h team.county_name
-              %p
-                %b State:
-                =h team.state_id? ? team.state.name : ""
-              %p
-                %b Description:
-                =h team.description 
+                =h "#{team.city}, #{team.county_name}, #{team.state_id ? team.state.name : ''}"
                           
             .clearDiv
           .clearDiv
   
   
-      - if @teams.respond_to?('total_pages')
+      - if @teams.respond_to?('total_pages') && @teams.total_pages > 1
         .apple_pagination
           = will_paginate @teams
 
     -else
       No Teams Match Your Search
   
-.clearDiv/
+.clearDiv

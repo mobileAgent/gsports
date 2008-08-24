@@ -7,7 +7,8 @@ module TeamsHelper
       #:joins=>"JOIN users ON user_id = users.id",
       #:conditions=>["users.team_id = ?", team.id],
       :conditions=>["team_id = ?", team.id],
-      :limit=>10
+      :limit=>10,
+      :order=>'published_at DESC'
     }.merge opts
     
     posts = Post.find(:all, options)
@@ -18,7 +19,6 @@ module TeamsHelper
   
   def team_videos()
     VideoAsset.for_team(@team).all(:limit => 10, :order => 'updated_at DESC')
-    
   end
   
   
