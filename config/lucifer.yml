@@ -6,7 +6,11 @@ test:
   key: GS-test-encryption-key
   salt: gs-test-salt
 
-production:
+qa:
   key: key
   salt: salt
+  
+production:
+  key: gs_escargot37&bananna45%lemon12
+  salt: gs^&hiphopopottamus##vs@@ryhmenocerous**
 

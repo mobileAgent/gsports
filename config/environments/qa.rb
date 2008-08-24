@@ -17,13 +17,13 @@ config.action_view.cache_template_loading            = true
 
 # Enable serving of images, stylesheets, and javascripts from an asset server
 # config.action_controller.asset_host = "http://assets.example.com"
-ActionController::Base.asset_host = "http://gs%d.globalsports.net"
+# ActionController::Base.asset_host = "http://assets%d.globalsports.net"
 
 # Disable delivery errors, bad email addresses will be ignored
 # config.action_mailer.raise_delivery_errors = false
 
 # Configuration for community engine
-APP_URL = "http://globalsports.net"
+APP_URL = "http://gsports.intetragedcc.net"
 
 # Caching, memcache on localhost for production
 config.cache_store = :mem_cache_store
@@ -31,11 +31,11 @@ config.cache_store = :mem_cache_store
 
 # Billing values
 # NOTE: Change these to GS real values
-ActiveMerchant::Billing::Base.mode = :production
-Active_Merchant_payflow_gateway_username = ''
-Active_Merchant_payflow_gateway_password = ''
-Active_Merchant_payflow_gateway_partner = ''
+ActiveMerchant::Billing::Base.mode = :test
+Active_Merchant_payflow_gateway_username = 'markdr'
+Active_Merchant_payflow_gateway_password = 'MarkDR1'
+Active_Merchant_payflow_gateway_partner = 'PayPal'
 
 PAYMENT_DUE_CYCLE = 30 # How often to bill in days
 
-AD_SERVER_BASE = 'ads.globalsports.net'
+AD_SERVER_BASE = 'www.danmcardle.com'

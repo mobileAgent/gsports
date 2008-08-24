@@ -1,35 +1,33 @@
+# gem install capistrano-ext for this one
+require 'capistrano/ext/multistage'
+
 set :stages, %w(development testing qa production) 
-set :default_stage, 'development' 
+set :default_stage, 'development'
 
 set :application, "gsports"
-set :rails_env, "production"
-set :use_sudo, false
-
-# Set up for github
-#default_run_options[:pty] = true
-set :scm, 'git'
 set :repository,  "git@github.com:mobileAgent/gsports.git"
+set :scm, 'git'
+set :branch, "master"
 set :repository_cache, "git_master"
 set :deploy_via, :remote_cache
-#set :deploy_via, :copy
-#set :copy_remote_dir, "/usr/local/gsports/git_master"
-
-set :user, "mjflest"
-set :branch, "master"
 set :git_shallow_clone, 1
 set :scm_verbose, true
 
+set :user, ENV["USER"]
+
+set :rails_env, "production"
+set :use_sudo, false
+
+set :file_size_limit, 2684354560
+ssh_options[:keys] = ["#{ENV['HOME']}/.ssh/id_rsa"]
+
+set :log_level, :trace
+set :group, "admin"
+set :use_sudo, false
+set :ssh_options, { :forward_agent => true }
+
 set :app_symlinks, %w(files photos videos assets)
 set :rails_config_files, %w(database.yml mailer.yml application.yml lucifer.yml broker.yml)
-
-# If you aren't deploying to /u/apps/#{application} on the target
-# servers (which is the default), you can specify the actual location
-# via the :deploy_to variable:
-set :deploy_to, "/usr/local/#{application}"
-
-role :app, "gsports.integratedcc.com"
-role :web, "gsports.integratedcc.com"
-role :db,  "gsports.integratedcc.com", :primary => true
 
 namespace :deploy do
   desc "Restarting mod_rails with restart.txt"
