@@ -6,9 +6,9 @@
   .mainCol1
     .contentBox.tanBackground
       .contentBoxHeader.yellowHeader
-        %span.moreLink
+        -#%span.moreLink
           %a{ :href => "" }
-            more>>
+            more&raquo;
         %h2.boxDescription
           WHAT MY FRIENDS ARE WATCHING
       .contentBoxContent
@@ -29,9 +29,9 @@
             .clearDiv
     .contentBox.tanBackground
       .contentBoxHeader.yellowHeader
-        %span.moreLink
+        -#%span.moreLink
           %a{ :href => "" }
-            more>>
+            more&raquo;
         %h2.boxDescription
           MY FRIENDS RECENT CLIPS & HIGHLIGHTS 
       .contentBoxContent
@@ -55,9 +55,9 @@
   .mainCol2
     .contentBox.tanBackground
       .contentBoxHeader.yellowHeader
-        %span.moreLink
+        -#%span.moreLink
           %a{ :href => "" }
-            more>>
+            more&raquo;
         %h2.boxDescription
           MOST POPULAR VIDEOS
       .contentBoxContent
@@ -78,9 +78,9 @@
             .clearDiv
     .contentBox.tanBackground
       .contentBoxHeader.yellowHeader
-        %span.moreLink
+        -#%span.moreLink
           %a{ :href => "" }
-            more>>
+            more&raquo;
         %h2.boxDescription
           RECENT FULL GAME UPLOADS
       .contentBoxContent
@@ -103,11 +103,12 @@
     col3 content
   .mainCol3    
     %h2.boxDescription
-      = link_to 'Post News', new_user_post_path(current_user), :class=>'articleLink'
+      - if current_user.league_staff? || current_user.team_staff? || current_user.admin?
+        = link_to 'Post News', new_user_post_path(current_user), :class=>'articleLink'
     
     .rightContentItem
-      %span.moreLink
-        = link_to 'more>>', '', :rel => 'bookmark'
+      -#%span.moreLink
+        = link_to 'more&raquo;', '', :rel => 'bookmark'
       %h2
         =@user.team.name
       - team_posts(@user.team, :limit=>1).each() do |post|
@@ -117,8 +118,8 @@
           = truncate_words(post.post, 75, '...' )
       
     .rightContentItem
-      %span.moreLink
-        = link_to 'more>>', '', :rel => 'bookmark'
+      -#%span.moreLink
+        = link_to 'more&raquo;', '', :rel => 'bookmark'
       %h2
         =@user.league.name
       - league_posts(@user.league, :limit=>1).each() do |post|
@@ -129,14 +130,14 @@
         
     .rightContentItem
       %span.moreLink
-        = link_to 'more>>', 'activities/network', :rel => 'bookmark'
+        = link_to 'more&raquo;', 'activities/network', :rel => 'bookmark'
       %h2
         Site Activity
       = render :partial => 'activities/dashboard_activity', :collection => @user.network_activity().to_a[0,3]
 
     .rightContentItem
-      %span.moreLink
-        = link_to 'more>>', user_posts_path(@user), :rel => 'bookmark'
+      -#%span.moreLink
+        = link_to 'more&raquo;', user_posts_path(@user), :rel => 'bookmark'
       %h2
         My News
       - if @user.posts.any?
