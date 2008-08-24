@@ -44,5 +44,34 @@ class PostsController < BaseController
     end
   end
   
+  def index
+    @user = User.find(params[:user_id])            
+    @category = Category.find_by_name(params[:category_name]) if params[:category_name]
+    cond = Caboose::EZ::Condition.new
+    cond.user_id == @user.id
+    if @category
+      cond.append ['category_id = ?', @category.id]
+    end
+    @posts = Post.paginate(:all, :order => "published_at DESC", :conditions => cond.to_sql, :per_page => 20, :page => params[:page])
+    # @pages, @posts = paginate :posts, :order => "published_at DESC", :conditions => cond.to_sql, :per_page => 20
+    @is_current_user = @user.eql?(current_user)
+
+    @popular_posts = @user.posts.find(:all, :limit => 10, :order => "view_count DESC")
+    
+    @rss_title = "#{AppConfig.community_name}: #{@user.login}'s posts"
+    @rss_url = formatted_user_posts_path(@user,:rss)
+        
+    respond_to do |format|
+      format.html # index.rhtml
+      format.rss {
+        render_rss_feed_for(@posts,
+           { :feed => {:title => @rss_title, :link => url_for(:controller => 'posts', :action => 'index', :user_id => @user) },
+             :item => {:title => :title,
+                       :description => :post,
+                       :link => :link_for_rss,
+                       :pub_date => :published_at} })        
+      }
+    end
+  end
   
 end

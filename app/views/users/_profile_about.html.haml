@@ -18,6 +18,11 @@
           = truncate_words(@user.description,25)
         %br/
         %br/
+        %h2.profileHeading Blog:
+        %span.profileSubHeading
+          = link_to "#{@published_post_count} posts", user_posts_path(@user)
+        %br/
+        %br/
         %h2.profileHeading Favorites:
         %span.profileSubHeading Teams:
         - if @user.moniker_hash["teams"]

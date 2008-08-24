@@ -3,6 +3,12 @@ color: #464337;
 	background-color: white;
 }
 
+.mainContentArea .first_alt, .yui-b, .mainContentArea .box {
+  padding-top: 10px;
+  width: 96%;
+  margin-left: 2%;
+}
+
 div.auto_complete {
   width: 350px;
   background: #ffffff; }
@@ -200,8 +206,9 @@ padding: 1em 0 1em 0;
 }
 
 .alt{
-border: 1px solid #94beff;
-background: #e1ecff;
+padding-top: 10px;
+border: 1px solid #666666;
+background: white;
 padding: 1em;
 }
 
@@ -209,12 +216,12 @@ padding: 1em;
 border: none;
 margin: 0 0 .5em 0;
 padding: .5em;
-background: #94beff;
+background: white;
 color: #38465b;
 }
 
 .first_alt {
-	margin-top:0;
+        margin-left: 10px;
         padding-top: 1.25em;
 	}
 
@@ -380,15 +387,16 @@ border-bottom: 1px dotted #a2a19b;
 }
 
 .checks li, .page li{
-padding-left: 20px;
+/* padding-left: 20px; */
 background-color: transparent;
-background-image: url(/plugin_assets/community_engine/images/icons/accept.png);
+/*background-image: url(/plugin_assets/community_engine/images/icons/accept.png);*/
 background-repeat: no-repeat;
 background-position: left center;
 }
-
+/*
 .checks li{background-image: url(/plugin_assets/community_engine/images/icons/accept.png)}
 .page li{background-image:url(/plugin_assets/community_engine/images/icons/page_white.png)}
+*/
 
 /* user list */
 dl.vcard{
@@ -433,13 +441,22 @@ dl.vcard dd.rss{background-image: url(/plugin_assets/community_engine/images/ico
 
 h6.all{margin:.5em 0;}
 
+/* copy in def of genericButton from tellart */
 h6.all a{
-font-size: 85%;
-font-weight: bold;
-text-transform: uppercase;
-background: transparent url(/plugin_assets/community_engine/images/icons/add.png) no-repeat left center;
-padding:3px 0 3px 20px;
-color: #379d00;
+	color: #FFEF0A;
+	text-align: center;
+	display: block;
+	width: 116px;
+	padding-top: 2px;
+	height: 15px;
+	background-image: url("/gs/images/generic_button.gif");
+	background-repeat: no-repeat;
+	background-position: left top;
+	text-decoration: none;
+	font-size: 123.1%;
+}
+h6.all a:active{
+	background-position: right top;
 }
 
 
@@ -490,7 +507,7 @@ color: #f00;
 background: #ffd5d5;
 }
 
-/* submit */
+/* submit 
 .MainForm p input, .MainForm p button {
 padding-left: 1em;
 padding-right: 1em;
@@ -502,8 +519,10 @@ width: auto;
 cursor: pointer;
 }
 
+
 .MainForm p input:hover{
-background:#004500;} 
+background:#004500;}
+*/
 
 
 .MainForm strong{color: #f00;}

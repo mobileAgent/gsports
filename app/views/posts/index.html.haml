@@ -30,8 +30,7 @@
       .forumBoxHeader
         = render :partial => 'post', :collection => @posts
 
-    - if @pages.length > 1
-      .pagination
-        = link_to "&laquo; Earlier posts", { :page => @pages.current.next } if @pages.current.next
-        = link_to " | Later posts &raquo; ", { :page => @pages.current.previous } if @pages.current.previous
+    - if @posts.respond_to?('total_pages') && @posts.total_pages > 1
+      .apple_pagination
+        = will_paginate @posts
 

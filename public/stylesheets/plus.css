@@ -20,16 +20,6 @@
   border: 2px solid darkblue;
 }
 
-.mainContentArea input[type='submit'] {
-   border: 2px solid darkblue;
-   margin-top: 5px;
-   font-weight: bold;
-}
-
-.mainContentArea input[type='submit']:hover {
-   color: red;
-}
-
 .mainConentArea label { 
   font-weight: bold;
   color: black;
@@ -74,6 +64,32 @@ table.unstyled td.numeric {
   width: 550px;
   height: 375px;
 }
+
+
+.pageContent {
+  margin: 0 5px 5px 25px;
+  padding-bottom: 10px;
+}
+
+.pageContent h1, .pageContent h2 {
+  margin-bottom: 10px;
+}
+
+input[type='submit'] {
+  color: #c7c7c7;
+  background-color: #363636;
+  padding: 3px 1em 3px 1em;
+  cursor: pointer;
+  margin: 1em 0;
+  width: auto;
+  font-weight: bold;
+}
+
+input[type='submit']:hover {
+   background-color: #363636;
+   color: red;
+}
+
 
 
 /* will-paginate apple.com store style pagination styles */

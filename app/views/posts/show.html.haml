@@ -4,7 +4,8 @@
   .profilePageHeader
     %h2.columnDescriptor
       %span
-        Announcements
+        = @post.category.name
+      %br/
       = @user.full_name
       of
       = @user.team.name
@@ -38,12 +39,17 @@
                   = truncate(h(@post.title),85)
                 %br/
                 = @post.post
-                - unless @post.tags.empty?
-                  %ul.tags
-                    - @post.tags.each do |t|
-                      %li=link_to( t.name, tag_url(t.name), :rel => 'tag')
+            .mailPostTags
+              - unless @post.tags.empty?
+                %strong
+                  Tags:
+                = @post.tags.collect{|t| link_to( h(t.name), tag_url(t.name), :class => 'tag')}.join(" ")
           .forumActions
-            = link_to "Delete", user_post_path(@post.user, @post), {:method => :delete, :confirm => 'Permanently delete this post?', :class => 'genericButton'}
+            - if (current_user && (current_user.admin? || current_user.id == @post.user_id))
+              =link_to "Edit", edit_user_post_path(@post.user, @post),{:class => 'genericButton'}
+              %br/
+              =link_to "Delete", user_post_path(@post.user, @post), {:method => :delete, :confirm => 'Permanently delete this post?', :class => 'genericButton'}
+              
           .clearDiv
 
       %div

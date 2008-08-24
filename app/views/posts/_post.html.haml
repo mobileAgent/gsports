@@ -4,7 +4,7 @@
       %a{:href=>"#{user_post_path(post.user, post)}", :class=>"photo", :rel=>"bookmark"}
         =image_tag((post.first_image_in_body || post.user.avatar_photo_url(:thumb)), :alt=>"", :width=>"80", :height=>"80")
         %br
-        = @user.full_name
+        = post.user.full_name
     
   .mailPostSummary
     .mailPostSummaryDate
@@ -15,7 +15,9 @@
           Subject: 
           = h post.title
         %br/
-        = post.post
+        = truncate_words (post.post, 85)
+        .moreLink
+          = link_to "more &raquo;", user_post_path(post.user,post)
       = link_to "comments (#{post.comments.size})", user_post_path(post.user, post)+'#comments'      
     
   .clearDiv

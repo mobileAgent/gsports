@@ -12,19 +12,15 @@
   .yui-b
     .box
       %h3
-        = "New #{@post.category ? Inflector.singularize(@post.category.name) : 'post'}"
+        = "New post"
 
       = error_messages_for :post
       - form_for(:post, :url => user_posts_path, :html => {:class => "MainForm"}) do |f|			
-        - unless @post.category || @post.contest 
-          %label
-            Category:
-          %select{:id=>"post_category_id", :name=>"post[category_id]"}
-            -for category in Category.find(:all)
-              %option{:value=>"#{category.id}", :selected => category.eql?(Category.get(:talk)) }= h(category.name)
-        -else
-          = f.hidden_field :category_id
-          = f.hidden_field :contest_id
+        %label
+          Category:
+        %select{:id=>"post_category_id", :name=>"post[category_id]"}
+          -for category in Category.find(:all)
+            %option{:value=>"#{category.id}", :selected => category.id == @post.category_id }= h(category.name)
 
         %label
           Title 

@@ -40,6 +40,7 @@ class UsersController < BaseController
     @clippings = @user.clippings.find(:all, :limit => 5)
     @photos = @user.photos.find(:all, :limit => 5)
     @comment = Comment.new(params[:comment])
+    @published_post_count = Post.count(:all, :conditions => ["user_id = ? and published_as = ?", @user.id, 'live'])
     @clips = @user.video_clips.find(:all, :limit => 2, :order => "created_at DESC")
     @reels = @user.video_reels.find(:all, :limit => 2, :order => "created_at DESC")
     @profile_clips_and_reels = []

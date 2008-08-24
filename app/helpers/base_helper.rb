@@ -79,4 +79,11 @@ module BaseHelper
     end	
     title
   end
+  
+  def more_comments_links(commentable)
+    html = link_to "&raquo; All comments", comments_url(commentable.class.to_s, commentable.to_param)
+    #html += "<br />"
+    #html += link_to "&raquo; Comments RSS", formatted_comments_url(commentable.class.to_s, commentable.to_param, :rss)
+    html
+  end
 end
