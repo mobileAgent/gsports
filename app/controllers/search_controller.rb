@@ -69,8 +69,8 @@ class SearchController < BaseController
          xml.league_name @video.league_name
          xml.team_name @video.team_name
          xml.user_name @video.user.full_name if @video.user_id
-         xml.visiting_team.name @video.visiting_team.name if @video.visiting_team_id
-         xml.home_team.name @video.home_team.name if @video.home_team_id
+         xml.visiting_team_name @video.visiting_team.name if @video.visiting_team_id
+         xml.home_team_name @video.home_team.name if @video.home_team_id
          xml.tags @video.tags.collect(&:name).join(', ')
          xml.favorite_count @video.favorites.size
          xml.type 'VideoAsset'
@@ -84,7 +84,7 @@ class SearchController < BaseController
          xml.parent_dockey @video.video_asset.dockey
          xml.parent_name @video.video_asset.title
          xml.parent_id @video.video_asset_id
-         xml.usef_name @video.user.full_name if @video.user_id
+         xml.user_name @video.user.full_name if @video.user_id
          xml.favorite_count @video.favorites.size
          xml.tags @video.tags.collect(&:name).join(', ')
        end
