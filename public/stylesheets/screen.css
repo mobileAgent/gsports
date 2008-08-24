@@ -382,8 +382,9 @@ background: url(/plugin_assets/community_engine/images/icons/tag_blue.png) no-re
 }
 
 .list li{
+margin-left: 15px;
 padding:3px 0;
-border-bottom: 1px dotted #a2a19b;
+/*border-bottom: 1px dotted #a2a19b;*/
 }
 
 .checks li, .page li{

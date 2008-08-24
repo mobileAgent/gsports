@@ -2,7 +2,7 @@ class CategoriesController < BaseController
 
   before_filter :login_required, :except => [:rss]
 
-  def formus
+  def forums
     @categories = Category.find(:all)
   end     
 

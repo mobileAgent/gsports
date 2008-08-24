@@ -123,6 +123,11 @@ class User < ActiveRecord::Base
     "#{firstname} #{lastname}"
   end
 
+  # Override CE
+  def display_name
+    full_name
+  end
+
   # Never let the login slug appear in urls or paths
   def to_param
     id.to_s
