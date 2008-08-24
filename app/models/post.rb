@@ -18,16 +18,45 @@ class Post < ActiveRecord::Base
     set_property :delta => true
    end
 
-  def image_thumbnail_for_post
-    return nil if self.post.nil?
-    img = first_image_in_body()
-    if img
-      # chaange the size fromw whatever it was to :thumb size
-      img.gsub!(/_[a-z]+\.jpg/,'_thumb.jpg')
-    else
-      nil
-    end
+  # Return the two most viewed/favorited articles for the home page
+  # That aren't already being used as athletes of the week
+  def self.highlighted_articles(exclude_ids=[-1])
+    p = Post.find(:all,
+                  :conditions => ["published_as = ? AND id NOT IN (?)","live",exclude_ids],
+                  :order => 'view_count desc, favorited_count desc, published_at desc',
+                  :limit => 2)
   end
   
+  def image_thumbnail_for_post
+    return '' if self.post.nil?
+    img = first_image_in_body()
+    if img
+      # chaange the size fromw whatever it was to :feature size
+      img.gsub!(/_[a-z]+\.jpg/,'_feature.jpg')
+    else
+      img = logo_thumbnail_for_post
+    end
+    img
+  end
+
+  # Team or league logo of the author
+  def logo_thumbnail_for_post
+    if user.league_staff? || user.admin? 
+      league = League.find(user.league_id)
+      if league.avatar
+        return league.avatar.public_filename(:thumb)
+      end
+    end
+    return user.team.avatar.public_filename(:thumb)
+  end
+
+  # Team or league name of the author
+  def logo_title
+    if self.user.league_staff?
+      self.user.league.name
+    else
+      self.user.team_name
+    end
+  end
   
 end

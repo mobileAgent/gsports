@@ -1,0 +1,10 @@
+.ArticlesWeek
+  .AthletesDescrip
+    %p
+      %strong
+        =link_to(truncate(h(story.title),55), url_for({:controller => 'posts', :action => 'show_public', :id => story.id}))
+    %p= story.user.full_name
+    %p= human_date(story.published_at)
+  .featureFIT
+    = image_tag(story.image_thumbnail_for_post, {:title => h(story.title), :alt => h(story.title), :height => '65', :width => '103', :class => 'AthletesPic'})
+

@@ -61,39 +61,4 @@ class AthleteOfTheWeek < Post
     [post1,post2]
   end
 
-  def image_thumbnail_for_post
-    return '' if self.post.nil?
-    img = first_image_in_body()
-    if img
-      # chaange the size fromw whatever it was to :feature size
-      img.gsub!(/_[a-z]+\.jpg/,'_feature.jpg')
-    else
-      img = ''
-    end
-    img
-  end
-
-  # Team or league logo of the author
-  def logo_thumbnail_for_post
-    if user.team_staff? && user.team.avatar
-      return user.team.avatar.public_filename(:thumb)
-    end
-    if user.league_staff? || user.admin? 
-      league = League.find(user.league_id)
-      if league.avatar
-        return league.avatar.public_filename(:thumb)
-      end
-    end
-    return nil
-  end
-
-  # Team or league name of the author
-  def logo_title
-    if self.user.team_staff?
-      self.user.team.name
-    else
-      self.user.league_name
-    end
-  end
-  
 end

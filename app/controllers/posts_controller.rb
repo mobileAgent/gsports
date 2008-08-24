@@ -6,13 +6,14 @@ class PostsController < BaseController
 
   # Allowed to show any of the featured athlete stories, but not just any story
   def show_public
-    @post = AthleteOfTheWeek.find(params[:id])
-    unless @post.category_id == AthleteOfTheWeek.my_category.id &&
-        (@post.user.league_staff? || @post.user.team_staff? || @post.user.admin?)
-      redirect_to :controller => 'base', :action => 'site_index' and return
-    end
-  rescue
-    redirect_to :controller => 'base', :action => 'site_index'
+#     @post = AthleteOfTheWeek.find(params[:id])
+#     unless @post.category_id == AthleteOfTheWeek.my_category.id &&
+#         (@post.user.league_staff? || @post.user.team_staff? || @post.user.admin?)
+#       redirect_to :controller => 'base', :action => 'site_index' and return
+#     end
+#   rescue
+#     redirect_to :controller => 'base', :action => 'site_index'
+    @post = Post.find(params[:id])
   end
   
   

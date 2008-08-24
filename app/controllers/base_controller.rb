@@ -43,7 +43,7 @@ class BaseController < ApplicationController
     @games_of_the_week = Rails.cache.fetch('games_of_the_week') { GameOfTheWeek.for_home_page || []}
     @game_dockey_string = @games_of_the_week.collect(&:dockey).join(",")
     @athletes_of_the_week = AthleteOfTheWeek.for_home_page
-    
+    @articles_of_the_week = Post.highlighted_articles(@athletes_of_the_week.collect(&:id))
 
   end
 

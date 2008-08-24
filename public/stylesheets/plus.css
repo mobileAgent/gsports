@@ -227,6 +227,60 @@ div.thumbFIT {
    margin-botton: 5px;
 }
 
+
+.homeFeatureLeft2 {
+	float: left;
+	width: 350px;
+	margin: 0px;
+	padding: 0px;
+}
+
+.homeFeatureMiddle2 {
+	width: 315px;
+	padding: 0px;
+	margin: 0;
+	float: left;
+}
+.homeFeatureRight2 {
+	width: 289px;
+	float: right;
+	margin: 0;
+	padding: 0;
+}
+.homeFeatureMiddle2 img {
+	padding: 0px;
+	margin-top: 6px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+	margin-left: 20px;
+	border: 1px solid #162A49;	
+}
+
+
+
+.homeFeatureMiddle2 img:hover {
+	border: 1px solid #2980CA;
+}
+
+/* tellart tried to hide h2 with an image. mega dumb imho */
+.homeFeature h3 {
+  color: yellow;
+  font-size: 166.1%;
+  margin-top: 10px;
+  padding-left: 18px;
+  height: 25px;
+  font-weight: bold;
+  font-family: Helvetica, Arial, sans-serif;
+}
+
+.ArticlesWeek {
+	background-color: #bac4d0;
+	height: 65px;
+	width: 255px;
+	margin-left: 20px;
+	margin-top: 8px;
+}
+
 .prototip .gs { border: 1px solid #ccc; color: #fff; font: 11px Arial, Helvetica, sans-serif; }
 .prototip .gs .toolbar { background: #2e2e2e; color: #fff; font-weight: bold; }
 .prototip .gs .toolbar a.close:hover { background: url(close_hover_red.gif);}
