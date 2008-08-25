@@ -1245,7 +1245,7 @@ label.verbalSemantic { /* used for <label> tags that are needed for semantic com
 
 /* head */
 .header {
-	background: #000000 url("/gs/images/webLogo.jpg") no-repeat top left;
+	background: #000000 url("/gs/images/webLogo956x200Mid.jpg") no-repeat top left;
 	font-size: 100%; /* = 10px @ 100% browser zoom */
 	color: #B3B3B3;
 	padding-bottom: 10px;
@@ -1253,7 +1253,7 @@ label.verbalSemantic { /* used for <label> tags that are needed for semantic com
 }
 /* header used for the homepage template with larger logo */
 .headerHome {
-	background: #000000 url("/gs/images/webLogo.jpg") no-repeat top left;
+	background: #000000 url("/gs/images/webLogo956x200home.jpg") no-repeat top left;
 	font-size: 100%; /* = 10px @ 100% browser zoom */
 	color: #B3B3B3;
 	padding-bottom: 10px;
