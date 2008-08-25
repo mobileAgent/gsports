@@ -17,9 +17,9 @@ namespace :vidavee do
 
   desc "Update the status of the specified video asset from the vidavee backend"
   task :update_video_asset_status => :environment do
-    id = ENV['ID']
+    id = ARGV[1]
     if id.nil?
-      puts "Specify ID=# on the command line"
+      puts "Specify ID on the command line"
       return
     end
     video_asset = VideoAsset.find(id)
@@ -38,14 +38,33 @@ namespace :vidavee do
     puts "Status is #{video_asset.video_status}"
   end
 
-  desc "Re-try to push the specified video_asset.id to the vidavee backend"
-  task :push_video_file => :environment do
-    id = ENV['ID']
-    if id.nil?
-      puts "Specify ID=# on the command line"
+  desc "Get updated status for all videos that are still queued"
+  task :update_queued_videos_status => :environment do
+    vidavee = Vidavee.find(:first)
+    login = vidavee.login
+    if login.nil?
+      puts "Cannot log into vidavee back end"
       return
     end
-    video_asset = VideoAsset.find(ENV['ID'])
+    queued_assets = VideoAsset.find(:all, :conditions => ['video_status = ?','queued'])
+    queued_assets.each do |asset|
+      pre = asset.video_status
+      vidavee.update_asset_record(login,asset,{'video_status' => true})
+      if (asset.video_status != pre)
+        puts "Updating status of video #{asset.id} to #{asset.video_status} from #{pre}"
+        asset.save!
+      end
+    end
+  end
+
+  desc "Re-try to push the specified video_asset.id to the vidavee backend"
+  task :push_video_file => :environment do
+    id = ARGV[1]
+    if id.nil?
+      puts "Specify ID on the command line"
+      return
+    end
+    video_asset = VideoAsset.find(id)
     if video_asset.nil?
       puts "Video asset not found for id #{id}"
       return

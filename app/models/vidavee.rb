@@ -243,12 +243,12 @@ class Vidavee < ActiveRecord::Base
     [found_count,save_count]
   end
   
-  def update_asset_record(sessionid,video_asset)
+  def update_asset_record(sessionid,video_asset,only={})
     response = vrequest('assets/GetDetailsAssetContent',sessionid, { DOCKEY_PARAM => video_asset.dockey })
     if response && response.content
       body = extract(response.content,"//content")
       if body
-        update_asset_record_from_xml(video_asset,body)
+        update_asset_record_from_xml(video_asset,body,only)
       else
         logger.debug "Bad response #{response.content}"
       end
@@ -534,23 +534,35 @@ class Vidavee < ActiveRecord::Base
     url
   end
 
-  def update_asset_record_from_xml(video_asset,asset_xml)
+  def update_asset_record_from_xml(video_asset,asset_xml,only={})
     dockey = asset_xml.search('//dockey')
     if dockey.nil?
       logger.debug "No valid response in #{asset_xml}"
       return
     end
-    video_asset.dockey= dockey.text
-    video_asset.video_type= asset_xml.search('//type').text
-    title= asset_xml.search('//title').text
-    if ((title.nil? || title.length == 0) && video_asset.title.nil?)
-      video_asset.title= 'no title supplied'
-    else
-      video_asset.title= title
+    if (only.empty? || only['dockey'])
+      video_asset.dockey= dockey.text
     end
-    video_asset.description= asset_xml.search('//description').text
-    video_asset.video_length= asset_xml.search('//length').text
-    video_asset.video_status= asset_xml.search('//status').text
+    if (only.empty? || only['video_type'])
+      video_asset.video_type= asset_xml.search('//type').text
+    end
+    if (only.empty? || only['title'])
+      title= asset_xml.search('//title').text
+      if ((title.nil? || title.length == 0) && video_asset.title.nil?)
+        video_asset.title= 'no title supplied'
+      else
+        video_asset.title= title
+      end
+    end
+    if (only.empty? || only['description'])
+      video_asset.description= asset_xml.search('//description').text
+    end
+    if (only.empty? || only['video_length'])
+      video_asset.video_length= asset_xml.search('//length').text
+    end
+    if (only.empty? || only['video_status'])
+      video_asset.video_status= asset_xml.search('//status').text
+    end
   end
   
 end
