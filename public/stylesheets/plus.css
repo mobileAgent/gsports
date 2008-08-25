@@ -290,3 +290,19 @@ div.thumbFIT {
 .prototip .gs .content a { color: #464337; text-decoration: none;}
 .prototip .gs li {	list-style: none; }
 
+
+
+.accountContinue2 {
+	text-align: left;
+	margin-top: 20px;
+	margin-bottom: 35px;
+}
+
+.accountContinue2 input {
+	border: 0px;
+	background-color: white;
+}
+
+
+
+
