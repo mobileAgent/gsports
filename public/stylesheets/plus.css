@@ -7,24 +7,57 @@
 
 /* forms */
 
+.landingContentArea, 
 .mainContentArea{
 	background-color: #ffffff;
 }
 
+.landingContentArea input[type='text'], .landingContentArea input[type='password'], .landingContentArea select, .landingContentArea input[type='radio'], .landingContentArea textarea,
 .mainContentArea input[type='text'], .mainContentArea input[type='password'], .mainContentArea select, .mainContentArea input[type='radio'], .mainContentArea textarea {
   xbackground-color: #feb;
   border: 1px solid black;
   margin-bottom: 4px;
 }
+
+.landingContentArea input[type='text']:focus, .landingContentArea input[type='password']:focus
 .mainContentArea input[type='text']:focus, .mainContentArea input[type='password']:focus { 
   border: 1px solid darkblue;
 }
 
+.landingContentArea label
 .mainConentArea label { 
   font-weight: bold;
   color: black;
   text-align: left;
 }
+
+
+.RegistrationContent .mainCol1 .contentBox, .profileContentArea .mainCol2 .contentBox{
+	width: 315px;
+	height: auto;
+}
+.RegistrationContent .contentBox{
+	margin-left: 10px;	
+	height: auto;
+	background-color: white;
+}
+.RegistrationContent .contentBoxContent{
+	height: auto;
+}
+
+label.required:before{
+	content: '*';
+}
+
+.field-block label{
+	display: block;
+}
+
+.field-block {
+	display: inline-block;
+}
+
+
 
 /* end forms */
 

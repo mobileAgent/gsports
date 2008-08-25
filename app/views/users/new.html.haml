@@ -10,102 +10,143 @@
       %span.RegistrationComplete
         PART 2: USER INFORMATION &raquo;
       PART 3: BILLING INFORMATION
-    .AccountType    
-      = error_messages_for :user
-        
-      - form_for :user, :url => users_path, :html => {:class => 'MainForm'} do |f|
-        
-        %label{"for"=>"firstname"} 
-          First Name
-          %em (Required: )
-        = f.text_field :firstname
-          
-        %label{"for"=>"minitial"} 
-          Middle Initial
-        = f.text_field :minitial, :length => 1
-        
-        %label{"for"=>"lastname"} 
-          Last Name
-          %em (Required: )
-        = f.text_field :lastname
-        
-        %h3 Address
-        
-        
-        %label{"for"=>"address1"} 
-          Address Line One
-          %em (Required: )
-        = f.text_field :address1
-        
-        %label{"for"=>"address2"} 
-          Address Line Two
-        = f.text_field :address2
-        
-        %label{"for"=>"city"} 
-          City
-          %em (Required: )
-        = f.text_field :city
-        
-        %label{"for"=>"state"} 
-          State
-          %em (Required: )
-        =collection_select(:user ,:state_id,State.all,"id","name", { :prompt => 'Choose State'})
-        
-        %label{"for"=>"zip"} 
-          Zip/Postal Code
-          %em (Required: )
-        = f.text_field :zip
-        
-        %label{"for"=>"phone"} 
-          Phone
-          %em (Required: )
-        = f.text_field :phone
   
-        - if @requested_role.to_i == Role[:league].id
-          %h3 League Association
-          
-          %label{"for" => "league_name"}
-            League you are representing
-            %em (Required: )
+    = error_messages_for :user
+  
+    %p
+      %br
+      %h1 Part 2: User Information
+    
+    - form_for :user, :url => users_path, :html => {:class => 'userForm'} do |f|
+    
+      .mainCol1
+        .contentBox
+          .contentBoxContent
+  
+            .field-block
+              %label.required{"for"=>"firstname"} 
+                First Name
+              = f.text_field :firstname, :size => 12
+
+            .field-block
+              %label{"for"=>"minitial"} 
+                M.I.
+              = f.text_field :minitial, :size => 1
+  
+            .field-block
+              %label.required{"for"=>"lastname"} 
+                Last Name
+              = f.text_field :lastname, :size => 16
             
-          = text_field_with_auto_complete :user, :league_name, :autocomplete => 'off'
-          
-        - else
-          %h3 Team Association
-          
-          %label{"for" => "team_name"}
-            Team you want to associate with
-            %em (Required: )
+            %br
             
-          = text_field_with_auto_complete :user, :team_name, :autocomplete => 'off'
+            .field-block            
+              %label.required{"for"=>"address1"} 
+                Address Line One
+              = f.text_field :address1, :size => 16
+            .field-block
+              %label{"for"=>"address2"} 
+                Address Line Two
+              = f.text_field :address2, :size => 16
+              
+            %br
+              
+            .field-block
+              %label.required{"for"=>"city"} 
+                City
+              = f.text_field :city, :size => 16
+              
+            .field-block
+              %label.required{"for"=>"zip"} 
+                Zip/Postal Code
+              = f.text_field :zip, :size => 10
+
+            %br
+              
+            .field-block
+              %label.required{"for"=>"state"} 
+                State
+              =collection_select(:user ,:state_id,State.all,"id","name", { :prompt => 'Choose State'})
+
+
+            .field-block
+              %label.required{"for"=>"country"} 
+                State
+              =collection_select(:user ,:country,Country.all,"id","name", { :prompt => 'Choose Country'})
+
+
+            %br
+
+
+
+
+
+            .field-block
+              %label.required{"for"=>"phone"} 
+                Phone
+              = f.text_field :phone
+    
+    
+      .mainCol2
+        .contentBox
+          .contentBoxContent
         
-        %h3 Account Details
-        
-        %label{"for"=>"email"}
-          E-mail address
-          %em (Required: )
-        = f.text_field :email
-  
-        %label{"for"=>"birthdate"}
-          Birthday:
-          %em (Required: you must be at least 13 years old to sign up.)
-        = date_select :user, :birthday, {:start_year => 1926, :end_year => Time.now.year - 13}
-  
-        %label{"for"=>"password"}
-          Choose a password:
-        = f.password_field :password
-        %label{"for"=>"password_confirmation"}
-          Re-type your password to confirm:
-        = f.password_field :password_confirmation
-        = hidden_field_tag :inviter_id, params[:inviter_id]
-        = hidden_field_tag :inviter_code, params[:inviter_code]
-        = hidden_field_tag :role, @requested_role
-        -#%p= submit_tag 'Sign up'
-        .accountContinue2
-          %p
-            %input{ :name => "Continue", :type => "image", :src => "/gs/images/account_continue_billing.png", :value => "Contine", :alt => "Continue" }
+            .field-block
+              %label.required{"for"=>"email"}
+                E-mail address
+              = f.text_field :email
             
-  
-  
+            %br
+            
+            .field-block
+              %label{"for"=>"password"}
+                Choose a password:
+              = f.password_field :password
+            
+            .field-block
+              %label{"for"=>"password_confirmation"}
+                Re-type your password to confirm:
+              = f.password_field :password_confirmation
+
+      %br{ :clear=>:left }
+      %hr
+
+      - if @requested_role.to_i == Role[:league].id
+        %h3 League Association
+      
+        %label.required{"for" => "league_name"}
+          League you are representing
+        
+        = text_field_with_auto_complete :user, :league_name, :autocomplete => 'off'
+      
+      - else
+        %h3 Team Association
+      
+        %label.required{"for" => "team_name"}
+          Team you want to associate with
+        
+        = text_field_with_auto_complete :user, :team_name, :autocomplete => 'off'
+      
+
+    
+      %h3 Account Details
+    
+
+
+      %label.required{"for"=>"birthdate"}
+        Birthday:
+        %em (you must be at least 13 years old to sign up.)
+      = date_select :user, :birthday, {:start_year => 1926, :end_year => Time.now.year - 13}
+
+      = hidden_field_tag :inviter_id, params[:inviter_id]
+      = hidden_field_tag :inviter_code, params[:inviter_code]
+      = hidden_field_tag :role, @requested_role
+      -#%p= submit_tag 'Sign up'
+      .accountContinue2
+        %p
+          %input{ :name => "Continue", :type => "image", :src => "/gs/images/account_continue_billing.png", :value => "Contine", :alt => "Continue" }
+        
+
+
   
   

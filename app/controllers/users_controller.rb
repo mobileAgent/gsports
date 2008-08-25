@@ -57,8 +57,14 @@ class UsersController < BaseController
 
   # registration step 2
   def new
-    @requested_role = params[:role]
-
+    @requested_role = params[:role].to_i
+    case @requested_role
+    when Role[:team].id
+      @team = Team.new
+    when Role[:league].id
+      @league = League.new
+    end
+    
     @user = User.new( {:birthday => Date.parse((Time.now - 25.years).to_s) }.merge(params[:user] || {}) )
     @inviter_id = params[:id]
     @inviter_code = params[:code]
@@ -72,6 +78,16 @@ class UsersController < BaseController
       @requested_role = params[:role].to_i
       return if (Role[:admin].id  == @requested_role or Role[:moderator].id == @requested_role)
       @role = Role[@requested_role]
+      
+      #TODO, step down role for team/league if exists
+      
+      case @role
+      when Role[:team].id
+        @team = Team.new(params[:user])
+      when Role[:league].id
+        @league = League.new(params[:user])
+      end
+      
     rescue
       logger.debug "Could not set role from #{params[:role]}"
       @role = Role[:member]
