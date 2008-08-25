@@ -139,6 +139,7 @@ class VideoReelsController < BaseController
     respond_to do |format|
       format.html { redirect_to(video_reels_url) }
       format.xml  { head :ok }
+      format.js
     end
   rescue ActiveRecord::RecordNotFound
     flash[:notice] = 'That reel could not be found.'

@@ -182,7 +182,7 @@ class Vidavee < ActiveRecord::Base
       first_item = h.search('//item')
       thumbnail_dockey=first_item.attr('id') if first_item
     end
-    { :title => title, :description => desc, :video_length => length, :thumbnail_dockey => thumbnail_dockey }
+    { :title => title, :description => desc, :video_length => length, :thumbnail_dockey => thumbnail_dockey, :dockey => dockey }
   end
 
   # Load gallery assets from vidavee xml into our video_assets models

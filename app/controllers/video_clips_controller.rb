@@ -131,6 +131,7 @@ class VideoClipsController < BaseController
     respond_to do |format|
       format.html { redirect_to(video_clips_url) }
       format.xml  { head :ok }
+      format.js
     end
   rescue ActiveRecord::RecordNotFound
     flash[:notice] = 'That clip could not be found.'

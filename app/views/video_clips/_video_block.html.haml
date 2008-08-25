@@ -1,4 +1,4 @@
-.video_thumbnail
+.video_thumbnail{:id => "video_clip_#{video_clip.id}"}
   = "<a href='#{user_video_clip_path(video_clip.user_id,video_clip)}'><img src='#{@vidavee.file_thumbnail_medium(video_clip.dockey)}' title='#{h(video_clip.title).gsub(/\'/,'')}' alt='Clip'/></a>"
   %br
   = h video_clip.title
@@ -12,4 +12,4 @@
       %br
       = link_to 'Edit', edit_video_clip_path(video_clip)
       |
-      = link_to 'Destroy', video_clip, :confirm => 'Are you sure?', :method => :delete
+      = link_to_remote 'Destroy', {:url => url_for(video_clip), :confirm => 'Are you sure?', :method => :delete}

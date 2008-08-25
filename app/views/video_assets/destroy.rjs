@@ -1,0 +1,1 @@
+page.hide "video_asset_#{@video_asset.id}"

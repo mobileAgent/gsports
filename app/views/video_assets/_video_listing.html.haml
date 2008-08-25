@@ -1,4 +1,4 @@
-.listingItem
+.listingItem{:id => "video_asset_#{video_listing.id}"}
   .listingImage
     = link_to "<img src='#{@vidavee.file_thumbnail_medium(video_listing.dockey)}' title='#{h(video_listing.title).gsub(/\'/,'')}' alt='Video'/>", video_asset_path(video_listing)
   .listingDescription
@@ -30,7 +30,7 @@
           %span
             Edit
       %li
-        = link_to 'Destroy', video_listing, :confirm => 'Are you sure?', :method => :delete,  :class=>'genericButton'
+        = link_to_remote 'Destroy', {:url => url_for(video_listing), :confirm => 'Are you sure?', :method => :delete},  :class=>'genericButton'
       %li
   .clearDiv
 .clearDiv

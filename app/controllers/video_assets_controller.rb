@@ -163,6 +163,7 @@ class VideoAssetsController < BaseController
     respond_to do |format|
       format.html { redirect_to(video_assets_url) }
       format.xml  { head :ok }
+      format.js
     end
   rescue ActiveRecord::RecordNotFound
     flash[:notice] = 'That video could not be found.'
