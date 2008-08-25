@@ -2,7 +2,6 @@
 require 'capistrano/ext/multistage'
 
 set :stages, %w(development testing qa production) 
-set :default_stage, 'development'
 
 set :application, "gsports"
 set :repository,  "git@github.com:mobileAgent/gsports.git"
@@ -42,10 +41,27 @@ namespace :deploy do
 
   desc "Do sphinx stuff on new app"
   task :after_update_code do
-    sphinx:configure
+    sphinx.restart
     create_symlinks
-    poller:restart_poller
+    poller.restart_poller
   end
+
+  desc "Migration is broken in recipe.rb line 341, try fixing it here"
+  task :migrate, :roles => :db, :only => { :primary => true } do 
+    rake = fetch(:rake, "rake")
+    rails_env = fetch(:rails_env, "production")
+    migrate_env = fetch(:migrate_env, "")
+    migrate_target = fetch(:migrate_target, :latest)
+ 
+    directory = case migrate_target.to_sym
+      when :current then current_path
+      when :latest then current_release
+      else raise ArgumentError, "unknown migration target #{migrate_target.inspect}"
+      end
+ 
+    run "cd #{directory}; #{rake} RAILS_ENV=#{migrate_env} db:migrate"
+  end 
+  
 end
 
 namespace :poller do
@@ -59,21 +75,15 @@ namespace :poller do
   desc "stop previous poller"
   task :stop_prior_poller, :roles=>:app do
     if previous_release
-      as = fetch(:runner, "app")
-      via = fetch(:run_method, :run)
-      stage = fetch(:stage)    
-      # need to be in RAILS_ROOT when this script is run
-      invoke_command("cd #{previous_revision} && RAILS_ENV=#{stage} script/poller stop'", :via => via, :as => as)        
+      rails_env = fetch(:environment, "production")
+      run "cd #{current_path}; RAILS_ENV=#{rails_env} script/poller stop"
     end
   end
   
   desc "start poller"
   task :start_poller, :roles=>:app do
-    as = fetch(:runner, "app")
-    via = fetch(:run_method, :run)
-    stage = fetch(:stage)    
-    # need to be in RAILS_ROOT when this script is run
-    invoke_command("cd #{current_path} && RAILS_ENV=#{stage} script/poller start'", :via => via, :as => as)        
+    rails_env = fetch(:environment, "production")
+    run "cd #{current_path}; RAILS_ENV=#{rails_env} script/poller start"
   end
 end
 
@@ -87,10 +97,18 @@ task :create_symlinks do
 end
 
 namespace :sphinx do
-  desc "Generate the ThinkingSphinx configuration file"
-  task :configure do
-    run "cd #{current_release} && rake thinking_sphinx:index"
-    run "cd #{current_release} && rake thinking_sphinx:restart"
+  desc "Restart sphinx"
+  task :restart do
+    rake = fetch(:rake, "rake")
+    rails_env = fetch(:environment, "production")
+    begin
+      run "cd #{current_release}; #{rake} RAILS_ENV=#{rails_env} thinking_sphinx:stop"
+    rescue
+      puts "sphinx was not running, ok."
+    end
+    run "cd #{current_release}; #{rake} RAILS_ENV=#{rails_env} thinking_sphinx:configure"
+    run "cd #{current_release}; #{rake} RAILS_ENV=#{rails_env} thinking_sphinx:index"
+    run "cd #{current_release}; #{rake} RAILS_ENV=#{rails_env} thinking_sphinx:start"
   end
 end
 
