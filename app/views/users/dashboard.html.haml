@@ -114,8 +114,8 @@
       - team_posts(@user.team, :limit=>1).each() do |post|
         %a.articleLink{:href=>user_post_path(post.user, post)}
           =post.title
-          %br
-          = truncate_words(post.post, 75, '...' )
+        %br
+        = truncate_words(post.post, 75, '...' )
       
     .rightContentItem
       -#%span.moreLink
@@ -125,8 +125,8 @@
       - league_posts(@user.league, :limit=>1).each() do |post|
         %a.articleLink{:href=>user_post_path(post.user, post)}
           =post.title
-          %br
-          = truncate_words(post.post, 75, '...' )
+        %br
+        = truncate_words(post.post, 75, '...' )
         
     .rightContentItem
       %span.moreLink
@@ -144,8 +144,8 @@
         - post = @user.posts.first
         %a.articleLink{:href=>user_post_path(post.user, post)}
           =post.title
-          %br
-          = truncate_words(post.post, 75, '...' )
+        %br
+        = truncate_words(post.post, 75, '...' )
             
                 
                 
