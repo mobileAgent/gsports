@@ -1,14 +1,29 @@
-%h1
-  = "Editing #{@video_asset.title} Details"
+.profileContentArea.listingPage
+  .profilePageHeader
+    %h2.columnDescriptor
+      %span
+        My Videos
+      = current_user.full_name
+  .leftNavCol
+    %h2.yellowHeader
+      My Profile
+    .leftNav
+      =render :partial => "users/profile_nav"
+  .listings
+    .contentBox.tanBackground
+      .contentBoxHeader.yellowHeader
+        %h2.boxDescription
+          = "Editing details for \"#{@video_asset.title}\""
+      .contentBoxContent
+        .featureSummary
+          #video_thumbnail
+            = "<img src='#{@vidavee.file_thumbnail_medium(@video_asset.dockey)}' title='#{h @video_asset.title}'>"
+          %br/
+          - form_for @video_asset do |f|
+            = render :partial => "form", :locals => { :f => f }
+            %p
+              = f.submit "Submit"
 
-#video_thumbnail
-  = "<img src='#{@vidavee.file_thumbnail_medium(@video_asset.dockey)}' title='#{h @video_asset.title}'>"
-%br/
-- form_for @video_asset do |f|
-  = render :partial => "form", :locals => { :f => f }
-  %p
-    = f.submit "Submit"
-
-= link_to 'Show', @video_asset
-|
-= link_to 'Back', video_assets_path
+          = link_to 'Show', @video_asset
+          |
+          = link_to 'Back', video_assets_path

@@ -1,44 +1,19 @@
-.flashArea#flashArea
-
--if @vidavee && session[:vidavee] && @video_asset.dockey
-
-  
-  = render :partial => 'shared/video_player', :locals => { :dockey => @video_asset.dockey, :target => 'flashArea' }
-  
--else
-  = "Your video is still loading."
-  
-%p
-  %b Title:
-  =h @video_asset.title
-
-%p
-  %b Description:
-  =h @video_asset.description
-
-%p
-  %b Length:
-  =h @video_asset.video_length
-
-%p
-  %b Game Date:
-  =h game_date(@video_asset.game_date)
-
-%p
-  %b Sport:
-  =h @video_asset.sport
-  
-%p= @video_asset.tags.collect{|t| link_to( h(t.name), tag_url(t.name), :class => 'tag') }.join(" ")
-%br/
-
-- if current_user && current_user.can_edit?(@video_asset)
-  = link_to 'Edit', edit_video_asset_path(@video_asset) |
-  = link_to 'Destroy', @video_asset, :confirm => 'Are you sure?', :method => :delete
-
-= render :partial => 'shared/favorite_item', :locals => { :item => @video_asset }
-= "|"
-= render :partial => 'shared/favorite_count', :locals => { :item => @video_asset }
-= "|"
-= render :partial => 'shared/view_count', :locals => { :item => @video_asset }
-= "|"
-= render :partial => 'shared/inappropriate_item', :locals => { :item => @video_asset }
+.profileContentArea.listingPage
+  .profilePageHeader
+    %h2.columnDescriptor
+      %span
+        My Videos
+      = current_user.full_name
+  .leftNavCol
+    %h2.yellowHeader
+      My Profile
+    .leftNav
+      =render :partial => "users/profile_nav"
+  .listings
+    .contentBox.tanBackground
+      .contentBoxHeader.yellowHeader
+        %h2.boxDescription
+          = "Details for \"#{@video_asset.title}\""
+      .contentBoxContent
+        .featureSummary
+          = render :partial => 'video_listing', :collection => [ @video_asset ]

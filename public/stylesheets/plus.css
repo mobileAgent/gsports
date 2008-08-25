@@ -5,19 +5,19 @@
   border: 0px;
 }
 
-/* aaron */
+/* forms */
 
 .mainContentArea{
 	background-color: #ffffff;
 }
 
 .mainContentArea input[type='text'], .mainContentArea input[type='password'], .mainContentArea select, .mainContentArea input[type='radio'], .mainContentArea textarea {
-  background-color: #feb;
-  border: 1px solid #26a;
+  xbackground-color: #feb;
+  border: 1px solid black;
   margin-bottom: 4px;
 }
 .mainContentArea input[type='text']:focus, .mainContentArea input[type='password']:focus { 
-  border: 2px solid darkblue;
+  border: 1px solid darkblue;
 }
 
 .mainConentArea label { 
@@ -26,11 +26,7 @@
   text-align: left;
 }
 
-.xxmainContentArea fieldset {
-  border: 2px solid darkblue;
-  margin-left: 4%;
-  margin-right: 4%;
-}
+/* end forms */
 
 table.unstyled {
   border: 1px solid black;
@@ -289,4 +285,20 @@ div.thumbFIT {
 .prototip .gs .content hr { background-color: #fff; color: #fff; border: 0; border-top: 1px solid #ccc}
 .prototip .gs .content a { color: #464337; text-decoration: none;}
 .prototip .gs li {	list-style: none; }
+
+
+
+.accountContinue2 {
+	text-align: left;
+	margin-top: 20px;
+	margin-bottom: 35px;
+}
+
+.accountContinue2 input {
+	border: 0px;
+	background-color: white;
+}
+
+
+
 

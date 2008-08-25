@@ -39,12 +39,25 @@
   = collection_select("video_asset","game_level",VideoAsset.GAME_LEVELS, "to_s","to_s",{:include_blank => true, :selected => @video_asset.game_level})
 
 %p
+  = f.label "Home Team Score"
+  %br/
+  = text_field :video_asset, :home_score, :value => @video_asset.home_score, :size=>3
+
+%p
+  = f.label "Visiting Team Score"
+  %br/
+  = text_field :video_asset, :visitor_score, :value => @video_asset.visitor_score, :size=>3
+
+
+%p
   =f.label :tags
   %br/
   = text_field_tag 'tag_list', @video_asset.tags.collect{|t| t.name}.join(" "), {:autocomplete => "off", :size => 35}
   #tag_list_auto_complete.auto_complete
   = auto_complete_field 'tag_list', {:url => { :controller => "tags", :action => 'auto_complete_for_tag_name'}, :tokens => [',', ' ']  }
-  
+
+
+
 - if current_user.admin?
   %fieldset
     %legend="Advanced Fields (Admin Only)"
