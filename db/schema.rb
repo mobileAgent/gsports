@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20080824040116) do
+ActiveRecord::Schema.define(:version => 20080825152104) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id",    :limit => 10
@@ -542,6 +542,8 @@ ActiveRecord::Schema.define(:version => 20080824040116) do
     t.integer  "league_id",          :limit => 11
     t.boolean  "public_video",                     :default => true
     t.boolean  "delta",                            :default => false
+    t.integer  "home_score",         :limit => 11
+    t.integer  "visitor_score",      :limit => 11
   end
 
   create_table "video_clips", :force => true do |t|
