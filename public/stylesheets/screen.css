@@ -831,8 +831,8 @@ div.user_list div.vcard {
 .progressContainer {
 	margin: 5px;
 	padding: 4px;
-	border: solid 1px #E8E8E8;
-	background-color: #F7F7F7;
+	border: solid 1px #666666;
+	background-color: #ededed;
 	overflow: hidden;
 }
 .progressContainer .red {
