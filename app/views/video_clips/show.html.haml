@@ -13,7 +13,7 @@
         - if current_user && current_user.can_edit?(@video_clip)
           %a.genericButton{ :href => edit_video_clip_path(@video_clip) }
             Edit
-          = link_to_remote 'Destroy', {:url => url_for(@video_clip), :confirm => 'Are you sure?', :method => :delete},  :class=>'genericButton'
+          = link_to 'Destroy', video_clip_path(@video_clip), {:confirm => 'Are you sure?', :method => :delete,  :class=>'genericButton'}
         - else
           = render :partial => 'shared/inappropriate_item', :locals => { :item => @video_clip }
       

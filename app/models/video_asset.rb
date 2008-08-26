@@ -42,7 +42,7 @@ class VideoAsset < ActiveRecord::Base
   end
 
   def self.GAME_GENDERS
-    ["Mens","Womens","Coed"]
+    ["Boys","Girls","Coed", "Mens", "Womens"]
   end
   
   named_scope :for_user,

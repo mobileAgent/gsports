@@ -199,6 +199,19 @@ object#homeFlash {
 .commentForm {
   margin-left: 10px;
   margin-top: 0;
+}
+  
+
+fieldset.emphasized {
+  border: 2px solid #888d99;
+  margin: 25px 0 25px 10px;
+  padding: 10px;
+}
+
+fieldset.emphasized legend {
+  color: black;
+  font-size: 123.1%;
+}
 
 /* These FIT classes force images into the given size
    without changing the aspect ratio, we just end up

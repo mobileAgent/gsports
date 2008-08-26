@@ -9,6 +9,13 @@
   = f.text_field :description
   
 %p
+  %br/
+  =f.check_box :public_video
+  =f.label(:public_video,  'Public Reel')
+  %br/
+  %br/
+  
+%p
   = f.label :tags
   %br/
   = text_field_tag 'tag_list', @video_reel.tags.collect{|t| t.name}.join(" "), {:autocomplete => "off", :size => 35}

@@ -1,35 +1,61 @@
-%h1
-  Editing video_clip
+.profileContentArea.listingPage
+  .profilePageHeader
+    %h2.columnDescriptor
+      %span
+        My Videos
+      = current_user.full_name
+  .leftNavCol
+    %h2.yellowHeader
+      My Profile
+    .leftNav
+      =render :partial => "users/profile_nav"
+  .listings
+    .contentBox.tanBackground
+      .contentBoxHeader.yellowHeader
+        %h2.boxDescription
+          = "Editing details for \"#{@video_clip.title}\""
+      .contentBoxContent
+        .featureSummary
+          #video_thumbnail
+            = "<img src='#{@vidavee.file_thumbnail_medium(@video_clip.dockey)}' title='#{h @video_clip.title}'>"
+          %br/
+          
+          - form_for(@video_clip) do |f|
+            = f.error_messages
+          
+            %p
+              = f.label :title
+              %br/
+              = f.text_field :title
+            
+            %p
+              = f.label :description
+              %br/
+              = f.text_field :description
+          
+            - if current_user && current_user.admin?
+              %p
+                = f.label :user_id
+                %br/
+                = f.text_field :user_id
 
-- form_for(@video_clip) do |f|
-  = f.error_messages
-
-  %p
-    = f.label :title
-    %br/
-    = f.text_field :title
-  
-  %p
-    = f.label :description
-    %br/
-    = f.text_field :description
-
-  - if current_user && current_user.admin?
-    %p
-      = f.label :user_id
-      %br/
-      = f.text_field :user_id
-
-  %p
-    =f.label :tags
-    %br/
-    = text_field_tag 'tag_list', @video_clip.tags.collect{|t| t.name}.join(" "), {:autocomplete => "off", :size => 35}
-    #tag_list_auto_complete.auto_complete
-    = auto_complete_field 'tag_list', {:url => { :controller => "tags", :action => 'auto_complete_for_tag_name'}, :tokens => [',', ' ']  }
-  
-  %p
-    = f.submit "Update"
-
-= link_to 'Show', @video_clip
-= "|"
-= link_to 'Back', video_clips_path
+            %p
+              %br/
+              =f.check_box :public_video
+              =f.label(:public_video,  'Public Clip')
+              %br/
+              %br/
+          
+            %p
+              =f.label :tags
+              %br/
+              = text_field_tag 'tag_list', @video_clip.tags.collect{|t| t.name}.join(" "), {:autocomplete => "off", :size => 35}
+              #tag_list_auto_complete.auto_complete
+              = auto_complete_field 'tag_list', {:url => { :controller => "tags", :action => 'auto_complete_for_tag_name'}, :tokens => [',', ' ']  }
+            
+            %p
+              = f.submit "Update"
+          
+          = link_to 'Show', @video_clip
+          = "|"
+          = link_to 'Back', video_clips_path

@@ -11,6 +11,7 @@ class UsersController < BaseController
                                            :return_admin, :assume, :featured, 
                                            :toggle_featured, :edit_pro_details, :update_pro_details,
                                            :dashboard, :show, :index, :change_team_photo, :change_league_photo]
+  before_filter :admin_required, :only => [:disable]
 
   uses_tiny_mce(:options => AppConfig.gsdefault_mce_options.merge({:editor_selector => "rich_text_editor"}), 
                 :only => [:new, :create, :update, :edit, :welcome_about])
@@ -165,6 +166,19 @@ class UsersController < BaseController
       render :action => 'billing', :userid => @user.id
     end
   end
+  
+  def disable
+    unless @user.admin?
+      @user.enabled=false
+      flash[:notice] = "The user account has been disabled."
+    else
+      flash[:error] = "You can't disable that user."
+    end
+    respond_to do |format|
+      format.html { redirect_to users_url }
+    end
+  end
+  
 
   def change_team_photo
     @user = User.find(params[:id])

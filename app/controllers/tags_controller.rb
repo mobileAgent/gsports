@@ -5,8 +5,13 @@ class TagsController < BaseController
   def auto_complete_for_tag_name
     look_for = params[:id] || params[:tag_list]
     if (look_for.nil?)
-      look_for = params.entries.first
+      myparams = params.clone
+      myparams.delete('action')
+      myparams.delete('controller')
+      logger.debug "No id or tag_list, trying #{myparams.entries.first} which is a #{myparams.entries.first.class.to_s}"
+      look_for = myparams.entries.first
       if look_for.class.to_s == "Array" && look_for.size == 2
+        logger.debug "Dude it is an array of #{look_for[1].class.to_s}"
         look_for = look_for[1].values.first
       end
     end
