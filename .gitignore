@@ -5,6 +5,8 @@ config/*.sphinx.conf
 nbproject
 .DS_Store
 tmp/**/*
+tmp/poller*.log
+tmp/poller.output
 tmp/*.pid
 videos
 public/photos
