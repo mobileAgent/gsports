@@ -181,6 +181,10 @@ class VideoAsset < ActiveRecord::Base
     dockey
   end
   
+  def owner
+    self.user
+  end
+  
   private
   
   def find_or_create_team_by_name team_name
@@ -199,6 +203,7 @@ class VideoAsset < ActiveRecord::Base
     end
     t
   end
+
 
   def save_deleted_video
     vd = DeletedVideo.new

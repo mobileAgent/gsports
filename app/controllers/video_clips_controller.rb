@@ -5,6 +5,9 @@ class VideoClipsController < BaseController
   before_filter :vidavee_login
   skip_before_filter :verify_authenticity_token, :only => [:create]
   
+  uses_tiny_mce(:options => AppConfig.narrow_mce_options.merge({:width => 530}),
+                :only => [:show])
+  
   # GET /video_clips
   # GET /video_clips.xml
   def index
@@ -75,8 +78,9 @@ class VideoClipsController < BaseController
       @video_clip.title = params[:title]
       @video_clip.description = params[:description]
       @video_clip.dockey = params[:dockey]
+      @video_clip.video_asset_id = params[:video_asset_id]
       @video_clip.public_video = params[:public_video]
-      @video_clip.tag_with(params[:tag_list])
+      @video_clip.tag_with(params[:tag_list]) if (params[:tag_list])
     else
       @video_clip = VideoClip.new(params[:video_clip])
       @video_clip.tag_with(params[:tag_list] || '') 

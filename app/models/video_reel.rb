@@ -36,4 +36,9 @@ class VideoReel < ActiveRecord::Base
     vd.deleted_at = Time.now
     vd.save!
   end
+  
+  def owner
+    self.user
+  end
+  
 end

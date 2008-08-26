@@ -1,0 +1,42 @@
+/* CSS file */
+
+
+.videoCtrlPnlStopBtn
+{
+    overSkin:Embed(source='images/stop.png');
+    upSkin:Embed(source='images/stop.png');
+    selectedUpSkin:Embed(source='images/stop.png');
+    selected-over-skin:Embed(source='images/stop.png');
+}
+
+.videoCtrlPnlPlayBtn
+{
+    overSkin:Embed(source='images/play.png');
+    upSkin:Embed(source='images/play.png');
+    selectedUpSkin:Embed(source='images/play.png');
+    selected-over-skin:Embed(source='images/play.png');
+}
+
+.videoCtrlPnlPauseBtn
+{
+    overSkin:Embed(source='images/pause.png');
+    upSkin:Embed(source='images/pause.png');
+    selectedUpSkin:Embed(source='images/pause.png');
+    selected-over-skin:Embed(source='images/pause.png');
+}
+
+.videoCtrlPnlMuteBtn
+{
+    overSkin:Embed(source='images/mute.png');
+    upSkin:Embed(source='images/mute.png');
+    selectedUpSkin:Embed(source='images/mute.png');
+    selected-over-skin:Embed(source='images/mute.png');
+}
+
+.videoCtrlPnlUnMuteBtn
+{
+    overSkin:Embed(source='images/unmute.png');
+    upSkin:Embed(source='images/unmute.png');
+    selectedUpSkin:Embed(source='images/unmute.png');
+    selected-over-skin:Embed(source='images/unmute.png');
+}

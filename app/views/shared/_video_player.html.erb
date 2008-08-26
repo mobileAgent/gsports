@@ -1,6 +1,6 @@
 <%- height ||= 395 %>
 <%- width ||= 580 %>
-<%- player_name ||= '/players/playerTest.swf' %>
+<%- player_name ||= '/players/clipmaker.swf' %>
 <%- fvars ||= { :p1 => @vidavee.file_flv_const(session[:vidavee],dockey) } %>
 <%- flashVars = fvars.inject([]) { |s,(k,v)| s << "#{k}: encodeURIComponent('#{v}')"}.join(",") %>
 <script type="text/javascript">

@@ -150,11 +150,55 @@ input[type='submit']:hover {
 /* Work around a tellart bug */
 object#homeFlash {
 	float:right;
-	width:580px;
+	width:560px;
 	height:395px;
 	background-image: url(../gs/images/videoplayer_background.png);
 	background-repeat: no-repeat;
 }
+
+#flashArea {
+        margin: 20px;
+	float:right;
+	background-image: url(../gs/images/videoplayer_background.png);
+	background-repeat: no-repeat;
+}
+
+.playerContentArea {
+  background: #292e43;
+  margin-right: 20px;
+  width: 100%;
+  margin-top: 5px;
+  height: auto;
+  float: left;
+}
+  
+.leftNavColPlayer {
+  width: 130px;
+  padding: 10px;
+  margin: 0;
+  height: 350px;
+  color: #cfcfcf;
+  float: left;
+}
+
+.leftNavColPlayer a {
+  margin-top: 5px;
+}
+
+.leftNavPlayer {
+  background: #888d99;
+  padding: 5px;
+  margin-top: 15px;
+}
+
+.commentArea {
+  width: 100%;
+  background: #e2e4a7;
+}
+
+.commentForm {
+  margin-left: 10px;
+  margin-top: 0;
 
 /* These FIT classes force images into the given size
    without changing the aspect ratio, we just end up
@@ -166,6 +210,7 @@ div.athleteFIT {
   overflow: hidden;
   display: inline;
 }
+
 div.featureFIT {
   height: 65px;
   width: 103px;

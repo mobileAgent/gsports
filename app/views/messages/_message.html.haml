@@ -32,7 +32,7 @@
     .mailReadMessage
       = link_to "close full message &raquo;", '#', :class => "morelink", :onclick => "$$('div#mail_full_#{message.id}')[0].hide();$$('div#mail_summary_#{message.id}')[0].show();return false;"
   .forumActions
-    = link_to 'Reply', {:url => { :controller => 'messages', :action => 'new'}}, :style => "float:right", :class => 'genericButton'
+    = link_to 'Reply', url_for({ :controller => 'messages', :action => 'new', :title => "Re: #{message.title}", :to => message.from_id}), :style => "float:right", :class => 'genericButton'
     %br
     %br
     = link_to_remote 'Delete', {:url => { :controller => 'messages', :action => 'destroy', :id => message}, :method => :delete} , :style => "float:right", :class => 'genericButton'

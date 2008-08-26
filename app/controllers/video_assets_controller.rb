@@ -14,6 +14,9 @@ class VideoAssetsController < BaseController
   session :cookie_only => false, :only => [:swfupload]
   protect_from_forgery :except => [:swfupload ]
   verify :method => :post, :only => [ :save_video, :swfupload ]
+  
+  uses_tiny_mce(:options => AppConfig.narrow_mce_options.merge({:width => 530}),
+                :only => [:show])
 
   # GET /video_assets
   # GET /video_assets.xml
