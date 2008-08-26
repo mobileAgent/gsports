@@ -36,7 +36,7 @@
   = text_field_with_auto_complete :video_asset, :visiting_team_name, :autocomplete => "off"
 
 %p
-  %label{:for=>"video_asset[game_gender]"} Mens/Womens
+  %label{:for=>"video_asset[game_gender]"} Boys/Girls
   %br/
   = collection_select("video_asset","game_gender",VideoAsset.GAME_GENDERS,"to_s","to_s",{ :selected => @video_asset.game_gender, :include_blank => true})
 

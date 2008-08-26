@@ -244,8 +244,13 @@ class VideoAssetsController < BaseController
   def add_team_and_league_relations(video_asset,params)
     
     # Set up team (should only come from admin form)
+    admin_set_team = false
     if(current_user.admin? && !params[:video_asset][:team_name].blank?)
       video_asset.team_name= params[:video_asset][:team_name]
+      # Transfer ownership to the admin
+      admin = User.team_admin(video_asset.team_id)
+      video_asset.user_id = admin[0].id if (admin && admin.any?)
+      admin_set_team = true
     else
       video_asset.team= current_user.team
     end
@@ -253,7 +258,10 @@ class VideoAssetsController < BaseController
     # Set up league (should only come from admin form)
     if(current_user.admin? && !params[:video_asset][:league_name].blank?)
       video_asset.league_name= params[:video_asset][:league_name]
-      if (video_asset.team_id?)
+      # Transfer ownership to the admin
+      admin = User.league_admin(video_asset.league_id)
+      video_asset.user_id = admin[0].id if (admin && admin.any?)
+      if (video_asset.team_id? && admin_set_team)
         video_asset.team.league_id= video_asset.league_id
       end
     else

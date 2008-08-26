@@ -10,9 +10,10 @@ class UsersController < BaseController
                                            :welcome_photo, :welcome_about, :welcome_invite,
                                            :return_admin, :assume, :featured, 
                                            :toggle_featured, :edit_pro_details, :update_pro_details,
-                                           :dashboard, :show, :index, :change_team_photo, :change_league_photo]
-  before_filter :admin_required, :only => [:disable]
-
+                                           :dashboard, :show, :index, :change_team_photo, :change_league_photo, :disable]
+  before_filter :admin_required, :only => [:assume, :destroy, :featured, :toggle_featured, :toggle_moderator, :disable]
+  before_filter :find_user, :only => [:edit, :edit_pro_details, :show, :update, :destroy, :statistics, :disable ]
+  
   uses_tiny_mce(:options => AppConfig.gsdefault_mce_options.merge({:editor_selector => "rich_text_editor"}), 
                 :only => [:new, :create, :update, :edit, :welcome_about])
   
