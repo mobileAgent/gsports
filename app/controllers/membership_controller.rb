@@ -1,4 +1,4 @@
-class MembershipController < ApplicationController
+class MembershipController < BaseController
 
   before_filter :login_required
   before_filter :require_current_user

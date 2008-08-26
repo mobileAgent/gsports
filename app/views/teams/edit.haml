@@ -1,12 +1,26 @@
-%h1 Editing team
-
-= error_messages_for :team
-
-- form_for(@team) do |f|
-  = render :partial => "form", :locals => { :f => f }
-  %p= f.submit "Update"
- 
+.profileContentArea.listingPage
+  .profilePageHeader
+    %h2.columnDescriptor
+      %span
+        Team Info
+      = @team.name
+  .leftNavCol
+    %h2.yellowHeader
+      My Profile
+    .leftNav
+      =render :partial => "users/profile_nav"
+  .listings
+    .listingItem
     
-= link_to 'Show', team_path(@team) | 
-= link_to 'Back', teams_path
+      %h1 Editing team
+      
+      = error_messages_for :team
+      
+      - form_for(@team) do |f|
+        = render :partial => "form", :locals => { :f => f }
+        %p= f.submit "Update"
+       
+          
+      = link_to 'Show', team_path(@team) | 
+      = link_to 'Back', teams_path
 

@@ -1,11 +1,23 @@
-%h1 Editing league
+.profileContentArea.listingPage
+  .profilePageHeader
+    %h2.columnDescriptor
+      %span
+        League Info
+      = @league.name
+  .leftNavCol
+    %h2.yellowHeader
+      My Profile
+    .leftNav
+      =render :partial => "users/profile_nav"
+  .listings
+    .listingItem
 
-= error_messages_for :league
-
-- form_for(@league) do |f|
-  = render :partial => "form", :locals => { :f => f }
-  %p= f.submit "Update"
-  
-= link_to 'Show', league_path(@league)
-= link_to 'Back', leagues_path
+      = error_messages_for :league
+      
+      - form_for(@league) do |f|
+        = render :partial => "form", :locals => { :f => f }
+        %p= f.submit "Update"
+        
+      = link_to 'Show', league_path(@league)
+      = link_to 'Back', leagues_path
 

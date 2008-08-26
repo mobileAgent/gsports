@@ -8,8 +8,13 @@ class TeamsController < BaseController
   # GET /team
   # GET /team.xml
   def index
-    @teams = Team.find(:all)
-
+    if params[:league_id]
+      @league = League.find(params[:league_id])
+      @teams = @league.teams
+    else
+      @teams = Team.find(:all)
+    end
+    
     respond_to do |format|
       format.html # index.haml
       format.xml  { render :xml => @teams }
@@ -40,7 +45,9 @@ class TeamsController < BaseController
   # GET /team/new.xml
   def new
     @team = Team.new
-
+    if params[:league_id]
+      @team.league= League.find(params[:league_id])
+    end
     respond_to do |format|
       format.html # new.haml
       format.xml  { render :xml => @team }
@@ -60,7 +67,7 @@ class TeamsController < BaseController
     respond_to do |format|
       if @team.save
         flash[:notice] = 'Team was successfully created.'
-        format.html { redirect_to(team_path(@team)) }
+        format.html { redirect_to(current_user.admin? ? teams_url : team_path(@team)) }
         format.xml  { render :xml => @team, :status => :created, :location => @team }
       else
         format.html { render :action => "new" }
@@ -77,7 +84,7 @@ class TeamsController < BaseController
     respond_to do |format|
       if @team.update_attributes(params[:team])
         flash[:notice] = 'Team was successfully updated.'
-        format.html { redirect_to(team_path(@team)) }
+        format.html { redirect_to(current_user.admin? ? teams_url : team_path(@team)) }
         format.xml  { head :ok }
       else
         format.html { render :action => "edit" }

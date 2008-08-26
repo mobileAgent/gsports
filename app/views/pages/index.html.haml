@@ -1,0 +1,33 @@
+.profileContentArea.listingPage
+  .profilePageHeader
+    %h2.columnDescriptor
+      %span
+        Pages Registry
+  .leftNavCol
+    %h2.yellowHeader
+      My Profile
+    .leftNav
+      =render :partial => "users/profile_nav"
+  .listings
+    .listingItem
+    
+      %table{:class=>"unstyled"}
+        %thead
+          %tr
+            %th
+              Name
+            %th
+              Permalink
+            %th
+              Html Content
+            %th{:colspan=>2}
+        %tbody
+          - for page in @pages
+            %tr
+              %td=link_to page.name, edit_page_path(page), {:title => "edit"}
+              %td=h page.permalink
+              %td= truncate_words(page.html_content, 10)
+              %td= link_to "Preview", "/info/#{page.permalink}", {:target => "_new", :title => "opens in a new window"}
+              %td= link_to "Delete", page, :confirm => 'Are you sure?', :method => :delete
+      
+      %p= link_to "New Page", new_page_path

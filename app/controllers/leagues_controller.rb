@@ -50,7 +50,7 @@ class LeaguesController < BaseController
     respond_to do |format|
       if @league.save
         flash[:notice] = 'League was successfully created.'
-        format.html { redirect_to(league_path(@league)) }
+        format.html { redirect_to(current_user.admin? ? leagues_url : league_path(@league)) }
         format.xml  { render :xml => @league, :status => :created, :location => @league }
       else
         format.html { render :action => "new" }
@@ -67,7 +67,7 @@ class LeaguesController < BaseController
     respond_to do |format|
       if @league.update_attributes(params[:league])
         flash[:notice] = 'League was successfully updated.'
-        format.html { redirect_to(league_path(@league)) }
+        format.html { redirect_to(current_user.admin? ? leagues_url : league_path(@league)) }
         format.xml  { head :ok }
       else
         format.html { render :action => "edit" }

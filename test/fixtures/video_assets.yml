@@ -10,6 +10,7 @@ one:
   view_count: 0
   game_date:  <%= 1.year.ago.to_s :db %>
   uploaded_file_path: the/path/to/happiness.flv
+  user: kyle
 
 two:
   dockey: 93FEA12F7867104750022222
@@ -21,4 +22,5 @@ two:
   view_count: 10
   game_date:  <%= 2.years.ago.to_s :db %>
   uploaded_file_path: the/path/to/recoding.mov
+  user: kyle
 

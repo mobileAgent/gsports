@@ -1,24 +1,38 @@
-%h1 Listing Leagues
+.profileContentArea.listingPage
+  .profilePageHeader
+    %h2.columnDescriptor
+      %span
+        League Registry
+  .leftNavCol
+    %h2.yellowHeader
+      My Profile
+    .leftNav
+      =render :partial => "users/profile_nav"
+  .listings
+    .listingItem
 
-%table.unstyled
-  %thead
-    %tr
-      %th Name
-      %th City
-      %th State
-      %th Description
-      %th Teams
-      %th/
-
-  - for league in @leagues
-    %tbody
-      %tr
-        %td= link_to league.name, edit_league_path(league)
-        %td=h league.city
-        %td=h(league.state_id? ? league.state.name : '')
-        %td=truncate(h(league.description),45)
-        %td.numeric= league.teams.count
-  
-        %td= link_to 'Destroy', league_path(league), :confirm => 'Are you sure?', :method => :delete
-   
-= link_to 'New league', new_league_path 
+      %table.unstyled
+        %thead
+          %tr
+            %th Name
+            %th City
+            %th State
+            %th Description
+            %th Teams
+            %th/
+      
+        - for league in @leagues
+          %tbody
+            %tr
+              %td= link_to league.name, edit_league_path(league),{:title => "edit"}
+              %td=h league.city
+              %td=h(league.state_id? ? league.state.name : '')
+              %td=truncate(h(league.description),45)
+              - if league.teams.count > 0
+                %td.numeric= link_to(league.teams.count,url_for({:controller=>'teams',:action=>'index',:league_id=>league.id}),{:title=>'show associated teams'})
+              - else
+                %td.numeric= league.teams.count
+        
+              %td= link_to 'Delete', league_path(league), :confirm => 'Are you sure?', :method => :delete
+         
+      = link_to 'New league', new_league_path 

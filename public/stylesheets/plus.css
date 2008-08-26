@@ -385,6 +385,20 @@ div.thumbFIT {
 	background-color: white;
 }
 
+.searchResultsContent h2.columnDescriptor a {
+  color: #111528;
+  text-decoration: none;
+  padding-left: 10px;
+}
+
+.searchResultsContent h2.columnDescriptor a:visited {
+  color: #111528;
+}
+
+.searchResultsContent h2.columnDescriptor a:hover {
+  color: red;
+}
+  
 
 
 

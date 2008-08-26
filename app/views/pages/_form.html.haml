@@ -1,0 +1,29 @@
+- form_for @page do |f|
+  %p
+    = f.label :name
+    %br/
+    = f.text_field :name
+  %p
+    = f.label :permalink
+    %br/
+    = f.text_field :permalink
+  %p
+    = f.label :content 
+    %br/
+    = f.text_area :content, :rows => 30, :cols => 95, :style=>"padding: 5px;"
+    %br/
+    %ul{:style=>"margin-left: 25px;"}
+      %li
+        %i
+          %a{:href=>'http://hobix.com/textile/', :target=>'_new'}
+            Help with textile markup
+      %li
+        To break out into raw html wrap with
+        %b
+          notextile.. &lt;div&gt;
+        and
+        %b
+          &lt;/div&gt;
+        and indent
+    %br/    
+  %p= f.submit "Submit"
