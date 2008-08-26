@@ -201,7 +201,7 @@ class Vidavee < ActiveRecord::Base
       if admin
         v.user_id = admin.id
       end
-      existing = VideoAsset.find_by_dockey(v.dockey)
+      existing = VideoAsset.find_by_dockey(v.dockey) || DeletedVideo.find_by_dockey(v.dockey)
       if existing
         puts "Video asset for dockey already exists #{v.dockey}"
       else
@@ -230,7 +230,7 @@ class Vidavee < ActiveRecord::Base
       next if playlist_dockey.nil?
       playlist_dockey=playlist_dockey.text
       found_count+=1
-      next if VideoReel.find_by_dockey(playlist_dockey)
+      next if(VideoReel.find_by_dockey(playlist_dockey)  || DeletedVideo.find_by_dockey(playlist_dockey))
       v = VideoReel.new(reel_details(sessionid,playlist_dockey))
       if v.title.nil? || v.title.size == 0
         v.title = 'no title supplied'
@@ -274,7 +274,7 @@ class Vidavee < ActiveRecord::Base
       vt.description= v.search('//description').text
       vt.video_asset_id = video_asset.id
       vt.user_id = video_asset.user_id
-      existing = VideoClip.find_by_dockey(vt.dockey)
+      existing = VideoClip.find_by_dockey(vt.dockey) || DeletedVideo.find_by_dockey(vt.dockey)
       if existing
         logger.debug "VideoClip #{vt.dockey} already saved"
       else
