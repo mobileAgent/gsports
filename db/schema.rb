@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20080825152104) do
+ActiveRecord::Schema.define(:version => 20080826120920) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id",    :limit => 10
@@ -18,6 +18,9 @@ ActiveRecord::Schema.define(:version => 20080825152104) do
     t.string   "item_type"
     t.datetime "created_at"
   end
+
+  add_index "activities", ["created_at"], :name => "index_activities_on_created_at"
+  add_index "activities", ["user_id"], :name => "index_activities_on_user_id"
 
   create_table "addresses", :force => true do |t|
     t.string   "firstname"
@@ -110,6 +113,7 @@ ActiveRecord::Schema.define(:version => 20080825152104) do
   add_index "comments", ["created_at"], :name => "index_comments_on_created_at"
   add_index "comments", ["commentable_type"], :name => "index_comments_on_commentable_type"
   add_index "comments", ["commentable_id"], :name => "index_comments_on_commentable_id"
+  add_index "comments", ["commentable_id", "commentable_type"], :name => "index_comments_on_commentable_id_and_commentable_type"
 
   create_table "contests", :force => true do |t|
     t.string   "title"
@@ -339,12 +343,14 @@ ActiveRecord::Schema.define(:version => 20080825152104) do
     t.integer  "favorited_count", :limit => 11, :default => 0
     t.string   "published_as",    :limit => 16, :default => "draft"
     t.datetime "published_at"
+    t.boolean  "delta",                         :default => false
     t.integer  "team_id",         :limit => 11
     t.integer  "league_id",       :limit => 11
-    t.boolean  "delta",                         :default => false
   end
 
   add_index "posts", ["category_id"], :name => "index_posts_on_category_id"
+  add_index "posts", ["published_at"], :name => "index_posts_on_published_at"
+  add_index "posts", ["published_as"], :name => "index_posts_on_published_as"
 
   create_table "roles", :force => true do |t|
     t.string  "name"

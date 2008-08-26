@@ -14,7 +14,9 @@ class Post < ActiveRecord::Base
     indexes tags.name, :as => :tags_content
     indexes category.name, :as => :category_name
     indexes published_as # can't be used as an attr
-    indexes comments.comment, :as => :comment_comments
+    # This causes sphinx indexing to crawl. Need to figure out why
+    # before enabling it
+    #indexes comments.comment, :as => :comment_comments
     set_property :delta => true
    end
 
