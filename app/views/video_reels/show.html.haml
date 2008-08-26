@@ -1,28 +1,32 @@
-.flashArea#flashArea
+.profileContentArea
+  .profilePageHeader
+    %h2.columnDescriptor
+      %span
+        Video Reel Player
+  .playerContentArea
+    .leftNavColPlayer
+      .leftNavPlayer
+        %a.genericButton{ :href => new_message_path(:to => @video_reel.user.id, :title => "Your clip '#{@video_reel.title}'") }
+          Send Message
+        = render :partial => 'shared/favorite_item', :locals => { :item => @video_reel }
 
-= render(:partial => 'shared/video_player', :locals => { :fvars => { :dockeys => "#{@video_reel.dockey}"}, :target => 'flashArea', :player_name => '/players/reelmaker.swf', :height => 550, :width => 945})
--#= render(:partial => 'shared/video_player', :locals => { :player_name => '/players/reel.swf', :dockey => @video_reel.dockey, :target => 'flashArea', :fvars => {:dockeys => @video_reel.dockey } })
-%br
-
-=h @video_reel.title
-%br/
-=h @video_reel.description
-%br/
-= "Owner #{h @video_reel.user.full_name}"
-%br/
-
-%p= @video_reel.tags.collect{|t| link_to( h(t.name), tag_url(t.name), :class => 'tag') }.join(" ")
-%br/
-
-= render :partial => 'shared/favorite_item', :locals => { :item => @video_reel }
-= "|"
-= render :partial => 'shared/favorite_count', :locals => { :item => @video_reel }
-= "|"
-= render :partial => 'shared/view_count', :locals => { :item => @video_reel }
-= "|"
-= render :partial => 'shared/inappropriate_item', :locals => { :item => @video_reel }
-- if current_user && current_user.can_edit?(@video_asset)
-  = "|"
-  =link_to 'Edit', edit_video_reel_path(@video_reel)
-  = "|"
-  =link_to 'Destroy', @video_reel, :confirm => 'Are you sure?', :method => :delete
+        - if current_user && current_user.can_edit?(@video_reel)
+          %a.genericButton{ :href => edit_video_reel_path(@video_reel) }
+            Edit
+          = link_to_remote 'Destroy', {:url => url_for(@video_reel), :confirm => 'Are you sure?', :method => :delete},  :class=>'genericButton'
+        - else
+          = render :partial => 'shared/inappropriate_item', :locals => { :item => @video_reel }
+      
+    .flashArea#flashArea
+    - if @vidavee && session[:vidavee] && @video_reel.dockey
+      = render(:partial => 'shared/video_player', :locals => { :fvars => {:dockey => @video_reel.dockey}, :target => 'flashArea', :height => 550, :width => 750 })
+      
+    .clearDiv
+  .clearDiv
+  
+  .commentArea
+    .commentForm
+      =render :partial => 'comments/comment_form', :locals => { :commentable => @video_reel }
+    .comments#comments
+      #newest_comment
+      =render :partial => 'comments/comment', :collection => @video_reel.comments
