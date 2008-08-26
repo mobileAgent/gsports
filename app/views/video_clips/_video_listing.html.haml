@@ -20,7 +20,7 @@
           %span
             Full Game
       %li
-        %a.genericButton{ :href => new_message_path(:to => video_listing.user.id) }
+        %a.genericButton{ :href => new_message_path(:to => video_listing.user.id, :title => "Your clip '#{video_listing.title}'") }
           %span
             Send Message
     %li
