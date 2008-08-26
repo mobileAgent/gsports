@@ -15,10 +15,11 @@
         %a.genericButton{ :href => user_path( video_listing.user.id )  }
           %span
             View Profile
-      %li
-        %a.genericButton{ :href => video_asset_path( video_listing.video_asset_id )  }
-          %span
-            Full Game
+      - if video_listing.video_asset_id
+        %li
+          %a.genericButton{ :href => video_asset_path( video_listing.video_asset_id )  }
+            %span
+              Full Game
       %li
         %a.genericButton{ :href => new_message_path(:to => video_listing.user.id, :title => "Your clip '#{video_listing.title}'") }
           %span

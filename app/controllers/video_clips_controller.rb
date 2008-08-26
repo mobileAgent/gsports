@@ -76,7 +76,9 @@ class VideoClipsController < BaseController
       @video_clip = VideoClip.new
       @video_clip.user = current_user
       @video_clip.title = params[:title]
+      @video_clip.video_length = params[:video_length]
       @video_clip.description = params[:description]
+      @video_clip.public_video = params[:public_video] || true
       @video_clip.dockey = params[:dockey]
       @video_clip.video_asset_id = params[:video_asset_id]
       @video_clip.public_video = params[:public_video]

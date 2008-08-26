@@ -1,113 +1,42 @@
 /* CSS file */
 
-.viewportScrollRightBtn
+
+.videoCtrlPnlStopBtn
 {
-    overSkin:Embed(source='../images/scrollPaneR.png');
-    upSkin:Embed(source='../images/scrollPaneR.png');
-    selectedUpSkin:Embed(source='../images/scrollPaneR.png');
-    selected-over-skin:Embed(source='../images/scrollPaneR.png');
-}
-.viewportScrollLeftBtn
-{
-    overSkin:Embed(source='../images/scrollPaneL.png');
-    upSkin:Embed(source='../images/scrollPaneL.png');
-    selectedUpSkin:Embed(source='../images/scrollPaneL.png');
-    selected-over-skin:Embed(source='../images/scrollPaneL.png');
+    overSkin:Embed(source='images/stop.png');
+    upSkin:Embed(source='images/stop.png');
+    selectedUpSkin:Embed(source='images/stop.png');
+    selected-over-skin:Embed(source='images/stop.png');
 }
 
-.playerAssyPoiBtn
+.videoCtrlPnlPlayBtn
 {
-    upSkin:Embed(source='../images/poiMkr.png');
+    overSkin:Embed(source='images/play.png');
+    upSkin:Embed(source='images/play.png');
+    selectedUpSkin:Embed(source='images/play.png');
+    selected-over-skin:Embed(source='images/play.png');
 }
 
-.mkrPanelSliderThumb
+.videoCtrlPnlPauseBtn
 {
-    thumbSkin:Embed(source='../images/mrkSliderThumb.gif');
+    overSkin:Embed(source='images/pause.png');
+    upSkin:Embed(source='images/pause.png');
+    selectedUpSkin:Embed(source='images/pause.png');
+    selected-over-skin:Embed(source='images/pause.png');
 }
 
-.mrkrPnlAddStartMrkBtn
+.videoCtrlPnlMuteBtn
 {
-    overSkin:Embed(source='../images/mkrGrnBtn.gif');
-    upSkin:Embed(source='../images/mkrGrnBtn.gif');
-    selectedUpSkin:Embed(source='../images/mkrGrnBtn.gif');
-    selected-over-skin:Embed(source='../images/mkrRedBtn.gif');
+    overSkin:Embed(source='images/mute.png');
+    upSkin:Embed(source='images/mute.png');
+    selectedUpSkin:Embed(source='images/mute.png');
+    selected-over-skin:Embed(source='images/mute.png');
 }
 
-.mrkrPnlAddEndMrkBtn
+.videoCtrlPnlUnMuteBtn
 {
-    overSkin:Embed(source='../images/mkrRedBtn.gif');
-    upSkin:Embed(source='../images/mkrRedBtn.gif');
-    selectedUpSkin:Embed(source='../images/mkrRedBtn.gif');
-    selected-over-skin:Embed(source='../images/mkrRedBtn.gif');
-}
-
-.ctrlPnlPlayBtn
-{
-    overSkin:Embed(source='../images/play.png');
-    upSkin:Embed(source='../images/play.png');
-    selectedUpSkin:Embed(source='../images/play.png');
-    selected-over-skin:Embed(source='../images/play.png');
-}
-.ctrlPnlPauseBtn
-{
-    overSkin:Embed(source='../images/pause.png');
-    upSkin:Embed(source='../images/pause.png');
-    selectedUpSkin:Embed(source='../images/pause.png');
-    selected-over-skin:Embed(source='../images/pause.png');
-}
-
-.addNewMrkBtn
-{
-    overSkin:Embed(source='../images/mkrGrnBtn.gif');
-    upSkin:Embed(source='../images/mkrGrnBtn.gif');
-    selectedUpSkin:Embed(source='../images/mkrGrnBtn.gif');
-    selected-over-skin:Embed(source='../images/mkrRedBtn.gif');
-}
-
-.ctrlPnlMarkerBtn
-{
-    overSkin:Embed(source='../images/mkrGrnBtn.gif');
-    upSkin:Embed(source='../images/mkrGrnBtn.gif');
-    selectedUpSkin:Embed(source='../images/mkrGrnBtn.gif');
-    selected-over-skin:Embed(source='../images/mkrRedBtn.gif');
-}
-
-.ctrlPnlThumbsBtn
-{
-    overSkin:Embed(source='../images/thumbBtn.png');
-    upSkin:Embed(source='../images/thumbBtn.png');
-    selectedUpSkin:Embed(source='../images/thumbBtn.png');
-    selected-over-skin:Embed(source='../images/mkrRedBtn.gif');
-}
-
-.ctrlPnlStopBtn
-{
-    overSkin:Embed(source='../images/stop.png');
-    upSkin:Embed(source='../images/stop.png');
-    selectedUpSkin:Embed(source='../images/stop.png');
-    selected-over-skin:Embed(source='../images/stop.png');
-}
-
-.ctrlPnlBackBtn
-{
-    overSkin:Embed(source='../images/back.png');
-    upSkin:Embed(source='../images/back.png');
-    selectedUpSkin:Embed(source='../images/back.png');
-    selected-over-skin:Embed(source='../images/back.png');
-}
-
-.ctrlPnlMuteBtn
-{
-    overSkin:Embed(source='../images/mute.png');
-    upSkin:Embed(source='../images/mute.png');
-    selectedUpSkin:Embed(source='../images/mute.png');
-    selected-over-skin:Embed(source='../images/mute.png');
-}
-
-.ctrlPnlUnMuteBtn
-{
-    overSkin:Embed(source='../images/unmute.png');
-    upSkin:Embed(source='../images/unmute.png');
-    selectedUpSkin:Embed(source='../images/unmute.png');
-    selected-over-skin:Embed(source='../images/unmute.png');
+    overSkin:Embed(source='images/unmute.png');
+    upSkin:Embed(source='images/unmute.png');
+    selectedUpSkin:Embed(source='images/unmute.png');
+    selected-over-skin:Embed(source='images/unmute.png');
 }
