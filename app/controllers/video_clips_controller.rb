@@ -80,9 +80,13 @@ class VideoClipsController < BaseController
       @video_clip.description = params[:description]
       @video_clip.public_video = params[:public_video] || true
       @video_clip.dockey = params[:dockey]
-      @video_clip.video_asset_id = params[:video_asset_id]
+      if(params[:video_asset_id] && params[:video_asset_id].length > 10)
+        @video_clip.video_asset_id = VideoAsset.find_by_dockey(params[:video_asset_id]).id
+      elsif params[:video_asset_id]
+        @video_clip.video_asset_id = params[:video_asset_id]
+      end
       @video_clip.public_video = params[:public_video]
-      @video_clip.tag_with(params[:tag_list]) if (params[:tag_list])
+      @video_clip.tag_with(params[:tags]) if (params[:tags])
     else
       @video_clip = VideoClip.new(params[:video_clip])
       @video_clip.tag_with(params[:tag_list] || '') 
