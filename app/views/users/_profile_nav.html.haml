@@ -16,12 +16,14 @@
 
 
 
-- if current_user && current_user.admin? && @user && @user.id != current_user.id
+- if current_user && current_user.admin?
   %br
   %ul
-    %li= link_to( "Assume ID", assume_user_path(@user) )
-    %li= link_to( "Disable user", url_for({:controller => 'users', :action => 'disable', :id => @user}), {:method => :delete, :confirm => 'Are you sure you want to disable this user account?'} )
-    
+    -if @user && @user.id != current_user.id
+      %li= link_to( "Assume ID", assume_user_path(@user) )
+      %li= link_to( "Disable user", url_for({:controller => 'users', :action => 'disable', :id => @user}), {:method => :delete, :confirm => 'Are you sure you want to disable this user account?'} )
+    %li= link_to('Admin Panel', url_for({:controller => 'admin', :action => 'dashboard'}))
+
 - if current_user && current_user.can_upload?
   %br
   %ul
