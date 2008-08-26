@@ -84,9 +84,8 @@
           = text_field :user, :phone
             
         
-          %h3 E-mail Notification
-        
           %fieldset
+            %legend E-mail Notification
             %label 
               = check_box :user, :notify_friend_requests        
               Notify me when
@@ -106,9 +105,9 @@
               = AppConfig.community_name
               Team.
         
-          %h3 Profile Privacy
         
           %fieldset
+            %legend Profile Privacy
             %label
               = check_box :user, :profile_public
               Make my profile public

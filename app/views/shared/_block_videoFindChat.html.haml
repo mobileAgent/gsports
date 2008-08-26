@@ -45,7 +45,7 @@
       =link_to "mailbox #{mcount}", messages_path()
 
 
-#user-menu-tip
+-# #user-menu-tip
   -if current_user.admin?
     %ul
       %li=link_to 'Admin', admin_dashboard_path               
@@ -60,7 +60,7 @@
       %nobr
         = link_to 'Profile', user_path(current_user)
         = link_to '(edit)', edit_user_path(current_user)
-
+  
     %li= link_to 'Account', edit_account_user_path(current_user)    
   %hr
   %ul
@@ -76,16 +76,16 @@
   %ul
     =link_to 'Logout', logout_path
 
-
-%script{:type => "text/javascript"}
-  :plain
-    new Tip('user-menu', $('user-menu-tip'), {
-      hook:{target: 'bottomRight', tip: 'topRight'},
-      hideOn: false, 
-      hideAfter: 0.4,  
-      className: 'gs',
-      offset: {y:2, x:12}
-      });
+-#%script{:type => "text/javascript"}
+  new Tip($('user-menu-tip'),
+  = "'#{user_menu_content}'"
+  {
+  hook:{target: 'bottomRight', tip: 'topRight'},
+  hideOn: false, 
+  hideAfter: 0.4,  
+  style: 'default',
+  offset: {y:2, x:12}
+  });
 
 
 

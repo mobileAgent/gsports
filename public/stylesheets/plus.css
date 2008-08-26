@@ -5,6 +5,12 @@
   border: 0px;
 }
 
+#flash_error {
+   color: red;
+   font-size: 125%;
+   border: 1px solid red;
+}
+
 /* forms */
 
 .mainContentArea{
@@ -266,6 +272,28 @@ div.thumbFIT {
   width: 92px;
   overflow: hidden;
 }
+
+.mainContentArea h3, .featureText .featureTitle {
+   font-size: 1.1em;
+   font-weight: bold;
+   color: #536338;
+}
+
+.mainContentArea h4 {
+   font-size: 1.0em;
+   font-weight: bold;
+}
+
+.mainContentArea h5 {
+  font-size: 0.9em;
+  font-weight: bold;
+}
+
+.contentBoxContent form {
+  padding-left: 10px;
+  padding-top: 10px;
+}
+
 
 .profileFeature a.genericButton:visited, .profileFeature a.genericButton {
    color: #FFEF0A;

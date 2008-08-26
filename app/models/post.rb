@@ -35,6 +35,7 @@ class Post < ActiveRecord::Base
     if img
       # chaange the size fromw whatever it was to :feature size
       img.gsub!(/_[a-z]+\.jpg/,'_feature.jpg')
+      img.gsub!(/^http:\/\/[^\/]+/,'') # make relative
     else
       img = logo_thumbnail_for_post
     end
