@@ -31,9 +31,6 @@
             Edit
       %li
         = link_to_remote 'Destroy', {:url => url_for(video_listing), :confirm => 'Are you sure?', :method => :delete},  :class=>'genericButton'
-    - else
-      %li
-        = render :partial => 'shared/inappropriate_item', :locals => { :item => video_listing }
       
   .clearDiv
 .clearDiv

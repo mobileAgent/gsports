@@ -14,8 +14,6 @@
           %a.genericButton{ :href => edit_video_asset_path(@video_asset) }
             Edit
           = link_to 'Destroy', video_asset_path(@video_asset), :confirm => 'Are you sure?', :method => :delete,  :class=>'genericButton'
-        - else
-          = render :partial => 'shared/inappropriate_item', :locals => { :item => @video_asset }
       
     .flashArea#flashArea
     - if @vidavee && session[:vidavee] && @video_asset.dockey
