@@ -1,2 +1,15 @@
-.profileContentArea
-  =render :partial => 'shared/admin_nav'
+.profileContentArea.listingPage
+  .profilePageHeader
+    %h2.columnDescriptor
+      %span
+        Admin Dashboard
+      - if @league
+        = " for #{@league.name}"
+  .leftNavCol
+    %h2.yellowHeader
+      My Profile
+    .leftNav
+      =render :partial => "users/profile_nav"
+  .listings
+    .listingItem
+      =render :partial => 'shared/admin_nav'
