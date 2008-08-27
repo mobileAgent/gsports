@@ -16,6 +16,7 @@ class RecurringBilling
     members_due = find_memberships_to_bill
     @billing_logger.info "Found #{members_due.length} Memberships to bill"
 
+    billing_message = []
     billed_success = 0
     billed_error = 0
     members_due.each {|mdue| 
@@ -23,22 +24,20 @@ class RecurringBilling
       # Bill the member 
       billing_result = mdue.bill_recurring
 
-      if !billing_result.nil? && billing_result.success?
+      if billing_result.success?
         billed_success += 1
+        billing_message << "Successfully billed #{mdue.name}"
         @billing_logger.info "Successfully billed #{mdue.name}"
         MembershipNotifier.deliver_billing_success(mdue.address.email,mdue) if !mdue.address.nil?
       else
         billed_error += 1
-        @billing_logger.info "Unable to bill #{mdue.name} response is nil" if billing_result.nil?
-
-        if !billing_result.nil?
-          @billing_logger.info "Unable to bill #{mdue.name} response: #{billing_result.inspect}" 
-          MembershipNotifier.deliver_billing_failure(mdue.address.email,mdue, billing_result.params['message']) if !mdue.address.nil?
-        end
+        billing_message << "Unable to bill #{mdue.name}:#{billing_result.message}."
+        @billing_logger.info "Unable to bill #{mdue.name} reason: #{billing_result.message}" 
+          MembershipNotifier.deliver_billing_failure(mdue.address.email,mdue, billing_result.message) if !mdue.address.nil?
       end
     }
     # Send an email
-    UserNotifier.deliver_generic(ADMIN_EMAIL, "Nightly Billing for #{Time.now}", "Recurring billing completed. #{billed_success} billed successfully, #{billed_error} billing failed") 
+    UserNotifier.deliver_generic(ADMIN_EMAIL, "Nightly Billing for #{Time.now}", "Recurring billing completed.\n #{billed_success} billed successfully,\n #{billed_error} billing failed.\n Details: #{billing_message.join('\n')}") 
   end 
 
   #

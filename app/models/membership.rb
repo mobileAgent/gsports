@@ -73,12 +73,13 @@ class Membership < ActiveRecord::Base
     return nil if membership_billing_histories.empty?
     membership_billing_histories.first.created_at
   end
-#
-# Bill this member
-#
-def bill_recurring
+  #
+  # Bill this member
+  #
+  def bill_recurring
 
-    return nil if credit_card.nil? # No credit card no billing (for now)
+return ActiveMerchant::Billing::PayflowResponse.new(false,"Missing credit card information") if credit_card.nil? 
+
     credit_card = ActiveMerchant::Billing::CreditCard.new(
       :first_name => self.credit_card.first_name,
       :last_name => self.credit_card.last_name,
@@ -87,7 +88,7 @@ def bill_recurring
       :year => self.credit_card.year,
       :verification_value => self.credit_card.verification_value)
 
-    return nil if !credit_card.valid?
+    return ActiveMerchant::Billing::PayflowResponse.new(false,creditcard.validate.to_s) if !credit_card.valid?
 
     gateway = ActiveMerchant::Billing::PayflowGateway.new({
       :login => Active_Merchant_payflow_gateway_username,
@@ -107,5 +108,5 @@ def bill_recurring
       save
     end
     response # Let the caller get response 
-end
+  end
 end
