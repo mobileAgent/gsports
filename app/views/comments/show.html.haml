@@ -1,0 +1,34 @@
+.profileContentArea.listingPage
+  .profilePageHeader
+    %h2.columnDescriptor
+      %span
+        Comment by 
+      = @user.full_name
+      of
+      = @user.team.name
+
+  .mailContainer
+    %br
+    
+    .forumContentBox
+      .forumBoxHeader
+        .mailItem
+          .mailPoster
+            = render :partial => 'posts/author_profile', :locals => {:user => @user}
+          .mailPostSummary
+            %h3
+              Comments for
+              = Inflector.underscore(@comment.commentable_type).humanize
+              = link_to(" context " + @comment.title, @comment.generate_commentable_url(true))
+            .mailPostSummaryDate
+              = @comment.created_at.strftime("%B %d, %Y")
+            .mailPostSummaryBody
+              =h @comment.comment
+          - if @comment.user_id == current_user.id || current_user.admin?
+            .forumActions
+              =link_to("Delete", comment_path(@comment.commentable_type, @comment.commentable_id, @comment), :method => :delete, :confirm => "Are you sure you want to permanently delete this comment", :class => 'genericButton')
+            .clearDiv
+        .clearDiv
+      %div
+        \&nbsp;
+        %br/
