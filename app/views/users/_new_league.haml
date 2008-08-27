@@ -1,0 +1,21 @@
+%hr
+.section-head League Info
+%br  
+  
+.field-block
+  %label.required
+    League Name
+  = text_field :league, :name 
+.field-block
+  %label
+    City
+  = text_field :league, :city, :size => 16
+.field-block
+  %label
+    State
+  =collection_select("league","state_id",State.all,"id","name",{ :selected => @league.state_name })
+.field-block
+  %label
+    Description
+  = text_field :league, :description, :size => 35
+

@@ -31,18 +31,33 @@
   text-align: left;
 }
 
+.fieldWithErrors input[type='text'] {
+	border: 1px solid red;
+}
+
 
 .RegistrationContent .mainCol1 .contentBox, .profileContentArea .mainCol2 .contentBox{
 	width: 315px;
 	height: auto;
 }
 .RegistrationContent .contentBox{
-	margin-left: 10px;	
+	margin-left: 0px;	
 	height: auto;
 	background-color: white;
 }
 .RegistrationContent .contentBoxContent{
 	height: auto;
+}
+
+.RegistrationContent hr {
+	border: 1px solid black;
+	width: 90%;
+	margin-bottom: 15px;
+}
+
+.RegistrationContent .section-head {
+	font-weight: bold;
+	font-size: 150%;
 }
 
 label.required:before{
@@ -116,7 +131,7 @@ input[type='submit'] {
 
 input[type='submit']:hover {
    background-color: #363636;
-   color: red;
+   color: #c7c7c7;
 }
 
 
@@ -322,15 +337,14 @@ div.thumbFIT {
 
 
 .accountContinue2 {
-	text-align: left;
+	text-align: right;
 	margin-top: 20px;
 	margin-bottom: 35px;
 }
 
 .accountContinue2 input {
-	border: 0px;
-	background-color: white;
 }
+
 
 
 

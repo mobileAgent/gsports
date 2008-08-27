@@ -1,0 +1,38 @@
+%hr
+.section-head Team Info
+%br
+
+.field-block
+  %label.required{:for=>'team_name'}
+    Team Name
+  = text_field :team, :name
+  
+.field-block
+  %label
+    City
+  = text_field :team, :city, :size => 16
+    
+.field-block
+  %label
+    County
+  = text_field :team, :county_name, :size => 16
+    
+.field-block
+  %label
+    State
+  =collection_select("team","state_id",State.all,"id","name",{ :prompt => 'Choose State' })
+    
+.field-block
+  %label
+    Description
+  = text_field :team, :description , :size => 35
+
+.field-block
+  %label.required{"for" => "team_league_name"}
+    League
+  = text_field_with_auto_complete :team, :league_name, :autocomplete => "off"
+    
+.field-block
+  %label{"for"=>"team_adzone"}
+    Ad Zone (Be sure to coordinate with ad server zones)
+  = text_field :team, :ad_zone, :size => 8

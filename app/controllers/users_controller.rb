@@ -57,7 +57,8 @@ class UsersController < BaseController
 
   # registration step 2
   def new
-    @requested_role = params[:role].to_i
+    @requested_role = (params[:role] || Role[:member].id).to_i
+    
     case @requested_role
     when Role[:team].id
       @team = Team.new
@@ -79,15 +80,6 @@ class UsersController < BaseController
       return if (Role[:admin].id  == @requested_role or Role[:moderator].id == @requested_role)
       @role = Role[@requested_role]
       
-      #TODO, step down role for team/league if exists
-      
-      case @role
-      when Role[:team].id
-        @team = Team.new(params[:user])
-      when Role[:league].id
-        @league = League.new(params[:user])
-      end
-      
     rescue
       logger.debug "Could not set role from #{params[:role]}"
       @role = Role[:member]
@@ -97,21 +89,34 @@ class UsersController < BaseController
     @user.role_id = @role.id
     logger.debug "Setting role for #{@user.email} to #{@user.role_id}"
 
-    if @user.role_id == Role[:league].id
+    case @role.id
+    when Role[:team].id
+      @team = Team.new(params[:team])
+      @team.save! 
+      @user.team = @team
+      
+    when Role[:league].id
+      @league = League.new(params[:league])
+      
       # Special handling for league role coming in
-      @league = League.find_or_create_by_name(params[:user][:league_name])
+      #@league = League.find_or_create_by_name(params[:user][:league_name])
+      
       @league.save! if @league.new_record?
       @user.league_id = @league.id
       @user.team_id = User.admin.first.team_id
+      
+    when Role[:scout].id
+      #TODO
+      
     else
-      # Handling for Team and member roles coming in
-      @team = Team.find_or_create_by_name(params[:user][:team_name])
-      if (@team.new_record?)
-        @team.league_id = User.admin.first.league_id
-        @team.save! 
-      end
-      @user.team_id = @team.id
-      @user.league_id = @team.league_id
+        # Handling for member roles coming in
+        @team = Team.find_or_create_by_name(params[:user][:team_name])
+        if (@team.new_record?)
+          @team.league_id = User.admin.first.league_id
+          @team.save! 
+        end
+        @user.team_id = @team.id
+        @user.league_id = @team.league_id
     end
     
     @user.login= "gs#{Time.now.to_i}#{rand(1000)}" # We never use this
@@ -119,7 +124,7 @@ class UsersController < BaseController
     create_friendship_with_inviter(@user, params)
     redirect_to :action => 'billing', :userid => @user.id
 
-  rescue ActiveRecord::RecordInvalid
+  rescue ActiveRecord::RecordInvalid => e
     render :action => 'new'
   end
 
@@ -374,5 +379,13 @@ class UsersController < BaseController
       end
     end
   end
+
+  
+  def auto_complete_for_team_league_name
+    @leagues = League.find(:all, :conditions => ["LOWER(name) like ?", params[:team][:league_name].downcase + '%' ], :order => "name ASC", :limit => 10 )
+    choices = "<%= content_tag(:ul, @leagues.map { |l| content_tag(:li, h(l.name)) }) %>"    
+    render :inline => choices
+  end
+
 
 end

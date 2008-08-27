@@ -11,141 +11,155 @@
         PART 2: USER INFORMATION &raquo;
       PART 3: BILLING INFORMATION
   
-    = error_messages_for :user
-  
+    = error_messages_for :user, :team, :league
+    
     %p
       %br
       %h1 Part 2: User Information
     
-    - form_for :user, :url => users_path, :html => {:class => 'userForm'} do |f|
+    -# form_for :user, :url => users_path, :html => {:class => 'userForm'} do |f|
+    - form_tag 'create' do |f|
     
       .mainCol1
         .contentBox
-          .contentBoxContent
-  
-            .field-block
-              %label.required{"for"=>"firstname"} 
-                First Name
-              = f.text_field :firstname, :size => 12
+          %hr 
+          
+          %nobr
+            %span.section-head Your Information
+            (* = required information)
+          %br
+          %br
 
-            .field-block
-              %label{"for"=>"minitial"} 
-                M.I.
-              = f.text_field :minitial, :size => 1
-  
-            .field-block
-              %label.required{"for"=>"lastname"} 
-                Last Name
-              = f.text_field :lastname, :size => 16
-            
-            %br
-            
-            .field-block            
-              %label.required{"for"=>"address1"} 
-                Address Line One
-              = f.text_field :address1, :size => 16
-            .field-block
-              %label{"for"=>"address2"} 
-                Address Line Two
-              = f.text_field :address2, :size => 16
-              
-            %br
-              
-            .field-block
-              %label.required{"for"=>"city"} 
-                City
-              = f.text_field :city, :size => 16
-              
-            .field-block
-              %label.required{"for"=>"zip"} 
-                Zip/Postal Code
-              = f.text_field :zip, :size => 10
+          .field-block
+            %label.required{"for"=>"firstname"} 
+              First Name
+            = text_field :user, :firstname, :size => 12
 
-            %br
-              
-            .field-block
-              %label.required{"for"=>"state"} 
-                State
-              =collection_select(:user ,:state_id,State.all,"id","name", { :prompt => 'Choose State'})
+          .field-block
+            %label{"for"=>"minitial"} 
+              M.I.
+            = text_field :user, :minitial, :size => 1
 
+          .field-block
+            %label.required{"for"=>"lastname"} 
+              Last Name
+            = text_field :user, :lastname, :size => 16
+        
+          %br
+        
+          .field-block            
+            %label.required{"for"=>"address1"} 
+              Address Line One
+            = text_field :user, :address1, :size => 16
+          .field-block
+            %label{"for"=>"address2"} 
+              Address Line Two
+            = text_field :user, :address2, :size => 16
+          
+          %br
+          
+          .field-block
+            %label.required{"for"=>"city"} 
+              City
+            = text_field :user, :city, :size => 16
+          
+          .field-block
+            %label.required{"for"=>"zip"} 
+              Zip/Postal Code
+            = text_field :user, :zip, :size => 10
 
-            .field-block
-              %label.required{"for"=>"country"} 
-                State
-              =collection_select(:user ,:country,Country.all,"id","name", { :prompt => 'Choose Country'})
-
-
-            %br
+          %br
+          
+          .field-block
+            %label.required{"for"=>"state"} 
+              State
+            =collection_select(:user ,:state_id,State.all,"id","name", { :prompt => 'Choose State'})
 
 
+          .field-block
+            %label.required{"for"=>"country"} 
+              Country
+            =collection_select(:user ,:country_id ,Country.all,"id","name", { :prompt => 'Choose Country'})
 
 
+          %br
 
-            .field-block
-              %label.required{"for"=>"phone"} 
-                Phone
-              = f.text_field :phone
-    
-    
+          .field-block
+            %label.required{"for"=>"phone"} 
+              Phone
+            = text_field :user, :phone, :size => 12
+          
+          %br
+          %br
+          
+          -# Team/League Stuff
+        
+          - case @requested_role
+          - when Role[:team].id
+            =render :partial => 'new_team'
+          - when Role[:league].id
+            = render :partial => "new_league"
+          - when Role[:scout].id
+            = render :partial => "new_scout"
+          - else #when Role[:member].id
+            = render :partial => "new_member"
+
+
       .mainCol2
         .contentBox
-          .contentBoxContent
+      
+          %hr  
+          .section-head Username and Password
+          %br
+            
+          .field-block
+            %label.required{"for"=>"email"}
+              E-mail address
+            = text_field :user, :email, :size => 24
         
-            .field-block
-              %label.required{"for"=>"email"}
-                E-mail address
-              = f.text_field :email
-            
-            %br
-            
-            .field-block
-              %label{"for"=>"password"}
-                Choose a password:
-              = f.password_field :password
-            
-            .field-block
-              %label{"for"=>"password_confirmation"}
-                Re-type your password to confirm:
-              = f.password_field :password_confirmation
+          %br
+        
+          .field-block
+            %label{"for"=>"password"}
+              Choose a password
+            = password_field :user, :password, :size => 18
+        
+          .field-block
+            %label{"for"=>"password_confirmation"}
+              Re-type password
+            = password_field :user, :password_confirmation, :size => 18
+          
+          %br
+          %br
+        
+          Your e-mail address will be your username neque porro 
+          dolorem consecteteur.  Passwords should be 8-10 characters 
+          in length, and lorem ipsum dolor sit amet.
+          
+          %br
+          %br
+          
+          .field-block
+            %label.required{"for"=>"birthdate"}
+              Birthday:
+              %em (you must be at least 13 years old to sign up.)
+            = date_select :user, :birthday, {:start_year => 1926, :end_year => Time.now.year - 13}
+          
+          %br
+          %br
+
+          = hidden_field_tag :inviter_id, params[:inviter_id]
+          = hidden_field_tag :inviter_code, params[:inviter_code]
+          = hidden_field_tag :role, @requested_role
+          -#%p= submit_tag 'Sign up'
+          .accountContinue2
+            %p
+              %input{ :name => "Continue", :type => "submit", :value => "Continue to Billing Information &raquo;"}
+              -#%input{ :name => "Continue", :type => "image", :src => "/gs/images/account_continue_billing.png", :value => "Contine", :alt => "Continue" }
+
 
       %br{ :clear=>:left }
-      %hr
-
-      - if @requested_role.to_i == Role[:league].id
-        %h3 League Association
       
-        %label.required{"for" => "league_name"}
-          League you are representing
-        
-        = text_field_with_auto_complete :user, :league_name, :autocomplete => 'off'
-      
-      - else
-        %h3 Team Association
-      
-        %label.required{"for" => "team_name"}
-          Team you want to associate with
-        
-        = text_field_with_auto_complete :user, :team_name, :autocomplete => 'off'
-      
-
-    
-      %h3 Account Details
-    
-
-
-      %label.required{"for"=>"birthdate"}
-        Birthday:
-        %em (you must be at least 13 years old to sign up.)
-      = date_select :user, :birthday, {:start_year => 1926, :end_year => Time.now.year - 13}
-
-      = hidden_field_tag :inviter_id, params[:inviter_id]
-      = hidden_field_tag :inviter_code, params[:inviter_code]
-      = hidden_field_tag :role, @requested_role
-      -#%p= submit_tag 'Sign up'
-      .accountContinue2
-        %p
-          %input{ :name => "Continue", :type => "image", :src => "/gs/images/account_continue_billing.png", :value => "Contine", :alt => "Continue" }
-        
 
 
   
