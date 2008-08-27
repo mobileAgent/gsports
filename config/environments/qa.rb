@@ -23,7 +23,7 @@ config.action_view.cache_template_loading            = true
 # config.action_mailer.raise_delivery_errors = false
 
 # Configuration for community engine
-APP_URL = "http://gsports.intetragedcc.net"
+APP_URL = "http://gsports.integratedcc.com"
 
 # Caching, memcache on localhost for production
 config.cache_store = :mem_cache_store
