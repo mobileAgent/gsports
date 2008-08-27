@@ -69,7 +69,11 @@ class SearchController < BaseController
        xstr = @video.to_xml(:except => [:uploaded_file_path, :league_id, :team_id, :user_id, :delta, :video_type, :visiting_team_id, :home_team_id], :dasherize => false ) do |xml|
          xml.league_name @video.league_name
          xml.team_name @video.team_name
-         xml.user_name @video.user.full_name if @video.user_id
+         if @video.user_id
+           xml.user_name @video.user.full_name
+         else
+           xml.user_name 'system'
+         end
          xml.visiting_team_name @video.visiting_team.name if @video.visiting_team_id
          xml.home_team_name @video.home_team.name if @video.home_team_id
          xml.tags @video.tags.collect(&:name).join(', ')
@@ -86,10 +90,16 @@ class SearchController < BaseController
          xml.parent_dockey @video.video_asset.dockey
          xml.parent_name @video.video_asset.title
          xml.parent_id @video.video_asset_id
-         xml.user_name @video.user.full_name if @video.user_id
          xml.favorite_count @video.favorites.size
          xml.tags @video.tags.collect(&:name).join(', ')
          xml.thumbnail_url @vidavee.file_thumbnail_medium(@video.dockey)
+         if @video.user_id
+           xml.user_name @video.user.full_name 
+           xml.team_name @video.user.team_name unless @video.user.league_staff?
+           xml.league_name @video.user.league_name if @video.user.league_staff?
+         else
+           xml.user_name 'system'
+         end
        end
        render :xml => xstr and return
      end
@@ -97,7 +107,13 @@ class SearchController < BaseController
      if @video
        xstr = @video.to_xml(:except => [:user_id, :delta], :dasherize => false) do |xml|
          xml.type 'VideoReel'
-         xml.user_name @video.user.full_name if @video.user_id
+         if @video.user_id
+           xml.user_name @video.user.full_name 
+           xml.team_name @video.user.team_name unless @video.user.league_staff?
+           xml.league_name @video.user.league_name if @video.user.league_staff?
+         else
+           xml.user_name 'system'
+         end
          xml.favorite_count @video.favorites.size
          xml.tags @video.tags.collect(&:name).join(', ')
          xml.thumbnail_url @vidavee.file_thumbnail_medium(@video.thumbnail_dockey)
