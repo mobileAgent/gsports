@@ -1,4 +1,6 @@
+# -*- coding: undecided -*-
 require 'yaml'
+require 'rexml-expansion-fix'
 
 # Be sure to restart your server when you modify this file
 

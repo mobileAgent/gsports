@@ -1,4 +1,7 @@
-class MembershipController < ApplicationController
+class MembershipController < BaseController
+
+  before_filter :login_required
+  before_filter :require_current_user
 
   def member_billing_method_info
     @member = Membership.find params[:id]

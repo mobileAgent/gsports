@@ -52,7 +52,7 @@
       /
     .clearDiv
     /
-    .mainCol1
+    .mainCol1{:style=>"width: 265px; float: left"}
       %h2.columnDescriptor
         = link_to 'VIDEOS', url_for({:controller => 'search', :action => 'q', 'search[category]' => 1, 'search[keyword]' => params[:search][:keyword]})
       - for video in @videos
@@ -71,7 +71,7 @@
                 .clearDiv
                 /
               
-    .mainCol2
+    .mainCol2{:style=>"width: 265px"}
       %h2.columnDescriptor
         = link_to 'NETWORK', url_for({:controller => 'search', :action => 'q', 'search[category]' => 2, 'search[keyword]' => params[:search][:keyword]})
       - for user in @users
@@ -90,7 +90,7 @@
                 .clearDiv
                 /
               
-    .mainCol3
+    .mainCol3{:style=>"width: 265px; float: right;"}
       %h2.columnDescriptor
         = link_to 'BLOGS', url_for({:controller => 'search', :action => 'q', 'search[category]' => 3, 'search[keyword]' => params[:search][:keyword]})
       - for post in @posts

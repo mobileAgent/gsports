@@ -1,0 +1,13 @@
+#!/bin/bash
+#
+# To run the nightly billing from cron
+# Make sure enough environment is set for
+# running the task. Nominally run once per day.
+# 
+RAILS_ROOT=${RAILS_ROOT:-`dirname $0`/..}
+RAILS_ENV=${RAILS_ENV:-"production"}
+PATH=/usr/local/bin:/bin:/usr/bin:${PATH}
+LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH}
+
+cd ${RAILS_ROOT}
+script/runner RecurringBilling.bill_memberships

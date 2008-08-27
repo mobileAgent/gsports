@@ -20,7 +20,7 @@
     .rightTopNav
       %h2
         Search Site
-      %label.verbalSemantic{ :for => "search[category]" }
+      -#%label.verbalSemantic{ :for => "search[category]" }
         Category
       %select#searchCategory{ :name => "search[category]" }
         %option{ :value => "0" }
@@ -31,9 +31,9 @@
           Users
         %option{ :value => "3" }
           Blogs
-      %label.verbalSemantic{ :for => "search[keyword]" }
-        Search Terms
-      %input#searchTerms{ :name => "search[keyword]", :type => "text"}/
+      %label{ :for => "search[keyword]" }
+        -# this focus and value are to help select the field on IE
+        %input#searchTerms{ :name => "search[keyword]", :type => "text", :value => '                  ', :onfocus => 'this.select()'}
       %input.submit{ :name => "submit", :src => "/gs/images/top_nav_search.gif", :type => "image", :value => "search", :alt => "Search" }/
 
 

@@ -1,4 +1,7 @@
 class SentMessagesController < ApplicationController
+
+  before_filter :login_required
+
   # GET /sent_messages
   # GET /sent_messages.xml
   def index

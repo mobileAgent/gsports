@@ -1,3 +1,4 @@
+set :application, "globalsports"
 role :app, "69.20.120.50", :user=>"gsapps"
 role :db, "69.20.120.50", :user=>"gsapps", :primary => true
 role :web, "69.20.120.50", :user=>"gsapps"

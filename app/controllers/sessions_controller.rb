@@ -26,7 +26,7 @@ class SessionsController < BaseController
         current_user = nil
         flash[:notice] = "Your account is not enabled.  Please contact the administrator."
       else
-        flash[:notice] = "Uh oh. We couldn't log you in with the username and password you entered. Your username is your email address. Try again?"      
+        flash[:error] = "Uh oh. We couldn't log you in with the username and password you entered. Your username is your email address. Try again?"      
       end
       redirect_to teaser_path and return if AppConfig.closed_beta_mode        
       redirect_to :controller => 'base', :action => 'site_index' and return

@@ -14,7 +14,9 @@ class Post < ActiveRecord::Base
     indexes tags.name, :as => :tags_content
     indexes category.name, :as => :category_name
     indexes published_as # can't be used as an attr
-    indexes comments.comment, :as => :comment_comments
+    # This causes sphinx indexing to crawl. Need to figure out why
+    # before enabling it
+    #indexes comments.comment, :as => :comment_comments
     set_property :delta => true
    end
 
@@ -33,6 +35,7 @@ class Post < ActiveRecord::Base
     if img
       # chaange the size fromw whatever it was to :feature size
       img.gsub!(/_[a-z]+\.jpg/,'_feature.jpg')
+      img.gsub!(/^http:\/\/[^\/]+/,'') # make relative
     else
       img = logo_thumbnail_for_post
     end

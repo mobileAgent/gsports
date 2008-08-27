@@ -1,26 +1,32 @@
-.flashArea#flashArea
-- if @vidavee && session[:vidavee] && @video_clip.dockey
-  = render(:partial => 'shared/video_player', :locals => { :dockey => @video_clip.dockey, :target => 'flashArea' })
-  %br
-  = h @video_clip.title
-  %br
-  = h @video_clip.description
-  %br
-  = h @video_clip.video_length
-  %br
+.profileContentArea
+  .profilePageHeader
+    %h2.columnDescriptor
+      %span
+        Video Clip Player
+  .playerContentArea
+    .leftNavColPlayer
+      .leftNavPlayer
+        %a.genericButton{ :href => new_message_path(:to => @video_clip.user.id, :title => "Your clip '#{@video_clip.title}'") }
+          Send Message
+        = render :partial => 'shared/favorite_item', :locals => { :item => @video_clip }
+
+        - if current_user && current_user.can_edit?(@video_clip)
+          %a.genericButton{ :href => edit_video_clip_path(@video_clip) }
+            Edit
+          = link_to 'Destroy', video_clip_path(@video_clip), {:confirm => 'Are you sure?', :method => :delete,  :class=>'genericButton'}
+        - else
+          = render :partial => 'shared/inappropriate_item', :locals => { :item => @video_clip }
+      
+    .flashArea#flashArea
+    - if @vidavee && session[:vidavee] && @video_clip.dockey
+      = render(:partial => 'shared/video_player', :locals => { :fvars => {:dockey => @video_clip.dockey}, :target => 'flashArea', :height => 550, :width => 750 })
+      
+    .clearDiv
+  .clearDiv
   
-  %p= @video_clip.tags.collect{|t| link_to( h(t.name), tag_url(t.name), :class => 'tag') }.join(" ")
-  %br/
-  
-  = link_to 'Parent video',video_asset_path(@video_clip.video_asset_id)  
-  = render :partial => 'shared/favorite_item', :locals => { :item => @video_clip }
-  = render :partial => 'shared/favorite_count', :locals => { :item => @video_clip }
-  = render :partial => 'shared/view_count', :locals => { :item => @video_clip }
-  = render :partial => 'shared/inappropriate_item', :locals => { :item => @video_clip }
-  -if current_user && current_user.can_edit?(@video_clip)
-    %br
-    = link_to 'Edit', edit_video_clip_path(@video_clip)
-    |
-    = link_to 'Destroy', @video_clip, :confirm => 'Are you sure?', :method => :delete
-- else
-  %p = "This clip could not be found"
+  .commentArea
+    .commentForm
+      =render :partial => 'comments/comment_form', :locals => { :commentable => @video_clip }
+    .comments#comments
+      #newest_comment
+      =render :partial => 'comments/comment', :collection => @video_clip.comments

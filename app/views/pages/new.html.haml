@@ -1,0 +1,16 @@
+.profileContentArea.listingPage
+  .profilePageHeader
+    %h2.columnDescriptor
+      %span
+        New Page
+  .leftNavCol
+    %h2.yellowHeader
+      My Profile
+    .leftNav
+      =render :partial => "users/profile_nav"
+  .listings
+    .listingItem
+
+      = render :partial => 'form'
+
+      %p= link_to "Back to List", pages_path

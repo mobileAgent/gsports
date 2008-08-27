@@ -1,32 +1,43 @@
-%h1 New league
-
-= error_messages_for :league 
-
-- form_for(@league) do |f| 
-  %p
-    %b Name
-    %br
-    = f.text_field :name 
-  %p
-    %b City
-    %br
-    = f.text_field :city
+.profileContentArea.listingPage
+  .profilePageHeader
+    %h2.columnDescriptor
+      %span
+        New League Record
+  .leftNavCol
+    %h2.yellowHeader
+      My Profile
+    .leftNav
+      =render :partial => "users/profile_nav"
+  .listings
+    .listingItem
     
-  %p
-    %b State
-    %br/
-    =collection_select("league","state_id",State.all,"id","name",{ :selected => @league.state_name })
-    
-  %p
-    %b Description
-    %br
-    = f.text_field :description 
-  %p
-    %b Active
-    %br
-    = f.check_box :active 
-
-  %p
-    = f.submit "Create"
-    
-= link_to 'Back', leagues_path 
+      = error_messages_for :league 
+      
+      - form_for(@league) do |f| 
+        %p
+          %b Name
+          %br
+          = f.text_field :name 
+        %p
+          %b City
+          %br
+          = f.text_field :city
+          
+        %p
+          %b State
+          %br/
+          =collection_select("league","state_id",State.all,"id","name",{ :selected => @league.state_name })
+          
+        %p
+          %b Description
+          %br
+          = f.text_field :description 
+        %p
+          %b Active
+          %br
+          = f.check_box :active 
+      
+        %p
+          = f.submit "Create"
+          
+      = link_to 'Back', leagues_path 

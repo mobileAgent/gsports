@@ -13,7 +13,13 @@ class MessagesController < ApplicationController
   # GET /messages/new
   def new  
     @message = Message.new()
-    @message.to_id = params[:to] if params[:to]
+    if params[:to]
+      begin
+        @message.to_name= User.find(params[:to]).full_name
+      rescue
+        logger.debug("sked for a bad to_id #{params[:to]}")
+      end
+    end
     @message.title = params[:title] if params[:title]
   end
 

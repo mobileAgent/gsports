@@ -1,11 +1,31 @@
-%h1="Editing Reel #{h @video_reel.title}"
-
-- form_for(@video_reel) do |f|
-  = f.error_messages
-  = render :partial => "form", :locals => { :f => f }
-  %p= f.submit "Update"
-  
-
-= link_to 'Show', @video_reel
-= "|"
-= link_to 'Back', video_reels_path
+.profileContentArea.listingPage
+  .profilePageHeader
+    %h2.columnDescriptor
+      %span
+        My Videos
+      = current_user.full_name
+  .leftNavCol
+    %h2.yellowHeader
+      My Profile
+    .leftNav
+      =render :partial => "users/profile_nav"
+  .listings
+    .contentBox.tanBackground
+      .contentBoxHeader.yellowHeader
+        %h2.boxDescription
+          = "Editing details for \"#{@video_reel.title}\""
+      .contentBoxContent
+        .featureSummary
+          #video_thumbnail
+            = "<img src='#{@vidavee.file_thumbnail_medium(@video_reel.thumbnail_dockey)}' title='#{h @video_reel.title}'>"
+          %br/
+          
+          - form_for(@video_reel) do |f|
+            = f.error_messages
+            = render :partial => "form", :locals => { :f => f }
+            %p= f.submit "Update"
+            
+          
+          = link_to 'Show', @video_reel
+          = "|"
+          = link_to 'Back', video_reels_path

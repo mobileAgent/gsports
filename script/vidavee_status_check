@@ -1,0 +1,13 @@
+#!/bin/bash
+#
+# To run the vidavee video status checker from cron
+# Make sure enough environment is set for
+# running the rake task. Nominally run every 5 minutes.
+# 
+RAILS_ROOT=${RAILS_ROOT:-`dirname $0`/..}
+RAILS_ENV=${RAILS_ENV:-"production"}
+PATH=/usr/local/bin:/bin:/usr/bin:${PATH}
+LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH}
+
+cd ${RAILS_ROOT}
+rake vidavee:update_queued_videos_status

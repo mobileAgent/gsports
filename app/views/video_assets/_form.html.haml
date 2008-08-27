@@ -10,6 +10,13 @@
   = f.text_field :description
   
 %p
+  %br/
+  =f.check_box :public_video
+  =f.label(:public_video,  'Public Video')
+  %br/
+  %br/
+  
+%p
   = f.label :sport
   %br/
   = text_field_with_auto_complete :video_asset, :sport, :autocomplete => "off"
@@ -29,7 +36,7 @@
   = text_field_with_auto_complete :video_asset, :visiting_team_name, :autocomplete => "off"
 
 %p
-  %label{:for=>"video_asset[game_gender]"} Mens/Womens
+  %label{:for=>"video_asset[game_gender]"} Boys/Girls
   %br/
   = collection_select("video_asset","game_gender",VideoAsset.GAME_GENDERS,"to_s","to_s",{ :selected => @video_asset.game_gender, :include_blank => true})
 
@@ -59,7 +66,7 @@
 
 
 - if current_user.admin?
-  %fieldset
+  %fieldset.emphasized
     %legend="Advanced Fields (Admin Only)"
     %p
       = f.label :league_name
@@ -69,6 +76,9 @@
       = f.label :team_name
       %br/
       = text_field_with_auto_complete :video_asset, :team_name, :autocomplete => "off"
+
+  %fieldset.emphasized
+    %legend="Very Advanced Fields (Vidavee Coordination, Admin Only)"
     %p
       = f.label :dockey
       %br/

@@ -72,5 +72,13 @@ include UsersHelper
     vsrc = @vidavee.file_thumbnail_medium(video.thumbnail_dockey)
     link_to "<img src='#{vsrc}' title='#{title}' alt='Video'/>", target
   end
+
+  def generate_link_for_message(item)
+    if item.class.to_s == 'Comment'
+      "/#{item.class.to_s.tableize}/show/#{item.id}"
+    else
+      "/#{item.class.to_s.tableize}/#{item.id}"
+    end
+  end
   
 end

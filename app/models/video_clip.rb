@@ -32,6 +32,7 @@ class VideoClip < ActiveRecord::Base
   end
   
   def save_deleted_video
+    return if self.dockey.nil?
     vd = DeletedVideo.new
     vd.dockey = self.dockey
     vd.video_id = self.id
@@ -40,6 +41,10 @@ class VideoClip < ActiveRecord::Base
     vd.deleted_by = self.user_id
     vd.deleted_at = Time.now
     vd.save!
+  end
+
+  def owner
+    self.user
   end
   
 end
