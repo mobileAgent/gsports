@@ -17,11 +17,14 @@ class UsersController < BaseController
   uses_tiny_mce(:options => AppConfig.gsdefault_mce_options.merge({:editor_selector => "rich_text_editor"}), 
                 :only => [:new, :create, :update, :edit, :welcome_about])
   
-  uses_tiny_mce(:options => AppConfig.narrow_mce_options.merge({:width => 330}),
+  uses_tiny_mce(:options => AppConfig.narrow_mce_options.merge({:width => 300}),
                 :only => [:show])
 
   def show
-    unless current_user.admin? || current_user.id == @user.id || @user.profile_public
+    # The current user can see @user's profile only if
+    # they are the admin, themselves, the profile is public
+    # or they are a friend of @user
+    unless (current_user.admin? || current_user.id == @user.id || @user.profile_public || @user.accepted_friendships.collect(&:friend_id).member?(current_user.id))
       render :action => 'private'
     end
     
