@@ -42,7 +42,7 @@
 }
 
 
-.RegistrationContent .mainCol1 .contentBox, .profileContentArea .mainCol2 .contentBox{
+.RegistrationContent .mainCol1 .contentBox, .RegistrationContent .mainCol2 .contentBox{
 	width: 315px;
 	height: auto;
 }
@@ -66,9 +66,11 @@
 	font-size: 150%;
 }
 
+/*
 label.required:before{
 	content: '*';
 }
+*/
 
 .field-block label{
 	display: block;
