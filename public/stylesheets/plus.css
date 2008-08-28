@@ -43,6 +43,7 @@
 
 
 .RegistrationContent .mainCol1 .contentBox, .profileContentArea .mainCol2 .contentBox{
+
 	width: 315px;
 	height: auto;
 }
@@ -204,10 +205,12 @@ input[type='submit']:hover {
 /* Work around a tellart bug */
 object#homeFlash {
 	float:right;
-	width: 594px;
+	width: 588px;
 	height: 410px;
 	background-image: url(../gs/images/videoplayer_background.png);
 	background-repeat: no-repeat;
+        margin: 0;
+        padding: 0;
 }
 
 #flashArea {
@@ -449,6 +452,6 @@ div.thumbFIT {
   margin-left: 15px;
 }
 
-
-
-
+.AccountRadio {
+  border: none;
+}
