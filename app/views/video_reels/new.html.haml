@@ -1,4 +1,14 @@
-.flashArea#flashArea
-= render(:partial => 'shared/video_player', :locals => { :fvars => { :dockeys => "#{@user_clip_dockeys}"}, :target => 'flashArea', :player_name => '/players/reelmaker.swf', :height => 550, :width => 945})
+.profileContentArea
+  .profilePageHeader
+    %h2.columnDescriptor
+      NEW REEL
+  .toplink
+    = link_to "&laquo; back to my clips", user_video_clips_path(current_user)
+    = " / "
+    = link_to "my reels", user_video_reels_path(current_user)
+  .playerContentArea
 
-= link_to 'Back', video_reels_path
+
+.flashArea#flashArea
+= render(:partial => 'shared/video_player', :locals => { :fvars => { :dockeys => "#{@user_clip_dockeys}"}, :target => 'flashArea', :player_name => '/players/reelmaker.swf', :height => 650, :width => 956})
+

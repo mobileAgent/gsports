@@ -204,14 +204,14 @@ input[type='submit']:hover {
 /* Work around a tellart bug */
 object#homeFlash {
 	float:right;
-	width:560px;
-	height:395px;
+	width: 594px;
+	height: 410px;
 	background-image: url(../gs/images/videoplayer_background.png);
 	background-repeat: no-repeat;
 }
 
 #flashArea {
-        margin: 20px;
+        margin-top: 5px;
 	float:right;
 	background-image: url(../gs/images/videoplayer_background.png);
 	background-repeat: no-repeat;
@@ -444,7 +444,10 @@ div.thumbFIT {
 .searchResultsContent h2.columnDescriptor a:hover {
   color: red;
 }
-  
+.profileContentArea .toplink {
+  float: left;
+  margin-left: 15px;
+}
 
 
 
