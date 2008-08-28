@@ -32,7 +32,7 @@
 
           .field-block
             %label.required{"for"=>"firstname"} 
-              First Name
+              * First Name
             = text_field :user, :firstname, :size => 12
 
           .field-block
@@ -42,14 +42,14 @@
 
           .field-block
             %label.required{"for"=>"lastname"} 
-              Last Name
+              * Last Name
             = text_field :user, :lastname, :size => 16
         
           %br
         
           .field-block            
             %label.required{"for"=>"address1"} 
-              Address Line One
+              * Address Line One
             = text_field :user, :address1, :size => 16
           .field-block
             %label{"for"=>"address2"} 
@@ -60,25 +60,25 @@
           
           .field-block
             %label.required{"for"=>"city"} 
-              City
+              * City
             = text_field :user, :city, :size => 16
           
           .field-block
             %label.required{"for"=>"zip"} 
-              Zip/Postal Code
+              * Zip/Postal Code
             = text_field :user, :zip, :size => 10
 
           %br
           
           .field-block
             %label.required{"for"=>"state"} 
-              State
+              * State
             =collection_select(:user ,:state_id,State.all,"id","name", { :prompt => 'Choose State'})
 
 
           .field-block
             %label.required{"for"=>"country"} 
-              Country
+              * Country
             =collection_select(:user ,:country_id ,Country.all,"id","name", { :prompt => 'Choose Country'})
 
 
@@ -86,7 +86,7 @@
 
           .field-block
             %label.required{"for"=>"phone"} 
-              Phone
+              * Phone
             = text_field :user, :phone, :size => 12
           
           %br
@@ -114,19 +114,19 @@
             
           .field-block
             %label.required{"for"=>"email"}
-              E-mail address
+              * E-mail address
             = text_field :user, :email, :size => 24
         
           %br
         
           .field-block
-            %label{"for"=>"password"}
-              Choose a password
+            %label.required{"for"=>"password"}
+              * Choose a password
             = password_field :user, :password, :size => 18
         
           .field-block
-            %label{"for"=>"password_confirmation"}
-              Re-type password
+            %label.required{"for"=>"password_confirmation"}
+              * Re-type password
             = password_field :user, :password_confirmation, :size => 18
           
           %br
@@ -141,7 +141,7 @@
           
           .field-block
             %label.required{"for"=>"birthdate"}
-              Birthday:
+              * Birthday:
               %em (you must be at least 13 years old to sign up.)
             = date_select :user, :birthday, {:start_year => 1926, :end_year => Time.now.year - 13}
           

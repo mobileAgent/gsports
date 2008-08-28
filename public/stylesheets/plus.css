@@ -18,8 +18,8 @@
 	background-color: #ffffff;
 }
 
-.landingContentArea input[type='text'], .landingContentArea input[type='password'], .landingContentArea select, .landingContentArea input[type='radio'], .landingContentArea textarea,
-.mainContentArea input[type='text'], .mainContentArea input[type='password'], .mainContentArea select, .mainContentArea input[type='radio'], .mainContentArea textarea {
+.landingContentArea input[type='text'], .landingContentArea input[type='password'], .landingContentArea select, .landingContentArea textarea,
+.mainContentArea input[type='text'], .mainContentArea input[type='password'], .mainContentArea select, .mainContentArea textarea {
   xbackground-color: #feb;
   border: 1px solid black;
   margin-bottom: 4px;
@@ -42,8 +42,7 @@
 }
 
 
-.RegistrationContent .mainCol1 .contentBox, .profileContentArea .mainCol2 .contentBox{
-
+.RegistrationContent .mainCol1 .contentBox, .RegistrationContent .mainCol2 .contentBox{
 	width: 315px;
 	height: auto;
 }
@@ -67,9 +66,11 @@
 	font-size: 150%;
 }
 
+/*
 label.required:before{
 	content: '*';
 }
+*/
 
 .field-block label{
 	display: block;
@@ -450,8 +451,4 @@ div.thumbFIT {
 .profileContentArea .toplink {
   float: left;
   margin-left: 15px;
-}
-
-.AccountRadio {
-  border: none;
 }

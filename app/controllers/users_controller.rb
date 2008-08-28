@@ -71,7 +71,12 @@ class UsersController < BaseController
       @league = League.new
     end
     
-    @user = User.new( {:birthday => Date.parse((Time.now - 25.years).to_s) }.merge(params[:user] || {}) )
+    default_options = {
+      :birthday => Date.parse((Time.now - 25.years).to_s) ,
+      :country => Country.find(207)
+    }
+    
+    @user = User.new( default_options.merge(params[:user] || {}) )
     @inviter_id = params[:id]
     @inviter_code = params[:code]
     #render :action => 'new', :layout => 'beta' and return if AppConfig.closed_beta_mode
