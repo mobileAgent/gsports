@@ -4,7 +4,7 @@
 
 .field-block
   %label.required{:for=>'team_name'}
-    Team Name
+    * Team Name
   = text_field :team, :name
   
 .field-block
@@ -29,7 +29,7 @@
 
 .field-block
   %label.required{"for" => "team_league_name"}
-    League
+    * League
   = text_field_with_auto_complete :team, :league_name, :autocomplete => "off"
     
     
