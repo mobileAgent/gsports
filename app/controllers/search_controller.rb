@@ -66,7 +66,9 @@ class SearchController < BaseController
      dockey = params[:dockey]
      @video = VideoAsset.find_by_dockey(dockey)
      if @video
-       xstr = @video.to_xml(:except => [:uploaded_file_path, :league_id, :team_id, :user_id, :delta, :video_type, :visiting_team_id, :home_team_id], :dasherize => false ) do |xml|
+       xstr = @video.to_xml(:except => [:created_at, :updated_at, :uploaded_file_path, :league_id, :team_id, :user_id, :delta, :video_type, :visiting_team_id, :home_team_id], :dasherize => false, :skip_types => true ) do |xml|
+         xml.created_at @video.created_at.to_s(:readable)
+         xml.updated_at @video.updated_at.to_s(:readable)
          xml.league_name @video.league_name
          xml.team_name @video.team_name
          if @video.user_id
@@ -85,8 +87,10 @@ class SearchController < BaseController
      end
      @video = VideoClip.find_by_dockey(dockey)
      if @video
-       xstr = @video.to_xml(:except => [:user_id, :delta, :video_asset_id], :dasherize => false ) do |xml|
+       xstr = @video.to_xml(:except => [:created_at, :updated_at, :user_id, :delta, :video_asset_id], :dasherize => false, :skip_types => true ) do |xml|
          xml.type 'VideoClip'
+         xml.created_at @video.created_at.to_s(:readable)
+         xml.updated_at @video.updated_at.to_s(:readable)
          xml.parent_dockey @video.video_asset.dockey
          xml.parent_name @video.video_asset.title
          xml.parent_id @video.video_asset_id
@@ -105,8 +109,10 @@ class SearchController < BaseController
      end
      @video = VideoReel.find_by_dockey(dockey)
      if @video
-       xstr = @video.to_xml(:except => [:user_id, :delta], :dasherize => false) do |xml|
+       xstr = @video.to_xml(:except => [:created_at, :updated_at, :user_id, :delta], :dasherize => false, :skip_types => true) do |xml|
          xml.type 'VideoReel'
+         xml.created_at @video.created_at.to_s(:readable)
+         xml.updated_at @video.updated_at.to_s(:readable)
          if @video.user_id
            xml.user_name @video.user.full_name 
            xml.team_name @video.user.team_name unless @video.user.league_staff?
