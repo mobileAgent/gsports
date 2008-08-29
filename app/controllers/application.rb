@@ -25,9 +25,10 @@ class ApplicationController < ActionController::Base
   def beta_mode
     if (CLOSED_BETA_MODE)
       unless ALLOWED_IP_ADDRS.member?(request.env['REMOTE_HOST'])
-        render :action => 'beta', :layout => 'beta' and return
+        render :template => 'base/beta', :layout => false and return
       end
     end
+    return true
   end
 
   # Allow these models to be memcached

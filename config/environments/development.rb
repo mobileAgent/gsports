@@ -34,5 +34,5 @@ PAYMENT_DUE_CYCLE = 0 # How often to bill in days
 
 AD_SERVER_BASE = 'www.danmcardle.com'
 
-CLOSED_BETA_MODE = true
-ALLOWED_IP_ADDRS = ['127.0.0.2']
+CLOSED_BETA_MODE = false
+ALLOWED_IP_ADDRS = ['127.0.0.1']

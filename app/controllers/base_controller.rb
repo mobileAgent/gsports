@@ -28,7 +28,10 @@ class BaseController < ApplicationController
     end
     @vidavee
   end
-  
+
+  def beta
+  end
+
   def site_index
 
     # What does a logged in user see first?
