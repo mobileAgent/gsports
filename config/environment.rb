@@ -106,8 +106,10 @@ require 'activemessaging/processor'
 # This sets the root of where video upload and 
 # transfer to vidavee takes place. Best not to be
 # under the public web server as we don't want to
-# be serving these up ourselves.
-VIDEO_BASE = "#{RAILS_ROOT}/videos"
+# be serving these up ourselves. Put it above RAILS_ROOT
+# so we don't have to worry about moving it during
+# cap deploy of a new version
+VIDEO_BASE = "#{RAILS_ROOT}/../videos"
 
 # Email addr for the admin account
 ADMIN_EMAIL = "admin@globalsports.net"

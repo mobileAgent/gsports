@@ -6,7 +6,7 @@
 class RecurringBilling
 
   # Put the log here
-  @billing_logger = Logger.new("#{File.dirname(__FILE__)}/recurring_billing.log")
+  @billing_logger = Logger.new("#{File.dirname(__FILE__)}/../log/recurring_billing.log")
   #
   # Bill all memberships that have not been billed since the last cycle
   # 

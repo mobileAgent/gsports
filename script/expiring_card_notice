@@ -1,8 +1,8 @@
 #!/bin/bash
 #
-# To run the vidavee video status checker from cron
-# Make sure enough environment is set for
-# running the rake task. Nominally run every 5 minutes.
+# To notify users who have cards expiring this month
+# (cards expire at the end of the listed month).
+# Nominally run on the first day of each month
 # 
 RAILS_ROOT=${RAILS_ROOT:-`dirname $0`/..}
 RAILS_ENV=${RAILS_ENV:-"production"}
@@ -10,4 +10,4 @@ PATH=/usr/local/bin:/bin:/usr/bin:${PATH}
 LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH}
 
 cd ${RAILS_ROOT}
-rake --silent vidavee:update_queued_videos_status
+rake --silent billing:notify_expiring_cardholders
