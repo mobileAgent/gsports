@@ -24,7 +24,9 @@ class ApplicationController < ActionController::Base
 
   def beta_mode
     if (CLOSED_BETA_MODE)
-      unless ALLOWED_IP_ADDRS.member?(request.env['REMOTE_HOST'])
+      puts "Checking BETA MODE"
+      unless ALLOWED_IP_ADDRS.member?(request.remote_ip)
+        puts "NOPE, not allowed #{request.remote_ip}"
         render :template => 'base/beta', :layout => false and return
       end
     end
