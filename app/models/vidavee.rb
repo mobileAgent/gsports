@@ -26,7 +26,7 @@ class Vidavee < ActiveRecord::Base
   LOGIN_TIMEOUT = 3
   
   # Turn this on for debug of HTTP traffic to Vidavee
-  # CLIENT.debug_dev = STDERR
+  CLIENT.debug_dev = STDERR
 
   # http://tribeca.vidavee.com/hsstv/rest/session/CheckUser;jsessionid=39555E57BCF38625CF7DEA2EDD9038F7.node1?api_key=5342smallworld&api_ts=1214532647018&api_token=39555E57BCF38625CF7DEA2EDD9038F7.node1&api_sig=830678DF3E967D0392F936122F767754&session_id=
   # Seems to always return false, not sure what good it is
@@ -432,6 +432,7 @@ class Vidavee < ActiveRecord::Base
       total_found += found
       total_saved += saved
     end
+    puts "Found #{total_found} clips, saved #{total_saved}"
     [total_found, total_saved]
   end
   
@@ -510,7 +511,7 @@ class Vidavee < ActiveRecord::Base
   # Build and sign the request params
   def build_request_params(action,sessionid='',extra_params={}, include_login=true)
     # get a timestamp in vidavee format for use in the http api
-    ts = Time.now.to_i.to_s + "000"
+    ts = "%.0f" % (Time.now.to_f * 1000)
     params = {KEY_PARAM => key,
       TS_PARAM => ts,
       SIG_PARAM => sign(action,ts),
