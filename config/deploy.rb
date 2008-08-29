@@ -76,7 +76,7 @@ namespace :poller do
   task :stop_prior_poller, :roles=>:app do
     if previous_release
       rails_env = fetch(:environment, "production")
-      run "cd #{current_release}; RAILS_ENV=#{rails_env} script/poller stop"
+      run "cd #{previous_release}; RAILS_ENV=#{rails_env} script/poller stop"
     end
   end
   
