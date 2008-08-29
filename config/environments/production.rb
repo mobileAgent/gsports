@@ -49,4 +49,7 @@ Active_Merchant_payflow_gateway_partner = 'PayPal'
 
 PAYMENT_DUE_CYCLE = 30 # How often to bill in days
 
+CLOSED_BETA_MODE = true
+ALLOWED_IP_ADDRS = ['96.244.114.172','68.45.217.123']
+
 AD_SERVER_BASE = 'ads.globalsports.net'

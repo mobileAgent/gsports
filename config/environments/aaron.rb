@@ -30,5 +30,8 @@ Active_Merchant_payflow_gateway_username = 'markdr_1217114297_biz@gmail.com'
 Active_Merchant_payflow_gateway_password = 'markrmarkr'
 Active_Merchant_payflow_gateway_partner = 'PayPal'
 
+CLOSED_BETA_MODE = false
+ALLOWED_IP_ADDRS = []
+
 
 AD_SERVER_BASE = 'www.danmcardle.com'
