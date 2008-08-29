@@ -5,6 +5,7 @@ class ApplicationController < ActionController::Base
 
   helper :all # include all helpers, all the time
   before_filter :preload_models
+  before_filter :beta_mode
 
   # Help with ssl switching
   include SslRequirement
@@ -21,6 +22,13 @@ class ApplicationController < ActionController::Base
   # from your application log (in this case, all fields with names like "password"). 
   filter_parameter_logging :password, :password_confirm, :verification_value, :cardnumber, :verificationnumber, :credit_card
 
+  def beta_mode
+    if (CLOSED_BETA_MODE)
+      unless ALLOWED_IP_ADDRS.member?(request.env['REMOTE_HOST'])
+        render :action => 'beta', :layout => 'beta' and return
+      end
+    end
+  end
 
   # Allow these models to be memcached
   def preload_models

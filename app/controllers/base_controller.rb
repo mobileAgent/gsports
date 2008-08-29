@@ -31,12 +31,6 @@ class BaseController < ApplicationController
   
   def site_index
 
-    if (CLOSED_BETA_MODE)
-      unless ALLOWED_IP_ADDRS.member?(request.env['REMOTE_HOST'])
-        render :action => 'beta', :layout => 'beta' and return
-      end
-    end
-
     # What does a logged in user see first?
     if(logged_in?)
       if (current_user.admin?)
