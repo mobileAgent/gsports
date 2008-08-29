@@ -26,7 +26,7 @@ class Vidavee < ActiveRecord::Base
   LOGIN_TIMEOUT = 3
   
   # Turn this on for debug of HTTP traffic to Vidavee
-  CLIENT.debug_dev = STDERR
+  # CLIENT.debug_dev = STDERR
 
   # http://tribeca.vidavee.com/hsstv/rest/session/CheckUser;jsessionid=39555E57BCF38625CF7DEA2EDD9038F7.node1?api_key=5342smallworld&api_ts=1214532647018&api_token=39555E57BCF38625CF7DEA2EDD9038F7.node1&api_sig=830678DF3E967D0392F936122F767754&session_id=
   # Seems to always return false, not sure what good it is
