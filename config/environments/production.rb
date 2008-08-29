@@ -22,7 +22,7 @@ ActionController::Base.asset_host = Proc.new { |source, request|
   if request.ssl?
     "#{request.protocol}#{request.host_with_port}"
   else
-    "http://gs%d.globalsports.net"
+    "http://gs#{rand(4)}.globalsports.net"
   end
 }
 
@@ -38,10 +38,14 @@ config.cache_store = :mem_cache_store
 
 # Billing values
 # NOTE: Change these to GS real values
-ActiveMerchant::Billing::Base.mode = :production
-Active_Merchant_payflow_gateway_username = ''
-Active_Merchant_payflow_gateway_password = ''
-Active_Merchant_payflow_gateway_partner = ''
+#ActiveMerchant::Billing::Base.mode = :production
+#Active_Merchant_payflow_gateway_username = ''
+#Active_Merchant_payflow_gateway_password = ''
+#Active_Merchant_payflow_gateway_partner = ''
+ActiveMerchant::Billing::Base.mode = :test
+Active_Merchant_payflow_gateway_username = 'markdr'
+Active_Merchant_payflow_gateway_password = 'MarkDR1'
+Active_Merchant_payflow_gateway_partner = 'PayPal'
 
 PAYMENT_DUE_CYCLE = 30 # How often to bill in days
 

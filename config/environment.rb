@@ -1,6 +1,5 @@
 # -*- coding: undecided -*-
 require 'yaml'
-require 'rexml-expansion-fix'
 
 # Be sure to restart your server when you modify this file
 
@@ -118,3 +117,7 @@ FOOTER_AD_COUNT = 3
 
 # Misc constants
 SECONDS_PER_DAY = 86400
+
+# Prevent a rexml DoS attack. This has to be 
+# at the bottom of the file
+require 'rexml-expansion-fix'

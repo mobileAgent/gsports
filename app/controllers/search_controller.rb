@@ -66,9 +66,10 @@ class SearchController < BaseController
      dockey = params[:dockey]
      @video = VideoAsset.find_by_dockey(dockey)
      if @video
-       xstr = @video.to_xml(:except => [:created_at, :updated_at, :uploaded_file_path, :league_id, :team_id, :user_id, :delta, :video_type, :visiting_team_id, :home_team_id], :dasherize => false, :skip_types => true ) do |xml|
+       xstr = @video.to_xml(:except => [:game_date, :created_at, :updated_at, :uploaded_file_path, :league_id, :team_id, :user_id, :delta, :video_type, :visiting_team_id, :home_team_id], :dasherize => false, :skip_types => true ) do |xml|
          xml.created_at @video.created_at.to_s(:readable)
          xml.updated_at @video.updated_at.to_s(:readable)
+         xml.game_date @video.game_date.to_s(:readable) if @video.game_date
          xml.league_name @video.league_name
          xml.team_name @video.team_name
          if @video.user_id
