@@ -108,7 +108,7 @@ require 'activemessaging/processor'
 # be serving these up ourselves. Put it above RAILS_ROOT
 # so we don't have to worry about moving it during
 # cap deploy of a new version
-VIDEO_BASE = "#{RAILS_ROOT}/../videos"
+VIDEO_BASE = "#{RAILS_ROOT}/../../videos/"
 
 # Email addr for the admin account
 ADMIN_EMAIL = "admin@globalsports.net"
