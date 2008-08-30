@@ -1,8 +1,8 @@
 # Filters added to this controller apply to all controllers in the application.
 # Likewise, all the methods added will be available for all controllers.
-
 class ApplicationController < ActionController::Base
-
+  include ExceptionNotifiable
+  
   helper :all # include all helpers, all the time
   before_filter :preload_models
   before_filter :beta_mode
@@ -24,9 +24,7 @@ class ApplicationController < ActionController::Base
 
   def beta_mode
     if (CLOSED_BETA_MODE)
-      puts "Checking BETA MODE"
       unless ALLOWED_IP_ADDRS.member?(request.remote_ip)
-        puts "NOPE, not allowed #{request.remote_ip}"
         render :template => 'base/beta', :layout => false and return
       end
     end

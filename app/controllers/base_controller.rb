@@ -1,32 +1,11 @@
 class BaseController < ApplicationController
   include Viewable
 
-  before_filter :vidavee_login, :includes => [ :site_index ]
+  before_filter :vidavee_login, :site_index
 
   # Turn off CE action caching, we are going to use Rails.cache
   def cache_action?
     false
-  end
-
-  # Everyone visiting the site needs a vidavee login, even
-  # unauthenticate users, so that they can see videos with a
-  # valid vidavee sessionid and dockey.
-  def vidavee_login
-
-    begin
-      @vidavee = Rails.cache.fetch('vidavee') { Vidavee.first }
-    rescue
-      logger.debug "Vidavee in cache is bad, replacing"
-      Rails.cache.delete('vidavee')
-      @vidavee = Rails.cache.fetch('vidavee') { Vidavee.first }
-    end
-    
-    if (session[:vidavee].nil? || 
-        session[:vidavee_expires].nil? || session[:vidavee_expires] < Time.now)
-      session[:vidavee] = @vidavee.username
-      session[:vidavee_expires] = 5.minutes.from_now
-    end
-    @vidavee
   end
 
   def beta
@@ -48,6 +27,29 @@ class BaseController < ApplicationController
     @athletes_of_the_week = AthleteOfTheWeek.for_home_page
     @articles_of_the_week = Post.highlighted_articles(@athletes_of_the_week.collect(&:id))
 
+  end
+
+  protected 
+
+  # Everyone visiting the site needs a vidavee login, even
+  # unauthenticate users, so that they can see videos with a
+  # valid vidavee sessionid and dockey.
+  def vidavee_login
+
+    begin
+      @vidavee = Rails.cache.fetch('vidavee') { Vidavee.first }
+    rescue
+      logger.debug "Vidavee in cache is bad, replacing"
+      Rails.cache.delete('vidavee')
+      @vidavee = Rails.cache.fetch('vidavee') { Vidavee.first }
+    end
+    
+    if (session[:vidavee].nil? || 
+        session[:vidavee_expires].nil? || session[:vidavee_expires] < Time.now)
+      session[:vidavee] = @vidavee.username
+      session[:vidavee_expires] = 5.minutes.from_now
+    end
+    @vidavee
   end
 
 end
