@@ -1,17 +1,15 @@
 class BaseController < ApplicationController
   include Viewable
 
-  before_filter :vidavee_login, :site_index
+  before_filter :vidavee_login, :includes => [:site_index]
 
-  # Turn off CE action caching, we are going to use Rails.cache
-  def cache_action?
-    false
-  end
-
+  # Show the lockout page
   def beta
   end
 
   def site_index
+
+    logger.debug "In site index action "
 
     # What does a logged in user see first?
     if(logged_in?)
@@ -29,6 +27,11 @@ class BaseController < ApplicationController
 
   end
 
+  # Turn off CE action caching, we are going to use Rails.cache
+  def cache_action?
+    false
+  end
+  
   protected 
 
   # Everyone visiting the site needs a vidavee login, even
@@ -46,7 +49,7 @@ class BaseController < ApplicationController
     
     if (session[:vidavee].nil? || 
         session[:vidavee_expires].nil? || session[:vidavee_expires] < Time.now)
-      session[:vidavee] = @vidavee.username
+      session[:vidavee] = @vidavee.login
       session[:vidavee_expires] = 5.minutes.from_now
     end
     @vidavee
