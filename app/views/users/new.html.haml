@@ -147,9 +147,8 @@
           
           %br
           %br
-
-          = hidden_field_tag :inviter_id, params[:inviter_id]
-          = hidden_field_tag :inviter_code, params[:inviter_code]
+          = hidden_field_tag :inviter_id, session[:inviter_id]
+          = hidden_field_tag :inviter_code, session[:inviter_code]
           = hidden_field_tag :role, @requested_role
           -#%p= submit_tag 'Sign up'
           .accountContinue2

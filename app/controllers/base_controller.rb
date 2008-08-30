@@ -1,12 +1,13 @@
 class BaseController < ApplicationController
   include Viewable
 
-  before_filter :vidavee_login, :includes => [:site_index]
+  before_filter :vidavee_login # , :includes => [:site_index]
 
   # Show the lockout page
   def beta
+    render :layout => false
   end
-
+  
   def site_index
 
     logger.debug "In site index action "
@@ -49,7 +50,8 @@ class BaseController < ApplicationController
     
     if (session[:vidavee].nil? || 
         session[:vidavee_expires].nil? || session[:vidavee_expires] < Time.now)
-      session[:vidavee] = @vidavee.login
+      logger.debug "Logging into vidavee again"
+      session[:vidavee] = @vidavee.login()
       session[:vidavee_expires] = 5.minutes.from_now
     end
     @vidavee

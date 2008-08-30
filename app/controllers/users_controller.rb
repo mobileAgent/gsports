@@ -56,8 +56,18 @@ class UsersController < BaseController
     update_view_count(@user) unless current_user && current_user.eql?(@user)
   end
 
+  # registration step 0, coming from an invitation link
+  # need to grab the inviter stuff while it is hot
+  def signup
+    session[:inviter_id] = params[:inviter_id]
+    session[:inviter_code] = params[:inviter_code]
+    redirect_to '/info/about'
+  end
+
   # registration step 1
   def register
+    @inviter_id = session[:inviter_id] || params[:inviter_id]
+    @inviter_code = session[:inviter_code] || params[:inviter_code]
   end
 
   # registration step 2
