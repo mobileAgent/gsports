@@ -1,7 +1,17 @@
 class FavoritesController < BaseController
   
-  before_filter :login_required
   after_filter :expire_home_page, :only => [:create, :destroy, :remove]
+
+  def remove
+    @favorite = Favorite.user(current_user).item_type_id(params[:favoritable_type],params[:favoritable_id]).first
+    @favorite.destroy if @favorite
+    
+    respond_to do |format|
+      format.js { render :action => "destroy" }
+    end    
+  end
+
+  protected
 
   def expire_home_page
     # Admins video favs change the home page
@@ -12,12 +22,5 @@ class FavoritesController < BaseController
     end
   end
   
-  def remove
-    @favorite = Favorite.user(current_user).item_type_id(params[:favoritable_type],params[:favoritable_id]).first
-    @favorite.destroy if @favorite
-    
-    respond_to do |format|
-      format.js { render :action => "destroy" }
-    end    
-  end
+
 end

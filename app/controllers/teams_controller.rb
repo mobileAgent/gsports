@@ -3,7 +3,7 @@ class TeamsController < BaseController
   auto_complete_for :team, :name
   skip_before_filter :verify_authenticity_token, :only => [:auto_complete_for_team_name, :auto_complete_for_team_league_name ]
   before_filter :admin_required, :except => [:auto_complete_for_team_name, :show, :show_public, :auto_complete_for_team_league_name ]
-  before_filter :login_required, :except => [:show_public]
+  skip_before_filter :gs_login_required, :only => [:show_public]
   
   # GET /team
   # GET /team.xml

@@ -1,7 +1,5 @@
 class CommentsController < BaseController
   
-  before_filter :login_required, :except => [:index]
-  
   def show
     @comment = Comment.find(params[:id])
     @user = @comment.user

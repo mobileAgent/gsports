@@ -2,7 +2,6 @@ class LeaguesController < BaseController
 
   auto_complete_for :league, :name
   before_filter :admin_required, :except => [:auto_complete_for_league_name, :show ]
-  before_filter :login_required
   
   # GET /league
   # GET /league.xml

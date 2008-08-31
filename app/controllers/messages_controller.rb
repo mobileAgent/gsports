@@ -1,6 +1,5 @@
-class MessagesController < ApplicationController
+class MessagesController < BaseController
   
-  before_filter :login_required
   protect_from_forgery :except => [:auto_complete_for_friend_full_name]
   
   # GET /messages

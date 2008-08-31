@@ -1,7 +1,5 @@
 class CategoriesController < BaseController
 
-  before_filter :login_required, :except => [:rss]
-
   def forums
     @categories = Category.find(:all)
   end     

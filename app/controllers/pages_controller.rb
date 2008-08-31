@@ -1,6 +1,7 @@
 class PagesController < BaseController
   
   before_filter :admin_required, :except => [:show]
+  skip_before_filter :gs_login_required, :only => [:show]
   
   def index
     @pages = Page.find(:all)

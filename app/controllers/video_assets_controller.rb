@@ -3,8 +3,6 @@ class VideoAssetsController < BaseController
   include ActiveMessaging::MessageSender
   publishes_to :push_video_files
 
-  before_filter :login_required
-  before_filter :vidavee_login
   skip_before_filter :verify_authenticity_token, :only => [:auto_complete_for_video_asset_home_team_name,
                                                            :auto_complete_for_video_asset_visiting_team_name,
                                                            :auto_complete_for_video_asset_team_name,

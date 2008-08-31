@@ -1,8 +1,6 @@
 class VideoClipsController < BaseController
   include Viewable
   
-  before_filter :login_required
-  before_filter :vidavee_login
   skip_before_filter :verify_authenticity_token, :only => [:create]
   
   uses_tiny_mce(:options => AppConfig.narrow_mce_options.merge({:width => 530}),

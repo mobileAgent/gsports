@@ -1,7 +1,8 @@
 class BaseController < ApplicationController
   include Viewable
 
-  before_filter :vidavee_login # , :includes => [:site_index]
+  before_filter :vidavee_login
+  before_filter :gs_login_required, :except => [:site_index, :beta]
 
   # Show the lockout page
   def beta
@@ -33,7 +34,33 @@ class BaseController < ApplicationController
     false
   end
   
-  protected 
+  protected
+
+  # This is a wrapper around the CE base_controllers login_required
+  # which is commonly used as a before_filter. Really it comes from
+  # CE/lib/authenticated_system. But many of the CE controllers use
+  # it like
+  #   before_filter :login_required, :except => [:foo]
+  # or 
+  #   before_filter :login_required, :only => [:foo]
+  # 
+  # Results vary dramatically in trying to add additional methods
+  # that CE felt did not need to be protected, but which we
+  # do want to protect. There is no (not yet) :exclude or :include
+  # method on before_filter so in some cases it is just ignored.
+  # Our solution to this it to just add the required hook as another
+  # name so that we can require it where we need it with a very
+  # simple syntax. The call is fast, not reuiring a DB
+  # lookup, so that should not present too much of a problem
+  #
+  # The system is totally authenticated now except for actions
+  # which have skip_before_filter for this filter.
+  # It is easy to audit that all controllers extend from this
+  # one and that only those actions which explicity skip this filter
+  # should be viewable to the public side.
+  def gs_login_required
+    return login_required
+  end
 
   # Everyone visiting the site needs a vidavee login, even
   # unauthenticate users, so that they can see videos with a
