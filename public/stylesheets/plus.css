@@ -179,8 +179,8 @@ input[type='submit']:hover {
 	float: right;
 }
 
-# Tighten up the width of the video quickfind selects, until we
-# can come up with something better
+/* Tighten up the width of the video quickfind selects, until we
+   can come up with something better */
 #videoFindSeason {
    width: 7em;
 }
@@ -188,7 +188,7 @@ input[type='submit']:hover {
    width: 6em;
 }
 #videoFindCounty {
- p  width: 8em;
+   width: 8em;
 }
 #videoFindLeague {
   width: 10em;
@@ -358,7 +358,7 @@ div.thumbFIT {
 
 .msgBody {
    margin-top: 5px;
-   margin-botton: 5px;
+   margin-bottom: 5px;
 }
 
 
@@ -452,3 +452,11 @@ div.thumbFIT {
   float: left;
   margin-left: 15px;
 }
+
+input[type='button'] {
+  color: #FFEF0A;
+  background-color: #444444;
+  border: 2px outset #666666;
+  margin: 3px 3px 3px 1px;
+}
+  

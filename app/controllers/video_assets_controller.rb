@@ -108,6 +108,11 @@ class VideoAssetsController < BaseController
       redirect_to url_for({ :controller => "search", :action => "my_videos" }) and return
     end
     
+    gd = params[:video_asset][:game_date] 
+    if (gd.length > 0 && gd.length <= 7) # yyyy-mm
+      params[:video_asset][:game_date] += '-01'
+      params[:video_asset][:ignore_game_day] = true
+    end
     @video_asset = VideoAsset.new(params[:video_asset])
     @video_asset.video_status = 'unknown'
       
@@ -136,6 +141,12 @@ class VideoAssetsController < BaseController
     respond_to do |format|
       @video_asset.tag_with(params[:tag_list] || '') 
       @video_asset = add_team_and_league_relations(@video_asset,params)
+      gd = params[:video_asset][:game_date] 
+      if (gd.length > 0 && gd.length <= 7) # yyyy-mm
+        params[:video_asset][:game_date] += '-01'
+        params[:video_asset][:ignore_game_day] = true
+      end
+        
       if @video_asset.update_attributes(params[:video_asset])
         flash[:notice] = 'VideoAsset was successfully updated.'
         format.html { redirect_to(@video_asset) }

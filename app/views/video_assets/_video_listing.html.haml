@@ -5,7 +5,7 @@
     %h4
       = h video_listing.title
     .schoolName
-      = "#{h video_listing.league.name if video_listing.league}, #{h video_listing.team.name if video_listing.team}, #{h video_listing.sport}, #{game_date(video_listing.game_date)}"
+      = "#{h video_listing.league.name if video_listing.league}, #{h video_listing.team.name if video_listing.team}, #{h video_listing.sport}, #{video_listing.human_game_date_string}"
     .recentFriendFeed
       = truncate_words("#{h video_listing.description} - #{h video_listing.video_length}",35)
       %br/

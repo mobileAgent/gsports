@@ -9,18 +9,22 @@
 
 = javascript_include_tag "application", :plugin => "community_engine"		
 = javascript_include_tag "rounder", :plugin => "community_engine"
--#= javascript_include_tag "AC_OETags"
 
 - if current_page?(:controller => 'photos', :action => 'new')
   = javascript_include_tag 'swfupload', :plugin => "community_engine"
   = javascript_include_tag 'uploader', :plugin => "community_engine"
-- if  current_page?(:controller => 'video_assets', :action => 'new')  
+  
+- if current_page?({:controller => 'video_assets', :action => 'new'}) || current_page?({:controller => 'video_assets', :action => 'edit'})
+  = javascript_include_tag 'video_form_helper'
   = javascript_include_tag 'swfupload', :plugin => "community_engine"
   = javascript_include_tag 'video_uploader'
+  = javascript_include_tag 'dhtmlxCombo/dhtmlxcommon'
+  = javascript_include_tag 'dhtmlxCombo/dhtmlxcombo'
+  = stylesheet_link_tag 'dhtmlxcombo'
+  %script
+    window.dhx_globalImgPath="/images/";  
 
 
-
--#= stylesheet_link_tag 'reset-fonts-grids'
 = stylesheet_link_tag 'screen'
 
 
@@ -29,11 +33,7 @@
 
 - if current_page?({:controller => 'posts', :action => 'show' })
   = javascript_include_tag 'lightbox', :plugin => "community_engine"
-  = stylesheet_link_tag 'lightbox', :plugin => "community_engine"	
-  
--#= javascript_include_tag "prototip"
--#= stylesheet_link_tag 'prototip', :media => 'screen'
-	
+  = stylesheet_link_tag 'lightbox', :plugin => "community_engine"
 
 = javascript_include_tiny_mce_if_used
 = tiny_mce if using_tiny_mce?
