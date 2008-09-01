@@ -68,7 +68,7 @@ function generate_video_title()
         title += ' ' + sport;
     if (game_date.length > 0)
         title += ' [' + game_date + ']';
-    if (game_type.length > 0 && game_type != 'regular season')
+    if (game_type.length > 0 && game_type != 'Regular Season')
         title += ' ' + game_type.toUpperCase();
     $('video_asset_title').value = title;
 }
