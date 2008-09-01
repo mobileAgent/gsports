@@ -46,7 +46,7 @@ class VideoAsset < ActiveRecord::Base
   end
 
   def self.GAME_TYPES
-    ["regular season", "playoff", "championship", "scrimmage"]
+    ["Regular Season", "Playoff", "Championship", "Scrimmage"]
   end
   
   named_scope :for_user,

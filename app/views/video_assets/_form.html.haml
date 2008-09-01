@@ -8,18 +8,17 @@
   = f.label "Game Date (yyyy-mm-dd) or (yyyy-mm if day unknown)"
   %br/
   = text_field :video_asset, :game_date, :value => @video_asset.game_date_string
-  %input{:type => 'button', :onclick=>'set_game_date_today()',:value => '&laquo; Today'}
   
   
 %p
-  %label{:for=>"video_asset[home_team_name]"} Home Team / Score
+  %label{:for=>"video_asset[home_team_name]"} Home Team (Our Team) / Score
   %br/
   %fieldset.inline
     = text_field_with_auto_complete :video_asset, :home_team_name, :autocomplete => "off"
     = text_field :video_asset, :home_score, :value => @video_asset.home_score, :size=>3
 
 %p
-  %label{:for=>"video_asset[visiting_team_name]"} Visitng Team / Score
+  %label{:for=>"video_asset[visiting_team_name]"} Opponent / Score
   %br/
   %fieldset.inline
     = text_field_with_auto_complete :video_asset, :visiting_team_name, :autocomplete => "off"
@@ -28,12 +27,12 @@
 %p
   %label{:for=>"video_asset[game_gender]"} Boys/Girls
   %br/
-  = collection_select("video_asset","game_gender",VideoAsset.GAME_GENDERS,"to_s","to_s",{ :selected => @video_asset.game_gender, :include_blank => true})
+  = collection_select("video_asset","game_gender",VideoAsset.GAME_GENDERS,"to_s","to_s",{ :selected => @video_asset.game_gender })
 
 %p
   %label{:for=>"video_asset[game_level]"} Level
   %br/
-  = collection_select("video_asset","game_level",@video_asset.game_level_choices, "to_s","to_s",{:include_blank => true, :selected => @video_asset.game_level}, {:style => "width: 115px"})
+  = collection_select("video_asset","game_level",@video_asset.game_level_choices, "to_s","to_s", { :selected => @video_asset.game_level}, {:style => "width: 115px"})
   %script
     var z=dhtmlXComboFromSelect("video_asset_game_level");
 
