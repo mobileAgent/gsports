@@ -15,6 +15,11 @@ config.action_view.cache_template_loading            = true
 # Use a different cache store in production
 # config.cache_store = :mem_cache_store
 
+# Set the cookie domain so that logins work with or without 'www.'
+# Down side of doing this is it causes the cookie to be sent
+# for all asset host requests too.
+#ActionController::Base.session_options[:session_domain] = 'globalsports.net'
+
 # Enable serving of images, stylesheets, and javascripts from an asset server
 # config.action_controller.asset_host = "http://assets.example.com"
 # But not over ssl, since we don't have certs for all the pages
