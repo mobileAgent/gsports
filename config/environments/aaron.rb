@@ -24,14 +24,15 @@ config.cache_store = :mem_cache_store
 
 # THis thing is unbelievably noisy and log cluttering
 
-# Using ActiveMerchant in development
+# Billing values
 ActiveMerchant::Billing::Base.mode = :test
-Active_Merchant_payflow_gateway_username = 'markdr_1217114297_biz@gmail.com'
-Active_Merchant_payflow_gateway_password = 'markrmarkr'
+Active_Merchant_payflow_gateway_username = 'markdr'
+Active_Merchant_payflow_gateway_password = 'MarkDR1'
 Active_Merchant_payflow_gateway_partner = 'PayPal'
 
-CLOSED_BETA_MODE = false
-ALLOWED_IP_ADDRS = []
-
+PAYMENT_DUE_CYCLE = 0 # How often to bill in days
 
 AD_SERVER_BASE = 'www.danmcardle.com'
+
+CLOSED_BETA_MODE = false
+ALLOWED_IP_ADDRS = ['127.0.0.1']
