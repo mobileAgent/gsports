@@ -7,6 +7,12 @@
     * Team Name
   %br
   = text_field :team, :name
+
+.field-block
+  %label.required{:for=>'team_nickname'}
+    * Nickname
+  %br
+  = text_field :team, :nickname
   
 .field-block
   %label

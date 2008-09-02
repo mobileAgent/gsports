@@ -17,6 +17,7 @@
         %thead
           %tr
             %th Name
+            %th Nickname
             %th City
             %th County
             %th State
@@ -29,6 +30,7 @@
           %tbody
             %tr
             %td= link_to team.name, edit_team_path(team), {:title => "edit"}
+            %td=h team.nickname
             %td=h team.city
             %td=h team.county_name
             %td=h team.state_id? ? team.state.name : ""
