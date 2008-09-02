@@ -4,8 +4,10 @@
       Registration
     %p
       This is the last step of the registration process.
-      Enter the name and address here as it shows on your
-      credit card.
+      
+    %p
+      Please enter the first and last name of the person as it appears on the credit card you will be using for payment
+      
 
   .RegistrationContent
     .RegistrationTrail
@@ -27,7 +29,7 @@
             - if @billing_gateway_error
               .warning
                 = @billing_gateway_error
-        
+                
             %label{"for"=>"firstname"}
             * First Name
             %br
@@ -57,6 +59,9 @@
             %br
             = text_field :credit_card, :verification_value, {:size => 4, :maxlength => 4}
   
+            %br
+            %br
+
             - skip_billing = (@billing_address.nil? || @billing_address.address1.blank?)
             - if skip_billing
               %fieldset.inline
