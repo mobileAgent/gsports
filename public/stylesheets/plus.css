@@ -45,6 +45,7 @@
 .RegistrationContent .mainCol1 .contentBox, .RegistrationContent .mainCol2 .contentBox{
 	width: 315px;
 	height: auto;
+	padding-right: 10px;
 }
 .RegistrationContent .contentBox{
 	margin-left: 0px;	
@@ -57,7 +58,6 @@
 
 .RegistrationContent hr {
 	border: 1px solid black;
-	width: 90%;
 	margin-bottom: 15px;
 }
 
@@ -73,13 +73,11 @@ label.required:before{
 */
 
 .field-block label{
-	display: block;
 }
 
-.field-block {
-	display: inline-block;
+.field-block input {
+	margin-right: 3px;
 }
-
 
 
 /* end forms */
