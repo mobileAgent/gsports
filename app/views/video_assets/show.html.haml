@@ -1,8 +1,11 @@
 .profileContentArea
   .profilePageHeader
     %h2.columnDescriptor
-      %span
-        Video Player
+      VIDEO PLAYER
+  .toplink
+    = link_to "&laquo; back to my clips", user_video_clips_path(current_user)
+    = " / "
+    = link_to "my reels", user_video_reels_path(current_user)
   .playerContentArea
     .leftNavColPlayer
       .leftNavPlayer
@@ -17,7 +20,7 @@
       
     .flashArea#flashArea
     - if @vidavee && session[:vidavee] && @video_asset.dockey
-      = render(:partial => 'shared/video_player', :locals => { :fvars => {:dockey => @video_asset.dockey}, :target => 'flashArea', :height => 550, :width => 750 })
+      = render(:partial => 'shared/video_player', :locals => { :fvars => {:dockey => @video_asset.dockey}, :target => 'flashArea', :height => 750, :width => 800 })
       
     .clearDiv
   .clearDiv

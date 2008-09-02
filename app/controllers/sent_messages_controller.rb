@@ -1,6 +1,4 @@
-class SentMessagesController < ApplicationController
-
-  before_filter :login_required
+class SentMessagesController < BaseController
 
   # GET /sent_messages
   # GET /sent_messages.xml

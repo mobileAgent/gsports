@@ -5,9 +5,9 @@
 # running the rake task. Nominally run every 5 minutes.
 # 
 RAILS_ROOT=${RAILS_ROOT:-`dirname $0`/..}
-RAILS_ENV=${RAILS_ENV:-"production"}
+export RAILS_ENV=${RAILS_ENV:-"production"}
 PATH=/usr/local/bin:/bin:/usr/bin:${PATH}
 LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH}
 
 cd ${RAILS_ROOT}
-rake vidavee:update_queued_videos_status
+rake --silent vidavee:update_queued_videos_status >> ${RAILS_ROOT}/log/${RAILS_ENV}-vidavee-status.log

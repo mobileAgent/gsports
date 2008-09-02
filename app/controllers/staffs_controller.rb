@@ -1,6 +1,5 @@
 class StaffsController < BaseController
 
-  before_filter :login_required
   before_filter :admin_for_league_or_team
 
   # GET /staff

@@ -8,9 +8,9 @@ class MembershipNotifier < ActionMailer::Base
   def billing_success(email, membership)
     setup_sender_info
     @recipients  = "#{email}"
-    @subject     = "Your #{AppConfig.community_name} monthly membership fee has been billed"
+    @subject     = "[#{AppConfig.community_name}] Your monthly membership fee has been billed"
     @sent_on     = Time.now
-    @body[:message] = "#{membership.name}, your credit card ending in #{membership.credit_card.displayable_number} has been billed successfully. Thank You"
+    @body[:message] = "Hi #{membership.name},\n\nYur credit card ending in #{membership.credit_card.displayable_number} has been billed successfully. \nThank you for continuing your #{AppConfig.community_name} membership."
     @body[:url] = "#{APP_URL}"
   end
 
@@ -18,19 +18,28 @@ class MembershipNotifier < ActionMailer::Base
   def billing_failure(email, membership, reason)
     setup_sender_info
     @recipients  = "#{email}"
-    @subject     = "There was a problem billing your #{AppConfig.community_name} monthly membership fee"
+    @subject     = "[#{AppConfig.community_name}]There was a problem billing your monthly membership fee"
     @sent_on     = Time.now
-    @body[:message] = "#{membership.name}, There was a problem billing your credit card: #{reason}. Please login and update your Profile billing information. Thank you!"
+    @body[:message] = "Hi #{membership.name},\n\nThere was a problem billing your credit card: #{reason}. Please login and update your Profile billing information.\n\nThank you!"
+    @body[:url] = "#{APP_URL}"
+  end
+
+  def card_expiring(email, membership)
+    setup_sender_info
+    @recipients  = "#{email}"
+    @subject     = "[#{AppConfig.community_name}] News about your account"
+    @sent_on     = Time.now
+    @body[:message] = "Hi #{membership.name},\n\nThe credit card used for your account (ending in #{membership.credit_card.displayable_number}) is going to expire soon.\nPlease login and update your Profile billing information!\n\nThank you!"
     @body[:url] = "#{APP_URL}"
   end
 
   protected
   def setup_email(user)
     setup_sender_info
-    @sent_on     = Time.now
+    @sent_on = Time.now
   end
  
   def setup_sender_info
-    @from        = "The #{AppConfig.community_name} Team <#{AppConfig.support_email}>"   
+    @from = "The #{AppConfig.community_name} Team <#{AppConfig.support_email}>"   
   end
 end

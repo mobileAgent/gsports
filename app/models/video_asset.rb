@@ -38,11 +38,15 @@ class VideoAsset < ActiveRecord::Base
 
   # Game metadata
   def self.GAME_LEVELS
-    ["Varsity","JV","Recreational","Other"]
+    ["Varsity","JV","Recreational"]
   end
 
   def self.GAME_GENDERS
     ["Boys","Girls","Coed", "Mens", "Womens"]
+  end
+
+  def self.GAME_TYPES
+    ["Regular Season", "Playoff", "Championship", "Scrimmage"]
   end
   
   named_scope :for_user,
@@ -184,7 +188,37 @@ class VideoAsset < ActiveRecord::Base
   def owner
     self.user
   end
-  
+
+  def game_date_string
+    return '' if game_date.nil?
+    if ignore_game_day
+      game_date.strftime("%Y-%m")
+    else
+      game_date.to_s(:game_date)
+    end
+  end
+
+  def human_game_date_string
+    return '' if game_date.nil?
+    if ignore_game_day
+      game_date.strftime("%B, %Y")
+    else
+      game_date.to_s(:readable)
+    end
+  end
+
+  def game_level_choices
+    a = VideoAsset.GAME_LEVELS
+    a << game_level unless (a.member?(game_level) || game_level.nil?)
+    a
+  end
+
+  def game_type_choices
+    a = VideoAsset.GAME_TYPES
+    a << game_type unless (a.member?(game_type) || game_type.nil?)
+    a
+  end
+
   private
   
   def find_or_create_team_by_name team_name

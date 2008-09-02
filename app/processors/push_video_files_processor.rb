@@ -11,14 +11,14 @@ class PushVideoFilesProcessor < ApplicationProcessor
     session_token = vidavee.login
     dockey = vidavee.push_video session_token,video_asset,video_asset.uploaded_file_path
     if dockey
-      logger.debug "Video push #{video_asset.uploaded_file_path} => #{dockey}"
-      if (video_asset.video_status == 'queued')
-        publish(:update_video_status,"#{video_asset.id}")
-      end
+      logger.info "Video push #{video_asset.uploaded_file_path} => #{dockey}"
+      #if (video_asset.video_status == 'queued')
+      #  publish(:update_video_status,"#{video_asset.id}")
+      #end
     else
       fullpath = video_asset.uploaded_file_path
       fn = fullpath[File.dirname(fullpath).length+1..-1]
-      logger.debug "Video push failed for #{fullpath}"
+      logger.info "Video push failed for #{fullpath}"
       [User.find_by_email(ADMIN_EMAIL),video_asset.user_id].uniq.each do |u|
         m = Message.create(:title => "Video upload failed for #{fn}",
                            :body => "Video file #{fn} could not be pushed to the backend video engine.",

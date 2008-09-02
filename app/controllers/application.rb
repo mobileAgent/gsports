@@ -1,11 +1,14 @@
 # Filters added to this controller apply to all controllers in the application.
 # Likewise, all the methods added will be available for all controllers.
-
 class ApplicationController < ActionController::Base
-
+  
   helper :all # include all helpers, all the time
   before_filter :preload_models
+  before_filter :beta_mode
 
+  # Let exception notifier work on all controllers
+  include ExceptionNotifiable
+  
   # Help with ssl switching
   include SslRequirement
   
@@ -21,6 +24,16 @@ class ApplicationController < ActionController::Base
   # from your application log (in this case, all fields with names like "password"). 
   filter_parameter_logging :password, :password_confirm, :verification_value, :cardnumber, :verificationnumber, :credit_card
 
+  protected
+
+  def beta_mode
+    if (CLOSED_BETA_MODE)
+      unless ALLOWED_IP_ADDRS.member?(request.remote_ip)
+        render :template => 'base/beta', :layout => false and return
+      end
+    end
+    return true
+  end
 
   # Allow these models to be memcached
   def preload_models

@@ -3,8 +3,6 @@ class VideoAssetsController < BaseController
   include ActiveMessaging::MessageSender
   publishes_to :push_video_files
 
-  before_filter :login_required
-  before_filter :vidavee_login
   skip_before_filter :verify_authenticity_token, :only => [:auto_complete_for_video_asset_home_team_name,
                                                            :auto_complete_for_video_asset_visiting_team_name,
                                                            :auto_complete_for_video_asset_team_name,
@@ -14,6 +12,7 @@ class VideoAssetsController < BaseController
   session :cookie_only => false, :only => [:swfupload]
   protect_from_forgery :except => [:swfupload ]
   verify :method => :post, :only => [ :save_video, :swfupload ]
+  after_filter :cache_control, :only => [:create, :update, :delete]
   
   uses_tiny_mce(:options => AppConfig.narrow_mce_options.merge({:width => 530}),
                 :only => [:show])
@@ -110,6 +109,11 @@ class VideoAssetsController < BaseController
       redirect_to url_for({ :controller => "search", :action => "my_videos" }) and return
     end
     
+    gd = params[:video_asset][:game_date] 
+    if (gd.length > 0 && gd.length <= 7) # yyyy-mm
+      params[:video_asset][:game_date] += '-01'
+      params[:video_asset][:ignore_game_day] = true
+    end
     @video_asset = VideoAsset.new(params[:video_asset])
     @video_asset.video_status = 'unknown'
       
@@ -138,6 +142,12 @@ class VideoAssetsController < BaseController
     respond_to do |format|
       @video_asset.tag_with(params[:tag_list] || '') 
       @video_asset = add_team_and_league_relations(@video_asset,params)
+      gd = params[:video_asset][:game_date] 
+      if (gd.length > 0 && gd.length <= 7) # yyyy-mm
+        params[:video_asset][:game_date] += '-01'
+        params[:video_asset][:ignore_game_day] = true
+      end
+        
       if @video_asset.update_attributes(params[:video_asset])
         flash[:notice] = 'VideoAsset was successfully updated.'
         format.html { redirect_to(@video_asset) }
@@ -268,6 +278,13 @@ class VideoAssetsController < BaseController
       video_asset.league_id= current_user.league_id
     end
     video_asset
+  end
+
+  protected
+
+  def cache_control
+    Rails.cache.delete('quickfind_sports');
+    Rails.cache.delete('quickfind_seasons');
   end
 
 end

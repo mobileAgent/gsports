@@ -37,5 +37,7 @@
             %td.numeric= team.users.count
         
             %td= link_to 'Delete', team_path(team), :confirm => 'Are you sure?', :method => :delete
-
-      = link_to 'New team', url_for({:controller=>'teams',:action=>'new',:league_id=>@league.id})
+      - if @league
+        = link_to 'New team', url_for({:controller=>'teams',:action=>'new',:league_id=>@league.id})
+      - else
+        = link_to 'New team', url_for({:controller=>'teams',:action=>'new'})

@@ -25,7 +25,7 @@ set :group, "admin"
 set :use_sudo, false
 set :ssh_options, { :forward_agent => true }
 
-set :app_symlinks, %w(files photos videos assets)
+set :app_symlinks, %w(files photos assets)
 set :rails_config_files, %w(database.yml mailer.yml application.yml lucifer.yml broker.yml)
 
 namespace :deploy do
@@ -76,14 +76,14 @@ namespace :poller do
   task :stop_prior_poller, :roles=>:app do
     if previous_release
       rails_env = fetch(:environment, "production")
-      run "cd #{current_path}; RAILS_ENV=#{rails_env} script/poller stop"
+      run "cd #{previous_release}; RAILS_ENV=#{rails_env} script/poller stop"
     end
   end
   
   desc "start poller"
   task :start_poller, :roles=>:app do
     rails_env = fetch(:environment, "production")
-    run "cd #{current_path}; RAILS_ENV=#{rails_env} script/poller start"
+    run "cd #{current_release}; RAILS_ENV=#{rails_env} script/poller start"
   end
 end
 
@@ -93,7 +93,7 @@ task :create_symlinks do
   via = fetch(:run_method, :run)
   base_dir = fetch(:deploy_to)
   invoke_command("cd #{current_release} && ln -s #{base_dir}/shared/photos ./public/photos", :via => via, :as => as)        
-  invoke_command("cd #{current_release} && ln -s #{base_dir}/shared/videos ./public/videos", :via => via, :as => as)        
+  # invoke_command("cd #{current_release} && ln -s #{base_dir}/shared/videos ./public/videos", :via => via, :as => as)        
 end
 
 namespace :sphinx do

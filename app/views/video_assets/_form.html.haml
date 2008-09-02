@@ -1,14 +1,48 @@
 = f.error_messages
 
 %p
-  = f.label :title
+  = f.label :sport
   %br/
-  = f.text_field :title
+  = text_field_with_auto_complete :video_asset, :sport, :autocomplete => "off"
 %p
-  = f.label :description
+  = f.label "Game Date (yyyy-mm-dd) or (yyyy-mm if day unknown)"
   %br/
-  = f.text_field :description
+  = text_field :video_asset, :game_date, :value => @video_asset.game_date_string
   
+  
+%p
+  %label{:for=>"video_asset[home_team_name]"} Home Team (Our Team) / Score
+  %br/
+  %fieldset.inline
+    = text_field_with_auto_complete :video_asset, :home_team_name, :autocomplete => "off"
+    = text_field :video_asset, :home_score, :value => @video_asset.home_score, :size=>3
+
+%p
+  %label{:for=>"video_asset[visiting_team_name]"} Opponent / Score
+  %br/
+  %fieldset.inline
+    = text_field_with_auto_complete :video_asset, :visiting_team_name, :autocomplete => "off"
+    = text_field :video_asset, :visitor_score, :value => @video_asset.visitor_score, :size=>3
+
+%p
+  %label{:for=>"video_asset[game_gender]"} Boys/Girls
+  %br/
+  = collection_select("video_asset","game_gender",VideoAsset.GAME_GENDERS,"to_s","to_s",{ :selected => @video_asset.game_gender })
+
+%p
+  %label{:for=>"video_asset[game_level]"} Level
+  %br/
+  = collection_select("video_asset","game_level",@video_asset.game_level_choices, "to_s","to_s", { :selected => @video_asset.game_level}, {:style => "width: 115px"})
+  %script
+    var z=dhtmlXComboFromSelect("video_asset_game_level");
+
+%p
+  %label{:for=>"video_asset[game_type]"} Game Type
+  %br/
+  = collection_select("video_asset","game_type",@video_asset.game_type_choices, "to_s","to_s", {},{:style => "width: 115px"})
+  %script
+    var z=dhtmlXComboFromSelect("video_asset_game_type");
+    
 %p
   %br/
   =f.check_box :public_video
@@ -17,46 +51,17 @@
   %br/
   
 %p
-  = f.label :sport
+  = f.label :title
+  %input{:type => 'button', :onclick => 'generate_video_title()', :value => "Auto-fill"}
   %br/
-  = text_field_with_auto_complete :video_asset, :sport, :autocomplete => "off"
-%p
-  = f.label "Game Date (yyyy-mm-dd)"
-  %br/
-  = text_field :video_asset, :game_date, :value => game_date(@video_asset.game_date)
-  
-%p
-  %label{:for=>"video_asset[home_team_name]"} Home Team
-  %br/
-  = text_field_with_auto_complete :video_asset, :home_team_name, :autocomplete => "off"
-    
-%p
-  %label{:for=>"video_asset[visiting_team_name]"} Visitng Team
-  %br/
-  = text_field_with_auto_complete :video_asset, :visiting_team_name, :autocomplete => "off"
+  = f.text_field :title, :size => 85
 
 %p
-  %label{:for=>"video_asset[game_gender]"} Boys/Girls
+  = f.label :description
   %br/
-  = collection_select("video_asset","game_gender",VideoAsset.GAME_GENDERS,"to_s","to_s",{ :selected => @video_asset.game_gender, :include_blank => true})
+  = f.text_area :description, :rows => 3, :cols => 65
 
-%p
-  %label{:for=>"video_asset[game_level]"} Level
-  %br/
-  = collection_select("video_asset","game_level",VideoAsset.GAME_LEVELS, "to_s","to_s",{:include_blank => true, :selected => @video_asset.game_level})
-
-%p
-  = f.label "Home Team Score"
-  %br/
-  = text_field :video_asset, :home_score, :value => @video_asset.home_score, :size=>3
-
-%p
-  = f.label "Visiting Team Score"
-  %br/
-  = text_field :video_asset, :visitor_score, :value => @video_asset.visitor_score, :size=>3
-
-
-%p
+%p  
   =f.label :tags
   %br/
   = text_field_tag 'tag_list', @video_asset.tags.collect{|t| t.name}.join(" "), {:autocomplete => "off", :size => 35}
@@ -68,6 +73,11 @@
 - if current_user.admin?
   %fieldset.emphasized
     %legend="Advanced Fields (Admin Only)"
+    %p
+      %label{:for=>"video_asset[gsan]"} GSAN
+      %br/
+      = f.text_field :gsan
+      
     %p
       = f.label :league_name
       %br/

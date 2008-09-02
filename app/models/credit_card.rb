@@ -6,6 +6,10 @@ class CreditCard < ActiveRecord::Base
   # is encrypted but we never need to worry about it
   encrypt_attributes :suffix=>'_encrypted', :key_file=>'lucifer.yml'
 
+  # List cards expiring this month
+  named_scope :expiring,
+    :conditions => ["month = ? and year = ?",Time.now.month,Time.now.year]
+
 
   def expiration_date=(date)
     self.month=date.month

@@ -50,7 +50,11 @@ class Post < ActiveRecord::Base
         return league.avatar.public_filename(:thumb)
       end
     end
-    return user.team.avatar.public_filename(:thumb)
+    if (user.team_id && user.team.avatar)
+      return user.team.avatar.public_filename(:thumb)
+    else
+      return ''
+    end
   end
 
   # Team or league name of the author

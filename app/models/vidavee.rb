@@ -432,6 +432,7 @@ class Vidavee < ActiveRecord::Base
       total_found += found
       total_saved += saved
     end
+    puts "Found #{total_found} clips, saved #{total_saved}"
     [total_found, total_saved]
   end
   
@@ -510,7 +511,7 @@ class Vidavee < ActiveRecord::Base
   # Build and sign the request params
   def build_request_params(action,sessionid='',extra_params={}, include_login=true)
     # get a timestamp in vidavee format for use in the http api
-    ts = Time.now.to_i.to_s + "000"
+    ts = "%.0f" % (Time.now.to_f * 1000)
     params = {KEY_PARAM => key,
       TS_PARAM => ts,
       SIG_PARAM => sign(action,ts),

@@ -1,0 +1,13 @@
+#!/bin/bash
+#
+# To notify users who have cards expiring this month
+# (cards expire at the end of the listed month).
+# Nominally run on the first day of each month
+# 
+RAILS_ROOT=${RAILS_ROOT:-`dirname $0`/..}
+export RAILS_ENV=${RAILS_ENV:-"production"}
+PATH=/usr/local/bin:/bin:/usr/bin:${PATH}
+LD_LIBRARY_PATH=/usr/local/lib:${LD_LIBRARY_PATH}
+
+cd ${RAILS_ROOT}
+rake --silent billing:notify_expiring_cardholders

@@ -5,23 +5,21 @@ class UsersController < BaseController
   end
   
   protect_from_forgery :only => [:create, :update, :destroy]
-  before_filter :login_required, :only => [:edit, :edit_account, :update,
-                                           :edit_billing, :update_billing,
-                                           :welcome_photo, :welcome_about, :welcome_invite,
-                                           :return_admin, :assume, :featured, 
-                                           :toggle_featured, :edit_pro_details, :update_pro_details,
-                                           :dashboard, :show, :index, :change_team_photo, :change_league_photo, :disable]
+  skip_before_filter :gs_login_required, :only => [:signup, :register, :new, :create, :billing, :submit_billing, :auto_complete_for_user_team_name, :auto_complete_for_team_league_name]
   before_filter :admin_required, :only => [:assume, :destroy, :featured, :toggle_featured, :toggle_moderator, :disable]
   before_filter :find_user, :only => [:edit, :edit_pro_details, :show, :update, :destroy, :statistics, :disable ]
   
   uses_tiny_mce(:options => AppConfig.gsdefault_mce_options.merge({:editor_selector => "rich_text_editor"}), 
                 :only => [:new, :create, :update, :edit, :welcome_about])
   
-  uses_tiny_mce(:options => AppConfig.narrow_mce_options.merge({:width => 330}),
+  uses_tiny_mce(:options => AppConfig.narrow_mce_options.merge({:width => 300}),
                 :only => [:show])
 
   def show
-    unless current_user.admin? || current_user.id == @user.id || @user.profile_public
+    # The current user can see @user's profile only if
+    # they are the admin, themselves, the profile is public
+    # or they are a friend of @user
+    unless (current_user.admin? || current_user.id == @user.id || @user.profile_public || @user.accepted_friendships.collect(&:friend_id).member?(current_user.id))
       render :action => 'private'
     end
     
@@ -53,8 +51,18 @@ class UsersController < BaseController
     update_view_count(@user) unless current_user && current_user.eql?(@user)
   end
 
+  # registration step 0, coming from an invitation link
+  # need to grab the inviter stuff while it is hot
+  def signup
+    session[:inviter_id] = params[:inviter_id]
+    session[:inviter_code] = params[:inviter_code]
+    redirect_to '/info/about'
+  end
+
   # registration step 1
   def register
+    @inviter_id = session[:inviter_id] || params[:inviter_id]
+    @inviter_code = session[:inviter_code] || params[:inviter_code]
   end
 
   # registration step 2

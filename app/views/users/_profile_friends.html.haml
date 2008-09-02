@@ -9,8 +9,11 @@
   .contentBoxContent
     .profileFeature
     
-    
-      = link_to "&raquo; View all my friend requests (#{@pending_friendships_count})", pending_user_friendships_path(@user) if @is_current_user
+
+      - if @is_current_user
+        = link_to "&raquo; View all my friend requests (#{@pending_friendships_count})", pending_user_friendships_path(@user)
+      - elsif current_user && current_user.can_request_friendship_with(@user)
+        = add_friend_link(@user)
       %br
       %br    
       - @accepted_friendships.each do |user|

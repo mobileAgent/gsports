@@ -1,8 +1,8 @@
 class PostsController < BaseController
 
-  before_filter :login_required, :only => [:new, :edit, :update, :destroy, :create, :manage, :show, :popular]
   uses_tiny_mce(:options => AppConfig.gsdefault_mce_options, :only => [:new, :edit, :update, :create ])
   uses_tiny_mce(:options => AppConfig.simple_mce_options, :only => [:show])
+  skip_before_filter :gs_login_required => [:show_public]
 
   # Allowed to show any of the featured athlete stories, but not just any story
   def show_public

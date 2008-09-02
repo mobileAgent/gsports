@@ -1,6 +1,5 @@
 # -*- coding: undecided -*-
 require 'yaml'
-require 'rexml-expansion-fix'
 
 # Be sure to restart your server when you modify this file
 
@@ -58,6 +57,7 @@ Rails::Initializer.run do |config|
      :secret      => db[RAILS_ENV]['secret']
   }
 
+
   # Use the database for sessions instead of the cookie-based default,
   # which shouldn't be used to store highly confidential information
   # (create the session table with "rake db:sessions:create")
@@ -96,8 +96,6 @@ Rails::Initializer.run do |config|
 end
 
 
-ExceptionNotifier.exception_recipients = %w(flester@gmail.com)
-
 # Project requires go here, rather than spread out in the project
 require "#{RAILS_ROOT}/vendor/plugins/community_engine/engine_config/boot.rb"
 require 'digest/md5'
@@ -106,8 +104,10 @@ require 'activemessaging/processor'
 # This sets the root of where video upload and 
 # transfer to vidavee takes place. Best not to be
 # under the public web server as we don't want to
-# be serving these up ourselves.
-VIDEO_BASE = "#{RAILS_ROOT}/videos"
+# be serving these up ourselves. Put it above RAILS_ROOT
+# so we don't have to worry about moving it during
+# cap deploy of a new version
+VIDEO_BASE = "#{RAILS_ROOT}/../../videos/"
 
 # Email addr for the admin account
 ADMIN_EMAIL = "admin@globalsports.net"
@@ -116,3 +116,11 @@ FOOTER_AD_COUNT = 3
 
 # Misc constants
 SECONDS_PER_DAY = 86400
+
+ExceptionNotifier.exception_recipients = %w(flester@gmail.com)
+ExceptionNotifier.sender_address = %("Application Error" <admin@globalsports.net>)
+ExceptionNotifier.email_prefix = '[GS] '
+
+# Prevent a rexml DoS attack. This has to be 
+# at the bottom of the file
+require 'rexml-expansion-fix'

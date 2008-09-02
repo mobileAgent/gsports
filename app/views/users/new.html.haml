@@ -11,7 +11,7 @@
         PART 2: USER INFORMATION &raquo;
       PART 3: BILLING INFORMATION
   
-    = error_messages_for :user, :team, :league
+    = error_messages_for :user, :team, :league, :object_name => 'User Information'
     
     %p
       %br
@@ -141,9 +141,10 @@
           
           %br
         
-          Your e-mail address will be your username neque porro 
-          dolorem consecteteur.  Passwords should be 8-10 characters 
-          in length.
+          Your e-mail address will be your username.
+          Passwords should be 8-10 characters 
+          in length and contain at least one number and
+          one non-alphabetic character.
           
           %br
           %br
@@ -157,9 +158,8 @@
           
           %br
           %br
-
-          = hidden_field_tag :inviter_id, params[:inviter_id]
-          = hidden_field_tag :inviter_code, params[:inviter_code]
+          = hidden_field_tag :inviter_id, session[:inviter_id]
+          = hidden_field_tag :inviter_code, session[:inviter_code]
           = hidden_field_tag :role, @requested_role
           -#%p= submit_tag 'Sign up'
           .accountContinue2

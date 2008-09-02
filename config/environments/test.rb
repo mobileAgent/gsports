@@ -36,3 +36,7 @@ Active_Merchant_payflow_gateway_password = 'MarkDR1'
 Active_Merchant_payflow_gateway_partner = 'PayPal'
 
 PAYMENT_DUE_CYCLE = 10 # How often to bill in days
+
+CLOSED_BETA_MODE = false
+ALLOWED_IP_ADDRS = []
+

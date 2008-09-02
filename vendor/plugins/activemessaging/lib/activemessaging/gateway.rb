@@ -197,7 +197,13 @@ module ActiveMessaging
         @@guard.synchronize {
           begin
             prepare_application
-            _dispatch(message)
+
+            # Patched to prevent blowout on stale connections
+            if defined?(ActiveRecord)
+              ActiveMessaging.logger.debug('Checking for active connection to database')
+              ActiveRecord::Base.verify_active_connections!
+            end
+           _dispatch(message)
           rescue Object => exc
             ActiveMessaging.logger.error "Dispatch exception: #{exc}"
             ActiveMessaging.logger.error exc.backtrace.join("\n\t")
