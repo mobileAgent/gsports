@@ -5,31 +5,37 @@
 .field-block
   %label.required{:for=>'team_name'}
     * Team Name
+  %br
   = text_field :team, :name
   
 .field-block
   %label
     City
+  %br
   = text_field :team, :city, :size => 16
     
 .field-block
   %label
     County
+  %br
   = text_field :team, :county_name, :size => 16
     
 .field-block
   %label
     State
-  =collection_select("team","state_id",State.all,"id","name",{ :prompt => 'Choose State' })
+  %br
+  =collection_select("team","state_id",State.all,"id","name",{ :prompt => 'State' })
     
 .field-block
   %label
     Description
+  %br
   = text_field :team, :description , :size => 35
 
 .field-block
   %label.required{"for" => "team_league_name"}
     * League
+  %br
   = text_field_with_auto_complete :team, :league_name, :autocomplete => "off"
     
     

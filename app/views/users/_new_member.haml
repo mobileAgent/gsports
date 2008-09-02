@@ -1,8 +1,9 @@
-
+%hr
 .section-head Team Association
 %br
 
 .field-block
   %label.required{"for" => "team_name"}
     * Team
+  %br
   = text_field_with_auto_complete :user, :team_name, :autocomplete => 'off'
