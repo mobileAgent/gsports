@@ -453,6 +453,7 @@ div.thumbFIT {
   margin-left: 15px;
 }
 
+<<<<<<< Updated upstream:public/stylesheets/plus.css
 input[type='button'] {
   color: #FFEF0A;
   background-color: #444444;
@@ -549,4 +550,10 @@ input[type='button'] {
 }
 .bg_30 {
   background-image: url("/gs/images/bg/30.jpg");
+}
+
+.headerBrand {
+     height: 90px; 
+     width: 475px;
+     z-index: 105;
 }

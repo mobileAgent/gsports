@@ -1,7 +1,9 @@
 .util
 %form#login{ :action => sessions_path, :method => "post" }
   .headerHome
-    %h1.headerBrand= "#{AppConfig.community_name}"
+    %a.headerLink{ :href => '/' }
+      %h1.headerBrand{:style => 'height: 100px; width: 625px; z-index: 105;'}
+        ="#{AppConfig.community_name}"
     .loginBox
       %label{:for => "login"} USERNAME
       = text_field_tag 'login', nil, :class => 'loginFormInput'
