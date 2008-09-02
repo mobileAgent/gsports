@@ -3,6 +3,7 @@ class BaseController < ApplicationController
 
   before_filter :vidavee_login
   before_filter :gs_login_required, :except => [:site_index, :beta]
+  before_filter :quickfind_setup
 
   # Show the lockout page
   def beta
@@ -82,6 +83,16 @@ class BaseController < ApplicationController
       session[:vidavee_expires] = 5.minutes.from_now
     end
     @vidavee
+  end
+
+  # Set up information we need to drive the quickfind dropdowns
+  # mostly memcached when running with memcached turned on
+  def quickfind_setup
+    @quickfind_seasons = Rails.cache.fetch('quickfind_seasons') { VideoAsset.seasons }
+    @quickfind_states = Rails.cache.fetch('quickfind_states') { Team.states }
+    @quickfind_counties = Rails.cache.fetch('quickfind_counties') { Team.counties }
+    @quickfind_leagues = Rails.cache.fetch('quickfind_leagues') { League.all }
+    @quickfind_sports = Rails.cache.fetch('quickfind_sports') { VideoAsset.sports }
   end
 
 end

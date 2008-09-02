@@ -2,6 +2,7 @@ class LeaguesController < BaseController
 
   auto_complete_for :league, :name
   before_filter :admin_required, :except => [:auto_complete_for_league_name, :show ]
+  after_filter :cache_control, :only => [:create, :update, :delete]
   
   # GET /league
   # GET /league.xml
@@ -85,6 +86,12 @@ class LeaguesController < BaseController
       format.html { redirect_to(leagues_url) }
       format.xml  { head :ok }
     end
+  end
+
+  protected
+
+  def cache_control
+    Rails.cache.delete('quickfind_leagues')
   end
   
 end

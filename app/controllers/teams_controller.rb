@@ -4,6 +4,7 @@ class TeamsController < BaseController
   skip_before_filter :verify_authenticity_token, :only => [:auto_complete_for_team_name, :auto_complete_for_team_league_name ]
   before_filter :admin_required, :except => [:auto_complete_for_team_name, :show, :show_public, :auto_complete_for_team_league_name ]
   skip_before_filter :gs_login_required, :only => [:show_public]
+  after_filter :cache_control, :only => [:update, :create, :destroy]
   
   # GET /team
   # GET /team.xml
@@ -109,6 +110,13 @@ class TeamsController < BaseController
     @leagues = League.find(:all, :conditions => ["LOWER(name) like ?", params[:team][:league_name].downcase + '%' ], :order => "name ASC", :limit => 10 )
     choices = "<%= content_tag(:ul, @leagues.map { |l| content_tag(:li, h(l.name)) }) %>"    
     render :inline => choices
+  end
+
+  protected
+
+  def cache_control
+    Rails.cache.delete('quickfind_states')
+    Rails.cache.delete('quickfind_counties')
   end
   
 end

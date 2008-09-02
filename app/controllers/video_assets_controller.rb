@@ -12,6 +12,7 @@ class VideoAssetsController < BaseController
   session :cookie_only => false, :only => [:swfupload]
   protect_from_forgery :except => [:swfupload ]
   verify :method => :post, :only => [ :save_video, :swfupload ]
+  after_filter :cache_control, :only => [:create, :update, :delete]
   
   uses_tiny_mce(:options => AppConfig.narrow_mce_options.merge({:width => 530}),
                 :only => [:show])
@@ -277,6 +278,13 @@ class VideoAssetsController < BaseController
       video_asset.league_id= current_user.league_id
     end
     video_asset
+  end
+
+  protected
+
+  def cache_control
+    Rails.cache.delete('quickfind_sports');
+    Rails.cache.delete('quickfind_seasons');
   end
 
 end
