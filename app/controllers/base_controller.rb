@@ -23,11 +23,19 @@ class BaseController < ApplicationController
     end
 
     # Not logged in, show featured games and athletes
-    @games_of_the_week = Rails.cache.fetch('games_of_the_week') { GameOfTheWeek.for_home_page || []}
+    @athletes_of_the_week =
+      Rails.cache.fetch('athletes_of_the_week', :expires_in => 30.minutes) do
+      AthleteOfTheWeek.for_home_page
+    end
+    @articles_of_the_week =
+      Rails.cache.fetch('articles_of_the_week', :expires_in => 30.minutes) do
+      Post.highlighted_articles(@athletes_of_the_week.collect(&:id)) 
+    end
+    @games_of_the_week =
+      Rails.cache.fetch('games_of_the_week', :expires_in => 30.minutes) do
+      GameOfTheWeek.for_home_page || []
+    end
     @game_dockey_string = @games_of_the_week.collect(&:dockey).join(",")
-    @athletes_of_the_week = AthleteOfTheWeek.for_home_page
-    @articles_of_the_week = Post.highlighted_articles(@athletes_of_the_week.collect(&:id))
-
   end
 
   # Turn off CE action caching, we are going to use Rails.cache
@@ -91,8 +99,9 @@ class BaseController < ApplicationController
     @quickfind_seasons = Rails.cache.fetch('quickfind_seasons') { VideoAsset.seasons }
     @quickfind_states = Rails.cache.fetch('quickfind_states') { Team.states }
     @quickfind_counties = Rails.cache.fetch('quickfind_counties') { Team.counties }
-    @quickfind_leagues = Rails.cache.fetch('quickfind_leagues') { League.all }
+    @quickfind_leagues = Rails.cache.fetch('quickfind_leagues') { League.find(:all, :order => 'name ASC') }
     @quickfind_sports = Rails.cache.fetch('quickfind_sports') { VideoAsset.sports }
+    @quickfind_cities = Rails.cache.fetch('quickfind_cities') { Team.cities }
   end
 
 end
