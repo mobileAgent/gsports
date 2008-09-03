@@ -37,13 +37,23 @@ class TeamsController < BaseController
   def show_by_name
     @team = Team.find_by_name(params[:team_name])
     if (params[:nick])
-      render :inline => @team.title_name and return
+      title_name = @team ? @team.title_name : params[:team_name]
+      render :inline => title_name and return
+        
     end
-    
-    respond_to do |format|
-      format.html { render :action => :show }
-      format.xml  { render :xml => @team }
-      format.js { render :xml => @team }
+
+    if (@team)
+      respond_to do |format|
+        format.html { render :action => :show }
+        format.xml  { render :xml => @team }
+        format.js { render :xml => @team }
+      end
+    else
+      respond_to do |format|
+        format.html { render :controller => 'base', :action => 'site_index' }
+        format.xml  { render :xml => '', :status => :unprocessable_entity }
+        format.xml  { render :xml => '', :status => :unprocessable_entity }
+      end
     end
   end
   
