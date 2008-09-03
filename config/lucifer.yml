@@ -1,3 +1,7 @@
+aaron:
+  key: GS-development-encryption-key
+  salt: gs-development-salt
+
 development:
   key: GS-development-encryption-key
   salt: gs-development-salt
