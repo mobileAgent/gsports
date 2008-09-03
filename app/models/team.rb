@@ -84,5 +84,9 @@ class Team < ActiveRecord::Base
   def team_name
     self.name
   end
+
+  def title_name
+    self.nickname || self.name
+  end
   
 end

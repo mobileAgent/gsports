@@ -2,7 +2,7 @@ class TeamsController < BaseController
 
   auto_complete_for :team, :name
   skip_before_filter :verify_authenticity_token, :only => [:auto_complete_for_team_name, :auto_complete_for_team_league_name ]
-  before_filter :admin_required, :except => [:auto_complete_for_team_name, :show, :show_public, :auto_complete_for_team_league_name ]
+  before_filter :admin_required, :except => [:auto_complete_for_team_name, :show, :show_by_name, :show_public, :auto_complete_for_team_league_name ]
   skip_before_filter :gs_login_required, :only => [:show_public]
   after_filter :cache_control, :only => [:update, :create, :destroy]
   
@@ -10,10 +10,10 @@ class TeamsController < BaseController
   # GET /team.xml
   def index
     if params[:league_id]
-      @league = League.find(params[:league_id])
+      @league = League.find(params[:league_id], :order => :name)
       @teams = @league.teams
     else
-      @teams = Team.find(:all)
+      @teams = Team.find(:all, :order => :name)
     end
     
     respond_to do |format|
@@ -26,10 +26,24 @@ class TeamsController < BaseController
   # GET /team/1.xml
   def show
     @team = Team.find(params[:id])
-
     respond_to do |format|
       format.html # show.haml
       format.xml  { render :xml => @team }
+      format.js { render :xml => @team }
+    end
+  end
+
+  # GET /teamname/:team_name
+  def show_by_name
+    @team = Team.find_by_name(params[:team_name])
+    if (params[:nick])
+      render :inline => @team.title_name and return
+    end
+    
+    respond_to do |format|
+      format.html { render :action => :show }
+      format.xml  { render :xml => @team }
+      format.js { render :xml => @team }
     end
   end
   

@@ -107,5 +107,11 @@
       = f.label :video_status
       %br/
       = f.text_field :video_status
-    
+
 %p
+
+  = hidden_field_tag 'home_team_nickname', (@video_asset.home_team.title_name if @video_asset.home_team_id)
+  = hidden_field_tag 'visiting_team_nickname', (@video_asset.visiting_team.title_name if @video_asset.visiting_team_id)
+
+  #home_team_info{:style => 'display: block'}
+  #visiting_team_info{:style => 'display: block'}
