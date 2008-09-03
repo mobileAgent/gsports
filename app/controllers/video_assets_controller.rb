@@ -142,8 +142,15 @@ class VideoAssetsController < BaseController
     respond_to do |format|
       @video_asset.tag_with(params[:tag_list] || '') 
       @video_asset = add_team_and_league_relations(@video_asset,params)
-      gd = params[:video_asset][:game_date] 
-      if (gd.length > 0 && gd.length <= 7) # yyyy-mm
+      gd = params[:video_asset][:game_date]
+      params[:video_asset][:ignore_game_month] = false
+      params[:video_asset][:ignore_game_day] = false
+      params[:video_asset][:game_date_str] = gd
+      if (gd.length > 0 && gd.length == 4) # yyyy
+        params[:video_asset][:game_date] += "-01"
+        params[:video_asset][:ignore_game_month] = true
+      end
+      if (gd.length > 0 && gd.length == 7) # yyyy-mm
         params[:video_asset][:game_date] += '-01'
         params[:video_asset][:ignore_game_day] = true
       end

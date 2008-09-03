@@ -21,6 +21,7 @@ ActionController::Routing::Routes.draw do |map|
   # Override CE on this one by getting mine in there first
   map.admin_dashboard  '/admin/dashboard', :controller => 'admin', :action => 'dashboard'
   map.signup '/signup/:inviter_id/:inviter_code', :controller => 'users', :action => 'signup'
+  map.signup '/teamname/:team_name', :controller => 'teams', :action => 'show_by_name'
 
   # Turn on community engine routes
   map.from_plugin :community_engine

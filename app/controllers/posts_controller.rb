@@ -3,6 +3,7 @@ class PostsController < BaseController
   uses_tiny_mce(:options => AppConfig.gsdefault_mce_options, :only => [:new, :edit, :update, :create ])
   uses_tiny_mce(:options => AppConfig.simple_mce_options, :only => [:show])
   skip_before_filter :gs_login_required => [:show_public]
+  after_filter :cache_control, :only => [:update, :destroy, :create]
 
   # Allowed to show any of the featured athlete stories, but not just any story
   def show_public
@@ -72,6 +73,14 @@ class PostsController < BaseController
                        :link => :link_for_rss,
                        :pub_date => :published_at} })        
       }
+    end
+  end
+
+  protected
+
+  def cache_control
+    if @post && @post.is_live? && @post.category.name == AthleteOfTheWeek.CATEGORY_NAME
+      Rails.cache.delete('athletes_of_the_week')
     end
   end
   

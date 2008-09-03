@@ -20,10 +20,10 @@ class Team < ActiveRecord::Base
   
   # To support the video quickfind state selection dropdown
   def self.states
-    Team.find(:all, 
-              :select => 'DISTINCT state_id', 
-              :conditions => 'state_id IS NOT NULL',
-              :order => 'state_id ASC')
+    State.find(:all,
+               :select => 'DISTINCT states.id, states.name',
+               :joins => 'JOIN teams on teams.state_id = states.id',
+               :order => 'id ASC')
   end
 
   # To support the video quickfind county selection dropdown
@@ -31,12 +31,12 @@ class Team < ActiveRecord::Base
     if (state_id > -1)
       Team.find(:all, 
                 :select => "DISTINCT county_name", 
-                :conditions => "state_id = #{state_id} AND county_name IS NOT NULL",
+                :conditions => "state_id = #{state_id} AND county_name IS NOT NULL and length(county_name) > 0",
                 :order => 'county_name ASC')
     else
       Team.find(:all, 
                 :select => "DISTINCT county_name", 
-                :conditions => "county_name IS NOT NULL",
+                :conditions => "county_name IS NOT NULL and length(county_name) > 0",
                 :order => 'county_name ASC')
     end
   end
@@ -50,7 +50,7 @@ class Team < ActiveRecord::Base
     else
       Team.find(:all, 
                 :select => "DISTINCT city", 
-                :conditions => "city IS NOT NULL",
+                :conditions => "city IS NOT NULL and length(city) > 0",
                 :order => 'city ASC')
     end
   end
@@ -83,6 +83,10 @@ class Team < ActiveRecord::Base
 
   def team_name
     self.name
+  end
+
+  def title_name
+    self.nickname || self.name
   end
   
 end

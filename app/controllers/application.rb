@@ -39,6 +39,7 @@ class ApplicationController < ActionController::Base
   def preload_models
     Role
     Tag
+    State
     Team
     League
     Moniker

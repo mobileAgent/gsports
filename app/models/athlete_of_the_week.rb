@@ -18,7 +18,8 @@ class AthleteOfTheWeek < Post
     return [] if(my_category.nil? || team_staff_ids.empty?)
     AthleteOfTheWeek.find(:all, 
                           :conditions => ["category_id = ? and user_id IN (?) ", my_category.id, team_staff_ids], 
-                          :order => "published_at DESC", 
+                          :order => "published_at DESC",
+                          :include => :user,
                           :limit => 2)
   end
 
@@ -26,7 +27,8 @@ class AthleteOfTheWeek < Post
     league_staff_ids = User.league_staff(league_id).collect(&:id)
     return [] if(my_category.nil? || league_staff_ids.empty?)
     AthleteOfTheWeek.find(:all, 
-                          :conditions => ["category_id = ? and user_id IN (?) ", my_category.id, league_staff_ids], 
+                          :conditions => ["category_id = ? and user_id IN (?) ", my_category.id, league_staff_ids],
+                          :include => :user,
                           :order => "published_at DESC", 
                           :limit => 2)
   end

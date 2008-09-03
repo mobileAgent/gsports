@@ -7,7 +7,7 @@ class LeaguesController < BaseController
   # GET /league
   # GET /league.xml
   def index
-    @leagues = League.find(:all)
+    @leagues = League.find(:all, :order => :name)
 
     respond_to do |format|
       format.html # index.haml

@@ -190,8 +190,11 @@ class VideoAsset < ActiveRecord::Base
   end
 
   def game_date_string
-    return '' if game_date.nil?
-    if ignore_game_day
+    if game_date.nil?
+      game_date_str || ''
+    elsif ignore_game_month
+      game_date.strftime("%Y")
+    elsif ignore_game_day
       game_date.strftime("%Y-%m")
     else
       game_date.to_s(:game_date)
@@ -199,8 +202,11 @@ class VideoAsset < ActiveRecord::Base
   end
 
   def human_game_date_string
-    return '' if game_date.nil?
-    if ignore_game_day
+    if game_date.nil?
+      game_date_str || ''
+    elsif ignore_game_month
+      game_date.strftime("%Y")
+    elsif ignore_game_day
       game_date.strftime("%B, %Y")
     else
       game_date.to_s(:readable)
