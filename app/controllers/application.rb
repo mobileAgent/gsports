@@ -35,6 +35,10 @@ class ApplicationController < ActionController::Base
     return true
   end
 
+  def admin_for_league_or_team
+    (current_user.admin? || current_user.league_admin? || current_user.team_admin?) ? true : access_denied
+  end
+  
   # Allow these models to be memcached
   def preload_models
     Role
@@ -44,6 +48,7 @@ class ApplicationController < ActionController::Base
     League
     Moniker
     User
+    Favorite
     VideoAsset
     VideoClip
     VideoReel
