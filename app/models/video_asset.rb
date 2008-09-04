@@ -171,6 +171,10 @@ class VideoAsset < ActiveRecord::Base
     home_team ? home_team.name : nil
   end
   
+  def home_team_title_name
+    home_team ? home_team.title_name : nil
+  end
+  
   def visiting_team_name= team_name
     if (team_name && team_name.size > 0)
       self.visiting_team = find_or_create_team_by_name team_name
@@ -179,6 +183,10 @@ class VideoAsset < ActiveRecord::Base
 
   def visiting_team_name
     visiting_team ? visiting_team.name : nil
+  end
+  
+  def visiting_team_title_name
+    visiting_team ? visiting_team.title_name : nil
   end
 
   def thumbnail_dockey

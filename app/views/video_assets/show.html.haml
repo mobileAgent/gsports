@@ -9,10 +9,19 @@
   .playerContentArea
     .leftNavColPlayer
       .leftNavPlayer
-        %a.genericButton{ :href => new_message_path(:to => @video_asset.user.id, :title => "Your video '#{@video_asset.title}'") }
+        -#%a.genericButton{ :href => new_message_path(:to => @video_asset.user.id, :title => "Your video '#{@video_asset.title}'") }
           Send Message
         = render :partial => 'shared/favorite_item', :locals => { :item => @video_asset }
 
+        - if @video_asset.team
+          %a.genericButton{ :href => team_path( @video_asset.team_id )  }
+            %span
+              Team Profile
+        - if @video_asset.league && @video_asset.team_id.nil?
+          %a.genericButton{ :href => league_path( @video_asset.league_id )  }
+            %span
+              League Profile
+            
         - if current_user && current_user.can_edit?(@video_asset)
           %a.genericButton{ :href => edit_video_asset_path(@video_asset) }
             Edit

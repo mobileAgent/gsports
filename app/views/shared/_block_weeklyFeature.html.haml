@@ -3,14 +3,14 @@
     - if @featured_game_for_team
       .featureCol.featureVertRule.featureFloat.weeklyCol1
         %span.yellowHeader
-          %h3= "#{truncate_words(@featured_team.name,1)} Game Of The Week"
+          %h3= "#{@featured_team.title_name} Game Of The Week"
         .featureSummaryThumb.featureFIT
           = link_to "<img src='#{@vidavee.file_thumbnail_medium(@featured_game_for_team.dockey)}' title='#{h(@featured_game_for_team.title).gsub(/\'/,'')}' alt='Video'/>", video_asset_path(@featured_game_for_team)
         .featureText
-          - if @featured_game_for_team.visiting_team_name && @featured_game_for_team.home_team_name
-            %h3= "#{@featured_game_for_team.visiting_team_name} vs #{@featured_game_for_team.home_team_name}"
+          - if @featured_game_for_team.visiting_team_title_name && @featured_game_for_team.home_team_title_name
+            %h3= "#{@featured_game_for_team.visiting_team_title_name} vs #{@featured_game_for_team.home_team_title_name}"
           - else
-            %h3= "#{@featured_game_for_team.team.name}"
+            %h3= "#{@featured_game_for_team.team.title_name}"
           %span.sportName= "#{(@featured_game_for_team.sport? ? @featured_game_for_team.sport.capitalize : '')}"
           %br/
           %span.date= human_date(@featured_game_for_team.game_date)
@@ -20,7 +20,7 @@
       .featureCol.featureVertRule.featureFloat.weeklyCol2
         %span.yellowHeader
           %h3
-            = "#{truncate_words(@featured_team.name,1)} Athletes Of The Week"
+            = "#{@featured_team.title_name} Athletes Of The Week"
         - for athlete in @featured_athletes_for_team
           .featureSummaryThumb.featureFIT
             - if (athlete.image_thumbnail_for_post)
