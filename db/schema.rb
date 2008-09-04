@@ -343,9 +343,9 @@ ActiveRecord::Schema.define(:version => 20080901011601) do
     t.integer  "favorited_count", :limit => 11, :default => 0
     t.string   "published_as",    :limit => 16, :default => "draft"
     t.datetime "published_at"
-    t.boolean  "delta",                         :default => false
     t.integer  "team_id",         :limit => 11
     t.integer  "league_id",       :limit => 11
+    t.boolean  "delta",                         :default => false
   end
 
   add_index "posts", ["category_id"], :name => "index_posts_on_category_id"

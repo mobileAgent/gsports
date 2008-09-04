@@ -207,7 +207,7 @@
 	padding: 20px 0px 10px 0px;
 	float:left;
 	background-color: #ffffff;	
-	}
+}
 
 .forumIEfix {
 	background-color: #FFFFFF;
@@ -220,9 +220,22 @@
 
 .forumBoxHeader h2 {
 	padding-bottom: 10px;
+	float: left;
 	font-size: 15px;
 	font-family: Arial, Helvetica, sans-serif;
 	padding-top: 5px;
+}
+
+#monitor_topic {
+  float: right;
+}
+
+.forumTags {
+  margin-left: 25px;
+}
+
+.forumVoices {
+  margin-left: 25px;
 }
 
 .forumPost {
@@ -230,27 +243,25 @@
 	width: auto;
 	display: block;
 	height: auto;
+	margin-bottom: 10px;
 }
-
-.forumPostSummaryBody p {
-	background-color: #FFFFFF;
-	display: block;
-	margin-bottom: 20px;
-}
-
-.forumPoster {
+.forumPoster {  
 	height: 150px;
-	width: 90px;
+	width: 100px;
 	float: left;
-	padding-top: 25px;
+	padding-top: 10px;
 	padding-right: 5px;
 	padding-bottom: 5px;
 	padding-left: 5px;
 	text-align: center;
 }
-.forumPoster img {
-	border: 1px solid #666666;
+.forumPoster a img {
+	border: 2px solid #666666;
 }
+.forumPoster a:hover img {
+  border: 2px solid #0066CC;
+}
+
 
 .forumPoster a {
 	font-size: 110%;
@@ -264,7 +275,6 @@
 .forumPoster a:hover {
 	font-size: 110%;
 	color: #333333;
-	
 }
 
 .forumPostSummary {
@@ -276,20 +286,26 @@
 	padding-left: 10px;
 }
 
+.forumPostSummaryBody {
+  background-color: #FFFFFF;
+  padding: 10px;
+}
+
+.forumPostSummaryBody p {
+  background-color: #FFFFFF;
+  display: block;
+  margin-bottom: 10px;
+}
+
 .forumPostSummaryDate {
 	padding-bottom: 10px;
 }
 
-.forumPostSummaryBody {
-	background-color: #FFFFFF;
-	padding: 10px;
-}
-
 .forumActions {
 	float: right;
-	width: 135px;
+	width: 130px;
 	padding-top: 30px;
-	padding-left: 15px;
+	padding-left: 10px;
 }
 
 
@@ -1165,9 +1181,22 @@
 .listingActions {
 	float: right;
 	list-style:none;
+	padding-left: 10px;
+	align: center;
 }
 .listingActions li {
 	margin-bottom: 10px;
+}
+.listingDate {
+  padding-bottom: 10px;
+}
+.listingBody {
+  background-color: #FFFFFF;
+  padding: 10px;
+}
+.listingBody p {
+  background-color: #FFFFFF;
+  display: block;
 }
 
 /* general */
@@ -1594,7 +1623,7 @@ span.ROLLOVERIMAGE a span { display: none; visibility: hide; }
 	margin-bottom:20px;
 	background-color: #E2E4A7;
 }
-.contentBoxHeader{
+.contentBoxHeader {
 	background: url("/gs/images/content_box_header.png") repeat-x scroll left bottom;
 	background-color: #68A34E;
 	border-bottom: 2px solid #b7baa3;
