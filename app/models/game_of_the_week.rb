@@ -5,7 +5,7 @@ class GameOfTheWeek
     video_favorites = Favorite.user(User.admin.first).videos.all(:order => "created_at DESC", :limit => 6, :include => [:user, :favoritable])
     # Add a last resort to keep the whole site from being borked
     if video_favorites.size == 0
-      video_favorites << VideoAsset.ready.first
+      return [ VideoAsset.ready.first ]
     end
     video_favorites.collect(&:favoritable)
   end
