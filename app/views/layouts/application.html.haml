@@ -22,7 +22,7 @@
       = auto_discovery_link_tag(:rss, @rss_url, {:title => @rss_title})
     
   %body
-    %div{:class => logged_in? ? "backgroundContainer bg_#{(rand(30)+1)}" : 'backgroundContainerHome'}
+    %div{:class => logged_in? ? "backgroundContainer bg_#{(rand(27)+1)}" : 'backgroundContainerHome'}
       .outerContainer
         - if logged_in?
           = render :partial => "shared/block_util"
