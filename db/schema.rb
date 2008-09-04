@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20080903122707) do
+ActiveRecord::Schema.define(:version => 20080904021640) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id",    :limit => 10
@@ -554,6 +554,8 @@ ActiveRecord::Schema.define(:version => 20080903122707) do
     t.boolean  "ignore_game_day",                  :default => false
     t.boolean  "ignore_game_month",                :default => false
     t.string   "game_date_str"
+    t.text     "internal_notes"
+    t.boolean  "missing_audio",                    :default => false
   end
 
   create_table "video_clips", :force => true do |t|

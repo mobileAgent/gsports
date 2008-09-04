@@ -81,6 +81,11 @@ class VideoAssetsController < BaseController
     
     @video_asset = VideoAsset.new
 
+    # Set default team name in the home team slot to help them figure it out
+    unless (current_user.admin? || current_user.league_staff?)
+      @video_asset.home_team_name = current_user.team.name
+    end
+
     respond_to do |format|
       format.html # new.html.haml
       format.xml  { render :xml => @video_asset }
