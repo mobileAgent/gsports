@@ -31,7 +31,7 @@ function generate_video_title()
     vtn = vt
     if (ht && ht.length > 0)
     {
-        var url = '/teamname/' + escape(ht)
+        var url = '/teamname/' + escape(ht).replace(/\./g,"%2e")
         var htajax = new Ajax.Request(url, {method: 'get',
             parameters: 'nick=true',
             onSuccess:  function (transport) {
@@ -49,7 +49,7 @@ function generate_video_title()
     }
     if (vt && vt.length > 0)
     {
-        var url = '/teamname/' + escape(vt)
+        var url = '/teamname/' + escape(vt).replace(/\./g,"%2e")
         var vtajax = new Ajax.Request(url, {method: 'get',
             parameters: 'nick=true',
             onSuccess:  function (transport) {
