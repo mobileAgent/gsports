@@ -16,7 +16,7 @@
       %em (2000 character limit)    
     = text_area :comment, :comment, {:size => "25x8", :class => "rich_text_editor"}
     %p
-      = submit_tag "Add Testimonial"
+      = submit_tag "Add Message"
       = image_tag 'spinner.gif', :plugin => "community_engine", :style => 'display:none;', :id => 'comment_spinner'
 - else
   = link_to "Log in to leave a comment", new_comment_path(commentable.class, commentable.id)
