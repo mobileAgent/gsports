@@ -555,3 +555,10 @@ input[type='button'] {
      width: 475px;
      z-index: 105;
 }
+
+.navlink {
+	display: block;
+	font-weight: bold;
+	padding-bottom: 3px;
+	padding-left: 10px;
+}
