@@ -26,7 +26,14 @@
 - if current_user && current_user.can_upload?
   %br
   .navlink= link_to 'Uploads', user_video_assets_path(current_user)
+  
 -if current_user.team_admin? || current_user.league_admin?
   .navlink= link_to 'Staff Accounts', staffs_path
+
+  -if current_user.team_admin?
+    .navlink= link_to 'Team Page', team_path(current_user.team)
+    .navlink= link_to 'Edit Team Info', edit_team_path(current_user.team)
     
-    
+  -if current_user.league_admin?
+    .navlink= link_to 'League Page', league_path(current_user.team)
+    .navlink= link_to 'Edit League Info', edit_league_path(current_user.team)
