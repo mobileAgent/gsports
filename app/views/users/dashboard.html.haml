@@ -110,7 +110,7 @@
       -#%span.moreLink
         = link_to 'more&raquo;', '', :rel => 'bookmark'
       %h2
-        =@user.team.name
+        =@user.team.title_name
       - team_posts(@user.team, :limit=>1).each() do |post|
         %a.articleLink{:href=>user_post_path(post.user, post)}
           =post.title

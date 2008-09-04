@@ -232,7 +232,7 @@ class User < ActiveRecord::Base
   end
 
   def team_name
-    team_id? ? team.name : ''
+    team_id? ? team.title_name : ''
   end
 
   # Unless the role is league or league_staff, use team->league

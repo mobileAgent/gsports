@@ -9,7 +9,7 @@
   .playerContentArea
     .leftNavColPlayer
       .leftNavPlayer
-        %a.genericButton{ :href => new_message_path(:to => @video_asset.user.id, :title => "Your video '#{@video_asset.title}'") }
+        -#%a.genericButton{ :href => new_message_path(:to => @video_asset.user.id, :title => "Your video '#{@video_asset.title}'") }
           Send Message
         = render :partial => 'shared/favorite_item', :locals => { :item => @video_asset }
 
