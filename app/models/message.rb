@@ -46,9 +46,8 @@ class Message < ActiveRecord::Base
   end
   
   def self.unread(user)
-    count(:conditions => ["to_id = ? and 'read' = ?", user.id,false])
+    count(:conditions => ["to_id = ? and messages.read = ?", user.id,false])
   end
-  #" -- reset emacs lame ruby-mode hilight --
   
   def self.inbox(user)
     msgs = []

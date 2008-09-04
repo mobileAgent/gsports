@@ -133,8 +133,4 @@ class StaffsController < BaseController
     end
   end
 
-  def admin_for_league_or_team
-    (current_user.admin? || current_user.league_admin? || current_user.team_admin?) ? true : access_denied
-  end
-  
 end

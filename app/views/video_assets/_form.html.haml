@@ -49,6 +49,9 @@
   %br/
   =f.check_box :public_video
   =f.label(:public_video,  'Public Video')
+  = "&nbsp; | &nbsp;"
+  =f.check_box :missing_audio
+  =f.label(:missing_audio, "This video has <strong>no</strong> audio")
   %br/
   %br/
   
@@ -61,7 +64,7 @@
 %p
   = f.label :description
   %br/
-  = f.text_area :description, :rows => 3, :cols => 65
+  = f.text_area :description, :rows => 3, :cols => 75
 
 %p  
   =f.label :tags
@@ -79,6 +82,10 @@
       %label{:for=>"video_asset[gsan]"} GSAN
       %br/
       = f.text_field :gsan
+    %p
+      %label{:for=>"video_asset[internal_notes]"} Internal Use Only
+      %br/
+      = f.text_area :internal_notes, :rows => 3, :cols => 65
       
     %p
       = f.label :league_name
@@ -94,7 +101,7 @@
     %p
       = f.label :dockey
       %br/
-      = f.text_field :dockey
+      = f.text_field :dockey, :size => 32
     %p
       = f.label :video_length
       %br/
@@ -107,11 +114,3 @@
       = f.label :video_status
       %br/
       = f.text_field :video_status
-
-%p
-
-  = hidden_field_tag 'home_team_nickname', (@video_asset.home_team.title_name if @video_asset.home_team_id)
-  = hidden_field_tag 'visiting_team_nickname', (@video_asset.visiting_team.title_name if @video_asset.visiting_team_id)
-
-  #home_team_info{:style => 'display: block'}
-  #visiting_team_info{:style => 'display: block'}

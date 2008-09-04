@@ -85,7 +85,7 @@ function buildTitle()
     ajaxRespCount = 0;
     hscore = $F('video_asset_home_score')
     vscore = $F('video_asset_visitor_score')
-    game_date = $F('video_asset_game_date')
+    game_date = format_game_date($F('video_asset_game_date'))
     bg = $F('video_asset_game_gender')
     sport = $F('video_asset_sport')
     game_level_field = $('video_asset_game_level')
@@ -115,12 +115,15 @@ function buildTitle()
         if (game_type_field)
             game_type = game_type_field.value
     }
-    title = vtn
-    if (vscore.length > 0)
-        title += '('+vscore+')'
-    title += ' vs ' + htn
+    title = htn
     if (hscore.length > 0)
         title += '('+hscore+')'
+    if (vtn.length > 0)
+    {
+        title += ' vs ' + vtn
+        if (vscore.length > 0)
+            title += '('+vscore+')'
+    }
     title += ','
     if (bg.length > 0)
         title += ' ' + bg
@@ -131,6 +134,22 @@ function buildTitle()
     if (game_date.length > 0)
         title += ' [' + game_date + ']'
     if (game_type.length > 0 && game_type != 'Regular Season')
-        title += ' ' + game_type.toUpperCase()
+        title += ' ' + game_type
     $('video_asset_title').value = title
+}
+
+
+function format_game_date(str)
+{
+    var ymd = new RegExp(/^(\d\d\d\d)-(\d\d)-(\d\d)$/)
+    var m = ymd.exec(str)
+    if (m && m.length == 4)
+        return m[2] + "-" + m[3] + "-" + m[1]
+    
+    var ym = new RegExp(/^(\d\d\d\d)-(\d\d)$/)
+    m = ym.exec(str)
+    if (m && m.length == 3)
+        return m[2] + "-" + m[1]
+    
+    return str
 }

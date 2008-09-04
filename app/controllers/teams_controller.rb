@@ -2,7 +2,8 @@ class TeamsController < BaseController
 
   auto_complete_for :team, :name
   skip_before_filter :verify_authenticity_token, :only => [:auto_complete_for_team_name, :auto_complete_for_team_league_name ]
-  before_filter :admin_required, :except => [:auto_complete_for_team_name, :show, :show_by_name, :show_public, :auto_complete_for_team_league_name ]
+  before_filter :admin_required, :only => [:index, :new, :create, :destroy]
+  before_filter :admin_for_league_or_team, :only => [:edit, :update]
   skip_before_filter :gs_login_required, :only => [:show_public]
   after_filter :cache_control, :only => [:update, :create, :destroy]
   
@@ -82,6 +83,11 @@ class TeamsController < BaseController
   # GET /team/1/edit
   def edit
     @team = Team.find(params[:id])
+    unless ((current_user.team_staff? && current_user.team_id == @team.id ) ||
+            current_user.admin?)
+      flash[:notice] = "You don't have permission to edit that record"
+      access_denied and return
+    end
   end
 
   # POST /team
@@ -105,6 +111,11 @@ class TeamsController < BaseController
   # PUT /team/1.xml
   def update
     @team = Team.find(params[:id])
+    unless ((current_user.team_staff? && current_user.team_id == @team.id ) ||
+            current_user.admin?)
+      flash[:notice] = "You don't have permission to edit that record"
+      access_denied
+    end
 
     respond_to do |format|
       if @team.update_attributes(params[:team])
