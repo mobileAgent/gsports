@@ -226,6 +226,14 @@
 	padding-top: 5px;
 }
 
+.forumDescription {
+  padding: 20px 10px 20px 10px;
+  background-color: #E2E4A7;
+  width: auto;
+  display: block;
+  margin-bottom: 10px;
+}
+
 #monitor_topic {
   float: right;
 }
@@ -279,7 +287,7 @@
 
 .forumPostSummary {
 	float: left;
-	width: 515px;
+	width: 525px;
 	padding-top: 25px;
 	padding-right: 10px;
 	padding-bottom: 25px;
@@ -298,14 +306,25 @@
 }
 
 .forumPostSummaryDate {
+  display: block;
 	padding-bottom: 10px;
+}
+
+.forumPostSummaryTopic {
+  display: block;
+  padding-bottom: 10px;
+  font-weight: bold;
 }
 
 .forumActions {
 	float: right;
-	width: 130px;
+	width: 125px;
 	padding-top: 30px;
 	padding-left: 10px;
+}
+
+.forumActions li {
+  margin-bottom: 10px;
 }
 
 
@@ -1575,6 +1594,7 @@ span.ROLLOVERIMAGE a span { display: none; visibility: hide; }
 }
 .leftNavCol{
 	width:125px; /*new jjs*/
+	margin-bottom: 10px;
 }
 .leftNav{
 	background: #999999;
@@ -1624,12 +1644,15 @@ span.ROLLOVERIMAGE a span { display: none; visibility: hide; }
 	background-color: #E2E4A7;
 }
 .contentBoxHeader {
-	background: url("/gs/images/content_box_header.png") repeat-x scroll left bottom;
+	background: url("/gs/images/content_box_header.png") repeat-x scroll left top;
 	background-color: #68A34E;
 	border-bottom: 2px solid #b7baa3;
 	height: 18px;
 	padding-top: 2px;
 	font-size: 110%;
+}
+td.contentBoxHeader {
+  font-weight: bold;
 }
 /* used in weekly features as well */
 .yellowHeader{

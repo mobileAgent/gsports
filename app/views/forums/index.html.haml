@@ -22,9 +22,10 @@
           = "#{_('posts')},"
           = number_with_delimiter(User.count(:conditions => "sb_posts_count>0"))
           = _('voices') 
-          \&nbsp;
-          = link_to _('Recent posts'), all_sb_posts_path
-          = feed_icon_tag _("Recent Posts"), formatted_all_sb_posts_path(:format => 'rss')
+          - if SbPost.count
+            \&nbsp;
+            = link_to _('Recent posts'), all_sb_posts_path
+            = feed_icon_tag _("Recent Posts"), formatted_all_sb_posts_path(:format => 'rss')
 
         %br<
 
@@ -33,9 +34,11 @@
           %br<
             
         %table{:border=>"0", :cellspacing=>"0", :cellpadding=>"0", :class=>"wide forums"}
-          %tr
-            %th.la{:width=>"70%", :colspan=>"3"}= _('Forum')
-            %th.la{:width=>"30%", :colspan=>"1"}= _('Last Post')
+          %tr.yellowHeader
+            %td.contentBoxHeader.la{:width=>"70%", :colspan=>"3"}
+              = _('Forum')
+            %td.contentBoxHeader.la{:width=>"30%", :colspan=>"1"}
+              = _('Last Post')
       
           -for forum in @forums do
             %tr{ :class => cycle('', 'inv') }

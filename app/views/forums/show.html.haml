@@ -18,7 +18,8 @@
   .listings
     .box    
       - unless @forum.description.blank?
-        = @forum.description_html
+        .forumDescription
+          = @forum.description_html
         %br.clear<
       
       - if @forum.moderators.any?
@@ -31,9 +32,10 @@
         = pluralize @forum.topics_count, _('topic') 
         , 
         = pluralize @forum.sb_posts_count, _('post')
-        \&nbsp;
-        = link_to _('Recent posts'), forum_sb_posts_path(@forum)
-        = feed_icon_tag @forum.name, formatted_forum_sb_posts_path(@forum, :rss)
+        - if @forum.sb_posts_count > 0
+          \&nbsp;
+          = link_to _('Recent posts'), forum_sb_posts_path(@forum)
+          = feed_icon_tag @forum.name, formatted_forum_sb_posts_path(@forum, :rss)
         
       %br.clear<
     
@@ -53,11 +55,15 @@
     
       - unless @topics.empty?
         %table.wide.topics{:border=>"0", :cellspacing=>"0", :cellpadding=>"0"}
-          %tr
-            %th.la{:colspan=>"2"}= _('Topic')
-            %th{:width=>"1%"}= _('Posts')
-            %th{:width=>"1%"}= _('Views') 
-            %th.la= _('Last post')
+          %tr.yellowHeader
+            %td.contentBoxHeader.la{:colspan=>"2"}
+              = _('Topic')
+            %td.contentBoxHeader{:width=>"1%"}
+              = _('Posts')
+            %td.contentBoxHeader{:width=>"1%"}
+              = _('Views') 
+            %td.contentBoxHeader.la
+              = _('Last post')
             
           - for topic in @topics
             %tr
