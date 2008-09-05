@@ -12,10 +12,10 @@
         = "#{@user.city}, #{@user.state_id ? @user.state.name : ''}"
         %br/
         %span.profileSubHeading Team:
-        ="#{@user.team_name}"
+        =link_to "#{@user.team_name}", team_path(current_user.team)
         %br/
         %span.profileSubHeading League:
-        = "#{@user.league_name}"
+        =link_to "#{@user.league_name}", league_path(current_user.team)
         %br/
         %br/
         %h2.profileHeading Sports Played:
