@@ -26,12 +26,12 @@ class RecurringBilling
 
       if billing_result.success?
         billed_success += 1
-        billing_message << "Successfully billed #{mdue.name}"
+        billing_message << "Successfully billed #{mdue.name} #{membership_user_details(mdue)}"
         @billing_logger.info "Successfully billed #{mdue.name}"
         MembershipNotifier.deliver_billing_success(mdue.address.email,mdue) if !mdue.address.nil?
       else
         billed_error += 1
-        billing_message << "Unable to bill #{mdue.name}:#{billing_result.message}."
+        billing_message << "Unable to bill #{mdue.name}:#{billing_result.message}. #{membership_user_details(mdue)}"
         @billing_logger.info "Unable to bill #{mdue.name} reason: #{billing_result.message}" 
           MembershipNotifier.deliver_billing_failure(mdue.address.email,mdue, billing_result.message) if !mdue.address.nil?
       end
@@ -55,10 +55,17 @@ class RecurringBilling
     due
   end
 
+  def self.membership_details(member)
+    "#{APP_URL}/member.users[0].id" #user_path(member.users[0] (http://localhost:3000/6)
+  end
   #
   # What is the difference, in days, between the provided date and Time.now
   #
   def self.time_diff_in_days(time = Time.now)
     ((Time.now - time).round)/SECONDS_PER_DAY
+  end
+
+  def self.membership_user_details (member)
+    "Team: #{member.users[0].team.name} , Role: #{member.users[0].role.name}"
   end
 end  
