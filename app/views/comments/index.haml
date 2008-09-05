@@ -2,16 +2,16 @@
   .profilePageHeader
     %h2.columnDescriptor
       %span
-        Comments
+        = (params[:title] || 'Comments')
       = @user.full_name
       of
-      = @user.team.name
+      = @user.league_staff? ? @user.league_name : @user.team.title_name
 
   .mailContainer
     %br
 
     .forumContentBox
-      .forumBoxHeader
+      -#.forumBoxHeader
         .mailItem
           .mailPoster
             = render :partial => 'posts/author_profile', :locals => {:user => @user}

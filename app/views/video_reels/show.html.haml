@@ -25,11 +25,13 @@
       = render(:partial => 'shared/video_player', :locals => { :fvars => {:dockey => @video_reel.dockey}, :target => 'flashArea', :height => 750, :width => 800 })
       
     .clearDiv
-  .clearDiv
-  
-  .commentArea
-    .commentForm
-      =render :partial => 'comments/comment_form', :locals => { :commentable => @video_reel }
-    .comments#comments
-      #newest_comment
-      =render :partial => 'comments/comment', :collection => @video_reel.comments
+    
+    .commentContainer
+      %br
+      .commentArea
+        .forumContentBox
+          .commentForm
+            =render :partial => 'comments/comment_form', :locals => { :commentable => @video_reel }
+          .comments#comments
+            #newest_comment
+            =render :partial => 'comments/comment', :collection => @video_reel.comments
