@@ -18,5 +18,6 @@
           %span.date="#{v.created_at.to_s(:readable)}"
           %br/
       .clearDiv.moreLinkArea
-        %span.moreLink= link_to("more?", url_for({:controller => 'search', :action => 'my_videos', :user_id => @user.id}))
+        - unless @profile_clips_and_reels.empty?
+          %span.moreLink= link_to("more?", url_for({:controller => 'search', :action => 'my_videos', :user_id => @user.id}))
             
