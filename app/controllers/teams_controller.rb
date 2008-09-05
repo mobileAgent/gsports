@@ -2,7 +2,8 @@ class TeamsController < BaseController
 
   auto_complete_for :team, :name
   skip_before_filter :verify_authenticity_token, :only => [:auto_complete_for_team_name, :auto_complete_for_team_league_name ]
-  before_filter :admin_required, :except => [:auto_complete_for_team_name, :show, :show_public, :auto_complete_for_team_league_name ]
+  before_filter :admin_required, :only => [:index, :new, :create, :destroy]
+  before_filter :admin_for_league_or_team, :only => [:edit, :update]
   skip_before_filter :gs_login_required, :only => [:show_public]
   after_filter :cache_control, :only => [:update, :create, :destroy]
   
@@ -10,10 +11,10 @@ class TeamsController < BaseController
   # GET /team.xml
   def index
     if params[:league_id]
-      @league = League.find(params[:league_id])
+      @league = League.find(params[:league_id], :order => :name)
       @teams = @league.teams
     else
-      @teams = Team.find(:all)
+      @teams = Team.find(:all, :order => :name)
     end
     
     respond_to do |format|
@@ -26,10 +27,34 @@ class TeamsController < BaseController
   # GET /team/1.xml
   def show
     @team = Team.find(params[:id])
-
     respond_to do |format|
       format.html # show.haml
       format.xml  { render :xml => @team }
+      format.js { render :xml => @team }
+    end
+  end
+
+  # GET /teamname/:team_name
+  def show_by_name
+    @team = Team.find_by_name(params[:team_name])
+    if (params[:nick])
+      title_name = @team ? @team.title_name : params[:team_name]
+      render :inline => title_name and return
+        
+    end
+
+    if (@team)
+      respond_to do |format|
+        format.html { render :action => :show }
+        format.xml  { render :xml => @team }
+        format.js { render :xml => @team }
+      end
+    else
+      respond_to do |format|
+        format.html { render :controller => 'base', :action => 'site_index' }
+        format.xml  { render :xml => '', :status => :unprocessable_entity }
+        format.xml  { render :xml => '', :status => :unprocessable_entity }
+      end
     end
   end
   
@@ -58,6 +83,11 @@ class TeamsController < BaseController
   # GET /team/1/edit
   def edit
     @team = Team.find(params[:id])
+    unless ((current_user.team_staff? && current_user.team_id == @team.id ) ||
+            current_user.admin?)
+      flash[:notice] = "You don't have permission to edit that record"
+      access_denied and return
+    end
   end
 
   # POST /team
@@ -81,6 +111,11 @@ class TeamsController < BaseController
   # PUT /team/1.xml
   def update
     @team = Team.find(params[:id])
+    unless ((current_user.team_staff? && current_user.team_id == @team.id ) ||
+            current_user.admin?)
+      flash[:notice] = "You don't have permission to edit that record"
+      access_denied
+    end
 
     respond_to do |format|
       if @team.update_attributes(params[:team])
@@ -117,6 +152,7 @@ class TeamsController < BaseController
   def cache_control
     Rails.cache.delete('quickfind_states')
     Rails.cache.delete('quickfind_counties')
+    Rails.cache.delete('quickfind_cities')
   end
   
 end

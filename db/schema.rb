@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20080901011601) do
+ActiveRecord::Schema.define(:version => 20080904124857) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id",    :limit => 10
@@ -257,7 +257,7 @@ ActiveRecord::Schema.define(:version => 20080901011601) do
     t.datetime "updated_at"
     t.string   "title"
     t.text     "body"
-    t.integer  "read",       :limit => 1
+    t.boolean  "read",                     :default => false
     t.integer  "replied",    :limit => 1
     t.integer  "to_id",      :limit => 11
     t.integer  "from_id",    :limit => 11
@@ -437,6 +437,7 @@ ActiveRecord::Schema.define(:version => 20080901011601) do
     t.string   "county_name"
     t.integer  "state_id",    :limit => 11
     t.integer  "ad_zone",     :limit => 11, :default => 1
+    t.string   "nickname"
   end
 
   create_table "topics", :force => true do |t|
@@ -531,8 +532,8 @@ ActiveRecord::Schema.define(:version => 20080901011601) do
     t.string   "video_length"
     t.string   "video_type"
     t.string   "video_status"
-    t.integer  "league_id",          :limit => 11
-    t.integer  "team_id",            :limit => 11
+    t.integer  "sponsor_id",         :limit => 11
+    t.integer  "member_id",          :limit => 11
     t.integer  "user_id",            :limit => 11
     t.string   "sport"
     t.datetime "game_date"
@@ -544,6 +545,8 @@ ActiveRecord::Schema.define(:version => 20080901011601) do
     t.string   "game_level"
     t.string   "game_gender"
     t.integer  "view_count",         :limit => 11, :default => 0
+    t.integer  "team_id",            :limit => 11
+    t.integer  "league_id",          :limit => 11
     t.boolean  "public_video",                     :default => true
     t.boolean  "delta",                            :default => false
     t.integer  "home_score",         :limit => 11
@@ -551,6 +554,10 @@ ActiveRecord::Schema.define(:version => 20080901011601) do
     t.string   "game_type"
     t.string   "gsan"
     t.boolean  "ignore_game_day",                  :default => false
+    t.boolean  "ignore_game_month",                :default => false
+    t.string   "game_date_str"
+    t.text     "internal_notes"
+    t.boolean  "missing_audio",                    :default => false
   end
 
   create_table "video_clips", :force => true do |t|

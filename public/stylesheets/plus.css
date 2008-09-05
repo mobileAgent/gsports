@@ -45,6 +45,7 @@
 .RegistrationContent .mainCol1 .contentBox, .RegistrationContent .mainCol2 .contentBox{
 	width: 315px;
 	height: auto;
+	padding-right: 10px;
 }
 .RegistrationContent .contentBox{
 	margin-left: 0px;	
@@ -57,7 +58,6 @@
 
 .RegistrationContent hr {
 	border: 1px solid black;
-	width: 90%;
 	margin-bottom: 15px;
 }
 
@@ -73,13 +73,11 @@ label.required:before{
 */
 
 .field-block label{
-	display: block;
 }
 
-.field-block {
-	display: inline-block;
+.field-block input {
+	margin-right: 3px;
 }
-
 
 
 /* end forms */
@@ -252,6 +250,7 @@ object#homeFlash {
 .commentArea {
   width: 100%;
   background: #e2e4a7;
+  margin-right: 25%;
 }
 
 .commentForm {
@@ -557,3 +556,88 @@ input[type='button'] {
      width: 475px;
      z-index: 105;
 }
+
+.navlink {
+	display: block;
+	font-weight: bold;
+	padding-bottom: 3px;
+	padding-left: 10px;
+}
+
+.commentContainer {
+    background-color: #E2E4A7;
+    padding: 5px 25px 5px 25px;
+}    
+
+.commentItem {
+    padding: 5px;
+    border: 1px solid #666666;
+    background-color: #E2E4A7;
+    width: auto;
+    display: block;
+    height: auto;
+}
+
+.commentPoster {
+    width: 85px;
+    float: left;
+    padding-top: 10px;
+    padding-right: 5px;
+    padding-bottom: 5px;
+    padding-left: 5px;
+    text-align: center;
+}
+
+.commentPosterImg a {
+    border: 2px solid #666666;
+}
+
+.commentPosterImg a:hover {
+    border: 2px solid #0066CC;
+}
+
+.commentPoster a {
+    font-size: 110%;
+    color: #333333;
+    text-align: left;
+    display: block;
+    margin-top: 5px;
+}
+
+.commentPoster a:hover {
+    font-size: 110%;
+    color: #333333;
+    text-decoration: none;	
+}
+
+.commentSummary, .commentSummaryBody {
+    width: 94%;
+    padding-left: 3%;
+    float: left;
+}
+
+.commentSummaryBody {
+    background-color: #FFFFFF;
+    padding: 10px;
+}
+
+.commentSummaryBody p {
+    background-color: #FFFFFF;
+    display: block;
+}
+
+.commentSummaryBody strong {
+    font-size: 115%;
+}
+
+.commentSummaryDate {
+    float: left;
+    padding-bottom: 10px;
+}
+
+.commentActions {
+    float: right;
+    padding: 5px;
+    width: auto;
+}
+

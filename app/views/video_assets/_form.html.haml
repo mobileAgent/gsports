@@ -5,7 +5,9 @@
   %br/
   = text_field_with_auto_complete :video_asset, :sport, :autocomplete => "off"
 %p
-  = f.label "Game Date (yyyy-mm-dd) or (yyyy-mm if day unknown)"
+  = f.label "Game Date"
+  %br/
+  %em= "Formats: (yyyy-mm-dd, yyyy-mm, yyyy, yyyy-yyyy)"
   %br/
   = text_field :video_asset, :game_date, :value => @video_asset.game_date_string
   
@@ -47,6 +49,9 @@
   %br/
   =f.check_box :public_video
   =f.label(:public_video,  'Public Video')
+  = "&nbsp; | &nbsp;"
+  =f.check_box :missing_audio
+  =f.label(:missing_audio, "This video has <strong>no</strong> audio")
   %br/
   %br/
   
@@ -59,7 +64,7 @@
 %p
   = f.label :description
   %br/
-  = f.text_area :description, :rows => 3, :cols => 65
+  = f.text_area :description, :rows => 3, :cols => 75
 
 %p  
   =f.label :tags
@@ -77,6 +82,10 @@
       %label{:for=>"video_asset[gsan]"} GSAN
       %br/
       = f.text_field :gsan
+    %p
+      %label{:for=>"video_asset[internal_notes]"} Internal Use Only
+      %br/
+      = f.text_area :internal_notes, :rows => 3, :cols => 65
       
     %p
       = f.label :league_name
@@ -92,7 +101,7 @@
     %p
       = f.label :dockey
       %br/
-      = f.text_field :dockey
+      = f.text_field :dockey, :size => 32
     %p
       = f.label :video_length
       %br/
@@ -105,5 +114,3 @@
       = f.label :video_status
       %br/
       = f.text_field :video_status
-    
-%p

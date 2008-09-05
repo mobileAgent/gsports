@@ -30,64 +30,69 @@
           %br
           %br
 
-          .field-block
-            %label.required{"for"=>"firstname"} 
-              * First Name
-            = text_field :user, :firstname, :size => 12
-
-          .field-block
-            %label{"for"=>"minitial"} 
-              M.I.
-            = text_field :user, :minitial, :size => 1
-
-          .field-block
-            %label.required{"for"=>"lastname"} 
-              * Last Name
-            = text_field :user, :lastname, :size => 16
+          %table
+            %tr
+              %td.field-block 
+                %label.required{"for"=>"firstname"} 
+                  * First Name
+                %br
+                = text_field :user, :firstname, :size => 12
+              %td.field-block 
+                %label{"for"=>"minitial"} 
+                  M.I.
+                %br
+                = text_field :user, :minitial, :size => 1
+              %td.field-block 
+                %label.required{"for"=>"lastname"} 
+                  * Last Name
+                %br
+                = text_field :user, :lastname, :size => 16
+      
+          %table
+            %tr
+              %td.field-block            
+                %label.required{"for"=>"address1"} 
+                  * Address Line One
+                %br
+                = text_field :user, :address1, :size => 16
+              %td.field-block
+                %label{"for"=>"address2"} 
+                  Address Line Two
+                = text_field :user, :address2, :size => 16
         
-          %br
-        
-          .field-block            
-            %label.required{"for"=>"address1"} 
-              * Address Line One
-            = text_field :user, :address1, :size => 16
-          .field-block
-            %label{"for"=>"address2"} 
-              Address Line Two
-            = text_field :user, :address2, :size => 16
-          
-          %br
-          
-          .field-block
-            %label.required{"for"=>"city"} 
-              * City
-            = text_field :user, :city, :size => 16
-          
-          .field-block
-            %label.required{"for"=>"zip"} 
-              * Zip/Postal Code
-            = text_field :user, :zip, :size => 10
+          %table
+            %tr
+              %td.field-block
+                %label.required{"for"=>"city"} 
+                  * City
+                %br
+                = text_field :user, :city, :size => 16
+    
+              %td.field-block
+                %label.required{"for"=>"zip"} 
+                  * Zip/Postal Code
+                = text_field :user, :zip, :size => 12
 
-          %br
-          
-          .field-block
-            %label.required{"for"=>"state"} 
-              * State
-            =collection_select(:user ,:state_id,State.all,"id","name", { :prompt => 'Choose State'})
+          %table
+            %tr
+              %td.field-block
+                %label.required{"for"=>"state"} 
+                  * State
+                %br
+                =collection_select(:user ,:state_id,State.all,"id","name", { :prompt => 'State'})
 
 
-          .field-block
-            %label.required{"for"=>"country"} 
-              * Country
-            =collection_select(:user ,:country_id ,Country.all,"id","name", { :prompt => 'Choose Country'})
+              %td.field-block
+                %label.required{"for"=>"country"} 
+                  * Country
+                %br
+                =collection_select(:user ,:country_id ,Country.all,"id","name", { :prompt => 'Choose Country'})
 
-
-          %br
-
-          .field-block
+          %td.field-block
             %label.required{"for"=>"phone"} 
               * Phone
-            = text_field :user, :phone, :size => 12
+            %br
+            = text_field :user, :phone, :size => 14
           
           %br
           %br
@@ -112,24 +117,28 @@
           .section-head Username and Password
           %br
             
-          .field-block
-            %label.required{"for"=>"email"}
-              * E-mail address
-            = text_field :user, :email, :size => 24
+          %table
+            %tr
+              %td.field-block
+                %label.required{"for"=>"email"}
+                  * E-mail address
+                %br
+                = text_field :user, :email, :size => 24
         
-          %br
+          %table
+            %tr
+              %td.field-block
+                %label.required{"for"=>"password"}
+                  * Choose a password
+                %br
+                = password_field :user, :password, :size => 18
         
-          .field-block
-            %label.required{"for"=>"password"}
-              * Choose a password
-            = password_field :user, :password, :size => 18
-        
-          .field-block
-            %label.required{"for"=>"password_confirmation"}
-              * Re-type password
-            = password_field :user, :password_confirmation, :size => 18
+              %td.field-block
+                %label.required{"for"=>"password_confirmation"}
+                  * Re-type password
+                %br
+                = password_field :user, :password_confirmation, :size => 18
           
-          %br
           %br
         
           Your e-mail address will be your username.
@@ -144,6 +153,7 @@
             %label.required{"for"=>"birthdate"}
               * Birthday:
               %em (you must be at least 13 years old to sign up.)
+            %br
             = date_select :user, :birthday, {:start_year => 1926, :end_year => Time.now.year - 13}
           
           %br

@@ -171,6 +171,10 @@ class VideoAsset < ActiveRecord::Base
     home_team ? home_team.name : nil
   end
   
+  def home_team_title_name
+    home_team ? home_team.title_name : nil
+  end
+  
   def visiting_team_name= team_name
     if (team_name && team_name.size > 0)
       self.visiting_team = find_or_create_team_by_name team_name
@@ -179,6 +183,10 @@ class VideoAsset < ActiveRecord::Base
 
   def visiting_team_name
     visiting_team ? visiting_team.name : nil
+  end
+  
+  def visiting_team_title_name
+    visiting_team ? visiting_team.title_name : nil
   end
 
   def thumbnail_dockey
@@ -190,8 +198,11 @@ class VideoAsset < ActiveRecord::Base
   end
 
   def game_date_string
-    return '' if game_date.nil?
-    if ignore_game_day
+    if game_date.nil?
+      game_date_str || ''
+    elsif ignore_game_month
+      game_date.strftime("%Y")
+    elsif ignore_game_day
       game_date.strftime("%Y-%m")
     else
       game_date.to_s(:game_date)
@@ -199,8 +210,11 @@ class VideoAsset < ActiveRecord::Base
   end
 
   def human_game_date_string
-    return '' if game_date.nil?
-    if ignore_game_day
+    if game_date.nil?
+      game_date_str || ''
+    elsif ignore_game_month
+      game_date.strftime("%Y")
+    elsif ignore_game_day
       game_date.strftime("%B, %Y")
     else
       game_date.to_s(:readable)

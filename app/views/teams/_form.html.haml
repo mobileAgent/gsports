@@ -2,6 +2,12 @@
   %b Name
   %br/
   = f.text_field :name
+  
+%div
+  %b Nickname
+  %br/
+  = f.text_field :nickname 
+  
 %div
   %b City
   %br/
@@ -26,8 +32,9 @@
   %b League
   %br/
   = text_field_with_auto_complete :team, :league_name, :autocomplete => "off"
-    
-%div
-  %b Ad Zone (Be sure to coordinate with ad server zones)
-  %br/
-  = f.text_field :ad_zone
+
+-if current_user.admin?  
+  %div
+    %b Ad Zone (Be sure to coordinate with ad server zones)
+    %br/
+    = f.text_field :ad_zone

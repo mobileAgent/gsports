@@ -1,13 +1,14 @@
 class LeaguesController < BaseController
 
   auto_complete_for :league, :name
-  before_filter :admin_required, :except => [:auto_complete_for_league_name, :show ]
+  before_filter :admin_required, :only => [:create, :index, :new, :destroy]
+  before_filter :admin_for_league_or_team, :only => [:edit, :update]
   after_filter :cache_control, :only => [:create, :update, :delete]
   
   # GET /league
   # GET /league.xml
   def index
-    @leagues = League.find(:all)
+    @leagues = League.find(:all, :order => :name)
 
     respond_to do |format|
       format.html # index.haml
@@ -40,6 +41,10 @@ class LeaguesController < BaseController
   # GET /league/1/edit
   def edit
     @league = League.find(params[:id])
+    unless ((current_user.league_staff? && current_user.league_id == @league.id ) ||
+            current_user.admin?)
+      access_denied and return
+    end
   end
 
   # POST /league
@@ -63,6 +68,10 @@ class LeaguesController < BaseController
   # PUT /league/1.xml
   def update
     @league = League.find(params[:id])
+    unless ((current_user.league_staff? && current_user.league_id == @league.id ) ||
+            current_user.admin?)
+      access_denied and return
+    end
 
     respond_to do |format|
       if @league.update_attributes(params[:league])

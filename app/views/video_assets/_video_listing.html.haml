@@ -5,22 +5,23 @@
     %h4
       = h video_listing.title
     .schoolName
-      = "#{h video_listing.league.name if video_listing.league}, #{h video_listing.team.name if video_listing.team}, #{h video_listing.sport}, #{video_listing.human_game_date_string}"
+      = "#{h video_listing.league.name if video_listing.league}, #{h video_listing.team.title_name if video_listing.team}, #{h video_listing.sport}, #{video_listing.human_game_date_string}"
     .recentFriendFeed
       = truncate_words("#{h video_listing.description} - #{h video_listing.video_length}",35)
       %br/
       = video_listing.tags.collect{|t| link_to( h(t.name), tag_url(t.name), :class => 'tag') }.join(" ")
   - skip_controls ||= false
   %ul.listingActions
-    - if video_listing.user
+    - if video_listing.team
       %li
-        %a.genericButton{ :href => user_path( video_listing.user.id )  }
+        %a.genericButton{ :href => team_path( video_listing.team_id )  }
           %span
-            View Profile
+            Team Profile
+    - if video_listing.league && video_listing.team_id.nil?
       %li
-        %a.genericButton{ :href => new_message_path(:to => video_listing.user.id, :title => "Your video '#{video_listing.title}'") }
+        %a.genericButton{ :href => league_path( video_listing.league_id )  }
           %span
-            Send Message
+            League Profile
     %li
       = render :partial => 'shared/favorite_item', :locals => { :item => video_listing }
 

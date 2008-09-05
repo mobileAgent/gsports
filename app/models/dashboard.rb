@@ -61,20 +61,9 @@ class Dashboard
                              :limit => limit,
                              :group => :favoritable_id,
                              :conditions => ['user_id in (?)',friend_ids],
+                             :include => [:user, :favoritable],
                              :order => 'count(1) DESC, max(created_at) DESC')
-    videos = []
-    f.each do |fav|
-      case fav.favoritable_type
-      when VideoAsset.to_s
-        videos << VideoAsset.find(fav.favoritable_id)
-      when VideoClip.to_s
-        videos << VideoClip.find(fav.favoritable_id)
-      when VideoReel.to_s
-        videos << VideoReel.find(fav.favoritable_id)
-      end
-    end
-    videos
-    
+    f.collect(&:favoritable)
   end
 
 end

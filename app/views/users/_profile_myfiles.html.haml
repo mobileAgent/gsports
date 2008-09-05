@@ -14,7 +14,8 @@
             
       .clearDiv.moreLinkArea
         %span.moreLink
-          = link_to "more?", user_photos_path(@user)
+          - unless @photos.empty?
+            = link_to "more?", user_photos_path(@user)
           -if @is_current_user
             = link_to "add?", new_user_photo_path(@user)
             

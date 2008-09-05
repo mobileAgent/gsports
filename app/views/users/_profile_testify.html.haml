@@ -4,8 +4,8 @@
       %a{ :href => "#", :onclick => "return profile_minimize(this)" }
         minimize -
     %h2.boxDescription
-      Testimonials
-  .contentBoxContent
+      Sports Wall
+  .contentBoxContent.sportsWall
     .profileFeature
       .profileInfo
         #newest_comment
@@ -15,10 +15,7 @@
       
       .clearDiv.moreLinkArea
         %span.moreLink
-          %a{ :href => "" }
-            write a testimonial for this person
-          |
-          = link_to 'see all testimonials?', comments_url(@user.class.to_s, @user.to_param)
+          = link_to 'see all messages &raquo;', comments_url(@user.class.to_s, @user.to_param, :sw => true)
 
             
             

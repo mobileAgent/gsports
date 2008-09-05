@@ -148,8 +148,8 @@ class UsersController < BaseController
     @user = User.find(params[:userid].to_i)
     @billing_address = Address.new(params[:billing_address])
     @credit_card = ActiveMerchant::Billing::CreditCard.new(params[:credit_card])
-    @credit_card.first_name = @user.firstname if (! @credit_card.first_name) 
-    @credit_card.last_name = @user.lastname if (! @credit_card.last_name) 
+    #@credit_card.first_name = @user.firstname if (! @credit_card.first_name) 
+    #@credit_card.last_name = @user.lastname if (! @credit_card.last_name) 
     logger.debug "USER session object(billing):" + @user.id.to_s
   end
 

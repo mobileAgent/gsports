@@ -81,6 +81,11 @@ class VideoAssetsController < BaseController
     
     @video_asset = VideoAsset.new
 
+    # Set default team name in the home team slot to help them figure it out
+    unless (current_user.admin? || current_user.league_staff?)
+      @video_asset.home_team_name = current_user.team.name
+    end
+
     respond_to do |format|
       format.html # new.html.haml
       format.xml  { render :xml => @video_asset }
@@ -142,8 +147,15 @@ class VideoAssetsController < BaseController
     respond_to do |format|
       @video_asset.tag_with(params[:tag_list] || '') 
       @video_asset = add_team_and_league_relations(@video_asset,params)
-      gd = params[:video_asset][:game_date] 
-      if (gd.length > 0 && gd.length <= 7) # yyyy-mm
+      gd = params[:video_asset][:game_date]
+      params[:video_asset][:ignore_game_month] = false
+      params[:video_asset][:ignore_game_day] = false
+      params[:video_asset][:game_date_str] = gd
+      if (gd.length > 0 && gd.length == 4) # yyyy
+        params[:video_asset][:game_date] += "-01"
+        params[:video_asset][:ignore_game_month] = true
+      end
+      if (gd.length > 0 && gd.length == 7) # yyyy-mm
         params[:video_asset][:game_date] += '-01'
         params[:video_asset][:ignore_game_day] = true
       end

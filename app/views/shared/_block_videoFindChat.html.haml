@@ -4,7 +4,7 @@
       =collection_select("search_video_asset","game_date",@quickfind_seasons,"year","year",{:prompt => '-Season-', :selected => '-Season-'}, {:id => "videoFindSeason", :name => 'season'})
       -#%label.verbalSemantic{ :for => "videoFindSeason" }
         Season
-      =collection_select("team","state_id",@quickfind_states,"state_id","state_name", {:prompt => "-State-", :selected => "-State-"}, {:id => 'videoFindState', :name => 'state'})
+      =collection_select("team","id",@quickfind_states,"id","name", {:prompt => "-State-", :selected => "-State-"}, {:id => 'videoFindState', :name => 'state'})
       -#%label.verbalSemantic{ :for => "videoFindState" }
         State
       =collection_select("team","county_name",@quickfind_counties,"county_name","county_name",{:prompt => "-County-", :selected => "-County-"}, {:id => 'videoFindCounty', :name => 'county_name'})
