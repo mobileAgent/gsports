@@ -1654,11 +1654,15 @@ td.contentBoxHeader {
   font-weight: bold;
 }
 /* used in weekly features as well */
-.yellowHeader{
+.yellowHeader {
 	color: #FFEF0A;
 }
-.yellowHeader h3{
+.yellowHeader h3 {
 	font-size: 110%;
+}
+h2.yellowHeader, .contentBoxHeader yellowwHeader {
+  font-size: 110%;
+  font-weight: bold;
 }
 .contentBoxHeader a, .contentBoxHeader a:visited {
 	color: #ffffff;

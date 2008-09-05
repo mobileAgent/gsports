@@ -1,12 +1,12 @@
 %ul
-  %li=link_to 'Dashboard', dashboard_user_path(current_user)
-  %li=link_to 'Profile', user_path(current_user.id)  
-  %li=link_to 'Blog', user_posts_path(current_user.id)
-  %li=link_to 'Forums', forums_path
-  %li=link_to 'Clips', user_video_clips_path(current_user.id)
-  %li=link_to 'Reels', user_video_reels_path(current_user.id)
-  %li=link_to 'Photos', user_photos_path(current_user.id)
-  %li=link_to 'Friends', accepted_user_friendships_path(current_user.id)
+  %li{ :style => @section == 'dashboard' ? 'color:white' : ''}=link_to 'Dashboard', dashboard_user_path(current_user)
+  %li{ :style => @section == 'profile' ? 'color:white' : ''}=link_to 'Profile', user_path(current_user.id)  
+  %li{ :style => @section == 'blog' ? 'color:white' : ''}=link_to 'Blog', user_posts_path(current_user.id)
+  %li{ :style => @section == 'forums' ? 'color:white' : ''}= link_to 'Forums', forums_path
+  %li{ :style => @section == 'clips' ? 'color:white' : ''}=link_to 'Clips', user_video_clips_path(current_user.id)
+  %li{ :style => @section == 'reels' ? 'color:white' : ''}=link_to 'Reels', user_video_reels_path(current_user.id)
+  %li{ :style => @section == 'photos' ? 'color:white' : ''}=link_to 'Photos', user_photos_path(current_user.id)
+  %li{ :style => @section == 'friends' ? 'color:white' : ''}=link_to 'Friends', accepted_user_friendships_path(current_user.id)
 
 %br
 %ul
