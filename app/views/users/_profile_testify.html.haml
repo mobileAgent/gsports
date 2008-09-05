@@ -5,7 +5,7 @@
         minimize -
     %h2.boxDescription
       Sports Wall
-  .contentBoxContent
+  .contentBoxContent.sportsWall
     .profileFeature
       .profileInfo
         #newest_comment
@@ -15,10 +15,7 @@
       
       .clearDiv.moreLinkArea
         %span.moreLink
-          %a{ :href => "" }
-            write a message on my sports wall
-          |
-          = link_to 'see all messages?', comments_url(@user.class.to_s, @user.to_param)
+          = link_to 'see all messages &raquo;', comments_url(@user.class.to_s, @user.to_param, :sw => true)
 
             
             

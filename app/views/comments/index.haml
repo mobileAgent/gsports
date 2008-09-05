@@ -2,10 +2,10 @@
   .profilePageHeader
     %h2.columnDescriptor
       %span
-        Comments
+        = (params[:sw] ? 'Sports Wall' : 'Comments')
       = @user.full_name
       of
-      = @user.team.name
+      = @user.league_staff? ? @user.league_name : @user.team.title_name
 
   .mailContainer
     %br
@@ -17,7 +17,7 @@
             = render :partial => 'posts/author_profile', :locals => {:user => @user}
           .mailPostSummary
             %h3
-              =Inflector.underscore(@commentable.class).capitalize
+              =Inflector.humanize(@commentable.class).capitalize
               Comments for
               = link_to @title, @comments.first.generate_commentable_url(false)
           .clearDiv

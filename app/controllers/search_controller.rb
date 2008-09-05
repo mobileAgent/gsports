@@ -17,6 +17,7 @@ class SearchController < BaseController
      cond.append ['public_video = ?', true]
      @video_assets = VideoAsset.paginate(:conditions => cond.to_sql, :page => params[:page], :order => 'video_assets.updated_at DESC', :include => [:team,:tags])
      @is_search_result = true
+     @search_result_size = @video_assets.size
      @title = 'Video Quickfind Results'
      render :action => 'my_videos'
    end
@@ -45,6 +46,7 @@ class SearchController < BaseController
 
      # Search all categories
      if @category > 0
+       
        render :action => render_name and return
      else
        # The search layout looks dumb if two columns are empty

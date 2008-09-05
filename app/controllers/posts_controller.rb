@@ -79,7 +79,7 @@ class PostsController < BaseController
   protected
 
   def cache_control
-    if @post && @post.is_live? && @post.category.name == AthleteOfTheWeek.CATEGORY_NAME
+    if @post && @post.is_live? && @post.category.name == AthleteOfTheWeek.my_category.name
       Rails.cache.delete('athletes_of_the_week')
     end
   end
