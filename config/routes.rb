@@ -50,7 +50,7 @@ ActionController::Routing::Routes.draw do |map|
   map.connect ':controller/:action/:id.:format'
 
   # A catch all route
-  if ENV['RAILS_ENV'] == 'production'
+  if ENV['RAILS_ENV'] == 'production' || ENV['RAILS_ENV'] == 'qa'
     map.connect '*path', :controller => 'base', :action => 'site_index'
   end
   

@@ -2,7 +2,7 @@
   .profilePageHeader
     %h2.columnDescriptor
       %span
-        = (params[:title] || 'Comments')
+        = (params[:sw] ? 'Sports Wall' : 'Comments')
       = @user.full_name
       of
       = @user.league_staff? ? @user.league_name : @user.team.title_name
