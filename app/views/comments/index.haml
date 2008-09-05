@@ -11,13 +11,13 @@
     %br
 
     .forumContentBox
-      -#.forumBoxHeader
+      .forumBoxHeader
         .mailItem
           .mailPoster
             = render :partial => 'posts/author_profile', :locals => {:user => @user}
           .mailPostSummary
             %h3
-              =Inflector.underscore(@commentable.class).capitalize
+              =Inflector.humanize(@commentable.class).capitalize
               Comments for
               = link_to @title, @comments.first.generate_commentable_url(false)
           .clearDiv
