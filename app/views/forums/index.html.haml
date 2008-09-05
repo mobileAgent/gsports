@@ -62,7 +62,7 @@
               %td.c3
                 = link_to _('Edit'), edit_forum_path(forum), :class => "tiny", :rel => "directory", :style => "float:right" if admin?
       
-              %td.inv.lp
+              %td.lp
                 - if forum.sb_posts.last
                   = time_ago_in_words(forum.sb_posts.last.created_at)
                   %br

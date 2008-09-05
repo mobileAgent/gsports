@@ -96,11 +96,11 @@
         - @related = Post.find_tagged_with(@forum.tag_list, :limit => 10)
         - unless @related.empty?
           %table.wide.topics{:border=>"0", :cellspacing=>"0", :cellpadding=>"0"}
-            %tr
-              %th.la{:colspan=>"2"}= _('This forum is still getting started... here are some blog posts to get you thinking ... ')
-              %th{:width=>"1%"}= _('Comments')
-              %th{:width=>"1%"}= _('Views')
-              %th.la= _('Author')
-              -@related.each do |post|
-                = render :partial => 'sb_posts/dummy_forum_post', :locals => {:post => post}
+            %tr.yellowHeader
+              %td.contentBoxHeader.la{:colspan=>"2"}= _('This forum is still getting started... here are some blog posts to get you thinking ... ')
+              %td.contentBoxHeader{:width=>"1%"}= _('Comments')
+              %td.contentBoxHeader{:width=>"1%"}= _('Views')
+              %td.contentBoxHeader.la= _('Author')
+            -@related.each do |post|
+              = render :partial => 'sb_posts/dummy_forum_post', :locals => {:post => post}
   
