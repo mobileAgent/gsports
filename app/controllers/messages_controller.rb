@@ -20,8 +20,14 @@ class MessagesController < BaseController
       end
     end
     @message.title = params[:title] if params[:title]
+    
+    render :action => :new
   end
-
+  
+  # GET /messages/new links
+  def update
+    new
+  end
 
   # POST /messages
   # POST /messages.xml
