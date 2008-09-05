@@ -11,7 +11,8 @@ color: #464337;
 
 div.auto_complete {
   width: 350px;
-  background: #ffffff; }
+
+}
   div.auto_complete ul {
     border: 1px solid #888888;
     list-style-type: none;

@@ -11,14 +11,7 @@
       %br/
       = photo_listing.tags.collect{|t| link_to( h(t.name), tag_url(t.name), :class => 'tag') }.join(" ")
   %ul.listingActions
-    %li
-      %a.genericButton{ :href => user_path( photo_listing.user )  }
-        %span
-          View Profile
-    %li
-      %a.genericButton{ :href => new_message_path(:to => photo_listing.user.id) }
-        %span
-          Send Message
+
     %li
       = render :partial => 'shared/favorite_item', :locals => { :item => photo_listing }
     - if current_user.id == photo_listing.user_id
