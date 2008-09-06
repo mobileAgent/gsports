@@ -2,27 +2,55 @@
   /
     col1 content
   .mainCol1
+    .contentBox.orgSummary
+      .contentBoxHeader
+        - if current_user && current_user.league_admin?(@league)
+          = link_to 'Edit', edit_league_path(@league), :class=>"edit-#{@league.avatar.height}"
+        %h2
+          =h @league.name
+      .contentBoxContent
+        %div{ :class=>"desc-#{@league.avatar.height}" }
+          %p
+            = "#{@league.city}, #{h @league.state_id? ? @league.state.name : ""}"
+          %p
+            =h @league.description 
+
+        %a{ :href=>league_path(@league), :class=>"logo-#{@league.avatar.height}" }
+          %img{ :src=>@league.avatar.public_filename, :title=>@league.name, :alt=>@league.name }
+
     .contentBox.tanBackground
       .contentBoxHeader.yellowHeader
         %h2.boxDescription
-          =h @league.name 
+          RECENT CLIPS & HIGHLIGHTS
       .contentBoxContent
-        .featureSummary
-          %b City:
-          =h @league.city 
-          %p
-            %b State:
-            =h(@league.state_id? ? @league.state.name : '')
-          %p
-            %b Description:
-            =h @league.description 
-          - if current_user && current_user.league_admin?(@league)
-            = link_to 'Edit', edit_league_path(@league)
-            = link_to 'Back', leagues_path
+        -#
+          =render :partial => 'video_assets/video_feature', :collection => league_videos()
+
+          - if @video_assets.respond_to?('total_pages')
+            .apple_pagination
+              = will_paginate @video_assets
+          - else
+            = link_to "More Videos...", url_for(:controller => 'search', :action => 'league_video_assets', :league_id => @league.id)
+
         
   /
     col2 content
   .mainCol2
+  
+    .contentBox.tanBackground
+      .contentBoxHeader.yellowHeader
+        %h2.boxDescription
+          MOST POPULAR VIDEOS
+      .contentBoxContent
+        -#
+          =render :partial => 'video_assets/video_feature', :collection => league_videos(:scope=>:popular)
+
+          - if @video_assets.respond_to?('total_pages')
+            .apple_pagination
+              = will_paginate @video_assets
+          - else
+            = link_to "More Videos...", url_for(:controller => 'search', :action => 'league_video_assets', :league_id => @league.id)
+  
     .contentBox.tanBackground
       .contentBoxHeader.yellowHeader
         %h2.boxDescription
@@ -36,19 +64,21 @@
         - else
           = link_to "More Videos...", url_for(:controller => 'search', :action => 'league_video_assets', :league_id => @league.id)
       
-          
+
   /
     col3 content
-  .mainCol3
-    %h2.boxDescription
-      = link_to 'Post News', new_user_post_path(current_user)
+  .mainCol3  
+    .rightContentItem
+      %span.moreLink
+        = link_to 'Post', new_user_post_path(current_user)
+      %h2
+        League News
     - league_posts().each() do |post|
       .rightContentItem
-        %span.moreLink
-          = link_to 'more>>', user_post_path(post.user, post), :rel => 'bookmark'
-        %h2
-          = post.title
-        = truncate_words(post.post, 75, '...' )
+        %span
+          = link_to post.title, user_post_path(post.user, post), :rel => 'bookmark', :class=>'articleLink'
+        %br
+        = truncate_words(post.post, 24, '...' )
 
 
                 

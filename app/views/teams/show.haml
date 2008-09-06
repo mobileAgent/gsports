@@ -4,32 +4,54 @@
   /
     col1 content
   .mainCol1
+    .contentBox.orgSummary
+      .contentBoxHeader
+        - if current_user && current_user.team_admin?(@team)
+          = link_to 'Edit', edit_team_path(@team), :class=>"edit-#{@team.avatar.height}"
+        %h2
+          =h @team.name
+      .contentBoxContent
+        %div{ :class=>"desc-#{@team.avatar.height}" }
+          %p
+            = "#{@team.city}, #{@team.county_name}, #{h @team.state_id? ? @team.state.name : ""}"
+          %p
+            =h @team.description 
+
+        %a{ :href=>team_path(@team), :class=>"logo-#{@team.avatar.height}" }
+          %img{ :src=>@team.avatar.public_filename, :title=>@team.team_name, :alt=>@team.team_name }
+        
     .contentBox.tanBackground
       .contentBoxHeader.yellowHeader
         %h2.boxDescription
-          =h @team.name 
+          RECENT CLIPS & HIGHLIGHTS
       .contentBoxContent
-        .featureSummary
-          %p
-            %b City:
-            =h @team.city 
-          %p
-            %b County:
-            =h @team.county_name
-          %p
-            %b State:
-            =h @team.state_id? ? @team.state.name : ""
-          %p
-            %b Description:
-            =h @team.description 
+        -#
+          =render :partial => 'video_assets/video_feature', :collection => team_videos()
 
-          - if current_user && current_user.team_admin?(@team)
-            = link_to 'Edit', edit_team_path(@team)
-            = link_to 'Back', teams_path
+          - if @video_assets.respond_to?('total_pages')
+            .apple_pagination
+              = will_paginate @video_assets
+          - else
+            = link_to "More Videos...", url_for(:controller => 'search', :action => 'team_video_assets', :team_id => @team.id)
+
 
   /
     col2 content
   .mainCol2
+    .contentBox.tanBackground
+      .contentBoxHeader.yellowHeader
+        %h2.boxDescription
+          MOST POPULAR VIDEOS
+      .contentBoxContent
+        -#
+          =render :partial => 'video_assets/video_feature', :collection => team_videos(:scope=>:popular)
+
+          - if @video_assets.respond_to?('total_pages')
+            .apple_pagination
+              = will_paginate @video_assets
+          - else
+            = link_to "More Videos...", url_for(:controller => 'search', :action => 'team_video_assets', :team_id => @team.id)
+
     .contentBox.tanBackground
       .contentBoxHeader.yellowHeader
         %h2.boxDescription
@@ -48,15 +70,18 @@
   /
     col3 content
   .mainCol3  
-    %h2.boxDescription
-      = link_to 'Post News', new_user_post_path(current_user)
+    .rightContentItem
+      %span.moreLink
+        = link_to 'Post', new_user_post_path(current_user)
+      %h2
+        = @team.nickname
+        News
     - team_posts().each() do |post|
       .rightContentItem
-        %span.moreLink
-          = link_to 'more>>', user_post_path(post.user, post), :rel => 'bookmark'
-        %h2
-          = post.title
-        = truncate_words(post.post, 75, '...' )
+        %span
+          = link_to post.title, user_post_path(post.user, post), :rel => 'bookmark', :class=>'articleLink'
+        %br
+        = truncate_words(post.post, 24, '...' )
 
 
                 
