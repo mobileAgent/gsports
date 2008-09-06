@@ -42,5 +42,6 @@
           .comments#comments
             #newest_comment
             =render :partial => 'comments/comment', :collection => @video_asset.comments
+          %span#more_comments_links= more_comments_links(@video_asset)
 
     
