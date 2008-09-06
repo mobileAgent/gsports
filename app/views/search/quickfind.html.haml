@@ -1,5 +1,5 @@
 
-
+-# I think this file is obsolete, quickfind action renders with my_videos
 .profileContentArea
   .profilePageHeader
     %h2.columnDescriptor
@@ -154,8 +154,8 @@
               %br/
             .clearDiv
 
-  - if @video_assets.respond_to?('total_pages')
+  - if @video_assets.respond_to?('total_pages') && @video_assets.total_pages > 1
     .apple_pagination
       = will_paginate @video_assets
-  
+      
     
