@@ -57,20 +57,20 @@
               .xbox
                 - mh = @user.moniker_hash
                 %h3 Teams
-                = text_field_with_auto_complete :user, :moniker_teams_tag_list, {:autocomplete => "off"}, {:url => { :controller => 'tags', :action => 'auto_complete_for_tag_name'}, :tokens => [',', ' ']  }
+                = text_field_with_auto_complete :user, :moniker_teams_tag_list, {:autocomplete => "off"}, {:url => { :controller => 'tags', :action => 'auto_complete_for_tag_name'}, :tokens => [',']  }
                 %h3 Sports
-                = text_field_with_auto_complete :user, :moniker_sports_tag_list, {:autocomplete => "off"}, {:url => { :controller => 'tags', :action => 'auto_complete_for_tag_name'}, :tokens => [',', ' ']  }
+                = text_field_with_auto_complete :user, :moniker_sports_tag_list, {:autocomplete => "off"}, {:url => { :controller => 'tags', :action => 'auto_complete_for_tag_name'}, :tokens => [',']  }
                 %h3 Music
-                = text_field_with_auto_complete :user, :moniker_music_tag_list, {:autocomplete => "off"}, {:url => { :controller => 'tags', :action => 'auto_complete_for_tag_name'}, :tokens => [',', ' '] }
+                = text_field_with_auto_complete :user, :moniker_music_tag_list, {:autocomplete => "off"}, {:url => { :controller => 'tags', :action => 'auto_complete_for_tag_name'}, :tokens => [',']  } 
                 %h3 Movies
-                = text_field_with_auto_complete :user, :moniker_movies_tag_list, {:autocomplete => "off"}, {:url => { :controller => 'tags', :action => 'auto_complete_for_tag_name'}, :tokens => [',', ' ']  }
+                = text_field_with_auto_complete :user, :moniker_movies_tag_list, {:autocomplete => "off"}, {:url => { :controller => 'tags', :action => 'auto_complete_for_tag_name'}, :tokens => [',']  }
                 
               .xbox
                 %h3 Personal Tags
                 #user_tags
                   = text_field_tag 'tag_list', @user.tags.collect{|t| t.name}.join(", "), {:autocomplete => "off"}
                   #tag_list_auto_complete.auto_complete
-                  = auto_complete_field 'tag_list', {:url => { :controller => "tags", :action => 'auto_complete_for_tag_name'}, :tokens => [',', ' ']  }
+                  = auto_complete_field 'tag_list', {:url => { :controller => "tags", :action => 'auto_complete_for_tag_name'}, :tokens => [',']  }
                   %label
                     %em
                       You could tag yourself
