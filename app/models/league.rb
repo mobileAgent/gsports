@@ -23,4 +23,17 @@ class League < ActiveRecord::Base
     self.name
   end
   
+  def avatar_photo_url(size = nil)
+    if avatar
+      avatar.public_filename(size)
+    else
+      case size
+        when :thumb
+          AppConfig.photo['missing_thumb']
+        else
+          AppConfig.photo['missing_medium']
+      end
+    end
+  end
+  
 end

@@ -14,11 +14,11 @@ class Comment < ActiveRecord::Base
       when 'photo'
         commentable.description || "Photo from #{commentable.user.full_name}"
       when 'video_asset'
-      commentable.title || (commentable.team_id ? "Video from #{commentable.team_name}" : "Video from #{commentable.league_name}")
+        commentable.title || (commentable.team_id ? "Video from #{commentable.team_name}" : "Video from #{commentable.league_name}")
       when 'video_clip'
-        "Clip from #{commentable.user.full_name}"
+        commentable.title || "Clip from #{commentable.user.full_name}"
       when 'video_reel'
-        "Reel from #{commentable.user.full_name}"
+        commentable.title || "Reel from #{commentable.user.full_name}"
     end
   end
   

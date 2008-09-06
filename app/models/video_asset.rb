@@ -236,6 +236,10 @@ class VideoAsset < ActiveRecord::Base
     a
   end
 
+  def league_video?
+    league_id && team_id.nil?
+  end
+
   private
   
   def find_or_create_team_by_name team_name

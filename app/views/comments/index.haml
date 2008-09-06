@@ -1,45 +1,53 @@
-.profileContentArea.listingPage
-  .profilePageHeader
-    %h2.columnDescriptor
-      %span
-        = (params[:sw] ? 'Sports Wall' : 'Comments')
-      = @user.full_name
-      of
-      = @user.league_staff? ? @user.league_name : @user.team.title_name
+- @section = 'forums'
+- @page_title = (params[:sw] ? 'Sports Wall' : 'Comments')
 
-  .mailContainer
-    %br
-
-    .forumContentBox
-      .forumBoxHeader
-        .mailItem
-          .mailPoster
-            = render :partial => 'posts/author_profile', :locals => {:user => @user}
-          .mailPostSummary
-            %h3
-              =Inflector.titleize(@commentable.class)
-              Comments for
-              = link_to @title, @comments.first.generate_commentable_url(false)
-          .clearDiv
-        .clearDiv
-      %div
-        \&nbsp;
-        %br/
-
-      #comments
-      
-
-        %a#newest_comment
+.profileContentArea
+  .listingPage
+    .profilePageHeader
+      %h2.columnDescriptor
+        %span
+          = @page_title
+        = @user.full_name
+    .leftNavCol
+      %h2.yellowHeader
+        My Profile
+      .leftNav
+        =render :partial => "users/profile_nav"    
+    .listings
+      %br
+  
+      .forumContentBox
+        - unless @commentable.class == User
+          .forumBoxHeader
+            .forumPost
+              .forumPoster
+                - if VideoAsset == @commentable.class
+                  = render :partial => "video_assets/video_profile", :locals => {:video_profile => @commentable}
+                - else
+                  = render :partial => 'posts/author_profile', :locals => {:user => @user}
+              .forumPostSummary
+                %h3
+                  =Inflector.titleize(@commentable.class).capitalize
+                  Comments for
+                  = link_to @title, @comments.first.generate_commentable_url(false)
+              .clearDiv
+            .clearDiv
+          %div
+            \&nbsp;
+            %br/
+  
+        #comments
+  
+          %a#newest_comment
           = render :partial => 'comments/comment', :collection => @comments
-
-        %h3  Add Your Comment
-        %p= render :partial => 'comments/comment_form', :locals => {:commentable => @commentable}
-        
-
+  
+          %h3 Add Your Comment
+          %p= render :partial => 'comments/comment_form', :locals => {:commentable => @commentable}
+  
+        .clearDiv
       .clearDiv
+  
+  
     .clearDiv
-
-
-  .clearDiv
-
+  
 

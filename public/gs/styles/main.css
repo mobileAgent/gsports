@@ -2024,3 +2024,65 @@ h2.yellowHeader, .contentBoxHeader yellowwHeader {
 	border: solid 1px green;
 }
 */
+
+
+/* comments */
+.commentPost {
+  background-color: #E2E4A7;
+  width: auto;
+  display: block;
+  height: auto;
+  margin-bottom: 10px;
+  border-top: 1px solid #ffffff;
+}
+.commentPoster {
+  float: left;
+  width: 150px;
+  margin-bottom: 10px;
+}
+/* Override for profile info display */
+.profileInfo .commentPoster {
+	width: 90px;
+}
+.profileInfo .commentPoster a img {
+  width: 80px;  
+}
+.commentPoster a img {
+  border: 2px solid #333333;
+}
+.commentPoster a:hover img {
+  border: 2px solid #0066CC;
+}
+.commentSummaryBox {
+	float: left;
+	width: 550px;
+  padding-top: 15px;	
+  margin-bottom: 10px;
+  margin-left: 20px;
+}
+.profileInfo .commentSummaryBox {
+  float: left;
+  width: 215px;
+  margin-left: 0px;
+}
+.commentHeading {
+  margin-bottom: 10px;
+}
+.commentSummaryBody {
+  background-color: #FFFFFF;
+  padding: 10px;
+}
+.commentSummaryBody p {
+  background-color: #FFFF;
+  margin-bottom: 10px;
+  display: block;
+}
+.commentActions {
+	float: right;
+}
+.profileInfo .commentActions {
+  float: clear;	
+}
+.commentActions li {
+  margin-bottom: 10px;
+}
