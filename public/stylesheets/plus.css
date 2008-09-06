@@ -8,7 +8,13 @@
 #flash_error {
    color: red;
    font-size: 125%;
+   background-color: #ffe3e3;
    border: 1px solid red;
+}
+
+#flash_info {
+  background-color: #e2e4a7;
+  border: 2px solid #68a34e;
 }
 
 /* forms */
@@ -658,7 +664,6 @@ input[type='button'] {
 
 
 /* team league summary content */
-
 .contentBox.orgSummary{
 	background: white;
 }
@@ -700,11 +705,22 @@ input[type='button'] {
 	position: absolute;
 	top: 0;
 }
-
-
 /* end - team league summary content */
 
+/* profile activity */
+.contentBoxContent.profileActivity{
+ height: 200px;
+}
 
+.profileActivity .activity-thumbnail {
+	float: left;
+	padding-right: 5px;
+}
+
+.profileActivity {
+	border-bottom: 1px solid white;
+}
+/* end - profile activity */
 
 /* Signup completed/weclome page */
 
@@ -767,3 +783,4 @@ div.signupCompletedContent{
 	padding-left: 40px;
 }
 
+/* End Signup completed*/
