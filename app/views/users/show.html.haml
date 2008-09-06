@@ -9,6 +9,8 @@
       %span
         PROFILE
       = @user.full_name
+      - if current_user && current_user.can_request_friendship_with(@user)
+        = add_friend_link(@user)
   .leftNavCol
     %h2.yellowHeader
       My Profile
