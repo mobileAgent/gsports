@@ -1,4 +1,5 @@
 - load_features(@team)
+- avht = @team.avatar ? @team.avatar.height : 100
 
 .landingContentArea
   /
@@ -7,18 +8,19 @@
     .contentBox.orgSummary
       .contentBoxHeader
         - if current_user && current_user.team_admin?(@team)
-          = link_to 'Edit', edit_team_path(@team), :class=>"edit-#{@team.avatar.height}"
+          = link_to 'Edit', edit_team_path(@team), :class=>"edit-#{avht}"
         %h2
           =h @team.name
       .contentBoxContent
-        %div{ :class=>"desc-#{@team.avatar.height}" }
+        %div{ :class=>"desc-#{avht}" }
           %p
             = "#{@team.city}, #{@team.county_name}, #{h @team.state_id? ? @team.state.name : ""}"
           %p
             =h @team.description 
 
-        %a{ :href=>team_path(@team), :class=>"logo-#{@team.avatar.height}" }
-          %img{ :src=>@team.avatar.public_filename, :title=>@team.team_name, :alt=>@team.team_name }
+        %a{ :href=>team_path(@team), :class=>"logo-#{avht}" }
+          - if @team.avatar
+            %img{ :src=>@team.avatar.public_filename, :title=>@team.team_name, :alt=>@team.team_name }
         
     .contentBox.tanBackground
       .contentBoxHeader.yellowHeader
