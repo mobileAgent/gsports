@@ -9,7 +9,7 @@
     .recentFriendFeed
       = truncate_words(h(photo_listing.description),35)
       %br/
-      = photo_listing.tags.collect{|t| link_to( h(t.name), tag_url(t.name), :class => 'tag') }.join(" ")
+      = photo_listing.tags.collect{|t| link_to( h(t.name), tag_url(t.name), :class => 'tag') }.join(", ")
   %ul.listingActions
 
     %li

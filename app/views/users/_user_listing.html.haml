@@ -6,7 +6,7 @@
       = user_listing.full_name
     .schoolName
       = "#{h user_listing.team.name}"
-    = "<p class='userTags'>" + user_listing.tags[0...6].collect{|t| link_to( t.name, tag_url(t.name), :class => "tag") if t }.join(" ") + "</p>" unless user_listing.tags.empty?
+    = "<p class='userTags'>" + user_listing.tags[0...6].collect{|t| link_to( t.name, tag_url(t.name), :class => "tag") if t }.join(", ") + "</p>" unless user_listing.tags.empty?
     
     .recentFriendFeed
       = "#{user_listing.description}"

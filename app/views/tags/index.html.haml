@@ -1,28 +1,50 @@
-.yui-b
-  .box
-    %h3 What are "Tags"?
-    %p
-      %strong= "Tags are one-word descriptors users assign to blog posts, pictures, and clippings on #{AppConfig.community_name}."
-    %p
-      %strong Bigger font size = more popular tag.
-    %p
-      For more information on Tags, check out the
-      %a{ :href => "/info/help" }
-        = "Help page"
-      
-  .box.alt
-    %h3 Search
-    %form.MainForm{"action"=>"/search/tags/", "method"=>"get"}
-      %label Tag name:
-      = text_field_tag 'id', params[:id], :autocomplete => "off"
-      #id_auto_complete.auto_complete{"class"=>"auto_complete", "id"=>"id_auto_complete"}
-      = auto_complete_field 'id', {:url => { :controller => "tags", :action => 'auto_complete_for_tag_name'}, :tokens => [',', ' ']  }
-      %p
-        %input{"type"=>"submit", "value"=>"go"}
+.forumContentArea
+  .listingPage
+    .profilePageHeader
+      %h2.columnDescriptor
+        %span
+          = _('TAGS')
+    .leftNavCol
+      %h2.yellowHeader
+        My Profile
+      .leftNav
+        =render :partial => "users/profile_nav"    
+    .listings
+          
+      .contentBox.tanBackground{ :style => "float: right" }
+        .contentBoxHeader.yellowHeader
+          %h2.boxDescription
+            = _('Search')
+        .contentBoxContent
+          %form.MainForm{"action"=>"/search/tags/", "method"=>"get"}
+            %label Tag name:
+            = text_field_tag 'id', params[:id], :autocomplete => "off"
+            #id_auto_complete.auto_complete{"class"=>"auto_complete", "id"=>"id_auto_complete"}
+            = auto_complete_field 'id', {:url => { :controller => "tags", :action => 'auto_complete_for_tag_name'}, :tokens => [','] }
+            %p
+              %input{"type"=>"submit", "value"=>"go"}
 
+      .box
+        %h2 What are "Tags"?
+        .box
+          %p
+            %strong= "Tags are descriptors users assign to blog posts, pictures, and clippings on #{AppConfig.community_name}. Multiple tags may be entered by using a comma to separate each tag."
+          %br/
+          %p
+            %strong Bigger font size = more popular tag.
+          %br/
+          %p
+            For more information on Tags, check out the
+            %a{ :href => "/info/help" }
+              = "Help page"
 
-#yui-main
-  .yui-b.box
-    %h3 Browse Content By Tags
-    - tag_cloud @tags, %w(nube1 nube2 nube3 nube4 nube5) do |name, css_class|
-      = link_to name, tag_url(name), :class => css_class
+        .clear
+
+      .contentBox.tanBackground
+        .contentBoxHeader.yellowHeader
+          %h2.boxDescription
+            = _('Browse Content By Tags')
+        .contentBoxContent{ :style => "padding: 10px 10px 10px 10px" }
+          %p
+            - tag_cloud @tags, %w(nube1 nube2 nube3 nube4 nube5) do |name, css_class|
+              = link_to name, tag_url(name), :class => css_class

@@ -1,85 +1,169 @@
-.yui-b.sidebar
-  .yui-u
-    .box.alt.first_alt
-      %h3
-        = params[:type] ? h(params[:type]+'s') : 'Items'
-        tagged:
+.forumContentArea
+  .listingPage
+    .profilePageHeader
+      %h2.columnDescriptor
+        %span
+          = _('TAGS')
         = link_to h(@tag.name), tag_path(@tag.name)
+    .leftNavCol
+      %h2.yellowHeader
+        My Profile
+      .leftNav
+        =render :partial => "users/profile_nav"    
+    .listings         
       - unless @pages.blank?
-        .pagination
-          = pagination_info_for @pages
-          = pagination_links_for @pages, {:link_to_current_page => true} if @pages.length > 1
+        .box
+          .pagination
+            = pagination_info_for @pages
+            = pagination_links_for @pages, {:link_to_current_page => true} if @pages.length > 1
 
+      .contentBox.tanBackground
+        .contentBoxHeader.yellowHeader
+          %h2.boxDescription
+            = _('Related Tags')
+        .contentBoxContent.contentBoxContent{ :style => "padding: 10px 10px 10px 10px" }
+          - tag_cloud @related_tags, %w(nube1 nube2 nube3 nube4 nube5) do |name, css_class|
+            - css_class = css_class + (name.eql?(params[:id]) ? " selected": "")
+            %p= link_to h(name), tag_path(name), :class => css_class
+        
+          %br/
+          %p= link_to _('All tags'), tags_path, :class => 'genericButton'
 
-    .box
-      %h3.tags Related Tags
-      %ul
-        - tag_cloud @related_tags, %w(nube1 nube2 nube3 nube4 nube5) do |name, css_class|
-          - css_class = css_class + (name.eql?(params[:id]) ? " selected": "")
-          %li= link_to h(name), tag_path(name), :class => css_class
-      
-      %h6.all= link_to "All tags", tags_path
-
-#yui-main
-  .yui-b.box
-
-    - if @posts.any?
-      #posts
-        %h3 Posts
-        %ul.list.page
-          - @posts.each do |post|
-            %li
-              = link_to( truncate(post.display_title, 75), user_post_path(post.user, post), :title => "by #{post.user.full_name}" )
-              %p.post_excerpt= truncate_words(post.post, 35, '...' )
-        %h6.all= link_to "All posts tagged #{@tag.name}", tag_path(:id => @tag.name, :type => 'Post')              
-
-    - if @photos.any?
-      %br.clear
-      %h3 Photos
-      - @photos.each do |photo|
-        = link_to image_tag(photo.public_filename(:thumb), :title => "#{photo.description} (uploaded by #{photo.user.full_name})", :class => "polaroid"), user_photo_path(photo.user, photo)
-      %h6.all= link_to "All photos tagged #{@tag.name}", tag_path(:id => @tag.name, :type => 'Photo')
-      
-      
-    - if @users.any? || @applied_monikers.any?
-      - used_ids=[]
-      .user
-        %h3 Users
-        - @users.each do |user|
-          = link_to image_tag(user.avatar_photo_url(:thumb), :class => "polaroid"), user_path(user), :title => user.full_name
-          - used_ids << user.id
-        - @applied_monikers.each do |am|
-          - if( ! used_ids.member?(am.user_id))
-            = link_to image_tag(am.user.avatar_photo_url(:thumb), :class => "polaroid"), user_path(am.user), :title => am.user.full_name
-        %h6.all= link_to "All users tagged #{@tag.name}", tag_path(:id => @tag.name, :type => 'User')
-
-
-    - unless @clippings.empty?
-      .blog
-        %h3 Clippings
-        - @clippings.each do |clipping|
-          %a{"href"=>"#{h user_clipping_url(clipping.user, clipping) }"}
-            %img.polaroid.clipping{"src"=>"#{h clipping.image_uri}", "style"=>"width:108px"}
-        %h6.all= link_to "All clippings tagged #{@tag.name}", tag_path(:id => @tag.name, :type => 'Clipping')
-
-    - unless @video_assets.empty?
-      .blog
-        %h3 Videos
-        - @video_assets.each do |va|
-          =link_to "<img src='#{@vidavee.file_thumbnail_medium(va.dockey)}' title='#{va.title}'>", video_asset_path(va)
-        %h6.all= link_to "All videos tagged #{@tag.name}", tag_path(:id => @tag.name, :type => 'VideoAsset')
-
-    - unless @video_clips.empty?
-      .blog
-        %h3 Clips
-        - @video_clips.each do |va|
-          =link_to "<img src='#{@vidavee.file_thumbnail_medium(va.dockey)}' title='{#va.title}'>", video_clip_path(va)
-        %h6.all= link_to "All clips tagged #{@tag.name}", tag_path(:id => @tag.name, :type => 'VideoCLip')
-
-    - unless @video_reels.empty?
-      .blog
-        %h3 Reels
-        - @video_reels.each do |va|
-          =link_to "<img src='#{@vidavee.file_thumbnail_medium(va.thumbnail_dockey)}' title='{#va.title}'>", video_reel_path(va)
-        %h6.all= link_to "All reels tagged #{@tag.name}", tag_path(:id => @tag.name, :type => 'VideoReel')
-             
+      .clear
+       
+      - if @posts.any?
+        .contentBox.tanBackground
+          .contentBoxHeader.yellowHeader
+            %h2.boxDescription
+              = _('Posts')
+          .contentBoxContent
+            - @posts.each do |post|
+              .listingItem
+                .listingDate
+                  %abbr.updated{"title"=>"#{post.created_at.xmlschema}"}= time_ago_in_words(post.created_at)
+                .listingBody
+                  %p= link_to( truncate(post.display_title, 75), user_post_path(post.user, post), :title => "by #{post.user.full_name}" )
+                  %p.post_excerpt= truncate_words(post.post, 35, '...' )
+            .listingItem
+              = link_to "All tagged posts", tag_path(:id => @tag.name, :type => 'Post'), :class => 'genericButton'              
+  
+      - if @photos.any?
+        %br.clear
+        .contentBox.tanBackground
+          .contentBoxHeader.yellowHeader
+            %h2.boxDescription
+              = _('Photos')
+          .contentBoxContent
+            - @photos.each do |photo|
+              .listingItem
+                .listingImage
+                  = link_to image_tag(photo.public_filename(:thumb), :title => "#{photo.description} (uploaded by #{photo.user.full_name})"), user_photo_path(photo.user, photo)
+                .listingDescription
+                  .listingDate
+                    %abbr.updated{"title"=>"#{photo.created_at.xmlschema}"}= time_ago_in_words(photo.created_at)
+                  -# .listingBody
+                    %p= "#{photo.description} (uploaded by #{photo.user.full_name})"
+                .clear
+            .listingItem
+              = link_to "All tagged photos", tag_path(:id => @tag.name, :type => 'Photo'), :class => 'genericButton'
+        
+        
+      - if @users.any? || @applied_monikers.any?
+        - used_ids=[]
+        .contentBox.tanBackground
+          .contentBoxHeader.yellowHeader
+            %h2.boxDescription
+              = _('Users')
+          .contentBoxContent
+            - @users.each do |user|
+              - used_ids << user.id
+              .listingItem
+                .listingImage
+                  = link_to image_tag(user.avatar_photo_url(:thumb)), user_path(user), :title => user.full_name
+                .listingDescription
+                  = user.full_name
+                .clear
+            - @applied_monikers.each do |am|
+              - if( ! used_ids.member?(am.user_id))
+                .listingItem
+                  .listingImage
+                    = link_to image_tag(am.user.avatar_photo_url(:thumb)), user_path(am.user), :title => am.user.full_name
+                  .listingDescription
+                    %p= am.user.full_name
+                  .clear
+            .listingItem
+              = link_to "All tagged users", tag_path(:id => @tag.name, :type => 'User'), :class => 'genericButton'
+  
+      - unless @clippings.empty?
+        .contentBox.tanBackground
+          .contentBoxHeader.yellowHeader
+            %h2.boxDescription
+              = _('Clippings')
+          .contentBoxContent
+            - @clippings.each do |clipping|
+              .listingItem
+                .listingImage
+                  %a{"href"=>"#{h user_clipping_url(clipping.user, clipping) }"}
+                    %img.clipping{"src"=>"#{h clipping.image_uri}", "style"=>"width:108px"}
+                .listingDescription
+                  .listingDate
+                    %abbr.updated{"title"=>"#{clipping.created_at.xmlschema}"}= time_ago_in_words(clipping.created_at)
+                    %p= "#{clipping.description} (by #{clipping.user.full_name})"
+                .clear
+            .listingItem
+              = link_to "All tagged clippings", tag_path(:id => @tag.name, :type => 'Clipping'), :class => 'genericButton'
+  
+      - unless @video_assets.empty?
+        .contentBox.tanBackground
+          .contentBoxHeader.yellowHeader
+            %h2.boxDescription
+              = _('Videos')
+          .contentBoxContent
+            - @video_assets.each do |va|
+              .listingItem
+                .listingImage
+                  =link_to "<img src='#{@vidavee.file_thumbnail_medium(va.dockey)}' title='#{va.title}'>", video_asset_path(va)
+                .listingDescription
+                  .listingDate
+                    %abbr.updated{"title"=>"#{va.created_at.xmlschema}"}= time_ago_in_words(va.created_at)
+                    %p= va.title
+                .clear
+            .listingItem
+              = link_to "All tagged videos", tag_path(:id => @tag.name, :type => 'VideoAsset'), :class => 'genericButton'
+  
+      - unless @video_clips.empty?
+        .contentBox.tanBackground
+          .contentBoxHeader.yellowHeader
+            %h2.boxDescription
+              = _('Clips')
+          .contentBoxContent
+            - @video_clips.each do |va|
+              .listingItem
+                .listingImage
+                  =link_to "<img src='#{@vidavee.file_thumbnail_medium(va.dockey)}' title='{#va.title}'>", video_clip_path(va)
+                .listingDescription
+                  .listingDate
+                    %abbr.updated{"title"=>"#{va.created_at.xmlschema}"}= time_ago_in_words(va.created_at)
+                    %p= va.title
+                .clear
+            .listingItem
+              = link_to "All tagged clips", tag_path(:id => @tag.name, :type => 'VideoCLip'), :class => 'genericButton'
+  
+      - unless @video_reels.empty?
+        .contentBox.tanBackground
+          .contentBoxHeader.yellowHeader
+            %h2.boxDescription
+              = _('Reels')
+          .contentBoxContent
+            - @video_reels.each do |va|
+              .listingItem
+                .listingImage
+                  =link_to "<img src='#{@vidavee.file_thumbnail_medium(va.thumbnail_dockey)}' title='{#va.title}'>", video_reel_path(va)
+                .listingDescription
+                  .listingDate
+                    %abbr.updated{"title"=>"#{va.created_at.xmlschema}"}= time_ago_in_words(va.created_at)
+                    %p= va.title                
+                .clear
+            .listingItem
+              = link_to "All tagged reels", tag_path(:id => @tag.name, :type => 'VideoReel'), :class => 'genericButton'
+               
