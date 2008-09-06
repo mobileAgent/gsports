@@ -24,7 +24,7 @@
             %h4
               = h @photo.description
               %br/
-              = @photo.tags.collect{|t| link_to( h(t.name), tag_url(t.name), :class => 'tag') }.join(" ")
+              = @photo.tags.collect{|t| link_to( h(t.name), tag_url(t.name), :class => 'tag') }.join(", ")
           %ul.listingActions    
             - if current_user.id == @photo.user_id
               %li

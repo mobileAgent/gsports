@@ -7,7 +7,7 @@
     .schoolName
       = truncate_words("#{h video_listing.description} - #{h video_listing.video_length}",35)
       %br/
-      = video_listing.tags.collect{|t| link_to( h(t.name), tag_url(t.name), :class => 'tag') }.join(" ")
+      = video_listing.tags.collect{|t| link_to( h(t.name), tag_url(t.name), :class => 'tag') }.join(", ")
   - skip_controls ||= false
   %ul.listingActions
     - if video_listing.user

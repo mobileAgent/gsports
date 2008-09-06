@@ -9,8 +9,8 @@
     .profileFeature.fileFeatures
       - unless @photos.empty?
         - @photos.each do |photo|
-          .fileThumb
-            = link_to image_tag( photo.public_filename(:icon), :class => "fileName"), user_photo_path(@user, photo)
+          .fileThumb{:style => "text-align: center; vertical-align: middle"}
+            = link_to image_tag( photo.public_filename(:icon)), user_photo_path(@user, photo)
             
       .clearDiv.moreLinkArea
         %span.moreLink

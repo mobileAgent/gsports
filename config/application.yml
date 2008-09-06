@@ -19,7 +19,7 @@ photo:
     min_size: 1    
     #size in megabytes
     max_size: 5
-    thumbnails: {icon: "49x49", feature: "103x65!", thumb: "100x100!", profile: "215x175!", medium: "290x320!", large: "664>"}
+    thumbnails: {icon: "60x40", feature: "103x65", thumb: "100x100", profile: "215x175", medium: "290x320>", large: "664>"}
     #options - 's3', 'file_system', 'db_system' - see attachment_fu for details
     storage: 'file_system'
     content_type: ['image/jpg', 'image/jpeg', 'image/pjpeg', 'image/gif', 'image/png', 'image/x-png']

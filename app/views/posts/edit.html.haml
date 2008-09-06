@@ -28,7 +28,7 @@
           Tags:
         = text_field_tag 'tag_list', @post.tags.collect{|t| t.name}.join(", "), {:autocomplete => "off", :size => 35}
         #tag_list_auto_complete.auto_complete
-        = auto_complete_field 'tag_list', {:url => { :controller => "tags", :action => 'auto_complete_for_tag_name'}, :tokens => [',', ' ']  }
+        = auto_complete_field 'tag_list', {:url => { :controller => "tags", :action => 'auto_complete_for_tag_name'}, :tokens => [',']  }
         %label Save post as:
         = f.select(:published_as, [['Published', 'live'], ['Draft', 'draft']])
         %p

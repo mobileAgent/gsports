@@ -9,14 +9,14 @@
     .recentFriendFeed
       = truncate_words("#{h video_listing.description} - #{h video_listing.video_length}",35)
       %br/
-      = video_listing.tags.collect{|t| link_to( h(t.name), tag_url(t.name), :class => 'tag') }.join(" ")
+      = video_listing.tags.collect{|t| link_to( h(t.name), tag_url(t.name), :class => 'tag') }.join(", ")
   - skip_controls ||= false
   %ul.listingActions
     - if video_listing.team
       %li
         %a.genericButton{ :href => team_path( video_listing.team_id )  }
           %span
-            Team Profile
+            School Profile
     - if video_listing.league && video_listing.team_id.nil?
       %li
         %a.genericButton{ :href => league_path( video_listing.league_id )  }

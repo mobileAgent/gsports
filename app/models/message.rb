@@ -78,9 +78,9 @@ class Message < ActiveRecord::Base
   # gets sent to.
   def self.get_message_recipient_ids(names,current_user,use_alias_id= false)
     recipient_ids = []
-    friend_ids = current_user.accepted_friendships.collect(&:friend_id)
     is_alias = false
     to_names = names.split(',')
+    friend_ids = current_user.accepted_friendships.collect(&:friend_id)
     to_names.each do |recipient|
       if recipient == 'all' && current_user.admin?
         if (use_alias_id)
@@ -94,7 +94,7 @@ class Message < ActiveRecord::Base
         if (use_alias_id)
           recipient_ids << Message.alias_id(recipient)
         else
-          users = User.find(:all, :conditions => ['team_id = ?',current_user.team_id])
+          users = User.find(:all, :conditions => ['team_id = ? and enabled = ?',current_user.team_id,true])
           users.each { |user| recipient_ids << user.id }
           is_alias = true
         end
@@ -102,20 +102,29 @@ class Message < ActiveRecord::Base
         if (use_alias_id)
           recipient_ids << Message.alias_id(recipient)
         else
-          users = User.find(:all, :conditions => ['league_id = ?',current_user.league_id])
+          users = User.find(:all, :conditions => ['league_id = ? and enabled = ?',current_user.league_id,true])
           users.each { |user| recipient_ids << user.id }
           is_alias = true
         end
       else # normal case, one of current_user's friendships
         fn,ln = recipient.split(' ')
-        user = User.find(:first,
-                         :conditions => ['firstname = ? and lastname = ? and id in (?)',
-                                         fn,ln,friend_ids])
+        if (current_user.admin?)
+          user = User.find(:first,
+                           :conditions => ['firstname = ? and lastname = ? and enabled = ?',
+                                           fn,ln,true])
+        else
+          user = User.find(:first,
+                           :conditions => ['firstname = ? and lastname = ? and id in (?) and enabled = ?',
+                                           fn,ln,friend_ids,true])
+        end
         recipient_ids << user.id if user
       end
     end
     [recipient_ids,is_alias]
   end
-  
+
+  def unread?
+    ! read
+  end
 
 end

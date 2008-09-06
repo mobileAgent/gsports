@@ -1168,9 +1168,14 @@
 	float: left;
 	margin-right: 9px;
 }
-.listingImage img {
-	border: 1px solid #9c9c9c;
+
+.listingImage img, .listingImage a img {
+  border: 2px solid #9c9c9c;
 }
+.listingImage a:hover img {
+  border: 2px solid #0066CC;
+}
+
 .listingDescription {
 	float: left;
 }

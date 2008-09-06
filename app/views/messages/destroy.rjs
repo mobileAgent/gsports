@@ -1,1 +1,1 @@
-page.hide "message_#{@message.id}"
+page.visual_effect :drop_out ,"message_#{@message.id}", :duration => 1 

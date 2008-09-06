@@ -1,0 +1,20 @@
+.mailPostSummary{:id => "mail_item_#{message_body.id}"}
+  .mailPostSummaryDate
+    = message_body.created_at.to_s(:game_date)
+  .mailPostSummaryBody{:class => (message_body.unread? ? "unread" : "read")}
+    %p
+      %strong
+        Subject: 
+        = truncate(h(message_body.title),85)
+      %br/
+      - if summary
+        = truncate_words message_body.body,40
+      - else
+        = message_body.body
+        
+  .mailReadMessage
+    - if summary
+      = link_to_remote "read full message &raquo;", { :url => url_for(message_body), :method => :get }
+    - else
+      = link_to_remote "close full message &raquo;", { :url => url_for(:controller => :messages, :action => :show, :id => message_body, :summary => true), :method => :get }
+    
