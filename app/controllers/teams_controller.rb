@@ -27,6 +27,8 @@ class TeamsController < BaseController
   # GET /team/1.xml
   def show
     @team = Team.find(params[:id])
+    @team_popular_videos = VideoAsset.for_team(@team).all(:limit => 10, :order => 'view_count DESC')
+    @team_clips_reels = []
     respond_to do |format|
       format.html # show.haml
       format.xml  { render :xml => @team }
