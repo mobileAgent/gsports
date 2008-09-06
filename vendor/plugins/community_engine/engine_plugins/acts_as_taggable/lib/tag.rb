@@ -7,11 +7,15 @@ class Tag < ActiveRecord::Base
     # first, pull out the quoted tags
     list.gsub!(/\"(.*?)\"\s*/ ) { tag_names << $1; "" }
 
-    # then, replace all commas with a space
-    list.gsub!(/,/, " ")
-
-    # then, get whatever's left
-    tag_names.concat list.split(/\s/)
+    # ECKMAN: split by comma (and semi-colon)
+    tag_names.concat list.split(/,/)
+        
+#   ECKMAN: removing lines that strip commas and split by whitespace
+#     # then, replace all commas with a space
+#     list.gsub!(/,/, " ")
+# 
+#     # then, get whatever's left
+#     tag_names.concat list.split(/\s/)s/)
 
     # strip whitespace from the names
     tag_names = tag_names.map { |t| t.strip }

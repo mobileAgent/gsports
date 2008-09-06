@@ -648,3 +648,65 @@ input[type='button'] {
 .mailItem .unread {
     border: 2px solid #333333;
 }
+
+.profilePageHeader .friend_request a, .profilePageHeader .friend_request a:visited {
+	color: #676767;
+	font-size: 80%;
+	padding-left: 3px;
+}
+
+
+
+/* team league summary content */
+
+.contentBox.orgSummary{
+	background: white;
+}
+
+.contentBox.orgSummary .contentBoxHeader{
+	background: white;
+	font-size: 120%;
+	font-weight: bold;
+	color: #0081C0;
+	margin-bottom: 5px;
+	border: 0;
+}
+
+.contentBox.orgSummary .contentBoxHeader a{
+	color: red;
+	float:right;
+	color: #666666;
+	font-size: 90%;
+	padding-right: 15px;
+}
+
+.contentBox.orgSummary .contentBoxContent{
+	font-weight: bold;
+	position: relative;
+}
+
+.contentBox.orgSummary .contentBoxContent p {
+	padding-top: 8px;
+}
+
+.contentBox.orgSummary .contentBoxContent .logo-60 img {
+	padding-top: 8px;
+}
+
+.contentBox.orgSummary .contentBoxContent .desc-100 {
+	padding-left: 120px;
+}
+.contentBox.orgSummary .contentBoxContent .logo-100 {
+	position: absolute;
+	top: 0;
+}
+
+
+/* end - team league summary content */
+
+
+
+
+
+
+
