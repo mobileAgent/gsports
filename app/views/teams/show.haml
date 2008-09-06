@@ -25,15 +25,7 @@
         %h2.boxDescription
           RECENT CLIPS & HIGHLIGHTS
       .contentBoxContent
-        -#
-          =render :partial => 'video_assets/video_feature', :collection => team_videos()
-
-          - if @video_assets.respond_to?('total_pages')
-            .apple_pagination
-              = will_paginate @video_assets
-          - else
-            = link_to "More Videos...", url_for(:controller => 'search', :action => 'team_video_assets', :team_id => @team.id)
-
+        =render :partial => 'video_assets/video_feature', :collection => @team_clips_reels
 
   /
     col2 content
@@ -45,7 +37,7 @@
       .contentBoxContent
         =render :partial => 'video_assets/video_feature', :collection => @team_popular_videos
 
-        - if @team_popular_videos.size == 10
+        - if @team_popular_videos.size >= 10
           = link_to "More Videos...", url_for(:controller => 'search', :action => 'team_video_assets', :team_id => @team.id)
 
     .contentBox.tanBackground
@@ -53,12 +45,8 @@
         %h2.boxDescription
           RECENT FULL GAME UPLOADS 
       .contentBoxContent
-        =render :partial => 'video_assets/video_feature', :collection => team_videos()
-
-        - if @video_assets.respond_to?('total_pages')
-          .apple_pagination
-            = will_paginate @video_assets
-        - else
+        =render :partial => 'video_assets/video_feature', :collection => @team_videos
+        - if @team_videos.size >= 10
           = link_to "More Videos...", url_for(:controller => 'search', :action => 'team_video_assets', :team_id => @team.id)
 
       

@@ -664,7 +664,6 @@ input[type='button'] {
 
 
 /* team league summary content */
-
 .contentBox.orgSummary{
 	background: white;
 }
@@ -706,13 +705,22 @@ input[type='button'] {
 	position: absolute;
 	top: 0;
 }
-
-
 /* end - team league summary content */
 
+/* profile activity */
+.contentBoxContent.profileActivity{
+ height: 200px;
+}
 
+.profileActivity .activity-thumbnail {
+	float: left;
+	padding-right: 5px;
+}
 
-
+.profileActivity {
+	border-bottom: 1px solid white;
+}
+/* end - profile activity */
 
 
 

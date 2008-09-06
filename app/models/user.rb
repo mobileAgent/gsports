@@ -269,5 +269,15 @@ class User < ActiveRecord::Base
     u = find :first, :conditions => ['email = ? and activated_at IS NOT NULL and enabled = true', login] if u.nil?
     u && u.authenticated?(password) && u.update_last_login ? u : nil
   end
+  
+  def activity(page = {}, since = 1.week.ago)
+    page.reverse_merge :size => 50, :current => 1
+    
+    ids = self.friends_ids
+    Activity.find(:all, 
+      :conditions => ['user_id = ? AND created_at > ?', id, since], 
+      :order => 'created_at DESC',
+      :page => page)      
+  end
 
 end

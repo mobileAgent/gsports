@@ -20,7 +20,9 @@ class LeaguesController < BaseController
   # GET /league/1.xml
   def show
     @league = League.find(params[:id])
+    @league_videos = VideoAsset.for_league(@league).all(:limit => 10, :order => 'updated_at DESC')
     @league_popular_videos = VideoAsset.for_league(@league).all(:limit => 10, :order => 'view_count DESC')
+    @league_clips_reels = []
 
     respond_to do |format|
       format.html # show.haml
