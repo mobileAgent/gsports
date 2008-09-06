@@ -1,0 +1,14 @@
+%tr{ :class => cycle('', 'inv') }
+  %td.cl{ :style => "padding:5px; width:16px;" }
+    = image_tag "clearbits/comment.gif", :class => "icon grey", :title => "No recent activity#{post}", :plugin => "community_engine"
+  %td.c2
+    =link_to h(post.title), user_post_path(post.user, post), :class => "entry-title", :rel => "bookmark", :target => '_blank'
+  %td.ca.stat
+    = post.comments.count
+  %td.ca.stat
+    = number_with_delimiter(post.view_count)
+  %td.lp
+    = _('by')
+    %span.author
+      %strong.fn
+        = h(post.user.display_name)

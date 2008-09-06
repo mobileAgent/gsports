@@ -8,7 +8,7 @@
       = pluralize(@posts.total_entries, 'result')
   .leftNavCol
     %h2.yellowHeader
-      My Profile
+      = _('My Profile')
     .leftNav
       =render :partial => "users/profile_nav"
 

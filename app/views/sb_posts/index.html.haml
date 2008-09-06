@@ -1,0 +1,80 @@
+- @section = 'forums'
+- @page_title = _('FORUMS')
+
+.forumContentArea.listingPage
+  .profilePageHeader
+    %h2.columnDescriptor
+      %span
+        = @page_title
+      - if @forum
+        = link_to h(@forum.name), forum_path(@forum)   
+  
+  .leftNavCol
+    %div{ :align => "center" }
+      = link_to _('&laquo; back to forum index'), forum_home_path
+    %br.clear
+    %h2.yellowHeader
+      My Profile
+    .leftNav
+      =render :partial => "users/profile_nav"    
+  .forumContainer
+    .forumContentBox
+      .forumBoxHeader    
+        %h2
+          = h _('Recent Posts')
+        .clear
+        %p.subtitle
+          = pluralize(@post_pages.item_count,"post")
+          = _('found')
+            
+  
+      - if @post_pages.page_count > 1
+        .pagination= pagination_links @post_pages, :window_size => 10
+    
+      %a{"name"=>"#{@posts.first.dom_id}", "id"=>"#{@posts.first.dom_id}"} &nbsp;
+      %br.clear
+      %br
+      
+      - for post in @posts do
+        .forumPost{:id => "forum_post_#{post.id}"}
+          .forumPoster
+            %a{:href=>"#{user_post_path(post.user, post)}"}
+              =image_tag(post.user.avatar_photo_url(:thumb), :alt=>"image")
+            %div
+              = link_to truncate(h(post.user.full_name), 15), user_path(post.user), :class => (post.user == @posts.first.user ? "admin" : nil) 
+          .forumPostSummary
+            .forumPostSummaryDate
+              %abbr.updated{"title"=>"#{post.created_at.xmlschema}"}= time_ago_in_words(post.created_at)
+            .forumPostSummaryTopic
+              = link_to h(post.forum.name), forum_path(post.forum)
+              \&nbsp; : &nbsp;
+              = link_to h(post.topic.title), forum_topic_path(post.forum, post.topic)
+            .forumPostSummaryBody
+              = post.body_html
+          .forumActions
+            = link_to _('View Post'), forum_topic_path(:forum_id => post.forum_id, :id => post.topic_id, :page => post.topic.last_page, :anchor => post.dom_id), :class => 'genericButton'
+            %br/
+
+            - if post.user_id == current_user.id || current_user.admin?
+              -# AJAX post deletion causes problems with deleting the LAST post
+              -# = link_to_remote _('Delete Post'), {:url => sb_post_path(:forum_id => post.forum_id, :topic_id => post.topic_id, :id => post.id, :page => params[:page]), :method => :delete, 500 => 'alert(\'Sorry, there was a server error\'); return false', :success => visual_effect(:fade, "forum_post_#{post.id}"), :confirm => _('Are you sure you want to permanently delete this post'), :html => {:class => 'genericButton'} }
+              = link_to _('Delete Post'), sb_post_path(:forum_id => post.forum_id, :topic_id => post.topic_id, :id => post.id, :page => params[:page]), :method => :delete, :confirm => _('Are you sure you want to permanently delete this post'), :class => 'genericButton'
+            - else 
+              = render :partial => 'shared/inappropriate_item', :locals => {:item => post}         
+          
+          .clearDiv
+          
+      %div
+      \&nbsp;
+      %br/
+
+      - if @post_pages.page_count > 1
+        .pagination= pagination_links @post_pages, :window_size => 10
+
+      %br.clear
+      - if @forum
+        %br
+        = link_to _("Forums"), forum_home_path
+        %span.arrow &rarr;
+        = link_to h(@forum.name), forum_path(@forum)
+        
