@@ -17,9 +17,4 @@ module TeamsHelper
   end
   
   
-  def team_videos()
-    VideoAsset.for_team(@team).all(:limit => 10, :order => 'updated_at DESC')
-  end
-  
-  
 end
