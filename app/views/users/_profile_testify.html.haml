@@ -4,15 +4,15 @@
       %a{ :href => "#", :onclick => "return profile_minimize(this)" }
         minimize -
     %h2.boxDescription
-      Sports Wall
+      = _('Sports Wall')
   .contentBoxContent.sportsWall
     .profileFeature
       .profileInfo
+        = render :partial => 'users/profile_comment_form', :locals => {:commentable => @user}
+
         #newest_comment
         = render :partial => 'comments/comment', :collection => @comments
-      
-        = render :partial => 'users/profile_comment_form', :locals => {:commentable => @user}
-      
+
       .clearDiv.moreLinkArea
         %span.moreLink
           = link_to 'see all messages &raquo;', comments_url(@user.class.to_s, @user.to_param, :sw => true)
