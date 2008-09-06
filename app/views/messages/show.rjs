@@ -1,0 +1,2 @@
+page.replace("mail_item_#{@message.id}", :partial => "message_body", :locals => { :message_body => @message, :summary => (params[:summary] || false) })
+page.visual_effect(:highlight, "mail_item_#{@message.id}")
