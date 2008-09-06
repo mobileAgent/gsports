@@ -10,8 +10,16 @@ class MessagesController < BaseController
   end
   
   # GET /messages/new
-  def new  
-    @message = Message.new()
+  def new
+    unless (current_user.admin? || current_user.team_staff? || current_user.league_staff?)
+      if current_user.accepted_friendships.size == 0
+        flash[:info] = "You need to have some friends to send messages to!"
+        redirect_to accepted_user_friendships_path(current_user) and return
+      end
+    end
+    
+    @message = Message.new(params[:message])
+    logger.debug("built message #{@message.inspect} from params #{params.inspect}")
     if params[:to]
       begin
         @message.to_name= User.find(params[:to]).full_name
@@ -37,6 +45,13 @@ class MessagesController < BaseController
         Message.get_message_recipient_ids(params[:message][:to_name], current_user)
     else
       recipient_ids,is_alias = params[:message][:to_id],false
+    end
+
+    if (recipient_ids.nil? || recipient_ids.size == 0)
+      logger.debug("There were no recipients found, sending back to new")
+      flash[:info] = "You can only send messages to your friends"
+      @message = Message.new(params[:message])
+      render :action => :new and return
     end
     logger.debug "Sending message from #{current_user.id} to #{recipient_ids.to_json}"
     # Now we have all the ids, sent the message to each one
