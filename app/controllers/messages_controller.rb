@@ -49,7 +49,11 @@ class MessagesController < BaseController
 
     if (recipient_ids.nil? || recipient_ids.size == 0)
       logger.debug("There were no recipients found, sending back to new")
-      flash[:info] = "You can only send messages to your friends"
+      if current_user.admin?
+          flash[:info] = "That recipient list didn't work out."
+        else
+          flash[:info] = "You can only send messages to your friends"
+        end
       @message = Message.new(params[:message])
       render :action => :new and return
     end
@@ -67,7 +71,7 @@ class MessagesController < BaseController
     logger.debug "Doing the sent message for #{current_user.id}"
     sent_message = SentMessage.new(params[:message])
     sent_message.from_id= current_user.id
-    to_ids,uses_alias = (is_alias ? Message.get_message_recipient_ids(params[:message][:to_name],current_user,true) : recipient_ids)
+    to_ids,uses_alias = (is_alias ? Message.get_message_recipient_ids(params[:message][:to_name],current_user,true) : [recipient_ids,false])
     sent_message.to_ids_array= to_ids
     sent_message.save!
 
@@ -130,13 +134,17 @@ class MessagesController < BaseController
   # Auto complete for addressing message to people in your 
   # friends list by name
   def auto_complete_for_friend_full_name
-    @friend_ids = Friendship.find(:all, :conditions => ['user_id = ? and friendship_status_id = ?',current_user.id,FriendshipStatus[:accepted].id]).collect(&:friend_id) 
-    if @friend_ids.nil? || @friend_ids.size == 0
-      render :inline => '' and return
-    end
     search_name = '%' + params[:message][:to_name] + '%'
-    @users = User.find(:all, :conditions => ["id in (?) and (LOWER(firstname) like ? or LOWER(lastname) like ?)", @friend_ids,search_name,search_name], :order => "lastname asc, firstname asc", :limit => 10)
-    choices = "<%= content_tag(:ul, @users.map { |u| content_tag(:li, h(u.full_name)) }) %>"    
+    if current_user.admin?
+      @users = User.find(:all, :conditions => ["(LOWER(firstname) like ? or LOWER(lastname) like ?) and enabled = ?",search_name,search_name,true], :order => "lastname asc, firstname asc", :limit => 10)
+    else
+      @friend_ids = Friendship.find(:all, :conditions => ['user_id = ? and friendship_status_id = ?',current_user.id,FriendshipStatus[:accepted].id]).collect(&:friend_id) 
+      if @friend_ids.nil? || @friend_ids.size == 0
+        render :inline => '' and return
+      end
+      @users = User.find(:all, :conditions => ["id in (?) and (LOWER(firstname) like ? or LOWER(lastname) like ?) and enabled = ?", @friend_ids,search_name,search_name,true], :order => "lastname asc, firstname asc", :limit => 10)
+    end
+    choices = "<%= content_tag(:ul, @users.map { |u| content_tag(:li, h(u.full_name)) }) %>"
     render :inline => choices
   end
 
