@@ -34,6 +34,7 @@
 	width: auto;
 	display: block;
 	height: auto;
+	margin-bottom: 10px;
 }
 
 
@@ -314,6 +315,10 @@
   display: block;
   padding-bottom: 10px;
   font-weight: bold;
+}
+
+.forumPostTags {
+	margin-top: 10px;
 }
 
 .forumActions {
