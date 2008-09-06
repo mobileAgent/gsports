@@ -36,34 +36,36 @@
               = date_select :user, :birthday, {:start_year => 1926, :end_year => Time.now.year - 12}
 
           .yui-b
-            #profile_details.box
+            #profile_details
               %h3 Profile Photo
-              = @user.vendor ? "<div class='right_corner'><div class='community_pro'></div></div>" : ''
-              = image_tag( @user.avatar_photo_url(:medium), :class => "polaroid" )
+              .contentBoxContent.topRowFixHeight
+                .centeringDiv{:style => "text-align: center; vertical-align: middle"}
+                  = image_tag @user.avatar_photo_url(:profile)
               %label
-                Choose a photo for your profile:
+                Choose a photo for your profile here or from your
+                = link_to 'photo gallery', user_photos_path(@user)
+                = ':'
               = file_field :avatar, :uploaded_data, :size => "20"
 
           #yui-main
             .yui-b
-              .box
-                %h3 About Me
-                = text_area :user, :description, :class => "rich_text_editor", :style => "width:40%"
+              %h3 About Me
+              = text_area :user, :description, :class => "rich_text_editor", :style => "width:40%"
         
               
 
-              .box
+              .xbox
                 - mh = @user.moniker_hash
                 %h3 Teams
                 = text_field_with_auto_complete :user, :moniker_teams_tag_list, {:autocomplete => "off"}, {:url => { :controller => 'tags', :action => 'auto_complete_for_tag_name'}, :tokens => [',', ' ']  }
                 %h3 Sports
                 = text_field_with_auto_complete :user, :moniker_sports_tag_list, {:autocomplete => "off"}, {:url => { :controller => 'tags', :action => 'auto_complete_for_tag_name'}, :tokens => [',', ' ']  }
                 %h3 Music
-                = text_field_with_auto_complete :user, :moniker_music_tag_list, {:autocomplete => "off"}, {:url => { :controller => 'tags', :action => 'auto_complete_for_tag_name'}, :tokens => [',', ' ']  } 
+                = text_field_with_auto_complete :user, :moniker_music_tag_list, {:autocomplete => "off"}, {:url => { :controller => 'tags', :action => 'auto_complete_for_tag_name'}, :tokens => [',', ' '] }
                 %h3 Movies
                 = text_field_with_auto_complete :user, :moniker_movies_tag_list, {:autocomplete => "off"}, {:url => { :controller => 'tags', :action => 'auto_complete_for_tag_name'}, :tokens => [',', ' ']  }
                 
-              .box
+              .xbox
                 %h3 Personal Tags
                 #user_tags
                   = text_field_tag 'tag_list', @user.tags.collect{|t| t.name}.join(", "), {:autocomplete => "off"}

@@ -6,10 +6,11 @@
     %h2.boxDescription
       Photo
   .contentBoxContent.topRowFixHeight
-    = image_tag( @user.avatar_photo_url(:medium), :class => 'polaroid', :width => '215', :height => '215')
-    - if !@user.avatar and @is_current_user
-      %br
-      No profile photo?
-      = link_to "Click here to upload one!", edit_user_path(@user)
+    .centeringDiv{:style => "text-align: center; vertical-align: middle"}
+      = image_tag @user.avatar_photo_url(:profile)
+      - if !@user.avatar and @is_current_user
+        %br
+        No profile photo?
+        = link_to "Click here to upload one!", edit_user_path(@user)
     
     
