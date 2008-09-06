@@ -92,7 +92,7 @@ class VideoAssetsControllerTest < ActionController::TestCase
   def test_update_tags
     login_as :admin
     tags = VideoAsset.find(video_assets(:one).id).tags.collect(&:name)
-    put :update, :id => video_assets(:one).id, :video_asset => {}, :tag_list => "newdog bluedog #{tags.join(' ')}"
+    put :update, :id => video_assets(:one).id, :video_asset => {}, :tag_list => "newdog, bluedog #{tags.join(', ')}"
     assert_redirected_to video_asset_path(assigns(:video_asset))
     assert_equal(tags.size+2, VideoAsset.find(video_assets(:one).id).tags.size)
   end
