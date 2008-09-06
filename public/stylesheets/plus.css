@@ -452,7 +452,6 @@ div.thumbFIT {
   margin-left: 15px;
 }
 
-<<<<<<< Updated upstream:public/stylesheets/plus.css
 input[type='button'] {
   color: #FFEF0A;
   background-color: #444444;
@@ -639,6 +638,15 @@ input[type='button'] {
     float: right;
     padding: 5px;
     width: auto;
+}
+
+/* Stop the jumping on selected mail items */
+.mailItem {
+    border: 2px solid white;
+}
+
+.mailItem .unread {
+    border: 2px solid #333333;
 }
 
 .profilePageHeader .friend_request a, .profilePageHeader .friend_request a:visited {

@@ -116,6 +116,9 @@ class Message < ActiveRecord::Base
     end
     [recipient_ids,is_alias]
   end
-  
+
+  def unread?
+    ! read
+  end
 
 end

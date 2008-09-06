@@ -1,5 +1,5 @@
 .videoFindChat
-  - form_for :search_video_asset, VideoAsset.new, :url => {:controller => 'search', :action => 'quickfind' }, :html => {:id=>'videoFind'} do |f|
+  - form_tag url_for({:controller => 'search', :action => 'quickfind'}), :method => :get, :id=>'videoFind' do
     .videoFind
       =collection_select("search_video_asset","game_date",@quickfind_seasons,"year","year",{:prompt => '-Season-', :selected => '-Season-'}, {:id => "videoFindSeason", :name => 'season'})
       -#%label.verbalSemantic{ :for => "videoFindSeason" }
@@ -17,7 +17,7 @@
       -#%label.verbalSemantic{ :for => "videoFindSport" }
         Sport
       %label{ :for => "videoFindSubmit" }
-        %input#videoFindSubmit.submit{ :name => "submit", :src => "/gs/images/video_find_submit.gif", :type => "image", :value => "search", :alt => "Search" }/
+        %input#videoFindSubmit.submit{ :name => nil, :src => "/gs/images/video_find_submit.gif", :type => "image", :value => "search", :alt => "Search" }/
   .chat
     /
       note that this seemingly overcomplicated layout helps the text scale nicely when the user increases the font size

@@ -98,6 +98,18 @@ class MessagesController < BaseController
       redirect_to user_path(current_user)
       return
     end
+
+    # Sir, gentlemen do not read other people's mail.
+    # My good man, they do, but they don't mark it as 'read' when they do.
+    if @message.unread? && current_user.id == @message.to_id
+      @message.read= true
+      @message.save!
+    end
+    
+    respond_to do |format|
+      format.html # => show.html.haml
+      format.js # => show.rjs 
+    end
   end
 
   # Auto complete for addressing message to people in your 

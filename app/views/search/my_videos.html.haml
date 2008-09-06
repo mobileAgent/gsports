@@ -76,7 +76,7 @@
             Videos
       =render :partial => 'video_assets/video_listing', :collection => @video_assets, :locals => { :skip_controls => false }
     
-      - if @video_assets.respond_to?('total_pages')
+      - if @video_assets.respond_to?('total_pages') && @video_assets.total_pages > 1
         .apple_pagination
           = will_paginate @video_assets
       - else
@@ -91,7 +91,7 @@
             Clips
       =render :partial => 'video_clips/video_listing', :collection => @video_clips, :locals => {:skip_controls => false }
       
-      - if @video_clips.respond_to?('total_pages')
+      - if @video_clips.respond_to?('total_pages') && @video_clips.total_pages > 1
         .apple_pagination
           = will_paginate @video_clips
       - else
@@ -105,11 +105,11 @@
             Reels
       =render :partial => 'video_reels/video_listing', :collection => @video_reels, :locals => { :skip_controls => false }
       
-      - if @video_reels.respond_to?('total_pages')
+      - if @video_reels.respond_to?('total_pages') && @video_reels.total_pages > 1
         .apple_pagination
           = will_paginate @video_reels
       - else
         %strong
           = link_to "More Reels...", url_for(:controller => 'search', :action => 'my_video_reels')
 
-.clearDiv/
+.clearDiv
