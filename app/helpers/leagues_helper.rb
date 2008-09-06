@@ -16,9 +16,4 @@ module LeaguesHelper
   end
   
   
-  def league_videos()
-    VideoAsset.for_league(@league).all(:limit => 10, :order => 'updated_at DESC')
-  end
-
-  
 end

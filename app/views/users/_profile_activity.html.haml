@@ -5,23 +5,25 @@
         minimize -
     %h2.boxDescription
       Activity
-  .contentBoxContent
-    .profileFeature
-      .profileInfo
-        - @current_user.network_activity().each() do |activity|
-
-          %span.profileSubHeading
-            =time_ago_in_words_or_date(activity.created_at)
+  .contentBoxContent.profileActivity
+    - @current_user.activity().each() do |activity|
+      .profileFeature.profileActivity
+        .profileInfo
         
-          =link_to activity.user.full_name, user_path(activity.user.id)  
+          %p
+            %span.profileSubHeading
+              =time_ago_in_words_or_date(activity.created_at)
+        
+          -# =link_to activity.user.full_name, user_path(activity.user.id)  
           - if activity.item
             - case activity.item_type
               - when 'Post'
                 =" wrote a post: "
                 = link_to activity.item.title, user_post_path(activity.item.user_id, activity.item)
-              - when 'Photo'
-                =" uploaded a photo: "
-                = link_to image_tag(activity.item.public_filename(:thumb), :width => '50px'), user_photo_path(activity.item.user_id, activity.item)
+              - when 'Photo'  
+                = link_to image_tag(activity.item.public_filename(:thumb), :width => '50px'), user_photo_path(activity.item.user_id, activity.item), :class=>'activity-thumbnail'
+                =" uploaded a photo "
+                .clearDiv
               - when 'Topic'
                 =" started a topic: "
                 -topic = activity.item
@@ -58,7 +60,5 @@
               - else
                 = " #{activity.action.sub("_", " ") }"           
       
-      
-          %br/
-        
+
         

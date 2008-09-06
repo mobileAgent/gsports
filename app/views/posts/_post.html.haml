@@ -1,29 +1,22 @@
-.mailItem{:id=>"post_#{ post.id}"}
-  .mailPoster
-    %span.mailPosterImg
-      %a{:href=>"#{user_post_path(post.user, post)}", :class=>"photo", :rel=>"bookmark"}
+.mailItem
+  .forumPost
+    .forumPoster
+      %a{:href=>"#{user_post_path(post.user, post)}", :rel=>"bookmark"}
         =image_tag((post.first_image_in_body || post.user.avatar_photo_url(:thumb)), :alt=>"", :width=>"80", :height=>"80")
-        %br
-        = post.user.full_name
+      %div
+        = link_to truncate(h(post.user.full_name), 15), user_path(post.user), :class => (post.user == @posts.first.user ? "admin" : nil) 
     
-  .mailPostSummary
-    .mailPostSummaryDate
-      = post.published_at.to_s(:game_date)
-    .mailPostSummaryBody
-      %p
+    .forumPostSummary
+      .forumPostSummaryDate
+        = post.published_at.to_s(:game_date)
+      .forumPostSummaryTopic
         %strong
-          Subject: 
-          = h post.title
-        %br/
-        = truncate_words (post.post, 85)
-        .moreLink
-          = link_to "more &raquo;", user_post_path(post.user,post)
-      = link_to "comments (#{post.comments.size})", user_post_path(post.user, post)+'#comments'      
-    
+          = _('Subject:') 
+          = h post.title      
+      .forumPostSummaryBody
+        %p
+          = truncate_words (post.post, 85)
+          .moreLink
+            = link_to "more &raquo;", user_post_path(post.user,post)
+        = link_to "comments (#{post.comments.size})", user_post_path(post.user, post)+'#comments'          
   .clearDiv
-
-  
-%div
-  \&nbsp;
-  %br
-  %br

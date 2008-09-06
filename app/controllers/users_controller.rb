@@ -196,7 +196,7 @@ class UsersController < BaseController
       redirect_to signup_completed_user_path(@user)
     else
       @billing_address ||= Address.new
-      flash.now[:warning] = "Sorry, we are having technical difficulties contacting our payment gateway. Try again in a few minutes."
+      flash.now[:error] = "Sorry, we are having technical difficulties contacting our payment gateway. Try again in a few minutes."
       @billing_gateway_error = "#{flash.now[:warning]} (#{@response.message})"
       render :action => 'billing', :userid => @user.id
     end

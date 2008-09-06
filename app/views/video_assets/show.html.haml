@@ -16,7 +16,7 @@
         - if @video_asset.team
           %a.genericButton{ :href => team_path( @video_asset.team_id )  }
             %span
-              Team Profile
+              School Profile
         - if @video_asset.league && @video_asset.team_id.nil?
           %a.genericButton{ :href => league_path( @video_asset.league_id )  }
             %span

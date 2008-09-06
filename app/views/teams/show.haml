@@ -25,14 +25,13 @@
         %h2.boxDescription
           RECENT CLIPS & HIGHLIGHTS
       .contentBoxContent
-        -#
-          =render :partial => 'video_assets/video_feature', :collection => team_videos()
+        =render :partial => 'video_assets/video_feature', :collection => @team_clips_reels
 
-          - if @video_assets.respond_to?('total_pages')
-            .apple_pagination
-              = will_paginate @video_assets
-          - else
-            = link_to "More Videos...", url_for(:controller => 'search', :action => 'team_video_assets', :team_id => @team.id)
+        - if @video_assets.respond_to?('total_pages')
+          .apple_pagination
+            = will_paginate @video_assets
+        - else
+          = link_to "More Videos...", url_for(:controller => 'search', :action => 'team_video_assets', :team_id => @team.id)
 
 
   /
@@ -43,21 +42,20 @@
         %h2.boxDescription
           MOST POPULAR VIDEOS
       .contentBoxContent
-        -#
-          =render :partial => 'video_assets/video_feature', :collection => team_videos(:scope=>:popular)
+        =render :partial => 'video_assets/video_feature', :collection => @team_popular_videos
 
-          - if @video_assets.respond_to?('total_pages')
-            .apple_pagination
-              = will_paginate @video_assets
-          - else
-            = link_to "More Videos...", url_for(:controller => 'search', :action => 'team_video_assets', :team_id => @team.id)
+        - if @video_assets.respond_to?('total_pages')
+          .apple_pagination
+            = will_paginate @video_assets
+        - else
+          = link_to "More Videos...", url_for(:controller => 'search', :action => 'team_video_assets', :team_id => @team.id)
 
     .contentBox.tanBackground
       .contentBoxHeader.yellowHeader
         %h2.boxDescription
           RECENT FULL GAME UPLOADS 
       .contentBoxContent
-        =render :partial => 'video_assets/video_feature', :collection => team_videos()
+        =render :partial => 'video_assets/video_feature', :collection => @team_videos
 
         - if @video_assets.respond_to?('total_pages')
           .apple_pagination
