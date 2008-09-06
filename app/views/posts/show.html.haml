@@ -1,14 +1,11 @@
-- @section = (@post.category && @post.category.name)
+- @section = 'blog'
 
 .profileContentArea.listingPage
   .profilePageHeader
     %h2.columnDescriptor
       %span
-        = @post.category.name
-      %br/
-      = @user.full_name
-      of
-      = @user.team.name
+        = _('BLOG')
+      = @post.category.name 
   .leftNavCol
     .clearDiv.moreLinkArea
     %h2.yellowHeader
@@ -19,7 +16,11 @@
   .forumContainer
     .forumContentBox
       .forumBoxHeader
-
+        %h2
+          = @user.full_name
+          of
+          = @user.team.name
+      .clearDiv
       .forumPost
         .forumPoster
           %a{:href=>"#{user_path(@user)}", :class=>"photo"}
