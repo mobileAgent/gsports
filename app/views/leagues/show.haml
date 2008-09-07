@@ -56,8 +56,9 @@
     col3 content
   .mainCol3  
     .rightContentItem
-      %span.moreLink
-        = link_to 'Post', new_user_post_path(current_user)
+      - if current_user.league_staff?(@league)
+        %span.moreLink
+          = link_to 'Post', new_user_post_path(current_user)
       %h2
         League News
     - league_posts().each() do |post|

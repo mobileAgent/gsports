@@ -20,5 +20,5 @@
         %br/
         %h2.profileHeading Sports Played:
         - if @user.moniker_hash["sports"]
-          %span.profileSubHeading= "#{@user.moniker_hash["sports"].join(', ')}"
+          %span.profileSubHeading= @user.moniker_hash["sports"].collect{|t| link_to( h(t), tag_url(t), :class => 'btag') }.join(', ')
         %br/

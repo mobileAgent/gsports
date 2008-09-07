@@ -58,8 +58,9 @@
     col3 content
   .mainCol3  
     .rightContentItem
-      %span.moreLink
-        = link_to 'Post', new_user_post_path(current_user)
+      - if current_user.team_staff?(@team)
+        %span.moreLink
+          = link_to 'Post', new_user_post_path(current_user)
       %h2
         = @team.nickname
         News

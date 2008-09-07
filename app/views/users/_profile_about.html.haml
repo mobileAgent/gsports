@@ -26,14 +26,14 @@
         %h2.profileHeading Favorites:
         %span.profileSubHeading Teams:
         - if @user.moniker_hash["teams"]
-          = "#{@user.moniker_hash["teams"].join(', ')}"
+          = @user.moniker_hash["teams"].collect{|t| link_to( h(t), tag_url(t), :class => 'tag') }.join(', ')
         %br/
         %span.profileSubHeading Music:
         - if @user.moniker_hash["music"]
-          = "#{@user.moniker_hash["music"].join(', ')}"
+          = @user.moniker_hash["music"].collect{|t| link_to( h(t), tag_url(t), :class => 'tag') }.join(', ')
         %br/
         - for mname in @user.moniker_hash.keys
           - next if (mname == "music" || mname == "sports" || mname == "teams")
           %span.profileSubHeading= "#{mname.capitalize}:"
-          = "#{@user.moniker_hash[mname].join(', ')}"
+          = @user.moniker_hash[mname].collect{|t| link_to( h(t), tag_url(t), :class => 'tag') }.join(', ')
           %br/
