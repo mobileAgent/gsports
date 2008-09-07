@@ -54,41 +54,42 @@
           = pagination_links @topic_pages, :window_size => 10
     
       - unless @topics.empty?
-        %table.wide.topics{:border=>"0", :cellspacing=>"0", :cellpadding=>"0"}
-          %tr.yellowHeader
-            %td.contentBoxHeader.la{:colspan=>"2"}
-              = _('Topic')
-            %td.contentBoxHeader{:width=>"1%"}
-              = _('Posts')
-            %td.contentBoxHeader{:width=>"1%"}
-              = _('Views') 
-            %td.contentBoxHeader.la
-              = _('Last post')
-            
-          - for topic in @topics
-            %tr
-              %td.c1{:style=>"padding:5px; width:16px;"}
-                - icon, color, post = icon_and_color_and_post_for topic
-    
-                - if recent_topic_activity(topic)
-                  = image_tag "clearbits/#{icon}.gif", :class => "icon green", :title => "Recent activity#{post}", :plugin => "community_engine"
-                - else
-                  = image_tag "clearbits/#{icon}.gif", :class => "icon grey #{color}", :title => "No recent activity#{post}", :plugin => "community_engine"
-              %td.c2
-                = "Sticky: <strong>" if topic.sticky?
-                = link_to h(topic.title), forum_topic_path(@forum, topic), :class => "entry-title", :rel => "bookmark"
-                = "</strong>" if topic.sticky?
-                - if topic.paged? 
-                  %small= link_to 'last', forum_topic_path(:forum_id => @forum, :id => topic, :page => topic.last_page)
-              %td.ca.inv.stat= topic.sb_posts_count-1
-              %td.ca.inv.stat= number_with_delimiter(topic.views)
-              %td.lp
-                %abbr.updated{:title=>"#{topic.replied_at.xmlschema}"}= time_ago_in_words(topic.replied_at)
-                by
-                %span.author
-                  %strong.fn= h(topic.replied_by_user.full_name)
-                %span= link_to 'view', forum_topic_path(:forum_id => @forum, :id => topic, :page => topic.last_page, :anchor => "posts-#{topic.last_post_id}")
+        %table{:border => 0, :cellspacing => 0, :cellpadding => 0, :width => '100%'}
+          %thead
+            %tr.yellowHeader
+              %td.padded.contentBoxHeader.la{:colspan=>"2"}
+                = _('Topic')
+              %td.padded.contentBoxHeader{:width=>"1%"}
+                = _('Posts')
+              %td.padded.contentBoxHeader{:width=>"1%"}
+                = _('Views') 
+              %td.padded.contentBoxHeader.la
+                = _('Last post')
+          %tbody  
+            - for topic in @topics
+              %tr.forumList
+                %td.forumList.c1{:style=>"padding:5px; width:16px;"}
+                  - icon, color, post = icon_and_color_and_post_for topic
       
+                  - if recent_topic_activity(topic)
+                    = image_tag "clearbits/#{icon}.gif", :class => "icon green", :title => "Recent activity#{post}", :plugin => "community_engine"
+                  - else
+                    = image_tag "clearbits/#{icon}.gif", :class => "icon grey #{color}", :title => "No recent activity#{post}", :plugin => "community_engine"
+                %td.forumList.c2
+                  = "Sticky: <strong>" if topic.sticky?
+                  = link_to h(topic.title), forum_topic_path(@forum, topic), :class => "entry-title", :rel => "bookmark"
+                  = "</strong>" if topic.sticky?
+                  - if topic.paged? 
+                    %small= link_to 'last', forum_topic_path(:forum_id => @forum, :id => topic, :page => topic.last_page)
+                %td.forumList.ca.stat= topic.sb_posts_count-1
+                %td.forumList.ca.stat= number_with_delimiter(topic.views)
+                %td.forumList.lp
+                  %abbr.updated{:title=>"#{topic.replied_at.xmlschema}"}= time_ago_in_words(topic.replied_at)
+                  by
+                  %span.author
+                    %strong.fn= h(topic.replied_by_user.full_name)
+                  %span= link_to 'view', forum_topic_path(:forum_id => @forum, :id => topic, :page => topic.last_page, :anchor => "posts-#{topic.last_post_id}")
+        
       - if @topic_pages.page_count > 1
         %p.pages= pagination_links @topic_pages, :window_size => 10
         

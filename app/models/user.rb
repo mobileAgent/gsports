@@ -91,25 +91,25 @@ class User < ActiveRecord::Base
 
   def team_admin?(chk_team=nil)
     pass = role && role.eql?(Role[:team])
-    pass &&= (chk_team == team) if(chk_team)
+    pass &&= (chk_team == self.team) if(chk_team)
     pass
   end
 
   def team_staff?(chk_team=nil)
     pass = role && (role.eql?(Role[:team_staff]) || team_admin? )
-    pass &&= (chk_team == team) if(chk_team)
+    pass &&= (chk_team == self.team) if(chk_team)
     pass
   end
 
   def league_admin?(chk_league=nil)
     pass = role && role.eql?(Role[:league])
-    pass &&= (chk_league == league) if(chk_league)
+    pass &&= (chk_league == self.league) if(chk_league)
     pass
   end
 
   def league_staff?(chk_league=nil)
     pass = role && (role.eql?(Role[:league_staff]) || league_admin?)
-    pass &&= (chk_league == league) if(chk_league)
+    pass &&= (chk_league == self.league) if(chk_league)
     pass
   end
 
@@ -283,5 +283,27 @@ class User < ActiveRecord::Base
       :order => 'created_at DESC',
       :page => page)      
   end
+
+  # Change the super class method to return the 
+  # missing image in thumb size for thumb, profile, icon and feature
+  def avatar_photo_url(size = nil)
+    if avatar
+      avatar.public_filename(size)
+    else
+      case size
+        when :thumb
+          AppConfig.photo['missing_thumb']
+        when :profile
+          AppConfig.photo['missing_thumb']
+        when :icon
+          AppConfig.photo['missing_thumb']
+        when :feature
+          AppConfig.photo['missing_thumb']
+        else
+          AppConfig.photo['missing_medium']
+      end
+    end
+  end
+
 
 end

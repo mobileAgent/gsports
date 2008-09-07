@@ -8,17 +8,16 @@
       = link_to "(#{@friend_count})", accepted_user_friendships_path(@user) if @friend_count > 5
   .contentBoxContent
     .profileFeature
-    
 
-      - if @is_current_user
+      - if @is_current_user && @pending_friendships_count > 0
         = link_to "&raquo; View all my friend requests (#{@pending_friendships_count})", pending_user_friendships_path(@user)
+        %br
+        %br    
       - elsif current_user && current_user.can_request_friendship_with(@user)
         = add_friend_link(@user)
-      %br
-      %br    
+        %br
+        %br    
       - @accepted_friendships.each do |user|
-        -#=render :partial => "users/sidebar_user", :locals => {:user => user}
-        
         .featureSummaryThumb
           = link_to image_tag(user.avatar_photo_url(:thumb), :alt => "#{user.full_name}", :width => '50', :height => '50'), user_path(user)
         .featureText
@@ -30,8 +29,9 @@
             %br/
             %p= truncate_words( user.description, 10, '...')
           %br/
-          =link_to 'Send Message', new_message_path(:to => user.id), :class => 'url'
-          %br/
+          - if @is_current_user
+            =link_to 'Send Message', new_message_path(:to => user.id), :class => 'url'
+            %br/
         .clearDiv
         
       -if @accepted_friendships.size > 4  

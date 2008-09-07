@@ -33,46 +33,47 @@
           = link_to _('Create New Forum'), new_forum_path, :class => 'genericButton'
           %br<
             
-        %table{:border=>"0", :cellspacing=>"0", :cellpadding=>"0", :class=>"wide forums"}
-          %tr.yellowHeader
-            %td.contentBoxHeader.la{:width=>"70%", :colspan=>"3"}
-              = _('Forum')
-            %td.contentBoxHeader.la{:width=>"30%", :colspan=>"1"}
-              = _('Last Post')
-      
-          -for forum in @forums do
-            %tr{ :class => cycle('', 'inv') }
-              %td.vat.c1  
-                - if recent_forum_activity(forum)
-                  = image_tag "clearbits/comment.gif", :class => "icon green", :title => _('Recent activity'), :plugin => "community_engine"
-                - else
-                  = image_tag "clearbits/comment.gif", :class => "icon grey", :title => _('No recent activity'), :plugin => "community_engine"
-              %td.c2.vat
-                = link_to h(forum.name), forum_path(forum), :class => "title"
-                .posts
-                  - unless forum.topics_count.zero?
-                    = number_with_delimiter(forum.topics_count)
-                    = _('topics')
-                    ,
-                    = number_with_delimiter(forum.sb_posts_count)
-                    = _('posts')
-      
-                %p.desc= forum.description_html
-      
-              %td.c3
-                = link_to _('Edit'), edit_forum_path(forum), :class => "tiny", :rel => "directory", :style => "float:right" if admin?
-      
-              %td.lp
-                - if forum.sb_posts.last
-                  = time_ago_in_words(forum.sb_posts.last.created_at)
-                  %br
-                  by
-                  %strong= h(forum.sb_posts.last.user.full_name)
-                  %span
-                    (
-                    = link_to 'view', forum_topic_path(:forum_id => forum, :id => forum.sb_posts.last.topic_id, :page => forum.sb_posts.last.topic.last_page, :anchor => forum.sb_posts.last.dom_id) 
-                    )
-            
+        %table{:border => 0, :cellspacing => 0, :cellpadding => 0, :width => '100%'}
+          %thead
+            %tr.yellowHeader
+              %td.padded.contentBoxHeader.la{:width=>"70%", :colspan=>"3"}
+                = _('Forum')
+              %td.padded.contentBoxHeader.la{:width=>"30%", :colspan=>"1"}
+                = _('Last Post')
+          %tbody
+            -for forum in @forums do
+              %tr.forumList
+                %td.forumList.vat.c1  
+                  - if recent_forum_activity(forum)
+                    = image_tag "clearbits/comment.gif", :class => "icon green", :title => _('Recent activity'), :plugin => "community_engine"
+                  - else
+                    = image_tag "clearbits/comment.gif", :class => "icon grey", :title => _('No recent activity'), :plugin => "community_engine"
+                %td.forumList.c2.vat
+                  %h4= link_to h(forum.name), forum_path(forum), :class => "title"
+                  .posts
+                    - unless forum.topics_count.zero?
+                      = number_with_delimiter(forum.topics_count)
+                      = _('topics')
+                      ,
+                      = number_with_delimiter(forum.sb_posts_count)
+                      = _('posts')
+        
+                  %p.desc= forum.description_html
+        
+                %td.forumList.c3
+                  = link_to _('Edit'), edit_forum_path(forum), :class => "tiny", :rel => "directory", :style => "float:right" if admin?
+        
+                %td.forumList.lp
+                  - if forum.sb_posts.last
+                    = time_ago_in_words(forum.sb_posts.last.created_at)
+                    %br
+                    by
+                    %strong= h(forum.sb_posts.last.user.full_name)
+                    %span
+                      (
+                      = link_to 'view', forum_topic_path(:forum_id => forum, :id => forum.sb_posts.last.topic_id, :page => forum.sb_posts.last.topic.last_page, :anchor => forum.sb_posts.last.dom_id) 
+                      )
+              
       
         - online_users = User.currently_online 
         - unless online_users.empty? 

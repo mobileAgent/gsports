@@ -115,7 +115,7 @@ class VideoAssetsController < BaseController
     end
     
     gd = params[:video_asset][:game_date] 
-    if (gd.length > 0 && gd.length <= 7) # yyyy-mm
+    if (gd && gd.length > 0 && gd.length <= 7) # yyyy-mm
       params[:video_asset][:game_date] += '-01'
       params[:video_asset][:ignore_game_day] = true
     end
@@ -151,11 +151,11 @@ class VideoAssetsController < BaseController
       params[:video_asset][:ignore_game_month] = false
       params[:video_asset][:ignore_game_day] = false
       params[:video_asset][:game_date_str] = gd
-      if (gd.length > 0 && gd.length == 4) # yyyy
+      if (gd && gd.length > 0 && gd.length == 4) # yyyy
         params[:video_asset][:game_date] += "-01"
         params[:video_asset][:ignore_game_month] = true
       end
-      if (gd.length > 0 && gd.length == 7) # yyyy-mm
+      if (gd && gd.length > 0 && gd.length == 7) # yyyy-mm
         params[:video_asset][:game_date] += '-01'
         params[:video_asset][:ignore_game_day] = true
       end

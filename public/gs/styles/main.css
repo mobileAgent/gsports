@@ -235,6 +235,18 @@
   margin-bottom: 10px;
 }
 
+.padded {
+	padding: 5px 5px 5px 5px; 
+}
+tr.forumList {
+  background-color: #E2E4A7;
+  border-bottom: 2px solid #ffffff; 
+}
+td.forumList,th.forumList { 
+  padding: 10px 5px 10px 5px; 
+  border-bottom: 2px solid #ffffff; 
+}
+
 #monitor_topic {
   float: right;
 }
@@ -260,7 +272,6 @@
 	float: left;
 	padding-top: 10px;
 	padding-right: 5px;
-	padding-bottom: 5px;
 	padding-left: 5px;
 	text-align: center;
 }
@@ -291,13 +302,13 @@
 	width: 525px;
 	padding-top: 25px;
 	padding-right: 10px;
-	padding-bottom: 25px;
 	padding-left: 10px;
 }
 
 .forumPostSummaryBody {
   background-color: #FFFFFF;
   padding: 10px;
+  margin-bottom: 10px;
 }
 
 .forumPostSummaryBody p {
@@ -1168,6 +1179,7 @@
 	padding: 9px;
 	margin-left: 10px;
 	margin-bottom: 10px;
+	border-bottom: 2px solid #ffffff;
 }
 .listingImage {
 	float: left;
@@ -1685,6 +1697,7 @@ h2.yellowHeader, .contentBoxHeader yellowwHeader {
 .contentBoxContent{
 	overflow:auto;
 	color: #444444;
+	margin: 5px 10px 10px 10px;
 }
 .featureSummary{
 	padding-bottom: 3px;
@@ -1842,7 +1855,6 @@ h2.yellowHeader, .contentBoxHeader yellowwHeader {
 }
 .profileFeature{
 	line-height: 180%;
-	margin: 5px 10px 0px 10px;
 }
 .profileFeature .featureText{
 	margin-top: 10px;
@@ -2060,7 +2072,7 @@ h2.yellowHeader, .contentBoxHeader yellowwHeader {
 }
 .commentSummaryBox {
 	float: left;
-	width: 550px;
+	width: 535px;
   padding-top: 15px;	
   margin-bottom: 10px;
   margin-left: 20px;
@@ -2090,4 +2102,13 @@ h2.yellowHeader, .contentBoxHeader yellowwHeader {
 }
 .commentActions li {
   margin-bottom: 10px;
+}
+
+tr.blogList {
+	background-color: #E2E4A7;
+	border-bottom: 2px solid #ffffff; 
+}
+td.blogList,th.blogList { 
+	padding: 10px 5px 10px 5px; 
+	border-bottom: 2px solid #ffffff; 
 }

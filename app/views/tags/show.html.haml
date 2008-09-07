@@ -21,7 +21,7 @@
         .contentBoxHeader.yellowHeader
           %h2.boxDescription
             = _('Related Tags')
-        .contentBoxContent.contentBoxContent{ :style => "padding: 10px 10px 10px 10px" }
+        .contentBoxContent
           - tag_cloud @related_tags, %w(nube1 nube2 nube3 nube4 nube5) do |name, css_class|
             - css_class = css_class + (name.eql?(params[:id]) ? " selected": "")
             %p= link_to h(name), tag_path(name), :class => css_class

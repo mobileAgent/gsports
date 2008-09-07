@@ -2,7 +2,7 @@
   .profilePageHeader
     %h2.columnDescriptor
       %span
-        My Network
+        = _('My Network')
       = @user.full_name()
   .leftNavCol
     %h2.yellowHeader
@@ -15,7 +15,7 @@
     .contentBox.tanBackground
       .contentBoxHeader.yellowHeader
         %h2.boxDescription
-          Friends
+        = _('Friends')
       .contentBoxContent
         %form{ :action => url_for({:controller => 'search', :action => "q"}), :method => 'get'}
           %input{ :type=>'hidden', :name => "search[category]", :value=>13 }
@@ -28,19 +28,23 @@
             %input#friendSearchTerms{ :name => "search[keyword]", :type => "text", :size => 30 }
             %input.submit{ :name => "submit", :src => "/gs/images/top_nav_search.gif", :type => "image", :value => "search", :alt => "Search" }/
             %br/
-    -#.clearDiv.moreLinkArea
-      %span.moreLink      
+        .listingItem
+          - if current_user.admin? || @is_current_user
+            - if @pending_friendships_count > 0
+              = link_to "View all my friend requests (#{@pending_friendships_count})", pending_user_friendships_path(@user)
+            - else
+              You have no friend requests.    
 
-    - if (current_user.id == @user.id && @pending_friendships_count > 0)
-      .listingItem
-        = link_to("(#{@pending_friendships_count} pending)", pending_user_friendships_path(@user), :class => 'genericButton') 
-     
-    .listingItem
-      .pagination
-        %span= pagination_info_for @pages
-        = pagination_links_for @pages, {:link_to_current_page => true} if @pages.length > 1
+        - if current_user.admin? || @is_current_user     
+          - if @friendships.length > 0
+            .listingItem
+              .pagination
+                %span= pagination_info_for @pages
+                = pagination_links_for @pages, {:link_to_current_page => true} if @pages.length > 1
     
-
-    = render :partial => "friendships/friendship", :collection => @friendships, :locals => {:owner => @user}
-
-    
+            .userList
+              = render :partial => "friendships/friendship", :collection => @friendships, :locals => {:owner => @user}
+          - else 
+            .listingItem
+              You have no friendships
+        

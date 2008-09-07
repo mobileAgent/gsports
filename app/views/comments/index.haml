@@ -17,14 +17,17 @@
       %br
   
       .forumContentBox
-        -# ECKMAN: This doesn't look good IMHO, so commenting out
+        - unless @commentable.class == User
           .forumBoxHeader
             .forumPost
               .forumPoster
-                = render :partial => 'posts/author_profile', :locals => {:user => @user}
+                - if VideoAsset == @commentable.class
+                  = render :partial => "video_assets/video_profile", :locals => {:video_profile => @commentable}
+                - else
+                  = render :partial => 'posts/author_profile', :locals => {:user => @user}
               .forumPostSummary
                 %h3
-                  =Inflector.humanize(@commentable.class).capitalize
+                  =Inflector.titleize(@commentable.class).capitalize
                   Comments for
                   = link_to @title, @comments.first.generate_commentable_url(false)
               .clearDiv
@@ -38,9 +41,8 @@
           %a#newest_comment
           = render :partial => 'comments/comment', :collection => @comments
   
-          %h3  Add Your Comment
+          %h3 Add Your Comment
           %p= render :partial => 'comments/comment_form', :locals => {:commentable => @commentable}
-          
   
         .clearDiv
       .clearDiv

@@ -81,6 +81,24 @@ class PhotosController < BaseController
       end
     end
   end
+
+  # DELETE /photos/1
+  # DELETE /photos/1.xml
+  def destroy    
+    @user = User.find(params[:user_id])
+    @photo = Photo.find(params[:id])
+    if @user.avatar.eql?(@photo)
+      @user.avatar = nil
+      @user.save!
+    end
+    @photo.destroy
+     
+    respond_to do |format|
+      format.html { redirect_to user_photos_url(@photo.user)   }
+      format.js # => destroy.rjs
+    end
+  end
+  
   
   def verify_team_league_photo
 

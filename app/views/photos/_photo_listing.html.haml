@@ -1,4 +1,4 @@
-.listingItem
+.listingItem{:id => "photo_item_#{photo_listing.id}"}
   .listingImage
     = link_to image_tag( photo_listing.public_filename(:thumb), :class => "polaroid"), user_photo_path(@user, photo_listing)
   .listingDescription
@@ -20,6 +20,6 @@
           %span
             Edit
       %li
-        = link_to 'Destroy', user_photo_path(current_user,photo_listing), :confirm => 'Are you sure?', :method => :delete,  :class=>'genericButton'
+        = link_to_remote 'Delete', { :url => user_photo_path(current_user,photo_listing), :confirm => 'Are you sure?', :method => :delete },  :class=>'genericButton'
   .clearDiv
 .clearDiv

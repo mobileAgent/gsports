@@ -19,8 +19,13 @@ class VidapiControllerTest < ActionController::TestCase
     vidavee = stub_everything
     vidavee.stubs(:logout).returns(true)
     Rails.cache.stubs(:fetch).with('vidavee').returns(vidavee)
+    Rails.cache.stubs(:fetch).with('quickfind_seasons').returns([]);
+    Rails.cache.stubs(:fetch).with('quickfind_states').returns([]);
+    Rails.cache.stubs(:fetch).with('quickfind_counties').returns([]);
+    Rails.cache.stubs(:fetch).with('quickfind_leagues').returns([]);
+    Rails.cache.stubs(:fetch).with('quickfind_sports').returns([]);
+    Rails.cache.stubs(:fetch).with('quickfind_cities').returns([]);
     get :logout
-    assert_response :success
     assert @request.session[:vidavee].nil?
   end
 

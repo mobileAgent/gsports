@@ -1,41 +1,65 @@
-.yui-b
-  .box#category_tips
-    - if @post.contest
-      = render :partial => "contest"
-    - elsif @post.category
-      = render :partial => "/categories/tips", :locals => {:category => @post.category}
-    - else
-      = render :partial => "/categories/tips", :locals => {:category => nil}
+- @section = 'blog'
 
-#yui-main
-  .yui-b
-    .box
-      %h3 Editing post
+.profileContentArea
+  .profilePageHeader
+    %h2.columnDescriptor
+      %span
+        BLOG
+      = @post.category.name 
+  .leftNavCol
+    %h2.yellowHeader
+      = _('My Profile')
+    .leftNav
+      =render :partial => "users/profile_nav"
 
-      = error_messages_for :post
-      - form_for(:post, :url => user_post_path(@user, @post), :html => { :method => :put, :class =>'MainForm' }) do |f|
-        %label 
-          Title 
-          %em (required)
-        = f.text_field :title
-        %label Category:
-        = f.collection_select(:category_id, Category.find(:all), :id, :name, {}, {})
-        %label
-          Body Text 
-          %em (required)          
-        = f.text_area :raw_post, :size => "86x15"
-        %label
-          Tags:
-        = text_field_tag 'tag_list', @post.tags.collect{|t| t.name}.join(", "), {:autocomplete => "off", :size => 35}
-        #tag_list_auto_complete.auto_complete
-        = auto_complete_field 'tag_list', {:url => { :controller => "tags", :action => 'auto_complete_for_tag_name'}, :tokens => [',']  }
-        %label Save post as:
-        = f.select(:published_as, [['Published', 'live'], ['Draft', 'draft']])
+  .forumContainer
+    - if @post.contest || @post.category  
+      .contentBox.tanBackground
+        .contentBoxHeader.yellowHeader
+          %h2.boxDescription
+            = _('Category')
+        .contentBoxContent
+          - if @post.contest
+            = render :partial => "contest"
+          - elsif @post.category
+            = render :partial => "/categories/tips", :locals => {:category => @post.category}
+          - else
+            = render :partial => "/categories/tips", :locals => {:category => nil}
+          %br.clear
+
+
+    .contentBox.tanBackground
+      .contentBoxHeader.yellowHeader
+        %h2.boxDescription
+          = _('Editing post')
+      .contentBoxContent
+  
+        = error_messages_for :post
+        
         %p
-          = submit_tag "Update" 
-          or
-          =link_to "cancel", user_post_path(current_user, @post)
-        %p
-          =link_to "#{image_tag 'icons/delete.png', :plugin => :community_engine} Delete this post?", user_post_path(current_user, @post), :method => :delete, :confirm => "Are you sure you want to delete this post?"
+          =link_to _('Delete Post'), user_post_path(current_user, @post), :method => :delete, :confirm => "Are you sure you want to delete this post?", :class => 'genericButton'
+                
+        - form_for(:post, :url => user_post_path(@user, @post), :html => { :method => :put, :class =>'MainForm' }) do |f|
+          %label 
+            Title 
+            %em (required)
+          = f.text_field :title
+          %label Category:
+          = f.collection_select(:category_id, Category.find(:all), :id, :name, {}, {})
+          %label
+            Body Text 
+            %em (required)          
+          = f.text_area :raw_post, :size => "86x15"
+          %label
+            Tags:
+          = text_field_tag 'tag_list', @post.tags.collect{|t| t.name}.join(", "), {:autocomplete => "off", :size => 35}
+          #tag_list_auto_complete.auto_complete
+          = auto_complete_field 'tag_list', {:url => { :controller => "tags", :action => 'auto_complete_for_tag_name'}, :tokens => [',']  }
+          %label Save post as:
+          = f.select(:published_as, [['Published', 'live'], ['Draft', 'draft']])
+          %p
+            = submit_tag "Update" 
+            or
+            =link_to "cancel", user_post_path(current_user, @post)
 
   = observe_field  "post_category_id", {:url => {:action => 'category_tips_update'}, :with => "post_category_id", :update => "category_tips", :complete => visual_effect(:highlight, "category_tips", :duration => 0.5)}
