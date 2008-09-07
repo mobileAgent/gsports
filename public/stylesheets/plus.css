@@ -705,6 +705,13 @@ input[type='button'] {
 	position: absolute;
 	top: 0;
 }
+
+.rightContentItem .member-link {
+	color: #666666;
+	float:right;
+}
+
+
 /* end - team league summary content */
 
 /* profile activity */

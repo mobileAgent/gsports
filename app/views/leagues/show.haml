@@ -4,7 +4,6 @@
   .mainCol1
     .contentBox.orgSummary
       .contentBoxHeader
-        = link_to 'League Members', "/search/q?search[category]=11&league_id=#{@league.id}"
         - if current_user && current_user.league_admin?(@league)
           = link_to 'Edit', edit_league_path(@league)
         %h2
@@ -68,6 +67,8 @@
     col3 content
   .mainCol3  
     .rightContentItem
+      = link_to 'League Members', "/search/q?search[category]=11&league_id=#{@league.id}", :class=>'member-link'
+      .clearDiv
       %span.moreLink
         = link_to 'Post', new_user_post_path(current_user)
       %h2
