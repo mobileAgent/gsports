@@ -16,47 +16,18 @@
       .contentBoxHeader.yellowHeader
         %h2.boxDescription
           Friends
-      -#.contentBoxContent.friendSearchWidgetArea
-        %span.friendSearchColumn
-          Search:
-        %span.friendSearchWidgetColumn
-          %label.verbalSemantic{ :for => "friendSearchTerms" }
-            Search Terms
-          %input#friendSearchTerms{ :name => "terms", :type => "text" }/
-          %input.submit{ :name => "submit", :src => "/gs/images/top_nav_search.gif", :type => "image", :value => "search", :alt => "Search" }/
-          %br/
-        .clearDiv
-        %span.friendSearchColumn
-          Sort by:
-        %span.friendSearchWidgetColumn
-          %label.verbalSemantic{ :for => "friendFindSortBy" }
-            Sort by
-          %select#friendFindSortBy{ :name => "sortBy" }
-            %option{ :value => "" }
-              Recent Updates
-            %option{ :value => "" }
-              Option
-            %option{ :value => "" }
-              Option
-            %option{ :value => "" }
-              Option
-          %br/
-        .clearDiv
-        %span.friendSearchColumn
-          Show:
-        %span.friendSearchWidgetColumn
-          %label.verbalSemantic{ :for => "friendFindShowNet" }
-            Show Network
-          %select#friendFindShowNet{ :name => "sortBy" }
-            %option{ :value => "" }
-              Recent Updates
-            %option{ :value => "" }
-              Option
-            %option{ :value => "" }
-              Option
-            %option{ :value => "" }
-              Option
-          %br/
+      .contentBoxContent
+        %form{ :action => url_for({:controller => 'search', :action => "q"}), :method => 'get'}
+          %input{ :type=>'hidden', :name => "search[category]", :value=>13 }
+          %input{ :type=>'hidden', :name => "friend_id", :value=>current_user.id }
+          %span.friendSearchColumn
+            Search:
+          %span.friendSearchWidgetColumn
+            %label.verbalSemantic{ :for => "friendSearchTerms" }
+              Search Terms
+            %input#friendSearchTerms{ :name => "search[keyword]", :type => "text", :size => 30 }
+            %input.submit{ :name => "submit", :src => "/gs/images/top_nav_search.gif", :type => "image", :value => "search", :alt => "Search" }/
+            %br/
     -#.clearDiv.moreLinkArea
       %span.moreLink      
 

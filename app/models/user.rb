@@ -72,6 +72,10 @@ class User < ActiveRecord::Base
     indexes league.name, :as => :league_name
     indexes tags.name, :as => :tags_content
     indexes comments.comment, :as => :comment_comments
+    
+    indexes friendships.friend_id, :as => :friend_id
+    
+    
     #indexes monikers.tags.name, :as => :moniker_content
     has created_at, updated_at, profile_public
   #  set_property :delta => true

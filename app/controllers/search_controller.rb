@@ -56,6 +56,12 @@ class SearchController < BaseController
         render_name = 'user_listing'
       end
 
+      if @category == 13
+        logger.debug "Routing search to friend category"
+        @users = sphinx_search_friends
+        render_name = 'user_listing'
+      end
+
 
      # Search all categories
      if @category > 0
@@ -255,6 +261,16 @@ class SearchController < BaseController
         :order => 'lastname, firstname'
       )
     end
+
+    
+    def sphinx_search_friends
+      User.search(params[:search][:keyword],
+                          :conditions => { :profile_public => 1, :friend_id => params[:friend_id] },
+                          :per_page => 30,
+                          :page => (params[:page] || 1),
+                          :order => :full_name)
+    end
+
 
    def protect_private_videos
      # Remove private video assets from results
