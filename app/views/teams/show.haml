@@ -6,8 +6,9 @@
   .mainCol1
     .contentBox.orgSummary
       .contentBoxHeader
+        = link_to 'Team Members', "/search/q?search[category]=10&team_id=#{@team.id}"
         - if current_user && current_user.team_admin?(@team)
-          = link_to 'Edit', edit_team_path(@team), :class=>"edit-#{@team.avatar.height}"
+          = link_to 'Edit', edit_team_path(@team)
         %h2
           =h @team.name
       .contentBoxContent
