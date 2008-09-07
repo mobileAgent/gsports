@@ -17,4 +17,17 @@
         %h2.boxDescription
           = _('Pending Friendships')
       .contentBoxContent
-        .user_list= render :partial => "friendships/friendship", :collection => @friendships, :locals => {:owner => @user}
+        - if current_user.admin? || @is_current_user     
+          - if @friendships.length > 0
+            -# Note: not currently paged...
+            - if @pages
+              .listingItem
+                .pagination
+                  %span= pagination_info_for @pages
+                  = pagination_links_for @pages, {:link_to_current_page => true} if @pages.length > 1
+    
+            .userList
+              = render :partial => "friendships/friendship", :collection => @friendships, :locals => {:owner => @user}
+          - else 
+            .padded
+              You have no pending friendships      
