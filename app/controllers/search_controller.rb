@@ -204,6 +204,7 @@ class SearchController < BaseController
      #cond.append ['name = ?', params[:name]]
      
      @teams = Team.paginate(:conditions => cond.to_sql, :page => params[:page], :order => 'teams.name DESC')
+     logger.debug "Found #{@teams.total_entries} entries on #{@teams.total_pages} pages"
    end
 
    protected

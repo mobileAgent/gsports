@@ -10,7 +10,7 @@
       =collection_select("team","county_name",@quickfind_counties,"county_name","county_name",{:prompt => "-County-", :selected => "-County-"}, {:id => 'videoFindCounty', :name => 'county_name'})
       -#%label.verbalSemantic{ :for => "videoFindCounty" }
         County
-      =collection_select("team","id",@quickfind_schools,"id","title_name",{:prompt => "-School-", :selected => '-School-'}, {:id => 'videoFindSchool', :name => 'team'})
+      =collection_select("team","id",@quickfind_schools,"id","name",{:prompt => "-School-", :selected => '-School-'}, {:id => 'videoFindSchool', :name => 'team'})
       -#%label.verbalSemantic{ :for => "videoFindSchool" }
         School
       =collection_select("search_video_asset","sport",@quickfind_sports,"sport","sport",{:prompt => "-Sport-", :selected => '-Sport-'}, {:id => 'videoFindSport', :name => 'sport'})
