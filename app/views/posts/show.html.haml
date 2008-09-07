@@ -1,56 +1,53 @@
-- @section = (@post.category && @post.category.name)
+- @section = 'blog'
 
 .profileContentArea.listingPage
   .profilePageHeader
     %h2.columnDescriptor
       %span
-        = @post.category.name
-      %br/
-      = @user.full_name
-      of
-      = @user.team.name
-  -#.leftNavCol
+        = _('BLOG')
+      = @post.category.name 
+  .leftNavCol
     .clearDiv.moreLinkArea
     %h2.yellowHeader
       My Network
     .leftNav
       =render :partial => "users/profile_nav"
       
-  .mailContainer
-    %br
-    
+  .forumContainer
     .forumContentBox
       .forumBoxHeader
-
-        .mailItem
-          .mailPoster
-            %span.mailPosterImg
-              %a{:href=>"#{user_path(@user)}", :class=>"photo"}
-                =image_tag(@user.avatar_photo_url(:thumb), :alt=>"Profile Picture", :width=>"80", :height=>"80")
-            %a{ :href => "#" }
-              = link_to @user.full_name, user_path(@user)
-          .mailPostSummary
-            .mailPostSummaryDate
-              = @post.published_at_display("%B %d, %Y")
-            .mailPostSummaryBody
-              %p
-                %strong
-                  Subject: 
-                  = truncate(h(@post.title),85)
-                %br/
-                = @post.post
-            .mailPostTags
-              - unless @post.tags.empty?
-                %strong
-                  Tags:
-                = @post.tags.collect{|t| link_to( h(t.name), tag_url(t.name), :class => 'tag')}.join(", ")
-          .forumActions
-            - if (current_user && (current_user.admin? || current_user.id == @post.user_id))
-              =link_to "Edit", edit_user_post_path(@post.user, @post),{:class => 'genericButton'}
-              %br/
-              =link_to "Delete", user_post_path(@post.user, @post), {:method => :delete, :confirm => 'Permanently delete this post?', :class => 'genericButton'}
-              
-          .clearDiv
+        %h2
+          = @user.full_name
+          of
+          = @user.team.name
+      .clearDiv
+      .forumPost
+        .forumPoster
+          %a{:href=>"#{user_path(@user)}", :class=>"photo"}
+            =image_tag(@user.avatar_photo_url(:thumb), :alt=>"Profile Picture", :width=>"80", :height=>"80")
+          %a{ :href => "#" }
+            = link_to @user.full_name, user_path(@user)
+        .forumPostSummary
+          .forumPostSummaryDate
+            = @post.published_at_display("%B %d, %Y")
+          .forumPostSummaryTopic
+            %strong
+              = _('Subject:') 
+              = h @post.title      
+          .forumPostSummaryBody
+            = @post.post
+          .forumPostTags
+            - unless @post.tags.empty?
+              %strong
+                Tags:
+              = @post.tags.collect{|t| link_to( h(t.name), tag_url(t.name), :class => 'tag')}.join(", ")
+        .forumActions
+          - if (current_user && (current_user.admin? || current_user.id == @post.user_id))
+            =link_to "Edit", edit_user_post_path(@post.user, @post),{:class => 'genericButton'}
+            %br/
+            =link_to "Delete", user_post_path(@post.user, @post), {:method => :delete, :confirm => 'Permanently delete this post?', :class => 'genericButton'}
+            
+        .clearDiv
 
       %div
         \&nbsp;
