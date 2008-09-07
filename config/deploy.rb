@@ -68,7 +68,9 @@ end
 namespace :memcached do
   desc "Clear the cache"
   task :clear do
-    run "cd #{directory}; RAILS_ENV=#{rails_env} #{rake} gsports:clear_cache"
+    rake = fetch(:rake, "rake")
+    rails_env = fetch(:environment, "production")
+    run "cd #{current_release}; RAILS_ENV=#{rails_env} #{rake} gsports:clear_cache"
   end
 end
 
