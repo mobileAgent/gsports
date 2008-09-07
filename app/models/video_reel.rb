@@ -26,6 +26,14 @@ class VideoReel < ActiveRecord::Base
   named_scope :for_user,
     lambda { |user| { :conditions => ["user_id = ?",user.id] } }
   
+  # Reels created by users associated with a team
+  named_scope :for_team,
+    lambda { |team| { :conditions => ["public_video = ? and users.team_id = ?",true,team.id], :include => [:user] } }
+
+  # Reels created by users associated with the specified league
+  named_scope :for_league,
+    lambda { |league| { :conditions => ["public_video = ? and users.league_id = ?",true,league.id], :include => [:user] } }
+
   def save_deleted_video
     return if self.dockey.nil?
     vd = DeletedVideo.new

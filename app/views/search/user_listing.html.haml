@@ -5,7 +5,16 @@
         User Search Results
       = current_user.full_name
     %h3
-      = pluralize(@users.total_entries, 'result')
+      -if @team
+        = pluralize(@users.total_entries, 'member')
+        of 
+        =link_to @team.name, team_path(@team)
+      -elsif @league
+        = pluralize(@users.total_entries, 'member')
+        of 
+        =link_to @league.name, league_path(@league)
+      -else
+        = pluralize(@users.total_entries, 'result')
   .leftNavCol
     %h2.yellowHeader
       My Profile

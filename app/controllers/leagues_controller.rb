@@ -22,7 +22,11 @@ class LeaguesController < BaseController
     @league = League.find(params[:id])
     @league_videos = VideoAsset.for_league(@league).all(:limit => 10, :order => 'updated_at DESC')
     @league_popular_videos = VideoAsset.for_league(@league).all(:limit => 10, :order => 'view_count DESC')
-    @league_clips_reels = []
+    
+    @league_clips_reels = VideoClip.for_league(@league).find(:all, :limit => 10, :order => "video_clips.created_at DESC")
+    @league_clips_reels << VideoReel.for_league(@league).find(:all, :limit => 10, :order => "video_reels.created_at DESC")
+    @league_clips_reels.flatten!
+    @league_clips_reels.sort! { |a,b| a.created_at <=> b.created_at }
 
     respond_to do |format|
       format.html # show.haml

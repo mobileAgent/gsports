@@ -1,22 +1,25 @@
+- avht = @league.avatar ? @league.avatar.height : 100
 .landingContentArea
   /
     col1 content
   .mainCol1
     .contentBox.orgSummary
       .contentBoxHeader
+        = link_to 'League Members', "/search/q?search[category]=11&league_id=#{@league.id}"
         - if current_user && current_user.league_admin?(@league)
-          = link_to 'Edit', edit_league_path(@league), :class=>"edit-#{@league.avatar.height}"
+          = link_to 'Edit', edit_league_path(@league)
         %h2
           =h @league.name
       .contentBoxContent
-        %div{ :class=>"desc-#{@league.avatar.height}" }
+        %div{ :class=>"desc-#{avht}" }
           %p
             = "#{@league.city}, #{h @league.state_id? ? @league.state.name : ""}"
           %p
             =h @league.description 
 
-        %a{ :href=>league_path(@league), :class=>"logo-#{@league.avatar.height}" }
-          %img{ :src=>@league.avatar.public_filename, :title=>@league.name, :alt=>@league.name }
+        %a{ :href=>league_path(@league), :class=>"logo-#{avht}" }
+          - if @league.avatar
+            %img{ :src=>@league.avatar.public_filename, :title=>@league.name, :alt=>@league.name }
 
     .contentBox.tanBackground
       .contentBoxHeader.yellowHeader
