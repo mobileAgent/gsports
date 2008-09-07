@@ -6,7 +6,7 @@
     %h2.boxDescription
       Activity
   .contentBoxContent.profileActivity
-    - @current_user.activity().each() do |activity|
+    - @user.activity().each() do |activity|
       .profileFeature.profileActivity
         .profileInfo
         
