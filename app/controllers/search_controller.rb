@@ -239,7 +239,7 @@ class SearchController < BaseController
     def activerecord_search_team
       @team = Team.find(params[:team_id])
       User.paginate(:all, 
-        :conditions=>{:team_id => @team.id},
+        :conditions=>{:team_id => @team.id, :enabled => true },
         :per_page => 30,
         :page => (params[:page] || 1),
         :order => 'lastname, firstname'
@@ -249,7 +249,7 @@ class SearchController < BaseController
     def activerecord_search_league
       @league = League.find(params[:league_id])
       User.paginate(:all, 
-        :conditions=>{:league_id => @league.id},
+        :conditions=>{:league_id => @league.id, :enabled => true },
         :per_page => 30,
         :page => (params[:page] || 1),
         :order => 'lastname, firstname'

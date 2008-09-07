@@ -13,6 +13,6 @@
   %ul.listingActions
     - if current_user.can_request_friendship_with(user_listing)
       %li
-        =link_to 'Request Friendship',url_for({ :controller => 'friendships', :action => 'create', :user_id => current_user.id, :friend_id => user_listing.id}), {:method => :post, :class => 'genericButton'}
+        = add_friend_button(user_listing)
   .clearDiv
 .clearDiv

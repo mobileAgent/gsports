@@ -87,7 +87,7 @@ module BaseHelper
     html
   end
   
-  def add_friend_button(user = nil)
+  def add_friend_button(user)
     html = "<span class='friend_request' id='friend_request_#{user.id}'>"
     html += link_to_remote "Request friendship!",
     {:update => "friend_request_#{user.id}",
