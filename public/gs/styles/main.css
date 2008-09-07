@@ -1697,7 +1697,6 @@ h2.yellowHeader, .contentBoxHeader yellowwHeader {
 .contentBoxContent{
 	overflow:auto;
 	color: #444444;
-	margin: 5px 10px 10px 10px;
 }
 .featureSummary{
 	padding-bottom: 3px;
@@ -1855,6 +1854,7 @@ h2.yellowHeader, .contentBoxHeader yellowwHeader {
 }
 .profileFeature{
 	line-height: 180%;
+	margin: 5px 10px 0px 10px;
 }
 .profileFeature .featureText{
 	margin-top: 10px;
