@@ -1,4 +1,5 @@
 - load_features(@team)
+- avht = @team.avatar ? @team.avatar.height : 100
 
 .landingContentArea
   /
@@ -6,19 +7,21 @@
   .mainCol1
     .contentBox.orgSummary
       .contentBoxHeader
+        = link_to 'Team Members', "/search/q?search[category]=10&team_id=#{@team.id}"
         - if current_user && current_user.team_admin?(@team)
-          = link_to 'Edit', edit_team_path(@team), :class=>"edit-#{@team.avatar.height}"
+          = link_to 'Edit', edit_team_path(@team), :class=>"edit-#{avht}"
         %h2
           =h @team.name
       .contentBoxContent
-        %div{ :class=>"desc-#{@team.avatar.height}" }
+        %div{ :class=>"desc-#{avht}" }
           %p
             = "#{@team.city}, #{@team.county_name}, #{h @team.state_id? ? @team.state.name : ""}"
           %p
             =h @team.description 
 
-        %a{ :href=>team_path(@team), :class=>"logo-#{@team.avatar.height}" }
-          %img{ :src=>@team.avatar.public_filename, :title=>@team.team_name, :alt=>@team.team_name }
+        %a{ :href=>team_path(@team), :class=>"logo-#{avht}" }
+          - if @team.avatar
+            %img{ :src=>@team.avatar.public_filename, :title=>@team.team_name, :alt=>@team.team_name }
         
     .contentBox.tanBackground
       .contentBoxHeader.yellowHeader
@@ -26,13 +29,6 @@
           RECENT CLIPS & HIGHLIGHTS
       .contentBoxContent
         =render :partial => 'video_assets/video_feature', :collection => @team_clips_reels
-
-        - if @video_assets.respond_to?('total_pages')
-          .apple_pagination
-            = will_paginate @video_assets
-        - else
-          = link_to "More Videos...", url_for(:controller => 'search', :action => 'team_video_assets', :team_id => @team.id)
-
 
   /
     col2 content
@@ -44,10 +40,7 @@
       .contentBoxContent
         =render :partial => 'video_assets/video_feature', :collection => @team_popular_videos
 
-        - if @video_assets.respond_to?('total_pages')
-          .apple_pagination
-            = will_paginate @video_assets
-        - else
+        - if @team_popular_videos.size >= 10
           = link_to "More Videos...", url_for(:controller => 'search', :action => 'team_video_assets', :team_id => @team.id)
 
     .contentBox.tanBackground
@@ -56,11 +49,7 @@
           RECENT FULL GAME UPLOADS 
       .contentBoxContent
         =render :partial => 'video_assets/video_feature', :collection => @team_videos
-
-        - if @video_assets.respond_to?('total_pages')
-          .apple_pagination
-            = will_paginate @video_assets
-        - else
+        - if @team_videos.size >= 10
           = link_to "More Videos...", url_for(:controller => 'search', :action => 'team_video_assets', :team_id => @team.id)
 
       
@@ -69,8 +58,9 @@
     col3 content
   .mainCol3  
     .rightContentItem
-      %span.moreLink
-        = link_to 'Post', new_user_post_path(current_user)
+      - if current_user.team_staff?(@team)
+        %span.moreLink
+          = link_to 'Post', new_user_post_path(current_user)
       %h2
         = @team.nickname
         News

@@ -27,10 +27,12 @@ class TeamsController < BaseController
   # GET /team/1.xml
   def show
     @team = Team.find(params[:id])
-    
     @team_videos = VideoAsset.for_team(@team).all(:limit => 10, :order => 'updated_at DESC')
-    @team_popular_videos = []
-    @team_clips_reels = []
+    @team_popular_videos = VideoAsset.for_team(@team).all(:limit => 10, :order => 'view_count DESC')
+    @team_clips_reels = VideoClip.for_team(@team).find(:all, :limit => 10, :order => "video_clips.created_at DESC")
+    @team_clips_reels << VideoReel.for_team(@team).find(:all, :limit => 10, :order => "video_reels.created_at DESC")
+    @team_clips_reels.flatten!
+    @team_clips_reels.sort! { |a,b| a.created_at <=> b.created_at }
     
     respond_to do |format|
       format.html # show.haml

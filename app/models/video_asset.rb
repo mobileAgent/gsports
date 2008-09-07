@@ -58,6 +58,9 @@ class VideoAsset < ActiveRecord::Base
   named_scope :for_league,
     lambda { |league| { :conditions => ["league_id = ? and video_status = 'ready' and public_video = true", league.id] } }
 
+  named_scope :for_league_exclusive,
+    lambda { |league| { :conditions => ["league_id = ? and team_id IS NULL and video_status = 'ready' and public_video = true", league.id] } }
+
 
   named_scope :ready,
     :conditions => ["video_status = 'ready' and dockey IS NOT NULL"]
@@ -231,6 +234,10 @@ class VideoAsset < ActiveRecord::Base
     a = VideoAsset.GAME_TYPES
     a << game_type unless (a.member?(game_type) || game_type.nil?)
     a
+  end
+
+  def league_video?
+    league_id && team_id.nil?
   end
 
   private

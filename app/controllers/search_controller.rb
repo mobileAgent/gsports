@@ -10,7 +10,7 @@ class SearchController < BaseController
      @user = current_user
      cond = Caboose::EZ::Condition.new
      cond.append ['year(game_date) = ?',params[:season]]
-     cond.append ['video_assets.league_id = ?', params[:league]]
+     cond.append ['video_assets.team_id = ?', params[:team]]
      cond.append ['sport = ?', params[:sport]]
      cond.append ['teams.state_id = ?', params[:state]]
      cond.append ['teams.county_name = ?', params[:county_name]]
@@ -43,6 +43,19 @@ class SearchController < BaseController
        @posts = sphinx_search_blogs
        render_name = 'post_listing'
      end
+     
+      if @category == 10
+        logger.debug "Routing search to team category"
+        @users = activerecord_search_team
+        render_name = 'user_listing'
+      end
+      
+      if @category == 11
+        logger.debug "Routing search to league category"
+        @users = activerecord_search_league
+        render_name = 'user_listing'
+      end
+
 
      # Search all categories
      if @category > 0
@@ -221,6 +234,27 @@ class SearchController < BaseController
                                              # :conditions => { :public_video => 1 },
                                              :order => 'updated_at DESC')
    end
+   
+
+    def activerecord_search_team
+      @team = Team.find(params[:team_id])
+      User.paginate(:all, 
+        :conditions=>{:team_id => @team.id, :enabled => true },
+        :per_page => 30,
+        :page => (params[:page] || 1),
+        :order => 'lastname, firstname'
+      )
+    end
+    
+    def activerecord_search_league
+      @league = League.find(params[:league_id])
+      User.paginate(:all, 
+        :conditions=>{:league_id => @league.id, :enabled => true },
+        :per_page => 30,
+        :page => (params[:page] || 1),
+        :order => 'lastname, firstname'
+      )
+    end
 
    def protect_private_videos
      # Remove private video assets from results

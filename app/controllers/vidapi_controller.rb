@@ -1,6 +1,7 @@
 class VidapiController < BaseController
   
   skip_before_filter :vidavee_login, :only => :logout
+  skip_before_filter :gs_login_required, :only => :logout
   
   # GET /vidapi/logout
   # Cancel our token with the back end

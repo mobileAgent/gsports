@@ -1,39 +1,43 @@
 .profileContentArea
-  .profilePageHeader
-    %h2.columnDescriptor
-      %span
+  .signupCompletedContent
+    .contentLeftBox
+      %h2.columnDescriptor
         = "Welcome to #{AppConfig.community_name}, #{@user.full_name}!"
 
-  .listings
-    .contentBox.tanBackground
-      .contentBoxHeader.yellowHeader
-        %h2.boxDescription
-          Your registration is complete!
+      .registrationCompleteTitle 
+        Your registration is complete!
 
-    .contentBox.tanBackground
-      .contentBoxHeader.yellowHeader
-        %h2.boxDescription
-          Your Next Steps
 
-    .listingItem
-      Your credit card has been successfuly charged
-      = number_to_currency(@user.role.plan.cost)
-      and this charge will occur every month about this time.
-      It will appear on your credit card statement as
-      = "'#{AppConfig.community_name}'."
 
-    .listingItem
+      %p
+        This page will server as your Confirmation of Membership as well as the receipt for your first month's membership fee of
+        = "#{number_to_currency(@user.role.plan.cost)}."
+        This charge will occur monthly around this date.
+        It will appear on your credit card statement as
+        ="\"#{AppConfig.community_name}.\""
 
-      We have sent an email to the email address you provided
-      during registration. Please take a look around for it, check
-      your spam folder just in case. Make sure to add the
-      = AppConfig.community_name
-      sender to your contacts list so
-      you continue to get important information about your
-      account.
+      %p 
+        We have sent an email to the email address you provided
+        during registration. Please take a look around for it, check
+        your spam folder just in case. Make sure to add the
+        = AppConfig.community_name
+        sender to your contacts list so
+        you continue to get important information about your
+        account.
 
-    .listingItem
-      Head on over and
-      = link_to "start filling out your profile.", edit_user_path(@user)
-      You can upload a picture, find your friends, tag your self,
-      and look at some of the cool videos we have.
+
+    .contentRightBox
+
+      .startUsingTitle
+        Start Using the Site:
+  
+      %p
+        Now that you've registered, dive right in to using the site.  
+        Complete your profile with your information and interests.  
+        Than upload photos, create a blog, visit the forums, and find your friends.
+      %p
+        After you've completed your profile, check out our full game videos.  
+        Create clips, reels, and highlights of all your best movies.
+
+      .myProfileButton
+        = link_to 'My Profile', user_path(:id=>@user.id)

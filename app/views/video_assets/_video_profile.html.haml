@@ -1,0 +1,8 @@
+%span.mailPosterImg
+  - plink = video_profile.league_video? ? league_path(video_profile.league) : team_path(video_profile.team)
+  - name = video_profile.league_video? ? video_profile.league_name : video_profile.team.name
+
+  %a{:href => plink, :class=>"photo"}
+    =image_tag(@vidavee.file_thumbnail_medium(video_profile.dockey), :alt => 'Video', :width => 80)
+= link_to name, plink
+  

@@ -35,3 +35,4 @@
           .comments#comments
             #newest_comment
             =render :partial => 'comments/comment', :collection => @video_reel.comments
+          %span#more_comments_links= more_comments_links(@video_reel)
