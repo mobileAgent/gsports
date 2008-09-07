@@ -61,6 +61,17 @@ test:
     adapter: test
     reliable: false
 
+qa:
+    adapter: stomp
+    reliable: true
+    # properties below are all defaults for this adapter
+    # login: ""
+    # passcode: ""
+    host: localhost
+    port: 61613
+    # reliable: true
+    # reconnectDelay: 5
+    
 production:
     adapter: stomp
     reliable: true
