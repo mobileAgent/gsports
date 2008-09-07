@@ -1,0 +1,20 @@
+.profileContentArea.listingPage
+  .profilePageHeader
+    %h2.columnDescriptor
+      %span
+        = _('My Network')
+      = @user.full_name()
+  .leftNavCol
+    %h2.yellowHeader
+      = _('My Profile')
+    .leftNav
+      =render :partial => "users/profile_nav"
+
+  .listings
+          
+    .contentBox.tanBackground
+      .contentBoxHeader.yellowHeader
+        %h2.boxDescription
+          = _('Pending Friendships')
+      .contentBoxContent
+        .user_list= render :partial => "friendships/friendship", :collection => @friendships, :locals => {:owner => @user}

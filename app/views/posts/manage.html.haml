@@ -1,40 +1,61 @@
-.yui-b.sidebar
-  .box
-    %h3 Links
-    %ul.checks
-      %li=link_to 'View my blog', user_posts_path(current_user)
-      %li=link_to 'New post', new_user_post_path(current_user)    
+- @section = 'blog'
 
-#yui-main
-  .yui-b
+.profileContentArea
+  .profilePageHeader
+    %h2.columnDescriptor
+      %span
+        BLOG
+      = @user.full_name
+  .leftNavCol
+    %h2.yellowHeader
+      = _('My Profile')
+    .leftNav
+      =render :partial => "users/profile_nav"
+
+  .forumContainer
     .box
-      %h3 
-        Manage Posts
-      %p Posts saved with 'draft' status won't appear in your blog until you publish them.
+      = link_to _('New post'), new_user_post_path(@user), {:class => "genericButton"}  if @is_current_user
+
+    .contentBox.tanBackground
+      .contentBoxHeader.yellowHeader
+        %h2.boxDescription
+          = "Manage #{@user.full_name}'s Posts"
+      .contentBoxContent
+        %p Posts saved with 'draft' status won't appear in your blog until you publish them.
       
+        -if @posts.page_count > 1
+          %br.clear   
+          .pagination{ :align => "center" }
+            = paginating_links @posts, :link_to_current_page => true
+        
+        %br.clear
+        
+        %table{:border => 0, :cellspacing => 0, :cellpadding => 0, :width => '100%'}
+          %thead
+            %tr.blogList
+              %th.blogList Date Created
+              %th.blogList Date Published            
+              %th.blogList Title
+              %th.blogList Category
+              %th.blogList Tags
+              %th.blogList Comments
+              %th.blogList Status
+          %tbody
+            - @posts.each do |post|
+              %tr.blogList
+                %td.blogList
+                  %abbr{:title=>"#{post.created_at}"}= post.created_at.strftime("%Y/%m/%d")
+                %td.blogList
+                  %abbr{:title=>"#{post.published_at}"}= post.published_at_display
+                %td.blogList= link_to post.title, edit_user_post_path(post.user, post)
+                %td.blogList= post.category.name
+                %td.blogList= post.tags.collect{|t| link_to( h(t.name), tag_url(t.name), :class => 'tag')}.join(", ")
+                %td.blogList= post.comments.count
+                %td.blogList= post.is_live? ? link_to('published', user_post_path(post.user, post)) : 'draft'
 
-      -if @posts.page_count > 1
-        .pagination= paginating_links @posts, :link_to_current_page => true
+        -if @posts.page_count > 1
+          %br.clear                
+          .pagination{ :align => "center" }
+            = paginating_links @posts, :link_to_current_page => true
 
-      %table{:border => 0, :width => '100%'}
-        %thead
-          %tr
-            %th Date Created
-            %th Date Published            
-            %th Title
-            %th Category
-            %th Tags
-            %th Comments
-            %th Status
-        %tbody
-          - @posts.each do |post|
-            %tr            
-              %td
-                %abbr{:title=>"#{post.created_at}"}= post.created_at.strftime("%Y/%m/%d")
-              %td
-                %abbr{:title=>"#{post.published_at}"}= post.published_at_display
-              %td= link_to post.title, edit_user_post_path(post.user, post)
-              %td= post.category.name
-              %td= post.tags.any? ? post.tag_list : 'No tags'
-              %td= post.comments.count
-              %td= post.is_live? ? link_to('published', user_post_path(post.user, post)) : 'draft'
+        %br.clear   
