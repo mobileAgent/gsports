@@ -19,10 +19,12 @@
       .contentBoxContent
         - if current_user.admin? || @is_current_user     
           - if @friendships.length > 0
-            .listingItem
-              .pagination
-                %span= pagination_info_for @pages
-                = pagination_links_for @pages, {:link_to_current_page => true} if @pages.length > 1
+            -# Note: not currently paged...
+            - if @pages
+              .listingItem
+                .pagination
+                  %span= pagination_info_for @pages
+                  = pagination_links_for @pages, {:link_to_current_page => true} if @pages.length > 1
     
             .userList
               = render :partial => "friendships/friendship", :collection => @friendships, :locals => {:owner => @user}
