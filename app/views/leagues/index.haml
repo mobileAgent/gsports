@@ -2,37 +2,39 @@
   .profilePageHeader
     %h2.columnDescriptor
       %span
-        League Registry
+        LEAGUES
   .leftNavCol
     %h2.yellowHeader
       = _('My Profile')
     .leftNav
       =render :partial => "users/profile_nav"
   .listings
-    .listingItem
 
-      %table.unstyled
+    .padded
+      = link_to 'New league', new_league_path, :class => 'genericButton' 
+
+      %table{:border => 0, :cellspacing => 0, :cellpadding => 0, :width => '100%'}
         %thead
-          %tr
-            %th Name
-            %th City
-            %th State
-            %th Description
-            %th Teams
-            %th/
-      
-        - for league in @leagues
-          %tbody
-            %tr
-              %td= link_to league.name, edit_league_path(league),{:title => "edit"}
-              %td=h league.city
-              %td=h(league.state_id? ? league.state.name : '')
-              %td=truncate(h(league.description),45)
-              - if league.teams.count > 0
-                %td.numeric= link_to(league.teams.count,url_for({:controller=>'teams',:action=>'index',:league_id=>league.id}),{:title=>'show associated teams'})
-              - else
-                %td.numeric= league.teams.count
-        
-              %td= link_to 'Delete', league_path(league), :confirm => 'Are you sure?', :method => :delete
+          %tr.yellowHeader
+            %td.padded.contentBoxHeader Name
+            %td.padded.contentBoxHeader City
+            %td.padded.contentBoxHeader State
+            %td.padded.contentBoxHeader Description
+            %td.padded.contentBoxHeader.numeric Teams
+            %td.padded.contentBoxHeader/ 
+    
+        %tbody
+          - for league in @leagues
+            %tr.leagueList
+              %td.leagueList= link_to league.name, edit_league_path(league),{:title => "edit"}
+              %td.leagueList=h league.city
+              %td.leagueList=h(league.state_id? ? league.state.name : '')
+              %td.leagueList=truncate(h(league.description),45)
+              %td.leagueList.numeric
+                - if league.teams.count > 0
+                  = link_to(league.teams.count,url_for({:controller=>'teams',:action=>'index',:league_id=>league.id}),{:title=>'show associated teams'})
+                - else
+                  = league.teams.count        
+              %td.leagueList{ :align => 'right' }
+                = link_to _('Delete'), league_path(league), :confirm => 'Are you sure?', :method => :delete, :class => 'genericButton'
          
-      = link_to 'New league', new_league_path 

@@ -15,19 +15,8 @@
     .contentBox.tanBackground
       .contentBoxHeader.yellowHeader
         %h2.boxDescription
-        = _('Friends')
+          = _('Friends')
       .contentBoxContent
-        %form{ :action => url_for({:controller => 'search', :action => "q"}), :method => 'get'}
-          %input{ :type=>'hidden', :name => "search[category]", :value=>13 }
-          %input{ :type=>'hidden', :name => "friend_id", :value=>current_user.id }
-          %span.friendSearchColumn
-            Search:
-          %span.friendSearchWidgetColumn
-            %label.verbalSemantic{ :for => "friendSearchTerms" }
-              Search Terms
-            %input#friendSearchTerms{ :name => "search[keyword]", :type => "text", :size => 30 }
-            %input.submit{ :name => "submit", :src => "/gs/images/top_nav_search.gif", :type => "image", :value => "search", :alt => "Search" }/
-            %br/
         .listingItem
           - if current_user.admin? || @is_current_user
             - if @pending_friendships_count > 0
@@ -42,6 +31,17 @@
                 %span= pagination_info_for @pages
                 = pagination_links_for @pages, {:link_to_current_page => true} if @pages.length > 1
     
+                %form{ :action => url_for({:controller => 'search', :action => "q"}), :method => 'get'}
+                  %input{ :type=>'hidden', :name => "search[category]", :value=>13 }
+                  %input{ :type=>'hidden', :name => "friend_id", :value=>current_user.id }
+                  %span.friendSearchColumn
+                    Search:
+                  %span.friendSearchWidgetColumn
+                    %label.verbalSemantic{ :for => "friendSearchTerms" }
+                      Search Terms
+                    %input#friendSearchTerms{ :name => "search[keyword]", :type => "text", :size => 30 }
+                    %input.submit{ :name => "submit", :src => "/gs/images/top_nav_search.gif", :type => "image", :value => "search", :alt => "Search" }/
+                    %br/
             .userList
               = render :partial => "friendships/friendship", :collection => @friendships, :locals => {:owner => @user}
           - else 
