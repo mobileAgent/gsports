@@ -10,7 +10,7 @@ class SearchController < BaseController
      @user = current_user
      cond = Caboose::EZ::Condition.new
      cond.append ['year(game_date) = ?',params[:season]]
-     cond.append ['video_assets.team_id = ?', params[:team]]
+     cond.append ['? in (video_assets.team_id,video_assets.home_team_id,video_assets.visiting_team_id)', params[:team]]
      cond.append ['sport = ?', params[:sport]]
      cond.append ['teams.state_id = ?', params[:state]]
      cond.append ['teams.county_name = ?', params[:county_name]]
