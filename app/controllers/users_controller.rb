@@ -6,6 +6,7 @@ class UsersController < BaseController
   
   protect_from_forgery :only => [:create, :update, :destroy]
   skip_before_filter :gs_login_required, :only => [:signup, :register, :new, :create, :billing, :submit_billing, :auto_complete_for_user_team_name, :auto_complete_for_team_league_name, :forgot_password]
+  skip_before_filter :billing_required, :only => [:edit_billing, :submit_billing]
   before_filter :admin_required, :only => [:assume, :destroy, :featured, :toggle_featured, :toggle_moderator, :disable]
   before_filter :find_user, :only => [:edit, :edit_pro_details, :show, :update, :destroy, :statistics, :disable ]
   
@@ -14,7 +15,7 @@ class UsersController < BaseController
   
   uses_tiny_mce(:options => AppConfig.narrow_mce_options.merge({:width => 300}),
                 :only => [:show])
-
+  
   def show
     # The current user can see @user's profile only if
     # they are the admin, themselves, the profile is public

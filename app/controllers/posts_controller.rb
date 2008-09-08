@@ -2,7 +2,7 @@ class PostsController < BaseController
 
   uses_tiny_mce(:options => AppConfig.gsdefault_mce_options, :only => [:new, :edit, :update, :create ])
   uses_tiny_mce(:options => AppConfig.simple_mce_options, :only => [:show])
-  skip_before_filter :gs_login_required => [:show_public]
+  skip_before_filter :gs_login_required, :only => [:show_public]
   after_filter :cache_control, :only => [:update, :destroy, :create]
 
   # Allowed to show any of the featured athlete stories, but not just any story

@@ -56,7 +56,7 @@ class RecurringBilling
   end
 
   def self.membership_details(member)
-    "#{APP_URL}/member.users[0].id" #user_path(member.users[0] (http://localhost:3000/6)
+    "#{APP_URL}/member.users[0].id"
   end
   #
   # What is the difference, in days, between the provided date and Time.now
@@ -66,6 +66,10 @@ class RecurringBilling
   end
 
   def self.membership_user_details (member)
-    "Team: #{member.users[0].team.name} , Role: #{member.users[0].role.name}"
+    if member.users[0].league_staff?
+      "League: #{member.users[0].league_name} , Role: #{member.users[0].role.name}"
+    else
+      "Team: #{member.users[0].team.name} , Role: #{member.users[0].role.name}"
+    end
   end
 end  
