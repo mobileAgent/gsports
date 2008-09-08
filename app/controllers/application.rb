@@ -59,4 +59,12 @@ class ApplicationController < ActionController::Base
     Message
     Staff
   end
+
+  def expire_games_of_the_week
+    if (current_user.admin?)
+      logger.debug "Clearing gotw cache due to admin video action"
+      Rails.cache.delete('games_of_the_week')
+    end
+  end
+  
 end

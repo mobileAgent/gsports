@@ -6,6 +6,8 @@ class VideoReelsController < BaseController
   uses_tiny_mce(:options => AppConfig.narrow_mce_options.merge({:width => 530}),
                 :only => [:show])
   
+  after_filter :expire_games_of_the_week, :only => [:destroy]
+  
   # GET /video_reels
   # GET /video_reels.xml
   def index
