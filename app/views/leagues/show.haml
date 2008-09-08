@@ -12,10 +12,12 @@
       .contentBoxContent
         %div{ :class=>"desc-#{avht}" }
           %p
-            = "#{@league.city}, #{h @league.state_id? ? @league.state.name : ""}"
+            =h( [@league.address1, @league.address2, @league.city, (@league.state_id? ? @league.state.name : nil), @league.zip].delete_if{ |i| !i }.join(', ') )
           %p
-            =h @league.description 
-
+            =h @league.phone
+            %br
+            =h @league.email
+          
         %a{ :href=>league_path(@league), :class=>"logo-#{avht}" }
           - if @league.avatar
             %img{ :src=>@league.avatar.public_filename, :title=>@league.name, :alt=>@league.name }

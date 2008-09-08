@@ -1,36 +1,62 @@
 %hr
-.section-head Team Info
+.section-head Team Information
 %br
 
-.field-block
-  %label.required{:for=>'team_name'}
-    * Team Name
-  %br
-  = text_field :team, :name
+%table
+  %tr
+    %td.field-block
+      %label.required
+        * Team Name
+      %br
+        = text_field :team, :name, :size => 22
 
-.field-block
-  %label.required{:for=>'team_nickname'}
-    * Nickname
-  %br
-  = text_field :team, :nickname
+    %td.field-block
+      %label.required 
+        * Nickname
+      %br
+      = text_field :team, :nickname, :size => 16
+      
   
-.field-block
-  %label
-    City
-  %br
-  = text_field :team, :city, :size => 16
-    
-.field-block
-  %label
-    County
-  %br
-  = text_field :team, :county_name, :size => 16
-    
-.field-block
-  %label
-    State
-  %br
-  =collection_select("team","state_id",State.all,"id","name",{ :prompt => 'State' })
+%table
+  %tr
+    %td.field-block            
+      %label.required{"for"=>"address1"} 
+        Address Line One
+      %br
+      = text_field :team, :address1, :size => 16
+    %td.field-block
+      %label{"for"=>"address2"} 
+        Address Line Two
+      = text_field :team, :address2, :size => 16  
+
+
+%table
+  %tr
+    %td.field-block            
+      %label.required
+        City
+      %br
+        = text_field :team, :city, :size => 16
+    %td.field-block
+      %label.required{"for"=>"zip"} 
+        Zip/Postal Code
+      %br
+      = text_field :team, :zip, :size => 12
+
+
+%table
+  %tr 
+    %td.field-block
+      %label
+        State
+      %br
+        =collection_select("team","state_id",State.all,"id","name",{ :prompt => 'State' })
+    %td.field-block
+      %label.required
+        County
+      %br
+      = text_field :team, :county_name, :size => 16
+      
     
 .field-block
   %label
@@ -43,5 +69,20 @@
     * League
   %br
   = text_field_with_auto_complete :team, :league_name, :autocomplete => "off"
-    
+
+  
+.field-block
+  %label.required{"for"=>"phone"} 
+    Phone
+  %br
+  = text_field :team, :phone, :size => 14
+  
+.field-block
+  %label.required{"for"=>"email"}
+    Contact E-mail address
+  %br
+  = text_field :team, :email, :size => 24
+
+
+
     

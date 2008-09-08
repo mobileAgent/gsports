@@ -88,7 +88,7 @@
                 %br
                 =collection_select(:user ,:country_id ,Country.all,"id","name", { :prompt => 'Choose Country'})
 
-          %td.field-block
+          .field-block
             %label.required{"for"=>"phone"} 
               * Phone
             %br
