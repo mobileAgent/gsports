@@ -11,7 +11,9 @@
       =render :partial => "users/profile_nav"
   .listings
     .listingItem
-      - if Time.now.strftime("%A") == 'Tuesday' && Time.now.hour > 16
+      - day = Time.now.strftime("%A")
+      - hour = Time.now.hour
+      - if (day == 'Tuesday' && hour > 16) || (day == 'Wednesday' && hour < 4)
         .warningBox{:style => 'width: 60%; margin-left: 20%; padding: 5px; text-align: center'}
           There is a maintenance window each
           %br/
