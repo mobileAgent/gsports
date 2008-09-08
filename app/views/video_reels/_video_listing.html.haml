@@ -12,11 +12,9 @@
     %br/
     .tall_listing_line
       = video_listing.video_length
-    - if video_listing.tags && video_listing.tags.size > 0
-      %span.schoolName
-        Tags:
+    - if video_listing.description && video_listing.description.length > 0
       %span.recentFriendFeed
-        = video_listing.tags.collect{|t| link_to( h(t.name), tag_url(t.name), :class => 'tag') }.join(", ")
+        = truncate_words(h(video_listing.description),25)
       
   - skip_controls ||= false
   %ul.listingActions

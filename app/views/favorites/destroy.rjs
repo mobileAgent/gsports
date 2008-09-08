@@ -15,16 +15,22 @@ if @favorite
       page.replace(fvid, :partial => 'shared/favorite_item', :locals => {:item => @favorite.favoritable })
     when 'video_assets'
       page.replace(fvid, :partial => 'shared/favorite_item', :locals => {:item => @favorite.favoritable })
+      page << "if($('#{fvcountid}')) {"
       page.replace(fvcountid, :partial => 'shared/favorite_count', :locals => {:item => @favorite.favoritable})
       page.visual_effect(:highlight,fvcountid)
+      page << "}"
     when 'video_clips'
       page.replace(fvid, :partial => 'shared/favorite_item', :locals => {:item => @favorite.favoritable })
+      page << "if($('#{fvcountid}')) {"
       page.replace(fvcountid, :partial => 'shared/favorite_count', :locals => {:item => @favorite.favoritable})
       page.visual_effect(:highlight,fvcountid)
+      page << "}"
     when 'video_reels'
       page.replace(fvid, :partial => 'shared/favorite_item', :locals => {:item => @favorite.favoritable })
+      page << "if($('#{fvcountid}')) {"
       page.replace(fvcountid, :partial => 'shared/favorite_count', :locals => {:item => @favorite.favoritable})
       page.visual_effect(:highlight,fvcountid)
+      page << "}"
       
     when 'posts'
       page.replace "post_#{@favorite.favoritable.id}_meta", :partial => 'posts/meta', :locals => {:post => @favorite.favoritable}
