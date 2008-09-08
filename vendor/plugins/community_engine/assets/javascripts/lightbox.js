@@ -9,10 +9,11 @@ var Lightbox = {
 	/* hideAll - closes all open lightbox windows */
 	hideAll: function(){
 		lboxes = document.getElementsByClassName('lbox')
-		lboxes.each(function(box){
+                if (lboxes && lboxes.length > 0 && lboxes.each)
+  	        	lboxes.each(function(box){
 				Element.hide(box)
-			}
-		)
+			        }
+		        )
 		if ($('overlay')){
 			Element.remove('overlay');
 			}
