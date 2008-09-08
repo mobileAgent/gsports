@@ -7,22 +7,41 @@
   %b Nickname
   %br/
   = f.text_field :nickname 
+
+
+%div
+  %b Address Line One
+  %br/
+  = f.text_field :address1, :size => 16
   
+%div
+  %b Address Line Two
+  %br/
+  = f.text_field :address2, :size => 16  
+  
+
 %div
   %b City
   %br/
   = f.text_field :city
-    
+
 %div
   %b County
   %br/
   = f.text_field :county_name
-    
+
 %div
   %b State
   %br/
   =collection_select("team","state_id",State.all,"id","name",{ :selected => @team.state_name })
-    
+
+
+%div
+  %b Zip/Postal Code
+  %br/
+  = f.text_field :zip, :size => 12
+
+
 %div
   %b Description
   %br/
@@ -32,6 +51,19 @@
   %b League
   %br/
   = text_field_with_auto_complete :team, :league_name, :autocomplete => "off"
+
+
+%div
+  %b Phone
+  %br/
+  = f.text_field :phone, :size => 12
+
+%div
+  %b Contact E-mail address
+  %br/
+  = f.text_field :email, :size => 32
+
+
 
 -if current_user.admin?  
   %div

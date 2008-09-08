@@ -2,6 +2,19 @@
   %b Name
   %br/
   = f.text_field :name 
+  
+
+%div
+  %b Address Line One
+  %br/
+  = f.text_field :address1, :size => 16
+
+%div
+  %b Address Line Two
+  %br/
+  = f.text_field :address2, :size => 16  
+  
+
 %div
   %b City
   %br/
@@ -14,3 +27,15 @@
   %b Description
   %br/
   = f.text_field :description, :size => 65
+
+
+%div
+  %b Phone
+  %br/
+  = f.text_field :phone, :size => 14
+
+%div
+  %b Contact E-mail address
+  %br/
+  = f.text_field :email, :size => 24
+

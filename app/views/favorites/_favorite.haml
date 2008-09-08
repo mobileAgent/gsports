@@ -1,13 +1,17 @@
 - case favorite.favoritable.class.to_s.tableize
-  - when 'clippings'
-    = render :partial => "clippings/clipping", :locals => {:clipping => favorite.favoritable}
   - when 'video_assets'
-    = render :partial => "video_assets/video_block", :locals => {:video_asset => favorite.favoritable, :skip_controls => true}
+    = render :partial => "video_assets/video_listing", :locals => {:video_listing => favorite.favoritable, :skip_controls => true}
   - when 'video_clips'
-    = render :partial => "video_clips/video_block", :locals => {:video_clip => favorite.favoritable, :skip_controls => true }
+    = render :partial => "video_clips/video_listing", :locals => {:video_listing => favorite.favoritable, :skip_controls => true }
   - when 'video_reels'
-    = render :partial => "video_reels/video_block", :locals => {:video_reel => favorite.favoritable, :skip_controls => true }
+    = render :partial => "video_reels/video_listing", :locals => {:video_listing => favorite.favoritable, :skip_controls => true }
+  - when 'photos'
+    = render :partial => "photos/photo_listing", :locals => {:photo_listing => favorite.favoritable, :photo_type => :thumb}
+
+
+-#
   - when 'posts'
     = render :partial => "posts/favorited_post", :locals => {:post => favorite.favoritable}
-  - when 'photos'
-    = render :partial => "photos/photo_block", :locals => {:photo => favorite.favoritable, :photo_type => :thumb}
+
+  - when 'clippings'
+    = render :partial => "clippings/clipping", :locals => {:clipping => favorite.favoritable}

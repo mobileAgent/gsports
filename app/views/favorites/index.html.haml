@@ -1,9 +1,21 @@
-.favorites.box
-  %h3= link_to "#{@user.full_name}'s favorites", user_favorites_path(@user.id)        
+.profileContentArea.listingPage
+  .profilePageHeader
+    %h2.columnDescriptor
+      %span
+        = @title || "My Favorites"
+      = "#{@user.full_name}" unless @title
+  .leftNavCol
+    %h2.yellowHeader
+      My Profile
+    .leftNav
+      =render :partial => "users/profile_nav"
 
-  - @favorites.in_groups_of(2) do |group|
-    .row  
-      - group.compact.each do |f|
-        = render :partial => "favorite", :locals => {:favorite => f}
+  .listings
 
-.pagination=pagination_links
+    =render :partial => 'favorite', :collection => @favorites
+        
+    - if @favorites.respond_to?('total_pages') && @favorites.total_pages > 1
+      .apple_pagination
+        = will_paginate @favorites
+        
+        

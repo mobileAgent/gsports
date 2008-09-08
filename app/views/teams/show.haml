@@ -14,9 +14,11 @@
       .contentBoxContent
         %div{ :class=>"desc-#{avht}" }
           %p
-            = "#{@team.city}, #{@team.county_name}, #{h @team.state_id? ? @team.state.name : ""}"
+            =h( [@team.address1, @team.address2, @team.city, (@team.state_id? ? @team.state.name : nil), @team.zip].delete_if{ |i| !i }.join(', ') )
           %p
-            =h @team.description 
+            =h @team.phone
+            %br
+            =h @team.email 
 
         - if current_user && @team.avatar
           %a{ :href=>team_path(@team), :class=>"logo-#{avht}" }
