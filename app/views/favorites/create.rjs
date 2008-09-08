@@ -2,6 +2,8 @@ if @favorite.new_record?
   #it didn't work
   flashnow(page,'You have already favorited this item')
 else
+  fvid="favorite_#{@favorite.favoritable_type}_#{@favorite.favoritable_id}"
+  fvcountid="favorite_count_#{@favorite.favoritable_type}_#{@favorite.favoritable_id}"
   case @favorite.favoritable.class.to_s.tableize
     when 'clippings'
       page.select("#clipping_#{@favorite.favoritable.id}").each do |element|
@@ -12,13 +14,19 @@ else
       end
 
     when 'photos'
-      page.replace("favorite_#{@favorite.favoritable_type}_#{@favorite.favoritable_id}", :partial => 'shared/favorite_item', :locals => {:item => @favorite.favoritable })
+      page.replace(fvid, :partial => 'shared/favorite_item', :locals => {:item => @favorite.favoritable })
     when 'video_assets'
-      page.replace("favorite_#{@favorite.favoritable_type}_#{@favorite.favoritable_id}", :partial => 'shared/favorite_item', :locals => {:item => @favorite.favoritable })
+      page.replace(fvid, :partial => 'shared/favorite_item', :locals => {:item => @favorite.favoritable })
+      page.replace(fvcountid, :partial => 'shared/favorite_count', :locals => {:item => @favorite.favoritable})
+      page.visual_effect(:highlight,fvcountid)
     when 'video_clips'
-      page.replace("favorite_#{@favorite.favoritable_type}_#{@favorite.favoritable_id}", :partial => 'shared/favorite_item', :locals => {:item => @favorite.favoritable })
+      page.replace(fvid, :partial => 'shared/favorite_item', :locals => {:item => @favorite.favoritable })
+      page.replace(fvcountid, :partial => 'shared/favorite_count', :locals => {:item => @favorite.favoritable})
+      page.visual_effect(:highlight,fvcountid)
     when 'video_reels'
-      page.replace("favorite_#{@favorite.favoritable_type}_#{@favorite.favoritable_id}", :partial => 'shared/favorite_item', :locals => {:item => @favorite.favoritable })
+      page.replace(fvid, :partial => 'shared/favorite_item', :locals => {:item => @favorite.favoritable })
+      page.replace(fvcountid, :partial => 'shared/favorite_count', :locals => {:item => @favorite.favoritable})
+      page.visual_effect(:highlight,fvcountid)
     
     when 'posts'
       page.replace("post_#{@favorite.favoritable.id}_meta", :partial => 'posts/meta', :locals => {:post => @favorite.favoritable})

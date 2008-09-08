@@ -39,10 +39,8 @@
       |
       =link_to "my account", edit_account_user_path(current_user.id), :id => 'user-menu'
       |
-      - unread = Message.unread(current_user)
-      - mcount = (unread > 0) ? "(#{unread})" : ''
-      =link_to "mailbox #{mcount}", messages_path()
 
+      = render :partial => 'shared/mailbox_with_count'
 
 -# #user-menu-tip
   -if current_user.admin?

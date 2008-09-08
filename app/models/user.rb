@@ -305,5 +305,8 @@ class User < ActiveRecord::Base
     end
   end
 
+  def can_send_message_to?(other_user)
+    admin? || friends_ids.member?(other_user.id)
+  end
 
 end

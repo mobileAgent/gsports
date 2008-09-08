@@ -814,3 +814,8 @@ a.btag, a.btag:visited {
   color: black !important;
   font-size: 110% !important;
 }
+
+.tall_listing_line {
+  margin: 3px 0 3px 0;
+  font-weight: bold;
+}
