@@ -44,6 +44,7 @@ namespace :deploy do
     sphinx.restart
     create_symlinks
     poller.restart_poller
+    memcached.clear
   end
 
   desc "Migration is broken in recipe.rb line 341, try fixing it here"
@@ -62,6 +63,15 @@ namespace :deploy do
     run "cd #{directory}; #{rake} RAILS_ENV=#{migrate_env} db:migrate"
   end 
   
+end
+
+namespace :memcached do
+  desc "Clear the cache"
+  task :clear do
+    rake = fetch(:rake, "rake")
+    rails_env = fetch(:environment, "production")
+    run "cd #{current_release}; RAILS_ENV=#{rails_env} #{rake} gsports:clear_cache"
+  end
 end
 
 namespace :poller do

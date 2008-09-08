@@ -18,7 +18,7 @@ class SbPostsController < BaseController
   protected
     #overide for community_engine SbPostsController
     def authorized?
-    	current_user.admin? || @post.editable_by?(current_user) 
+    	current_user.admin? || @post.nil? || @post.editable_by?(current_user)
     end
 	
 	#overide for community_engine SbPostsController

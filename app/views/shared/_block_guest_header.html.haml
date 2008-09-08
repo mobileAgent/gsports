@@ -39,22 +39,22 @@
           %span
             Registration
             
-  - form_for :team, :url => {:controller => 'search', :action => 'teamfind' }, :html => {:id=>'teamFind', :class=>'rightTopNav'} do |f|
+  - form_tag url_for({:controller => 'search', :action => 'teamfind'}), :method => :get, :id=>'teamFind', :class=>'rightTopNav' do
     %div
       %h2
         Search for My School
       %label.verbalSemantic{ :for => "searchState" }
         State
-      =collection_select("team","id",@quickfind_states,"id","name", {:prompt => "-State-", :selected => "-State-"}, {:id => 'searchState', :name => 'state'})
+      =collection_select("teamfind","id",@quickfind_states,"id","name", {:prompt => "-State-", :selected => "-State-"}, {:id => 'searchState', :name => 'state'})
       %label.verbalSemantic{ :for => "searchCounty" }
         County
-      =collection_select("team","county_name",@quickfind_counties,"county_name","county_name",{:prompt => "-County-", :selected => "-County-"}, {:id => 'searchCounty', :name => 'county'})
+      =collection_select("teamfind","county_name",@quickfind_counties,"county_name","county_name",{:prompt => "-County-", :selected => "-County-"}, {:id => 'searchCounty', :name => 'county'})
       %label.verbalSemantic{ :for => "searchCity" }
         City
-      =collection_select("team","city",@quickfind_cities,"city","city",{:prompt => "-City-", :selected => "-City-"}, {:id => 'searchCity', :name => 'city'})
+      =collection_select("teamfind","city",@quickfind_cities,"city","city",{:prompt => "-City-", :selected => "-City-"}, {:id => 'searchCity', :name => 'city'})
       -#%label.verbalSemantic{ :for => "searchSchool" }
         School
-      %input.submit{ :name => "submit", :type => "image", :src => "/gs/images/top_nav_search.gif", :value => "search", :alt => "Search" }/
+      %input.submit{ :name => nil, :type => "image", :src => "/gs/images/top_nav_search.gif", :value => "search", :alt => "Search" }/
       
       
       

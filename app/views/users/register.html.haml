@@ -3,9 +3,15 @@
   .SideBar
     %h1
       Registration
+    %p      
+      The Registration process is completed in three easy steps.
+    %p
+      First, select the type of account that best fits you or your organization.
+    %p
+      Then provide us with your personal user information. Lastly, provide your billing information and you&apos;re all set!        
     %p
       %a{ :href => "/info/membership" }
-        Read more about types &raquo;
+        Read more about Account types &raquo;
         
   .RegistrationContent
     .RegistrationTrail
@@ -20,32 +26,28 @@
           ACCOUNT TYPE
         .SelectedAccount
           %label.verbalSemantic{ :for => "Ath" }
-            Athletes Coaches, Parents, and Fans
+            Athletes, Students, Family and Fans
           .AccountRadio
             %input#Ath{ :name => :role, :checked => "checked", :type => "radio", :value => "", :onchange => "updateSelectedAccount(this)" }/
           .AccountIllustration
             %img{ :src => "/gs/images/account_athletes.jpg", :height => "99", :alt => "Athletes Illustration", :onclick => "return selectThisAcocunt(this)", :width => "131" }/
           .AccountDescriptionAthletes
             %h2
-              Athletes, Coaches, Parents and Fans.
+              Athletes, Students, Family and Fans.
             %p
-              Vestibulum quis est id arcu tincidunt ultrices. Nulla vestibulum euismod leo. Sed et elit. Ut aliquet, mi eu volutpat elementum, sem arcu suscipit nunc. Nunc turpis nulla, porttitor id, tempus at condimentum elementum, sem. Sed tempor eros.
-            %p
-              ?
+              Subscribers of this account have full access to all game video, editing features and social networking on the Global Sports platform. Users are able to create a personal profile page which includes photos, friends, forums, favorites (such as video clips) and share them with family and friends.
         .UnSelectedAccount
           %label.verbalSemantic{ :for => "School" }
-            Schools and Private Clubs
+            Schools and Private Athletic Clubs
           .AccountRadio
             %input#School{ :name => :role, :type => "radio", :value => Role[:team].id, :onchange => "updateSelectedAccount(this)" }/
           .AccountIllustration
             %img{ :src => "/gs/images/accout_school_illu.jpg", :height => "99", :alt => "Teams Illustration", :onclick => "return selectThisAcocunt(this)", :width => "131" }/
           .AccountDescriptionSchools
             %h2
-              Athletes, Coaches, Parents and Fans.
+              Schools and Private Athletic Clubs
             %p
-              Vestibulum quis est id arcu tincidunt ultrices. Nulla vestibulum euismod leo. Sed et elit. Ut aliquet, mi eu volutpat elementum, sem arcu suscipit nunc. Nunc turpis nulla, porttitor id, tempus at condimentum elementum, sem. Sed tempor eros.
-            %p
-              ?
+              Select this account type if you represent a school or private club and want your video of sporting events on Global Sports&apos; platform. You will upload game video and be provided with a branded Homepage with customizable sections for news, events and Game and Players of the Week.  
         .UnSelectedAccount
           %label.verbalSemantic{ :for => "Leagues" }
             Leagues and Conferences
@@ -55,11 +57,9 @@
             %img{ :src => "/gs/images/accout_league_illu.jpg", :height => "99", :alt => "Leagues Illustration", :onclick => "return selectThisAcocunt(this)", :width => "131" }/
           .AccountDescriptionLeagues
             %h2
-              Athletes, Coaches, Parents and Fans.
+              Leagues and Conferences
             %p
-              Vestibulum quis est id arcu tincidunt ultrices. Nulla vestibulum euismod leo. Sed et elit. Ut aliquet, mi eu volutpat elementum, sem arcu suscipit nunc. Nunc turpis nulla, porttitor id, tempus at condimentum elementum, sem. Sed tempor eros.
-            %p
-              ?
+              Select this account type if you represent a league or conference and want your video of tournaments and playoff games that you sponsor to be part of the Global Sports platform.  You will be provided with a branded Homepage with customizable sections for news, events, and Game and Players of the Week.
         .UnSelectedAccount
           %label.verbalSemantic{ :for => "Scouts" }
             Scouts and Recruiters
@@ -69,13 +69,9 @@
             %img{ :src => "/gs/images/account_scouts.jpg", :height => "99", :alt => "Recruiters Illustration", :onclick => "return selectThisAcocunt(this)", :width => "131" }/
           .AccountDescriptionScouts
             %h2
-              Athletes, Coaches, Parents and Fans.
+              Scouts and Recruiters
             %p
-              Vestibulum quis est id arcu tincidunt ultrices. Nulla vestibulum euismod leo. Sed et elit. Ut aliquet, mi eu volutpat elementum, sem arcu suscipit nunc. Nunc turpis nulla, porttitor id, tempus at condimentum elementum, sem. Sed tempor eros.
-            %p
-              ?
+              This account type allows access to the Recruiter&apos;s module of the Global Sports platform.  Within this premium module, you will find scouting reports, statistical information and video coverage (full game, highlights reels and combine performances) on the nation&apos;s hottest recruiting prospects.
         .accountContinue
           %p
             %input{ :name => "Continue", :type => "image", :src => "/gs/images/account_continue.png", :value => "Contine", :alt => "Continue" }/
-          %p
-            (Lorem ipsum dolor sit amet)

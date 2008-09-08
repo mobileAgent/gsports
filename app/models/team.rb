@@ -86,7 +86,11 @@ class Team < ActiveRecord::Base
   end
 
   def title_name
-    self.nickname || self.name
+    if (self.nickname && self.nickname.length > 0)
+      self.nickname
+    else
+      self.name
+    end
   end
   
   def avatar_photo_url(size = nil)

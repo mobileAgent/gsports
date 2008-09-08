@@ -18,8 +18,11 @@
           %p
             =h @team.description 
 
-        %a{ :href=>team_path(@team), :class=>"logo-#{avht}" }
-          - if @team.avatar
+        - if current_user && @team.avatar
+          %a{ :href=>team_path(@team), :class=>"logo-#{avht}" }
+            %img{ :src=>@team.avatar.public_filename, :title=>@team.team_name, :alt=>@team.team_name }
+        - if !current_user && @team.avatar 
+          %span{:class=>"logo-#{avht}" }
             %img{ :src=>@team.avatar.public_filename, :title=>@team.team_name, :alt=>@team.team_name }
         
     .contentBox.tanBackground
@@ -27,7 +30,7 @@
         %h2.boxDescription
           RECENT CLIPS & HIGHLIGHTS
       .contentBoxContent
-        =render :partial => 'video_assets/video_feature', :collection => @team_clips_reels
+        =render :partial => 'video_assets/video_feature', :collection => @team_clips_reels, :locals => {:nolinks => true}
 
   /
     col2 content
@@ -37,19 +40,25 @@
         %h2.boxDescription
           MOST POPULAR VIDEOS
       .contentBoxContent
-        =render :partial => 'video_assets/video_feature', :collection => @team_popular_videos
+        =render :partial => 'video_assets/video_feature', :collection => @team_popular_videos, :locals => {:nolinks => true}
 
         - if @team_popular_videos.size >= 10
-          = link_to "More Videos...", url_for(:controller => 'search', :action => 'team_video_assets', :team_id => @team.id)
+          - if current_user
+            = link_to "More Videos...", url_for(:controller => 'search', :action => 'team_video_assets', :team_id => @team.id)
+          - else
+            = "More Videos available to members!"
 
     .contentBox.tanBackground
       .contentBoxHeader.yellowHeader
         %h2.boxDescription
           RECENT FULL GAME UPLOADS 
       .contentBoxContent
-        =render :partial => 'video_assets/video_feature', :collection => @team_videos
+        =render :partial => 'video_assets/video_feature', :collection => @team_videos, :locals => {:nolinks => true}
         - if @team_videos.size >= 10
-          = link_to "More Videos...", url_for(:controller => 'search', :action => 'team_video_assets', :team_id => @team.id)
+          - if current_user
+            = link_to "More Videos...", url_for(:controller => 'search', :action => 'team_video_assets', :team_id => @team.id)
+          - else
+            = "More Videos available to members!"
 
       
           
@@ -57,9 +66,10 @@
     col3 content
   .mainCol3  
     .rightContentItem
-      = link_to "View #{@team.nickname} Members", "/search/q?search[category]=10&team_id=#{@team.id}", :class=>'member-link'
+      - if current_user
+        = link_to "View #{@team.nickname} Members", "/search/q?search[category]=10&team_id=#{@team.id}", :class=>'member-link'
       .clearDiv
-      - if current_user.team_staff?(@team)
+      - if current_user && current_user.team_staff?(@team)
         %span.moreLink
           = link_to 'Post', new_user_post_path(current_user)
       %h2

@@ -800,3 +800,17 @@ a.btag, a.btag:visited {
   color: black;
   text-decoration: none;
 }
+
+.helptip, .helptip:visited {
+  color: #666666;
+  text-decoration: none;
+}
+
+.helptip:hover {
+  color: red;
+}
+
+.RegistrationContent .lightbox{
+  color: black !important;
+  font-size: 110% !important;
+}

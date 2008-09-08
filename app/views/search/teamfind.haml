@@ -11,21 +11,22 @@
     -if @teams && @teams.size > 0
 
       - @teams.each do |team|
-        - if team.active
-          .listingItem
-            .listingImage
-              - if team.avatar
-                %a{:href=>team_path(team)}
-                  %img{ :src=>team.avatar.public_filename, :title=>team.name, :alt=>team.name }
-            
-            .listingDescription
-              %h4.schoolName
-                = link_to h(team.name), url_for({:controller => 'teams', :action => 'show_public', :id => team })
-              %p
-                =h "#{team.city}, #{team.county_name}, #{team.state_id ? team.state.name : ''}"
-                          
-            .clearDiv
+        .listingItem
+          .listingImage
+            - if team.avatar
+              %a{:href=>team_path(team)}
+                %img{ :src=>team.avatar.public_filename, :title=>team.name, :alt=>team.name }
+          
+          .listingDescription
+            %h4.schoolName
+              = link_to h(team.name), url_for({:controller => 'teams', :action => 'show_public', :id => team })
+            %p
+              - if team.city && team.city.length > 0
+                = h "#{team.city}, "
+              = h "#{team.county_name}, #{team.state_id ? team.state.name : ''}"
+                        
           .clearDiv
+        .clearDiv
   
   
       - if @teams.respond_to?('total_pages') && @teams.total_pages > 1

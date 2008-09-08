@@ -11,8 +11,8 @@ class User < ActiveRecord::Base
   before_save :encrypt_password, :whitelist_attributes
   before_create :make_activation_code
   after_create :update_last_login
-  after_create {|user| UserNotifier.deliver_signup_notification(user) }
-  after_save   {|user| UserNotifier.deliver_activation(user) if user.recently_activated? }  
+  #after_create {|user| UserNotifier.deliver_signup_notification(user) }
+  #after_save   {|user| UserNotifier.deliver_activation(user) if user.recently_activated? }  
 
   # Virtual attribute for the unencrypted password
   attr_accessor :password
