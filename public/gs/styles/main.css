@@ -802,7 +802,7 @@ td.forumList,th.forumList {
 	margin: 0px;
 	padding-top: 25px;
 	padding-right: 20px;
-	padding-bottom: 25px;
+	padding-bottom: 0; /* mjf */
 	padding-left: 15px;
 	background-image: url(../images/home_welcome_to_global_sports.gif);
 	background-repeat: no-repeat;
@@ -820,7 +820,7 @@ td.forumList,th.forumList {
 
 .homeText p {
 	font-size: 11px;
-	margin-top: 2em;
+	margin-top: 5px; /* mjf */
 	margin-right: 0em;
 	margin-bottom: 0em;
 	margin-left: 0em;
