@@ -1,3 +1,5 @@
+require 'vendor/plugins/community_engine/app/models/user_observer'
+
 class UserObserver < ActiveRecord::Observer
 
   def after_create(user)

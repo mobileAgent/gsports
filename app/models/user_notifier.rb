@@ -1,3 +1,5 @@
+require 'vendor/plugins/community_engine/app/models/user_notifier'
+
 class UserNotifier < ActionMailer::Base
   default_url_options[:host] = APP_URL.sub('http://', '')
   include ActionController::UrlWriter
