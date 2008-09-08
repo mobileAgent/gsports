@@ -1,19 +1,19 @@
 .videoFindChat
   - form_tag url_for({:controller => 'search', :action => 'quickfind'}), :method => :get, :id=>'videoFind' do
     .videoFind
-      =collection_select("search_video_asset","game_date",@quickfind_seasons,"year","year",{:prompt => '-Season-', :selected => '-Season-'}, {:id => "videoFindSeason", :name => 'season'})
+      =collection_select("quickfind","game_date",@quickfind_seasons,"year","year",{:prompt => '-Season-', :selected => '-Season-'}, {:id => "videoFindSeason", :name => 'season'})
       -#%label.verbalSemantic{ :for => "videoFindSeason" }
         Season
-      =collection_select("team","id",@quickfind_states,"id","name", {:prompt => "-State-", :selected => "-State-"}, {:id => 'videoFindState', :name => 'state'})
+      =collection_select("quickfind","id",@quickfind_states,"id","name", {:prompt => "-State-", :selected => "-State-"}, {:id => 'videoFindState', :name => 'state'})
       -#%label.verbalSemantic{ :for => "videoFindState" }
         State
-      =collection_select("team","county_name",@quickfind_counties,"county_name","county_name",{:prompt => "-County-", :selected => "-County-"}, {:id => 'videoFindCounty', :name => 'county_name'})
+      =collection_select("quickfind","county_name",@quickfind_counties,"county_name","county_name",{:prompt => "-County-", :selected => "-County-"}, {:id => 'videoFindCounty', :name => 'county_name'})
       -#%label.verbalSemantic{ :for => "videoFindCounty" }
         County
-      =collection_select("team","id",@quickfind_schools,"id","name",{:prompt => "-School-", :selected => '-School-'}, {:id => 'videoFindSchool', :name => 'team'})
+      =collection_select("quickfind","id",@quickfind_schools,"id","name",{:prompt => "-School-", :selected => '-School-'}, {:id => 'videoFindSchool', :name => 'team'})
       -#%label.verbalSemantic{ :for => "videoFindSchool" }
         School
-      =collection_select("search_video_asset","sport",@quickfind_sports,"sport","sport",{:prompt => "-Sport-", :selected => '-Sport-'}, {:id => 'videoFindSport', :name => 'sport'})
+      =collection_select("quickfind","sport",@quickfind_sports,"sport","sport",{:prompt => "-Sport-", :selected => '-Sport-'}, {:id => 'videoFindSport', :name => 'sport'})
       -#%label.verbalSemantic{ :for => "videoFindSport" }
         Sport
       %label{ :for => "videoFindSubmit" }
