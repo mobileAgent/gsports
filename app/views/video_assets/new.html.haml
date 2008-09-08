@@ -11,7 +11,14 @@
       =render :partial => "users/profile_nav"
   .listings
     .listingItem
-
+      - if Time.now.strftime("%A") == 'Tuesday' && Time.now.hour > 16
+        .warningBox{:style => 'width: 60%; margin-left: 20%; padding: 5px; text-align: center'}
+          There is a maintenance window each
+          %br/
+          Wednesday, 3:00-3:30 a.m. Eastern
+          %br/
+          Video uploads should not be started if they will span this window
+    
       - form_for(:video_asset, @video_asset,:html => {:multipart => true}, :url => {:controller => 'video_assets' , :action => 'save_video'}, :html => {:id => 'upload_form', :onsubmit => 'return doSubmit();' } ) do |f|
         = render :partial => "form", :locals => { :f => f }
         %p

@@ -5,7 +5,7 @@
   border: 0px;
 }
 
-#flash_error {
+#flash_error, .warningBox {
    color: red;
    font-size: 125%;
    background-color: #ffe3e3;
