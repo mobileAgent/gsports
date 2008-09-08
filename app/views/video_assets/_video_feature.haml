@@ -3,6 +3,7 @@
 - line3 = video_feature.class == VideoAsset ? video_feature.human_game_date_string : video_feature.created_at.to_s(:readable)
 .featureSummary
   .featureSummaryThumb.favFIT
+    - nolinks ||= nil
     - if nolinks
       %img{:src=>"#{@vidavee.file_thumbnail_medium(video_feature.thumbnail_dockey)}", :title=>"#{h(video_feature.title).gsub(/\'/,'')}", :alt=>'Video'}
     - else
