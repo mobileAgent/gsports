@@ -822,3 +822,7 @@ a.btag, a.btag:visited {
 .edit-profile h3 {
 	padding-top: 8px;
 }
+
+.edit-profile-nav {
+	padding: 0 0 6px 10px;
+}

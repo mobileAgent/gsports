@@ -12,6 +12,11 @@
   .listings
   
     = error_messages_for :user
+    
+    .edit-profile-nav
+      = link_to 'Edit your profile?', edit_user_path(@user)
+      = " | "
+      = link_to 'Edit your billing information?', url_for({:controller => 'users', :action => 'edit_billing', :id => @user })
   
     - form_tag update_account_user_url(@user), :method => 'put', :multipart => true do
   
@@ -21,14 +26,6 @@
             Personal Information
         .contentBoxContent.edit-profile
       
-          %h3
-            You're editing your account.
-          %h4
-            = link_to 'Edit your profile?', edit_user_path(@user)
-            = " | "
-            = link_to 'Edit your billing information?', url_for({:controller => 'users', :action => 'edit_billing', :id => @user })
-          %br/
-          
           %table
             %tr
               %td
