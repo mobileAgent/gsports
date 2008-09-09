@@ -86,7 +86,7 @@
             %label{:for => 'state'}
               State
               %br/
-              =collection_select(:billing_address ,:state , State.all,"name","name", { :prompt => 'State', :selected => (@billing_address.state? ? @billing_address.state : '') })
+              =collection_select(:billing_address ,:state , State.all,"name","name", { :prompt => 'State', :selected => ( (!@billing_address.nil? && @billing_address.state?) ? @billing_address.state : '') })
 
             %br
             %label{:for=>'zip'}
