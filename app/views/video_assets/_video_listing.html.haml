@@ -4,34 +4,52 @@
   .listingDescription
     %h4
       = h video_listing.title
-    .schoolName
-      = "#{h video_listing.league.name if video_listing.league}, #{h video_listing.team.title_name if video_listing.team}, #{h video_listing.sport}, #{video_listing.human_game_date_string}"
-    .recentFriendFeed
-      = truncate_words("#{h video_listing.description} - #{h video_listing.video_length}",35)
+    %span.schoolName
+      Views:
+    %span.recentFriendFeed
+      = number_with_delimiter(video_listing.view_count)
+    = render :partial => 'shared/favorite_count', :locals => {:item => video_listing}
+    %br/
+    .tall_listing_line
+      = video_listing.video_length
+    - if video_listing.home_team_id || video_listing.visiting_team_id
+      %span.schoolName
+        In this video:
+      %span.recentFriendFeed
+        - if video_listing.home_team_id
+          = link_to h(video_listing.home_team.title_name), team_path(video_listing.home_team_id)
+          - if video_listing.visiting_team_id
+            = ", "
+        - if video_listing.visiting_team_id
+          = link_to h(video_listing.visiting_team.title_name), team_path(video_listing.visiting_team_id)
       %br/
-      = video_listing.tags.collect{|t| link_to( h(t.name), tag_url(t.name), :class => 'tag') }.join(", ")
+    %span.schoolName
+      Uploaded by:
+    %span.recentFriendFeed
+      - if video_listing.league_video?
+        = link_to h(video_listing.league_name), league_path(video_listing.league_id)
+      - else
+        = link_to h(video_listing.team_name), team_path(video_listing.team_id)
+      on
+      = video_listing.created_at.strftime("%B %d, %Y")
   - skip_controls ||= false
   %ul.listingActions
-    - if video_listing.team
-      %li
-        %a.genericButton{ :href => team_path( video_listing.team_id )  }
-          %span
-            School Profile
+    %li
+      = link_to "Watch Video", video_asset_path(video_listing), :class => 'genericButton'
     - if video_listing.league_video?
       %li
-        %a.genericButton{ :href => league_path( video_listing.league_id )  }
-          %span
-            League Profile
+        = link_to "League Profile", league_path( video_listing.league_id ), :class => 'genericButton'
+    - else
+      %li
+        = link_to "School Profile", team_path( video_listing.team_id), :class => 'genericButton'
     %li
       = render :partial => 'shared/favorite_item', :locals => { :item => video_listing }
 
     - if current_user && current_user.can_edit?(video_listing)
       %li
-        %a.genericButton{ :href => edit_video_asset_path(video_listing) }
-          %span
-            Edit
+        = link_to "Edit", edit_video_asset_path(video_listing), :class => 'genericButton'
       %li
-        = link_to_remote 'Destroy', {:url => url_for(video_listing), :confirm => 'Are you sure?', :method => :delete},  :class=>'genericButton'
+        = link_to_remote 'Delete', {:url => url_for(video_listing), :confirm => 'Are you sure?', :method => :delete},  :class=>'genericButton'
       
   .clearDiv
 .clearDiv

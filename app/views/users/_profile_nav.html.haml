@@ -28,7 +28,7 @@
   .navlink= link_to 'Upload Video', user_video_assets_path(current_user)
   
 -if current_user.team_staff? || current_user.league_staff?
-  .navlink= link_to 'Upload Image', new_user_photo_path(@user)
+  .navlink= link_to 'Upload Image', new_user_photo_path(current_user)
 
 -if current_user.team_staff?
   .navlink= link_to 'Team Page', team_path(current_user.team)

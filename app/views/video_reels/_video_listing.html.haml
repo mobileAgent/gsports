@@ -4,29 +4,34 @@
   .listingDescription
     %h4
       = h video_listing.title
-    .schoolName
-      = truncate_words("#{h video_listing.description} - #{h video_listing.video_length}",35)
-      %br/
-      = video_listing.tags.collect{|t| link_to( h(t.name), tag_url(t.name), :class => 'tag') }.join(", ")
+    %span.schoolName
+      Views:
+    %span.recentFriendFeed
+      = number_with_delimiter(video_listing.view_count)
+    = render :partial => 'shared/favorite_count', :locals => {:item => video_listing}
+    %br/
+    .tall_listing_line
+      = video_listing.video_length
+    - if video_listing.description && video_listing.description.length > 0
+      %span.recentFriendFeed
+        = truncate_words(h(video_listing.description),25)
+      
   - skip_controls ||= false
   %ul.listingActions
-    - if video_listing.user
+    %li
+      = link_to "Watch Reel", user_video_reel_path(video_listing.user_id,video_listing), :class => 'genericButton'
+    - if video_listing.user && current_user && current_user.id != video_listing.user_id
       %li
-        %a.genericButton{ :href => user_path( video_listing.user.id )  }
-          %span
-            View Profile
-      %li
-        %a.genericButton{ :href => new_message_path(:to => video_listing.user.id, :title => "Your reel '#{video_listing.title}'") }
-          %span
-            Send Message
+        = link_to "User Profile",user_path( video_listing.user.id ),:class => 'genericButton'
+      - if current_user.can_send_message_to?(video_listing.user)
+        %li
+          = link_to "Send Message", new_message_path(:to => video_listing.user.id, :title => "Your reel '#{video_listing.title}'"), :class => 'genericButton'
     %li
       = render :partial => 'shared/favorite_item', :locals => { :item => video_listing }
     -if current_user && current_user.can_edit?(video_listing)
       %li
-        %a.genericButton{ :href => edit_video_reel_path(video_listing) }
-          %span
-            Edit
+        = link_to "Edit", edit_video_reel_path(video_listing), :class => 'genericButton'
       %li
-        = link_to_remote 'Destroy', {:url => url_for(video_listing), :confirm => 'Are you sure?', :method => :delete}, :class=>'genericButton'
+        = link_to_remote 'Delete', {:url => url_for(video_listing), :confirm => 'Are you sure?', :method => :delete}, :class=>'genericButton'
   .clearDiv
 .clearDiv

@@ -22,5 +22,4 @@ class FavoritesController < BaseController
     end
   end
   
-
 end

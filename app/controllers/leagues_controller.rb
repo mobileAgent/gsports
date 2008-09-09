@@ -3,7 +3,7 @@ class LeaguesController < BaseController
   auto_complete_for :league, :name
   before_filter :admin_required, :only => [:create, :index, :new, :destroy]
   before_filter :admin_for_league_or_team, :only => [:edit, :update]
-  after_filter :cache_control, :only => [:create, :update, :delete]
+  after_filter :cache_control, :only => [:create, :update, :destroy]
   
   # GET /league
   # GET /league.xml

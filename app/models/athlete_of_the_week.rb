@@ -44,11 +44,12 @@ class AthleteOfTheWeek < Post
                       Role[:team_staff].id,
                       Role[:admin].id
                      ]
-    ids = User.find(:all, :conditions => ["role_id IN (?)",legal_role_ids]).collect(&:id)
-    return [] if (my_category.nil? || ids.empty?)
+    
     posts = AthleteOfTheWeek.find(:all,
-                      :conditions => ["category_id = ? and user_id IN (?) and published_at > ?",my_category.id,ids,14.days.ago],
-                      :order => "published_at DESC")
+      :conditions => ["category_id = ? and users.role_id IN (?) and published_at > ?",
+                      my_category.id,legal_role_ids,14.days.ago],
+      :include => [:user],
+      :order => "published_at DESC")
 
     # If we have none, 1 or 2, just let them go
     return posts if posts.size <= 2

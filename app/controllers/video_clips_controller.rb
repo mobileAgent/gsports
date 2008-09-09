@@ -6,6 +6,8 @@ class VideoClipsController < BaseController
   uses_tiny_mce(:options => AppConfig.narrow_mce_options.merge({:width => 530}),
                 :only => [:show])
   
+  after_filter :expire_games_of_the_week, :only => [:destroy]
+  
   # GET /video_clips
   # GET /video_clips.xml
   def index
@@ -150,4 +152,5 @@ class VideoClipsController < BaseController
     @video_clip = VideoClip.find(params[:id])
     send_data @vidavee.file_thumbnail_medium(session[:vidavee],@video_clip.dockey), :filename => "clip#{@video_clip.id}.jpg", :type => 'image/jpeg' 
   end
+
 end

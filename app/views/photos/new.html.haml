@@ -46,11 +46,15 @@
               %label
                 %input{ :type=>:checkbox, :name=>'team_photo' }
                 Make this the team photo
+                %em
+                  (must be 100x100 or 234x60)
     
             -elsif current_user.league_staff?
               %label
                 %input{ :type=>:checkbox, :name=>'league_photo' }
                 Make this the league photo
+                %em
+                  (must be 100x100 or 234x60)
 
             %p
               = submit_tag "Create"

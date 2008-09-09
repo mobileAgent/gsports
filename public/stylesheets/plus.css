@@ -5,7 +5,7 @@
   border: 0px;
 }
 
-#flash_error {
+#flash_error, .warningBox {
    color: red;
    font-size: 125%;
    background-color: #ffe3e3;
@@ -825,4 +825,9 @@ a.btag, a.btag:visited {
 
 .edit-profile-nav {
 	padding: 0 0 6px 10px;
+}
+
+.tall_listing_line {
+  margin: 3px 0 3px 0;
+  font-weight: bold;
 }

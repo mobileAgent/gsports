@@ -30,7 +30,7 @@ Active_Merchant_payflow_gateway_username = 'markdr'
 Active_Merchant_payflow_gateway_password = 'MarkDR1'
 Active_Merchant_payflow_gateway_partner = 'PayPal'
 
-PAYMENT_DUE_CYCLE = 0 # How often to bill in days
+PAYMENT_DUE_CYCLE = 30 # How often to bill in days
 
 AD_SERVER_BASE = 'www.danmcardle.com'
 

@@ -1,0 +1,5 @@
+%span#mailbox_header_with_count
+  - unread = Message.unread(current_user)
+  - mcount = (unread > 0) ? "(#{unread})" : ''
+  =link_to "mailbox #{mcount}", messages_path()
+

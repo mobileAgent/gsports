@@ -6,6 +6,8 @@ class League < ActiveRecord::Base
   belongs_to :state
   belongs_to :avatar, :class_name => "Photo", :foreign_key => "avatar_id"
   
+  before_destroy :reassign_dependent_items
+  
   # Every league needs a name
   validates_presence_of :name
 
@@ -34,6 +36,24 @@ class League < ActiveRecord::Base
           AppConfig.photo['missing_medium']
       end
     end
+  end
+  
+  protected
+
+  def reassign_dependent_items
+    alg_id = User.admin.first.league_id
+    v = VideoAsset.find_all_by_league_id(self.id)
+    v.each { |x| x.update_attributes(:league_id => alg_id) }
+
+    u = User.find_all_by_league_id(self.id)
+    u.each { |x| x.update_attributes(:league_id => alg_id) }
+
+    t = Team.find_all_by_league_id(self.id)
+    t.each { |x| x.update_attributes(:league_id => alg_id) }
+                                   
+    p = Post.find_all_by_league_id(self.id)
+    p.each { |x| x.update_attributes(:league_id => alg_id) }
+    
   end
   
 end

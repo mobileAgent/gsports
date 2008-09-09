@@ -1,1 +1,3 @@
 page.visual_effect :drop_out ,"message_#{@message.id}", :duration => 1 
+page.replace("mailbox_header_with_count", :partial => "shared/mailbox_with_count")
+page.visual_effect(:highlight, "mailbox_header_with_count")
