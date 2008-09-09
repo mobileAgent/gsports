@@ -106,19 +106,17 @@ class UsersController < BaseController
 
     case @role.id
     when Role[:team].id
-      @team = Team.new(params[:team])
+      @team = Team.find_or_create_by_name(params[:user][:team_name])
+      @team.attributes = params[:team]
       @team.save! 
       @user.team = @team
       
     when Role[:league].id
-      @league = League.new(params[:league])
-      
-      # Special handling for league role coming in
-      #@league = League.find_or_create_by_name(params[:user][:league_name])
-      
-      @league.save! if @league.new_record?
-      @user.league_id = @league.id
-      @user.team_id = User.admin.first.team_id
+      @league = League.find_or_create_by_name(params[:user][:league_name])
+      @league.attributes = params[:league]
+      @league.save!
+      @user.league = @league
+      @user.team = User.admin.first.team
       
     when Role[:scout].id
       #TODO
