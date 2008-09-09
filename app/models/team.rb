@@ -6,6 +6,8 @@ class Team < ActiveRecord::Base
   belongs_to :avatar, :class_name => "Photo", :foreign_key => "avatar_id"
   belongs_to :state
 
+  before_destroy :reassign_dependent_items
+
   # Every team needs a name and a league
   validates_presence_of :name
   validates_presence_of :league_id
@@ -104,6 +106,25 @@ class Team < ActiveRecord::Base
           AppConfig.photo['missing_medium']
       end
     end
+  end
+
+  protected
+
+  def reassign_dependent_items
+    ateam_id = User.admin.first.team_id
+    
+    v = VideoAsset.find_all_by_team_id(self.id)
+    v.each { |x| x.update_attributes(:team_id => ateam_id) }
+    v = VideoAsset.find_all_by_home_team_id(self.id)
+    v.each { |x| x.update_attributes(:home_team_id => ateam_id) }
+    v = VideoAsset.find_all_by_visiting_team_id(self.id)
+    v.each { |x| x.update_attributes(:visiting_team_id => ateam_id) }
+
+    u = User.find_all_by_team_id(self.id)
+    u.each { |x| x.update_attributes(:team_id => ateam_id) }
+    
+    p = Post.find_all_by_team_id(self.id)
+    p.each { |x| x.update_attributes(:team_id => ateam_id) }
   end
   
 end
