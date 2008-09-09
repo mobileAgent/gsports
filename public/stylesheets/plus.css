@@ -814,3 +814,11 @@ a.btag, a.btag:visited {
   color: black !important;
   font-size: 110% !important;
 }
+
+.edit-profile {
+	padding: 0 20px 10px 20px;
+}
+
+.edit-profile h3 {
+	padding-top: 8px;
+}

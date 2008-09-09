@@ -275,6 +275,9 @@ class UsersController < BaseController
       @user.avatar = @avatar
     end
     
+    @team = Team.find(:first, :conditions=>{:name => params[:user][:team_name]})
+    @user.team = @team if @team
+    
     if @user.save!
       @user.track_activity(:updated_profile)
       
