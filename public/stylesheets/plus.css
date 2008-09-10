@@ -815,6 +815,18 @@ a.btag, a.btag:visited {
   font-size: 110% !important;
 }
 
+.edit-profile {
+	padding: 0 20px 10px 20px;
+}
+
+.edit-profile h3 {
+	padding-top: 8px;
+}
+
+.edit-profile-nav {
+	padding: 0 0 6px 10px;
+}
+
 .tall_listing_line {
   margin: 3px 0 3px 0;
   font-weight: bold;

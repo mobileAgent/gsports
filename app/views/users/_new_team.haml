@@ -8,7 +8,8 @@
       %label.required
         * Team Name
       %br
-        = text_field :team, :name, :size => 22
+        -# = text_field :team, :name, :size => 22
+        = text_field_with_auto_complete :user, :team_name, :autocomplete => "off", :size => 22, :value=>''
 
     %td.field-block
       %label.required 
@@ -82,6 +83,12 @@
     Contact E-mail address
   %br
   = text_field :team, :email, :size => 24
+  
+-#.field-block
+  %label.required{"for"=>"email"}
+    Team Logo (must be 100x100 or 234x60)
+  %br
+  = file_field :avatar, :uploaded_data, :size => "20"
 
 
 

@@ -6,7 +6,8 @@
   %label.required
     * League Name
   %br
-  = text_field :league, :name 
+  -# = text_field :league, :name 
+  = text_field_with_auto_complete :user, :league_name, :autocomplete => "off", :value=>''
   
   
 

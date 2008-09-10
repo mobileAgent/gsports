@@ -10,112 +10,126 @@
     .leftNav
       =render :partial => "users/profile_nav"
   .listings
-    .contentBox.tanBackground
-      .contentBoxHeader.yellowHeader
-        %h2.boxDescription
-          Editing Account Details
-      .contentBoxContent
+  
+    = error_messages_for :user
+    
+    .edit-profile-nav
+      = link_to 'Edit your profile?', edit_user_path(@user)
+      = " | "
+      = link_to 'Edit your billing information?', url_for({:controller => 'users', :action => 'edit_billing', :id => @user })
+  
+    - form_tag update_account_user_url(@user), :method => 'put', :multipart => true do
+  
+      .contentBox.tanBackground
+        .contentBoxHeader.yellowHeader
+          %h2.boxDescription
+            Personal Information
+        .contentBoxContent.edit-profile
       
-        - form_tag update_account_user_url(@user), :method => 'put', :class => "MainForm", :multipart => true do
-          %h3
-            You're editing your account.
-          %h4
-            = link_to 'Edit your profile?', edit_user_path(@user)
-            = " | "
-            = link_to 'Edit your billing information?', url_for({:controller => 'users', :action => 'edit_billing', :id => @user })
-          %br/
-          
-          = error_messages_for :user
-        
-          %h3 First Name
-          = text_field :user, :firstname, :size => "28"
+          %table
+            %tr
+              %td
+                %h3 * First Name
+                = text_field :user, :firstname, :size => '12'
             
-          %h3 Middle Initial
-          = text_field :user, :minitial, :size => "2"
+              %td
+                %h3 M.I.
+                = text_field :user, :minitial, :size => '1'
             
-          %h3 Last Name
-          = text_field :user, :lastname, :size => "28"
+              %td
+                %h3 * Last Name
+                = text_field :user, :lastname, :size => '16'
+             
+          %table
+            %tr
+              %td
+                %label{"for"=>"address1"} 
+                  %h3
+                    * Address Line One
+                = text_field :user, :address1, :size => '16'
+              %td
+                %label{"for"=>"address2"} 
+                  %h3 Address Line Two
+                = text_field :user, :address2, :size => '16'
+                
+                
+          %table
+            %tr
+              %td
+                %label{"for"=>"city"}
+                  %h3
+                    * City
+                  = text_field :user, :city, :size => '16'
+              %td
+                %label{"for"=>"state"} 
+                  %h3
+                    * State
+                  =collection_select(:user ,:state_id,State.all,"id","name", { :prompt => 'Choose State', :selected => (@user.state_id? ? @user.state.name : '') })
+              %td
+                %label{"for"=>"zip"}
+                  %h3
+                    * Zip/Postal Code:
+                  = text_field :user, :zip, :size => '12'
+              %td
+                %label{"for"=>"phone"} 
+                  %h3
+                    * Phone
+                  = text_field :user, :phone, :size => '14'
             
         
-          %h3 E-mail Address
-          = text_field :user, :email, :size => "28"
-        
-          %h3 Password
-          = password_field :user, :password, :size => "28", :autocomplete => 'off'
-        
-          %label{:for => :password_confirmation}
-            %h3 Confirm Password
-          = password_field :user, :password_confirmation, :size => "28"
-        
-          %h3 Location
+                
+                
+      .contentBox.tanBackground
+        .contentBoxHeader.yellowHeader
+          %h2.boxDescription
+            Personal Information
+        .contentBoxContent.edit-profile    
+          %table
+            %tr
+              %td{ :valign=>'top' }
+                %h3 * E-mail Address
+                = text_field :user, :email, :size => "28"
+                %br
+                
+                %h3 E-mail Notification
+                %label 
+                  = check_box :user, :notify_friend_requests        
+                  Notify me when
+                  = AppConfig.community_name
+                  members request friendship.
+                %br
+                %label
+                  = check_box :user, :notify_comments         
+                  Notify me when
+                  = AppConfig.community_name
+                  members comment on my profile, blog, or photos.
+                %br
+                %label
+                  = check_box :user, :notify_community_news
+                  Send me occasional news and updates from the
+                  = AppConfig.community_name
+                  Team.
+
+              %td{ :valign=>'top' }
+                %h3 Password
+                = password_field :user, :password, :size => "28", :autocomplete => 'off'
+
+                %label{:for => :password_confirmation}
+                  %h3 Confirm Password
+                = password_field :user, :password_confirmation, :size => "28"
               
-          %label{"for"=>"address1"} 
-            %h3
-              Address Line One
-              %em (Required: )
-          = text_field :user, :address1
-               
-          %label{"for"=>"address2"} 
-            %h3 Address Line Two
-          = text_field :user, :address2
-                
-          %label{"for"=>"city"} 
-            %h3
-              City
-              %em (Required: )
-          = text_field :user, :city
-                    
-          %label{"for"=>"state"} 
-            %h3
-              State
-              %em (Required: )
-          =collection_select(:user ,:state_id,State.all,"id","name", { :prompt => 'Choose State', :selected => (@user.state_id? ? @user.state.name : '') })
-                
-          %label{"for"=>"zip"} 
-            %h3
-              Zip/Postal Code:
-              %em (Required: )
-          = text_field :user, :zip
-                
-          %label{"for"=>"phone"} 
-            %h3
-              Phone
-              %em (Required: )
-          = text_field :user, :phone
-            
-        
-          %fieldset
-            %legend E-mail Notification
-            %label 
-              = check_box :user, :notify_friend_requests        
-              Notify me when
-              = AppConfig.community_name
-              members request friendship.
-        
-            %label
-              = check_box :user, :notify_comments         
-              Notify me when
-              = AppConfig.community_name
-              members comment on my profile, blog, or photos.
-        
-        
-            %label
-              = check_box :user, :notify_community_news
-              Send me occasional news and updates from the
-              = AppConfig.community_name
-              Team.
-        
-        
-          %fieldset
-            %legend Profile Privacy
-            %label
-              = check_box :user, :profile_public
-              Make my profile public
-              %br
-              %em
-                When checked, your profile will be visible to anyone logged into 
-                = "#{AppConfig.community_name}."
-              %br
-              %em
-                When unchecked, your profile will only be visible to you and your friends
-          %p= submit_tag 'Save Changes'  
+                %fieldset
+                  %legend Profile Privacy
+                  %label
+                    = check_box :user, :profile_public
+                    Make my profile public
+                    %br
+                    %em
+                      When checked, your profile will be visible to anyone logged into 
+                      = "#{AppConfig.community_name}."
+                    %br
+                    %em
+                      When unchecked, your profile will only be visible to you and your friends
+      
+      %p= submit_tag 'Save Changes'  
+    

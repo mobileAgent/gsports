@@ -13,43 +13,46 @@
     .contentBox.tanBackground
       .contentBoxHeader.yellowHeader
         %h2.boxDescription
-          ="Editing Billing Information &raquo; #{(current_user.admin? ? @user.full_name : current_user.full_name)}"
-      .contentBoxContent
-
-        %form{:action => '/users/update_billing', :class => 'MainForm', :method => :post}
+          Billing Information
+      .contentBoxContent.edit-profile
+          
+        %form{:action => '/users/update_billing', :method => :post}
           = error_messages_for :credit_card, :merchant_credit_card, :billing_address, :user, :object_name => 'Credit Card'
         
           = hidden_field_tag "id", @user.id
-        
-          %label{:for=>:first_name}
-          First Name
-          %em (Required: )
-          %br/
-          = text_field :credit_card, :first_name
-        
-          %label{:for=>:last_name}
-          Last Name
-          %em (Required: )
-          %br/
-          = text_field :credit_card,:last_name
-        
-          %label{:for=>:expiration_date}
-          Expiration Date:
-          %em (Required: )
-          %br/
-          = date_select :credit_card, :expiration_date, {:start_year => Time.now.year, :end_year => Time.now.year+10, :discard_day => true}
-        
-          %label{:for=>:number}
-          Card Number
-          %em (Required: )
-          %br/
-          = text_field :credit_card, :number, { :size => 16, :maxlength => 16 }
-        
-          %label{:for=>:verification_value}
-          Verification number
-          %em (Required: )
-          %br/
-          = text_field :credit_card, :verification_value, {:size => 4, :maxlength => 4}
+          
+          %label{"for"=>"firstname"}
+            * First Name
+            %br
+            = text_field :credit_card, :first_name
+
+          %br
+          %label{"for"=>"lastname"}
+            * Last Name
+            %br
+            = text_field :credit_card,:last_name
+
+          %fieldset.inline
+            %label{"for"=>"expiration_date"}
+              * Expiration Date:
+              %br/
+              %table
+                %tr
+                  %td
+                    =collection_select(:credit_card, :year, cc_years,"number","name",{:prompt => '-Year-', :selected => @credit_card.year })
+                  %td
+                    =collection_select(:credit_card, :month, cc_months,"number","name",{:prompt => '-Month-', :selected => @credit_card.month })
+
+          %label{"for"=>"number"}
+            * Card Number
+            %br
+            = text_field :credit_card, :number, :size => 16, :maxlength => 16
+
+          %br
+          %label{"for"=>"verification_value"}
+            * Verification number
+            %br
+            = text_field :credit_card, :verification_value, {:size => 4, :maxlength => 4}
         
           - if @billing_address.nil? || @billing_address.new_record?
             %fieldset.inline
@@ -61,31 +64,36 @@
         
           %div{:id => 'billingAddress', :style => "display: #{@billing_address.nil? || @billing_address.new_record? ? 'none' : 'block'}"}
         
+            %br
             %label{:for=>'address1'}
-            Address Line 1
-            %br/
-            = text_field :billing_address, :address1
-        
+              Address Line 1
+              %br/
+              = text_field :billing_address, :address1
+
+            %br
             %label{:for=>'address2'}
-            Address Line 2
-            %br/
-            = text_field :billing_address, :address2
-        
+              Address Line 2
+              %br/
+              = text_field :billing_address, :address2
+
+            %br
             %label{:for=>'city'}
-            City
-            %br/
-            = text_field :billing_address, :city
-        
+              City
+              %br/
+              = text_field :billing_address, :city
+
+            %br
             %label{:for => 'state'}
-            State
-            %br/
-            =collection_select(:billing_address ,:state , State.all,"name","name", { :prompt => 'Choose State', :selected => (@billing_address.state? ? @billing_address.state : '') })
-            
-            
+              State
+              %br/
+              =collection_select(:billing_address ,:state , State.all,"name","name", { :prompt => 'State', :selected => ( (!@billing_address.nil? && @billing_address.state?) ? @billing_address.state : '') })
+
+            %br
             %label{:for=>'zip'}
-            Zip/Postal Code
-            %br/
-            = text_field :billing_address, :zip
+              Zip/Postal Code
+              %br/
+              = text_field :billing_address, :zip
+            / end of billing address
         
           %p
             = submit_tag 'Save Changes'
