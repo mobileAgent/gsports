@@ -26,7 +26,7 @@
             %tr
               %td{ :valign=>'top' }
             
-                - unless @user.team_staff? or @user.league_staff?
+                - unless @user.team_staff? or @user.league_staff? or @user.admin?
                   %h3 School
                   = text_field_with_auto_complete :user, :team_name, :autocomplete => "off", :value=>@user.team.name
                   %br
