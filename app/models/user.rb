@@ -279,11 +279,22 @@ class User < ActiveRecord::Base
     
     ids = self.friends_ids
     Activity.find(:all, 
-      :conditions => ['user_id = ? AND created_at > ?', id, since], 
+      :conditions => ['user_id = ? AND created_at > ? AND action <> ?', id, since,"logged_in"], 
       :order => 'created_at DESC',
       :page => page)      
   end
 
+  # Modify original to not show login events
+  def network_activity(page = {}, since = 1.week.ago)
+    page.reverse_merge :size => 10, :current => 1
+    
+    ids = self.friends_ids
+    Activity.find(:all, 
+      :conditions => ['user_id in (?) AND created_at > ? AND action <> ? ', ids, since,"logged_in"], 
+      :order => 'created_at DESC',
+      :page => page)      
+  end
+  
   # Change the super class method to return the 
   # missing image in thumb size for thumb, profile, icon and feature
   def avatar_photo_url(size = nil)

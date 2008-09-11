@@ -118,8 +118,16 @@ class TeamsController < BaseController
       access_denied
     end
 
+    if current_user.admin?
+      params[:team][:league_name] ||= current_user.league_name
+    else
+      params[:team][:league_name] = current_user.league_name
+    end
+
+    status = @team.update_attributes(params[:team])
+
     respond_to do |format|
-      if @team.update_attributes(params[:team])
+      if status
         flash[:notice] = 'Team was successfully updated.'
         format.html { redirect_to(current_user.admin? ? teams_url : team_path(@team)) }
         format.xml  { head :ok }

@@ -7,6 +7,8 @@
       Activity
   .contentBoxContent.profileActivity
     - @user.activity().each() do |activity|
+      - next if activity.action == 'logged_in'
+      - next if activity.item.nil? && activity.item_id # points to a deleted item
       .profileFeature.profileActivity
         .profileInfo
         
@@ -54,11 +56,10 @@
           - else
             - case activity.action
               - when 'updated_profile'
-                updated their profile
+                updated
+                = @user.id == current_user.id ? "your" : "their"
+                profile
               - when 'logged_in'
                 logged into the site
               - else
-                = " #{activity.action.sub("_", " ") }"           
-      
-
-        
+                = " #{activity.action.sub("_", " ") }"

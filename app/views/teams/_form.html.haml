@@ -47,10 +47,11 @@
   %br/
   = f.text_field :description , :size => 65
 
-%div
-  %b League
-  %br/
-  = text_field_with_auto_complete :team, :league_name, :autocomplete => "off"
+- if current_user.admin?
+  %div
+    %b League
+    %br/
+    = text_field_with_auto_complete :team, :league_name, :autocomplete => "off"
 
 
 %div

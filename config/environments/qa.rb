@@ -40,5 +40,6 @@ PAYMENT_DUE_CYCLE = 30 # How often to bill in days
 
 CLOSED_BETA_MODE = false
 ALLOWED_IP_ADDRS = []
+ExceptionNotifier.email_prefix = '[GS-QA] '
 
 AD_SERVER_BASE = 'www.danmcardle.com'
