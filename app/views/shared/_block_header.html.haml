@@ -8,14 +8,14 @@
         - if AdSlot.header_slot2_is_logo(current_user)
           = link_to AdSlot.header_slot2_img_tag(current_user),team_path(current_user.team)
         - else
-          = render :partial => "shared/top_ad"
+          = render :partial => "shared/top_ad", :locals => {:zone =>  5}
   .headerPosition1
     .structuralContainer
       %div
         - if AdSlot.header_slot1_is_logo(current_user)
           = link_to AdSlot.header_slot1_img_tag(current_user),league_path(current_user.league)
         - else
-          = render :partial => "shared/top_ad"
+          = render :partial => "shared/top_ad", :locals => {:zone => 4}
   .headerAccountControl
     .headerAccountControlLinks
       %span

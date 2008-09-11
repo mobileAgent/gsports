@@ -1806,11 +1806,11 @@ h2.yellowHeader, .contentBoxHeader yellowwHeader {
 .featureVertRule{
 	border-right: 1px dashed #E6E6E6;
 }
-/* footerAds */
+/* footerAds, mjf changed to new shorter background and height */
 .footer{
-	background:transparent url("/gs/images/footer_advert_background.png") no-repeat scroll left bottom;
+	background:transparent url("/gs/images/footer_advert_background_80px.png") no-repeat scroll left bottom;
 	margin-top: 20px;
-	height: 110px;
+	height: 70px;
 	padding-top: 10px;
 	width: inherit;
 }
