@@ -80,9 +80,9 @@
   = date_select :staff, :birthday, {:start_year => 1926, :end_year => Time.now.year - 13}
 
 %br
-%label{"for"=>"enabled"}
+%label
+  = f.check_box :enabled
   Account Enabled?
-= f.check_box :enabled
 
 
 

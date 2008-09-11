@@ -16,6 +16,22 @@ class User < ActiveRecord::Base
 
   validates_presence_of :phone
   validates_presence_of :team_id
+  
+  def validate
+    
+    # limit staff accounts
+    if enabled 
+      members = nil
+      members = Staff.league_staff(league_id) if league_staff?
+      members = Staff.team_staff(team_id) if team_staff?
+      if members
+        count = members.delete_if{|u|u.id==id}.collect(&:enabled).delete_if{|e|!e}.size
+        errors.add_to_base("You can only have 3 enabled staff members. You have #{count}") if(count >= 3)
+      end
+    end
+
+  end
+
 
   has_many :subscriptions
   has_many :memberships, :through => :subscriptions
@@ -124,6 +140,24 @@ class User < ActiveRecord::Base
   def can_upload?
     admin? || team_staff? || league_staff?
   end
+  
+  
+  
+  def get_managed_user_ids
+    get_managed_users.collect(&:id)
+  end
+
+  def get_managed_users
+    if league_admin? || (admin? && params[:league_id])
+      Staff.league_staff(league_id)
+    elsif team_admin? || (admin? && params[:team_id])
+      Staff.team_staff(team_id)
+    else
+      []
+    end
+  end
+  
+  
 
   def full_name
     "#{firstname} #{lastname}"
