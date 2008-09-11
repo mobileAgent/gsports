@@ -1,4 +1,6 @@
 - avht = @league.avatar ? @league.avatar.height : 100
+- top_row_height_px = @league_popular_videos.size >= 3 ? 255 : 130
+- second_row_height_px = [@league_clips_reels.size,@league_videos.size].max >= 3 ? 255 : 130
 .landingContentArea
   /
     col1 content
@@ -9,14 +11,25 @@
           = link_to 'Edit', edit_league_path(@league)
         %h2
           =h @league.name
-      .contentBoxContent
+      .contentBoxContent{:style => "height: #{top_row_height_px}px"}
         %div{ :class=>"desc-#{avht}" }
           %p
-            =h( [@league.address1, @league.address2, @league.city, (@league.state_id? ? @league.state.name : nil), @league.zip].delete_if{ |i| !i }.join(', ') )
+            - if @league.address1 && @league.address1.length > 0
+              =h @league.address1
+              %br/
+            - if @league.address2 && @league.address2.length > 0
+              =h @league.address2
+              %br/
+            - if @league.city || @league.state_id
+              = h [@league.city, (@league.state_id? ? @league.state.name : nil), @league.zip].compact.join(' ')
           %p
             =h @league.phone
             %br
             =h @league.email
+            - if current_user
+              = link_to 'League Members', "/search/q?search[category]=11&league_id=#{@league.id}", :class=>'member-link'
+      .clearDiv
+            
           
         %a{ :href=>league_path(@league), :class=>"logo-#{avht}" }
           - if @league.avatar
@@ -26,7 +39,7 @@
       .contentBoxHeader.yellowHeader
         %h2.boxDescription
           RECENT CLIPS & HIGHLIGHTS
-      .contentBoxContent
+      .contentBoxContent{:style => "height: #{second_row_height_px}px"}
         =render :partial => 'video_assets/video_feature', :collection => @league_clips_reels
 
   /
@@ -37,7 +50,7 @@
       .contentBoxHeader.yellowHeader
         %h2.boxDescription
           MOST POPULAR VIDEOS
-      .contentBoxContent
+      .contentBoxContent{:style => "height: #{top_row_height_px}px"}
         =render :partial => 'video_assets/video_feature', :collection => @league_popular_videos
         -# if @league_popular_videos.size == 10
           = link_to "More Videos...", url_for(:controller => 'search', :action => 'league_video_assets', :league_id => @league.id)
@@ -46,7 +59,7 @@
       .contentBoxHeader.yellowHeader
         %h2.boxDescription
           RECENT FULL GAME UPLOADS 
-      .contentBoxContent
+      .contentBoxContent{:style => "height: #{second_row_height_px}px"}
         =render :partial => 'video_assets/video_feature', :collection => @league_videos
 
         - if @league_videos.size >= 10
@@ -57,8 +70,6 @@
     col3 content
   .mainCol3  
     .rightContentItem
-      = link_to 'League Members', "/search/q?search[category]=11&league_id=#{@league.id}", :class=>'member-link'
-      .clearDiv
       - if current_user.league_staff?(@league)
         %span.moreLink
           = link_to 'Post', new_user_post_path(current_user)
