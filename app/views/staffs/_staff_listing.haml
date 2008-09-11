@@ -1,0 +1,63 @@
+.listingItem{:id => "staff_item_#{staff_listing.id}"}
+  .listingImage
+    = link_to image_tag( staff_listing.avatar_photo_url(:thumb), :class => "polaroid" ), edit_staff_path(staff_listing)
+  .listingDescription
+    %table{ :width=>'100%' }
+      %tr
+        %td{ :valign=>'top' }
+          %h4
+            = link_to staff_listing.full_name, edit_staff_path(staff_listing)
+          .recentFriendFeed
+            Email:
+            = staff_listing.email
+            %br
+            Created: 
+            = staff_listing.created_at.to_s(:readable)
+            %br
+            Last Login: 
+            = staff_listing.last_login_at.to_s(:readable)
+            %br
+            Phone: 
+            = staff_listing.phone
+            %br
+            = staff_listing.video_assets.count
+            Uploads
+            %br
+            = (staff_listing.video_clips.count + staff_listing.video_reels.count)
+            Clips & Reels
+            %br
+            = staff_listing.posts.count
+            Posts
+            %br
+            = staff_listing.photos.count
+            Photos
+      
+            %br
+      
+            = "#{staff_listing.description}"
+            
+        %td{ :width=>'25px' }
+        %td{ :valign=>'top' }
+          .recentFriendFeed     
+            %br
+            %br
+            = staff_listing.enabled ? 'Account Enabled' : 'Account Disabled'
+          
+            - if staff_listing.tags.size > 0 
+              %br
+              %br
+              Tags:
+              = "<p class='userTags'>" + staff_listing.tags[0...6].collect{|t| link_to( t.name, tag_url(t.name), :class => "tag") if t }.join(", ") + "</p>" unless staff_listing.tags.empty?
+
+  %ul.listingActions
+    %li
+      %a.genericButton{ :href => edit_staff_path(staff_listing) }
+        %span
+          Edit
+    - unless current_user.id == staff_listing.id
+      %li
+        = link_to 'Destroy', staff_path(staff_listing), :confirm => 'Are you sure?', :method => :delete,  :class=>'genericButton'
+  .clearDiv
+.clearDiv
+
+

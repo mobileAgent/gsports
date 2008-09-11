@@ -1,23 +1,22 @@
-%h1= "Staff Accounts"
-%h2= "Managed by #{current_user.byline}"
+.profileContentArea
+  .profilePageHeader
+    %h2.columnDescriptor
+      %span
+        Staff Accounts
+      = @current_user.full_name
+  .leftNavCol
+    %h2.yellowHeader
+      = _('My Profile')
+    .leftNav
+      =render :partial => "users/profile_nav"
 
-%table.unstyled
-  %thead
-    %tr
-      %th Name
-      %th Email
-      %th Since
-      %th Last Login
-      %th Phone
-      %th #Uploads
-      %th #Clips/Reels
-      %th #Posts
-      %th #Photos
-      %th Enabled
-      %th
-        / Actions
-  %tbody
-    = render :partial => 'staff', :collection => @staffs
-    
-= link_to "Create New Staff Member", new_staff_path
+  .listings
+  
+    .listingItem
+      = link_to 'New Staff Member', new_staff_path(), :class => 'genericButton'
+  
+    = render :partial => 'staff_listing', :collection => @staffs
+
+
+
     

@@ -1,13 +1,26 @@
-.RegContent
-  .SideBar
-    %h1
-      Creating Staff Account
-  .RegistrationContent
-    .AccountType    
-      = error_messages_for :staff
+.profileContentArea
+  .profilePageHeader
+    %h2.columnDescriptor
+      %span
+        Create Staff Account
+      
+  .leftNavCol
+    %h2.yellowHeader
+      = _('My Profile')
+    .leftNav
+      =render :partial => "users/profile_nav"
+  .listings
+  
+    .contentBox.tanBackground
+      .contentBoxHeader.yellowHeader
+        %h2.boxDescription
+          Create Staff Account
+      .contentBoxContent
+  
+        = error_messages_for :staff
 
-      - form_for @staff, :html => {:class => 'MainForm'} do |f|
-        = render :partial => "form", :locals => { :f => f , :include_password => true }
-        %p= f.submit "Create"
+        - form_for @staff, :html => {:class => 'StaffForm'} do |f|
+          = render :partial => "form", :locals => { :f => f , :include_password => true }
+          %p= f.submit "Create"
   
 

@@ -1,64 +1,95 @@
-%label{"for"=>"firstname"} 
-  First Name
-  %em (Required: )
-= f.text_field :firstname
+%table
+  %tr
+    %td.field-block
+      %label{"for"=>"firstname"} 
+        * First Name
+        %br
+        = f.text_field :firstname, :size => 12
+    %td.field-block
+      %label{"for"=>"minitial"} 
+        M.I.
+        %br
+        = f.text_field :minitial, :size => 1
+    %td.field-block
+      %label{"for"=>"lastname"} 
+        * Last Name
+        %br
+        = f.text_field :lastname, :size => 16
 
-%label{"for"=>"minitial"} 
-  Middle Initial
-= f.text_field :minitial, :length => 1
+%table
+  %tr
+    %td.field-block
+      %label{"for"=>"address1"} 
+        * Address Line One
+        %br
+        = f.text_field :address1, :size => 16
+    %td.field-block
+      %label{"for"=>"address2"} 
+        Address Line Two
+        %br
+        = f.text_field :address2, :size => 16
 
-%label{"for"=>"lastname"} 
-  Last Name
-  %em (Required: )
-= f.text_field :lastname
+%table
+  %tr
+    %td.field-block
+      %label{"for"=>"city"} 
+        * City
+        %br
+      = f.text_field :city, :size => 16
+    %td.field-block
+      %label{"for"=>"state"} 
+        * State
+        %br
+      =collection_select(:staff ,:state_id,State.all,"id","name", { :prompt => 'Choose State', :selected => (@staff.state_id ? @staff.state.name : '')})
+    %td.field-block
+      %label{"for"=>"zip"} 
+        * Zip/Postal Code
+        %br
+        = f.text_field :zip, :size => 10
 
-%label{"for"=>"address1"} 
-  Address Line One
-  %em (Required: )
-= f.text_field :address1
-
-%label{"for"=>"address2"} 
-  Address Line Two
-= f.text_field :address2
-
-%label{"for"=>"city"} 
-  City
-  %em (Required: )
-= f.text_field :city
-
-%label{"for"=>"state"} 
-  State
-  %em (Required: )
-=collection_select(:staff ,:state_id,State.all,"id","name", { :prompt => 'Choose State', :selected => (@staff.state_id ? @staff.state.name : '')})
-
-%label{"for"=>"zip"} 
-  Zip/Postal Code
-  %em (Required: )
-= f.text_field :zip
-
-%label{"for"=>"phone"} 
-  Phone
-  %em (Required: )
-= f.text_field :phone
-
-%label{"for"=>"email"}
-  E-mail address
-  %em (Required: )
-= f.text_field :email
-
-%label{"for"=>"birthdate"}
-  Birthday:
-  %em (Required: must be at least 13 years old.)
-= date_select :staff, :birthday, {:start_year => 1926, :end_year => Time.now.year - 13}
+%table
+  %tr
+    %td.field-block
+      %label{"for"=>"phone"} 
+        * Phone
+        %br
+        = f.text_field :phone, :size => 12
+    %td.field-block
+      %label{"for"=>"email"}
+        * E-mail address
+        %br
+        = f.text_field :email, :size => 32
 
 - if include_password
-  %label{"for"=>"password"}
-    Type the password:
-  = f.password_field :password
-  %label{"for"=>"password_confirmation"}
-    Re-type the password to confirm:
-  = f.password_field :password_confirmation
+  %table
+    %tr
+      %td.field-block
+        %label{"for"=>"password"}
+          Password:
+          %br
+          = f.password_field :password, :size => 12
+      %td.field-block
+        %label{"for"=>"password_confirmation"}
+          Confirm password:
+          %br
+          = f.password_field :password_confirmation, :size => 12
 
+%label{"for"=>"birthdate"}
+  * Birthday (must be at least 13 years old.)
+  %br
+  = date_select :staff, :birthday, {:start_year => 1926, :end_year => Time.now.year - 13}
+
+%br
 %label{"for"=>"enabled"}
   Account Enabled?
 = f.check_box :enabled
+
+
+
+
+
+
+
+
+
+
