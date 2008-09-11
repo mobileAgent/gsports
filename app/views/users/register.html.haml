@@ -28,9 +28,9 @@
           %label.verbalSemantic{ :for => "Ath" }
             Athletes, Students, Family and Fans
           .AccountRadio
-            %input#Ath{ :name => :role, :checked => "checked", :type => "radio", :value => "", :onchange => "updateSelectedAccount(this)" }/
+            %input#Ath{ :name => :role, :checked => "checked", :type => "radio", :value => "", :onclick => "updateSelectedAccount(this)" }/
           .AccountIllustration
-            %img{ :src => "/gs/images/account_athletes.jpg", :height => "99", :alt => "Athletes Illustration", :onclick => "return selectThisAcocunt(this)", :width => "131" }/
+            %img{ :src => "/gs/images/account_athletes.jpg", :height => "99", :alt => "Athletes Illustration", :onclick => "return selectThisAccount('Ath')", :width => "131" }/
           .AccountDescriptionAthletes
             %h2
               Athletes, Students, Family and Fans.
@@ -40,9 +40,9 @@
           %label.verbalSemantic{ :for => "School" }
             Schools and Private Athletic Clubs
           .AccountRadio
-            %input#School{ :name => :role, :type => "radio", :value => Role[:team].id, :onchange => "updateSelectedAccount(this)" }/
+            %input#School{ :name => :role, :type => "radio", :value => Role[:team].id, :onclick => "updateSelectedAccount(this)" }/
           .AccountIllustration
-            %img{ :src => "/gs/images/accout_school_illu.jpg", :height => "99", :alt => "Teams Illustration", :onclick => "return selectThisAcocunt(this)", :width => "131" }/
+            %img{ :src => "/gs/images/accout_school_illu.jpg", :height => "99", :alt => "Teams Illustration", :onclick => "return selectThisAccount('School')", :width => "131" }/
           .AccountDescriptionSchools
             %h2
               Schools and Private Athletic Clubs
@@ -52,9 +52,9 @@
           %label.verbalSemantic{ :for => "Leagues" }
             Leagues and Conferences
           .AccountRadio
-            %input#Leagues{ :name => :role, :type => "radio", :value => Role[:league].id, :onchange => "updateSelectedAccount(this)" }/
+            %input#Leagues{ :name => :role, :type => "radio", :value => Role[:league].id, :onclick => "updateSelectedAccount(this)" }/
           .AccountIllustration
-            %img{ :src => "/gs/images/accout_league_illu.jpg", :height => "99", :alt => "Leagues Illustration", :onclick => "return selectThisAcocunt(this)", :width => "131" }/
+            %img{ :src => "/gs/images/accout_league_illu.jpg", :height => "99", :alt => "Leagues Illustration", :onclick => "return selectThisAccount('Leagues')", :width => "131" }/
           .AccountDescriptionLeagues
             %h2
               Leagues and Conferences
@@ -64,9 +64,9 @@
           %label.verbalSemantic{ :for => "Scouts" }
             Scouts and Recruiters
           .AccountRadio
-            %input#Scouts{ :name => :role, :type => "radio", :value => Role[:scout].id, :onchange => "updateSelectedAccount(this)" }/
+            %input#Scouts{ :name => :role, :type => "radio", :value => Role[:scout].id, :onclick => "updateSelectedAccount(this)" }/
           .AccountIllustration
-            %img{ :src => "/gs/images/account_scouts.jpg", :height => "99", :alt => "Recruiters Illustration", :onclick => "return selectThisAcocunt(this)", :width => "131" }/
+            %img{ :src => "/gs/images/account_scouts.jpg", :height => "99", :alt => "Recruiters Illustration", :onclick => "return selectThisAccount('Scouts')", :width => "131" }/
           .AccountDescriptionScouts
             %h2
               Scouts and Recruiters
