@@ -24,7 +24,8 @@
           = link_to truncate_words(dashboard_activity.item.comment), dashboard_activity.item.generate_commentable_url, :class=>'articleLink'
         - when 'Favorite'
           =" favorited"
-          = link_to " a #{dashboard_activity.item.favoritable.class.to_s.humanize.downcase}", user_favorite_path(dashboard_activity.item.user_id, dashboard_activity.item), :class=>'articleLink'
+          - hname = (dashboard_activity.item.favoritable.class.to_s.humanize == "Videoasset" ? "Video" : dashboard_activity.item.favoritable.class.to_s.gsub(/Video/,''))
+          = link_to " a #{hname}", user_favorite_path(dashboard_activity.item.user_id, dashboard_activity.item), :class=>'articleLink'
         - when 'Clipping'
           =" added a clipping: "
           = link_to image_tag( dashboard_activity.item.image_uri(:thumb), :width => '50px'), user_clipping_path(dashboard_activity.item.user_id, dashboard_activity.item), :class=>'articleLink'
