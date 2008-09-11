@@ -844,3 +844,9 @@ a.btag, a.btag:visited {
   margin: 3px 0 3px 0;
   font-weight: bold;
 }
+
+
+/* fix to text in three column search results layout */
+.mainCol1 .contentBox, .mainCol2 .contentBox, .mainCol3 .contentBox {
+  height: auto !important;
+}
