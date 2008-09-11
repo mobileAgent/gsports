@@ -1,5 +1,5 @@
 - path = video_feature.class == VideoAsset ? video_asset_path(video_feature) : (video_feature.class == VideoClip ? video_clip_path(video_feature) : video_reel_path(video_feature))
-- line2 = video_feature.class == VideoAsset ? video_feature.sport : video_feature.user.full_name
+- line2 = video_feature.class == VideoAsset ? (video_feature.league_video? ? video_feature.league_name : video_feature.team.title_name) : video_feature.user.full_name
 - line3 = video_feature.class == VideoAsset ? video_feature.human_game_date_string : video_feature.created_at.to_s(:readable)
 .featureSummary
   .featureSummaryThumb.favFIT
@@ -9,8 +9,8 @@
     - else
       = link_to "<img src='#{@vidavee.file_thumbnail_medium(video_feature.thumbnail_dockey)}' title='#{h(video_feature.title).gsub(/\'/,'')}' alt='Video'/>", path
   .featureText
-    %h3
-      = h video_feature.title
+    %h3.featureTitle
+      = link_to h(video_feature.title), path
     %span.sportName
       = h line2
     %br/

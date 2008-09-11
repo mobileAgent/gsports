@@ -336,6 +336,19 @@ div.thumbFIT {
    color: #536338;
 }
 
+.featureText h3.featureTitle a, .featureText h3.featureTitle a:visited {
+   text-decoration: none;
+   color: #536338;
+}
+
+.featureText h3.featureTitle a:hover {
+  text-decoration: underline;
+}
+
+.featureText h3.featureTitle a:active {
+  text-decoration: none;
+}
+
 .mainContentArea h4 {
    font-size: 1.0em;
    font-weight: bold;

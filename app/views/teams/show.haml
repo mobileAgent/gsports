@@ -14,11 +14,21 @@
       .contentBoxContent
         %div{ :class=>"desc-#{avht}" }
           %p
-            =h( [@team.address1, @team.address2, @team.city, (@team.state_id? ? @team.state.name : nil), @team.zip].delete_if{ |i| !i }.join(', ') )
+            - if @team.address1 && @team.address1.length > 0
+              = h @team.address1
+              %br/
+            - if @team.address2 && @team.address2.length > 0
+              = h @team.address2
+              %br/
+            - if @team.city || @team.state_id
+              = h [@team.city,(@team.state_id ? @team.state.name : nil),@team.zip].compact.join(' ')
           %p
             =h @team.phone
             %br
-            =h @team.email 
+            =h @team.email
+          - if current_user
+            %p
+              = link_to "View #{@team.nickname} Members", "/search/q?search[category]=10&team_id=#{@team.id}", :class=>'member-link'
 
         - if current_user && @team.avatar
           %a{ :href=>team_path(@team), :class=>"logo-#{avht}" }
@@ -32,7 +42,7 @@
         %h2.boxDescription
           RECENT CLIPS & HIGHLIGHTS
       .contentBoxContent
-        =render :partial => 'video_assets/video_feature', :collection => @team_clips_reels, :locals => {:nolinks => true}
+        =render :partial => 'video_assets/video_feature', :collection => @team_clips_reels, :locals => {:nolinks => current_user.nil? }
 
   /
     col2 content
@@ -42,7 +52,7 @@
         %h2.boxDescription
           MOST POPULAR VIDEOS
       .contentBoxContent
-        =render :partial => 'video_assets/video_feature', :collection => @team_popular_videos, :locals => {:nolinks => true}
+        =render :partial => 'video_assets/video_feature', :collection => @team_popular_videos, :locals => {:nolinks => current_user.nil? }
 
         - if @team_popular_videos.size >= 10
           - if current_user
@@ -55,7 +65,7 @@
         %h2.boxDescription
           RECENT FULL GAME UPLOADS 
       .contentBoxContent
-        =render :partial => 'video_assets/video_feature', :collection => @team_videos, :locals => {:nolinks => true}
+        =render :partial => 'video_assets/video_feature', :collection => @team_videos, :locals => {:nolinks => current_user.nil? }
         - if @team_videos.size >= 10
           - if current_user
             = link_to "More Videos...", url_for(:controller => 'search', :action => 'team_video_assets', :team_id => @team.id)
@@ -68,9 +78,6 @@
     col3 content
   .mainCol3  
     .rightContentItem
-      - if current_user
-        = link_to "View #{@team.nickname} Members", "/search/q?search[category]=10&team_id=#{@team.id}", :class=>'member-link'
-      .clearDiv
       - if current_user && current_user.team_staff?(@team)
         %span.moreLink
           = link_to 'Post', new_user_post_path(current_user)
