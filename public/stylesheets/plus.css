@@ -724,6 +724,16 @@ input[type='button'] {
 	float:right;
 }
 
+.rightContentItem h2 a, .rightContentItem h2 a:visited {
+	font-size: 120%;
+	color: #0081C0;
+	margin-bottom: 5px;
+        text-decoration: none;
+}
+
+.rightContentItem h2 a:hover {
+  text-decoration: underline;
+}
 
 /* end - team league summary content */
 

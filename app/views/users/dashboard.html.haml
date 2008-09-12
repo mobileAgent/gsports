@@ -12,21 +12,8 @@
         %h2.boxDescription
           WHAT MY FRIENDS ARE WATCHING
       .contentBoxContent
-        - for video in @network_favorites
-          .featureSummary
-            .featureSummaryThumb.favFIT
-              = video_image_link(video)
-              -#%img{ :src => "#{@vidavee.file_thumbnail_medium(video.thumbnail_dockey)}" }
-            .featureText
-              %span.featureTitle
-                =h video.title
-              %span.sportName
-                = video.user.full_name
-                %br/
-              %span.date
-                =game_date(video.created_at)
-              %br/
-            .clearDiv
+        =render :partial => 'video_assets/video_feature', :collection => @network_favorites, :locals => {:nolinks => current_user.nil? }
+        
     .contentBox.tanBackground
       .contentBoxHeader.yellowHeader
         -#%span.moreLink
@@ -35,21 +22,8 @@
         %h2.boxDescription
           MY FRIENDS RECENT CLIPS & HIGHLIGHTS 
       .contentBoxContent
-        - for video in @network_recent
-          .featureSummary
-            .featureSummaryThumb.favFIT
-              = video_image_link(video)
-              -#%img{ :src => "#{@vidavee.file_thumbnail_medium(video.thumbnail_dockey)}" }
-            .featureText
-              %span.featureTitle
-                = video.title
-              %span.sportName
-                = video.user.full_name
-              %br/
-              %span.date
-                =game_date(video.created_at)
-              %br/
-            .clearDiv
+        = render :partial => 'video_assets/video_feathre', :collection => @network_recent, :locals => {:nolinks => current_user.nil? }
+        
   /
     col2 content
   .mainCol2
@@ -61,21 +35,8 @@
         %h2.boxDescription
           MOST POPULAR VIDEOS
       .contentBoxContent
-        - for video in @popular_videos
-          .featureSummary
-            .featureSummaryThumb.favFIT
-              = video_image_link(video)
-              -#%img{ :src => "#{@vidavee.file_thumbnail_medium(video.thumbnail_dockey)}" }
-            .featureText
-              %span.featureTitle
-                =h video.title
-              %span.sportName
-                =h video.user.full_name
-              %br/
-              %span.date
-                =game_date(video.created_at)
-              %br/
-            .clearDiv
+        = render :partial => 'video_assets/video_feature', :collection => @popular_videos, :locals => {:nolinks => current_user.nil? }
+        
     .contentBox.tanBackground
       .contentBoxHeader.yellowHeader
         -#%span.moreLink
@@ -84,21 +45,8 @@
         %h2.boxDescription
           RECENT FULL GAME UPLOADS
       .contentBoxContent
-        - for video in @recent_uploads
-          .featureSummary
-            .featureSummaryThumb.favFIT
-              = video_image_link(video)
-              -#%img{ :src => "#{@vidavee.file_thumbnail_medium(video.thumbnail_dockey)}" }
-            .featureText
-              %span.featureTitle
-                =h video.title
-              %span.sportName
-                =h video.team_name
-              %br/
-              %span.date
-                =game_date(video.created_at)
-              %br/
-            .clearDiv
+        = render :partial => 'video_assets/video_feature', :collection => @recent_uploads, :locals => {:nolinks => current_user.nil? }
+        
   /
     col3 content
   .mainCol3    
@@ -110,23 +58,23 @@
       -#%span.moreLink
         = link_to 'more&raquo;', '', :rel => 'bookmark'
       %h2
-        =@user.team.title_name
+        =link_to @user.team.title_name, team_path(@user.team)
       - team_posts(@user.team, :limit=>1).each() do |post|
         %a.articleLink{:href=>user_post_path(post.user, post)}
           =post.title
         %br
-        = truncate_words(post.post, 24, '...' )
+        = truncate_words(post.post, 24)
       
     .rightContentItem
       -#%span.moreLink
         = link_to 'more&raquo;', '', :rel => 'bookmark'
       %h2
-        =@user.league.name
+        =link_to @user.league.name, league_path(@user.league)
       - league_posts(@user.league, :limit=>1).each() do |post|
         %a.articleLink{:href=>user_post_path(post.user, post)}
           =post.title
         %br
-        = truncate_words(post.post, 24, '...' )
+        = truncate_words(post.post, 24)
         
     .rightContentItem
       %span.moreLink
@@ -145,8 +93,4 @@
         %a.articleLink{:href=>user_post_path(post.user, post)}
           =post.title
         %br
-        = truncate_words(post.post, 24, '...' )
-            
-                
-                
-                
+        = truncate_words(post.post, 24)
