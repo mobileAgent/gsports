@@ -6,8 +6,6 @@ class Team < ActiveRecord::Base
   belongs_to :avatar, :class_name => "Photo", :foreign_key => "avatar_id"
   belongs_to :state
 
-  before_destroy :reassign_dependent_items
-
   # Every team needs a name and a league
   validates_presence_of :name
   validates_presence_of :league_id
@@ -43,11 +41,11 @@ class Team < ActiveRecord::Base
     end
   end
   
-  def self.cities(county_id=-1)
-    if (county_id > -1)
+  def self.cities(county_name=nil)
+    if (!county_name.nil?)
       Team.find(:all, 
                 :select => "DISTINCT city", 
-                :conditions => "county_id = #{county_id} AND city IS NOT NULL",
+                :conditions => "county_name = '#{county_name}' AND city IS NOT NULL",
                 :order => 'city ASC')
     else
       Team.find(:all, 
@@ -88,43 +86,7 @@ class Team < ActiveRecord::Base
   end
 
   def title_name
-    if (self.nickname && self.nickname.length > 0)
-      self.nickname
-    else
-      self.name
-    end
-  end
-  
-  def avatar_photo_url(size = nil)
-    if avatar
-      avatar.public_filename(size)
-    else
-      case size
-        when :thumb
-          AppConfig.photo['missing_thumb']
-        else
-          AppConfig.photo['missing_medium']
-      end
-    end
-  end
-
-  protected
-
-  def reassign_dependent_items
-    ateam_id = User.admin.first.team_id
-    
-    v = VideoAsset.find_all_by_team_id(self.id)
-    v.each { |x| x.update_attributes(:team_id => ateam_id) }
-    v = VideoAsset.find_all_by_home_team_id(self.id)
-    v.each { |x| x.update_attributes(:home_team_id => ateam_id) }
-    v = VideoAsset.find_all_by_visiting_team_id(self.id)
-    v.each { |x| x.update_attributes(:visiting_team_id => ateam_id) }
-
-    u = User.find_all_by_team_id(self.id)
-    u.each { |x| x.update_attributes(:team_id => ateam_id) }
-    
-    p = Post.find_all_by_team_id(self.id)
-    p.each { |x| x.update_attributes(:team_id => ateam_id) }
+    self.nickname || self.name
   end
   
 end

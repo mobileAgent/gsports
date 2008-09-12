@@ -1,7 +1,7 @@
 class SearchController < BaseController
   
   skip_before_filter :verify_authenticity_token, :only => [ :quickfind ]
-  skip_before_filter :gs_login_required, :only => [:teamfind]
+  skip_before_filter :gs_login_required, :only => [:teamfind,:update_teamfind_counties,:update_teamfind_cities]
   before_filter :vidavee_login
   after_filter :protect_private_videos, :except => [:teamfind]
   
@@ -206,6 +206,26 @@ class SearchController < BaseController
      @teams = Team.paginate(:conditions => cond.to_sql, :page => params[:page], :order => 'teams.name DESC')
      logger.debug "Found #{@teams.total_entries} entries on #{@teams.total_pages} pages"
    end
+   
+  def update_teamfind_counties
+    state = (params[:state] || 0).to_i
+    teamfind_counties = state > 0 ? Team.counties(state) : []
+
+    render :update do |page|
+      page.replace_html 'teamfind_counties', :partial => 'teamfind_counties', :object => teamfind_counties
+      page.replace_html 'teamfind_cities',   :partial => 'teamfind_cities',   :object => []
+    end
+  end
+   
+  def update_teamfind_cities
+    county = (params[:county] || "")
+    teamfind_cities = !county.empty?  ? Team.cities(county) : []
+
+    render :update do |page|
+      page.replace_html 'teamfind_cities',   :partial => 'teamfind_cities',   :object => teamfind_cities
+    end
+  end
+   
 
    protected
 

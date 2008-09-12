@@ -43,18 +43,18 @@
     %div
       %h2
         Search for My School
-      %label.verbalSemantic{ :for => "searchState" }
-        State
-      =collection_select("teamfind","id",@quickfind_states,"id","name", {:prompt => "-State-", :selected => "-State-"}, {:id => 'searchState', :name => 'state'})
-      %label.verbalSemantic{ :for => "searchCounty" }
-        County
-      =collection_select("teamfind","county_name",@quickfind_counties,"county_name","county_name",{:prompt => "-County-", :selected => "-County-"}, {:id => 'searchCounty', :name => 'county'})
-      %label.verbalSemantic{ :for => "searchCity" }
-        City
-      =collection_select("teamfind","city",@quickfind_cities,"city","city",{:prompt => "-City-", :selected => "-City-"}, {:id => 'searchCity', :name => 'city'})
-      -#%label.verbalSemantic{ :for => "searchSchool" }
-        School
+      =collection_select("teamfind","id",@quickfind_states,"id","name", {:prompt => "-State-", :selected => "-State-"}, {:id => 'searchState', :name => 'state', :onchange=>"#{remote_function(:url=>{:controller=>'search',:action=>'update_teamfind_counties'},:with=>"'state='+value")}" } )
+      
+      #teamfind_counties
+        = render :partial => '/search/teamfind_counties', :object => []
+      
+      #teamfind_cities
+        = render :partial => '/search/teamfind_cities', :object => []
+      
+      
       %input.submit{ :name => nil, :type => "image", :src => "/gs/images/top_nav_search.gif", :value => "search", :alt => "Search" }/
+
+      
       
       
       
