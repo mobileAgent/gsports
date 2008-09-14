@@ -7,9 +7,9 @@
     .loginBox
       %label{:for => "login"} USERNAME
       = text_field_tag 'login', nil, :class => 'loginFormInput'
-      %br/
+      -#%br/
       %label{:for => "password"} PASSWORD
-      %br/
+      -#%br/
       = password_field_tag 'password', nil, :class => 'loginFormPassword'
       %input#loginButton.submit{ :name => "submit", :src => "/gs/images/top_nav_login.gif", :type => "image", :value => "Login", :alt => "Login" }/
       %br/

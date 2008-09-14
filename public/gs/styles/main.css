@@ -800,7 +800,7 @@ td.forumList,th.forumList {
 .homeText {
 	width:330px;
 	margin: 0px;
-	padding-top: 25px;
+	padding-top: 20px; /* mjf */
 	padding-right: 20px;
 	padding-bottom: 0; /* mjf */
 	padding-left: 15px;
@@ -1518,7 +1518,7 @@ span.ROLLOVERIMAGE a span { display: none; visibility: hide; }
 /* tb: .videoFind form { */
 .videoFind {
 	margin-top: 17px;
-	margin-right: 15px;
+	margin-right: 10px; /* change for ie6, mjf */
 	float:right;
 }
 /* tb: .videoFind form select, .videoFind form submit{ */

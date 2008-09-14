@@ -227,8 +227,7 @@ object#homeFlash {
 
 .playerContentArea {
   background: #292e43;
-  margin-right: 20px;
-  width: 100%;
+  width: 956px;
   margin-top: 5px;
   height: auto;
   float: left;
@@ -254,9 +253,8 @@ object#homeFlash {
 }
 
 .commentArea {
-  width: 100%;
   background: #e2e4a7;
-  margin-right: 25%;
+  margin-right: 25px;
 }
 
 .commentForm {
@@ -334,6 +332,10 @@ div.thumbFIT {
    font-size: 1.1em;
    font-weight: bold;
    color: #536338;
+}
+
+.featureText {
+  margin-right: 5px !important;
 }
 
 .featureText h3.featureTitle a, .featureText h3.featureTitle a:visited {
@@ -696,6 +698,14 @@ input[type='button'] {
 	color: #666666;
 	font-size: 90%;
 	padding-right: 15px;
+}
+
+.contentBoxHeader h2 {
+         font-size: 150%;
+}
+
+.contentBoxHeader h2.boxDescription {
+        font-size: 100%;
 }
 
 .contentBox.orgSummary .contentBoxContent{
