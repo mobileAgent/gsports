@@ -8,16 +8,26 @@ class VideoAsset < ActiveRecord::Base
   belongs_to :visiting_team, :class_name => 'Team', :foreign_key => 'visiting_team_id'
   has_many :video_clips, :dependent => :destroy
   
+  # Every video needs a title
+  validates_presence_of :title
+  
   acts_as_commentable
   acts_as_taggable
   has_many :favorites, :as => :favoritable, :dependent => :destroy
-  acts_as_activity :user, :if => Proc.new{|r| r.video_status == 'ready' }
+  acts_as_activity :user, :if => Proc.new{|r| r.video_status == 'ready' && r.public_video }
   
   attr_protected :team_name, :league_name
   before_destroy :save_deleted_video
   
-  # Every video needs a title
-  validates_presence_of :title
+
+  after_save do |video|
+    activity = Activity.find_by_item_type_and_item_id('VideoAsset', video.id)
+    if video.video_status == 'ready' && video.public_video && !activity
+      video.create_activity_from_self 
+    elsif ((video.video_status != 'ready' || !video.public_video) && activity)
+      activity.destroy
+    end
+  end
 
   # Be careful, game_date can be nil
   [:year, :month, :day].each { |m| delegate m, :to => :game_date }

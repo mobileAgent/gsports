@@ -6,11 +6,20 @@ class VideoClip < ActiveRecord::Base
   acts_as_commentable
   acts_as_taggable
   has_many :favorites, :as => :favoritable, :dependent => :destroy
-  acts_as_activity :user
+  acts_as_activity :user, :if => Proc.new{|r| r.public_video }
   before_destroy :save_deleted_video
   
   # Every clip needs a title
   validates_presence_of :title
+  
+  after_save do |video|
+    activity = Activity.find_by_item_type_and_item_id('VideoClip', video.id)
+    if video.public_video && !activity
+      video.create_activity_from_self 
+    elsif !video.public_video && activity
+      activity.destroy
+    end
+  end
   
   # set indexes for sphinx
   define_index do
