@@ -22,7 +22,7 @@ class VidapiControllerTest < ActionController::TestCase
     Rails.cache.stubs(:fetch).with('quickfind_seasons').returns([]);
     Rails.cache.stubs(:fetch).with('quickfind_states').returns([]);
     Rails.cache.stubs(:fetch).with('quickfind_counties').returns([]);
-    Rails.cache.stubs(:fetch).with('quickfind_leagues').returns([]);
+    Rails.cache.stubs(:fetch).with('quickfind_schools').returns([]);
     Rails.cache.stubs(:fetch).with('quickfind_sports').returns([]);
     Rails.cache.stubs(:fetch).with('quickfind_cities').returns([]);
     get :logout
