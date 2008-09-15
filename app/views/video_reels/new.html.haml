@@ -6,9 +6,9 @@
     = link_to "&laquo; back to my clips", user_video_clips_path(current_user)
     = " / "
     = link_to "my reels", user_video_reels_path(current_user)
-  .playerContentArea
+  .playerContentArea{:style => "background-color: #0c1329"}
 
 
-.flashArea#flashArea
-= render(:partial => 'shared/video_player', :locals => { :fvars => { :dockeys => "#{@user_clip_dockeys}"}, :target => 'flashArea', :player_name => '/players/reelmaker.swf', :height => 650, :width => 956})
+    .flashArea#flashArea
+    = render(:partial => 'shared/video_player', :locals => { :fvars => { :dockeys => "#{@user_clip_dockeys}"}, :target => 'flashArea', :player_name => '/players/reelmaker.swf', :height => 650, :width => 945})
 

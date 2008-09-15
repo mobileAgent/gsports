@@ -1,0 +1,29 @@
+.vscroll
+{
+    downArrowUpSkin: Embed(source="images/downArrow.png");
+    downArrowOverSkin: Embed(source="images/downArrow.png");
+    downArrowDownSkin: Embed(source="images/downArrow.png");
+    upArrowUpSkin: Embed(source="images/upArrow.png");
+    upArrowOverSkin: Embed(source="images/upArrow.png");
+    upArrowDownSkin: Embed(source="images/upArrow.png");
+    thumbDownSkin: 
+    	Embed(source="images/thumb.png",
+        scaleGridLeft="7", scaleGridTop="5", 
+        scaleGridRight="8", scaleGridBottom="7");
+        
+    thumbUpSkin: 
+    	Embed(source="images/thumb.png",
+        scaleGridLeft="7", scaleGridTop="5", 
+        scaleGridRight="8", scaleGridBottom="7");
+        
+    thumbOverSkin: 
+    	Embed(source="images/thumb.png",
+        scaleGridLeft="7", scaleGridTop="5", 
+        scaleGridRight="8", scaleGridBottom="7");
+        
+    trackSkin: 
+    	Embed(source="images/scrolltrack.png",
+        scaleGridLeft="7", scaleGridTop="4", 
+        scaleGridRight="8", scaleGridBottom="6" );       
+} 
+

@@ -1,42 +1,67 @@
 /* CSS file */
 
+
+.reelInfoPreviewBtn
+{
+    overSkin:Embed(source='images/previewReel.gif');
+    upSkin:Embed(source='images/previewReel.gif');
+    selectedUpSkin:Embed(source='images/previewReel.gif');
+    selected-over-skin:Embed(source='images/previewReel.gif');
+}
+
+.reelInfoSaveBtn
+{
+    overSkin:Embed(source='images/saveReel.gif');
+    upSkin:Embed(source='images/saveReel.gif');
+    selectedUpSkin:Embed(source='images/saveReel.gif');
+    selected-over-skin:Embed(source='images/saveReel.gif');
+}
+
+.reelInfoPublishBtn
+{
+    overSkin:Embed(source='images/publishReel.gif');
+    upSkin:Embed(source='images/publishReel.gif');
+    selectedUpSkin:Embed(source='images/publishReel.gif');
+    selected-over-skin:Embed(source='images/publishReel.gif');
+}
+
 .videoCtrlPnlStopBtn
 {
-    overSkin:Embed(source='images/stop.png');
-    upSkin:Embed(source='images/stop.png');
-    selectedUpSkin:Embed(source='images/stop.png');
-    selected-over-skin:Embed(source='images/stop.png');
+    overSkin:Embed(source='images/rewind_Button.png');
+    upSkin:Embed(source='images/rewind_Button.png');
+    selectedUpSkin:Embed(source='images/rewind_Button.png');
+    selected-over-skin:Embed(source='images/rewind_Button.png');
 }
 
 .videoCtrlPnlPlayBtn
 {
-    overSkin:Embed(source='images/play.png');
-    upSkin:Embed(source='images/play.png');
-    selectedUpSkin:Embed(source='images/play.png');
-    selected-over-skin:Embed(source='images/play.png');
+    overSkin:Embed(source='images/playButton.png');
+    upSkin:Embed(source='images/playButton.png');
+    selectedUpSkin:Embed(source='images/playButton.png');
+    selected-over-skin:Embed(source='images/playButton.png');
 }
 
 .videoCtrlPnlPauseBtn
 {
-    overSkin:Embed(source='images/pause.png');
-    upSkin:Embed(source='images/pause.png');
-    selectedUpSkin:Embed(source='images/pause.png');
-    selected-over-skin:Embed(source='images/pause.png');
+    overSkin:Embed(source='images/pauseButton.png');
+    upSkin:Embed(source='images/pauseButton.png');
+    selectedUpSkin:Embed(source='images/pauseButton.png');
+    selected-over-skin:Embed(source='images/pauseButton.png');
 }
 
 .videoCtrlPnlMuteBtn
 {
-    overSkin:Embed(source='images/mute.png');
-    upSkin:Embed(source='images/mute.png');
-    selectedUpSkin:Embed(source='images/mute.png');
-    selected-over-skin:Embed(source='images/mute.png');
+    overSkin:Embed(source='images/mute2.png');
+    upSkin:Embed(source='images/mute2.png');
+    selectedUpSkin:Embed(source='images/mute2.png');
+    selected-over-skin:Embed(source='images/mute2.png');
 }
 
 .videoCtrlPnlUnMuteBtn
 {
-    overSkin:Embed(source='images/unmute.png');
-    upSkin:Embed(source='images/unmute.png');
-    selectedUpSkin:Embed(source='images/unmute.png');
-    selected-over-skin:Embed(source='images/unmute.png');
+    overSkin:Embed(source='images/sound.png');
+    upSkin:Embed(source='images/sound.png');
+    selectedUpSkin:Embed(source='images/sound.png');
+    selected-over-skin:Embed(source='images/sound.png');
 }
 
