@@ -22,6 +22,37 @@ class SearchController < BaseController
     render :action => 'my_videos'
   end
 
+  def quickfind_select_state
+    state = (params[:state] || 0).to_i
+    counties = state > 0 ? Team.counties(state) : @quickfind_counties
+    schools = state > 0 ? Team.find(:all, :conditions=>{:state_id=>state}, :order => 'name ASC') : @quickfind_schools
+
+    render :update do |page|
+      page.replace_html 'quickfind_counties', :partial => 'quickfind_counties', :object => counties
+      page.replace_html 'quickfind_schools',  :partial => 'quickfind_schools',  :object => schools
+    end
+  end
+
+  def quickfind_select_county
+    county = (params[:county] || "")
+    schools = state > 0 ? Team.find(:all, :conditions=>{:state_id=>state}, :order => 'name ASC') : @quickfind_schools
+    
+    render :update do |page|
+      page.replace_html 'quickfind_schools',  :partial => 'quickfind_schools',  :object => schools
+    end
+  end
+
+  def quickfind_select_school
+    school = (params[:school] || 0).to_i
+    sports = school > 0 ? VideoAsset.sports(school) : @quickfind_sports
+    seasons = school > 0 ? VideoAsset.seasons(school) : @quickfind_seasons
+
+    render :update do |page|
+      page.replace_html 'quickfind_sports',   :partial => 'quickfind_sports',   :object => sports
+      page.replace_html 'quickfind_seasons',   :partial => 'quickfind_seasons',   :object => seasons
+    end
+  end
+
   # Main site search
   def q
     @category = (params[:search][:category] || "0").to_i
@@ -239,17 +270,18 @@ class SearchController < BaseController
   
   def update_teamfind_counties
     state = (params[:state] || 0).to_i
-    teamfind_counties = state > 0 ? Team.counties(state) : []
-
+    teamfind_counties = state > 0 ? Team.counties(state) : @quickfind_counties
+    quickfind_cities = state > 0 ? Team.find(:all,:select => "DISTINCT city",:conditions => "state_id = '#{state}' AND city IS NOT NULL",:order => 'city ASC') : @quickfind_cities
+      
     render :update do |page|
       page.replace_html 'teamfind_counties', :partial => 'teamfind_counties', :object => teamfind_counties
-      page.replace_html 'teamfind_cities',   :partial => 'teamfind_cities',   :object => []
+      page.replace_html 'teamfind_cities',   :partial => 'teamfind_cities',   :object => quickfind_cities
     end
   end
   
   def update_teamfind_cities
     county = (params[:county] || "")
-    teamfind_cities = !county.empty?  ? Team.cities(county) : []
+    teamfind_cities = !county.empty?  ? Team.cities(county) : @quickfind_cities
 
     render :update do |page|
       page.replace_html 'teamfind_cities',   :partial => 'teamfind_cities',   :object => teamfind_cities

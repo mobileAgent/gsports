@@ -120,18 +120,24 @@ class VideoAsset < ActiveRecord::Base
   end
 
   # To support the video quickfind sport selection dropdown
-  def self.sports
+  def self.sports(team_id=nil)
+    cond = 'sport IS NOT NULL'
+    cond += " and team_id = #{team_id.to_i}" if team_id
+    
     VideoAsset.find(:all, 
                     :select => 'DISTINCT sport', 
-                    :conditions => 'sport IS NOT NULL',
+                    :conditions => cond,
                     :order => 'sport ASC')
   end
 
   # To support the video quickfind season selection dropdown
-  def self.seasons
+  def self.seasons(team_id=nil)
+    cond = 'game_date IS NOT NULL'
+    cond += " and team_id = #{team_id.to_i}" if team_id
+    
     years = VideoAsset.find(:all, 
                             :select => "DISTINCT year(game_date) as season", 
-                            :conditions => "game_date IS NOT NULL",
+                            :conditions => cond,
                             :order => "season ASC").map(&:season)
     years.inject([]) { |v,y| v << VideoAsset.new(:game_date => "#{y}-01-01") }
   end

@@ -1,0 +1,1 @@
+=collection_select("quickfind","county_name",quickfind_counties,"county_name","county_name",{:prompt => "-County-", :selected => "-County-"}, {:id => 'videoFindCounty', :name => 'county_name', :onchange=>"#{remote_function(:url=>{:controller=>'search',:action=>'quickfind_select_county'},:with=>"'county='+value")}" })

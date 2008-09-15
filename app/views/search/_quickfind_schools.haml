@@ -1,0 +1,1 @@
+=collection_select("quickfind","id",quickfind_schools,"id","name",{:prompt => "-School-", :selected => '-School-'}, {:id => 'videoFindSchool', :name => 'team', :onchange=>"#{remote_function(:url=>{:controller=>'search',:action=>'quickfind_select_school'},:with=>"'school='+value")}"})

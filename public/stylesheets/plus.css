@@ -214,6 +214,9 @@ input[type='submit']:hover {
   width: 10em;
 }
 
+#quickfind_counties,#quickfind_schools,#quickfind_sports,#quickfind_seasons{
+	display: inline;
+}
 
 /* Fix up to make photos in posts wrap in text */
 .entry-content img {

@@ -1,21 +1,15 @@
 .videoFindChat
   - form_tag url_for({:controller => 'search', :action => 'quickfind'}), :method => :get, :id=>'videoFind' do
     .videoFind
-      =collection_select("quickfind","game_date",@quickfind_seasons,"year","year",{:prompt => '-Season-', :selected => '-Season-'}, {:id => "videoFindSeason", :name => 'season'})
-      -#%label.verbalSemantic{ :for => "videoFindSeason" }
-        Season
-      =collection_select("quickfind","id",@quickfind_states,"id","name", {:prompt => "-State-", :selected => "-State-"}, {:id => 'videoFindState', :name => 'state'})
-      -#%label.verbalSemantic{ :for => "videoFindState" }
-        State
-      =collection_select("quickfind","county_name",@quickfind_counties,"county_name","county_name",{:prompt => "-County-", :selected => "-County-"}, {:id => 'videoFindCounty', :name => 'county_name'})
-      -#%label.verbalSemantic{ :for => "videoFindCounty" }
-        County
-      =collection_select("quickfind","id",@quickfind_schools,"id","name",{:prompt => "-School-", :selected => '-School-'}, {:id => 'videoFindSchool', :name => 'team'})
-      -#%label.verbalSemantic{ :for => "videoFindSchool" }
-        School
-      =collection_select("quickfind","sport",@quickfind_sports,"sport","sport",{:prompt => "-Sport-", :selected => '-Sport-'}, {:id => 'videoFindSport', :name => 'sport'})
-      -#%label.verbalSemantic{ :for => "videoFindSport" }
-        Sport
+      =collection_select("quickfind","id",@quickfind_states,"id","name", {:prompt => "-State-", :selected => "-State-"}, {:id => 'videoFindState', :name => 'state', :onchange=>"#{remote_function(:url=>{:controller=>'search',:action=>'quickfind_select_state'},:with=>"'state='+value")}" })
+      #quickfind_counties
+        = render :partial => '/search/quickfind_counties', :object => @quickfind_counties
+      #quickfind_schools
+        = render :partial => '/search/quickfind_schools', :object => @quickfind_schools
+      #quickfind_sports
+        = render :partial => '/search/quickfind_sports', :object => @quickfind_sports
+      #quickfind_seasons
+        = render :partial => '/search/quickfind_seasons', :object => @quickfind_seasons
       %label{ :for => "videoFindSubmit" }
         %input#videoFindSubmit.submit{ :name => nil, :src => "/gs/images/video_find_submit.gif", :type => "image", :value => "search", :alt => "Search" }/
   .chat
