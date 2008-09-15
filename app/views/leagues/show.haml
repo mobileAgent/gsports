@@ -28,8 +28,6 @@
             =h @league.email
             - if current_user
               = link_to 'League Members', "/search/q?search[category]=11&league_id=#{@league.id}", :class=>'member-link'
-      .clearDiv
-            
           
         %a{ :href=>league_path(@league), :class=>"logo-#{avht}" }
           - if @league.avatar
