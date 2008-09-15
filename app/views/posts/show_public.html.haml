@@ -1,4 +1,4 @@
-.homeText
+.homeText{ :style=>'width:90%;padding:20px;' }
   %h1.homeTextWelcome
     Global Sports Athlete Of The Week
   %br/
@@ -9,4 +9,4 @@
     = "#{@post.published_at.to_s(:readable)} by #{@post.user.byline}"
     %br/
     %br/
-= @post.post
+    = @post.post
