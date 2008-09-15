@@ -46,10 +46,10 @@
       =collection_select("teamfind","id",@quickfind_states,"id","name", {:prompt => "-State-", :selected => "-State-"}, {:id => 'searchState', :name => 'state', :onchange=>"#{remote_function(:url=>{:controller=>'search',:action=>'update_teamfind_counties'},:with=>"'state='+value")}" } )
       
       #teamfind_counties
-        = render :partial => '/search/teamfind_counties', :object => []
+        = render :partial => '/search/teamfind_counties', :object => @quickfind_counties
       
       #teamfind_cities
-        = render :partial => '/search/teamfind_cities', :object => []
+        = render :partial => '/search/teamfind_cities', :object => @quickfind_cities
       
       
       %input.submit{ :name => nil, :type => "image", :src => "/gs/images/top_nav_search.gif", :value => "search", :alt => "Search" }/
