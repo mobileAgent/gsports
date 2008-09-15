@@ -1,4 +1,6 @@
 - load_features()
+- top_row_height_px = [@network_favorites.size,@popular_videos.size].max >= 3 ? 255 : 130
+- second_row_height_px = [@network_recent.size,@recent_uploads.size].max >= 3 ? 255 : 130
 
 .landingContentArea
   /
@@ -11,7 +13,7 @@
             more&raquo;
         %h2.boxDescription
           WHAT MY FRIENDS ARE WATCHING
-      .contentBoxContent
+      .contentBoxContent{:style => "height: #{top_row_height_px}px"}
         =render :partial => 'video_assets/video_feature', :collection => @network_favorites, :locals => {:nolinks => current_user.nil? }
         
     .contentBox.tanBackground
@@ -21,7 +23,7 @@
             more&raquo;
         %h2.boxDescription
           MY FRIENDS RECENT CLIPS & HIGHLIGHTS 
-      .contentBoxContent
+      .contentBoxContent{:style => "height: #{second_row_height_px}px"}
         = render :partial => 'video_assets/video_feathre', :collection => @network_recent, :locals => {:nolinks => current_user.nil? }
         
   /
@@ -34,7 +36,7 @@
             more&raquo;
         %h2.boxDescription
           MOST POPULAR VIDEOS
-      .contentBoxContent
+      .contentBoxContent{:style => "height: #{top_row_height_px}px"}
         = render :partial => 'video_assets/video_feature', :collection => @popular_videos, :locals => {:nolinks => current_user.nil? }
         
     .contentBox.tanBackground
@@ -44,7 +46,7 @@
             more&raquo;
         %h2.boxDescription
           RECENT FULL GAME UPLOADS
-      .contentBoxContent
+      .contentBoxContent{:style => "height: #{second_row_height_px}px"}
         = render :partial => 'video_assets/video_feature', :collection => @recent_uploads, :locals => {:nolinks => current_user.nil? }
         
   /
