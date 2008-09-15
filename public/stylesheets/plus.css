@@ -204,6 +204,17 @@ input[type='submit']:hover {
   width: 8em;
 }
 
+#searchState {
+   width: 6em;
+}
+#searchCounty {
+   width: 8em;
+}
+#searchCity {
+  width: 10em;
+}
+
+
 /* Fix up to make photos in posts wrap in text */
 .entry-content img {
   float: left;
