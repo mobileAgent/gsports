@@ -2,7 +2,7 @@
   .forumPost
     .forumPoster
       %a{:href=>"#{user_post_path(post.user, post)}", :rel=>"bookmark"}
-        =image_tag((post.first_image_in_body || post.user.avatar_photo_url(:thumb)), :alt=>"", :width=>"80", :height=>"80")
+        =image_tag((post.image_thumbnail_for_post("thumb") || post.user.avatar_photo_url(:thumb)), :alt=>"")
       %div
         = link_to truncate(h(post.user.full_name), 15), user_path(post.user), :class => (post.user == @posts.first.user ? "admin" : nil) 
     

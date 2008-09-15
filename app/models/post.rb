@@ -29,12 +29,12 @@ class Post < ActiveRecord::Base
                   :limit => 2)
   end
   
-  def image_thumbnail_for_post
+  def image_thumbnail_for_post(size = "feature")
     return '' if self.post.nil?
     img = first_image_in_body()
     if img
       # chaange the size fromw whatever it was to :feature size
-      img.gsub!(/_[a-z]+\.jpg/,'_feature.jpg')
+      img.gsub!(/_[a-z]+\.jpg/,"_#{size}.jpg")
       img.gsub!(/^http:\/\/[^\/]+/,'') # make relative
     else
       img = logo_thumbnail_for_post
