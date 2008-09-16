@@ -31,8 +31,9 @@
       - if @post_pages.page_count > 1
         .pagination= pagination_links @post_pages, :window_size => 10
     
-      %a{"name"=>"#{@posts.first.dom_id}", "id"=>"#{@posts.first.dom_id}"} &nbsp;
-      %br.clear
+      - if @posts.first
+        %a{"name"=>"#{@posts.first.dom_id}", "id"=>"#{@posts.first.dom_id}"} &nbsp;
+        %br.clear
       %br
       
       - for post in @posts do
