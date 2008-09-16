@@ -57,7 +57,7 @@ class AthleteOfTheWeek < Post
     # Pick two at random from the list
     post1 = posts[rand(posts.size)]
     post2 = nil
-    while (post2.nil || post1.id == post2.id)
+    while (post2.nil? || post1.id == post2.id)
       post2 = posts[rand(posts.size)]
     end
 
