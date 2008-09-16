@@ -57,4 +57,4 @@ PAYMENT_DUE_CYCLE = 30 # How often to bill in days
 CLOSED_BETA_MODE = false
 ALLOWED_IP_ADDRS = ['96.244.114.172','68.45.217.123','72.81.234.188','12.180.53.61','74.236.197.211','67.87.134.150','72.68.112.76','68.191.57.23','75.195.92.78','216.143.158.73','96.244.1.112','68.50.173.224','71.250.225.26','66.9.143.210']
 
-AD_SERVER_BASE = 'ads.globalsports.net'
+AD_SERVER_BASE = 'ads.globalsports.net/www/delivery'

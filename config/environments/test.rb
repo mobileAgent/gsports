@@ -27,7 +27,7 @@ APP_URL = "http://localhost:3000"
 # Caching, use memory for dev/test
 config.cache_store = :memory_store
 
-AD_SERVER_BASE = 'www.danmcardle.com'
+AD_SERVER_BASE = 'www.danmcardle.com/openx/www/delivery'
 
 # Billing values
 ActiveMerchant::Billing::Base.mode = :test

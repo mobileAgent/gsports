@@ -42,4 +42,4 @@ CLOSED_BETA_MODE = false
 ALLOWED_IP_ADDRS = []
 ExceptionNotifier.email_prefix = '[GS-QA] '
 
-AD_SERVER_BASE = 'www.danmcardle.com'
+AD_SERVER_BASE = 'www.danmcardle.com/openx/www/delivery'
