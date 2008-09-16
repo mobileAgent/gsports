@@ -1,73 +1,87 @@
-%div
-  %b Name
-  %br/
-  = f.text_field :name
+%table{ :width=>'100%' }
+  %tr
+    %td{ :valign=>'top' }
+      %h3 School Logo
+      .contentBoxContent.topRowFixHeight
+        .centeringDiv{:style => "text-align: center; vertical-align: middle"}
+          = image_tag @team.avatar_photo_url
+      %label
+        Choose a photo to use for your school logo
+        %br/
+        %em (100x100 or 234x60 only)
+        %br/
+      = file_field :avatar, :uploaded_data, :size => "20"
+      %br
+      %br
+      %div
+        %b Name
+        %br/
+        = f.text_field :name
   
-%div
-  %b Nickname
-  %br/
-  = f.text_field :nickname 
-
-
-%div
-  %b Address Line One
-  %br/
-  = f.text_field :address1, :size => 16
-  
-%div
-  %b Address Line Two
-  %br/
-  = f.text_field :address2, :size => 16  
-  
-
-%div
-  %b City
-  %br/
-  = f.text_field :city
-
-%div
-  %b County
-  %br/
-  = f.text_field :county_name
-
-%div
-  %b State
-  %br/
-  =collection_select("team","state_id",State.all,"id","name",{ :selected => @team.state_name })
-
-
-%div
-  %b Zip/Postal Code
-  %br/
-  = f.text_field :zip, :size => 12
-
-
-%div
-  %b Description
-  %br/
-  = f.text_field :description , :size => 65
-
-- if current_user.admin?
-  %div
-    %b League
-    %br/
-    = text_field_with_auto_complete :team, :league_name, :autocomplete => "off"
-
-
-%div
-  %b Phone
-  %br/
-  = f.text_field :phone, :size => 12
-
-%div
-  %b Contact E-mail address
-  %br/
-  = f.text_field :email, :size => 32
-
-
-
--if current_user.admin?  
-  %div
-    %b Ad Zone (Be sure to coordinate with ad server zones)
-    %br/
-    = f.text_field :ad_zone
+      %div
+        %b Nickname
+        %br/
+        = f.text_field :nickname
+        
+    %td
+      %div
+        %b Address Line One
+        %br/
+        = f.text_field :address1
+        
+      %div
+        %b Address Line Two
+        %br/
+        = f.text_field :address2
+        
+      
+      %div
+        %b County
+        %br/
+        = f.text_field :county_name
+      
+      %div
+      %table{:cellspacing => 4}
+        %tr
+          %td City
+          %td State
+          %td Zip/Postal Code
+        %tr
+          %td
+            = f.text_field :city, :size => 25
+          %td  
+            =collection_select("team","state_id",State.all,"id","name",{ :prompt => '--', :selected => @team.state_name })
+          %td  
+            = f.text_field :zip, :size => 12
+      
+      %div
+        %b Description
+        %br/
+        = f.text_area :description , :rows => 3, :cols => 45
+      
+      %div
+        %b Phone
+        %br/
+        = f.text_field :phone, :size => 12
+      
+      %div
+        %b Contact E-mail address
+        %br/
+        = f.text_field :email, :size => 32
+      
+      
+      
+      -if current_user.admin?
+        %fieldset.emphasized
+          %label
+            Admin Only
+          %div
+            %b League
+            %br/
+            = text_field_with_auto_complete :team, :league_name, :autocomplete => "off"
+      
+          %div
+            %b Ad Zone (Be sure to coordinate with ad server zones)
+            %br/
+            = f.text_field :ad_zone, :size => 5
+      

@@ -2,7 +2,7 @@
   .profilePageHeader
     %h2.columnDescriptor
       %span
-        New Team Record
+        New School Record
   .leftNavCol
     %h2.yellowHeader
       My Profile
@@ -13,7 +13,7 @@
 
       = error_messages_for :team 
       
-      - form_for(@team) do |f| 
+      - form_for (@team, :url => team_url(@team), :html => {:method => 'put', :multipart => true}) do |f|
         = render :partial => "form", :locals => { :f => f }
         %p= f.submit "Create"
           

@@ -79,6 +79,12 @@ class LeaguesController < BaseController
             current_user.admin?)
       access_denied and return
     end
+    
+    @avatar = Photo.new(params[:avatar])
+    @avatar.user_id = current_user.id
+    if @avatar.save
+      @league.avatar = @avatar
+    end
 
     respond_to do |format|
       if @league.update_attributes(params[:league])

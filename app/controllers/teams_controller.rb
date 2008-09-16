@@ -11,10 +11,10 @@ class TeamsController < BaseController
   # GET /team.xml
   def index
     if params[:league_id]
-      @league = League.find(params[:league_id], :order => :name)
-      @teams = @league.teams
+      @league = League.find(params[:league_id], :order => :name, :include => [:state])
+      @teams = @league.teams(:include => [:state])
     else
-      @teams = Team.find(:all, :order => :name)
+      @teams = Team.find(:all, :order => :name, :include => [:state, :league])
     end
     
     respond_to do |format|
@@ -122,6 +122,12 @@ class TeamsController < BaseController
       params[:team][:league_name] ||= current_user.league_name
     else
       params[:team][:league_name] = current_user.league_name
+    end
+    
+    @avatar = Photo.new(params[:avatar])
+    @avatar.user_id = current_user.id
+    if @avatar.save
+      @team.avatar = @avatar
     end
 
     status = @team.update_attributes(params[:team])
