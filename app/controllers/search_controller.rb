@@ -9,7 +9,9 @@ class SearchController < BaseController
   def quickfind
     @user = current_user
     cond = Caboose::EZ::Condition.new
-    cond.append ['year(game_date) = ?',params[:season]]
+    if ! params[:season].blank?
+      cond.append ['year(game_date) = ? or game_date_str like ?',params[:season],"#{params[:season]}%"]
+    end
     cond.append ['? in (video_assets.team_id,video_assets.home_team_id,video_assets.visiting_team_id)', params[:team]]
     cond.append ['sport = ?', params[:sport]]
     cond.append ['teams.state_id = ?', params[:state]]
