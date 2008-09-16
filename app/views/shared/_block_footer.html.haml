@@ -1,6 +1,7 @@
-.footer
-  .footerAds
-    %span.footerAd= render :partial => "shared/bottom_ad"
-    - (FOOTER_AD_COUNT-1).to_i.times do |i|
-      %span.footerAd= render :partial => "shared/bottom_ad", :locals => {:zone => i+2 }
+- unless request.ssl?
+  .footer
+    .footerAds
+      %span.footerAd= render :partial => "shared/bottom_ad"
+      - (FOOTER_AD_COUNT-1).to_i.times do |i|
+        %span.footerAd= render :partial => "shared/bottom_ad", :locals => {:zone => i+2 }
 
