@@ -887,3 +887,7 @@ a.btag, a.btag:visited {
 .mainCol1 .contentBox, .mainCol2 .contentBox, .mainCol3 .contentBox {
   height: auto !important;
 }
+
+.homeText h1 {
+  color: #0081c0 !important;
+}
