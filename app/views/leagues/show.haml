@@ -7,7 +7,7 @@
   .mainCol1
     .contentBox.orgSummary
       .contentBoxHeader
-        - if current_user && current_user.league_admin?(@league)
+        - if current_user && (current_user.league_admin?(@league) || current_user.admin?)
           = link_to 'Edit', edit_league_path(@league)
         %h2
           =h @league.name
