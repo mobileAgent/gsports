@@ -154,7 +154,21 @@
               * Birthday:
               %em (you must be at least 13 years old to sign up.)
             %br
-            = date_select :user, :birthday, {:start_year => 1926, :end_year => Time.now.year - 13}
+            = date_select :user, :birthday, {:start_year => 1926, :end_year => Time.now.year - 13}          
+          
+          %br
+          %br
+          %hr  
+          .section-head Promotion Code
+          %br
+            
+          %table
+            %tr
+              %td.field-block
+                %label{"for"=>"promo_code"}
+                  If you have a promotion code, enter it in the box below.
+                %br
+                = text_field_tag :promo_code, params[:promo_code], :size => 24
           
           %br
           %br

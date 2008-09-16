@@ -1,0 +1,20 @@
+
+%label.required{"for"=>"promo_code"}
+  %h3= _('Unique Promo Code')
+= form.text_field :promo_code, :size => 30
+
+%label{"for"=>"name"}
+  %h3= _('Name')
+= form.text_field :name
+
+%label{"for"=>"cost"}
+  %h3= _('Price')
+= form.text_field :cost
+
+%label{"for"=>"subscription_plan"}
+  %h3= _('Subscription')
+= form.collection_select :subscription_plan_id, SubscriptionPlan.find(:all), :id, :description, {:prompt => "-Select-"}
+
+%label{"for"=>"html_content"}
+  %h3= _('Description')
+= form.text_area :html_content, :rows => 7

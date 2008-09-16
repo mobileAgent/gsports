@@ -2113,15 +2113,3 @@ h2.yellowHeader, .contentBoxHeader yellowwHeader {
   margin-bottom: 10px;
 }
 
-tr.blogList, tr.leagueList {
-  background-color: #E2E4A7;
-  border-bottom: 2px solid #ffffff; 
-}
-td.blogList, th.blogList, td.leagueList, th.leagueList { 
-  padding: 10px 5px 10px 5px; 
-  border-bottom: 2px solid #ffffff; 
-}
-td.numeric {
-  text-align: right;
-}
-

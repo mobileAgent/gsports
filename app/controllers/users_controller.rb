@@ -101,6 +101,15 @@ class UsersController < BaseController
       @role = Role[:member]
     end
 
+    logger.debug "PROMO CODE: #{params[:promo_code]}"
+    if params[:promo_code]
+      logger.debug "Looking up promo code #{params[:promo_code]}"
+      @promotion = Promotion.find_by_promo_code(params[:promo_code])
+      
+      logger.debug  "Promotion: #{@promotion.name}" unless @promotion == nil
+       
+    end 
+
     @user = User.new(params[:user])
     @user.role_id = @role.id
     logger.debug "Setting role for #{@user.email} to #{@user.role_id}"
@@ -143,7 +152,7 @@ class UsersController < BaseController
     @user.login= "gs#{Time.now.to_i}#{rand(1000)}" # We never use this
     @user.save!
     create_friendship_with_inviter(@user, params)
-    redirect_to :action => 'billing', :userid => @user.id
+    redirect_to :action => 'billing', :userid => @user.id, :promotion_id => @promotion ? @promotion.id : nil
 
   rescue ActiveRecord::RecordInvalid => e
     render :action => 'new'

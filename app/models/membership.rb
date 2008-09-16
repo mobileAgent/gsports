@@ -4,7 +4,8 @@ class Membership < ActiveRecord::Base
    has_many :users, :through => :subscriptions
    has_many :membership_billing_histories, :order => "created_at DESC"
    has_one  :credit_card
-
+   belongs_to :promotion
+   
   CREDIT_CARD_BILLING_METHOD = "cc"
   INVOICE_BILLING_METHOD = "invoice"
 
