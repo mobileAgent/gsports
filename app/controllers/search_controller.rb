@@ -35,7 +35,7 @@ class SearchController < BaseController
 
   def quickfind_select_county
     county = (params[:county] || "")
-    schools = state > 0 ? Team.find(:all, :conditions=>{:state_id=>state}, :order => 'name ASC') : @quickfind_schools
+    schools = !county.empty? ? Team.find(:all, :conditions=>{:county_name=>county}, :order => 'name ASC') : @quickfind_schools
     
     render :update do |page|
       page.replace_html 'quickfind_schools',  :partial => 'quickfind_schools',  :object => schools
