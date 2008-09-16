@@ -6,7 +6,7 @@ class CreateSorSearchLogs < ActiveRecord::Migration
       t.string :fisrtname
       t.string :state_name
       t.string :link
-      t.boolean :is_sor ,:defaule =>false
+      t.boolean :is_sor, :default =>false
       t.string :html_content
       t.timestamps
     end
