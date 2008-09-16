@@ -12,14 +12,15 @@ closed_beta_mode: false
 featured_writer_label: 'Featured Athletes'
 
 photo:
-  missing_thumb: '/plugin_assets/community_engine/images/icon_missing_thumb.gif'
-  missing_medium: "/plugin_assets/community_engine/images/icon_missing_medium.gif"
+  missing_thumb: '/images/icon_missing_thumb.gif'
+  missing_medium: "/images/icon_missing_medium.gif"
+  missing_profile: "/images/icon_missing_profile.gif"
   attachment_fu_options:
     resize_to: "465>"
     min_size: 1    
     #size in megabytes
     max_size: 5
-    thumbnails: {icon: "60x40", feature: "103x65", thumb: "100x100", profile: "215x175", medium: "290x320>", large: "664>"}
+    thumbnails: {icon: "60x40", feature: "103x65", thumb: "100x100", profile: "215x175", medium: "290x320", large: "664>"}
     #options - 's3', 'file_system', 'db_system' - see attachment_fu for details
     storage: 'file_system'
     content_type: ['image/jpg', 'image/jpeg', 'image/pjpeg', 'image/gif', 'image/png', 'image/x-png']
@@ -36,8 +37,8 @@ feature:
     content_type: ['image/jpg', 'image/jpeg', 'image/pjpeg', 'image/gif', 'image/png', 'image/x-png']
     
 video_asset:
-  missing_thumb: '/plugin_assets/community_engine/images/icon_missing_thumb.gif'
-  missing_medium: "/plugin_assets/community_engine/images/icon_missing_medium.gif"
+  missing_thumb: '/images/icon_missing_thumb.gif'
+  missing_medium: "/images/icon_missing_medium.gif"
   attachment_fu_options:
     #resize_to: "465>"
     min_size: 1    

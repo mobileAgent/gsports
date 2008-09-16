@@ -1,3 +1,4 @@
+- @user ||= current_user
 .profileContentArea
   .signupCompletedContent
     .contentLeftBox
@@ -8,13 +9,14 @@
         Your registration is complete!
 
 
-
-      %p
-        This page will server as your Confirmation of Membership as well as the receipt for your first month's membership fee of
-        = "#{number_to_currency(@user.role.plan.cost)}."
-        This charge will occur monthly around this date.
-        It will appear on your credit card statement as
-        ="\"#{AppConfig.community_name}.\""
+      - if @user.role.plan
+        %p
+          This page will server as your Confirmation of Membership as
+          well as the receipt for your first month's membership fee of
+          = "#{number_to_currency(@user.role.plan.cost)}."
+          This charge will occur monthly around this date.
+          It will appear on your credit card statement as
+          ="\"#{AppConfig.community_name}.\""
 
       %p 
         We have sent an email to the email address you provided
@@ -39,5 +41,14 @@
         After you've completed your profile, check out our full game videos.  
         Create clips, reels, and highlights of all your best movies.
 
-      .myProfileButton
-        = link_to 'My Profile', user_path(:id=>@user.id)
+      - case @user.role_id
+      - when Role[:team].id
+        .myProfileButton
+          = link_to 'Team Profile', edit_team_path(@user.team)
+      - when Role[:league].id
+        .myProfileButton
+          = link_to 'League Profile', edit_league_path(@user.league)
+      - else
+        .myProfileButton
+          = link_to 'My Profile', user_path(@user)
+          

@@ -9,7 +9,7 @@
   .mainCol1
     .contentBox.orgSummary
       .contentBoxHeader
-        - if current_user && current_user.team_admin?(@team)
+        - if current_user && (current_user.team_admin?(@team) || current_user.admin?)
           = link_to 'Edit', edit_team_path(@team), :class=>"edit-#{avht}"
         %h2
           =h @team.name

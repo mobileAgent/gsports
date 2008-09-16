@@ -108,16 +108,15 @@ class UsersController < BaseController
     case @role.id
     when Role[:team].id
       @team = Team.find_or_create_by_name(params[:user][:team_name])
-      if (@team.new_record?)
-        @team.league_id = User.admin.first.league_id
-      end
       @team.attributes = params[:team]
+      if (@team.league.nil?)
+        @team.league = User.admin.first.league
+        logger.debug "Setting team league to admin value"
+      end
       @team.save! 
       @user.team = @team
       if (@team.league)
         @user.league = @team.league
-      else
-        @user.league = User.admin.first.league
       end
       
     when Role[:league].id

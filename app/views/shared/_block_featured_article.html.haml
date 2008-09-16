@@ -2,9 +2,10 @@
   .AthletesDescrip
     %p
       %strong
-        =link_to(truncate(h(story.title),55), url_for({:controller => 'posts', :action => 'show_public', :id => story.id}))
+        =link_to(truncate(h(story.title),45), url_for({:controller => 'posts', :action => 'show_public', :id => story.id}))
     %p= story.user.full_name
     %p= human_date(story.published_at)
   .athleteFIT
-    = image_tag(story.image_thumbnail_for_post, {:title => h(story.title), :alt => h(story.title), :class => 'AthletesLogo'})
+    - unless story.image_thumbnail_for_post.nil? || story.image_thumbnail_for_post.blank?
+      = image_tag(story.image_thumbnail_for_post, {:title => h(story.title), :alt => h(story.title), :class => 'AthletesLogo'})
 

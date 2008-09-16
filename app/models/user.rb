@@ -330,7 +330,7 @@ class User < ActiveRecord::Base
   end
   
   # Change the super class method to return the 
-  # missing image in thumb size for thumb, profile, icon and feature
+  # different sizes we need
   def avatar_photo_url(size = nil)
     if avatar
       avatar.public_filename(size)
@@ -339,7 +339,7 @@ class User < ActiveRecord::Base
         when :thumb
           AppConfig.photo['missing_thumb']
         when :profile
-          AppConfig.photo['missing_thumb']
+          AppConfig.photo['missing_profile']
         when :icon
           AppConfig.photo['missing_thumb']
         when :feature

@@ -20,7 +20,14 @@
 
         .listingItem
           .listingImage
-            = image_tag( @photo.public_filename, :class => "polaroid" )
+            %table
+              %tr
+                %td{ :valign=>:bottom }
+                  = link_to "&laquo; Prev", user_photo_path(@user, @previous), :class => 'left' if @previous
+                %td{ :valign=>:bottom }
+                  = image_tag( @photo.public_filename, :class => "polaroid" )  
+                %td{ :valign=>:bottom }
+                  = link_to "Next &raquo;", user_photo_path(@user, @next), :class => 'right' if @next
             %h4
               = h @photo.description
               %br/

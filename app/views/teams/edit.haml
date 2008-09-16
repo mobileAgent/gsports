@@ -2,7 +2,7 @@
   .profilePageHeader
     %h2.columnDescriptor
       %span
-        Team Info
+        School Info
       = @team.name
   .leftNavCol
     %h2.yellowHeader
@@ -12,11 +12,11 @@
   .listings
     .listingItem
     
-      %h1 Editing team
+      %h1 Editing School Info
       
       = error_messages_for :team
       
-      - form_for(@team) do |f|
+      - form_for (@team, :url => team_url(@team), :html => {:method => 'put', :multipart => true}) do |f|
         = render :partial => "form", :locals => { :f => f }
         %p= f.submit "Update"
        

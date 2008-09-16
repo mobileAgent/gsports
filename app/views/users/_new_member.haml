@@ -9,7 +9,7 @@
       %a{:href => "#", :onclick => "new Lightbox.base('team_help'); return false;", :class => 'helptip' }
         what's this?
   %br
-  = text_field_with_auto_complete :user, :team_name, :autocomplete => 'off'
+  = text_field_with_auto_complete :user, :team_name, :autocomplete => 'off', :value=>(@team.nil? ? '' : @team.name)
 
 #team_help.help_box{:style => "display: none"}
   When you associate yourself with a school or club, each time you log

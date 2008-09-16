@@ -2,7 +2,7 @@
   .profilePageHeader
     %h2.columnDescriptor
       %span
-        Team Registry
+        School Registry
       - if @league
         = " for #{@league.name}"
   .leftNavCol
@@ -36,10 +36,11 @@
             %td=h team.state_id? ? team.state.name : ""
             %td=h team.league_name
             %td=truncate h(team.description),45
-            %td.numeric= team.users.count
-        
-            %td= link_to 'Delete', team_path(team), :confirm => 'Are you sure?', :method => :delete
+            %td.numeric= team.users.size
+
+            - if team.id != User.admin.first.team_id
+              %td= link_to 'Delete', team_path(team), :confirm => 'Are you sure?', :method => :delete
       - if @league
-        = link_to 'New team', url_for({:controller=>'teams',:action=>'new',:league_id=>@league.id})
+        = link_to 'New school', url_for({:controller=>'teams',:action=>'new',:league_id=>@league.id})
       - else
-        = link_to 'New team', url_for({:controller=>'teams',:action=>'new'})
+        = link_to 'New school', url_for({:controller=>'teams',:action=>'new'})
