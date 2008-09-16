@@ -46,6 +46,8 @@
             =link_to "Edit", edit_user_post_path(@post.user, @post),{:class => 'genericButton'}
             %br/
             =link_to "Delete", user_post_path(@post.user, @post), {:method => :delete, :confirm => 'Permanently delete this post?', :class => 'genericButton'}
+            %br/
+          = render :partial => 'shared/favorite_item', :locals => { :item => @post }
             
         .clearDiv
 

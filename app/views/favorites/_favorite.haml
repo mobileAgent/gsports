@@ -7,11 +7,9 @@
     = render :partial => "video_reels/video_listing", :locals => {:video_listing => favorite.favoritable, :skip_controls => true }
   - when 'photos'
     = render :partial => "photos/photo_listing", :locals => {:photo_listing => favorite.favoritable, :photo_type => :thumb}
-
-
--#
   - when 'posts'
     = render :partial => "posts/favorited_post", :locals => {:post => favorite.favoritable}
 
+-#
   - when 'clippings'
     = render :partial => "clippings/clipping", :locals => {:clipping => favorite.favoritable}

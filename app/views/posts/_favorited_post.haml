@@ -1,12 +1,19 @@
-.posts
-  .post{:id => "post_#{post.id}"}
-    = link_to image_tag( (post.image_for_excerpt), {:style=>"width:200px"} ), user_post_path(post.user, post)
-    %p
-      %strong= link_to post.title, user_post_path(post.user, post)
-      %br
-      %small.quiet= link_to "By #{post.user.full_name}", user_path(post.user)
-      %br
-      = truncate_words(post.post, 7, '...' )
-      = link_to( '<small>&raquo;MORE</small>', user_post_path(post.user, post))
+.listingItem{:id => "post_#{post.id}"}
+  .listingImage
+    = link_to image_tag(post.image_thumbnail_for_post(:feature,true)), user_post_path(post.user, post)
+  .listingDescription
+    %h4
+      = link_to post.title, user_post_path(post.user, post)
+    %span.schoolName
+      = link_to "By #{post.user.full_name}", user_path(post.user)
+    %span.recentFriendFeed
+      = truncate_words(post.post,10)
+  %ul.listingActions
+    %li
+      = link_to "Read More", user_post_path(post.user,post), :class => 'genericButton'
+    %li
+      = render :partial => 'shared/favorite_item', :locals => { :item => post }
+      
+  .clearDiv
+.clearDiv
 
-    =render :partial => 'posts/meta', :locals => {:post => post}

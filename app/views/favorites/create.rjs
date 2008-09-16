@@ -34,7 +34,7 @@ else
       page.visual_effect(:highlight,fvcountid)
       page << "}"
     when 'posts'
-      page.replace("post_#{@favorite.favoritable.id}_meta", :partial => 'posts/meta', :locals => {:post => @favorite.favoritable})
+      page.replace(fvid, :partial => 'shared/favorite_item', :locals => {:item => @favorite.favoritable })
 
     else
       flashnow(page,'Your favorite has been recorded')

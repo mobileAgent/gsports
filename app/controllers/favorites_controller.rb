@@ -15,10 +15,15 @@ class FavoritesController < BaseController
 
   def expire_home_page
     # Admins video favs change the home page
-    if current_user.admin? && @favorite && !@favorite.new_record? &&
-        @favorite.video_type?
-      logger.debug "Clearing gotw cache due to admin favorite #{@favorite.id}"
-      Rails.cache.delete('games_of_the_week')
+    if current_user.admin? && @favorite && !@favorite.new_record?
+      if @favorite.video_type?
+        logger.debug "Clearing gotw cache due to admin favorite #{@favorite.id}"
+        Rails.cache.delete('games_of_the_week')
+      end
+      if @favorite.favoritable_type == Post.to_s
+        logger.debug "Clearing featured articles due to admin favorite #{@favorite.id}"
+        Rails.cache.delete('articles_of_the_week')
+      end
     end
   end
   

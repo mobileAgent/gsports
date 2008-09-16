@@ -28,9 +28,9 @@ class AthleteOfTheWeekTest < ActiveSupport::TestCase
     a = AthleteOfTheWeek.find(p.id)
     # Author is kyle, a league admin for league two
     # so we want the league logo here
-    logo_src = a.logo_thumbnail_for_post
+    logo_src = a.logo_image_for_post
     assert_not_nil logo_src
-    assert logo_src.index(leagues(:two).avatar.public_filename(:thumb))
+    assert logo_src.index(leagues(:two).avatar.public_filename(:feature))
   end
     
 end
