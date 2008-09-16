@@ -13,31 +13,8 @@
     
       = error_messages_for :league 
       
-      - form_for(@league) do |f| 
-        %p
-          %b Name
-          %br
-          = f.text_field :name 
-        %p
-          %b City
-          %br
-          = f.text_field :city
-          
-        %p
-          %b State
-          %br/
-          =collection_select("league","state_id",State.all,"id","name",{ :selected => @league.state_name })
-          
-        %p
-          %b Description
-          %br
-          = f.text_field :description 
-        %p
-          %b Active
-          %br
-          = f.check_box :active 
-      
-        %p
-          = f.submit "Create"
+      - form_for (@league, :url => league_url(@league), :html => {:method => 'put', :multipart => true}) do |f|
+        = render :partial => "form", :locals => { :f => f }
+        %p= f.submit "Create"
           
       = link_to 'Back', leagues_path 

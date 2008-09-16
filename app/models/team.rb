@@ -80,7 +80,9 @@ class Team < ActiveRecord::Base
   end
   
   def league_name= league_name
-    self.league= League.find_or_create_by_name league_name
+    unless (league_name.nil? || league_name.blank?)
+      self.league= League.find_or_create_by_name league_name
+    end
   end
 
   def team_name

@@ -836,7 +836,7 @@ div.signupCompletedContent{
 	font-size: 170%;
 	vertical-align: middle;
 	padding-top: 20px;
-	padding-left: 40px;
+       	padding-left: 20px;
 }
 
 /* End Signup completed*/
@@ -886,4 +886,8 @@ a.btag, a.btag:visited {
 /* fix to text in three column search results layout */
 .mainCol1 .contentBox, .mainCol2 .contentBox, .mainCol3 .contentBox {
   height: auto !important;
+}
+
+.homeText h1 {
+  color: #0081c0 !important;
 }

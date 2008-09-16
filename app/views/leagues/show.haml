@@ -7,7 +7,7 @@
   .mainCol1
     .contentBox.orgSummary
       .contentBoxHeader
-        - if current_user && current_user.league_admin?(@league)
+        - if current_user && (current_user.league_admin?(@league) || current_user.admin?)
           = link_to 'Edit', edit_league_path(@league)
         %h2
           =h @league.name
@@ -28,8 +28,6 @@
             =h @league.email
             - if current_user
               = link_to 'League Members', "/search/q?search[category]=11&league_id=#{@league.id}", :class=>'member-link'
-      .clearDiv
-            
           
         %a{ :href=>league_path(@league), :class=>"logo-#{avht}" }
           - if @league.avatar

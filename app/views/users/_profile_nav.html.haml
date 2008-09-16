@@ -35,8 +35,8 @@
   .navlink= link_to 'Edit Team Info', edit_team_path(current_user.team)
   
 -if current_user.league_staff?
-  .navlink= link_to 'League Page', league_path(current_user.team)
-  .navlink= link_to 'Edit League Info', edit_league_path(current_user.team)
+  .navlink= link_to 'League Page', league_path(current_user.league)
+  .navlink= link_to 'Edit League Info', edit_league_path(current_user.league)
   
 
 -if current_user.team_admin? || current_user.league_admin?

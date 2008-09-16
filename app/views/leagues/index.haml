@@ -31,10 +31,11 @@
               %td.leagueList=h(league.state_id? ? league.state.name : '')
               %td.leagueList=truncate(h(league.description),45)
               %td.leagueList.numeric
-                - if league.teams.count > 0
-                  = link_to(league.teams.count,url_for({:controller=>'teams',:action=>'index',:league_id=>league.id}),{:title=>'show associated teams'})
+                - if league.teams.size > 0
+                  = link_to(league.teams.size,url_for({:controller=>'teams',:action=>'index',:league_id=>league.id}),{:title=>'show associated teams'})
                 - else
-                  = league.teams.count        
+                  = league.teams.size
               %td.leagueList{ :align => 'right' }
-                = link_to _('Delete'), league_path(league), :confirm => 'Are you sure?', :method => :delete, :class => 'genericButton'
+                - if league.id != User.admin.first.league_id
+                  = link_to _('Delete'), league_path(league), :confirm => 'Are you sure?', :method => :delete, :class => 'genericButton'
          

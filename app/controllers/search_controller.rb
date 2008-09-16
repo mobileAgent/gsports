@@ -127,9 +127,12 @@ class SearchController < BaseController
         if @video.league_video?
           xml.owner_name @video.league_name
           xml.owner_name_url league_path(@video.league)
-        else
+        elsif (@video.team_id?)
           xml.owner_name @video.team.title_name
           xml.owner_name_url team_path(@video.team)
+        else
+          xml.owner_name @video.user.full_name
+          xml.owner_name_url user_path(@video.user_id)
         end
         if @video.user_id
           xml.user_name @video.user.full_name
