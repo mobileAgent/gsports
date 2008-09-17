@@ -19,7 +19,7 @@ class VideoAssetsController < BaseController
                 :only => [:show])
 
   def images
-    redirect_to "/players/images/#{params[:id]}.png" and return
+    redirect_to "/players/images/#{params[:id]}.#{params[:format]}" and return
   end
 
   # GET /video_assets
