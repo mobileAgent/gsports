@@ -127,7 +127,8 @@ class UsersController < BaseController
       @user.team = User.admin.first.team
       
     when Role[:scout].id
-      #TODO
+      @user.team = User.admin.first.team
+      @user.league = User.admin.first.league
       
     else
         # Handling for member roles coming in
