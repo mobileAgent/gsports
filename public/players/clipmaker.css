@@ -1,6 +1,30 @@
 /* CSS file */
 
 
+.scrollRightScrollBtn
+{
+    overSkin:Embed(source='images/moveright.png');
+    upSkin:Embed(source='images/moveright.png');
+    selectedUpSkin:Embed(source='images/moveright.png');
+    selected-over-skin:Embed(source='images/moveright.png');
+}
+
+.scrollLeftScrollBtn
+{
+    overSkin:Embed(source='images/moveleft.png');
+    upSkin:Embed(source='images/moveleft.png');
+    selectedUpSkin:Embed(source='images/moveleft.png');
+    selected-over-skin:Embed(source='images/moveleft.png');
+}
+
+.videoCtrlPnlFlagBtn
+{
+    overSkin:Embed(source='images/flag.png');
+    upSkin:Embed(source='images/flag.png');
+    selectedUpSkin:Embed(source='images/flag.png');
+    selected-over-skin:Embed(source='images/flag.png');
+}
+
 .videoCtrlPnlStopBtn
 {
     overSkin:Embed(source='images/rewind_Button.png');
@@ -27,10 +51,10 @@
 
 .videoCtrlPnlHelpBtn
 {
-    overSkin:Embed(source='assets/help.png');
-    upSkin:Embed(source='assets/help.png');
-    selectedUpSkin:Embed(source='assets/help.png');
-    selected-over-skin:Embed(source='assets/help.png');
+    overSkin:Embed(source='images/help.png');
+    upSkin:Embed(source='images/help.png');
+    selectedUpSkin:Embed(source='images/help.png');
+    selected-over-skin:Embed(source='images/help.png');
 }
 
 

@@ -24,7 +24,7 @@
             - else
               You have no friend requests.    
 
-        - if current_user.admin? || @is_current_user     
+        - if current_user
           - if @friendships.length > 0
             .listingItem
               .pagination

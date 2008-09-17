@@ -24,7 +24,7 @@
         %h2.boxDescription
           MY FRIENDS RECENT CLIPS & HIGHLIGHTS 
       .contentBoxContent{:style => "height: #{second_row_height_px}px"}
-        = render :partial => 'video_assets/video_feathre', :collection => @network_recent, :locals => {:nolinks => current_user.nil? }
+        = render :partial => 'video_assets/video_feature', :collection => @network_recent, :locals => {:nolinks => current_user.nil? }
         
   /
     col2 content

@@ -469,11 +469,15 @@ class Vidavee < ActiveRecord::Base
 
   # extract some element from the response document
   def extract(doc,fragment)
-    h = Hpricot.XML(doc)
-    status = h.search('/response').attr('status')
-    if (status == 'ok')
-      token = h.search(fragment)
-    else
+    begin
+      h = Hpricot.XML(doc)
+      status = h.search('/response').attr('status')
+      if (status == 'ok')
+        token = h.search(fragment)
+      else
+        token = nil
+      end
+    rescue
       token = nil
     end
     token

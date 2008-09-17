@@ -21,7 +21,7 @@
             - case activity.item_type
               - when 'Post'
                 =" wrote a post: "
-                = link_to activity.item.title, user_post_path(activity.item.user_id, activity.item)
+                = link_to truncate(activity.item.title,45), user_post_path(activity.item.user_id, activity.item)
               - when 'Photo'  
                 = link_to image_tag(activity.item.public_filename(:thumb), :width => '50px'), user_photo_path(activity.item.user_id, activity.item), :class=>'activity-thumbnail'
                 =" uploaded a photo "
@@ -40,7 +40,8 @@
               - when 'Favorite'
                 =" favorited a "
                 - hname = (activity.item.favoritable.class.to_s == "VideoAsset" ? "Video" : activity.item.favoritable.class.to_s.gsub(/Video/,''))
-                = link_to hname, user_favorite_path(activity.item.user_id, activity.item)
+                - title = activity.item.favoritable.respond_to?("title") ? activity.item.favoritable.title : ''
+                = link_to "#{hname} #{truncate(title,45)}", user_favorite_path(activity.item.user_id, activity.item)
               - when 'Clipping'
                 =" added a clipping: "
                 = link_to image_tag( activity.item.image_uri(:thumb), :width => '50px'), user_clipping_path(activity.item.user_id, activity.item)        

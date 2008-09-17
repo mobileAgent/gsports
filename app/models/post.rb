@@ -22,36 +22,51 @@ class Post < ActiveRecord::Base
 
   # Return the two most viewed/favorited articles for the home page
   # That aren't already being used as athletes of the week
-  def self.highlighted_articles(exclude_ids=[-1])
+  def self.orig_highlighted_articles(exclude_ids=[-1])
     p = Post.find(:all,
                   :conditions => ["published_as = ? AND id NOT IN (?)","live",exclude_ids],
                   :order => 'view_count desc, favorited_count desc, published_at desc',
                   :limit => 2)
   end
   
-  def image_thumbnail_for_post(size = "feature")
+  # Return the two most recently admin favorited articles for the home page
+  # That aren't already being used as athletes of the week
+  def self.highlighted_articles(exclude_ids=[-1])
+    f = Favorite.find(:all,
+                      :conditions => ["user_id = ? and favoritable_type = ? and favoritable_id NOT IN (?)",
+                                      User.admin.first.id,Post.to_s,exclude_ids],
+                      :order => 'created_at DESC',
+                      :limit => 2)
+    f.collect(&:favoritable)
+  end
+  
+  def image_thumbnail_for_post(size = "feature", fallback_to_author = false)
     return '' if self.post.nil?
     img = first_image_in_body()
     if img
       # chaange the size fromw whatever it was to :feature size
       img.gsub!(/_[a-z]+\.jpg/,"_#{size}.jpg")
       img.gsub!(/^http:\/\/[^\/]+/,'') # make relative
-    else
-      img = logo_thumbnail_for_post
+    elsif fallback_to_author
+      img = user.avatar_photo_url(size.to_sym)        
+    end
+    
+    if img.nil?
+      img = logo_image_for_post(size)
     end
     img
   end
 
   # Team or league logo of the author
-  def logo_thumbnail_for_post
+  def logo_image_for_post(size="feature")
     if user.league_staff? || user.admin? 
       league = League.find(user.league_id)
       if league.avatar
-        return league.avatar.public_filename(:thumb)
+        return league.avatar.public_filename(size.to_sym)
       end
     end
     if (user.team_id && user.team.avatar)
-      return user.team.avatar.public_filename(:thumb)
+      return user.team.avatar.public_filename(size.to_sym)
     else
       return ''
     end

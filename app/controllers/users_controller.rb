@@ -1,6 +1,6 @@
 class UsersController < BaseController
 
-  if RAILS_ENV == 'production'
+  if RAILS_ENV == 'production' || RAILS_ENV == 'qa'
     ssl_required :billing, :submit_billing, :edit_billing, :update_billing
   end
   
@@ -150,7 +150,8 @@ class UsersController < BaseController
       @user.team = User.admin.first.team
       
     when Role[:scout].id
-      #TODO
+      @user.team = User.admin.first.team
+      @user.league = User.admin.first.league
       
     else
         # Handling for member roles coming in
@@ -233,10 +234,10 @@ class UsersController < BaseController
         return
       end
   
-      gateway = ActiveMerchant::Billing::PayflowGateway.new({
+      gateway = ActiveMerchant::Billing::PayflowGateway.new(
         :login => Active_Merchant_payflow_gateway_username,
-        :password => Active_Merchant_payflow_gateway_password
-                                                            })
+        :password => Active_Merchant_payflow_gateway_password,
+        :partner => Active_Merchant_payflow_gateway_partner)
   
       cost_for_gateway = (@cost * 100).to_i
       @response = gateway.purchase(cost_for_gateway, @credit_card)
@@ -431,32 +432,41 @@ class UsersController < BaseController
       redirect_to dashboard_user_path(@user) and return
     end
     
-    # Have to test with an AM::B:CC in order to validate
-    cc=params[:credit_card]
-    logger.debug "CC params inbound are #{cc.inspect}"
-    @merchant_credit_card = ActiveMerchant::Billing::CreditCard.new({
-                             :first_name => cc[:first_name],
-                             :last_name => cc[:last_name],
-                             :number => cc[:number],
-                             :month => cc["expiration_date(2i)"],
-                             :year => cc["expiration_date(1i)"],
-                             :verification_value => cc[:verification_value]})
-
     # Have to have one of ours on the form and db
     @memberships = @user.memberships
     if @memberships && @memberships.size > 0
       @credit_card = @memberships[0].credit_card
       @billing_address = @memberships[0].address || Address.new
     end
+    @credit_card ||= CreditCard.new # Can't create card from params due to date issues
+    
+    # Have to test with an AM::B:CC in order to validate
+    cc=params[:credit_card]
+    number = cc[:number]
+    if number.index("***")
+      number = @credit_card.number
+    end
+    ccv = cc[:verification_value]
+    if ccv.index("***")
+      ccv = @credit_card.verification_value
+    end
+
+    @merchant_credit_card = ActiveMerchant::Billing::CreditCard.new({
+                             :first_name => cc[:first_name],
+                             :last_name => cc[:last_name],
+                             :number => number,
+                             :month => cc[:month],
+                             :year => cc[:year],
+                             :verification_value => ccv})
+
 
     @billing_address = params[:skip_billing_address] ? nil : Address.new(params[:billing_address])
-    @credit_card ||= CreditCard.new # Can't create card from params due to date issues
     @credit_card.attributes = ({:first_name => cc[:first_name],
                                  :last_name => cc[:last_name],
-                                 :number => cc[:number],
-                                 :month => cc["expiration_date(2i)"],
-                                 :year => cc["expiration_date(1i)"],
-                                 :verification_value => cc[:verification_value]})
+                                 :number => number,
+                                 :month => cc[:month],
+                                 :year => cc[:year],
+                                 :verification_value => ccv})
 
     
     if (!@merchant_credit_card.valid?)
