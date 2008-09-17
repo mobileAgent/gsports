@@ -47,7 +47,7 @@ class PromotionsController < BaseController
     respond_to do |format|
       if @promotion.save
         flash[:notice] = 'Promotion was successfully created.'
-        format.html { redirect_to(promotions_url) }
+        format.html { redirect_to(@promotion) }
         format.xml  { render :xml => @promotion, :status => :created, :location => @promotion }
       else
         format.html { render :action => "new" }
@@ -64,7 +64,7 @@ class PromotionsController < BaseController
     respond_to do |format|
       if @promotion.update_attributes(params[:promotion])
         flash[:notice] = 'Promotion was successfully updated.'
-        format.html { redirect_to(promotions_url) }
+        format.html { redirect_to(@promotion) }
         format.xml  { head :ok }
       else
         format.html { render :action => "edit" }
