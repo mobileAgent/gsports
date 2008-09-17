@@ -1359,7 +1359,7 @@ a.logout {
 	border-left: 1px solid #FFFFFF;
 	padding-left: 4px;
 	padding-right: 4px;
-	border-right: 1px solid #FFFFFF;
+	border-right: none; /* mjf */
 }
 a.logout:hover { }
 /* .headerAd1 and .headerSchoolLogo deprecated in favor of .headerPosition1 and .headerPosition2 */
