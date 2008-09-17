@@ -27,7 +27,7 @@
             %span.profileSubHeading
               =truncate(h(f.title),18)
               %br/
-            =f.user.firstname
+            =f.user.full_name
             %br/
           .clearDiv
         - when 'video_reels'
@@ -37,7 +37,7 @@
             %span.profileSubHeading
               =truncate(h(f.title),18)
               %br/
-            =f.user.firstname
+            =f.user.full_name
             %br/
           .clearDiv
         - when 'posts'
