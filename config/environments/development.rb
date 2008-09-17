@@ -33,6 +33,7 @@ Active_Merchant_payflow_gateway_partner = 'PayPal'
 PAYMENT_DUE_CYCLE = 30 # How often to bill in days
 
 AD_SERVER_BASE = 'www.danmcardle.com/openx/www/delivery'
+AD_ZONE_N = ['a04a93c3','a4e788a7','a03c6fbc','a6e6602c','a6d175df']
 
 CLOSED_BETA_MODE = false
 ALLOWED_IP_ADDRS = ['127.0.0.1']

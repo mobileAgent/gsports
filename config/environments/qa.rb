@@ -43,3 +43,4 @@ ALLOWED_IP_ADDRS = []
 ExceptionNotifier.email_prefix = '[GS-QA] '
 
 AD_SERVER_BASE = 'www.danmcardle.com/openx/www/delivery'
+AD_ZONE_N = ['a04a93c3','a4e788a7','a03c6fbc','a6e6602c','a6d175df']

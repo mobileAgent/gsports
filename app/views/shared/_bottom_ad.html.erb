@@ -1,2 +1,2 @@
 <%- zone ||= (current_user ? current_user.ad_zone : 1) %>
-<a href='<%=request.protocol%><%=AD_SERVER_BASE%>/ck.php?n=af04abdb&amp;cb=<%=rand(100000)%>' target='_blank'><img src='<%=request.protocol%><%=AD_SERVER_BASE%>/avw.php?zoneid=<%=zone%>&amp;cb=<%=rand(100000)%>&amp;n=a4c81d06' style='border: none' alt='' /></a>
+<a href='<%=request.protocol%><%=AD_SERVER_BASE%>/ck.php?n=<%=AD_ZONE_N[zone]%>&amp;cb=<%=rand(100000)%>' target='_blank'><img src='<%=request.protocol%><%=AD_SERVER_BASE%>/avw.php?zoneid=<%=zone%>&amp;cb=<%=rand(100000)%>&amp;n=<%=AD_ZONE_N[zone]%>' style='border: none' alt='' /></a>
