@@ -85,8 +85,10 @@ class UsersController < BaseController
     @user = User.new( default_options.merge(params[:user] || {}) )
     @inviter_id = params[:id]
     @inviter_code = params[:code]
+    
+    session[:promotion] = nil
+    
     #render :action => 'new', :layout => 'beta' and return if AppConfig.closed_beta_mode
-
   end
 
   def create
@@ -101,14 +103,26 @@ class UsersController < BaseController
       @role = Role[:member]
     end
 
-    logger.debug "PROMO CODE: #{params[:promo_code]}"
-    if params[:promo_code]
+    # Lookup up promo code if provided
+    unless params[:promo_code].blank?
       logger.debug "Looking up promo code #{params[:promo_code]}"
       @promotion = Promotion.find_by_promo_code(params[:promo_code])
-      
-      logger.debug  "Promotion: #{@promotion.name}" unless @promotion == nil
-       
-    end 
+
+      if @promotion == nil
+        logger.debug "Promotion not found for #{params[:promo_code]}."
+        flash.now[:error] = "Sorry, the promotion code you entered is invalid: #{params[:promo_code]}."
+        render :action => 'new', :role => @role.id and return false
+      elsif @promotion.subscription_plan_id != nil && @role.plan != nil && @role.plan.id != @promotion.subscription_plan_id
+        logger.debug "Promotion not valid for role: #{@role.plan.id} != #{@promotion.subscription_plan_id}"
+        flash.now[:error] = "Sorry, the promotion you have provided is not available to accounts of type: #{@role.plan.description}"
+        @promotion = nil
+        render :action => 'new', :role => @role.id and return false
+      else
+        logger.debug  "Promotion: #{@promotion.promo_code}: #{@promotion.name}"
+        flash[:notice] = "The promotion #{@promotion.name} has been applied!"
+        session[:promotion] = @promotion
+      end
+    end
 
     @user = User.new(params[:user])
     @user.role_id = @role.id
@@ -149,10 +163,13 @@ class UsersController < BaseController
         @user.league_id = @team.league_id
     end
     
+    
+    
     @user.login= "gs#{Time.now.to_i}#{rand(1000)}" # We never use this
     @user.save!
     create_friendship_with_inviter(@user, params)
-    redirect_to :action => 'billing', :userid => @user.id, :promotion_id => @promotion ? @promotion.id : nil
+    
+    redirect_to :action => 'billing', :userid => @user.id
 
   rescue ActiveRecord::RecordInvalid => e
     render :action => 'new'
@@ -161,10 +178,25 @@ class UsersController < BaseController
   # registration step 3
   def billing
     @user = User.find(params[:userid].to_i)
-    @billing_address = Address.new(params[:billing_address])
-    @credit_card = ActiveMerchant::Billing::CreditCard.new(params[:credit_card])
-    #@credit_card.first_name = @user.firstname if (! @credit_card.first_name) 
-    #@credit_card.last_name = @user.lastname if (! @credit_card.last_name) 
+    @promotion = session[:promotion]
+    
+    # check for promotional pricing
+    if @promotion != nil && @promotion.cost != nil
+      @cost = @promotion.cost
+      logger.debug "Using promotional pricing: #{@cost}"      
+    else
+      @cost = @user.role.plan.cost
+    end
+    
+    # only initialize billing information if we have a cost > 0
+    if @cost > 0
+      @billing_address = Address.new(params[:billing_address])
+      @credit_card = ActiveMerchant::Billing::CreditCard.new(params[:credit_card])
+    
+      #@credit_card.first_name = @user.firstname if (! @credit_card.first_name) 
+      #@credit_card.last_name = @user.lastname if (! @credit_card.last_name)
+    end
+
     logger.debug "USER session object(billing):" + @user.id.to_s
   end
 
@@ -172,48 +204,70 @@ class UsersController < BaseController
   # Capture payment
   #
   def submit_billing
-    @user = User.find(params[:userid].to_i)
-    cc = params[:credit_card]
-    @credit_card = ActiveMerchant::Billing::CreditCard.new({
-      :first_name => cc[:first_name],
-      :last_name => cc[:last_name],
-      :number => cc[:number],
-      :month => cc[:month],
-      :year => cc[:year],
-      :verification_value => cc[:verification_value]})
-    @billing_address = params[:skip_billing_address] ? nil : Address.new(params[:billing_address])
+    @user = User.find(params[:userid].to_i)    
+    @promotion = session[:promotion]
     
-    if (!@credit_card.valid?)
-      @billing_address ||= Address.new
-      render :action => 'billing', :userid => @user.id
-      return
-    end
-
-    gateway = ActiveMerchant::Billing::PayflowGateway.new({
-      :login => Active_Merchant_payflow_gateway_username,
-      :password => Active_Merchant_payflow_gateway_password
-                                                          })
-
-    cost_for_gateway = (@user.role.plan.cost * 100).to_i
-    @response = gateway.purchase(cost_for_gateway, @credit_card)
-    
-    logger.debug "Response from gateway #{@response.inspect} for #{@user.full_name} at #{cost_for_gateway}"
-    
-    if (@response.success?)
-      logger.debug "Gatway response is success #{@response.inspect}"
-      @user.make_member(Membership::CREDIT_CARD_BILLING_METHOD,@billing_address,@response)
-      @user.set_payment(@credit_card)
-      @user.enabled = true
-      @user.activated_at = Time.now
-      @user.save!
-      self.current_user = @user # Log them in right now!
-      UserNotifier.deliver_welcome(@user)
-      redirect_to signup_completed_user_path(@user)
+    if @promotion != nil && @promotion.cost != nil
+      @cost = @promotion.cost
+      logger.debug "Using promotional pricing: #{@cost}"      
     else
-      @billing_address ||= Address.new
-      flash.now[:error] = "Sorry, we are having technical difficulties contacting our payment gateway. Try again in a few minutes."
-      @billing_gateway_error = "#{flash.now[:warning]} (#{@response.message})"
-      render :action => 'billing', :userid => @user.id
+      @cost = @user.role.plan.cost
+    end
+    
+    if @cost == 0
+      @user.make_member(Membership::FREE_BILLING_METHOD,0,nil,nil,@promotion)
+    else
+      cc = params[:credit_card]
+      @credit_card = ActiveMerchant::Billing::CreditCard.new({
+        :first_name => cc[:first_name],
+        :last_name => cc[:last_name],
+        :number => cc[:number],
+        :month => cc[:month],
+        :year => cc[:year],
+        :verification_value => cc[:verification_value]})
+      @billing_address = params[:skip_billing_address] ? nil : Address.new(params[:billing_address])
+      
+      if (!@credit_card.valid?)
+        @billing_address ||= Address.new
+        render :action => 'billing', :userid => @user.id
+        return
+      end
+  
+      gateway = ActiveMerchant::Billing::PayflowGateway.new({
+        :login => Active_Merchant_payflow_gateway_username,
+        :password => Active_Merchant_payflow_gateway_password
+                                                            })
+  
+      cost_for_gateway = (@cost * 100).to_i
+      @response = gateway.purchase(cost_for_gateway, @credit_card)
+      
+      logger.debug "Response from gateway #{@response.inspect} for #{@user.full_name} at #{cost_for_gateway}"
+      
+      if (@response.success?)
+        logger.debug "Gatway response is success #{@response.inspect}"
+        @user.make_member(Membership::CREDIT_CARD_BILLING_METHOD,@cost,@billing_address,@response)
+        @user.set_payment(@credit_card)
+      else
+        @billing_address ||= Address.new
+        flash.now[:error] = "Sorry, we are having technical difficulties contacting our payment gateway. Try again in a few minutes."
+        @billing_gateway_error = "#{flash.now[:warning]} (#{@response.message})"
+        render :action => 'billing', :userid => @user.id
+        return false;
+      end      
+    end   
+    
+    @user.enabled = true
+    @user.activated_at = Time.now
+    @user.save!
+    self.current_user = @user # Log them in right now!
+    UserNotifier.deliver_welcome(@user)
+    redirect_to signup_completed_user_path(@user)
+  end
+  
+  def signup_completed
+    if session[:promotion]
+      logger.debug "Clearing out promotion from the session..."
+      session[:promotion] = nil
     end
   end
   
@@ -410,7 +464,7 @@ class UsersController < BaseController
     end
     
     unless @memberships && @memberships.size > 0
-      @user.make_member(Membership::CREDIT_CARD_BILLING_METHOD,@billing_address,nil)
+      @user.make_member(Membership::CREDIT_CARD_BILLING_METHOD,@user.role.plan.cost,@billing_address,nil)
     end
     
     @user.memberships[0].credit_card = @credit_card

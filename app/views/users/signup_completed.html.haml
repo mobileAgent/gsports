@@ -9,14 +9,21 @@
         Your registration is complete!
 
 
-      - if @user.role.plan
-        %p
-          This page will server as your Confirmation of Membership as
-          well as the receipt for your first month's membership fee of
-          = "#{number_to_currency(@user.role.plan.cost)}."
-          This charge will occur monthly around this date.
-          It will appear on your credit card statement as
-          ="\"#{AppConfig.community_name}.\""
+      -# Pull the cost out of the membership, NOT the user.role.plan
+      -# since the user may have used a promotion
+      - if @user.memberships && @user.memberships.size > 0
+        - cost = @user.memberships[0].cost
+        - if cost > 0
+          %p
+            This page will serve as your Confirmation of Membership as
+            well as the receipt for your first month's membership fee of
+            = "#{number_to_currency(cost)}."
+            This charge will occur monthly around this date.
+            It will appear on your credit card statement as
+            ="\"#{AppConfig.community_name}.\""
+        - else
+          %p
+            This page will serve as your Confirmation of Membership.
 
       %p 
         We have sent an email to the email address you provided

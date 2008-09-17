@@ -8,6 +8,7 @@ class Membership < ActiveRecord::Base
    
   CREDIT_CARD_BILLING_METHOD = "cc"
   INVOICE_BILLING_METHOD = "invoice"
+  FREE_BILLING_METHOD = "na"
 
    STATES = {
   'AL' => 'Alabama',
@@ -78,7 +79,7 @@ class Membership < ActiveRecord::Base
   # Bill this member
   #
   def bill_recurring
-
+    return ActiveMerchant::Billing::PayflowResponse.new()
 return ActiveMerchant::Billing::PayflowResponse.new(false,"Missing credit card information") if credit_card.nil? 
 
     credit_card = ActiveMerchant::Billing::CreditCard.new(

@@ -1,0 +1,50 @@
+- title @promotion.promo_code
+- @section = 'promotions'
+- @page_title = _('PROMOTION')
+
+.forumContentArea
+  .listingPage
+    .profilePageHeader
+      %h2.columnDescriptor
+        %span
+          = @page_title
+        = @promotion.promo_code
+  .leftNavCol
+    %div{ :align => "center" }
+      = link_to _('&laquo; back to promotion index'), promotions_path
+    %br.clear
+    %h2.yellowHeader
+      My Profile
+    .leftNav
+      =render :partial => "users/profile_nav"    
+  .listings
+    .contentBox.tanBackground
+      .contentBoxHeader.yellowHeader
+        .boxDescription
+          = _('Promotion Details')
+      .contentBoxContent
+        %div{ :style => "padding: 10px 10px 10px 10px" }
+          - if current_user.admin?
+            %p
+              = link_to "Edit", edit_promotion_path(@promotion), :class => 'genericButton'
+              %br/
+  
+          %p
+            %strong Promotion Code:
+            = @promotion.promo_code
+          %p
+            %strong Name:
+            = @promotion.name
+          %p
+            %strong Cost:
+            = number_to_currency @promotion.cost
+          %p
+            %strong Subscription Plan:
+            - if @promotion.subscription_plan != nil
+              = @promotion.subscription_plan.description
+          %br/
+          %p
+            .box{:style => "background-color: #ffffff; padding-bottom: 10px"}
+              %p
+                = @promotion.html_content
+                %br/

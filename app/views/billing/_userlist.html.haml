@@ -1,9 +1,9 @@
-%tr
-  %td
+%tr.forumList
+  %td.forumList
     ="#{userlist.lastname},#{userlist.firstname}, #{userlist.minitial}"
-  %td
+  %td.forumList
     =userlist.created_at.to_date
-  %td
+  %td.forumList
     =userlist.enabled? ? "Y" : "N"
-  %td
+  %td.forumList
     =userlist.memberships[0].nil? ? "NA" : userlist.memberships[0].name

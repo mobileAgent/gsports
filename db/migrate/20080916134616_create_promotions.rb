@@ -5,6 +5,7 @@ class CreatePromotions < ActiveRecord::Migration
       t.integer :subscription_plan_id, :limit => 11
       t.string :name, :limit => 255
       t.column :cost, :decimal, :precision => 8, :scale => 2
+      t.text :content
       t.text :html_content
       t.timestamps
     end

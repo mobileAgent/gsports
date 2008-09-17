@@ -14,14 +14,14 @@ class PromotionsController < BaseController
 
   # GET /promotions/1
   # GET /promotions/1.xml
-  #def show
-  #  @promotion = Promotion.find(params[:id])
-  #
-  #  respond_to do |format|
-  #    format.html # show.html.erb
-  #    format.xml  { render :xml => @promotion }
-  #  end
-  #end
+  def show
+    @promotion = Promotion.find(params[:id])
+  
+    respond_to do |format|
+      format.html # show.html.erb
+      format.xml  { render :xml => @promotion }
+    end
+  end
 
   # GET /promotions/new
   # GET /promotions/new.xml

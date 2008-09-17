@@ -1,21 +1,31 @@
 - @section = (params[:metro_area_id] ? 'metro_area' : 'users')
 
+.profileContentArea.listingPage
+  .profilePageHeader
+    %h2.columnDescriptor
+      %span
+        BILLING
+      = "History for #{@member_name}"
+  .leftNavCol
+    = link_to "Billing Home", :controller => :billing
+    %br/
 
-#yui-main
-  .yui-b
-    .box.user_list
-      %h3= link_to_unless_current "Billing Home", :controller => :billing
-      %h3= "#{AppConfig.community_name} Billing History for #{@member_name}"
+    %h2.yellowHeader
+      = _('My Profile')
+    .leftNav
+      =render :partial => "users/profile_nav"
+  .listings
+    .box
 
-  
-      %br.clear
-      %table.unstyled
+      %table{:border => 0, :cellspacing => 0, :cellpadding => 0, :width => '100%'}
         %thead
-          %tr
-            %th Authorization Reference Number 
-            %th Date
+          %tr.yellowHeader
+            %td.padded.contentBoxHeader.la
+              Authorization Reference Number 
+            %td.padded.contentBoxHeader.la
+              Date
         %tbody
           = render :partial => "membership/billing_history", :collection => @billings
-
+  
       
       %br.clear
