@@ -15,12 +15,15 @@
         %h2.boxDescription
           Billing Information
       .contentBoxContent.edit-profile
+
+        %div{ :style => "float: right; width: 400px; margin: 10px 10px 10px 10px" }
+          = render :partial => "billing/credit_card_help"      
           
         %form{:action => '/users/update_billing', :method => :post}
           = error_messages_for :credit_card, :merchant_credit_card, :billing_address, :user, :object_name => 'Credit Card'
         
           = hidden_field_tag "id", @user.id
-          
+                    
           %label{"for"=>"firstname"}
             * First Name
             %br
