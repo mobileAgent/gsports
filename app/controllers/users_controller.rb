@@ -1,6 +1,6 @@
 class UsersController < BaseController
 
-  if RAILS_ENV == 'production'
+  if RAILS_ENV == 'production' || RAILS_ENV == 'qa'
     ssl_required :billing, :submit_billing, :edit_billing, :update_billing
   end
   
