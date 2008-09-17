@@ -3,7 +3,6 @@ class SearchController < BaseController
   skip_before_filter :verify_authenticity_token, :only => [ :quickfind ]
   skip_before_filter :gs_login_required, :only => [:teamfind,:update_teamfind_counties,:update_teamfind_cities]
   before_filter :vidavee_login
-  after_filter :protect_private_videos, :except => [:teamfind]
   
   # Video quickfind
   def quickfind
@@ -19,6 +18,7 @@ class SearchController < BaseController
     cond.append ['public_video = ?', true]
     @video_assets = VideoAsset.paginate(:conditions => cond.to_sql, :page => params[:page], :order => 'video_assets.updated_at DESC', :include => [:team,:tags])
     @is_search_result = true
+    protect_private_videos(@video_assets)
     @search_result_size = @video_assets.size
     @title = 'Video Quickfind Results'
     render :action => 'my_videos'
@@ -63,6 +63,7 @@ class SearchController < BaseController
     if @category == 1 || @category == 0
       logger.debug "Routing search to video category"
       @videos = sphinx_search_videos
+      protect_private_videos(@videos)
       @title = 'Search Results'
       render_name = 'video_listing'
     end
@@ -223,6 +224,9 @@ class SearchController < BaseController
     @video_assets = VideoAsset.for_user(@user).all(:limit => 10, :order => 'updated_at DESC')
     @video_clips = VideoClip.for_user(@user).all(:limit => 10, :order => 'updated_at DESC')
     @video_reels = VideoReel.for_user(@user).all(:limit => 10, :order => 'updated_at DESC')
+    protect_private_videos(@video_assets)
+    protect_private_videos(@video_clips)
+    protect_private_videos(@video_reels)
   end
   
   # This is not as straight-forward as video assets where the user_id is the
@@ -230,18 +234,21 @@ class SearchController < BaseController
   def my_video_assets
     @user = params[:user_id] ? User.find(params[:user_id]) : current_user
     @video_assets = VideoAsset.for_user(@user).paginate(:page => params[:page], :order => 'updated_at DESC')
+    protect_private_videos(@video_assets)
     render:action => "my_videos"
   end
   
   def my_video_clips
     @user = params[:user_id] ? User.find(params[:user_id]) : current_user
     @video_clips = VideoClip.for_user(@user).paginate(:page => params[:page], :order => 'updated_at DESC')
+    protect_private_videos(@video_clips)
     render:action => "my_videos"
   end
   
   def my_video_reels
     @user = params[:user_id] ? User.find(params[:user_id]) : current_user
     @video_reels = VideoReel.for_user(@user).paginate(:page => params[:page], :order => 'updated_at DESC')
+    protect_private_videos(@video_reels)
     render:action => "my_videos"
   end
   
@@ -250,6 +257,7 @@ class SearchController < BaseController
     @team = Team.find(params[:team_id])
     @title = @team.name
     @video_assets = VideoAsset.for_team(@team).paginate(:page => params[:page], :order => 'updated_at DESC')
+    protect_private_videos(@video_assets)
     render:action => "my_videos"
   end
 
@@ -359,23 +367,14 @@ class SearchController < BaseController
                 :order => :full_name)
   end
 
-
-  def protect_private_videos
-    # Remove private video assets from results
-    if (@video_assets && @video_assets.any? && current_user && (! current_user.admin? ))
-      @video_assets.reject!{|v| v.public_video == false && v.user_id != current_user.id}
+  # Remove private videos from search results
+  def protect_private_videos(videos)
+    logger.debug "In protect_private_videos"
+    if (videos && videos.any? && current_user && (! current_user.admin? ))
+      logger.debug "Before videos #{videos.size}"
+      videos.reject!{|v| v.public_video == false && v.user_id != current_user.id}
+      logger.debug "After videos #{videos.size}"
     end
-    
-    # Remove private clips from results
-    if (@video_clips && @video_clips.any? && current_user && (! current_user.admin? ))
-      @video_clips.reject!{|v| v.public_video == false && v.user_id != current_user.id}
-    end
-    
-    # Remove private reels from results
-    if (@video_reels && @video_reels.any? && current_user && (! current_user.admin?) )
-      @video_reels.reject!{|v| v.public_video == false && v.user_id != current_user.id}
-    end
-    true
   end
 
 end
