@@ -132,7 +132,11 @@
   
         .mainCol1
           .contentBox
-          
+            - if @offer_PO
+              %p
+                =link_to 'Pay by Purchase Order?', :action=>:purchase_order, :userid => @user.id
+                %br
+                %br
             %p
               For your safety and security, we require that you enter your card verification number. The verification number is a 3 or 4-digit number printed on your card. 
               If you are using a Visa, Mastercard, or Discover card, it is a 3 digit number that appears to the right of your card number (see below).
