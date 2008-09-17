@@ -43,14 +43,10 @@ config.cache_store = :mem_cache_store
 
 # Billing values
 # NOTE: Change these to GS real values
-#ActiveMerchant::Billing::Base.mode = :production
-#Active_Merchant_payflow_gateway_username = ''
-#Active_Merchant_payflow_gateway_password = ''
-#Active_Merchant_payflow_gateway_partner = ''
-ActiveMerchant::Billing::Base.mode = :test
-Active_Merchant_payflow_gateway_username = 'markdr'
-Active_Merchant_payflow_gateway_password = 'MarkDR1'
-Active_Merchant_payflow_gateway_partner = 'PayPal'
+ActiveMerchant::Billing::Base.mode = :production
+Active_Merchant_payflow_gateway_username = '941000086910'
+Active_Merchant_payflow_gateway_password = ''
+Active_Merchant_payflow_gateway_partner = 'merchantes'
 
 PAYMENT_DUE_CYCLE = 30 # How often to bill in days
 
