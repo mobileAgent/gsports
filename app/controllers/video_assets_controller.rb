@@ -18,6 +18,10 @@ class VideoAssetsController < BaseController
   uses_tiny_mce(:options => AppConfig.narrow_mce_options.merge({:width => 530}),
                 :only => [:show])
 
+  def images
+    redirect_to "/players/images/#{params[:id]}.png" and return
+  end
+
   # GET /video_assets
   # GET /video_assets.xml
   def index
