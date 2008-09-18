@@ -1,5 +1,12 @@
 %tr.forumList
   %td.forumList
-    =billing_history.authorization_reference_number
-  %td.forumList
     =billing_history.created_at.to_date
+  %td.forumList.numeric
+    - if billing_history.membership
+      =number_to_currency(billing_history.membership.cost)    
+  %td.forumList.numeric
+    - if billing_history.credit_card
+      =cc_displayable_fill(billing_history.credit_card)    
+  %td.forumList.numeric
+    =billing_history.authorization_reference_number
+    

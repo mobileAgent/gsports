@@ -21,9 +21,13 @@
         %thead
           %tr.yellowHeader
             %td.padded.contentBoxHeader.la
-              Authorization Reference Number 
-            %td.padded.contentBoxHeader.la
               Date
+            %td.padded.contentBoxHeader.numeric
+              Price 
+            %td.padded.contentBoxHeader.numeric
+              Credit Card 
+            %td.padded.contentBoxHeader.numeric
+              Authorization Reference Number 
         %tbody
           = render :partial => "membership/billing_history", :collection => @billings
   
