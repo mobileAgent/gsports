@@ -1,5 +1,5 @@
-- skip_credit_card = (@cost == 0 || @credit_card == nil)
-- skip_billing_addr = skip_credit_card || @billing_address.nil? || @billing_address.address1.blank?
+- skip_payment = (@cost == 0 || @credit_card == nil)
+- skip_billing_addr = skip_payment || @billing_address.nil? || @billing_address.address1.blank?
 
 .RegContent
   .SideBar
@@ -8,7 +8,7 @@
     %p
       This is the last step of the registration process.
 
-    - if !skip_credit_card
+    - if !skip_payment
       %p
         Please enter the first and last name of the person as it appears on the credit card you will be using for payment
       
@@ -44,7 +44,7 @@
 
           %form{:action=>'/users/submit_billing',:method => :post}
   
-            - if !skip_credit_card
+            - if !skip_payment
               = error_messages_for :credit_card, :user, :billing_address, :object_name => 'Billing Information'
               - if @billing_gateway_error
                 .warning
@@ -149,18 +149,19 @@
             %p= submit_tag('Submit', :onclick => "if ($$('#tos')[0].checked && $$('#suba')[0].checked) { return true; } else { alert('You must agree to the Terms of Service and the Subscriber Agreement'); return false; }")
   
       .mainCol2
-        .contentBox
-          - if @offer_PO
-            %p
-              -#=link_to 'Pay by Purchase Order?', :action=>:purchase_order, :userid => @user.id
-              -#= link_to 'Pay by Check?', '#', :onclick=>"javascript:$('POInfo').show();"
-              -#= link_to_remote 'Pay by Check?', :url => { :action => 'request_po' }, :update => 'POInfo'
-              -#= link_to_remote 'Pay by Check?', :url => { :controller=>'purchase_orders', :action => 'new', :user_id=>@user.id }, :update => 'POInfo'
-              = link_to_remote 'Pay by Check?', :url => { :controller=>'purchase_orders', :action => 'new' }, :with => "'purchase_order%5Buser_id%5D=#{@user.id}'", :update => 'POInfo'
-              
-            %br
-            #POInfo         
+        .contentBox         
+          - if !skip_payment
           
-          - if !skip_credit_card
+            - if @offer_PO
+              %p
+                -#=link_to 'Pay by Purchase Order?', :action=>:purchase_order, :userid => @user.id
+                -#= link_to 'Pay by Check?', '#', :onclick=>"javascript:$('POInfo').show();"
+                -#= link_to_remote 'Pay by Check?', :url => { :action => 'request_po' }, :update => 'POInfo'
+                -#= link_to_remote 'Pay by Check?', :url => { :controller=>'purchase_orders', :action => 'new', :user_id=>@user.id }, :update => 'POInfo'
+                = link_to_remote 'Pay by Check?', :url => { :controller=>'purchase_orders', :action => 'new' }, :with => "'purchase_order%5Buser_id%5D=#{@user.id}'", :update => 'POInfo'
+                
+              %br
+              #POInfo         
+          
             = render :partial => "billing/credit_card_help"
             

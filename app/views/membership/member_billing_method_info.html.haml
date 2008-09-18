@@ -33,6 +33,6 @@
               %td.forumList
                 ="#{@member.credit_card.month}/#{@member.credit_card.year}"
               %td.forumList
-                = @member.credit_card.updated_at
+                = @member.credit_card.updated_at.to_date
         
       %br.clear

@@ -9,9 +9,9 @@
   %td.forumList.numeric
     =number_to_currency(membership.cost)
   %td.forumList
-    =membership.created_at.to_date
-  %td.forumList
     - if membership.promotion != nil
       =membership.promotion.promo_code
+  %td.forumList
+    =membership.created_at.to_date
   %td.forumList
     =link_to "Billing History", :controller => :membership, :action => "member_billing_history", :id => membership.id 
