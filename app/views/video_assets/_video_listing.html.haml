@@ -3,7 +3,7 @@
     = link_to "<img src='#{@vidavee.file_thumbnail_medium(video_listing.dockey)}' title='#{h(video_listing.title).gsub(/\'/,'')}' alt='Video'/>", video_asset_path(video_listing)
   .listingDescription
     %h4
-      = h video_listing.title
+      = truncate(h(video_listing.title),75)
     %span.schoolName
       Views:
     %span.recentFriendFeed
