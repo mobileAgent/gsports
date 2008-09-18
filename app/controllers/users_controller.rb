@@ -180,6 +180,8 @@ class UsersController < BaseController
   # registration step 3
   def billing
     @user = User.find(params[:userid].to_i)
+
+    @offer_PO = @user.team_staff? || @user.league_staff?
     @promotion = session[:promotion]
     
     # check for promotional pricing

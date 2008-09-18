@@ -1,0 +1,20 @@
+- form_for @po do |f|
+
+  = f.hidden_field :user_id
+  = f.hidden_field :rep_name
+  = f.hidden_field :po_number
+
+  Representative: 
+  = @po.rep_name
+  %br
+
+  Purchase Order, or Check #: 
+  = @po.po_number
+  
+  %br
+  
+  %p
+  = submit_tag 'Print Purchase Order'
+  
+  %br
+  %br

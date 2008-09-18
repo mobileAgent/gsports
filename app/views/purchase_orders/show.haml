@@ -1,0 +1,211 @@
+!!! Strict
+%html{:xmlns=>"http://www.w3.org/1999/xhtml", 'xml:lang'=>"en", :lang=>"en"}
+  %head
+    %link{:rel=>"shortcut icon", :href=>"/favicon.ico"}/
+    %meta{"http-equiv"=>"Content-Type", :content=>"text/html;charset=utf-8"}/
+  
+    %title
+      Global Sports Purchase Order
+    
+    %style{:type => "text/css" }
+      :plain
+        body{
+          font-family: ariel,veranda,sans-serif;
+        }
+        #PurchaseOrder{
+          width: 800px;
+          margin: 20px 50px 20px 50px;
+        }
+        .Invoice_Date{ float: right; }
+        h1 {
+          color: #999;
+          font-size: 260%;
+          font-weight: bold;
+        }
+        .to_from {
+          margin: 20px 0 20px 0; 
+          position:relative;
+        }
+        .billTo { float: left; width: 300px; }
+        .vendor { float: right; width: 450px; }
+        .vendor img{ margin-right: 20px; }
+        .vendor table{ margin-top: 10px; }
+        .clearDiv { clear:both;  }
+        
+        table.tally {
+          width: 100%;
+          margin: 0 0 20px 0;
+          border-spacing: 0px;   
+          border-top: 1px solid black;
+          border-right: 1px solid black;
+        }
+        .tally td {
+          padding: 10px;
+          border-bottom: 1px solid black;
+          border-left: 1px solid black;
+        }
+        .tally th {
+          padding: 10px;
+          background-color: #DBE4F0;
+          border-bottom: 1px solid black;
+          border-left: 1px solid black;
+          text-transform: uppercase;
+          font-weight: normal;
+        }
+        td{ vertical-align: top }
+        td.totals { background-color: #DBE4F0; }
+        td.spacer{ border-left: 0px; border-bottom: 0px; }
+        td.line{ border-bottom: 1px solid black; }
+        td.shipping{ width: 50% }
+        
+        .signature {
+          width: 50%;
+          float: right;
+          margin: 40px 0 10px 0;
+        }
+
+
+  %body{ :onload=>'javascript:window.print();' }
+
+    #PurchaseOrder
+      .Invoice_Date
+        .InvoiceNo
+          GS#
+          = @po.gs_po_number
+        .Date
+          = @po.date
+          
+      %h1
+        PURCHASE ORDER
+  
+      .to_from
+        .billTo
+          %b
+            = @po.org.name
+          %br
+          %br
+          Attn:
+          = @po.rep_name
+          %br
+          = @po.org.address1
+          - if @po.org.address2 && !@po.org.address2.empty?
+            %br
+            = @po.org.address2
+          %br
+          = "#{@po.org.city}, #{@po.org.state.name}"
+          %br
+          = @po.org.phone
+          %br
+          = @po.org.email
+    
+        .vendor
+          %b
+            Vendor:
+          %table
+            %tr
+              %td
+                %img{ :src=>'/gs/images/gsCircle.jpg', :width=>'100px', :height=>'100px' } 
+              %td
+                %b
+                  Global Sports
+                %br
+                1890 Palmer Ave | Ste 204
+                %br
+                Larchmont, NY 10358
+                %br
+                (914) 630-4630
+                %br
+                custcare@globalsports.net
+    
+        .clearDiv
+    
+      %table.tally
+        %tr
+          %th
+            Requisitioner Name
+          %th
+            School Name PO #
+        %tr
+          %td
+            = @po.user.full_name
+          %td
+            = @po.po_number
+    
+      %table.tally
+        %tr
+          %th
+            Item #
+          %th
+            Description
+          %th
+            QTY
+          %th
+            Unit Price
+          %th
+            Total
+        %tr
+          %td
+            = @po.item_number
+          %td
+            = @po.description
+          %td
+            = number_to_currency(@po.user.role.plan.cost)
+          %td
+            12
+          %td
+            = number_to_currency(12 * @po.user.role.plan.cost)
+        
+        %tr
+          %td
+            &nbsp;
+          %td
+          %td
+          %td
+          %td
+          
+        %tr
+          %td.spacer{ :colspan=>3 }
+          %td
+            Total
+          %td.totals
+            = number_to_currency(12 * @po.user.role.plan.cost)
+    
+      %table
+        %tr
+          %td.shipping
+            %b
+              Ship PO to:
+              %br
+              Global Sports
+            %br
+            1890 Palmer Ave | Ste 204
+            %br
+            Larchmont, NY 10358
+          %td
+            Special Instructions / Comments:
+  
+      .signature
+        %table
+          %tr
+            %td{:width=>'25%'}
+              Check #
+            %td.line{:width=>'25%'}
+            %td{:width=>'25%'}
+              Check Amt
+            %td.line{:width=>'25%'}
+          %tr
+            %td.line{:colspan=>4}
+              &nbsp;
+              %br
+              &nbsp;
+              %br
+              &nbsp;
+          %tr
+            %td{:colspan=>4}
+              Authorized Signature
+      .clearDiv
+
+            
+  
+  
+  

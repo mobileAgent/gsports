@@ -37,23 +37,24 @@
             = "The promotion code '#{@promotion.promo_code}' has been applied" 
         %br/
         %br/
-     
-      %form{:action=>'/users/submit_billing',:method => :post}
-        %div{ :class => !skip_credit_card ? 'mainCol1' : 'box' }
-          .contentBox
-        
+
+
+      .mainCol1
+        .contentBox
+
+          %form{:action=>'/users/submit_billing',:method => :post}
+  
             - if !skip_credit_card
-                          
               = error_messages_for :credit_card, :user, :billing_address, :object_name => 'Billing Information'
               - if @billing_gateway_error
                 .warning
                   = @billing_gateway_error
-                  
+                
               %label{"for"=>"firstname"}
                 * First Name
                 %br
                 = text_field :credit_card, :first_name
-    
+  
               %br
               %label{"for"=>"lastname"}
                 * Last Name
@@ -147,14 +148,19 @@
             = hidden_field_tag :userid, @user.id
             %p= submit_tag('Submit', :onclick => "if ($$('#tos')[0].checked && $$('#suba')[0].checked) { return true; } else { alert('You must agree to the Terms of Service and the Subscriber Agreement'); return false; }")
   
-        - if !skip_credit_card        
-          .mainCol1
-            .contentBox
-              = render :partial => "billing/credit_card_help"
-  
-
+      .mainCol2
+        .contentBox
+          - if @offer_PO
+            %p
+              -#=link_to 'Pay by Purchase Order?', :action=>:purchase_order, :userid => @user.id
+              -#= link_to 'Pay by Check?', '#', :onclick=>"javascript:$('POInfo').show();"
+              -#= link_to_remote 'Pay by Check?', :url => { :action => 'request_po' }, :update => 'POInfo'
+              -#= link_to_remote 'Pay by Check?', :url => { :controller=>'purchase_orders', :action => 'new', :user_id=>@user.id }, :update => 'POInfo'
+              = link_to_remote 'Pay by Check?', :url => { :controller=>'purchase_orders', :action => 'new' }, :with => "'purchase_order%5Buser_id%5D=#{@user.id}'", :update => 'POInfo'
+              
+            %br
+            #POInfo         
+          
+          - if !skip_credit_card
+            = render :partial => "billing/credit_card_help"
             
-            
-  
-  
-  

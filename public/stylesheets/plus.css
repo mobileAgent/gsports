@@ -134,6 +134,17 @@ table.unstyled td.numeric {
   margin-bottom: 10px;
 }
 
+input[type='button'].submit {
+  color: #c7c7c7;
+  background-color: #363636;
+  padding: 3px 1em 3px 1em;
+  cursor: pointer;
+  margin: 1em 0;
+  width: auto;
+  font-weight: bold;
+  border: 0px;
+}
+
 input[type='submit'] {
   color: #c7c7c7;
   background-color: #363636;
@@ -892,6 +903,9 @@ a.btag, a.btag:visited {
   color: #0081c0 !important;
 }
 
+#POInfo {
+ padding-left: 15px;	
+}
 
 tr.blogList, tr.leagueList {
   background-color: #E2E4A7;
