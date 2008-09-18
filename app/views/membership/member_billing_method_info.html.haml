@@ -23,13 +23,16 @@
               Number(partial) 
             %td.padded.contentBoxHeader.la
               Expiration date (Month/year)
-        %tbody
-          %tr.forumList
-            %td.forumList
-              - if @member.credit_card
-                =@member.credit_card.displayable_number
-            %td.forumList
-              - if @member.credit_card
+            %td.padded.contentBoxHeader.la
+              Last Update
+        - if @member.credit_card
+          %tbody
+            %tr.forumList
+              %td.forumList
+                =cc_displayable_fill (@member.credit_card)
+              %td.forumList
                 ="#{@member.credit_card.month}/#{@member.credit_card.year}"
+              %td.forumList
+                = @member.credit_card.updated_at
         
       %br.clear
