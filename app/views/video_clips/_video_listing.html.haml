@@ -15,7 +15,8 @@
     - if video_listing.video_asset_id
       %span.schoolName
         Clipped from:
-      = link_to h(video_listing.video_asset.title),video_asset_path( video_listing.video_asset_id )
+      - title = video_listing.video_asset.title
+      = link_to truncate(h(title),75),video_asset_path( video_listing.video_asset_id )
       
   - skip_controls ||= false
   %ul.listingActions

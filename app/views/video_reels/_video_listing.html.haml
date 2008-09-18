@@ -3,7 +3,7 @@
     = "<a href='#{user_video_reel_path(video_listing.user_id,video_listing)}'><img src='#{@vidavee.file_thumbnail_medium(video_listing.thumbnail_dockey)}' title='#{h(video_listing.title).gsub(/\'/,'')}' alt='Reel'/></a>"
   .listingDescription
     %h4
-      = h video_listing.title
+      = truncate(h(video_listing.title),75)
     %span.schoolName
       Views:
     %span.recentFriendFeed
