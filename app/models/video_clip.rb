@@ -63,5 +63,30 @@ class VideoClip < ActiveRecord::Base
   def owner
     self.user
   end
+
+  def video_length=(length_string)
+    if length_string.class.to_s != 'String' || length_string.index(':')
+      self[:video_length] = length_string.to_s
+    else
+      begin
+        raw_seconds = length_string.to_i
+        if raw_seconds == 0
+          self[:video_length] = length_string
+        else
+          h = raw_seconds / 3600
+          m = "%02d" % ((raw_seconds - (h*3600)) / 60)
+          s = "%02d" % (raw_seconds % 60)
+          if h > 0
+            self[:video_length] = "#{h}:#{m}:#{s}"
+          else
+            self[:video_length] = "#{m}:#{s}"
+          end
+        end
+      rescue
+        self[:video_length] = length_string
+      end
+    end
+    self[:video_length]
+  end
   
 end
