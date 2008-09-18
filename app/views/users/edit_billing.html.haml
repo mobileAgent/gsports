@@ -16,7 +16,7 @@
           Billing Information
       .contentBoxContent.edit-profile
 
-        %div{ :style => "float: right; width: 400px; margin: 10px 10px 10px 10px" }
+        %div{ :style => "float: right; background-color: #ffffff; width: 400px; margin: 10px 10px 10px 10px; padding: 10px 10px 10px 10px" }
           = render :partial => "billing/credit_card_help"      
           
         %form{:action => '/users/update_billing', :method => :post}
@@ -38,14 +38,19 @@
           %fieldset.inline
             %label{"for"=>"expiration_date"}
               * Expiration Date:
+              
+              = @credit_card.year
+              \/
+              = @credit_card.month
+              
               %br/
               %table
                 %tr
                   %td
-                    =collection_select(:credit_card, :year, cc_years,"number","name",{:prompt => '-Year-', :selected => @credit_card.year })
+                    =collection_select :credit_card, :year, cc_years,"number","name",{:prompt => '-Year-'}, {:selected => @credit_card.year }
                   %td
-                    =collection_select(:credit_card, :month, cc_months,"number","name",{:prompt => '-Month-', :selected => @credit_card.month })
-
+                    =collection_select :credit_card, :month, cc_months,"number","name",{:prompt => '-Month-'}, {:selected => @credit_card.month }
+                    
           %label{"for"=>"number"}
             * Card Number
             %br

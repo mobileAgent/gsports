@@ -34,6 +34,7 @@ class User < ActiveRecord::Base
 
   has_many :subscriptions
   has_many :memberships, :through => :subscriptions
+  has_many :credit_cards
   belongs_to :team
   belongs_to :league
   has_many :video_assets
@@ -188,14 +189,12 @@ class User < ActiveRecord::Base
     return false
   end
   
-  def make_member(billing_method,cost,address,payment_authorization=nil,promotion=nil)
+  def make_member(billing_method,cost,address,credit_card=nil,payment_authorization=nil,promotion=nil)
     mem = Membership.new(:billing_method=>billing_method)
     mem.cost = cost == nil ? role.plan.cost : cost
     mem.name = full_name
-    
-    if promotion != nil
-      mem.promotion = promotion;
-    end
+    mem.credit_card = credit_card
+    mem.promotion = promotion
 
     # if no address provided use the address data in me
     if address.nil?
@@ -221,6 +220,7 @@ class User < ActiveRecord::Base
       pf = payment_authorization.params
       history.authorization_reference_number = "#{pf['pn_ref']}/#{pf['auth_code']}"
       history.payment_method = billing_method
+      history.credit_card = credit_card
       mem.membership_billing_histories << history
     end
     memberships << mem
@@ -228,15 +228,13 @@ class User < ActiveRecord::Base
   end
 
   def set_payment(ccinfo)
-    cc = CreditCard.new(:first_name => ccinfo.first_name,
-                        :last_name => ccinfo.last_name,
-                        :number => ccinfo.number,
-                        :month => ccinfo.month,
-                        :year => ccinfo.year,
-                        :verification_value => ccinfo.verification_value,
-                        :displayable_number => ccinfo.number[(ccinfo.number.length - 4)..ccinfo.number.length])
-   memberships[0].credit_card = cc
-   save
+    cc = CreditCard.from_active_merchant_cc(ccinfo)
+    cc.save
+    
+    if memberships && memberships.size > 0
+      memberships[0].credit_card = cc    
+      save
+    end    
   end
 
   def enabled?
@@ -357,4 +355,40 @@ class User < ActiveRecord::Base
     admin? || friends_ids.member?(other_user.id)
   end
 
+  def billing_needed?
+    return false if Role.non_billable_role_ids.member?(role_id) 
+    return false if memberships.size < 1
+    
+    mem = memberships[0]
+    if (mem.cost > 0 &&
+          mem.billing_method == Membership::CREDIT_CARD_BILLING_METHOD &&
+          mem.last_billed < (Time.now - (PAYMENT_DUE_CYCLE+5).days))
+      logger.info "NEED PAYMENT: #{mem.cost} last billed #{mem.last_billed}"
+      true
+    else 
+      false
+    end
+  end
+
+  def credit_card_expired?
+    return false if memberships == nil || memberships.size < 1
+    
+    mem = memberships[0]
+    if (mem.credit_card != nil &&
+          mem.credit_card.expiration_date < Date.today)
+      logger.info "CREDIT CARD EXPIRED: #{mem.credit_card.expiration_date}"
+      true
+    else 
+      false
+    end
+  end
+
+  def credit_card
+    if credit_cards != nil && credit_cards.size > 0
+      credit_cards.first
+    else
+      nil
+    end
+  end
+  
 end

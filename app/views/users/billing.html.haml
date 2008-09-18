@@ -67,9 +67,9 @@
                   %table
                     %tr
                       %td
-                        =collection_select(:credit_card, :year, cc_years,"number","name",{:prompt => '-Year-', :selected => @credit_card.year })
+                        =collection_select(:credit_card, :year, cc_years,"number","name",{:prompt => '-Year-'}, {:selected => @credit_card.year })
                       %td
-                        =collection_select(:credit_card, :month, cc_months,"number","name",{:prompt => '-Month-', :selected => @credit_card.month })
+                        =collection_select(:credit_card, :month, cc_months,"number","name",{:prompt => '-Month-'}, {:selected => @credit_card.month })
     
               %label{"for"=>"number"}
                 * Card Number
@@ -150,7 +150,7 @@
         - if !skip_credit_card        
           .mainCol1
             .contentBox
-               = render :partial => "billing/credit_card_help"
+              = render :partial => "billing/credit_card_help"
   
 
             

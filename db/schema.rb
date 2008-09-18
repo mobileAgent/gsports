@@ -137,7 +137,7 @@ ActiveRecord::Schema.define(:version => 20080916134616) do
     t.string   "month"
     t.string   "year"
     t.string   "verification_value"
-    t.integer  "membership_id",      :limit => 11
+    t.integer  "user_id",      :limit => 11
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "displayable_number"
@@ -244,6 +244,7 @@ ActiveRecord::Schema.define(:version => 20080916134616) do
     t.string   "authorization_reference_number"
     t.string   "payment_method"
     t.integer  "membership_id",                  :limit => 11
+    t.integer  "credit_card_id",                  :limit => 11
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -253,9 +254,10 @@ ActiveRecord::Schema.define(:version => 20080916134616) do
     t.string   "billing_method"
     t.decimal  "cost",                         :precision => 8, :scale => 2, :default => 0.0
     t.integer  "address_id",     :limit => 11
+    t.integer  "promotion_id",   :limit => 11
+    t.integer  "credit_card_id",   :limit => 11
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "promotion_id",   :limit => 11
   end
 
   create_table "messages", :force => true do |t|
