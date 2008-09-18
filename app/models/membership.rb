@@ -3,10 +3,12 @@ class Membership < ActiveRecord::Base
    has_many :subscriptions
    has_many :users, :through => :subscriptions
    has_many :membership_billing_histories, :order => "created_at DESC"
-   has_one  :credit_card
-
+   belongs_to :credit_card # fk: credit_card_id
+   belongs_to :promotion # fk: promotion_id
+   
   CREDIT_CARD_BILLING_METHOD = "cc"
   INVOICE_BILLING_METHOD = "invoice"
+  FREE_BILLING_METHOD = "na"
 
    STATES = {
   'AL' => 'Alabama',
@@ -77,25 +79,22 @@ class Membership < ActiveRecord::Base
   # Bill this member
   #
   def bill_recurring
+    return ActiveMerchant::Billing::PayflowResponse.new(false,"Nothing to charge: $0") if (cost.nil? || cost == 0)
+    return ActiveMerchant::Billing::PayflowResponse.new(false,"Missing credit card information") if credit_card.nil? 
 
-return ActiveMerchant::Billing::PayflowResponse.new(false,"Missing credit card information") if credit_card.nil? 
+    # convert to ActiveMerchant credit card for validation
+    am_credit_card = self.credit_card.to_active_merchant_cc
+    unless am_credit_card.valid?
+      return ActiveMerchant::Billing::PayflowResponse.new(false,am_credit_card.validate.to_s)
+    end    
 
-    credit_card = ActiveMerchant::Billing::CreditCard.new(
-      :first_name => self.credit_card.first_name,
-      :last_name => self.credit_card.last_name,
-      :number => self.credit_card.number,
-      :month => self.credit_card.month,
-      :year => self.credit_card.year,
-      :verification_value => self.credit_card.verification_value)
-
-    return ActiveMerchant::Billing::PayflowResponse.new(false,creditcard.validate.to_s) if !credit_card.valid?
-
-    gateway = ActiveMerchant::Billing::PayflowGateway.new({
-      :login => Active_Merchant_payflow_gateway_username,
-      :password => Active_Merchant_payflow_gateway_password
-                                                          })
+    gateway = ActiveMerchant::Billing::PayflowGateway.new(
+        :login => Active_Merchant_payflow_gateway_username,
+        :password => Active_Merchant_payflow_gateway_password,
+        :partner => Active_Merchant_payflow_gateway_partner)
+                                                          
     cost_for_gateway = (cost * 100).to_i
-    response = gateway.purchase(cost_for_gateway, credit_card)
+    response = gateway.purchase(cost_for_gateway, am_credit_card)
    
     logger.debug "Response from gateway #{@response.inspect} for #{cost_for_gateway}"
    
@@ -104,9 +103,11 @@ return ActiveMerchant::Billing::PayflowResponse.new(false,"Missing credit card i
       pf = response.params
       history.authorization_reference_number = "#{pf['pn_ref']}/#{pf['auth_code']}"
       history.payment_method = billing_method
+      history.credit_card = self.credit_card
       membership_billing_histories << history
       save
     end
     response # Let the caller get response 
   end
+  
 end

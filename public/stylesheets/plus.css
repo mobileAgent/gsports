@@ -116,7 +116,7 @@ table.unstyled td.numeric {
 }
 
 .mainContentArea .videoPlayer {
-  float right;
+  float: right;
   width: 550px;
   height: 375px;
 }
@@ -903,9 +903,18 @@ a.btag, a.btag:visited {
   color: #0081c0 !important;
 }
 
-
-
 #POInfo {
  padding-left: 15px;	
 }
 
+tr.blogList, tr.leagueList {
+  background-color: #E2E4A7;
+  border-bottom: 2px solid #ffffff; 
+}
+td.blogList, th.blogList, td.leagueList, th.leagueList { 
+  padding: 10px 5px 10px 5px; 
+  border-bottom: 2px solid #ffffff; 
+}
+td.numeric {
+  text-align: right;
+}

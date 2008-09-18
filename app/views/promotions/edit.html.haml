@@ -1,0 +1,29 @@
+- @section = 'promotions'
+- @page_title = _('PROMOTION')
+
+.forumContentArea
+  .listingPage
+    .profilePageHeader
+      %h2.columnDescriptor
+        %span
+          = @page_title
+        = @promotion.promo_code
+  .leftNavCol
+    %div{ :align => "center" }
+      = link_to _('&laquo; back to promotion index'), promotions_path
+    %br.clear
+    %h2.yellowHeader
+      My Profile
+    .leftNav
+      =render :partial => "users/profile_nav"    
+  .listings
+    .contentBox.tanBackground
+      .contentBoxHeader.yellowHeader
+        .boxDescription
+          = _('Promotion Details')
+      .contentBoxContent      
+        - form_for :promotion, :url => promotion_url(@promotion), :html => {:method => 'put', :class => "MainForm"} do |f|
+          %p= link_to _('Delete'), promotion_url(@promotion), :method => :delete, :confirm => "Are you sure you want to permanently delete this promotion?", :class => 'genericButton'
+          = render :partial => "form", :object => f
+			
+          %p= submit_tag _('Save'), :or => link_to(_('Cancel'), promotions_path)

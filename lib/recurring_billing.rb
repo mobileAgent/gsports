@@ -47,7 +47,10 @@ class RecurringBilling
   # 
   def self.find_memberships_to_bill
     due = []
-    mships = Membership.find_all_by_billing_method(Membership::CREDIT_CARD_BILLING_METHOD)
+    # Make sure we don't pull any zero-cost memberships, 
+    # even though they should not have billing_method='cc'
+    # mships = Membership.find_all_by_billing_method(Membership::CREDIT_CARD_BILLING_METHOD)
+    mships = Membership.find(:all, :conditions => ['billing_method = ? and cost > 0', Membership::CREDIT_CARD_BILLING_METHOD])
     @billing_logger.info "Found #{mships.length} memberships to process"
     mships.each {|m|
       due << m if (m.last_billed.nil? || (time_diff_in_days(m.last_billed) >= PAYMENT_DUE_CYCLE))

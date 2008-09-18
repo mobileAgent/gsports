@@ -77,13 +77,10 @@ class BaseController < ApplicationController
     # Need to check that when they edit billing, we go ahead
     # and charge them at that time. Also the edit billng
     # form is lame needs to look more like the registration form
-    return true # Not ready to enable this yet 
+    #return true # Not ready to enable this yet 
     return true if current_user.nil?
-    return true if Role.non_billable_role_ids.member?(current_user.role_id)
-    
-    if current_user.memberships.size < 1 ||p
-        (current_user.memberships[0].billing_method == Membership::CREDIT_CARD_BILLING_METHOD &&
-         current_user.memberships[0].last_billed? > (Time.now - (PAYMENT_DUE_CYCLE+5).days))
+   
+    if current_user.billing_needed? || current_user.credit_card_expired?
       flash[:error] = "Your billing information must be updated!"
       redirect_to(url_for(:controller => 'users', :action => 'edit_billing')) and return false
     end

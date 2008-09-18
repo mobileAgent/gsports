@@ -1,0 +1,46 @@
+- @section = 'promotion'
+
+.profileContentArea
+  .profilePageHeader
+    %h2.columnDescriptor
+      %span
+        PROMOTIONS
+  .leftNavCol
+    %h2.yellowHeader
+      = _('My Profile')
+    .leftNav
+      =render :partial => "users/profile_nav"
+
+  .forumContainer      
+    .forumContentBox
+
+      = link_to 'New promotion', new_promotion_path, :class => 'genericButton'
+      %br<
+      
+      %table{:border => 0, :cellspacing => 0, :cellpadding => 0, :width => '100%'}
+        %thead
+          %tr.yellowHeader
+            -# %td.padded.contentBoxHeader.la
+            -#  = _('Delete')
+            %td.padded.contentBoxHeader.la
+              = _('Promo Code')
+            %td.padded.contentBoxHeader.la
+              = _('Name')
+            %td.padded.contentBoxHeader.la
+              = _('Cost')
+            %td.padded.contentBoxHeader.la
+              = _('Subscription')
+        %tbody
+          - for promotion in @promotions
+            %tr.forumList
+              -# %td.forumList
+              -#  = link_to 'Destroy', promotion, :confirm => 'Are you sure?', :method => :delete
+              %td.forumList
+                = link_to promotion.promo_code, edit_promotion_path(promotion)
+              %td.forumList
+                = promotion.name
+              %td.forumList
+                = number_to_currency promotion.cost
+              %td.forumList
+                - if promotion.subscription_plan != nil
+                  = promotion.subscription_plan.description

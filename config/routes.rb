@@ -1,6 +1,7 @@
 ActionController::Routing::Routes.draw do |map|
+  
+  map.resources :promotions
   map.resources :sent_messages
-
   map.resources :members
   map.resources :pages
   map.resources :teams

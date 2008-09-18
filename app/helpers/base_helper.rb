@@ -102,4 +102,12 @@ module BaseHelper
     html += "<a class='genericButton' name='#'>Requesting friendship...</a></span></span>"
     html
   end
+  
+  def cc_displayable_fill(credit_card)
+    if credit_card.displayable_number
+      "************#{credit_card.displayable_number}"
+    else
+      "****************"
+    end
+  end
 end

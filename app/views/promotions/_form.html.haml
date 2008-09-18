@@ -1,0 +1,35 @@
+
+%label.required{"for"=>"promo_code"}
+  %h3= _('Unique Promo Code')
+= form.text_field :promo_code, :size => 30
+
+%label{"for"=>"name"}
+  %h3= _('Name')
+= form.text_field :name
+
+%label{"for"=>"cost"}
+  %h3= _('Price')
+= form.text_field :cost
+
+%label{"for"=>"subscription_plan"}
+  %h3= _('Subscription')
+= form.collection_select :subscription_plan_id, SubscriptionPlan.find(:all), :id, :description, {:prompt => "-Select-"}
+
+%label{"for"=>"content"}
+  %h3= _('Description')
+= form.text_area :content, :rows => 8, :cols=>80, :style=>"padding: 5px;"
+%br/
+%ul{:style=>"margin-left: 25px;"}
+  %li
+    %i
+      %a{:href=>'http://hobix.com/textile/', :target=>'_new'}
+        Help with textile markup
+  %li
+    To break out into raw html wrap with
+    %b
+      notextile.. &lt;div&gt;
+    and
+    %b
+      &lt;/div&gt;
+    and indent
+%br/    

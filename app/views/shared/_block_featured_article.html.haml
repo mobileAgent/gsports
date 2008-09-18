@@ -7,6 +7,6 @@
     %p= human_date(story.published_at)
   - unless story.image_thumbnail_for_post.nil? || story.image_thumbnail_for_post.blank?
     .athleteFIT
-      .AthletesLogo
-        = image_tag(story.image_thumbnail_for_post, {:title => h(story.title), :alt => h(story.title), :style => "float: right;"})
+      .AthletesLogox{:style => "text-align:right;"}
+        = image_tag(story.image_thumbnail_for_post, {:title => h(story.title), :alt => h(story.title)})
 

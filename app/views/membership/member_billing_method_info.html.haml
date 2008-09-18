@@ -1,22 +1,38 @@
 - @section = (params[:metro_area_id] ? 'metro_area' : 'users')
 
+.profileContentArea.listingPage
+  .profilePageHeader
+    %h2.columnDescriptor
+      %span
+        BILLING
+      = "Details for #{@member.name}"
+  .leftNavCol
+    = link_to "Billing Home", :controller => :billing
+    %br/
 
-#yui-main
-  .yui-b
-    .box.user_list
-      %h3= link_to_unless_current "Billing Home", :controller => :billing
-      %h3= "#{AppConfig.community_name} Billing Method details for #{@member.name}"
-
-  
-      %br.clear
-      %table{:border => 1}
-        %tr
-          %th Number(partial) 
-          %th Expiration date (Month/year)
-        %tr
-          %td
-            =@member.credit_card.displayable_number
-          %td
-            ="#{@member.credit_card.month}/#{@member.credit_card.year}"
-      
+    %h2.yellowHeader
+      = _('My Profile')
+    .leftNav
+      =render :partial => "users/profile_nav"
+  .listings
+    .box
+      %table{:border => 0, :cellspacing => 0, :cellpadding => 0, :width => '100%'}
+        %thead
+          %tr.yellowHeader
+            %td.padded.contentBoxHeader.la
+              Number(partial) 
+            %td.padded.contentBoxHeader.la
+              Expiration date (Month/year)
+            %td.padded.contentBoxHeader.la
+              Last Update
+        - if @member.credit_card
+          %tbody
+            %tr.forumList
+              %td.forumList
+                =cc_displayable_fill (@member.credit_card)
+              %td.forumList
+                ="#{@member.credit_card.month}/#{@member.credit_card.year}"
+              %td.forumList
+                = @member.credit_card.updated_at
+        
       %br.clear
