@@ -1,0 +1,25 @@
+- form_for @po do |f|
+
+  = error_messages_for :po, :object_name => 'Purchase Order'
+
+  = f.hidden_field :user_id
+  
+  %label
+    Representative
+    %br/
+    = f.text_field :rep_name
+
+  %br
+  %label
+    Purchase Order, or Check #
+    %br/
+    = f.text_field :po_number
+
+  %br
+  
+  %p
+  = submit_to_remote('Submit', 'Request Purchase Order', :url => { :action => 'confirm' }, :update => 'POInfo', :html => { :class=>'submit' })
+  
+  
+  %br
+  %br

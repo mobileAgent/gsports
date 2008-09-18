@@ -14,9 +14,9 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :monikers
   map.resources :subscription_plans
   map.resources :staffs
+  map.resources :purchase_orders
   
   map.register         'register',        :controller => 'users', :action => 'register'
-  map.purchase_order   'purchase_order',  :controller => 'users', :action => 'purchase_order'
   map.forgot_password  'forgot_password', :controller => 'users', :action => 'forgot_password'
 
   # Override CE on this one by getting mine in there first

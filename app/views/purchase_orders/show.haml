@@ -71,9 +71,9 @@
       .Invoice_Date
         .InvoiceNo
           GS#
-          = @invoice_no
+          = @po.gs_po_number
         .Date
-          = Time.now.strftime '%d-%m-%Y'
+          = @po.date
           
       %h1
         PURCHASE ORDER
@@ -81,22 +81,22 @@
       .to_from
         .billTo
           %b
-            = @entity.name
+            = @po.org.name
           %br
           %br
           Attn:
-          = @user.full_name
+          = @po.rep_name
           %br
-          = @entity.address1
-          - if @entity.address2 && !@entity.address2.empty?
+          = @po.org.address1
+          - if @po.org.address2 && !@po.org.address2.empty?
             %br
-            = @entity.address2
+            = @po.org.address2
           %br
-          = "#{@entity.city}, #{@entity.state.name}"
+          = "#{@po.org.city}, #{@po.org.state.name}"
           %br
-          = @entity.phone
+          = @po.org.phone
           %br
-          = @entity.email
+          = @po.org.email
     
         .vendor
           %b
@@ -127,9 +127,9 @@
             School Name PO #
         %tr
           %td
-            = @user.full_name
+            = @po.user.full_name
           %td
-            &nbsp;
+            = @po.po_number
     
       %table.tally
         %tr
@@ -145,15 +145,15 @@
             Total
         %tr
           %td
-            = @item_no
+            = @po.item_number
           %td
-            = @description
+            = @po.description
           %td
-            = number_to_currency(@user.role.plan.cost)
+            = number_to_currency(@po.user.role.plan.cost)
           %td
             12
           %td
-            = number_to_currency(12 * @user.role.plan.cost)
+            = number_to_currency(12 * @po.user.role.plan.cost)
         
         %tr
           %td
@@ -168,7 +168,7 @@
           %td
             Total
           %td.totals
-            = number_to_currency(12 * @user.role.plan.cost)
+            = number_to_currency(12 * @po.user.role.plan.cost)
     
       %table
         %tr

@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20080912010328) do
+ActiveRecord::Schema.define(:version => 20080917205151) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id",    :limit => 10
@@ -357,6 +357,14 @@ ActiveRecord::Schema.define(:version => 20080912010328) do
   add_index "posts", ["published_at"], :name => "index_posts_on_published_at"
   add_index "posts", ["published_as"], :name => "index_posts_on_published_as"
 
+  create_table "purchase_orders", :force => true do |t|
+    t.string   "rep_name"
+    t.string   "po_number"
+    t.integer  "user_id",    :limit => 11
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "roles", :force => true do |t|
     t.string  "name"
     t.integer "subscription_plan_id", :limit => 11
@@ -395,6 +403,28 @@ ActiveRecord::Schema.define(:version => 20080912010328) do
 
   create_table "skills", :force => true do |t|
     t.string "name"
+  end
+
+  create_table "sor_configs", :force => true do |t|
+    t.integer  "state_id",   :limit => 11,                   :null => false
+    t.string   "state_code", :limit => 5,                    :null => false
+    t.string   "state_name", :limit => 5,                    :null => false
+    t.string   "website",                                    :null => false
+    t.boolean  "is_check",                 :default => true
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "sor_search_logs", :force => true do |t|
+    t.integer  "user_id",      :limit => 11
+    t.string   "lastname"
+    t.string   "fisrtname"
+    t.string   "state_name"
+    t.string   "link"
+    t.boolean  "is_sor",                     :default => false
+    t.string   "html_content"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "states", :force => true do |t|

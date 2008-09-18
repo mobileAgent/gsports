@@ -5,7 +5,7 @@ class UsersController < BaseController
   end
   
   protect_from_forgery :only => [:create, :update, :destroy]
-  skip_before_filter :gs_login_required, :only => [:signup, :register, :new, :create, :billing, :purchase_order, :submit_billing, :auto_complete_for_user_team_name, :auto_complete_for_team_league_name, :forgot_password]
+  skip_before_filter :gs_login_required, :only => [:signup, :register, :new, :create, :billing, :submit_billing, :auto_complete_for_user_team_name, :auto_complete_for_team_league_name, :forgot_password]
   skip_before_filter :billing_required, :only => [:edit_billing, :submit_billing]
   before_filter :admin_required, :only => [:assume, :destroy, :featured, :toggle_featured, :toggle_moderator, :disable]
   before_filter :find_user, :only => [:edit, :edit_pro_details, :show, :update, :destroy, :statistics, :disable ]
@@ -159,21 +159,6 @@ class UsersController < BaseController
     #@credit_card.last_name = @user.lastname if (! @credit_card.last_name) 
     @offer_PO = @user.team_staff? || @user.league_staff?
     logger.debug "USER session object(billing):" + @user.id.to_s
-  end
-  
-  def purchase_order
-    @user = User.find(params[:userid].to_i)
-    @item_no = @user.role_id
-    if @user.team_staff?
-      @entity = @user.team 
-      @description = "Monthly Member Firm Subscription"
-    else #if @user.league_staff?
-      @entity = @user.league
-      @description = "Monthly Sponsor Organiztion Subscription"
-    end
-    timestamp = Time.now.to_i
-    @invoice_no = "#{@user.id}-#{timestamp}"
-    render :layout => false
   end
 
   #
