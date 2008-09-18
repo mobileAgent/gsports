@@ -29,7 +29,6 @@ class User < ActiveRecord::Base
         errors.add_to_base("You can only have 3 enabled staff members. You have #{count}") if(count >= 3)
       end
     end
-
   end
 
 
@@ -189,10 +188,14 @@ class User < ActiveRecord::Base
     return false
   end
   
-  def make_member(billing_method, address,payment_authorization)
+  def make_member(billing_method,cost,address,payment_authorization=nil,promotion=nil)
     mem = Membership.new(:billing_method=>billing_method)
-    mem.cost = role.plan.cost
+    mem.cost = cost == nil ? role.plan.cost : cost
     mem.name = full_name
+    
+    if promotion != nil
+      mem.promotion = promotion;
+    end
 
     # if no address provided use the address data in me
     if address.nil?

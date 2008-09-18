@@ -1,14 +1,17 @@
+- skip_credit_card = (@cost == 0 || @credit_card == nil)
+- skip_billing_addr = skip_credit_card || @billing_address.nil? || @billing_address.address1.blank?
+
 .RegContent
   .SideBar
     %h1
       Registration
     %p
       This is the last step of the registration process.
-      
-    %p
-      Please enter the first and last name of the person as it appears on the credit card you will be using for payment
-      
 
+    - if !skip_credit_card
+      %p
+        Please enter the first and last name of the person as it appears on the credit card you will be using for payment
+      
   .RegistrationContent
     .RegistrationTrail
       PART 1: ACCOUNT TYPE &raquo; PART 2: USER INFORMATION &raquo; 
@@ -17,138 +20,152 @@
       
     .AccountType
       %br/
-      %h2= "The cost for this membership is #{number_to_currency(@user.role.plan.cost)} per month"
-      %br/
       
-      %form{:action=>'/users/submit_billing',:method => :post}
-        
-        .mainCol1
-          .contentBox
-  
-            = error_messages_for :credit_card, :user, :billing_address, :object_name => 'Billing Information'
-            - if @billing_gateway_error
-              .warning
-                = @billing_gateway_error
-                
-            %label{"for"=>"firstname"}
-              * First Name
-              %br
-              = text_field :credit_card, :first_name
-  
-            %br
-            %label{"for"=>"lastname"}
-              * Last Name
-              %br
-              = text_field :credit_card,:last_name
-
-            %fieldset.inline
-              %label{"for"=>"expiration_date"}
-                * Expiration Date:
-                %br/
-                %table
-                  %tr
-                    %td
-                      =collection_select(:credit_card, :year, cc_years,"number","name",{:prompt => '-Year-', :selected => @credit_card.year })
-                    %td
-                      =collection_select(:credit_card, :month, cc_months,"number","name",{:prompt => '-Month-', :selected => @credit_card.month })
-  
-            %label{"for"=>"number"}
-              * Card Number
-              %br
-              = text_field :credit_card, :number, :size => 16, :maxlength => 16
-  
-            %br
-            %label{"for"=>"verification_value"}
-              * Verification number
-              %br
-              = text_field :credit_card, :verification_value, {:size => 4, :maxlength => 4}
-  
-            %br
-            %br
-
-            - skip_billing = (@billing_address.nil? || @billing_address.address1.blank?)
-            - if skip_billing
-              %fieldset.inline
-                %input{:type => 'checkbox', :checked => (skip_billing ? 'checked' : ''), :name => 'skip_billing_address', :id => 'skip_billing_address', :onclick => "this.checked ? $$('#billingAddress')[0].hide() : $$('#billingAddress')[0].show()"}
-                %label{:for => 'skip_billing_address'}
-                  Use primary account address as billing address
-            - elsif @billing_address
-              = hidden_field_tag 'billing_address[id]', @billing_address.id
-      
-            %div{:id => 'billingAddress', :style => (skip_billing ? "display:none" : "display:block")}
-      
-              %br
-              %label{:for=>'address1'}
-                Address Line 1
-                %br/
-                = text_field :billing_address, :address1
-      
-              %br
-              %label{:for=>'address2'}
-                Address Line 2
-                %br/
-                = text_field :billing_address, :address2
-      
-              %br
-              %label{:for=>'city'}
-                City
-                %br/
-                = text_field :billing_address, :city
-      
-              %br
-              %label{:for => 'state'}
-                State
-                %br/
-                =collection_select(:billing_address ,:state , State.all,"name","name", { :prompt => 'State', :selected => (@billing_address.state? ? @billing_address.state : '') })
+      %h2
+        - if @cost > 0
+          = "The cost for this membership is #{number_to_currency(@cost)} per month"
+        - else 
+          = "You are enrolling in a FREE membership!"
           
+      %br/
+
+      - if @promotion
+        %p
+          - if @promotion.html_content
+            = @promotion.html_content
+          - else
+            = "The promotion code '#{@promotion.promo_code}' has been applied" 
+        %br/
+        %br/
+     
+      %form{:action=>'/users/submit_billing',:method => :post}
+        %div{ :class => !skip_credit_card ? 'mainCol1' : 'box' }
+          .contentBox
+        
+            - if !skip_credit_card
+                          
+              = error_messages_for :credit_card, :user, :billing_address, :object_name => 'Billing Information'
+              - if @billing_gateway_error
+                .warning
+                  = @billing_gateway_error
+                  
+              %label{"for"=>"firstname"}
+                * First Name
+                %br
+                = text_field :credit_card, :first_name
+    
               %br
-              %label{:for=>'zip'}
-                Zip/Postal Code
-                %br/
-                = text_field :billing_address, :zip
-              / end of billing address 
-              
+              %label{"for"=>"lastname"}
+                * Last Name
+                %br
+                = text_field :credit_card,:last_name
+  
+              %fieldset.inline
+                %label{"for"=>"expiration_date"}
+                  * Expiration Date:
+                  %br/
+                  %table
+                    %tr
+                      %td
+                        =collection_select(:credit_card, :year, cc_years,"number","name",{:prompt => '-Year-', :selected => @credit_card.year })
+                      %td
+                        =collection_select(:credit_card, :month, cc_months,"number","name",{:prompt => '-Month-', :selected => @credit_card.month })
+    
+              %label{"for"=>"number"}
+                * Card Number
+                %br
+                = text_field :credit_card, :number, :size => 16, :maxlength => 16
+    
+              %br
+              %label{"for"=>"verification_value"}
+                * Verification number
+                %br
+                = text_field :credit_card, :verification_value, {:size => 4, :maxlength => 4}
+    
               %br
               %br
+
+              - if skip_billing_addr
+                %fieldset.inline
+                  %input{:type => 'checkbox', :checked => (skip_billing_addr ? 'checked' : ''), :name => 'skip_billing_address', :id => 'skip_billing_address', :onclick => "this.checked ? $$('#billingAddress')[0].hide() : $$('#billingAddress')[0].show()"}
+                  %label{:for => 'skip_billing_address'}
+                    Use primary account address as billing address
+              - elsif @billing_address
+                = hidden_field_tag 'billing_address[id]', @billing_address.id
+        
+              %div{:id => 'billingAddress', :style => (skip_billing_addr ? "display:none" : "display:block")}
+        
+                %br
+                %label{:for=>'address1'}
+                  Address Line 1
+                  %br/
+                  = text_field :billing_address, :address1
+        
+                %br
+                %label{:for=>'address2'}
+                  Address Line 2
+                  %br/
+                  = text_field :billing_address, :address2
+        
+                %br
+                %label{:for=>'city'}
+                  City
+                  %br/
+                  = text_field :billing_address, :city
+        
+                %br
+                %label{:for => 'state'}
+                  State
+                  %br/
+                  =collection_select(:billing_address ,:state , State.all,"name","name", { :prompt => 'State', :selected => (@billing_address.state? ? @billing_address.state : '') })
+            
+                %br
+                %label{:for=>'zip'}
+                  Zip/Postal Code
+                  %br/
+                  = text_field :billing_address, :zip
+                / end of billing address 
+                
+                %br
+                %br
 
             %fieldset.inline
               %input#tos{:name=>"tos", :type=>"checkbox", :value=>"tos", :checked=>params[:tos]}
               %label{:for => "tos"}
                 I have read and agree to the
                 =link_to("#{AppConfig.community_name} Terms of Service", '/info/terms', {:target => "_blank"})
-
+    
             %fieldset.inline
               %input#suba{ :name=>'suba', :type=>'checkbox', :value=>'suba', :checked=>params[:suba]}
               %label{:for => "suba"}
                 I have read and agree to the
                 =link_to("#{AppConfig.community_name} Subscriber Agreement", "/info/subscriber_#{@user.role.name}", {:target => "_blank"})
-          
+        
             = hidden_field_tag :inviter_id, params[:inviter_id]
             = hidden_field_tag :inviter_code, params[:inviter_code]
             = hidden_field_tag :role, @requested_role
             = hidden_field_tag :userid, @user.id
             %p= submit_tag('Submit', :onclick => "if ($$('#tos')[0].checked && $$('#suba')[0].checked) { return true; } else { alert('You must agree to the Terms of Service and the Subscriber Agreement'); return false; }")
   
+        - if !skip_credit_card        
+          .mainCol1
+            .contentBox
+              %p
+                For your safety and security, we require that you enter your card verification number. The verification number is a 3 or 4-digit number printed on your card. 
+                If you are using a Visa, Mastercard, or Discover card, it is a 3 digit number that appears to the right of your card number (see below).
+              
+              %p{ :align=>'center' }
+                %img{ :src=>'/images/csc.png' }
+              
+              %p
+                If you are using an American Express card, the verification number is a 4 digit number that appears on the front of your card, above and either on the left or right of the card number (see below)
+              
+              %p{ :align=>'center' }
+                %img{ :src=>'/images/csc-amex.png' }
+              
+              %p
+                If your card does not have a verification number, try another card or enter the number 000. 
   
-        .mainCol1
-          .contentBox
-          
-            %p
-              For your safety and security, we require that you enter your card verification number. The verification number is a 3 or 4-digit number printed on your card. 
-              If you are using a Visa, Mastercard, or Discover card, it is a 3 digit number that appears to the right of your card number (see below).
-            
-            %p{ :align=>'center' }
-              %img{ :src=>'/images/csc.png' }
-            
-            %p
-              If you are using an American Express card, the verification number is a 4 digit number that appears on the front of your card, above and either on the left or right of the card number (see below)
-            
-            %p{ :align=>'center' }
-              %img{ :src=>'/images/csc-amex.png' }
-            
-            %p
-              If your card does not have a verification number, try another card or enter the number 000. 
-
 
             
             
