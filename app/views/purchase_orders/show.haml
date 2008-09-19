@@ -92,7 +92,7 @@
             %br
             = @po.org.address2
           %br
-          = "#{@po.org.city}, #{@po.org.state.name}"
+          = "#{@po.org.city}, #{@po.org.state ? @po.org.state.name : ''}"
           %br
           = @po.org.phone
           %br

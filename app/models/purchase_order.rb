@@ -4,6 +4,7 @@ class PurchaseOrder < ActiveRecord::Base
   
   validates_presence_of :rep_name
   validates_presence_of :po_number
+  validates_presence_of :user_id
   
   def gs_po_number
     "#{user_id}-#{created_at.to_i}"

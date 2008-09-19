@@ -37,20 +37,40 @@
 
           - form_for @po do |f|
 
-            = f.hidden_field :user_id
-            = f.hidden_field :rep_name
-            = f.hidden_field :po_number
+            = error_messages_for :po, :object_name => 'Purchase Order'
 
-            Representative: 
+            %b
+              Representative: 
             = @po.rep_name
             %br
 
-            Purchase Order, or Check #: 
+            %b
+              Purchase Order, or Check #: 
             = @po.po_number
   
             %br
+            %br
   
-            %p
+            = f.hidden_field :user_id
+            = f.hidden_field :rep_name
+            = f.hidden_field :po_number
+            
+            = hidden_field_tag :confirm, :yes
+            
+            %fieldset.inline
+              %input#tos{:name=>'tos', :type=>'checkbox', :value=>'yes', :checked=>false}
+              %label{:for => "tos"}
+                I have read and agree to the
+                =link_to("#{AppConfig.community_name} Terms of Service", '/info/terms', {:target => "_blank"})
+    
+            %fieldset.inline
+              %input#suba{ :name=>'suba', :type=>'checkbox', :value=>'yes', :checked=>false}
+              %label{:for => "suba"}
+                I have read and agree to the
+                =link_to("#{AppConfig.community_name} Subscriber Agreement", "/info/subscriber_#{@po.user.role.name}", {:target => "_blank"})
+            
+              
+            %br
             = submit_tag 'Print Purchase Order'
   
             %br
