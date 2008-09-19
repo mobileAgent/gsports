@@ -43,18 +43,21 @@ class Team < ActiveRecord::Base
     end
   end
   
-  def self.cities(county_name=nil)
-    if (!county_name.nil?)
-      Team.find(:all, 
-                :select => "DISTINCT city", 
-                :conditions => "county_name = '#{county_name}' AND city IS NOT NULL",
-                :order => 'city ASC')
+  def self.cities(county_name=nil,state_id=nil)
+    if county_name
+      if state_id && state_id > 0
+        cond = ["county_name = ? AND state_id = ? AND city IS NOT NULL",county_name,state_id]
+      else
+        cond = ["county_name = ? AND city IS NOT NULL",county_name]
+      end
     else
-      Team.find(:all, 
-                :select => "DISTINCT city", 
-                :conditions => "city IS NOT NULL and length(city) > 0",
-                :order => 'city ASC')
+      cond = ["city IS NOT NULL and length(city) > 0"]
     end
+      
+    Team.find(:all, 
+              :select => "DISTINCT city", 
+              :conditions => cond,
+              :order => 'city ASC')
   end
 
   def self.schools(city_id=-1)

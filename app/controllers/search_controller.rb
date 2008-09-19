@@ -7,16 +7,7 @@ class SearchController < BaseController
   # Video quickfind
   def quickfind
     @user = current_user
-    cond = Caboose::EZ::Condition.new
-    if ! params[:season].blank?
-      cond.append ['year(game_date) = ? or game_date_str like ?',params[:season],"#{params[:season]}%"]
-    end
-    cond.append ['? in (video_assets.team_id,video_assets.home_team_id,video_assets.visiting_team_id)', params[:team]]
-    cond.append ['sport = ?', params[:sport]]
-    cond.append ['teams.state_id = ?', params[:state]]
-    cond.append ['teams.county_name = ?', params[:county_name]]
-    cond.append ['public_video = ?', true]
-    @video_assets = VideoAsset.paginate(:conditions => cond.to_sql, :page => params[:page], :order => 'video_assets.updated_at DESC', :include => [:team,:tags])
+    @video_assets = VideoAsset.quickfind(params)
     @is_search_result = true
     protect_private_videos(@video_assets)
     @search_result_size = @video_assets.size
@@ -25,9 +16,9 @@ class SearchController < BaseController
   end
 
   def quickfind_select_state
-    state = (params[:state] || 0).to_i
-    counties = state > 0 ? Team.counties(state) : @quickfind_counties
-    schools = state > 0 ? Team.find(:all, :conditions=>{:state_id=>state}, :order => 'name ASC') : @quickfind_schools
+    @state = (params[:state] || 0).to_i
+    counties = @state > 0 ? Team.counties(@state) : @quickfind_counties
+    schools = @state > 0 ? Team.find(:all, :conditions=>{:state_id=>@state}, :order => 'name ASC') : @quickfind_schools
 
     render :update do |page|
       page.replace_html 'quickfind_counties', :partial => 'quickfind_counties', :object => counties
@@ -36,8 +27,14 @@ class SearchController < BaseController
   end
 
   def quickfind_select_county
-    county = (params[:county] || "")
-    schools = !county.empty? ? Team.find(:all, :conditions=>{:county_name=>county}, :order => 'name ASC') : @quickfind_schools
+    @state = (params[:state] || 0).to_i
+    @county = (params[:county] || "")
+    if @state > 0
+      cond = ["county_name = ? and state_id = ?",@county,@state]
+    else
+      cond = ["county_name = ?",@county]
+    end
+    schools = !@county.empty? ? Team.find(:all, :conditions => cond, :order => 'name ASC') : @quickfind_schools
     
     render :update do |page|
       page.replace_html 'quickfind_schools',  :partial => 'quickfind_schools',  :object => schools
@@ -282,9 +279,9 @@ class SearchController < BaseController
   end
   
   def update_teamfind_counties
-    state = (params[:state] || 0).to_i
-    teamfind_counties = state > 0 ? Team.counties(state) : @quickfind_counties
-    quickfind_cities = state > 0 ? Team.find(:all,:select => "DISTINCT city",:conditions => "state_id = '#{state}' AND city IS NOT NULL",:order => 'city ASC') : @quickfind_cities
+    @state = (params[:state] || 0).to_i
+    teamfind_counties = @state > 0 ? Team.counties(@state) : @quickfind_counties
+    quickfind_cities = @state > 0 ? Team.find(:all,:select => "DISTINCT city",:conditions => "state_id = '#{@state}' AND city IS NOT NULL",:order => 'city ASC') : @quickfind_cities
       
     render :update do |page|
       page.replace_html 'teamfind_counties', :partial => 'teamfind_counties', :object => teamfind_counties
@@ -293,8 +290,10 @@ class SearchController < BaseController
   end
   
   def update_teamfind_cities
-    county = (params[:county] || "")
-    teamfind_cities = !county.empty?  ? Team.cities(county) : @quickfind_cities
+    @state = (params[:state] || 0).to_i
+    @county = (params[:county] || "")
+    
+    teamfind_cities = !@county.empty?  ? Team.cities(@county,@state) : @quickfind_cities
 
     render :update do |page|
       page.replace_html 'teamfind_cities',   :partial => 'teamfind_cities',   :object => teamfind_cities
