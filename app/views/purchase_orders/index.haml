@@ -1,0 +1,59 @@
+.profileContentArea.listingPage
+  .profilePageHeader
+    %h2.columnDescriptor
+      %span
+        Purchase Orders
+      Memberships
+  .leftNavCol
+    %h2.yellowHeader
+      = _('My Profile')
+    .leftNav
+      =render :partial => "users/profile_nav"
+  .listings
+    .box
+      - form_tag '/purchase_orders/activate' do |f|
+        %table{:border => 0, :cellspacing => 0, :cellpadding => 0, :width => '100%'}
+          %thead
+            %tr.yellowHeader
+              %td.padded.contentBoxHeader.la
+                = _('Member')
+              %td.padded.contentBoxHeader.la
+                = _('Requisitioner')
+              %td.padded.contentBoxHeader.la
+                = _('Organization') 
+              %td.padded.contentBoxHeader.la
+                = _('GS PO #') 
+              %td.padded.contentBoxHeader.la
+                = _('Org PO #')
+              %td.padded.contentBoxHeader.la
+                = _('Issued') 
+              %td.padded.contentBoxHeader.la
+                = _('Activated')
+          %tbody  
+          
+            - @pos.each do |po|
+              %tr.forumList
+                %td.forumList
+                  = link_to po.user.full_name, user_path(po.user_id)
+                %td.forumList
+                  = po.rep_name
+                %td.forumList
+                  = link_to po.org.name, purchase_order_org_path(po)
+                %td.forumList
+                  = po.gs_po_number
+                %td.forumList
+                  = po.po_number
+                %td.forumList
+                  = po.date
+                %td.forumList
+                  - if po.user.activated_at
+                    = po.user.activated_at
+                  - else
+                    = check_box_tag 'pos[]', po.id
+  
+            %tr
+              %td{ :colspan=>6 }
+              %td
+                = submit_tag 'Activate'
+                
+                

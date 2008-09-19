@@ -40,6 +40,21 @@ class PurchaseOrdersController < BaseController
     @po = PurchaseOrder.find(params[:id].to_i)
     render :layout => false
   end
+  
+  def activate
+    pos = params[:pos]
+    if pos
+      pos.each { |poid|
+        po = PurchaseOrder.find(poid.to_i)
+        po.user.enabled = true
+        po.user.activated_at = Time.now
+        po.user.save!
+        UserNotifier.deliver_welcome(po.user)
+      }
+    end
+    @pos = PurchaseOrder.find(:all)
+    render :action => 'index'
+  end
     
   
 end
