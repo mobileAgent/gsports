@@ -4,11 +4,8 @@
       %span
         MAILBOX
       = @title || "Sent Messages"
-  .leftNavCol
-    %h2.yellowHeader
-      My Profile
-    .leftNav
-      =render :partial => "users/profile_nav"
+      
+  =render :partial => "users/profile_nav"
 
   %form#Forum{ :action => "#", :method => "post" }
     .mailContainer

@@ -5,12 +5,9 @@
     %h2.columnDescriptor
       %span
         BLOG
-      = @post.category.name 
-  .leftNavCol
-    %h2.yellowHeader
-      = _('My Profile')
-    .leftNav
-      =render :partial => "users/profile_nav"
+      = @post.category.name
+      
+  =render :partial => "users/profile_nav"
 
   .forumContainer
     - if @post.contest || @post.category  

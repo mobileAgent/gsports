@@ -15,12 +15,8 @@
         =link_to @league.name, league_path(@league)
       -else
         = pluralize(@users.total_entries, 'result')
-  .leftNavCol
-    %h2.yellowHeader
-      My Profile
-    .leftNav
-      =render :partial => "users/profile_nav"
-
+        
+  =render :partial => "users/profile_nav"
 
   .listings
     -#.contentBox.tanBackground

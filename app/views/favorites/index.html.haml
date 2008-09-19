@@ -4,11 +4,7 @@
       %span
         = @title || "My Favorites"
       = "#{@user.full_name}" unless @title
-  .leftNavCol
-    %h2.yellowHeader
-      My Profile
-    .leftNav
-      =render :partial => "users/profile_nav"
+  =render :partial => "users/profile_nav"
 
   .listings
 

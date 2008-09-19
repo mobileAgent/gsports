@@ -7,14 +7,8 @@
       %span
         = _('FORUMS')
       = @forum.name
-  .leftNavCol
-    %div{ :align => "center" }
-      = link_to _('&laquo; back to forum index'), forum_home_path
-    %br.clear
-    %h2.yellowHeader
-      = _('My Profile')
-    .leftNav
-      =render :partial => "users/profile_nav"    
+      
+  =render :partial => "users/profile_nav"    
   .listings
     .box    
       - unless @forum.description.blank?

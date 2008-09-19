@@ -6,14 +6,8 @@
       %span
         BILLING
       = "Details for #{@member.name}"
-  .leftNavCol
-    = link_to "Billing Home", :controller => :billing
-    %br/
-
-    %h2.yellowHeader
-      = _('My Profile')
-    .leftNav
-      =render :partial => "users/profile_nav"
+      
+  =render :partial => "users/profile_nav"
   .listings
     .box
       %table{:border => 0, :cellspacing => 0, :cellpadding => 0, :width => '100%'}

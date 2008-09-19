@@ -8,11 +8,8 @@
         %span
           = @page_title
         = @user.full_name
-    .leftNavCol
-      %h2.yellowHeader
-        My Profile
-      .leftNav
-        =render :partial => "users/profile_nav"    
+        
+    =render :partial => "users/profile_nav"    
     .listings
       %br
   

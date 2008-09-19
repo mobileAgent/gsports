@@ -4,11 +4,8 @@
       %span
         Upload a new video
       = current_user.full_name
-  .leftNavCol
-    %h2.yellowHeader
-      My Profile
-    .leftNav
-      =render :partial => "users/profile_nav"
+      
+  =render :partial => "users/profile_nav"
   .listings
     .listingItem
       - day = Time.now.strftime("%A")

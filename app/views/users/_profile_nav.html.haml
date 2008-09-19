@@ -1,43 +1,47 @@
-.navlink=link_to 'Dashboard', dashboard_user_path(current_user)
-.navlink=link_to 'Profile', user_path(current_user.id)  
-.navlink=link_to 'Blog', user_posts_path(current_user.id)
-.navlink=link_to 'Forums', forums_path
-.navlink=link_to 'Clips', user_video_clips_path(current_user.id)
-.navlink=link_to 'Reels', user_video_reels_path(current_user.id)
-.navlink=link_to 'Photos', user_photos_path(current_user.id)
-.navlink=link_to 'Friends', accepted_user_friendships_path(current_user.id)
-.navlink=link_to 'Favorites', user_favorites_path(current_user.id)
-
-%br
-
-.navlink=link_to 'Edit Profile', edit_user_path(current_user)
-.navlink=link_to 'Edit Account', edit_account_user_path(current_user)
-.navlink=link_to 'Manage Blog', manage_user_posts_path(current_user)
-
-
-
-- if current_user && current_user.admin?
-  %br
-  -if @user && @user.id != current_user.id
-    .navlink= link_to( "Assume ID", assume_user_path(@user) )
-    .navlink= link_to( "Disable user", url_for({:controller => 'users', :action => 'disable', :id => @user}), {:method => :delete, :confirm => 'Are you sure you want to disable this user account?'} )
-  .navlink= link_to('Admin Panel', url_for({:controller => 'admin', :action => 'dashboard'}))
-
-- if current_user && current_user.can_upload?
-  %br
-  .navlink= link_to 'Upload Video', user_video_assets_path(current_user)
-  
--if current_user.team_staff? || current_user.league_staff?
-  .navlink= link_to 'Upload Image', new_user_photo_path(current_user)
-
--if current_user.team_staff?
-  .navlink= link_to 'Team Page', team_path(current_user.team)
-  .navlink= link_to 'Edit Team Info', edit_team_path(current_user.team)
-  
--if current_user.league_staff?
-  .navlink= link_to 'League Page', league_path(current_user.league)
-  .navlink= link_to 'Edit League Info', edit_league_path(current_user.league)
-  
-
--if current_user.team_admin? || current_user.league_admin?
-  .navlink= link_to 'Staff Accounts', staffs_path
+.leftNavCol
+  %h2.yellowHeader
+    My Tools
+  .leftNav
+    .navlink=link_to 'Dashboard', dashboard_user_path(current_user)
+    .navlink=link_to 'Profile', user_path(current_user.id)  
+    .navlink=link_to 'Blog', user_posts_path(current_user.id)
+    .navlink=link_to 'Forums', forums_path
+    .navlink=link_to 'Clips', user_video_clips_path(current_user.id)
+    .navlink=link_to 'Reels', user_video_reels_path(current_user.id)
+    .navlink=link_to 'Photos', user_photos_path(current_user.id)
+    .navlink=link_to 'Friends', accepted_user_friendships_path(current_user.id)
+    .navlink=link_to 'Favorites', user_favorites_path(current_user.id)
+    
+    %br
+    
+    .navlink=link_to 'Edit Profile', edit_user_path(current_user)
+    .navlink=link_to 'Edit Account', edit_account_user_path(current_user)
+    .navlink=link_to 'Manage Blog', manage_user_posts_path(current_user)
+    
+    
+    
+    - if current_user && current_user.admin?
+      %br
+      -if @user && @user.id != current_user.id
+        .navlink= link_to( "Assume ID", assume_user_path(@user) )
+        .navlink= link_to( "Disable user", url_for({:controller => 'users', :action => 'disable', :id => @user}), {:method => :delete, :confirm => 'Are you sure you want to disable this user account?'} )
+      .navlink= link_to('Admin Panel', url_for({:controller => 'admin', :action => 'dashboard'}))
+    
+    - if current_user && current_user.can_upload?
+      %br
+      .navlink= link_to 'Upload Video', user_video_assets_path(current_user)
+      
+    -if current_user.team_staff? || current_user.league_staff?
+      .navlink= link_to 'Upload Image', new_user_photo_path(current_user)
+    
+    -if current_user.team_staff?
+      .navlink= link_to 'Team Page', team_path(current_user.team)
+      .navlink= link_to 'Edit Team Info', edit_team_path(current_user.team)
+      
+    -if current_user.league_staff?
+      .navlink= link_to 'League Page', league_path(current_user.league)
+      .navlink= link_to 'Edit League Info', edit_league_path(current_user.league)
+      
+    
+    -if current_user.team_admin? || current_user.league_admin?
+      .navlink= link_to 'Staff Accounts', staffs_path
