@@ -70,8 +70,7 @@
                 =link_to("#{AppConfig.community_name} Subscriber Agreement", "/info/subscriber_#{@po.user.role.name}", {:target => "_blank"})
             
             %br
-            = submit_tag 'Print Purchase Order'
-            = submit_tag 'Print Purchase Order'
+            = submit_tag('Print Purchase Order', :onclick => "if ($$('#tos')[0].checked && $$('#suba')[0].checked) { return true; } else { alert('You must agree to the Terms of Service and the Subscriber Agreement'); return false; }")
   
             %br
             %br
