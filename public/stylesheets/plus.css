@@ -603,6 +603,7 @@ input[type='button'] {
      height: 90px; 
      width: 475px;
      z-index: 105;
+     cursor: pointer;
 }
 
 .navlink {
