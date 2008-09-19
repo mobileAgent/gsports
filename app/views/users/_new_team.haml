@@ -1,95 +1,96 @@
-%hr
-.section-head Team Information
-%br
-
-%table
-  %tr
-    %td.field-block
-      %label.required
-        * Team Name
-      %br
-        -# = text_field :team, :name, :size => 22
-        = text_field_with_auto_complete :user, :team_name, :autocomplete => "off", :size => 22, :value=>(@team.nil? ? '' : @team.name)
-
-    %td.field-block
-      %label.required 
-        * Nickname
-      %br
-      = text_field :team, :nickname, :size => 16
-      
+#reg_teaminfo
+  %hr
+  .section-head Team Information
+  %br
   
-%table
-  %tr
-    %td.field-block            
-      %label.required{"for"=>"address1"} 
-        Address Line One
-      %br
-      = text_field :team, :address1, :size => 16
-    %td.field-block
-      %label{"for"=>"address2"} 
-        Address Line Two
-      = text_field :team, :address2, :size => 16  
-
-
-%table
-  %tr
-    %td.field-block            
-      %label.required
-        City
-      %br
-        = text_field :team, :city, :size => 16
-    %td.field-block
-      %label.required{"for"=>"zip"} 
-        Zip/Postal Code
-      %br
-      = text_field :team, :zip, :size => 12
-
-
-%table
-  %tr 
-    %td.field-block
-      %label
-        State
-      %br
-        =collection_select("team","state_id",State.all,"id","name",{ :prompt => 'State' })
-    %td.field-block
-      %label.required
-        County
-      %br
-      = text_field :team, :county_name, :size => 16
-      
+  %table
+    %tr
+      %td.field-block
+        %label.required
+          * Team Name
+        %br
+          -# = text_field :team, :name, :size => 22
+          = text_field_with_auto_complete :user, :team_name, :autocomplete => "off", :size => 22, :value=>(@team.nil? ? '' : @team.name), :onblur => "#{remote_function(:url=>{:controller=>'users',:action=>'registration_fill_team'},:with=>"'name='+value")}"
+  
+      %td.field-block
+        %label.required 
+          * Nickname
+        %br
+        = text_field :team, :nickname, :size => 16
+        
     
-.field-block
-  %label
-    Description
-  %br
-  = text_field :team, :description , :size => 35
-
-.field-block
-  %label.required{"for" => "team_league_name"}
-    * League
-  %br
-  = text_field_with_auto_complete :team, :league_name, :autocomplete => "off"
-
+  %table
+    %tr
+      %td.field-block            
+        %label.required{"for"=>"address1"} 
+          Address Line One
+        %br
+        = text_field :team, :address1, :size => 16
+      %td.field-block
+        %label{"for"=>"address2"} 
+          Address Line Two
+        = text_field :team, :address2, :size => 16  
   
-.field-block
-  %label.required{"for"=>"phone"} 
-    Phone
-  %br
-  = text_field :team, :phone, :size => 14
   
-.field-block
-  %label.required{"for"=>"email"}
-    Contact E-mail address
-  %br
-  = text_field :team, :email, :size => 24
+  %table
+    %tr
+      %td.field-block            
+        %label.required
+          City
+        %br
+          = text_field :team, :city, :size => 16
+      %td.field-block
+        %label.required{"for"=>"zip"} 
+          Zip/Postal Code
+        %br
+        = text_field :team, :zip, :size => 12
   
--#.field-block
-  %label.required{"for"=>"email"}
-    Team Logo (must be 100x100 or 234x60)
-  %br
-  = file_field :avatar, :uploaded_data, :size => "20"
-
-
-
+  
+  %table
+    %tr 
+      %td.field-block
+        %label
+          State
+        %br
+          =collection_select("team","state_id",State.all,"id","name",{ :prompt => 'State' })
+      %td.field-block
+        %label.required
+          County
+        %br
+        = text_field :team, :county_name, :size => 16
+        
+      
+  .field-block
+    %label
+      Description
+    %br
+    = text_field :team, :description , :size => 35
+  
+  .field-block
+    %label.required{"for" => "team_league_name"}
+      * League
+    %br
+    = text_field_with_auto_complete :team, :league_name, :autocomplete => "off"
+  
     
+  .field-block
+    %label.required{"for"=>"phone"} 
+      Phone
+    %br
+    = text_field :team, :phone, :size => 14
+    
+  .field-block
+    %label.required{"for"=>"email"}
+      Contact E-mail address
+    %br
+    = text_field :team, :email, :size => 24
+    
+  -#.field-block
+    %label.required{"for"=>"email"}
+      Team Logo (must be 100x100 or 234x60)
+    %br
+    = file_field :avatar, :uploaded_data, :size => "20"
+  
+  
+  
+      
