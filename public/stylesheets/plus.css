@@ -718,6 +718,7 @@ input[type='button'] {
 	color: #0081C0;
 	margin-bottom: 5px;
 	border: 0;
+	height: auto;
 }
 
 .contentBox.orgSummary .contentBoxHeader a{
@@ -738,7 +739,6 @@ input[type='button'] {
 
 .contentBox.orgSummary .contentBoxContent{
 	font-weight: bold;
-	position: relative;
 }
 
 .contentBox.orgSummary .contentBoxContent p {
@@ -750,11 +750,10 @@ input[type='button'] {
 }
 
 .contentBox.orgSummary .contentBoxContent .desc-100 {
-	padding-left: 120px;
+
 }
 .contentBox.orgSummary .contentBoxContent .logo-100 {
-	position: absolute;
-	top: 0;
+	margin-right: 20px;
 }
 
 .rightContentItem .member-link {

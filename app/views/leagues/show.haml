@@ -1,37 +1,32 @@
 - avht = @league.avatar ? @league.avatar.height : 100
 - top_row_height_px = @league_popular_videos.size >= 3 ? 255 : 130
 - second_row_height_px = [@league_clips_reels.size,@league_videos.size].max >= 3 ? 255 : 130
+
+
 .landingContentArea
   /
     col1 content
   .mainCol1
     .contentBox.orgSummary
-      .contentBoxHeader
-        - if current_user && (current_user.league_admin?(@league) || current_user.admin?)
-          = link_to 'Edit', edit_league_path(@league)
-        %h2
-          =h @league.name
-      .contentBoxContent{:style => "height: #{top_row_height_px}px"}
-        %div{ :class=>"desc-#{avht}" }
-          %p
-            - if @league.address1 && @league.address1.length > 0
-              =h @league.address1
-              %br/
-            - if @league.address2 && @league.address2.length > 0
-              =h @league.address2
-              %br/
-            - if @league.city || @league.state_id
-              = h [@league.city, (@league.state_id? ? @league.state.name : nil), @league.zip].compact.join(' ')
-          %p
-            =h @league.phone
-            %br
-            =h @league.email
-            - if current_user
-              = link_to 'League Members', "/search/q?search[category]=11&league_id=#{@league.id}", :class=>'member-link'
-          
-        %a{ :href=>league_path(@league), :class=>"logo-#{avht}" }
-          - if @league.avatar
-            %img{ :src=>@league.avatar.public_filename, :title=>@league.name, :alt=>@league.name }
+      
+      .contentBoxContent{:style => "height: #{top_row_height_px+18}px"}
+        .contentBoxHeader
+          - if current_user && (current_user.league_admin?(@league) || current_user.admin?)
+            = link_to 'Edit', edit_league_path(@league)
+          %h2
+            =h @league.name
+            
+        - case avht
+        - when 60
+          = render :partial=>'contact_info', :locals=>{:avht=>avht}
+          = render :partial=>'logo', :locals=>{:avht=>avht}
+        - when 100
+          %table
+            %tr
+              %td
+                = render :partial=>'logo', :locals=>{:avht=>avht}
+              %td
+                = render :partial=>'contact_info', :locals=>{:avht=>avht}
 
     .contentBox.tanBackground
       .contentBoxHeader.yellowHeader

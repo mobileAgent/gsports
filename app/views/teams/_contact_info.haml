@@ -1,0 +1,16 @@
+%div{ :class=>"desc-#{avht}" }
+  %p
+    - if @team.address1 && @team.address1.length > 0
+      = h @team.address1
+    - if @team.address2 && @team.address2.length > 0
+      = h @team.address2
+    - if @team.city || @team.state_id
+      = h [@team.city,(@team.state_id ? @team.state.name : nil),@team.zip].compact.join(' ')
+  %p
+    =h @team.phone
+    |
+    =h @team.email
+  - if current_user
+    %p
+      = link_to "View #{@team.nickname} Members", "/search/q?search[category]=10&team_id=#{@team.id}", :class=>'member-link'
+
