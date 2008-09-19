@@ -150,16 +150,10 @@
   
       .mainCol2
         .contentBox
-          - if @offer_PO
+          - if @offer_PO && @cost > 0
             %p
-              -#=link_to 'Pay by Purchase Order?', :action=>:purchase_order, :userid => @user.id
-              -#= link_to 'Pay by Check?', '#', :onclick=>"javascript:$('POInfo').show();"
-              -#= link_to_remote 'Pay by Check?', :url => { :action => 'request_po' }, :update => 'POInfo'
-              -#= link_to_remote 'Pay by Check?', :url => { :controller=>'purchase_orders', :action => 'new', :user_id=>@user.id }, :update => 'POInfo'
-              = link_to_remote 'Pay by Check?', :url => { :controller=>'purchase_orders', :action => 'new' }, :with => "'purchase_order%5Buser_id%5D=#{@user.id}'", :update => 'POInfo'
-              
+              = link_to 'Pay by Check or Purchase Order?', new_purchase_order_path(:purchase_order=>{:user_id=>@user.id})
             %br
-            #POInfo         
           
           - if !skip_credit_card
             = render :partial => "billing/credit_card_help"

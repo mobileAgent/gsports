@@ -1,25 +1,72 @@
-- form_for @po do |f|
+.RegContent
+  .SideBar
+    %h1
+      Registration
+    %p
+      This is the last step of the registration process.
 
-  -#= error_messages_for :po, :object_name => 'Purchase Order'
+  .RegistrationContent
+    .RegistrationTrail
+      PART 1: ACCOUNT TYPE &raquo; PART 2: USER INFORMATION &raquo; 
+      %span.RegistrationComplete
+        PART 3: BILLING INFORMATION
+      
+    .AccountType
+      %br/
+      
+      %h2
+        - if @cost > 0
+          = "The cost for this membership is #{number_to_currency(@cost)} per month"
+        - else 
+          = "You are enrolling in a FREE membership!"
+          
+      %br/
 
-  = f.hidden_field :user_id
-  
-  %label
-    Representative
-    %br/
-    = f.text_field :rep_name
+      - if @promotion
+        %p
+          - if @promotion.html_content
+            = @promotion.html_content
+          - else
+            = "The promotion code '#{@promotion.promo_code}' has been applied" 
+        %br/
+        %br/
 
-  %br
-  %label
-    Purchase Order, or Check #
-    %br/
-    = f.text_field :po_number
 
-  %br
+      .mainCol1
+        .contentBox
+
+          - form_for @po, :url => { :action => "confirm" } do |f|
+
+            = error_messages_for :po, :object_name => 'Purchase Order'
+
+            = f.hidden_field :user_id
   
-  %p
-  = submit_to_remote('Submit', 'Request Purchase Order', :url => { :action => 'confirm' }, :update => 'POInfo', :html => { :class=>'submit' })
+            %label
+              Representative
+              %br/
+              = f.text_field :rep_name
+
+            %br
+            %label
+              Purchase Order, or Check #
+              %br/
+              = f.text_field :po_number
+
+            %br
+            %br
   
-  
-  %br
-  %br
+            = submit_tag('Request Purchase Order')
+    
+            %br
+            %br
+
+    .mainCol2
+      .contentBox
+        %p
+          = link_to 'Pay by Credit Card?', url_for(:controller=>:users, :action=>:billing, :userid=>@po.user.id)
+        %br
+        
+        
+        
+        
+        

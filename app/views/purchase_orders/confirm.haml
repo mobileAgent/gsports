@@ -1,20 +1,57 @@
-- form_for @po do |f|
+.RegContent
+  .SideBar
+    %h1
+      Registration
+    %p
+      This is the last step of the registration process.
 
-  = f.hidden_field :user_id
-  = f.hidden_field :rep_name
-  = f.hidden_field :po_number
+  .RegistrationContent
+    .RegistrationTrail
+      PART 1: ACCOUNT TYPE &raquo; PART 2: USER INFORMATION &raquo; 
+      %span.RegistrationComplete
+        PART 3: BILLING INFORMATION
+      
+    .AccountType
+      %br/
+      
+      %h2
+        - if @cost > 0
+          = "The cost for this membership is #{number_to_currency(@cost)} per month"
+        - else 
+          = "You are enrolling in a FREE membership!"
+          
+      %br/
 
-  Representative: 
-  = @po.rep_name
-  %br
+      - if @promotion
+        %p
+          - if @promotion.html_content
+            = @promotion.html_content
+          - else
+            = "The promotion code '#{@promotion.promo_code}' has been applied" 
+        %br/
+        %br/
 
-  Purchase Order, or Check #: 
-  = @po.po_number
+
+      .mainCol1
+        .contentBox
+
+          - form_for @po do |f|
+
+            = f.hidden_field :user_id
+            = f.hidden_field :rep_name
+            = f.hidden_field :po_number
+
+            Representative: 
+            = @po.rep_name
+            %br
+
+            Purchase Order, or Check #: 
+            = @po.po_number
   
-  %br
+            %br
   
-  %p
-  = submit_tag 'Print Purchase Order'
+            %p
+            = submit_tag 'Print Purchase Order'
   
-  %br
-  %br
+            %br
+            %br
