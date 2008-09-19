@@ -118,7 +118,7 @@ FOOTER_AD_COUNT = 3
 # Misc constants
 SECONDS_PER_DAY = 86400
 
-ExceptionNotifier.exception_recipients = %w(flester@gmail.com)
+ExceptionNotifier.exception_recipients = %w(icciapps@gmail.com)
 ExceptionNotifier.sender_address = %("Application Error" <admin@globalsports.net>)
 ExceptionNotifier.email_prefix = '[GS] '
 

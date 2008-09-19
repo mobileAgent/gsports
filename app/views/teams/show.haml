@@ -22,6 +22,9 @@
             - if @team.address2 && @team.address2.length > 0
               = h @team.address2
               %br/
+            - if @team.county_name && @team.county_name.length > 0
+              = h "#{@team.county_name} County"
+              %br/
             - if @team.city || @team.state_id
               = h [@team.city,(@team.state_id ? @team.state.name : nil),@team.zip].compact.join(' ')
           %p

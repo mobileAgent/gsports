@@ -181,7 +181,6 @@ class UsersController < BaseController
   def billing
     @user = User.find(params[:userid].to_i)
 
-    @offer_PO = @user.team_staff? || @user.league_staff?
     @promotion = session[:promotion]
     
     # check for promotional pricing
@@ -196,6 +195,7 @@ class UsersController < BaseController
     if @cost > 0
       @billing_address = Address.new(params[:billing_address])
       @credit_card = ActiveMerchant::Billing::CreditCard.new(params[:credit_card])
+      @offer_PO = @user.team_staff? || @user.league_staff?
     
       #@credit_card.first_name = @user.firstname if (! @credit_card.first_name) 
       #@credit_card.last_name = @user.lastname if (! @credit_card.last_name)
@@ -437,12 +437,18 @@ class UsersController < BaseController
       flash[:notice] = "Insufficient permission to update"
       redirect_to dashboard_user_path(@user) and return
     end
+
+    @billing_address = params[:skip_billing_address] ? nil : Address.new(params[:billing_address])
+    if !@billing_address.nil? && params[:billing_address][:id]
+      logger.debug "Preserving address ID: #{params[:billing_address][:id]}"
+      @billing_address.id = params[:billing_address][:id]
+    end
     
     # Have to have one of ours on the form and db
     @memberships = @user.memberships
     if @memberships && @memberships.size > 0
       @existing_credit_card = @memberships[0].credit_card
-      @billing_address = @memberships[0].address || Address.new
+      @billing_address ||= @memberships[0].address || Address.new
       @cost = @memberships[0].cost
     end
     @existing_credit_card ||= CreditCard.new # Can't create card from params due to date issues
@@ -459,7 +465,7 @@ class UsersController < BaseController
       ccv = @existing_credit_card.verification_value
     end
 
-    @credit_card = ActiveMerchant::Billing::CreditCard.new({
+    @am_credit_card = ActiveMerchant::Billing::CreditCard.new({
                              :first_name => cc[:first_name],
                              :last_name => cc[:last_name],
                              :number => number,
@@ -467,23 +473,22 @@ class UsersController < BaseController
                              :year => cc[:year],
                              :verification_value => ccv})
 
-    @billing_address = params[:skip_billing_address] ? nil : Address.new(params[:billing_address])
 
-    if (!@credit_card.valid?)
+    # Confusing CreditCard objects, app and ActiveMerchant::Billing::CreditCard
+    @credit_card = CreditCard.from_active_merchant_cc(@am_credit_card)
+    @credit_card.user = @user
+
+    if (!@am_credit_card.valid?)
       render :action => 'edit_billing' and return
     end
 
-    # Confusing CreditCard objects, app and ActiveMerchant::Billing::CreditCard
-    new_credit_card = CreditCard.from_active_merchant_cc(@credit_card)
-    new_credit_card.user = @user
-
     # This will save the credit card record if the CC has changed
-    if @existing_credit_card == nil || !new_credit_card.equals?(@existing_credit_card)
+    if @existing_credit_card == nil || !@credit_card.equals?(@existing_credit_card)
       logger.debug "Saving changes to credit card..."
-      new_credit_card.save!
+      @credit_card.save!
       
       if @user.memberships != nil && @user.memberships.size > 0
-        @user.memberships[0].credit_card = new_credit_card;
+        @user.memberships[0].credit_card = @credit_card
       end
     end
 
@@ -510,16 +515,16 @@ class UsersController < BaseController
       cost_for_gateway = (@cost * 100).to_i
       
       # make the purchase
-      @response = gateway.purchase(cost_for_gateway, @credit_card)      
+      @response = gateway.purchase(cost_for_gateway, @am_credit_card)      
       logger.debug "Response from gateway #{@response.inspect} for #{cost_for_gateway}"
      
       if (@response.success?)
         # Not sure this makes any sense... what are we billing for if no memberships?
         unless @memberships && @memberships.size > 0
-          @user.make_member(Membership::CREDIT_CARD_BILLING_METHOD,@cost,@billing_address,new_credit_card,nil)
+          @user.make_member(Membership::CREDIT_CARD_BILLING_METHOD,@cost,@billing_address,@credit_card,nil)
         end
         @user.memberships[0].address = @billing_address if @billing_address
-        @user.memberships[0].credit_card = new_credit_card
+        @user.memberships[0].credit_card = @credit_card
 
         history = MembershipBillingHistory.new
         pf = @response.params

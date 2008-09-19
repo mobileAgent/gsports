@@ -64,6 +64,9 @@ class MessagesController < BaseController
       @message = Message.new(params[:message])
       @message.from_id= current_user.id
       @message.to_id= recipient_id
+      if @message.title.nil? || @message.title.blank?
+        @message.title= "(no subject)"
+      end
       @message.save!
     end
 
@@ -73,6 +76,9 @@ class MessagesController < BaseController
     sent_message.from_id= current_user.id
     to_ids,uses_alias = (is_alias ? Message.get_message_recipient_ids(params[:message][:to_name],current_user,true) : [recipient_ids,false])
     sent_message.to_ids_array= to_ids
+    if sent_message.title.nil? || sent_message.title.blank?
+      sent_message.title= "(no subject)"
+    end
     sent_message.save!
 
     logger.debug "The sent message was saved"

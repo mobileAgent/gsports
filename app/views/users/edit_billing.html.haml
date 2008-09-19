@@ -16,12 +16,13 @@
           Billing Information
       .contentBoxContent.edit-profile
 
-        %div{ :style => "float: right; background-color: #ffffff; width: 400px; margin: 10px 10px 10px 10px; padding: 10px 10px 10px 10px" }
-          = render :partial => "billing/credit_card_help"      
-          
-        %form{:action => '/users/update_billing', :method => :post}
-          = error_messages_for :credit_card, :merchant_credit_card, :billing_address, :user, :object_name => 'Credit Card'
+        = error_messages_for :credit_card, :am_credit_card, :merchant_credit_card, :billing_address, :user, :object_name => 'Credit Card'
         
+        %form{:action => '/users/update_billing', :method => :post}
+        
+          %div{ :style => "float: right; background-color: #ffffff; width: 400px; margin: 10px 10px 10px 10px; padding: 10px 10px 10px 10px" }
+            = render :partial => "billing/credit_card_help"      
+            
           = hidden_field_tag "id", @user.id
                     
           %label{"for"=>"firstname"}
@@ -62,15 +63,17 @@
             %br
             = text_field :credit_card, :verification_value, {:size => 4, :maxlength => 4, :value => "***" }
         
-          - if @billing_address.nil? || @billing_address.new_record?
+          - hide_billing_address = @billing_address.nil? || params[:skip_billing_address] # || @billing_address.new_record?
+          - if hide_billing_address
             %fieldset.inline
               %input{:type => 'checkbox', :checked => 'checked', :name => 'skip_billing_address', :id => 'skip_billing_address', :onclick => "this.checked ? $$('#billingAddress')[0].hide() : $$('#billingAddress')[0].show()"}
               %label{:for => 'skip_billing_address'}
                 Use primary account address as billing address
-          - elsif @billing_address
+
+          - if @billing_address
             = hidden_field_tag 'billing_address[id]', @billing_address.id
         
-          %div{:id => 'billingAddress', :style => "display: #{@billing_address.nil? || @billing_address.new_record? ? 'none' : 'block'}"}
+          %div{:id => 'billingAddress', :style => "display: #{hide_billing_address ? 'none' : 'block'}"}
         
             %br
             %label{:for=>'address1'}
@@ -93,6 +96,7 @@
             %br
             %label{:for => 'state'}
               State
+              = @billing_address.state
               %br/
               =collection_select(:billing_address ,:state , State.all,"name","name", { :prompt => 'State', :selected => ( (!@billing_address.nil? && @billing_address.state?) ? @billing_address.state : '') })
 

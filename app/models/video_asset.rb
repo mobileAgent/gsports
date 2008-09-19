@@ -256,6 +256,19 @@ class VideoAsset < ActiveRecord::Base
     league_id && team_id.nil?
   end
 
+  def self.quickfind(params)
+    cond = Caboose::EZ::Condition.new
+    if ! params[:season].blank?
+      cond.append ['year(game_date) = ? or game_date_str like ?',params[:season],"#{params[:season]}%"]
+    end
+    cond.append ['? in (video_assets.team_id,video_assets.home_team_id,video_assets.visiting_team_id)', params[:team]]
+    cond.append ['sport = ?', params[:sport]]
+    cond.append ['? in (teams.state_id,home_teams_video_assets.state_id,visiting_teams_video_assets.state_id)', params[:state]]
+    cond.append ['? in (teams.county_name,home_teams_video_assets.county_name,visiting_teams_video_assets.county_name)', params[:county_name]]
+    cond.append ['public_video = ?', true]
+    @video_assets = VideoAsset.paginate(:conditions => cond.to_sql, :page => params[:page], :order => 'video_assets.updated_at DESC', :include => [:tags], :joins => [:team, :visiting_team,:home_team])
+  end
+
   private
   
   def find_or_create_team_by_name team_name
