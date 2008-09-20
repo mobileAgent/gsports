@@ -98,7 +98,7 @@ class TeamsController < BaseController
 
     respond_to do |format|
       if @team.save
-        flash[:notice] = 'Team was successfully created.'
+        flash[:notice] = 'School info was successfully created.'
         format.html { redirect_to(current_user.admin? ? teams_url : team_path(@team)) }
         format.xml  { render :xml => @team, :status => :created, :location => @team }
       else
@@ -134,7 +134,7 @@ class TeamsController < BaseController
 
     respond_to do |format|
       if status
-        flash[:notice] = 'Team was successfully updated.'
+        flash[:notice] = 'School info was successfully updated.'
         format.html { redirect_to(current_user.admin? ? teams_url : team_path(@team)) }
         format.xml  { head :ok }
       else

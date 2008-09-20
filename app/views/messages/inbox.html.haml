@@ -4,12 +4,8 @@
       %span
         MAILBOX
       = @title || "MY INBOX"
-  .leftNavCol
-    .clearDiv.moreLinkArea
-    %h2.yellowHeader
-      My Network
-    .leftNav
-      =render :partial => "users/profile_nav"
+      
+  =render :partial => "users/profile_nav"
       
   %form#Forum{ :action => "#", :method => "post" }
     .mailContainer

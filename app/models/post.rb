@@ -45,7 +45,7 @@ class Post < ActiveRecord::Base
     img = first_image_in_body()
     if img
       # chaange the size fromw whatever it was to :feature size
-      img.gsub!(/_[a-z]+\.jpg/,"_#{size}.jpg")
+      img.gsub!(/_[a-z]+\.([^\.]+)$/,"_#{size}.\\1")
       img.gsub!(/^http:\/\/[^\/]+/,'') # make relative
     elsif fallback_to_author
       img = user.avatar_photo_url(size.to_sym)        

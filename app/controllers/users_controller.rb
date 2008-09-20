@@ -5,7 +5,7 @@ class UsersController < BaseController
   end
   
   protect_from_forgery :only => [:create, :update, :destroy]
-  skip_before_filter :gs_login_required, :only => [:signup, :register, :new, :create, :billing, :submit_billing, :auto_complete_for_user_team_name, :auto_complete_for_team_league_name, :forgot_password]
+  skip_before_filter :gs_login_required, :only => [:signup, :register, :new, :create, :billing, :submit_billing, :auto_complete_for_user_team_name, :auto_complete_for_team_league_name, :forgot_password, :registration_fill_team]
   skip_before_filter :billing_required, :only => [:edit_billing, :submit_billing, :update_billing]
   before_filter :admin_required, :only => [:assume, :destroy, :featured, :toggle_featured, :toggle_moderator, :disable]
   before_filter :find_user, :only => [:edit, :edit_pro_details, :show, :update, :destroy, :statistics, :disable ]
@@ -25,7 +25,7 @@ class UsersController < BaseController
     end
     
     @friend_count = @user.accepted_friendships.count
-    @accepted_friendships = @user.accepted_friendships.find(:all, :limit => 5).collect{|f| f.friend }
+    @accepted_friendships = @user.accepted_friendships.find(:all, :limit => 5, :include => [:friend]).collect{|f| f.friend }
     @pending_friendships_count = @user.pending_friendships.count()
 
     fav_cond = { :user_id => @user.id }
@@ -35,10 +35,10 @@ class UsersController < BaseController
     @comments = @user.comments.find(:all, :limit => 10, :order => 'created_at DESC')
     @photo_comments = Comment.find_photo_comments_for(@user)
 
-    @users_comments = Comment.find_comments_by_user(@user, :limit => 5)
+    # @users_comments = Comment.find_comments_by_user(@user, :limit => 5)
 
     @recent_posts = @user.posts.find(:all, :limit => 2, :order => "published_at DESC")
-    @clippings = @user.clippings.find(:all, :limit => 5)
+    # @clippings = @user.clippings.find(:all, :limit => 5)
     @photos = @user.photos.find(:all, :limit => 5)
     @comment = Comment.new(params[:comment])
     @published_post_count = Post.count(:all, :conditions => ["user_id = ? and published_as = ?", @user.id, 'live'])
@@ -89,6 +89,15 @@ class UsersController < BaseController
     session[:promotion] = nil
     
     #render :action => 'new', :layout => 'beta' and return if AppConfig.closed_beta_mode
+  end
+
+  # Fills in the registration team block when registering as team admin
+  def registration_fill_team
+    @team = Team.find_by_name(params[:name])
+    respond_to do |format|
+      format.xml  { render :xml => @team }
+      format.js { render :action => "registration_fill_team" } # => registration_fill_team.rjs
+    end
   end
 
   def create

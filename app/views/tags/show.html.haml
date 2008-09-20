@@ -5,11 +5,8 @@
         %span
           = _('TAGS')
         = link_to h(@tag.name), tag_path(@tag.name)
-    .leftNavCol
-      %h2.yellowHeader
-        My Profile
-      .leftNav
-        =render :partial => "users/profile_nav"    
+        
+    =render :partial => "users/profile_nav"    
     .listings         
       - unless @pages.blank?
         .box

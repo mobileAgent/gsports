@@ -4,11 +4,8 @@
       %span
         School Info
       = @team.name
-  .leftNavCol
-    %h2.yellowHeader
-      = _('My Profile')
-    .leftNav
-      =render :partial => "users/profile_nav"
+      
+  =render :partial => "users/profile_nav"
   .listings
     .listingItem
     

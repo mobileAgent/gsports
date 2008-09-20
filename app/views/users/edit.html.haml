@@ -4,11 +4,8 @@
       %span
         My Profile
       = current_user.full_name()
-  .leftNavCol
-    %h2.yellowHeader
-      = _('My Profile')
-    .leftNav
-      =render :partial => "users/profile_nav"
+      
+  =render :partial => "users/profile_nav"
                     
   .listings    
       

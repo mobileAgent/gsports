@@ -6,13 +6,9 @@
       = current_user.full_name
     %h3
       = pluralize(@posts.total_entries, 'result')
-  .leftNavCol
-    %h2.yellowHeader
-      = _('My Profile')
-    .leftNav
-      =render :partial => "users/profile_nav"
-
-
+      
+  =render :partial => "users/profile_nav"
+  
   .listings
     -#.contentBox.tanBackground
       .contentBoxHeader.yellowHeader

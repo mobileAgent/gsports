@@ -6,9 +6,12 @@
       =h @league.address2
     - if @league.city || @league.state_id
       = h [@league.city, (@league.state_id? ? @league.state.name : nil), @league.zip].compact.join(' ')
-  %p
-    =h @league.phone
-    |
-    =h @league.email
-    - if current_user
+  - if (@league.phone && @league.phone.length > 0) || (@league.email && @league.email.length > 0)
+    %p
+      =h @league.phone
+      - if @league.phone && @league.phone.length > 0 && @league.email && @league.email.length > 0
+        |
+        =h @league.email
+  - if current_user
+    %p
       = link_to 'League Members', "/search/q?search[category]=11&league_id=#{@league.id}", :class=>'member-link'

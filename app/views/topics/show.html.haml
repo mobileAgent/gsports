@@ -7,15 +7,9 @@
     %h2.columnDescriptor
       %span
         = _('FORUMS')
-      = link_to h(@topic.forum.name), forum_path(@topic.forum)   
-  .leftNavCol
-    %div{ :align => "center" }
-      = link_to _('&laquo; back to forum index'), forum_home_path
-    %br.clear
-    %h2.yellowHeader
-      = _('My Profile')
-    .leftNav
-      =render :partial => "users/profile_nav"    
+      = link_to h(@topic.forum.name), forum_path(@topic.forum)
+      
+  =render :partial => "users/profile_nav"    
   .forumContainer
     .forumContentBox
       .forumBoxHeader    

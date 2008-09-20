@@ -11,11 +11,7 @@
       = @user.full_name
       - if current_user && current_user.can_request_friendship_with(@user)
         = add_friend_link(@user)
-  .leftNavCol
-    %h2.yellowHeader
-      = _('My Profile')
-    .leftNav
-      =render :partial => "users/profile_nav"
+  =render :partial => "users/profile_nav"
   /
     col1 content
   .mainCol1

@@ -4,11 +4,7 @@
       %span
         Purchase Orders
       Memberships
-  .leftNavCol
-    %h2.yellowHeader
-      = _('My Profile')
-    .leftNav
-      =render :partial => "users/profile_nav"
+  =render :partial => "users/profile_nav"
   .listings
     .box
       - form_tag '/purchase_orders/activate' do |f|
@@ -44,10 +40,10 @@
                 %td.forumList
                   = po.po_number
                 %td.forumList
-                  = po.date
+                  = human_date(po.created_at)
                 %td.forumList
                   - if po.user.activated_at
-                    = po.user.activated_at
+                    = human_date(po.user.activated_at)
                   - else
                     = check_box_tag 'pos[]', po.id
   

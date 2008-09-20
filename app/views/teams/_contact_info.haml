@@ -6,10 +6,12 @@
       = h @team.address2
     - if @team.city || @team.state_id
       = h [@team.city,(@team.state_id ? @team.state.name : nil),@team.zip].compact.join(' ')
-  %p
-    =h @team.phone
-    |
-    =h @team.email
+  - if (@team.phone && @team.phone.length > 0) || (@team.email && @team.email.length > 0)
+    %p
+      =h @team.phone
+      - if @team.phone && @team.phone.length > 0 && @team.email && @team.email.length > 0
+        |
+        =h @team.email
   - if current_user
     %p
       = link_to "View #{@team.nickname} Members", "/search/q?search[category]=10&team_id=#{@team.id}", :class=>'member-link'
