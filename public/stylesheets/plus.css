@@ -1,3 +1,6 @@
+a, a:visited, a:hover, a:active {
+  outline: none;
+}
 
 /* notice warning flash_message */
 #flash_notice, #flash_error, #flash_info {
@@ -159,7 +162,6 @@ input[type='submit']:hover {
    background-color: #363636;
    color: #c7c7c7;
 }
-
 
 
 /* will-paginate apple.com store style pagination styles */

@@ -305,9 +305,15 @@ class User < ActiveRecord::Base
   # We only do this by email and we also handle disabled user accounts
   def self.authenticate(login, password)
     # hide records with a nil activated_at
-    u = find :first, :conditions => ['email = ? and activated_at IS NOT NULL and enabled = true', login] if u.nil?
+    u = find :first, :conditions => ['email = ? and activated_at IS NOT NULL and enabled = true', login]
     u && u.authenticated?(password) && u.update_last_login ? u : nil
   end
+
+  def self.authenticate_inactive(login,password)
+    u = find :first, :conditions => ['email = ?', login]
+    u && u.authenticated?(password) && u.update_last_login ? u : nil
+  end
+    
   
   def activity(page = {}, since = 1.week.ago)
     page.reverse_merge :size => 50, :current => 1
