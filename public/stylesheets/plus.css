@@ -920,3 +920,48 @@ td.blogList, th.blogList, td.leagueList, th.leagueList {
 td.numeric {
   text-align: right;
 }
+
+#sidebar {
+	width: 130px;	
+	margin: 0px 0px 0px 0px;
+	padding: 0px 0px 0px 0px;
+}
+#sidebar a {
+	color: #ffffff;
+	text-decoration: none;
+}
+#sidebar a:hover {
+	text-decoration: underline;
+}
+#sidebar .menutitle {
+	/* padding+height=actual height */
+	height: 25px;
+  padding-top: 10px; 	
+	color: #ffffff;
+	font-size: 110%;
+	font-weight: bold;
+	text-transform: uppercase;
+	padding-left: 18px;
+  background-image: url(../images/sidebar_menu_title.png);
+  background-repeat: no-repeat; 
+}
+#sidebar .menuitem, #sidebar .menuitem-hilite, #sidebar .menuitem-last {
+  /* padding+height=actual height */
+  height: 16px;
+  padding-top: 4px; 
+  color: #ffffff;
+  font-weight: bold;
+  text-transform: uppercase;
+  padding-left: 18px;
+  background-image: url(../images/sidebar_menu_item.png);
+  background-repeat: no-repeat;
+}
+#sidebar .menuitem-hilite {
+  background-image: url(../images/sidebar_menu_item_btm.png);
+  background-repeat: no-repeat; 
+}
+#sidebar .menuitem-last {
+  height: 33px; 
+  background-image: url(../images/sidebar_menu_btm_curve.png);
+	background-repeat: no-repeat;	
+}
