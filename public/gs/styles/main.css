@@ -1120,9 +1120,11 @@ td.forumList,th.forumList {
 .leftNavCol .moreLink{
 	width:100px;
 }
+/*
 .listingPage .leftNavCol{
 	padding-top: 0px;
 }
+*/
 .listings .moreLinkArea .moreLink{
 	float:left;
 }

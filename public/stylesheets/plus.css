@@ -258,7 +258,7 @@ object#homeFlash {
 .playerContentArea {
   background: #292e43;
   width: 956px;
-  margin-top: 5px;
+  /*margin-top: 5px;*/
   height: auto;
   float: left;
 }
@@ -500,7 +500,7 @@ div.thumbFIT {
 }
 .profileContentArea .toplink {
   float: left;
-  margin-left: 15px;
+  margin: 10px 0px 10px 15px;
 }
 
 input[type='button'] {
