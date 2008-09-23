@@ -12,58 +12,53 @@
         - case f.class.to_s.tableize
         - when 'video_assets'
           .featureItem
-            .featureSummaryThumb.favFIT
+            .featureItemThumb
               = link_to "<img src='#{@vidavee.file_thumbnail_medium(f.dockey)}' title='#{h(f.title).gsub(/\'/,'')}' alt='Video'/>", video_asset_path(f)
             .featureText
               %span.profileSubHeading
                 =truncate(h(f.title),18)
                 %br/
               =game_date(f.game_date)
-              %br/
             .clearDiv
         - when 'video_clips'
           .featureItem
-            .featureSummaryThumb.favFIT
+            .featureItemThumb
               = "<a href='#{user_video_clip_path(f.user_id,f)}'><img src='#{@vidavee.file_thumbnail_medium(f.dockey)}' title='#{h(f.title).gsub(/\'/,'')}' alt='Clip'/></a>"
             .featureText
               %span.profileSubHeading
                 =truncate(h(f.title),18)
                 %br/
               =f.user.full_name
-              %br/
             .clearDiv
         - when 'video_reels'
           .featureItem
-            .featureSummaryThumb.favFIT
+            .featureItemThumb
               = "<a href='#{user_video_reel_path(f.user_id,f)}'><img src='#{@vidavee.file_thumbnail_medium(f.thumbnail_dockey)}' title='#{h(f.title).gsub(/\'/,'')}' alt='Reel'/></a>"
             .featureText
               %span.profileSubHeading
                 =truncate(h(f.title),18)
                 %br/
               =f.user.full_name
-              %br/
             .clearDiv
         - when 'posts'
           .featureItem
-            .featureSummaryThumb.favFIT
+            .featureItemThumb
               = link_to image_tag(f.image_thumbnail_for_post("icon",true)), user_post_path(f.user,f)
             .featureText
               %span.profileSubHeading
                 =truncate(h(f.title),18)
                 %br/
               =f.user.full_name
-              %br/
             .clearDiv
         - when 'photos'
           .featureItem
-            .featureSummaryThumb
+            .featureItemThumb
               = link_to image_tag(f.public_filename(:icon), {:alt=>'User Photo',:title=>f.description}), user_photo_path(f.user, f)
             .featureText
               %span.profileSubHeading
                 =truncate(h(f.display_name),18)
                 %br/
               =f.user.full_name
-              %br/
             .clearDiv
           
     .profileFeature.moreLinkArea

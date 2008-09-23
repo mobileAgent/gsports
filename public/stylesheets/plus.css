@@ -328,14 +328,12 @@ div.favFIT {
   overflow: hidden;
   display: inline;
 }
-
 div.profileFIT {
-  height: 90px;
-  width: 150px;
+	width: 150px;
+  height: 10px;
   overflow: hidden;
   display: inline;
 }
-
 div.thumbFIT {
   height: 100px;
   width: 100px;
@@ -924,12 +922,6 @@ td.numeric {
 	/* Override for profile info display */
   width: 80px;  
 }
-.commentPoster a img {
-  border: 2px solid #333333;
-}
-.commentPoster a:hover img {
-  border: 2px solid #0066CC;
-}
 .commentSummaryBox {
   float: left;
   width: 530px;
@@ -967,6 +959,9 @@ td.numeric {
 	padding-bottom: 5px;
 	margin-bottom: 5px;
 }
+.profileFeature .featureItem {
+  margin-right: 0px;
+}
 .featureItemThumb {
   float: left;
   text-align: center;
@@ -980,17 +975,45 @@ td.numeric {
   /* Override for profile info display */
   width: 50px;  
 }
-.featureItemThumb a img, .commentPoster a img {
-  border: 2px solid #333333;
-}
-.featureItemThumb a:hover img, .commentPoster a:hover img {
-  border: 2px solid #0066CC;
-}
 .featureItem .featureText {
 	/* override profileItem.featureText from main.css */
   margin-top: 0px;
+	margin-right: 0px;
+	width: 125px;
 }
 .profileContentArea .topRowFixHeight .moreLinkArea {
 	position: relative;
 	top: 150px;
 }
+
+.profileFeature .clipItem {
+  float: left;
+  display: inline;
+  padding: 5px 5px 5px 5px;
+  width: 150px;
+}
+.profileFeature .clipItem .profileClipFIT {
+	 width: 140px;
+   height: 90px;
+	 overflow: hidden;
+	 display: block;
+}
+
+a img.framed,
+a.framed img, 
+.featureItemThumb a img, 
+.commentPoster a img,
+.forumPoster a img 
+{
+  border: 2px solid #333333;
+}
+
+a:hover img.framed, 
+a:hover.framed img, 
+.featureItemThumb a:hover img, 
+.commentPoster a:hover img,
+.forumPoster a:hover img 
+{	
+  border: 2px solid #0066CC;
+}
+
