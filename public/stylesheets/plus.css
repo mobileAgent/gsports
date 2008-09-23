@@ -615,82 +615,6 @@ input[type='button'] {
 	padding-left: 10px;
 }
 
-.commentContainer {
-    background-color: #E2E4A7;
-    padding: 5px 25px 5px 25px;
-}    
-
-.commentItem {
-    padding: 5px;
-    border: 1px solid #666666;
-    background-color: #E2E4A7;
-    width: auto;
-    display: block;
-    height: auto;
-}
-
-.commentPoster {
-    width: 85px;
-    float: left;
-    padding-top: 10px;
-    padding-right: 5px;
-    padding-bottom: 5px;
-    padding-left: 5px;
-    text-align: center;
-}
-
-.commentPosterImg a {
-    border: 2px solid #666666;
-}
-
-.commentPosterImg a:hover {
-    border: 2px solid #0066CC;
-}
-
-.commentPoster a {
-    font-size: 110%;
-    color: #333333;
-    text-align: left;
-    display: block;
-    margin-top: 5px;
-}
-
-.commentPoster a:hover {
-    font-size: 110%;
-    color: #333333;
-    text-decoration: none;	
-}
-
-.commentSummary, .commentSummaryBody {
-    width: 94%;
-    padding-left: 3%;
-    float: left;
-}
-
-.commentSummaryBody {
-    background-color: #FFFFFF;
-    padding: 10px;
-}
-
-.commentSummaryBody p {
-    background-color: #FFFFFF;
-    display: block;
-}
-
-.commentSummaryBody strong {
-    font-size: 115%;
-}
-
-.commentSummaryDate {
-    float: left;
-    padding-bottom: 10px;
-}
-
-.commentActions {
-    float: right;
-    padding: 5px;
-    width: auto;
-}
 
 /* Stop the jumping on selected mail items */
 .mailItem {
@@ -785,10 +709,6 @@ input[type='button'] {
 .profileActivity .activity-thumbnail {
 	float: left;
 	padding-right: 5px;
-}
-
-.profileActivity {
-	border-bottom: 1px solid white;
 }
 /* end - profile activity */
 
@@ -921,8 +841,11 @@ td.numeric {
   text-align: right;
 }
 
+/*
+ * SIDE BAR
+ */
 #sidebar {
-	width: 130px;	
+	width: 125px;	
 	margin: 0px 0px 0px 0px;
 	padding: 0px 0px 0px 0px;
 }
@@ -964,3 +887,107 @@ td.numeric {
   background-image: url(../images/sidebar_menu_btm_curve.png);
 	background-repeat: no-repeat;	
 }
+
+
+
+/*
+ * COMMENTS
+ */
+
+.commentContainer {
+    background-color: #E2E4A7;
+    padding: 5px 25px 5px 25px;
+} 
+.commentPost {
+  background-color: #E2E4A7;
+  width: auto;
+  display: block;
+  height: auto;
+  margin-bottom: 10px;
+}
+.profileInfo .commentPost {
+	/* Override for profile info display */
+  margin-bottom: 0px;
+  border-bottom: 1px solid #ffffff;
+}
+.commentPoster {
+  float: left;
+	padding: 10px 10px 10px 15px;	
+  text-align: center;
+  width: auto;
+}
+.profileInfo .commentPoster {
+  /* Override for profile info display */
+  padding-left: 10px;
+}
+.profileInfo .commentPoster a img {
+	/* Override for profile info display */
+  width: 80px;  
+}
+.commentPoster a img {
+  border: 2px solid #333333;
+}
+.commentPoster a:hover img {
+  border: 2px solid #0066CC;
+}
+.commentSummaryBox {
+  float: left;
+  width: 530px;
+  margin-bottom: 10px;
+}
+.profileInfo .commentSummaryBox {
+  width: 215px;
+}
+.commentHeading {
+	padding-top: 10px;
+  margin-bottom: 10px;
+}
+.commentSummaryBody {
+  background-color: #FFFFFF;
+  padding: 10px;
+}
+.commentSummaryBody p {
+  background-color: #FFFFFF;
+  margin-bottom: 5px;
+  display: block;
+}
+.commentActions {
+  float: right;
+  padding: 5px;
+  width: auto;
+}
+.profileInfo .commentActions {
+  float: clear; 
+}
+.commentActions li {
+  margin-bottom: 10px;
+}
+.featureItem, .featureSummary {
+  border-bottom: 1px solid #ffffff;
+	padding-bottom: 5px;
+	margin-bottom: 5px;
+}
+.featureItemThumb {
+  float: left;
+  text-align: center;
+  width: auto;
+}
+.profileInfo .commentPoster {
+  /* Override for profile info display */
+  padding-left: 10px;
+}
+.featureItemThumb a img, .profileInfo .commentPoster a img {
+  /* Override for profile info display */
+  width: 50px;  
+}
+.featureItemThumb a img, .commentPoster a img {
+  border: 2px solid #333333;
+}
+.featureItemThumb a:hover img, .commentPoster a:hover img {
+  border: 2px solid #0066CC;
+}
+.featureItem .featureText {
+	/* override profileItem.featureText from main.css */
+  margin-top: 0px;
+}
+

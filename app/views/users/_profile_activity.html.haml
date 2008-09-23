@@ -9,8 +9,8 @@
     - @user.activity().each() do |activity|
       - next if activity.action == 'logged_in'
       - next if activity.item.nil? && activity.item_id # points to a deleted item
-      .profileFeature.profileActivity
-        .profileInfo
+      .profileFeature
+        .profileInfo.featureItem
         
           %p
             %span.profileSubHeading
