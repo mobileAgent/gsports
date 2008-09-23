@@ -5,7 +5,8 @@
   .profilePageHeader
     %h2.columnDescriptor
       %span
-        = _('EDIT FORUM')
+        =link_to _('FORUMS'), forums_path
+      Edit
       = @forum.name
       
   =render :partial => "users/profile_nav"    
