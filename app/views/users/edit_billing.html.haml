@@ -2,7 +2,8 @@
   .profilePageHeader
     %h2.columnDescriptor
       %span
-        My Account
+        =link_to _('ACCOUNT'), user_path
+      Billing for
       = "#{current_user.admin? ? @user.full_name : current_user.full_name}"
       
   =render :partial => "users/profile_nav"

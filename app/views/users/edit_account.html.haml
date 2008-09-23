@@ -2,7 +2,7 @@
   .profilePageHeader
     %h2.columnDescriptor
       %span
-        My Account
+        =link_to _('ACCOUNT'), user_path
       = current_user.full_name
       
   =render :partial => "users/profile_nav"
