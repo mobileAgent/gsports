@@ -2,8 +2,11 @@
   .profilePageHeader
     %h2.columnDescriptor
       %span
-        Upload a new video
-      = current_user.full_name
+        = link_to _('MY VIDEOS'), url_for({:controller => 'search', :action => 'my_videos', :user_id => @user.id})        
+      Upload New Video
+      -#
+        for
+        = current_user.full_name
       
   =render :partial => "users/profile_nav"
   .listings

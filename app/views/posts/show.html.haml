@@ -4,7 +4,7 @@
   .profilePageHeader
     %h2.columnDescriptor
       %span
-        = _('BLOG')
+        =link_to _('BLOG'), user_posts_path(@user.id)
       = @post.category.name
       
   =render :partial => "users/profile_nav"

@@ -2,7 +2,10 @@
   .profilePageHeader
     %h2.columnDescriptor
       %span
-        = @title || "MY FAVORITES"
+        -if @title
+          = @title
+        -else
+          =link_to _('MY FAVORITES'), user_favorites_path(@user.id)
       = "#{@user.full_name}" unless @title
   =render :partial => "users/profile_nav"
 

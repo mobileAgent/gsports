@@ -1018,6 +1018,10 @@ a:hover.framed img,
 }
 
 /* Allow for linking of main page heading */
+h2.columnDescriptor span {
+  text-transform: uppercase;	
+}
+
 h2.columnDescriptor span a {
   color: #0081C0; 
   text-decoration: none;

@@ -14,7 +14,7 @@ class VideoAssetsController < BaseController
   verify :method => :post, :only => [ :save_video, :swfupload ]
   after_filter :cache_control, :only => [:create, :update, :destroy]
   after_filter :expire_games_of_the_week, :only => [:destroy]
-  
+  before_filter :find_user, :only => [:index, :show, :new, :edit ]
   uses_tiny_mce(:options => AppConfig.narrow_mce_options.merge({:width => 530}),
                 :only => [:show])
 
@@ -298,6 +298,10 @@ class VideoAssetsController < BaseController
   end
 
   protected
+
+  def find_user
+    @user = params[:user_id] ? User.find(params[:user_id]) : current_user
+  end
 
   def cache_control
     Rails.cache.delete('quickfind_sports');

@@ -2,7 +2,7 @@
   .profilePageHeader
     %h2.columnDescriptor
       %span
-        = "MY VIDEOS"
+        = link_to _('MY VIDEOS'), url_for({:controller => 'search', :action => 'my_videos', :user_id => @user.id})        
       = @user.full_name
       
   =render :partial => "users/profile_nav"
