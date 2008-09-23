@@ -990,4 +990,7 @@ td.numeric {
 	/* override profileItem.featureText from main.css */
   margin-top: 0px;
 }
-
+.profileContentArea .topRowFixHeight .moreLinkArea {
+	position: relative;
+	top: 150px;
+}

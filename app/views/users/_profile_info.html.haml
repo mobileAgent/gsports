@@ -22,3 +22,8 @@
         - if @user.moniker_hash["sports"]
           %span.profileSubHeading= @user.moniker_hash["sports"].collect{|t| link_to( h(t), tag_url(t), :class => 'btag') }.join(', ')
         %br/
+    - if @is_current_user
+      .profileFeature.moreLinkArea
+        %span.moreLink
+          = link_to _('edit'), edit_user_path(@user)
+        

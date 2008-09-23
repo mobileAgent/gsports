@@ -8,9 +8,13 @@
   .contentBoxContent.topRowFixHeight
     .centeringDiv{:style => "text-align: center; vertical-align: middle"}
       = image_tag @user.avatar_photo_url(:profile)
-      - if !@user.avatar and @is_current_user
-        %br
-        No profile photo?
-        = link_to "Click here to upload one!", edit_user_path(@user)
+    - if !@user.avatar and @is_current_user
+      %br
+      No profile photo?
+      = link_to "Click here to upload one!", edit_user_path(@user)
+  - if @user.avatar and @is_current_user
+    .profileFeature.moreLinkArea
+      %span.moreLink
+        = link_to _('edit'), edit_user_path(@user)
     
     
