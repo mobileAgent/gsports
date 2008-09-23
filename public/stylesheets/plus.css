@@ -848,11 +848,11 @@ td.numeric {
 	padding: 0px 0px 0px 0px;
 }
 #sidebar a {
-	color: #ffffff;
+	color: #cccccc;
 	text-decoration: none;
 }
 #sidebar a:hover {
-	text-decoration: underline;
+  color: #ffffff;
 }
 #sidebar .menutitle {
 	/* padding+height=actual height */
@@ -863,7 +863,7 @@ td.numeric {
 	font-weight: bold;
 	text-transform: uppercase;
 	padding-left: 18px;
-  background-image: url(../images/sidebar_menu_title.png);
+	background-image: url(../images/sidebar_menu_title.png);
   background-repeat: no-repeat; 
 }
 #sidebar .menuitem, #sidebar .menuitem-hilite, #sidebar .menuitem-last {
