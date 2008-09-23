@@ -6,7 +6,7 @@ class UsersController < BaseController
   
   protect_from_forgery :only => [:create, :update, :destroy]
   skip_before_filter :gs_login_required, :only => [:signup, :register, :new, :create, :billing, :submit_billing, :auto_complete_for_user_team_name, :auto_complete_for_team_league_name, :forgot_password, :registration_fill_team]
-  skip_before_filter :billing_required, :only => [:edit_billing, :submit_billing, :update_billing]
+  skip_before_filter :billing_required, :only => [:edit_billing, :submit_billing, :update_billing, :auto_complete_for_user_league_name]
   before_filter :admin_required, :only => [:assume, :destroy, :featured, :toggle_featured, :toggle_moderator, :disable]
   before_filter :find_user, :only => [:edit, :edit_pro_details, :show, :update, :destroy, :statistics, :disable ]
   
