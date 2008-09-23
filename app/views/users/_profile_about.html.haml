@@ -37,3 +37,8 @@
           %span.profileSubHeading= "#{mname.capitalize}:"
           = @user.moniker_hash[mname].collect{|t| link_to( h(t), tag_url(t), :class => 'tag') }.join(', ')
           %br/
+    - if @user.avatar and (@is_current_user or @current_user.admin?)
+      .profileFeature.moreLinkArea
+        %span.moreLink
+          = link_to _('edit'), edit_user_path(@user)
+          

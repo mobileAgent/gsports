@@ -32,7 +32,7 @@
               %br/
           .clearDiv
         
-      -if @accepted_friendships.size > 4  
-        .clearDiv.moreLinkArea
-          %span.moreLink
-            =link_to 'more?', accepted_user_friendships_path(@user)
+    -if @accepted_friendships.size > 4  
+      .profileFeature.moreLinkArea
+        %span.moreLink
+          =link_to 'more', accepted_user_friendships_path(@user)

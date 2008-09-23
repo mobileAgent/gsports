@@ -11,12 +11,13 @@
         - @photos.each do |photo|
           .fileThumb{:style => "text-align: center; vertical-align: middle"}
             = link_to image_tag( photo.public_filename(:icon)), user_photo_path(@user, photo)
-            
-      .clearDiv.moreLinkArea
-        %span.moreLink
-          - unless @photos.empty?
-            = link_to "more?", user_photos_path(@user)
-          -if @is_current_user
-            = link_to "add?", new_user_photo_path(@user)
-            
-            
+
+  .profileFeature.moreLinkArea
+    %span.moreLink
+      - unless @photos.empty?
+        = link_to "more", user_photos_path(@user)
+      -if @is_current_user
+        - unless @photos.empty?
+          |
+        = link_to "add", new_user_photo_path(@user)            
+        
