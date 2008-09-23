@@ -8,33 +8,31 @@
       = link_to "(#{@friend_count})", accepted_user_friendships_path(@user) if @friend_count > 5
   .contentBoxContent
     .profileFeature
-
       - if @is_current_user && @pending_friendships_count > 0
-        = link_to "&raquo; View all my friend requests (#{@pending_friendships_count})", pending_user_friendships_path(@user)
-        %br
-        %br    
+        .featureItem
+          = link_to "&raquo; View all my friend requests (#{@pending_friendships_count})", pending_user_friendships_path(@user)
       - elsif current_user && current_user.can_request_friendship_with(@user)
-        = add_friend_link(@user)
-        %br
-        %br    
+        .featureItem
+          = add_friend_link(@user)
       - @accepted_friendships.each do |user|
-        .featureSummaryThumb
-          = link_to image_tag(user.avatar_photo_url(:thumb), :alt => "#{user.full_name}", :width => '50', :height => '50'), user_path(user)
-        .featureText
-          %span.profileSubHeading
-            =link_to user.full_name, user_path(user), :class => 'url'
-          %br/
-          =user.team_name
-          -# if user.description
+        .featureItem
+          .featureItemThumb
+            = link_to image_tag(user.avatar_photo_url(:thumb), :alt => "#{user.full_name}"), user_path(user)
+          .featureText
+            %span.profileSubHeading
+              =link_to user.full_name, user_path(user), :class => 'url'
             %br/
-            %p= truncate_words( user.description, 10, '...')
-          %br/
-          - if @is_current_user
-            =link_to 'Send Message', new_message_path(:to => user.id), :class => 'url'
+            =user.team_name
+            -# if user.description
+              %br/
+              %p= truncate_words( user.description, 10, '...')
             %br/
-        .clearDiv
+            - if @is_current_user
+              =link_to 'Send Message', new_message_path(:to => user.id), :class => 'url'
+              %br/
+          .clearDiv
         
-      -if @accepted_friendships.size > 4  
-        .clearDiv.moreLinkArea
-          %span.moreLink
-            =link_to 'more?', accepted_user_friendships_path(@user)
+    -if @accepted_friendships.size > 4  
+      .profileFeature.moreLinkArea
+        %span.moreLink
+          =link_to 'more', accepted_user_friendships_path(@user)

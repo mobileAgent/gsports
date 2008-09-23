@@ -1,7 +1,9 @@
-.profileContentArea
+.profileContentArea.listingPage
   .profilePageHeader
     %h2.columnDescriptor
-      VIDEO PLAYER
+      %span
+        MY VIDEOS
+      Player
   .toplink
     = link_to "&laquo; back to my clips", user_video_clips_path(current_user)
     = " / "

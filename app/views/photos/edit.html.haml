@@ -2,7 +2,7 @@
   .profilePageHeader
     %h2.columnDescriptor
       %span
-        = @title || "My Photos"
+        = @title || "MY PHOTOS"
       = "#{@user.full_name}" unless @title
       
   =render :partial => "users/profile_nav"

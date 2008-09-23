@@ -7,7 +7,7 @@
   .profilePageHeader
     %h2.columnDescriptor
       %span
-        PROFILE
+        =link_to _('PROFILE'), user_path
       = @user.full_name
       - if current_user && current_user.can_request_friendship_with(@user)
         = add_friend_link(@user)

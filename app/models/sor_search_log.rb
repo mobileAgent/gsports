@@ -9,14 +9,15 @@ class SorSearchLog < ActiveRecord::Base
     if @users.size >0
       agent = WWW::Mechanize.new
       for user in @users
-        self.search_user_with_sor(user, agent)
+        level =0
+        self.search_user_with_sor(user, agent,level)
       end
     end
   end
 
-  def self.search_user_with_sor(user,agent)
+  def self.search_user_with_sor(user,agent,level)
     if user.state_id
-      SorSearchLog.send("search_user_state_#{user.state_id}".to_sym, user, agent)
+      SorSearchLog.send("search_user_state_#{user.state_id}".to_sym, user, agent,level)
     end
   end
 
@@ -25,7 +26,7 @@ class SorSearchLog < ActiveRecord::Base
   # more field: (ZipCode) ctl00$BodyArea1$UcSexOffender1$txtZipCode ,(County) ctl00$BodyArea1$UcSexOffender1$txtCounty
   # accept : N/A
   # link result : N/A
-  def self.search_user_state_1(user,agent)
+  def self.search_user_state_1(user,agent,level)
     page = agent.get("http://community.dps.alabama.gov/Default.aspx")
     search_form = page.forms.with.name("aspnetForm").first
     unless user.lastname =='' or user.city ='' or user.city==nil
@@ -50,7 +51,7 @@ class SorSearchLog < ActiveRecord::Base
   # more field:  SearchForm$City , SearchForm$ZipCodes
   # accept : N/A
   # link result : yes
-  def self.search_user_state_2(user,agent)
+  def self.search_user_state_2(user,agent,level)
     page = agent.get("http://www.dps.state.ak.us/Sorweb/Search.aspx")
     search_form = page.forms.with.name("SearchFormControl").first
     search_form.FirstName =user.firstname
@@ -72,7 +73,7 @@ class SorSearchLog < ActiveRecord::Base
   # more field: (more form)
   # accept : N/A
   # link result : N/A
-  def self.search_user_state_3(user,agent)
+  def self.search_user_state_3(user,agent,level)
     page = agent.get("http://az.gov/webapp/offender/searchName.do")
     search_form = page.forms.with.name("nameSearchForm").first
     search_form.lastName =user.lastname
@@ -91,7 +92,7 @@ class SorSearchLog < ActiveRecord::Base
   # Search field: name
   # more field: city, county, state
   #http://www.acic.org/soff/index.php
-  def self.search_user_state_4(user,agent)
+  def self.search_user_state_4(user,agent,level)
     page = agent.get("http://www.acic.org/soff/index.php")
     accept_form = page.forms.first
     unless  accept_form.buttons.with.value("I Agree").nil?
@@ -119,7 +120,7 @@ class SorSearchLog < ActiveRecord::Base
   # accept : yes
   # link result : yes
   #http://meganslaw.ca.gov/disclaimer.htm
-  def self.search_user_state_5(user,agent)
+  def self.search_user_state_5(user,agent,level)
     page = agent.get("http://meganslaw.ca.gov/disclaimer.htm")
     accept_form = page.forms.first
     unless  accept_form.buttons.with.value("Continue").nil?
@@ -146,13 +147,13 @@ class SorSearchLog < ActiveRecord::Base
 
   # id = 6 state = CO (Colorado)
   # can't use auto browser
-  def self.search_user_state_6(user,agent)
+  def self.search_user_state_6(user,agent,level)
 
 
   end
 
   # id = 7 state = CT (Connecticut)
-  def self.search_user_state_7(user,agent)
+  def self.search_user_state_7(user,agent,level)
 
 
   end
@@ -162,7 +163,7 @@ class SorSearchLog < ActiveRecord::Base
   # search field: lname, fname
   # linkresult :N/A
   # Acceptment :N/A
-  def self.search_user_state_8(user,agent)
+  def self.search_user_state_8(user,agent,level)
     page = agent.get("http://sexoffender.dsp.delaware.gov/sor_search.htm")
     search_form = page.forms.with.name("nsearch").first
     if search_form == nil
@@ -186,7 +187,7 @@ class SorSearchLog < ActiveRecord::Base
   # id = 9 state = DC (District Of Columbia )
   # Search field: txtLast (lastname), txtFirst (firstname)
   # more field: txtDictric1 (District), drpQuad (City Quadrant)
-  def self.search_user_state_9(user,agent)
+  def self.search_user_state_9(user,agent,level)
     page = agent.get("http://sor.csosa.net/sor/public/publicSearch.asp")
     search_form = page.forms.with.name("form").first
     if search_form == nil
@@ -208,80 +209,194 @@ class SorSearchLog < ActiveRecord::Base
   end
 
   # id = 10 state = FL (Florida)
-  def self.search_user_state_10(user,agent)
-
-
+  # http://offender.fdle.state.fl.us/offender/offenderSearchNav.do?link=advanced
+  # search field: firstName, LastName, city
+  def self.search_user_state_10(user,agent,level)
+    page = agent.get("http://offender.fdle.state.fl.us/offender/offenderSearchNav.do?link=advanced")
+    search_form = page.forms.with.name("OffenderSearchFormBean").first
+    if search_form == nil
+      logger.info "The page site is not available at the moment!!!"
+    else
+      search_form.lastName =user.lastname
+      search_form.firstName =user.firstname
+      search_form.city =user.city
+     # doc = agent.submit(search_form)
+      button=search_form.buttons.with.name("imageField").first
+     # doc = search_form.click_button(button)
+     # if doc.links.size >1
+     #   result = SorSearchLog.new
+     #   result.lastname = user.lastname
+     #   result.firstname = user.firstname
+     #   result.user_id =user.id
+     #   result.state_name = 'FL'
+     #   result.link ="N/A"
+     #   result.save
+     # end
+    end
   end
 
   # id = 11 state = GA (Georgia)
-  def self.search_user_state_11(user,agent)
-
-
+  # http://services.georgia.gov/gbi/gbisor/SORSearch.jsp
+  # search field = fname, lastname
+  # more field = city , county
+  def self.search_user_state_11(user,agent,level)
+    page = agent.get("http://services.georgia.gov/gbi/gbisor/SORSearch.jsp")
+    search_form = page.forms.with.name("SearchOffender").first
+    if search_form == nil
+      logger.info "The page site is not available at the moment!!!"
+    else
+      search_form.lname =user.lastname
+      search_form.fname =user.firstname
+      doc = agent.submit(search_form)
+      if doc.links.size >0
+        result = SorSearchLog.new
+        result.lastname = user.lastname
+        result.firstname = user.firstname
+        result.user_id =user.id
+        result.state_name = 'GA'
+        result.link ="N/A"
+        result.save
+      end
+    end
   end
 
   # id = 12 state = HI (Hawaii)
-  def self.search_user_state_12(user,agent)
-
-
+  #http://sexoffenders.ehawaii.gov/sexoff/search.jsp
+  # search field: LNAME, FNAME
+  # more field :ZIP
+  def self.search_user_state_12(user,agent,level)
+    page = agent.get("http://sexoffenders.ehawaii.gov/sexoff/search.jsp")
+    search_form = page.forms.first
+    if search_form == nil
+      logger.info "The page site is not available at the moment!!!"
+    else
+      search_form.LNAME =user.lastname
+      search_form.FNAME =user.firstname
+      search_form.ZIP =user.zip
+      doc = agent.submit(search_form)
+      if doc.links.size >12
+        result = SorSearchLog.new
+        result.lastname = user.lastname
+        result.firstname = user.firstname
+        result.user_id =user.id
+        result.state_name = 'HI'
+        result.link ="N/A"
+        result.save
+      end
+    end
   end
 
   # id = 13 state = ID (Idaho)
-  def self.search_user_state_13(user,agent)
-
-
+  # Search field :fnm (firstname), lnm (lastname)
+  # More field :cty (City),cnt (County)
+  #http://www.isp.state.id.us/sor_id/search_regnam.htm
+  def self.search_user_state_13(user,agent,level)
+    page = agent.get("http://www.isp.state.id.us/sor_id/search_regnam.htm")
+    search_form = page.forms.with.name("searchform").first
+    if search_form == nil
+      logger.info "The page site is not available at the moment!!!"
+    else
+      search_form.lnm =user.lastname
+      search_form.fnm =user.firstname
+    #  search_form.cty =user.city
+      doc = agent.submit(search_form)
+      if doc.links.size >17
+        result = SorSearchLog.new
+        result.lastname = user.lastname
+        result.firstname = user.firstname
+        result.user_id =user.id
+        result.state_name = 'ID'
+        result.link ="N/A"
+        result.save
+      end
+    end
   end
 
   # id = 14 state = IL (Illinois)
-  def self.search_user_state_14(user,agent)
-
-
+  # search field: lastname,  city
+  # more field: county, zipcode
+# http://www.isp.state.il.us/sor/
+  def self.search_user_state_14(user,agent,level)
+    page = agent.get("http://www.isp.state.il.us/sor/")
+    accept_form = page.forms.with.name("disc").first
+    unless  accept_form.buttons.with.value("I Agree").nil?
+      button=accept_form.buttons.with.value("I Agree")
+      page = accept_form.click_button(button)
+    end
+    search_form = page.forms.with.name("SSOR").first
+    if search_form == nil
+      logger.info "The page site is not available at the moment!!!"
+    else
+      search_form.lastname =user.lastname
+    #  search_form.fnm =user.firstname
+      search_form.cty =user.city
+      doc = agent.submit(search_form)
+      if doc.links.size >28
+        result = SorSearchLog.new
+        result.lastname = user.lastname
+        result.firstname = user.firstname
+        result.user_id =user.id
+        result.state_name = 'IL'
+        result.link ="N/A"
+        result.save
+      end
+    end
   end
 
   # id = 15 state = IN (Indiana)
-  def self.search_user_state_15(user,agent)
-
-
+  # http://www.insor.org/insasoweb/
+  def self.search_user_state_15(user,agent,level)
+    page = agent.get("http://www.insor.org/insasoweb/")
+    accept_form = page.forms.with.name("agreementForm").first
+    radio_button = accept_form.radiobuttons.first
+    radio_button.checked =true
+    page =agent.submit(accept_form)
+    search_form = page.forms.with.name("advancedSearchForm")
+    search_form.lastName =user.lastname
+    search_form.firstName =user.firstname
+    button = search_form.buttons.first
+    doc = search_form.click_button(button)
   end
 
   # id = 16 state = IA (Iowa)
-  def self.search_user_state_16(user,agent)
+  def self.search_user_state_16(user,agent,level)
 
 
   end
 
   # id = 17 state = KS (Kansas)
-  def self.search_user_state_17(user,agent)
+  def self.search_user_state_17(user,agent,level)
 
 
   end
 
   # id = 18 state = KY (Kentucky)
-  def self.search_user_state_18(user,agent)
+  def self.search_user_state_18(user,agent,level)
 
 
   end
 
   # id = 19 state = LA (Louisiana)
-  def self.search_user_state_19(user,agent)
+  def self.search_user_state_19(user,agent,level)
 
 
   end
 
   # id = 20 state = ME (Maine)
-  def self.search_user_state_20(user,agent)
+  def self.search_user_state_20(user,agent,level)
 
 
   end
 
   # id = 21 state = MA (Maryland)
-  def self.search_user_state_21(user,agent)
+  def self.search_user_state_21(user,agent,level)
 
 
   end
 
   # id =22 state = MA (Massachusetts)
   # LastName, County , City Name
-  def self.search_user_state_22(user,agent)
+  def self.search_user_state_22(user,agent,level)
     page = agent.get("http://sorb.chs.state.ma.us/search.htm")
     accept_link = page.links.text("PROCEED")
     unless accept_link == nil
@@ -307,49 +422,49 @@ class SorSearchLog < ActiveRecord::Base
 
 
   # id = 23 state = MI (Michigan)
-  def self.search_user_state_23(user,agent)
+  def self.search_user_state_23(user,agent,level)
 
 
   end
 
   # id = 24 state = MN (Minnesota)
-  def self.search_user_state_24(user,agent)
+  def self.search_user_state_24(user,agent,level)
 
 
   end
 
   # id = 25 state = MS (Missisippi)
-  def self.search_user_state_25(user,agent)
+  def self.search_user_state_25(user,agent,level)
 
 
   end
 
   # id = 26 state = M0 (Missouri)
-  def self.search_user_state_26(user,agent)
+  def self.search_user_state_26(user,agent,level)
 
 
   end
 
   # id = 27 state = MT (Montana)
-  def self.search_user_state_27(user,agent)
+  def self.search_user_state_27(user,agent,level)
 
 
   end
 
   # id = 28 state = NE (Nebraska)
-  def self.search_user_state_28(user,agent)
+  def self.search_user_state_28(user,agent,level)
 
 
   end
 
   # id = 29 state = NV (Nevada)
-  def self.search_user_state_29(user,agent)
+  def self.search_user_state_29(user,agent,level)
 
 
   end
 
   # id = 30 state = NH (New Hampshire)
-  def self.search_user_state_30(user,agent)
+  def self.search_user_state_30(user,agent,level)
 
 
   end
@@ -388,7 +503,7 @@ class SorSearchLog < ActiveRecord::Base
   end
 
    # id =33 , state NY (New York)
-  def self.search_user_state_33(user,agent)
+  def self.search_user_state_33(user,agent,level)
     page = agent.get("http://www.criminaljustice.state.ny.us/nsor/search_index.htm")
     search_form = page.forms.with.action("/cgi/internet/nsor/fortecgi").first
     if search_form == nil
@@ -409,109 +524,109 @@ class SorSearchLog < ActiveRecord::Base
   end
 
   # id = 34 state = NC (North Carolina)
-  def self.search_user_state_34(user,agent)
+  def self.search_user_state_34(user,agent,level)
 
 
   end
 
   # id = 35 state = ND (North Dakota)
-  def self.search_user_state_35(user,agent)
+  def self.search_user_state_35(user,agent,level)
 
 
   end
 
   # id = 36 state = OH (Ohio)
-  def self.search_user_state_36(user,agent)
+  def self.search_user_state_36(user,agent,level)
 
 
   end
 
   # id = 37 state = OK (Oklahoma)
-  def self.search_user_state_37(user,agent)
+  def self.search_user_state_37(user,agent,level)
 
 
   end
 
   # id = 38 state = OR (Oregon)
-  def self.search_user_state_38(user,agent)
+  def self.search_user_state_38(user,agent,level)
 
 
   end
 
   # id = 39 state = PA (Pennsylvania)
-  def self.search_user_state_39(user,agent)
+  def self.search_user_state_39(user,agent,level)
 
 
   end
 
   # id = 40 state = RI (Rhode Island)
-  def self.search_user_state_40(user,agent)
+  def self.search_user_state_40(user,agent,level)
 
 
   end
 
   # id = 41 state = SC (South Carolina)
-  def self.search_user_state_41(user,agent)
+  def self.search_user_state_41(user,agent,level)
 
 
   end
 
   # id = 42 state = SD (South Dakota)
-  def self.search_user_state_42(user,agent)
+  def self.search_user_state_42(user,agent,level)
 
 
   end
 
   # id = 43 state = TN (Tennessee)
-  def self.search_user_state_43(user,agent)
+  def self.search_user_state_43(user,agent,level)
 
 
   end
 
   # id = 44 state = TX (Texas)
-  def self.search_user_state_44(user,agent)
+  def self.search_user_state_44(user,agent,level)
 
 
   end
 
   # id = 45 state = UT (Utah)
-  def self.search_user_state_45(user,agent)
+  def self.search_user_state_45(user,agent,level)
 
 
   end
 
   # id = 46 state = VT (Vermont)
-  def self.search_user_state_46(user,agent)
+  def self.search_user_state_46(user,agent,level)
 
 
   end
 
   # id = 47 state = VA (Virginia)
-  def self.search_user_state_47(user,agent)
+  def self.search_user_state_47(user,agent,level)
 
 
   end
 
   # id = 48 state = WA (Washington)
-  def self.search_user_state_48(user,agent)
+  def self.search_user_state_48(user,agent,level)
 
 
   end
 
   # id = 49 state = WV (West Virginia)
-  def self.search_user_state_49(user,agent)
+  def self.search_user_state_49(user,agent,level)
 
 
   end
 
   # id = 50 state = WI (Wisconsin)
-  def self.search_user_state_50(user,agent)
+  def self.search_user_state_50(user,agent,level)
 
 
   end
 
   # id = 51 state = WY (Wyoming)
-  def self.search_user_state_51(user,agent)
+  def self.search_user_state_51(user,agent,level)
 
 
   end

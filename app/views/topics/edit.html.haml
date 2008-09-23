@@ -4,7 +4,7 @@
   .profilePageHeader
     %h2.columnDescriptor
       %span
-        = _('FORUMS')
+        =link_to _('FORUMS'), forums_path
       = link_to h(@topic.forum.name), forum_path(@topic.forum)
       \:
       = _('Edit Topic')

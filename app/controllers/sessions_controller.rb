@@ -25,9 +25,11 @@ class SessionsController < BaseController
       flash[:notice] = "Thanks! You're now logged in."
       current_user.track_activity(:logged_in)
     else
-      if !current_user.nil? && !current_user.enabled?
-        current_user = nil
-        flash[:notice] = "Your account is not enabled.  Please contact the administrator."
+      self.current_user = nil
+      inactive_user = User.authenticate_inactive(params[:login],params[:password])
+      if (inactive_user)
+        flash[:error] = 'Your account is inactive. You must provide billing information'
+        redirect_to :controller => 'users', :action => 'billing', :userid => inactive_user.id and return
       else
         flash[:error] = "Uh oh. We couldn't log you in with the username and password you entered. Your username is your email address. Try again?"      
       end

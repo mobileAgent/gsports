@@ -2,7 +2,8 @@
   .profilePageHeader
     %h2.columnDescriptor
       %span
-        My Profile
+        =link_to _('PROFILE'), user_path
+      Edit
       = current_user.full_name()
       
   =render :partial => "users/profile_nav"

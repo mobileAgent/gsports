@@ -1,3 +1,6 @@
+a, a:visited, a:hover, a:active {
+  outline: none;
+}
 
 /* notice warning flash_message */
 #flash_notice, #flash_error, #flash_info {
@@ -161,7 +164,6 @@ input[type='submit']:hover {
 }
 
 
-
 /* will-paginate apple.com store style pagination styles */
 .apple_pagination {
   background: #F1F1F1;
@@ -256,7 +258,7 @@ object#homeFlash {
 .playerContentArea {
   background: #292e43;
   width: 956px;
-  margin-top: 5px;
+  /*margin-top: 5px;*/
   height: auto;
   float: left;
 }
@@ -326,14 +328,12 @@ div.favFIT {
   overflow: hidden;
   display: inline;
 }
-
 div.profileFIT {
-  height: 90px;
-  width: 150px;
+	width: 150px;
+  height: 10px;
   overflow: hidden;
   display: inline;
 }
-
 div.thumbFIT {
   height: 100px;
   width: 100px;
@@ -498,7 +498,7 @@ div.thumbFIT {
 }
 .profileContentArea .toplink {
   float: left;
-  margin-left: 15px;
+  margin: 10px 0px 10px 15px;
 }
 
 input[type='button'] {
@@ -613,82 +613,6 @@ input[type='button'] {
 	padding-left: 10px;
 }
 
-.commentContainer {
-    background-color: #E2E4A7;
-    padding: 5px 25px 5px 25px;
-}    
-
-.commentItem {
-    padding: 5px;
-    border: 1px solid #666666;
-    background-color: #E2E4A7;
-    width: auto;
-    display: block;
-    height: auto;
-}
-
-.commentPoster {
-    width: 85px;
-    float: left;
-    padding-top: 10px;
-    padding-right: 5px;
-    padding-bottom: 5px;
-    padding-left: 5px;
-    text-align: center;
-}
-
-.commentPosterImg a {
-    border: 2px solid #666666;
-}
-
-.commentPosterImg a:hover {
-    border: 2px solid #0066CC;
-}
-
-.commentPoster a {
-    font-size: 110%;
-    color: #333333;
-    text-align: left;
-    display: block;
-    margin-top: 5px;
-}
-
-.commentPoster a:hover {
-    font-size: 110%;
-    color: #333333;
-    text-decoration: none;	
-}
-
-.commentSummary, .commentSummaryBody {
-    width: 94%;
-    padding-left: 3%;
-    float: left;
-}
-
-.commentSummaryBody {
-    background-color: #FFFFFF;
-    padding: 10px;
-}
-
-.commentSummaryBody p {
-    background-color: #FFFFFF;
-    display: block;
-}
-
-.commentSummaryBody strong {
-    font-size: 115%;
-}
-
-.commentSummaryDate {
-    float: left;
-    padding-bottom: 10px;
-}
-
-.commentActions {
-    float: right;
-    padding: 5px;
-    width: auto;
-}
 
 /* Stop the jumping on selected mail items */
 .mailItem {
@@ -783,10 +707,6 @@ input[type='button'] {
 .profileActivity .activity-thumbnail {
 	float: left;
 	padding-right: 5px;
-}
-
-.profileActivity {
-	border-bottom: 1px solid white;
 }
 /* end - profile activity */
 
@@ -918,3 +838,191 @@ td.blogList, th.blogList, td.leagueList, th.leagueList {
 td.numeric {
   text-align: right;
 }
+
+/*
+ * SIDE BAR
+ */
+#sidebar {
+	width: 125px;	
+	margin: 0px 0px 0px 0px;
+	padding: 0px 0px 0px 0px;
+}
+#sidebar a {
+	color: #ffffff;
+	text-decoration: none;
+}
+#sidebar a:hover {
+	text-decoration: underline;
+}
+#sidebar .menutitle {
+	/* padding+height=actual height */
+	height: 25px;
+  padding-top: 10px; 	
+	color: #ffffff;
+	font-size: 110%;
+	font-weight: bold;
+	text-transform: uppercase;
+	padding-left: 18px;
+  background-image: url(../images/sidebar_menu_title.png);
+  background-repeat: no-repeat; 
+}
+#sidebar .menuitem, #sidebar .menuitem-hilite, #sidebar .menuitem-last {
+  /* padding+height=actual height */
+  height: 16px;
+  padding-top: 4px; 
+  color: #ffffff;
+  font-weight: bold;
+  padding-left: 18px;
+  background-image: url(../images/sidebar_menu_item.png);
+  background-repeat: no-repeat;
+}
+#sidebar .menuitem-hilite {
+  background-image: url(../images/sidebar_menu_item_btm.png);
+  background-repeat: no-repeat; 
+}
+#sidebar .menuitem-last {
+  height: 33px; 
+  background-image: url(../images/sidebar_menu_btm_curve.png);
+	background-repeat: no-repeat;	
+}
+
+
+
+/*
+ * COMMENTS
+ */
+
+.commentContainer {
+    background-color: #E2E4A7;
+    padding: 5px 25px 5px 25px;
+} 
+.commentPost {
+  background-color: #E2E4A7;
+  width: auto;
+  display: block;
+  height: auto;
+  margin-bottom: 10px;
+}
+.profileInfo .commentPost {
+	/* Override for profile info display */
+  margin-bottom: 0px;
+  border-bottom: 1px solid #ffffff;
+}
+.commentPoster {
+  float: left;
+	padding: 10px 10px 10px 15px;	
+  text-align: center;
+  width: auto;
+}
+.profileInfo .commentPoster {
+  /* Override for profile info display */
+  padding-left: 10px;
+}
+.profileInfo .commentPoster a img {
+	/* Override for profile info display */
+  width: 80px;  
+}
+.commentSummaryBox {
+  float: left;
+  width: 530px;
+  margin-bottom: 10px;
+}
+.profileInfo .commentSummaryBox {
+  width: 215px;
+}
+.commentHeading {
+	padding-top: 10px;
+  margin-bottom: 10px;
+}
+.commentSummaryBody {
+  background-color: #FFFFFF;
+  padding: 10px;
+}
+.commentSummaryBody p {
+  background-color: #FFFFFF;
+  margin-bottom: 5px;
+  display: block;
+}
+.commentActions {
+  float: right;
+  padding: 5px;
+  width: auto;
+}
+.profileInfo .commentActions {
+  float: clear; 
+}
+.commentActions li {
+  margin-bottom: 10px;
+}
+.featureItem, .featureSummary {
+  border-bottom: 1px solid #ffffff;
+	padding-bottom: 5px;
+	margin-bottom: 5px;
+}
+.profileFeature .featureItem {
+  margin-right: 0px;
+}
+.featureItemThumb {
+  float: left;
+  text-align: center;
+  width: auto;
+}
+.profileInfo .commentPoster {
+  /* Override for profile info display */
+  padding-left: 10px;
+}
+.featureItemThumb a img, .profileInfo .commentPoster a img {
+  /* Override for profile info display */
+  width: 50px;  
+}
+.featureItem .featureText {
+	/* override profileItem.featureText from main.css */
+  margin-top: 0px;
+	margin-right: 0px;
+	width: 125px;
+}
+.profileContentArea .topRowFixHeight .moreLinkArea {
+	position: relative;
+	top: 150px;
+}
+
+.profileFeature .clipItem {
+  float: left;
+  display: inline;
+  padding: 5px 5px 5px 5px;
+  width: 150px;
+}
+.profileFeature .clipItem .profileClipFIT {
+	 width: 140px;
+   height: 90px;
+	 overflow: hidden;
+	 display: block;
+}
+
+a img.framed,
+a.framed img, 
+.featureItemThumb a img, 
+.commentPoster a img,
+.forumPoster a img 
+{
+  border: 2px solid #333333;
+}
+
+a:hover img.framed, 
+a:hover.framed img, 
+.featureItemThumb a:hover img, 
+.commentPoster a:hover img,
+.forumPoster a:hover img 
+{	
+  border: 2px solid #0066CC;
+}
+
+/* Allow for linking of main page heading */
+h2.columnDescriptor span a {
+  color: #0081C0; 
+  text-decoration: none;
+}
+h2.columnDescriptor span a:hover {
+  text-decoration: underline;
+}
+

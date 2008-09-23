@@ -4,11 +4,12 @@
       %a{ :href => "#", :onclick => "return profile_minimize(this)" }
         minimize -
     %h2.boxDescription
-      = _('Sports Wall')
+      = _('My Scoreboard')
   .contentBoxContent.sportsWall
     .profileFeature
       .profileInfo
-        = render :partial => 'users/profile_comment_form', :locals => {:commentable => @user}
+        .commentPost
+          = render :partial => 'users/profile_comment_form', :locals => {:commentable => @user}
 
         #newest_comment
         = render :partial => 'comments/comment', :collection => @comments

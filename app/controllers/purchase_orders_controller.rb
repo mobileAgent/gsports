@@ -25,6 +25,16 @@ class PurchaseOrdersController < BaseController
         render :action=>:confirm
       else
         @po.save!
+
+        #########################
+        # If we have to auto-enable users when a po is submitted, here is how
+        # @po.user.enabled = true
+        # @po.user.activated_at = Time.now
+        # @po.user.save!
+        # self.current_user = @po.user # Log them in right now!
+        # UserNotifier.deliver_welcome(@po.user)
+        #########################
+        
         render :action=>:show, :layout => false, :id=>@po.id
       end
     else    

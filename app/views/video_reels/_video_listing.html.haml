@@ -1,7 +1,8 @@
 .listingItem{:id => "video_reel_#{video_listing.id}"}
   .listingImage
     = "<a href='#{user_video_reel_path(video_listing.user_id,video_listing)}'><img src='#{@vidavee.file_thumbnail_medium(video_listing.thumbnail_dockey)}' title='#{h(video_listing.title).gsub(/\'/,'')}' alt='Reel'/></a>"
-  .listingDescription
+  - skip_controls ||= false
+  .listingDescription{ :style => "width: 500px" }
     %h4
       = truncate(h(video_listing.title),75)
     %span.schoolName
@@ -15,8 +16,6 @@
     - if video_listing.description && video_listing.description.length > 0
       %span.recentFriendFeed
         = truncate_words(h(video_listing.description),25)
-      
-  - skip_controls ||= false
   %ul.listingActions
     %li
       = link_to "Watch Reel", user_video_reel_path(video_listing.user_id,video_listing), :class => 'genericButton'
@@ -33,5 +32,6 @@
         = link_to "Edit", edit_video_reel_path(video_listing), :class => 'genericButton'
       %li
         = link_to_remote 'Delete', {:url => url_for(video_listing), :confirm => 'Are you sure?', :method => :delete}, :class=>'genericButton'
+      
   .clearDiv
 .clearDiv
