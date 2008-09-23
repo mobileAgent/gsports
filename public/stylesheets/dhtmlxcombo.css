@@ -39,7 +39,12 @@
 }
 .dhx_combo_list{
    position:absolute;
-   z-index:30;
+  /* 
+   * z-index should be >= 30, which is the z-index of the auto_complete list (screen.css)
+   * Prefer to use z-index = 30, which will allow the ordering of the boxes
+   * in the html determine which one to put in front.
+   */ 
+	 z-index:30;
    overflow-y:auto;
    overflow-x:hidden;
    border:1px solid black;

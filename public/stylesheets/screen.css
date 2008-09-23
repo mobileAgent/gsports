@@ -11,19 +11,27 @@ color: #464337;
 
 div.auto_complete {
   width: 350px;
-
+	/* 
+	 * z-index should be >= 30, which is the z-index of the dhtmlxcombo box (dhtmlxcombo.css)
+	 * Prefer to use z-index = 30, which will allow the ordering of the boxes
+	 * in the html determine which one to put in front.
+	 */ 
+	z-index: 30;
 }
   div.auto_complete ul {
-    border: 1px solid #888888;
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    width: auto; }
-    div.auto_complete ul li {
-      margin: 0;
-      padding: 3px; }
-    div.auto_complete ul li.selected {
-      background-color: #FFFDC0; }
+  border: 1px solid #888888;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  width: auto; 
+}
+div.auto_complete ul li {
+	margin: 0;
+	padding: 3px; 
+}
+div.auto_complete ul li.selected {
+  background-color: #FFFDC0; 
+}
 .clear {
 	clear: both;}
 .right {
