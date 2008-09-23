@@ -8,36 +8,44 @@
         
   =render :partial => "users/profile_nav"
   .listings
-    .listingItem
+    .padded
 
-      %table.unstyled
-        %thead
-          %tr
-            %th Name
-            %th Nickname
-            %th City
-            %th County
-            %th State
-            %th League
-            %th Description
-            %th Users
-            %th/
-      
-        - for team in @teams
-          %tbody
-            %tr
-            %td= link_to team.name, edit_team_path(team), {:title => "edit"}
-            %td=h team.nickname
-            %td=h team.city
-            %td=h team.county_name
-            %td=h team.state_id? ? team.state.name : ""
-            %td=h team.league_name
-            %td=truncate h(team.description),45
-            %td.numeric= team.users.size
-
-            - if team.id != User.admin.first.team_id
-              %td= link_to 'Delete', team_path(team), :confirm => 'Are you sure?', :method => :delete
       - if @league
-        = link_to 'New school', url_for({:controller=>'teams',:action=>'new',:league_id=>@league.id})
+        = link_to 'New school', url_for({:controller=>'teams',:action=>'new',:league_id=>@league.id}), :class => 'genericButton'
       - else
-        = link_to 'New school', url_for({:controller=>'teams',:action=>'new'})
+        = link_to 'New school', url_for({:controller=>'teams',:action=>'new'}), :class => 'genericButton'
+
+      %br/
+
+      %table{:border => 0, :cellspacing => 0, :cellpadding => 0, :width => '100%'}
+        %thead
+          %tr.yellowHeader
+            %td.padded.contentBoxHeader Name
+            %td.padded.contentBoxHeader Nickname
+            %td.padded.contentBoxHeader City
+            %td.padded.contentBoxHeader County
+            %td.padded.contentBoxHeader State
+            %td.padded.contentBoxHeader League
+            %td.padded.contentBoxHeader Description
+            %td.padded.contentBoxHeader.numeric Users
+            %td.padded.contentBoxHeader/ 
+    
+        %tbody
+          - for team in @teams
+            %tr.leagueList
+              %td.leagueList= link_to team.name, edit_team_path(team), {:title => "edit"}
+              %td.leagueList=h team.nickname
+              %td.leagueList=h team.city
+              %td.leagueList=h team.county_name
+              %td.leagueList=h team.state_id? ? team.state.name : ""
+              %td.leagueList=h team.league_name
+              %td.leagueList=truncate h(team.description),45
+              %td.leagueList.numeric= team.users.size
+
+              - if team.id != User.admin.first.team_id
+                %td.leagueList= link_to 'Delete', team_path(team), :confirm => 'Are you sure?', :method => :delete
+              - else
+                %td.leagueList &nbsp;
+              
+
+        

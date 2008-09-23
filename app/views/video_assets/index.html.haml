@@ -8,14 +8,17 @@
   =render :partial => "users/profile_nav"
   .listings
     - if current_user.can_upload?
-      .listingItem
+      .box
         = link_to 'Upload a new video', new_video_asset_path, :class => 'genericButton'
 
-      = render :partial => 'video_listing', :collection => @video_assets
+      - if @video_assets.any?
+        = render :partial => 'video_listing', :collection => @video_assets
       
-      - if @video_assets.respond_to?('total_pages')
-        .apple_pagination
-          = will_paginate @video_assets
-        
+        - if @video_assets.respond_to?('total_pages')
+          .apple_pagination
+            = will_paginate @video_assets
+      - else
+        .box
+          You don't have any videos yet.
     
     

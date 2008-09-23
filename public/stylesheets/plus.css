@@ -1030,3 +1030,13 @@ h2.columnDescriptor span a:hover {
   text-decoration: underline;
 }
 
+/* Adding right margin to right-most 3rd column */ 
+.rightContentItem {
+  width: 250px;
+  margin: 10px 20px 0px 20px;
+}
+.mainCol3 .contentBox {
+  width: 238px;
+}
+
+
