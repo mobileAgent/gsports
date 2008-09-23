@@ -1,7 +1,7 @@
 .listingItem{:id => "video_clip_#{video_listing.id}"}
   .listingImage
     = "<a href='#{user_video_clip_path(video_listing.user_id,video_listing)}'><img src='#{@vidavee.file_thumbnail_medium(video_listing.dockey)}' title='#{h(video_listing.title).gsub(/\'/,'')}' alt='Clip'/></a>"
-  .listingDescription
+  .listingDescription{ :style => "width: 500px" }
     %h4
       = h video_listing.title
     %span.schoolName
