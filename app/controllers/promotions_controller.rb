@@ -53,7 +53,10 @@ class PromotionsController < BaseController
         format.html { render :action => "new" }
         format.xml  { render :xml => @promotion.errors, :status => :unprocessable_entity }
       end
-    end
+    end    
+  rescue ActiveRecord::StatementInvalid    
+    # Catch potential error from db if promo code is not unique (validation should catch)
+    render :action => 'new'
   end
 
   # PUT /promotions/1
@@ -71,6 +74,9 @@ class PromotionsController < BaseController
         format.xml  { render :xml => @promotion.errors, :status => :unprocessable_entity }
       end
     end
+  rescue ActiveRecord::StatementInvalid
+    # Catch potential error from db if promo code is not unique (validation should catch)
+    render :action => 'edit'
   end
 
   # DELETE /promotions/1

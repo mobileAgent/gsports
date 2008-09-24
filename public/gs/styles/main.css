@@ -1243,10 +1243,13 @@ td.forumList,th.forumList {
 
 /* general */
  
-body *{
+body * {
 	border: 0;
 	margin: 0;
 	padding: 0;
+}
+ul {
+  padding-left: 30px;
 }
 body{
 	font-size: 10px; /*** all other font sizes should be specified as percentages of 10px ***/

@@ -1039,4 +1039,9 @@ h2.columnDescriptor span a:hover {
   width: 238px;
 }
 
+/* restoring left padding for lists that are removed by the "body *" css */
+ul, ol {
+  padding-left: 30px;
+}
+
 
