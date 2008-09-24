@@ -24,6 +24,10 @@
         %br/
         %br/
         %h2.profileHeading Favorites:
+        %span.profileSubHeading Sports:
+        - if @user.moniker_hash["sports"]
+          = @user.moniker_hash["sports"].collect{|t| link_to( h(t), tag_url(t), :class => 'btag') }.join(', ')
+        %br/
         %span.profileSubHeading Teams:
         - if @user.moniker_hash["teams"]
           = @user.moniker_hash["teams"].collect{|t| link_to( h(t), tag_url(t), :class => 'tag') }.join(', ')
@@ -32,6 +36,7 @@
         - if @user.moniker_hash["music"]
           = @user.moniker_hash["music"].collect{|t| link_to( h(t), tag_url(t), :class => 'tag') }.join(', ')
         %br/
+        
         - for mname in @user.moniker_hash.keys
           - next if (mname == "music" || mname == "sports" || mname == "teams")
           %span.profileSubHeading= "#{mname.capitalize}:"
