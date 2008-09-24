@@ -1039,4 +1039,76 @@ h2.columnDescriptor span a:hover {
   width: 238px;
 }
 
+/* Ratings */
+
+.star-rating,
+.star-rating a:hover,
+.star-rating a:active,
+.star-rating a:focus,
+.star-rating .current-rating{
+	background: url(/images/star.gif) left -1000px repeat-x;
+}
+.star-rating{
+	position:relative;
+	width:115px;
+	height:24px;
+	overflow:hidden;
+	list-style:none;
+	margin:0;
+	padding:0;
+	background-position: left top;
+}
+.star-rating li{
+	display: inline;
+}
+.star-rating a,
+.star-rating .current-rating{
+	position:absolute;
+	top:0;
+	left:0;
+	text-indent:-1000em;
+	height:25px;
+	line-height:25px;
+	outline:none;
+	overflow:hidden;
+	border: none;
+	margin:0;
+	padding:0;
+}
+.star-rating a:hover,
+.star-rating a:active,
+.star-rating a:focus{
+	background-position: left bottom;
+}
+.star-rating a.stars-1{
+	width:20%;
+	z-index:6;
+}
+.star-rating a.stars-2{
+	width:40%;
+	z-index:5;
+}
+.star-rating a.stars-3{
+	width:60%;
+	z-index:4;
+}
+.star-rating a.stars-4{
+	width:80%;
+	z-index:3;
+}
+.star-rating a.stars-5{
+	width:100%;
+	z-index:2;
+}
+.star-rating .current-rating{
+	z-index:1;
+	background-position: left center;
+}
+
+
+/* end Ratings */
+
+
+
+
 

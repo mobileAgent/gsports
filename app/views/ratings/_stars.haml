@@ -1,0 +1,11 @@
+-# http://www.komodomedia.com/blog/2007/01/css-star-rating-redux/
+- rating = item.rating > 0 ? ((item.rating / 5.0)*100).to_i : 0
+- target = "rate-#{item.type}-#{item.id}"
+%div{ :id => target }
+  -#="[#{item.type}-#{item.id}]: #{item.rating} - #{rating}"
+  %ul{ :class=>"star-rating" }
+    %li{ :class=>"current-rating", :style=>"width:#{rating}%;" }
+    -(1 .. 5).each do |i|
+      %li
+        = link_to_remote(i, :url => { :controller => "ratings", :action => "rate", :type=>item.class, :id=>item.id, :rating=>i}, :html=>{ :title=>"#{i} star out of 5", :class=>"stars-#{i}" } )
+
