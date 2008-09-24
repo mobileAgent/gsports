@@ -2,8 +2,10 @@
   .profilePageHeader
     %h2.columnDescriptor
       %span
-        UPLOAD SUCCESS!
-      = current_user.full_name
+        MY VIDEOS
+      Upload SUCCESS!
+      -#
+        = current_user.full_name
 
   =render :partial => "users/profile_nav"
   .listings

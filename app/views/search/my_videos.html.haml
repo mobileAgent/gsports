@@ -2,7 +2,10 @@
   .profilePageHeader
     %h2.columnDescriptor
       %span
-        = @title || "My Videos"
+        -if @title
+          = @title 
+        -else 
+          =link_to _('MY VIDEOS'), url_for({:controller => 'search', :action => 'my_videos', :user_id => @user.id})
       = "#{@user.full_name}" unless @title
       
   =render :partial => "users/profile_nav"

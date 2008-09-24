@@ -2,7 +2,8 @@ class VideoClipsController < BaseController
   include Viewable
   
   skip_before_filter :verify_authenticity_token, :only => [:create]
-  
+  before_filter :find_user, :only => [:index, :show, :new, :edit ]
+
   uses_tiny_mce(:options => AppConfig.narrow_mce_options.merge({:width => 530}),
                 :only => [:show])
   
@@ -12,7 +13,6 @@ class VideoClipsController < BaseController
   # GET /video_clips.xml
   def index
     
-    @user = params[:user_id] ? User.find(params[:user_id]) : current_user
     cond = Caboose::EZ::Condition.new
     cond.user_id == @user.id
     if params[:tag_name]    
@@ -61,6 +61,7 @@ class VideoClipsController < BaseController
 
   # GET /video_clips/1/edit
   def edit
+    @user = params[:user_id] ? User.find(params[:user_id]) : current_user
     @video_clip = VideoClip.find(params[:id])
   rescue ActiveRecord::RecordNotFound
     flash[:notice] = 'That clip could not be found.'
@@ -151,6 +152,12 @@ class VideoClipsController < BaseController
   def thumbnail
     @video_clip = VideoClip.find(params[:id])
     send_data @vidavee.file_thumbnail_medium(session[:vidavee],@video_clip.dockey), :filename => "clip#{@video_clip.id}.jpg", :type => 'image/jpeg' 
+  end
+  
+  protected
+  
+  def find_user
+    @user = params[:user_id] ? User.find(params[:user_id]) : current_user
   end
 
 end

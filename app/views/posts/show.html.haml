@@ -4,7 +4,7 @@
   .profilePageHeader
     %h2.columnDescriptor
       %span
-        = _('BLOG')
+        =link_to _('BLOG'), user_posts_path(@user.id)
       = @post.category.name
       
   =render :partial => "users/profile_nav"
@@ -20,7 +20,7 @@
       .forumPost
         .forumPoster
           %a{:href=>"#{user_path(@user)}", :class=>"photo"}
-            =image_tag(@user.avatar_photo_url(:thumb), :alt=>"Profile Picture", :width=>"80", :height=>"80")
+            =image_tag(@post.image_thumbnail_for_post(:thumb, true), :alt=>"")
           %a{ :href => "#" }
             = link_to @user.full_name, user_path(@user)
         .forumPostSummary

@@ -2,7 +2,7 @@
   .profilePageHeader
     %h2.columnDescriptor
       %span
-        = "MY CLIPS"
+        =link_to _('MY CLIPS'), user_video_clips_path(@user.id)
       = @user.full_name
       
   =render :partial => "users/profile_nav"
@@ -16,5 +16,6 @@
           = will_paginate @video_clips
           
     -else
-      = "You don't have any video clips yet"
+      .box
+        You don't have any video clips yet.
     

@@ -5,7 +5,7 @@
   .profilePageHeader
     %h2.columnDescriptor
       %span
-        = @page_title
+        =link_to _('FORUMS'), forums_path
       - if @forum
         = link_to h(@forum.name), forum_path(@forum)   
   

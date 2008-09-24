@@ -40,6 +40,6 @@
             .featureText
               %span.profileSubHeading
                 = truncate(h(fa.title),35)
-                = link_to('more?', user_post_path(fa.user_id,fa))
+              = link_to 'more', user_post_path(fa.user_id,fa), { :style => "color:#ffffff" }
         %a.arrowButton{ :href => league_path(@featured_athletes_for_league.first.user.league_id) }
           %img{ :src => "/gs/images/top_nav_search.gif", :alt => "More" }/
