@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20080917205151) do
+ActiveRecord::Schema.define(:version => 20080924194002) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id",    :limit => 10
@@ -365,10 +365,10 @@ ActiveRecord::Schema.define(:version => 20080917205151) do
     t.integer  "subscription_plan_id", :limit => 11
     t.string   "name"
     t.decimal  "cost",                               :precision => 8, :scale => 2
+    t.text     "content"
     t.text     "html_content"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.text     "content"
   end
 
   add_index "promotions", ["promo_code"], :name => "index_promotions_on_promo_code", :unique => true
@@ -380,6 +380,16 @@ ActiveRecord::Schema.define(:version => 20080917205151) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  create_table "ratings", :force => true do |t|
+    t.integer  "rating",        :limit => 11, :default => 0
+    t.datetime "created_at",                                  :null => false
+    t.string   "rateable_type", :limit => 32, :default => "", :null => false
+    t.integer  "rateable_id",   :limit => 11, :default => 0,  :null => false
+    t.integer  "user_id",       :limit => 11, :default => 0,  :null => false
+  end
+
+  add_index "ratings", ["user_id"], :name => "fk_ratings_user"
 
   create_table "roles", :force => true do |t|
     t.string  "name"
@@ -437,7 +447,7 @@ ActiveRecord::Schema.define(:version => 20080917205151) do
     t.string   "fisrtname"
     t.string   "state_name"
     t.string   "link"
-    t.boolean  "is_sor"
+    t.boolean  "is_sor",                     :default => false
     t.string   "html_content"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -588,8 +598,8 @@ ActiveRecord::Schema.define(:version => 20080917205151) do
     t.string   "video_length"
     t.string   "video_type"
     t.string   "video_status"
-    t.integer  "league_id",          :limit => 11
-    t.integer  "team_id",            :limit => 11
+    t.integer  "sponsor_id",         :limit => 11
+    t.integer  "member_id",          :limit => 11
     t.integer  "user_id",            :limit => 11
     t.string   "sport"
     t.datetime "game_date"
@@ -601,6 +611,8 @@ ActiveRecord::Schema.define(:version => 20080917205151) do
     t.string   "game_level"
     t.string   "game_gender"
     t.integer  "view_count",         :limit => 11, :default => 0
+    t.integer  "team_id",            :limit => 11
+    t.integer  "league_id",          :limit => 11
     t.boolean  "public_video",                     :default => true
     t.boolean  "delta",                            :default => false
     t.integer  "home_score",         :limit => 11
