@@ -2,7 +2,7 @@ class PurchaseOrdersController < BaseController
 
   before_filter :admin_required, :only => [:index]
   skip_before_filter :gs_login_required, :only => [:show, :new, :confirm, :create]
-
+  skip_before_filter :billing_required, :only => [:show, :new, :confirm, :create]  
 
   def index
     @pos = PurchaseOrder.find(:all)

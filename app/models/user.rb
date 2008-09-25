@@ -194,7 +194,13 @@ class User < ActiveRecord::Base
     mem.cost = cost == nil ? role.plan.cost : cost
     mem.name = full_name
     mem.credit_card = credit_card
-    mem.promotion = promotion
+    if promotion
+      mem.promotion = promotion
+      if !promotion.period_days.nil? && promotion.period_days > 0
+        mem.expiration_date = Time.now + promotion.period_days.days       
+        logger.debug "Expiration is #{mem.expiration_date}"
+      end
+    end
 
     # if no address provided use the address data in me
     if address.nil?
@@ -230,9 +236,10 @@ class User < ActiveRecord::Base
   def set_payment(ccinfo)
     cc = CreditCard.from_active_merchant_cc(ccinfo)
     cc.save
-    
-    if memberships && memberships.size > 0
-      memberships[0].credit_card = cc    
+
+    mem = membership
+    if !mem.nil?
+      mem[0].credit_card = cc    
       save
     end    
   end
@@ -360,12 +367,26 @@ class User < ActiveRecord::Base
   def can_send_message_to?(other_user)
     admin? || friends_ids.member?(other_user.id)
   end
+  
+  def membership
+    return nil if (memberships.nil? or memberships.empty?)
+    
+    # look for the first active membership
+    memberships.each do |m|
+      if !m.expired?
+        return m
+      end
+    end
+
+    memberships[0]
+  end
 
   def billing_needed?
     return false if Role.non_billable_role_ids.member?(role_id) 
-    return false if memberships.size < 1
     
-    mem = memberships[0]
+    mem = membership
+    return false if mem.nil?
+    
     if (mem.cost > 0 &&
           mem.billing_method == Membership::CREDIT_CARD_BILLING_METHOD &&
           mem.last_billed < (Time.now - (PAYMENT_DUE_CYCLE+5).days))
@@ -377,9 +398,9 @@ class User < ActiveRecord::Base
   end
 
   def credit_card_expired?
-    return false if memberships == nil || memberships.size < 1
+    mem = membership
+    return false if mem.nil?
     
-    mem = memberships[0]
     if (mem.credit_card != nil &&
           mem.credit_card.expiration_date < Date.today)
       logger.info "CREDIT CARD EXPIRED: #{mem.credit_card.expiration_date}"

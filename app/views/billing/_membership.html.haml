@@ -1,17 +1,17 @@
 %tr.forumList
   %td.forumList
-    =membership.name
+    =link_to membership.name, user_path(membership.user.id)
   %td.forumList
     - if membership.billing_method == Membership::CREDIT_CARD_BILLING_METHOD
-      =link_to membership.billing_method,:controller => :membership, :action => :member_billing_method_info ,:id => membership.id
+      =link_to 'Credit Card',:controller => :membership, :action => :member_billing_method_info ,:id => membership.id
     - else
       = membership.billing_method
   %td.forumList.numeric
     =number_to_currency(membership.cost)
   %td.forumList
     - if membership.promotion != nil
-      =membership.promotion.promo_code
+      =link_to membership.promotion.promo_code, promotion_path(membership.promotion.id)
   %td.forumList
     =membership.created_at.to_date
   %td.forumList
-    =link_to "Billing History", :controller => :membership, :action => "member_billing_history", :id => membership.id 
+    =link_to 'Billing History', :controller => :membership, :action => "member_billing_history", :id => membership.id 

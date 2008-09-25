@@ -3,9 +3,13 @@
 - second_row_height_px = [@network_recent.size,@recent_uploads.size].max >= 3 ? 255 : 130
 
 .landingContentArea
+    
   /
     col1 content
   .mainCol1
+  
+    =render :partial => "users/profile_membership_notice"
+  
     .contentBox.tanBackground
       .contentBoxHeader.yellowHeader
         -#%span.moreLink
