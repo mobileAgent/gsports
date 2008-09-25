@@ -11,3 +11,6 @@ set :web_port, 80
 set :server_name, "globalsports.net"
 set :environment, "production"
 set :migrate_env, "production"
+
+set :branch, "prod_branch"
+set :repository_cache, "git_prod_branch"
