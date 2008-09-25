@@ -6,7 +6,7 @@ class UsersController < BaseController
   
   protect_from_forgery :only => [:create, :update, :destroy]
   skip_before_filter :gs_login_required, :only => [:signup, :register, :new, :create, :billing, :submit_billing, :auto_complete_for_user_team_name, :auto_complete_for_team_league_name, :forgot_password, :registration_fill_team]
-  skip_before_filter :billing_required, :only => [:renew, :billing, :edit_billing, :submit_billing, :update_billing, :auto_complete_for_user_league_name]
+  skip_before_filter :billing_required, :only => [:account_expired, :renew, :billing, :edit_billing, :submit_billing, :update_billing, :auto_complete_for_user_league_name]
   before_filter :admin_required, :only => [:assume, :destroy, :featured, :toggle_featured, :toggle_moderator, :disable]
   before_filter :find_user, :only => [:edit, :edit_pro_details, :show, :update, :destroy, :statistics, :disable ]
   
@@ -291,9 +291,66 @@ class UsersController < BaseController
     end
   end
   
-  def renew
-    # TODO: need a renewal screen here
-    redirect_to :action => 'billing', :userid => current_user.id
+  def account_expired
+    session[:promotion] = nil
+    @user = current_user
+    @membership = @user.membership;
+  end
+  
+  def renew    
+    @user = current_user
+    
+    # Get the user's best/most-recent membership
+    @membership = @user.membership;
+    
+    # Pre-fill from the most recent membership, if available
+    @billing_address = @membership ? @membership.address : Address.new;
+    
+    # Pre-fill credit card from the most recent
+    @credit_card = @membership && @membership.credit_card ? 
+        @membership.credit_card : ActiveMerchant::Billing::CreditCard.new
+        
+    @offer_PO = @user.team_staff? || @user.league_staff?    
+    
+    # Lookup up promo code if provided
+    unless params[:promo_code].blank?
+      logger.debug "Looking up promo code #{params[:promo_code]}"
+      @promotion = Promotion.find_by_promo_code(params[:promo_code])
+
+      if @promotion == nil || !@promotion.enabled? ||
+            (@promotion.subscription_plan_id != nil && 
+             @user.role.plan != nil && @user.role.plan.id != @promotion.subscription_plan_id)
+
+        if @promotion == nil
+          logger.debug "Promotion not found for #{params[:promo_code]}."
+        elsif !@promotion.enabled?
+          logger.debug "Promotion has been disabled for #{params[:promo_code]}."
+        else
+          logger.debug "Promotion not valid for role: #{@role.plan.id} != #{@promotion.subscription_plan_id}"
+        end
+        
+        flash.now[:error] = "Sorry, the promotion code you entered is invalid: #{params[:promo_code]}."
+        @promotion = nil
+        render :action => 'account_expired' and return false
+
+      elsif !@promotion.reusable? && 
+                @user.memberships && 
+                !@user.memberships.find_all{ |mem| mem.promotion_id == @promotion.id }.empty?
+
+        logger.debug "Promotion is not reusable: #{@promotion.promo_code}:"
+        flash.now[:error] = "Sorry, the promotion code you entered may not be used more than once: #{params[:promo_code]}."
+        @promotion = nil
+        render :action => 'account_expired' and return false
+
+      else
+        logger.debug  "Promotion: #{@promotion.promo_code}: #{@promotion.name}"
+        flash[:notice] = "The promotion #{@promotion.name} has been applied!"
+        session[:promotion] = @promotion
+      end
+    end
+
+    @cost = @promotion && @promotion.cost ? @promotion.cost : @user.role.plan.cost
+    render :action => 'billing', :userid => @user.id
   end
   
   def disable

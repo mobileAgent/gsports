@@ -97,7 +97,7 @@ class BaseController < ApplicationController
 
     if membership.expired?
       flash[:error] = "Your membership has expired. Please renew your account."
-      redirect_to(url_for(:controller => 'users', :action => 'renew')) and return false
+      redirect_to(url_for(:controller => 'users', :action => 'account_expired')) and return false
     end
     return true
   end
