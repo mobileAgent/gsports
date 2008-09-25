@@ -1,0 +1,15 @@
+- user = @user || current_user
+- if user && (user.id == current_user.id || current_user.admin?)
+  - membership = current_user.membership
+  - if membership && membership.expiration_date
+    .contentBox.tanBackground
+      .contentBoxHeader.yellowHeader
+        %h2.boxDescription
+          MEMBERSHIP NOTICE
+      .contentBoxContent{ :style => "height: auto" }
+        .featureSummary
+          Your 
+          - if membership.promotion
+            promotional
+          membership expires on 
+          = membership.expiration_date.to_date  

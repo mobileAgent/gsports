@@ -468,7 +468,6 @@ class UsersController < BaseController
     @popular_videos = Dashboard.popular_videos(@user)
     @network_recent = Dashboard.network_recent(@user)
     @network_favorites = Dashboard.network_favorites(@user)
-    
   end
 
   def forgot_password  

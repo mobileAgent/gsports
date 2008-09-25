@@ -46,6 +46,11 @@ a, a:visited, a:hover, a:active {
   text-align: left;
 }
 
+.landingContentArea .expirationNotice {
+  padding: 10px 20px 10px 20px;
+  font-weight: bold;
+}
+
 .fieldWithErrors input[type='text'] {
 	border: 1px solid red;
 }
