@@ -150,7 +150,7 @@ class SearchController < BaseController
         xml.tags @video.tags.collect(&:name).join(', ')
         xml.favorite_count @video.favorites.size
         xml.thumbnail_url @vidavee.file_thumbnail_medium(@video.dockey)
-        xml.rating 1
+        #xml.rating 0
         xml.type 'VideoAsset'
       end
       render :xml => xstr and return
@@ -167,7 +167,8 @@ class SearchController < BaseController
         xml.favorite_count @video.favorites.size
         xml.tags @video.tags.collect(&:name).join(', ')
         xml.thumbnail_url @vidavee.file_thumbnail_medium(@video.dockey)
-        xml.rating 1
+        xml.rating @video.rating
+        xml.rate_url "/ratings/rate/#{@video.id}?type=VideoClip&rating="
         if @video.user_id
           xml.owner_name @video.user.full_name
           xml.owner_name_url user_path(@video.user)
@@ -208,7 +209,8 @@ class SearchController < BaseController
         xml.favorite_count @video.favorites.size
         xml.tags @video.tags.collect(&:name).join(', ')
         xml.thumbnail_url @vidavee.file_thumbnail_medium(@video.thumbnail_dockey)
-        xml.rating 1
+        xml.rating @video.rating
+        xml.rate_url "/ratings/rate/#{@video.id}?type=VideoReel&rating="
       end
       render :xml => xstr and return
     end

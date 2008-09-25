@@ -1,8 +1,22 @@
 class RatingsController < BaseController
   
-  
   def rate
-    
+    item, rating = save_rating()
+    render :text => "Rated #{rating.rateable_type}(#{rating.rateable_id}) with #{rating.rating}"
+  end
+  
+  def update_rating
+    item, rating = save_rating()
+    target = "rate-#{rating.rateable_type}-#{rating.rateable_id}"
+
+    render :update do |page|
+      page.replace_html target, :partial => 'stars', :locals => { :item => item }
+    end
+  end
+  
+  private
+  
+  def save_rating
     type = params[:type].gsub(/[^a-zA-Z]/,'')
     id = params[:id].to_i
     item = eval "#{type}.find(#{id})"
@@ -15,11 +29,7 @@ class RatingsController < BaseController
     
     item.add_rating rating
     
-    target = "rate-#{type}-#{id}"
-    
-    render :update do |page|
-      page.replace_html target, :partial => 'stars', :locals => { :item => item }
-    end
+    [item, rating]
   end
   
   
