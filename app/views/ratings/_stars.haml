@@ -1,8 +1,8 @@
 -# http://www.komodomedia.com/blog/2007/01/css-star-rating-redux/
 - rating = item.rating > 0 ? ((item.rating / 5.0)*100).to_i : 0
-- target = "rate-#{item.type}-#{item.id}"
+- target = "rate-#{item.class}-#{item.id}"
 %div{ :id => target }
-  -#="[#{item.type}-#{item.id}]: #{item.rating} - #{rating}"
+  -#="[#{item.class}-#{item.id}]: #{item.rating} - #{rating}"
   %ul{ :class=>"star-rating" }
     %li{ :class=>"current-rating", :style=>"width:#{rating}%;" }
     -(1 .. 5).each do |i|
