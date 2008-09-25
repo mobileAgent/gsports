@@ -1248,9 +1248,6 @@ body * {
 	margin: 0;
 	padding: 0;
 }
-ul {
-  padding-left: 30px;
-}
 body{
 	font-size: 10px; /*** all other font sizes should be specified as percentages of 10px ***/
 	font-family: "Lucida Grande", verdana, arial, helvetica, sans-serif;	

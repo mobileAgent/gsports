@@ -84,8 +84,24 @@ class BaseController < ApplicationController
       flash[:error] = "Your billing information must be updated!"
       redirect_to(url_for(:controller => 'users', :action => 'edit_billing')) and return false
     end
+    
+    membership_required
+  end
+
+  # Ensure the status of the users membership, accounts for promotional period expirations
+  def membership_required
+    return true if current_user.nil?
+
+    membership = current_user.membership;
+    return true if membership.nil?
+
+    if membership.expired?
+      flash[:error] = "Your membership has expired. Please renew your account."
+      redirect_to(url_for(:controller => 'users', :action => 'renew')) and return false
+    end
     return true
   end
+
 
   # Everyone visiting the site needs a vidavee login, even
   # unauthenticate users, so that they can see videos with a

@@ -1,75 +1,82 @@
 class Membership < ActiveRecord::Base
-   has_one :address, :as => :addressable, :dependent => :destroy
-   has_many :subscriptions
-   has_many :users, :through => :subscriptions
-   has_many :membership_billing_histories, :order => "created_at DESC"
-   belongs_to :credit_card # fk: credit_card_id
-   belongs_to :promotion # fk: promotion_id
+  has_one :address, :as => :addressable, :dependent => :destroy
+  has_one :subscription
+  has_one :user, :through => :subscription
+  has_many :membership_billing_histories, :order => "created_at DESC"
+  belongs_to :credit_card # fk: credit_card_id
+  belongs_to :promotion # fk: promotion_id
    
   CREDIT_CARD_BILLING_METHOD = "cc"
   INVOICE_BILLING_METHOD = "invoice"
   FREE_BILLING_METHOD = "na"
 
-   STATES = {
-  'AL' => 'Alabama',
-  'AK' => 'Alaska',
-  'AS' => 'America Samoa',
-  'AZ' => 'Arizona',
-  'AR' => 'Arkansas',
-  'CA' => 'California',
-  'CO' => 'Colorado',
-  'CT' => 'Connecticut',
-  'DE' => 'Delaware',
-  'DC' => 'District of Columbia',
-  'FM' => 'Micronesia1',
-  'FL' => 'Florida',
-  'GA' => 'Georgia',
-  'GU' => 'Guam',
-  'HI' => 'Hawaii',
-  'ID' => 'Idaho',
-  'IL' => 'Illinois',
-  'IN' => 'Indiana',
-  'IA' => 'Iowa',
-  'KS' => 'Kansas',
-  'KY' => 'Kentucky',
-  'LA' => 'Louisiana',
-  'ME' => 'Maine',
-  'MH' => 'Islands1',
-  'MD' => 'Maryland',
-  'MA' => 'Massachusetts',
-  'MI' => 'Michigan',
-  'MN' => 'Minnesota',
-  'MS' => 'Mississippi',
-  'MO' => 'Missouri',
-  'MT' => 'Montana',
-  'NE' => 'Nebraska',
-  'NV' => 'Nevada',
-  'NH' => 'New Hampshire',
-  'NJ' => 'New Jersey',
-  'NM' => 'New Mexico',
-  'NY' => 'New York',
-  'NC' => 'North Carolina',
-  'ND' => 'North Dakota',
-  'OH' => 'Ohio',
-  'OK' => 'Oklahoma',
-  'OR' => 'Oregon',
-  'PW' => 'Palau',
-  'PA' => 'Pennsylvania',
-  'PR' => 'Puerto Rico',
-  'RI' => 'Rhode Island',
-  'SC' => 'South Carolina',
-  'SD' => 'South Dakota',
-  'TN' => 'Tennessee',
-  'TX' => 'Texas',
-  'UT' => 'Utah',
-  'VT' => 'Vermont',
-  'VI' => 'Virgin Island',
-  'VA' => 'Virginia',
-  'WA' => 'Washington',
-  'WV' => 'West Virginia',
-  'WI' => 'Wisconsin',
-  'WY' => 'Wyoming'
-}
+  STATES = {
+    'AL' => 'Alabama',
+    'AK' => 'Alaska',
+    'AS' => 'America Samoa',
+    'AZ' => 'Arizona',
+    'AR' => 'Arkansas',
+    'CA' => 'California',
+    'CO' => 'Colorado',
+    'CT' => 'Connecticut',
+    'DE' => 'Delaware',
+    'DC' => 'District of Columbia',
+    'FM' => 'Micronesia1',
+    'FL' => 'Florida',
+    'GA' => 'Georgia',
+    'GU' => 'Guam',
+    'HI' => 'Hawaii',
+    'ID' => 'Idaho',
+    'IL' => 'Illinois',
+    'IN' => 'Indiana',
+    'IA' => 'Iowa',
+    'KS' => 'Kansas',
+    'KY' => 'Kentucky',
+    'LA' => 'Louisiana',
+    'ME' => 'Maine',
+    'MH' => 'Islands1',
+    'MD' => 'Maryland',
+    'MA' => 'Massachusetts',
+    'MI' => 'Michigan',
+    'MN' => 'Minnesota',
+    'MS' => 'Mississippi',
+    'MO' => 'Missouri',
+    'MT' => 'Montana',
+    'NE' => 'Nebraska',
+    'NV' => 'Nevada',
+    'NH' => 'New Hampshire',
+    'NJ' => 'New Jersey',
+    'NM' => 'New Mexico',
+    'NY' => 'New York',
+    'NC' => 'North Carolina',
+    'ND' => 'North Dakota',
+    'OH' => 'Ohio',
+    'OK' => 'Oklahoma',
+    'OR' => 'Oregon',
+    'PW' => 'Palau',
+    'PA' => 'Pennsylvania',
+    'PR' => 'Puerto Rico',
+    'RI' => 'Rhode Island',
+    'SC' => 'South Carolina',
+    'SD' => 'South Dakota',
+    'TN' => 'Tennessee',
+    'TX' => 'Texas',
+    'UT' => 'Utah',
+    'VT' => 'Vermont',
+    'VI' => 'Virgin Island',
+    'VA' => 'Virginia',
+    'WA' => 'Washington',
+    'WV' => 'West Virginia',
+    'WI' => 'Wisconsin',
+    'WY' => 'Wyoming'
+  }
+
+  named_scope :active, :conditions => {'(expiration_date is null or expiration_date < ?)', Date.new}
+  named_scope :expired, :conditions => {'expiration_date is not null and expiration_date > ?', Date.new}
+
+  def expired?
+    expiration_date != nil && expiration_date < Time.now
+  end
 
   def last_billed
     return nil if membership_billing_histories.empty?
