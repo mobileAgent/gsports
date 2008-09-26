@@ -1,4 +1,5 @@
-- skip_payment = (@cost == 0 || @credit_card == nil)
+-# Never skip payment.. require CC for all transactions
+- skip_payment = false && (@cost == 0 || @credit_card == nil)
 - skip_billing_addr = skip_payment || @billing_address.nil? || @billing_address.address1.blank?
 - renewal = current_user && !current_user.memberships.nil? && !current_user.memberships.empty?
 
@@ -40,12 +41,17 @@
           - else
             = "The promotion code '#{@promotion.promo_code}' has been applied" 
         %br/
-        %br/
 
 
       .mainCol1
         .contentBox
 
+          - if @cost == 0
+            %p
+              %strong NOTE:
+              A valid credit card is required for membership. Your credit card will be verified, but not charged.
+              %br/
+          %br/
           %form{:action=>'/users/submit_billing',:method => :post}
   
             - if !skip_payment

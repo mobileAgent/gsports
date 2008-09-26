@@ -203,15 +203,14 @@ class UsersController < BaseController
       @cost = @user.role.plan.cost
     end
     
-    # only initialize billing information if we have a cost > 0
-    if @cost > 0
-      @billing_address = Address.new(params[:billing_address])
-      @credit_card = ActiveMerchant::Billing::CreditCard.new(params[:credit_card])
-      @offer_PO = @user.team_staff? || @user.league_staff?
-    
-      #@credit_card.first_name = @user.firstname if (! @credit_card.first_name) 
-      #@credit_card.last_name = @user.lastname if (! @credit_card.last_name)
-    end
+
+    # need to provide credit card even if price == 0
+    @billing_address = Address.new(params[:billing_address])
+    @credit_card = ActiveMerchant::Billing::CreditCard.new(params[:credit_card])
+    @offer_PO = @cost > 0 && (@user.team_staff? || @user.league_staff?)
+  
+    #@credit_card.first_name = @user.firstname if (! @credit_card.first_name) 
+    #@credit_card.last_name = @user.lastname if (! @credit_card.last_name)
 
     logger.debug "USER session object(billing):" + @user.id.to_s
   end
@@ -232,49 +231,59 @@ class UsersController < BaseController
       @cost = @user.role.plan.cost
     end
     
-    if @cost == 0
-      @user.make_member(Membership::FREE_BILLING_METHOD,0,nil,nil,nil,@promotion)
-    else
-      cc = params[:credit_card]
-      @credit_card = ActiveMerchant::Billing::CreditCard.new({
-        :first_name => cc[:first_name],
-        :last_name => cc[:last_name],
-        :number => cc[:number],
-        :month => cc[:month],
-        :year => cc[:year],
-        :verification_value => cc[:verification_value]})
-      @billing_address = params[:skip_billing_address] ? nil : Address.new(params[:billing_address])
-      
-      if (!@credit_card.valid?)
-        @billing_address ||= Address.new
-        render :action => 'billing', :userid => @user.id
-        return
-      end
-  
-      gateway = ActiveMerchant::Billing::PayflowGateway.new(
-        :login => Active_Merchant_payflow_gateway_username,
-        :password => Active_Merchant_payflow_gateway_password,
-        :partner => Active_Merchant_payflow_gateway_partner)
-  
-      cost_for_gateway = (@cost * 100).to_i
-      @response = gateway.purchase(cost_for_gateway, @credit_card)
-      
-      logger.debug "Response from gateway #{@response.inspect} for #{@user.full_name} at #{cost_for_gateway}"
-      
-      if (@response.success?)
-        logger.debug "Gatway response is success #{@response.inspect}"
-        credit_card_for_db = CreditCard.from_active_merchant_cc(@credit_card)
-        credit_card_for_db.user = @user
-        credit_card_for_db.save!
-        @user.make_member(Membership::CREDIT_CARD_BILLING_METHOD,@cost,@billing_address,credit_card_for_db,@response,@promotion)
-      else
-        @billing_address ||= Address.new
-        flash.now[:error] = "Sorry, we are having technical difficulties contacting our payment gateway. Try again in a few minutes."
-        @billing_gateway_error = "#{flash.now[:warning]} (#{@response.message})"
-        render :action => 'billing', :userid => @user.id
-        return false;
-      end      
+    cc = params[:credit_card]
+    @credit_card = ActiveMerchant::Billing::CreditCard.new({
+      :first_name => cc[:first_name],
+      :last_name => cc[:last_name],
+      :number => cc[:number],
+      :month => cc[:month],
+      :year => cc[:year],
+      :verification_value => cc[:verification_value]})
+    @billing_address = params[:skip_billing_address] ? nil : Address.new(params[:billing_address])
+    
+    if (!@credit_card.valid?)
+      @billing_address ||= Address.new
+      render :action => 'billing', :userid => @user.id
+      return
     end
+
+    gateway = ActiveMerchant::Billing::PayflowGateway.new(
+      :login => Active_Merchant_payflow_gateway_username,
+      :password => Active_Merchant_payflow_gateway_password,
+      :partner => Active_Merchant_payflow_gateway_partner)
+
+    # if the cost is 0, we need to make a $1, and then void it for verification 
+    cost_for_gateway = @cost == 0 ? 1.to_i : (@cost * 100).to_i
+    @response = gateway.purchase(cost_for_gateway, @credit_card)
+
+    logger.debug "Response from gateway #{@response.inspect} for #{@user.full_name} at #{cost_for_gateway}"
+    
+    if (@response.success?)
+      logger.debug "Gatway response is success #{@response.inspect}"
+
+      # Void the $1.00 transaction post haste!
+      if @cost == 0
+        void_transaction(@response)
+      end
+      
+      credit_card_for_db = CreditCard.from_active_merchant_cc(@credit_card)
+      credit_card_for_db.user = @user
+      credit_card_for_db.save!
+
+      @user.make_member(Membership::CREDIT_CARD_BILLING_METHOD,@cost,@billing_address,credit_card_for_db,@response,@promotion)
+
+    else
+      @billing_address ||= Address.new
+      
+      if @response.message.nil? || @reponse.message.blank?
+        flash.now[:error] = "Sorry, we are having technical difficulties contacting our payment gateway. Try again in a few minutes."
+      else
+        @billing_gateway_error = "#{flash.now[:warning]} (#{@response.message})"
+      end
+      
+      render :action => 'billing', :userid => @user.id
+      return false;
+    end      
     
     @user.enabled = true
     @user.activated_at = Time.now
@@ -282,6 +291,35 @@ class UsersController < BaseController
     self.current_user = @user # Log them in right now!
     UserNotifier.deliver_welcome(@user)
     redirect_to signup_completed_user_path(@user)
+  end
+  
+  def void_transaction (payment_response)
+    return false if payment_response.nil?
+    
+    # void the $1.00 payment
+    authorization = payment_response.params['pn_ref']        
+     
+    logger.debug ("*** VOIDING Temporary $1.00 TX: " + authorization)
+    void_response = gateway.void('xyz')
+    #authorization)
+    if (!void_response.success?)
+      logger.error ("**** FAILED TO VOID: " + authorization)
+            
+      # send an email here so we make sure this TX gets cleaned up
+      begin
+        email_body = "Payflow transaction needs to be voided for authorization: #{authorization}/#{payment_response.params['auth_code']}"
+        m = Message.new(:to => User.admin.first.id, 
+                        :title => "Unable to void $1 Authorization TX", 
+                        :body => email_body)
+        m.save!
+      rescue
+        logger.warn ("Unable to send admin email: #{email_body}");
+      end
+      
+      return false
+    end
+    
+    return true    
   end
   
   def signup_completed
