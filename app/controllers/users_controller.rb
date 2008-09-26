@@ -660,8 +660,7 @@ class UsersController < BaseController
       :password => Active_Merchant_payflow_gateway_password,
       :partner => Active_Merchant_payflow_gateway_partner)
 
-    void_response = gateway.void('xyz')
-    #authorization)
+    void_response = gateway.void(authorization)
     if (!void_response.success?)
       logger.error ("**** FAILED TO VOID: " + authorization)
             
