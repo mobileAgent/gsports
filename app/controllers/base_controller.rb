@@ -129,7 +129,7 @@ class BaseController < ApplicationController
   # mostly memcached when running with memcached turned on
   def quickfind_setup
     @quickfind_seasons = Rails.cache.fetch('quickfind_seasons') { VideoAsset.seasons }
-    @quickfind_schools = Rails.cache.fetch('quickfind_schools') { Team.find(:all, :order => "name ASC") }
+    @quickfind_schools = Rails.cache.fetch('quickfind_schools') { Team.having_videos.find(:all, :order => "name ASC") }
     @quickfind_states = Rails.cache.fetch('quickfind_states') { Team.states }
     @quickfind_counties = Rails.cache.fetch('quickfind_counties') { Team.counties }
     @quickfind_sports = Rails.cache.fetch('quickfind_sports') { VideoAsset.sports }
