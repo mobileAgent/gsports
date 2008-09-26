@@ -160,10 +160,11 @@
   
       .mainCol2
         .contentBox
-          - if !skip_payment && @offer_PO && @cost > 0
+          - if !skip_payment && @offer_PO
             %p
               = link_to 'Pay by Check or Purchase Order?', new_purchase_order_path(:purchase_order=>{:user_id=>@user.id})
             %br
 
+          - if !skip_payment
             = render :partial => "billing/credit_card_help"
             
