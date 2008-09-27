@@ -293,34 +293,6 @@ class UsersController < BaseController
     redirect_to signup_completed_user_path(@user)
   end
   
-  def void_transaction (payment_response)
-    return false if payment_response.nil?
-    
-    # void the $1.00 payment
-    authorization = payment_response.params['pn_ref']        
-     
-    logger.debug ("*** VOIDING Temporary $1.00 TX: " + authorization)
-    void_response = gateway.void('xyz')
-    #authorization)
-    if (!void_response.success?)
-      logger.error ("**** FAILED TO VOID: " + authorization)
-            
-      # send an email here so we make sure this TX gets cleaned up
-      begin
-        email_body = "Payflow transaction needs to be voided for authorization: #{authorization}/#{payment_response.params['auth_code']}"
-        m = Message.new(:to => User.admin.first.id, 
-                        :title => "Unable to void $1 Authorization TX", 
-                        :body => email_body)
-        m.save!
-      rescue
-        logger.warn ("Unable to send admin email: #{email_body}");
-      end
-      
-      return false
-    end
-    
-    return true    
-  end
   
   def signup_completed
     if session[:promotion]
@@ -673,5 +645,40 @@ class UsersController < BaseController
     render :inline => choices
   end
 
+  protected
+  
+  def void_transaction (payment_response)
+    return false if payment_response.nil?
+    
+    # void the $1.00 payment
+    authorization = payment_response.params['pn_ref']        
+     
+    logger.debug ("*** VOIDING Temporary $1.00 TX: " + authorization)
+    
+    gateway = ActiveMerchant::Billing::PayflowGateway.new(
+      :login => Active_Merchant_payflow_gateway_username,
+      :password => Active_Merchant_payflow_gateway_password,
+      :partner => Active_Merchant_payflow_gateway_partner)
+
+    void_response = gateway.void(authorization)
+    if (!void_response.success?)
+      logger.error ("**** FAILED TO VOID: " + authorization)
+            
+      # send an email here so we make sure this TX gets cleaned up
+      begin
+        email_body = "Payflow transaction needs to be voided for authorization: #{authorization}/#{payment_response.params['auth_code']}"
+        m = Message.new(:to => User.admin.first.id, 
+                        :title => "Unable to void $1 Authorization TX", 
+                        :body => email_body)
+        m.save!
+      rescue
+        logger.warn ("Unable to send admin email: #{email_body}");
+      end
+      
+      return false
+    end
+    
+    return true    
+  end
 
 end
