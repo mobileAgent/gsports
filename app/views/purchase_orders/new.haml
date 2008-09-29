@@ -22,9 +22,6 @@
       %h2
         - if @cost > 0
           = "The cost for this membership is #{number_to_currency(@cost)} per month"
-        - else 
-          = "You are enrolling in a FREE membership!"
-          
       %br/
 
       - if @promotion
