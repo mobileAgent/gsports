@@ -10,7 +10,7 @@
     %p
       - if league_listing.city && league_listing.city.length > 0
         = h "#{league_listing.city}, "
-      = h "#{league_listing.county_name}, #{league_listing.state_id ? league_listing.state.name : ''}"
+      = h "#{league_listing.state_id ? league_listing.state.name : ''}"
                 
   .clearDiv
 .clearDiv
