@@ -268,7 +268,8 @@ class VideoAsset < ActiveRecord::Base
     cond.append ['? in (teams.state_id,home_teams_video_assets.state_id,visiting_teams_video_assets.state_id)', params[:state]]
     cond.append ['? in (teams.county_name,home_teams_video_assets.county_name,visiting_teams_video_assets.county_name)', params[:county_name]]
     cond.append ['public_video = ?', true]
-    @video_assets = VideoAsset.paginate(:conditions => cond.to_sql, :page => params[:page], :order => 'video_assets.updated_at DESC', :include => [:tags], :joins => [:team, :visiting_team,:home_team])
+    # nested includes make query into left outer join
+    @video_assets = VideoAsset.paginate(:conditions => cond.to_sql, :page => params[:page], :order => 'video_assets.updated_at DESC', :include => [:tags, :team, { :visiting_team => {} ,:home_team => {} }])
   end
 
   private

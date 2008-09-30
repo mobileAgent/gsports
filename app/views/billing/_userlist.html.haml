@@ -6,4 +6,5 @@
   %td.forumList
     =userlist.enabled? ? "Y" : "N"
   %td.forumList
-    =userlist.memberships[0].nil? ? "NA" : userlist.memberships[0].name
+    - mem = userlist.membership
+    =mem.nil? ? "NA" : mem.name

@@ -84,8 +84,24 @@ class BaseController < ApplicationController
       flash[:error] = "Your billing information must be updated!"
       redirect_to(url_for(:controller => 'users', :action => 'edit_billing')) and return false
     end
+    
+    membership_required
+  end
+
+  # Ensure the status of the users membership, accounts for promotional period expirations
+  def membership_required
+    return true if current_user.nil?
+
+    membership = current_user.membership;
+    return true if membership.nil?
+
+    if membership.expired?
+      flash[:error] = "Your membership has expired. Please renew your account."
+      redirect_to(url_for(:controller => 'users', :action => 'account_expired')) and return false
+    end
     return true
   end
+
 
   # Everyone visiting the site needs a vidavee login, even
   # unauthenticate users, so that they can see videos with a
@@ -113,7 +129,7 @@ class BaseController < ApplicationController
   # mostly memcached when running with memcached turned on
   def quickfind_setup
     @quickfind_seasons = Rails.cache.fetch('quickfind_seasons') { VideoAsset.seasons }
-    @quickfind_schools = Rails.cache.fetch('quickfind_schools') { Team.find(:all, :order => "name ASC") }
+    @quickfind_schools = Rails.cache.fetch('quickfind_schools') { Team.having_videos.find(:all, :order => "name ASC") }
     @quickfind_states = Rails.cache.fetch('quickfind_states') { Team.states }
     @quickfind_counties = Rails.cache.fetch('quickfind_counties') { Team.counties }
     @quickfind_sports = Rails.cache.fetch('quickfind_sports') { VideoAsset.sports }

@@ -1,32 +1,34 @@
-- skip_payment = (@cost == 0 || @credit_card == nil)
+-# Never skip payment.. require CC for all transactions
+- skip_payment = false && (@cost == 0 || @credit_card == nil)
 - skip_billing_addr = skip_payment || @billing_address.nil? || @billing_address.address1.blank?
+- renewal = current_user && !current_user.memberships.nil? && !current_user.memberships.empty?
 
 .RegContent
   .SideBar
     %h1
-      Registration
-    %p
-      This is the last step of the registration process.
+      = renewal ? 'Account Renewal' : 'Registration'      
+    
+    - if !renewal
+      %p
+        This is the last step of the registration process.
 
     - if !skip_payment
       %p
         Please enter the first and last name of the person as it appears on the credit card you will be using for payment
       
   .RegistrationContent
-    .RegistrationTrail
-      PART 1: ACCOUNT TYPE &raquo; PART 2: USER INFORMATION &raquo; 
-      %span.RegistrationComplete
-        PART 3: BILLING INFORMATION
-      
+    - if !renewal
+      .RegistrationTrail
+        PART 1: ACCOUNT TYPE &raquo; PART 2: USER INFORMATION &raquo; 
+        %span.RegistrationComplete
+          PART 3: BILLING INFORMATION
+        
     .AccountType
       %br/
       
       %h2
         - if @cost > 0
           = "The cost for this membership is #{number_to_currency(@cost)} per month"
-        - else 
-          = "You are enrolling in a FREE membership!"
-          
       %br/
 
       - if @promotion
@@ -36,12 +38,17 @@
           - else
             = "The promotion code '#{@promotion.promo_code}' has been applied" 
         %br/
-        %br/
 
 
       .mainCol1
         .contentBox
 
+          - if @cost == 0
+            %p
+              %strong NOTE:
+              A valid credit card is required for membership. Your credit card will be verified, but not charged.
+              %br/
+          %br/
           %form{:action=>'/users/submit_billing',:method => :post}
   
             - if !skip_payment
@@ -150,10 +157,11 @@
   
       .mainCol2
         .contentBox
-          - if !skip_payment && @offer_PO && @cost > 0
+          - if !skip_payment && @offer_PO
             %p
               = link_to 'Pay by Check or Purchase Order?', new_purchase_order_path(:purchase_order=>{:user_id=>@user.id})
             %br
 
+          - if !skip_payment
             = render :partial => "billing/credit_card_help"
             

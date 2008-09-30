@@ -2,7 +2,7 @@
   .profilePageHeader
     %h2.columnDescriptor
       %span
-        ADMINISTRATION
+        =link_to 'ADMINISTRATION', :action => 'dashboard'
       Dashboard
       - if @league
         = " for #{@league.name}"

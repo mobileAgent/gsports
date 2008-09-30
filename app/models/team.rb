@@ -29,6 +29,10 @@ class Team < ActiveRecord::Base
   delegate :league_avatar, :to => :league
   
   alias_method :team_avatar, :avatar
+
+  named_scope :having_videos,
+    :conditions => ["teams.id in (select distinct tid from (select team_id as tid from video_assets union select home_team_id as tid from video_assets union select visiting_team_id as tid from video_assets) ttt)"]
+  
   
   def self.find_list(tag_list)
     find(:all, :conditions => [ 'LOWER(name) LIKE ?', '%' + tag_list + '%' ])
@@ -39,18 +43,19 @@ class Team < ActiveRecord::Base
     State.find(:all,
                :select => 'DISTINCT states.id, states.name',
                :joins => 'JOIN teams on teams.state_id = states.id',
+               :conditions => 'teams.id in (select distinct tid from (select team_id as tid from video_assets union select home_team_id as tid from video_assets union select visiting_team_id as tid from video_assets) ttt)',
                :order => 'id ASC')
   end
 
   # To support the video quickfind county selection dropdown
   def self.counties(state_id=-1)
     if (state_id > -1)
-      Team.find(:all, 
+      Team.having_videos.find(:all, 
                 :select => "DISTINCT county_name", 
-                :conditions => "state_id = #{state_id} AND county_name IS NOT NULL and length(county_name) > 0",
+                :conditions => ["state_id = ? AND county_name IS NOT NULL and length(county_name) > 0", state_id],
                 :order => 'county_name ASC')
     else
-      Team.find(:all, 
+      Team.having_videos.find(:all, 
                 :select => "DISTINCT county_name", 
                 :conditions => "county_name IS NOT NULL and length(county_name) > 0",
                 :order => 'county_name ASC')
@@ -67,8 +72,8 @@ class Team < ActiveRecord::Base
     else
       cond = ["city IS NOT NULL and length(city) > 0"]
     end
-      
-    Team.find(:all, 
+
+    Team.having_videos.find(:all, 
               :select => "DISTINCT city", 
               :conditions => cond,
               :order => 'city ASC')
@@ -76,16 +81,15 @@ class Team < ActiveRecord::Base
 
   def self.schools(city_id=-1)
     if (city_id > -1)
-      Team.find(:all, 
-                :select => "DISTINCT name", 
-                :conditions => "city_id = #{city_id} AND name IS NOT NULL",
-                :order => 'name ASC')
+      cond = ["city_id = ? AND name IS NOT NULL", city_id]
     else
-      Team.find(:all, 
-                :select => "DISTINCT name", 
-                :conditions => "name IS NOT NULL",
-                :order => 'name ASC')
+      cond = "name IS NOT NULL"
     end
+
+    Team.having_videos.find(:all, 
+              :select => "DISTINCT name", 
+              :conditions => cond,
+              :order => 'name ASC')
   end
 
   def state_name

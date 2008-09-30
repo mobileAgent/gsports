@@ -1,15 +1,20 @@
+- renewal = current_user && !current_user.memberships.nil? && !current_user.memberships.empty?
+
 .RegContent
   .SideBar
     %h1
-      Registration
-    %p
-      This is the last step of the registration process.
+      = renewal ? 'Account Renewal' : 'Registration'      
+    
+    - if !renewal
+      %p
+        This is the last step of the registration process.
 
   .RegistrationContent
-    .RegistrationTrail
-      PART 1: ACCOUNT TYPE &raquo; PART 2: USER INFORMATION &raquo; 
-      %span.RegistrationComplete
-        PART 3: BILLING INFORMATION
+    - if !renewal
+      .RegistrationTrail
+        PART 1: ACCOUNT TYPE &raquo; PART 2: USER INFORMATION &raquo; 
+        %span.RegistrationComplete
+          PART 3: BILLING INFORMATION
       
     .AccountType
       %br/
@@ -17,9 +22,6 @@
       %h2
         - if @cost > 0
           = "The cost for this membership is #{number_to_currency(@cost)} per month"
-        - else 
-          = "You are enrolling in a FREE membership!"
-          
       %br/
 
       - if @promotion

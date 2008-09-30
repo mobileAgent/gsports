@@ -3,20 +3,26 @@
 
     %ul.leftTopNav
       %li
-        %span#gnavMyNetwork.ROLLOVERIMAGE
-          %a{ :href => accepted_user_friendships_path(current_user.id) }
-            %span
-              My Network
+        -# %span#gnavMyNetwork.ROLLOVERIMAGE
+        %a{ :href => accepted_user_friendships_path(current_user.id) }
+          %span
+            My Network
       %li.divider
-        %span#gnavMyVideos.ROLLOVERIMAGE
-          %a{ :href => url_for(:controller => 'search', :action => 'my_videos') }
-            %span
-              My Videos
+        -#% span#gnavMyVideos.ROLLOVERIMAGE
+        %a{ :href => url_for(:controller => 'search', :action => 'my_videos') }
+          %span
+            My Videos
       %li.divider
-        %span#gnavMyProfile.ROLLOVERIMAGE
-          %a{ :href => user_path(current_user.id) }
+        -# %span#gnavMyProfile.ROLLOVERIMAGE
+        %a{ :href => user_path(current_user.id) }
+          %span
+            = _('My Profile')
+      -if current_user && current_user.admin?
+        %li.divider
+          %a{ :href => url_for({:controller => 'admin', :action => 'dashboard'}) }
             %span
-              = _('My Profile')
+              = _('Admin Panel')
+
     .rightTopNav
       %h2
         Search Site

@@ -1109,6 +1109,19 @@ ul, ol {
 	z-index:1;
 	background-position: left center;
 }
-
-
 /* end Ratings */
+
+/* Use text for top nav instead of images */
+.topNav .leftTopNav a {
+  color: #cccccc;
+  text-decoration: none;
+}
+.topNav .leftTopNav a:hover {
+  color: #ffffff;
+}
+.topNav .leftTopNav {    
+  color: #cccccc;
+  font-size: 110%;
+  font-weight: bold;
+  text-transform: uppercase;
+}

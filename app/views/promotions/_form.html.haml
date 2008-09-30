@@ -10,12 +10,34 @@
 
 %label{"for"=>"cost"}
   %h3= _('Price')
-= form.text_field :cost
+= form.text_field :cost, :maxlength => 11
+
+%label{"for"=>"period_days"}
+  %h3= _('Period (Days)')
+= form.text_field :period_days, :size => 4, :maxlength => 4
+
 
 %label{"for"=>"subscription_plan"}
   %h3= _('Subscription')
 = form.collection_select :subscription_plan_id, SubscriptionPlan.find(:all), :id, :description, {:prompt => "-Select-"}
 
+%table
+  %tr
+    %td
+      %label{"for"=>"enabled"}
+        %h3= _('Enabled')
+    %td &nbsp;
+    %td
+      %fieldset
+        = form.check_box :enabled
+  %tr
+    %td
+      %label{"for"=>"reusable"}
+        %h3= _('Re-Usable')
+    %td &nbsp;
+    %td
+      %fieldset
+        = form.check_box :reusable
 %label{"for"=>"content"}
   %h3= _('Description')
 = form.text_area :content, :rows => 8, :cols=>80, :style=>"padding: 5px;"

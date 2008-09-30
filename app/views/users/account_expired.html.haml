@@ -1,0 +1,36 @@
+.RegContent
+  .SideBar
+      
+  .RegistrationContent 
+    = error_messages_for :promo_code, :object_name => 'Promotion Code'
+    
+    %p     
+      %br/
+      - if @membership && @membership.expiration_date
+        %h1 Account Expiration Notice
+        %br/
+        %p
+          Your account expired on 
+          %span{ :style => "color: red" }
+            = @membership.expiration_date.to_date
+      - else 
+        %h2 Account Renewal
+
+      %br/            
+      %p To continue using Global Sports, your account must be renewed.
+      %br/          
+          
+    - form_tag 'renew' do |f|
+      %label{"for"=>"promo_code"}
+        If you have a promotion code, enter it in the box below.
+      %br
+      = text_field_tag :promo_code, params[:promo_code], :size => 24
+
+      %br/
+      %br/   
+      %p
+        %input{ :name => "Continue", :type => "image", :src => "/gs/images/billing_continue.png", :value => "Contine", :alt => "Continue" }
+      %br/
+      %br/
+      %br/
+      %br{ :clear=>:left }

@@ -253,12 +253,13 @@ ActiveRecord::Schema.define(:version => 20080929210040) do
   create_table "memberships", :force => true do |t|
     t.string   "name"
     t.string   "billing_method"
-    t.decimal  "cost",                         :precision => 8, :scale => 2, :default => 0.0
-    t.integer  "address_id",     :limit => 11
+    t.decimal  "cost",                          :precision => 8, :scale => 2, :default => 0.0
+    t.integer  "address_id",      :limit => 11
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "promotion_id",   :limit => 11
-    t.integer  "credit_card_id", :limit => 11
+    t.integer  "promotion_id",    :limit => 11
+    t.integer  "credit_card_id",  :limit => 11
+    t.datetime "expiration_date"
   end
 
   create_table "messages", :force => true do |t|
@@ -370,6 +371,9 @@ ActiveRecord::Schema.define(:version => 20080929210040) do
     t.text     "html_content"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "enabled"
+    t.boolean  "reusable"
+    t.integer  "period_days",          :limit => 11
   end
 
   add_index "promotions", ["promo_code"], :name => "index_promotions_on_promo_code", :unique => true

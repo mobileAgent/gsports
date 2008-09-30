@@ -6,7 +6,7 @@ class UsersController < BaseController
   
   protect_from_forgery :only => [:create, :update, :destroy]
   skip_before_filter :gs_login_required, :only => [:signup, :register, :new, :create, :billing, :submit_billing, :auto_complete_for_user_team_name, :auto_complete_for_team_league_name, :forgot_password, :registration_fill_team]
-  skip_before_filter :billing_required, :only => [:edit_billing, :submit_billing, :update_billing, :auto_complete_for_user_league_name]
+  skip_before_filter :billing_required, :only => [:account_expired, :renew, :billing, :edit_billing, :submit_billing, :update_billing, :auto_complete_for_user_league_name]
   before_filter :admin_required, :only => [:assume, :destroy, :featured, :toggle_featured, :toggle_moderator, :disable]
   before_filter :find_user, :only => [:edit, :edit_pro_details, :show, :update, :destroy, :statistics, :disable ]
   
@@ -157,13 +157,15 @@ class UsersController < BaseController
       logger.debug "Looking up promo code #{params[:promo_code]}"
       @promotion = Promotion.find_by_promo_code(params[:promo_code])
 
-      if @promotion == nil ||
+      if @promotion == nil || !@promotion.enabled? ||
             (@promotion.subscription_plan_id != nil && 
              @role.plan != nil && @role.plan.id != @promotion.subscription_plan_id)
-        
+
         if @promotion == nil
           logger.debug "Promotion not found for #{params[:promo_code]}."
-        else 
+        elsif !@promotion.enabled?
+          logger.debug "Promotion has been disabled for #{params[:promo_code]}."
+        else
           logger.debug "Promotion not valid for role: #{@role.plan.id} != #{@promotion.subscription_plan_id}"
         end
         flash.now[:error] = "Sorry, the promotion code you entered is invalid: #{params[:promo_code]}."
@@ -184,31 +186,31 @@ class UsersController < BaseController
 
   rescue ActiveRecord::RecordInvalid => e
     render :action => 'new'
-  end
+  end  
 
   # registration step 3
   def billing
-    @user = User.find(params[:userid].to_i)
+    id = params[:userid] || params[:id] || current_user.id
+    @user = User.find(id)
 
     @promotion = session[:promotion]
     
     # check for promotional pricing
     if @promotion != nil && @promotion.cost != nil
       @cost = @promotion.cost
-      logger.debug "Using promotional pricing: #{@cost}"      
+      logger.debug "Using promotional pricing: #{@cost}"
     else
       @cost = @user.role.plan.cost
     end
     
-    # only initialize billing information if we have a cost > 0
-    if @cost > 0
-      @billing_address = Address.new(params[:billing_address])
-      @credit_card = ActiveMerchant::Billing::CreditCard.new(params[:credit_card])
-      @offer_PO = @user.team_staff? || @user.league_staff?
-    
-      #@credit_card.first_name = @user.firstname if (! @credit_card.first_name) 
-      #@credit_card.last_name = @user.lastname if (! @credit_card.last_name)
-    end
+
+    # need to provide credit card even if price == 0
+    @billing_address = Address.new(params[:billing_address])
+    @credit_card = ActiveMerchant::Billing::CreditCard.new(params[:credit_card])
+    @offer_PO = @cost > 0 && (@user.team_staff? || @user.league_staff?)
+  
+    #@credit_card.first_name = @user.firstname if (! @credit_card.first_name) 
+    #@credit_card.last_name = @user.lastname if (! @credit_card.last_name)
 
     logger.debug "USER session object(billing):" + @user.id.to_s
   end
@@ -217,7 +219,9 @@ class UsersController < BaseController
   # Capture payment
   #
   def submit_billing
-    @user = User.find(params[:userid].to_i)    
+    id = params[:userid] || params[:id] || current_user.id
+    @user = User.find(id)
+    
     @promotion = session[:promotion]
     
     if @promotion != nil && @promotion.cost != nil
@@ -227,49 +231,59 @@ class UsersController < BaseController
       @cost = @user.role.plan.cost
     end
     
-    if @cost == 0
-      @user.make_member(Membership::FREE_BILLING_METHOD,0,nil,nil,nil,@promotion)
-    else
-      cc = params[:credit_card]
-      @credit_card = ActiveMerchant::Billing::CreditCard.new({
-        :first_name => cc[:first_name],
-        :last_name => cc[:last_name],
-        :number => cc[:number],
-        :month => cc[:month],
-        :year => cc[:year],
-        :verification_value => cc[:verification_value]})
-      @billing_address = params[:skip_billing_address] ? nil : Address.new(params[:billing_address])
-      
-      if (!@credit_card.valid?)
-        @billing_address ||= Address.new
-        render :action => 'billing', :userid => @user.id
-        return
-      end
-  
-      gateway = ActiveMerchant::Billing::PayflowGateway.new(
-        :login => Active_Merchant_payflow_gateway_username,
-        :password => Active_Merchant_payflow_gateway_password,
-        :partner => Active_Merchant_payflow_gateway_partner)
-  
-      cost_for_gateway = (@cost * 100).to_i
-      @response = gateway.purchase(cost_for_gateway, @credit_card)
-      
-      logger.debug "Response from gateway #{@response.inspect} for #{@user.full_name} at #{cost_for_gateway}"
-      
-      if (@response.success?)
-        logger.debug "Gatway response is success #{@response.inspect}"
-        credit_card_for_db = CreditCard.from_active_merchant_cc(@credit_card)
-        credit_card_for_db.user = @user
-        credit_card_for_db.save!
-        @user.make_member(Membership::CREDIT_CARD_BILLING_METHOD,@cost,@billing_address,credit_card_for_db,@response)
-      else
-        @billing_address ||= Address.new
-        flash.now[:error] = "Sorry, we are having technical difficulties contacting our payment gateway. Try again in a few minutes."
-        @billing_gateway_error = "#{flash.now[:warning]} (#{@response.message})"
-        render :action => 'billing', :userid => @user.id
-        return false;
-      end      
+    cc = params[:credit_card]
+    @credit_card = ActiveMerchant::Billing::CreditCard.new({
+      :first_name => cc[:first_name],
+      :last_name => cc[:last_name],
+      :number => cc[:number],
+      :month => cc[:month],
+      :year => cc[:year],
+      :verification_value => cc[:verification_value]})
+    @billing_address = params[:skip_billing_address] ? nil : Address.new(params[:billing_address])
+    
+    if (!@credit_card.valid?)
+      @billing_address ||= Address.new
+      render :action => 'billing', :userid => @user.id
+      return
     end
+
+    gateway = ActiveMerchant::Billing::PayflowGateway.new(
+      :login => Active_Merchant_payflow_gateway_username,
+      :password => Active_Merchant_payflow_gateway_password,
+      :partner => Active_Merchant_payflow_gateway_partner)
+
+    # if the cost is 0, we need to make a $1, and then void it for verification 
+    cost_for_gateway = @cost == 0 ? 1.to_i : (@cost * 100).to_i
+    @response = gateway.purchase(cost_for_gateway, @credit_card)
+
+    logger.debug "Response from gateway #{@response.inspect} for #{@user.full_name} at #{cost_for_gateway}"
+    
+    if (@response.success?)
+      logger.debug "Gatway response is success #{@response.inspect}"
+
+      # Void the $1.00 transaction post haste!
+      if @cost == 0
+        void_transaction(@response)
+      end
+      
+      credit_card_for_db = CreditCard.from_active_merchant_cc(@credit_card)
+      credit_card_for_db.user = @user
+      credit_card_for_db.save!
+
+      @user.make_member(Membership::CREDIT_CARD_BILLING_METHOD,@cost,@billing_address,credit_card_for_db,@response,@promotion)
+
+    else
+      @billing_address ||= Address.new
+      
+      if @response.message.nil? || @reponse.message.blank?
+        flash.now[:error] = "Sorry, we are having technical difficulties contacting our payment gateway. Try again in a few minutes."
+      else
+        @billing_gateway_error = "#{flash.now[:warning]} (#{@response.message})"
+      end
+      
+      render :action => 'billing', :userid => @user.id
+      return false;
+    end      
     
     @user.enabled = true
     @user.activated_at = Time.now
@@ -279,11 +293,74 @@ class UsersController < BaseController
     redirect_to signup_completed_user_path(@user)
   end
   
+  
   def signup_completed
     if session[:promotion]
       logger.debug "Clearing out promotion from the session..."
       session[:promotion] = nil
     end
+  end
+  
+  def account_expired
+    session[:promotion] = nil
+    @user = current_user
+    @membership = @user.membership;
+  end
+  
+  def renew    
+    @user = current_user
+    
+    # Get the user's best/most-recent membership
+    @membership = @user.membership;
+    
+    # Pre-fill from the most recent membership, if available
+    @billing_address = @membership ? @membership.address : Address.new;
+    
+    # Pre-fill credit card from the most recent
+    @credit_card = @membership && @membership.credit_card ? 
+        @membership.credit_card : ActiveMerchant::Billing::CreditCard.new
+        
+    @offer_PO = @user.team_staff? || @user.league_staff?    
+    
+    # Lookup up promo code if provided
+    unless params[:promo_code].blank?
+      logger.debug "Looking up promo code #{params[:promo_code]}"
+      @promotion = Promotion.find_by_promo_code(params[:promo_code])
+
+      if @promotion == nil || !@promotion.enabled? ||
+            (@promotion.subscription_plan_id != nil && 
+             @user.role.plan != nil && @user.role.plan.id != @promotion.subscription_plan_id)
+
+        if @promotion == nil
+          logger.debug "Promotion not found for #{params[:promo_code]}."
+        elsif !@promotion.enabled?
+          logger.debug "Promotion has been disabled for #{params[:promo_code]}."
+        else
+          logger.debug "Promotion not valid for role: #{@role.plan.id} != #{@promotion.subscription_plan_id}"
+        end
+        
+        flash.now[:error] = "Sorry, the promotion code you entered is invalid: #{params[:promo_code]}."
+        @promotion = nil
+        render :action => 'account_expired' and return false
+
+      elsif !@promotion.reusable? && 
+                @user.memberships && 
+                !@user.memberships.find_all{ |mem| mem.promotion_id == @promotion.id }.empty?
+
+        logger.debug "Promotion is not reusable: #{@promotion.promo_code}:"
+        flash.now[:error] = "Sorry, the promotion code you entered may not be used more than once: #{params[:promo_code]}."
+        @promotion = nil
+        render :action => 'account_expired' and return false
+
+      else
+        logger.debug  "Promotion: #{@promotion.promo_code}: #{@promotion.name}"
+        flash[:notice] = "The promotion #{@promotion.name} has been applied!"
+        session[:promotion] = @promotion
+      end
+    end
+
+    @cost = @promotion && @promotion.cost ? @promotion.cost : @user.role.plan.cost
+    render :action => 'billing', :userid => @user.id
   end
   
   def disable
@@ -401,7 +478,6 @@ class UsersController < BaseController
     @popular_videos = Dashboard.popular_videos(@user)
     @network_recent = Dashboard.network_recent(@user)
     @network_favorites = Dashboard.network_favorites(@user)
-    
   end
 
   def forgot_password  
@@ -427,11 +503,11 @@ class UsersController < BaseController
       flash[:notice] = "Insufficient permission to edit"
       redirect_to dashboard_user_path(current_user) and return
     end
-    @memberships = @user.memberships
-    if @memberships && @memberships.size > 0
+    @membership = @user.membership
+    if !@membership.nil?
       # ActiveMerchant::Billing::CreditCard vs CreditCard confusion....
-      @credit_card = @memberships[0].credit_card
-      @billing_address = @memberships[0].address || Address.new
+      @credit_card = @membership.credit_card
+      @billing_address = @membership.address || Address.new
     else
       @credit_card = CreditCard.new
       @billing_address = Address.new
@@ -454,11 +530,11 @@ class UsersController < BaseController
     end
     
     # Have to have one of ours on the form and db
-    @memberships = @user.memberships
-    if @memberships && @memberships.size > 0
-      @existing_credit_card = @memberships[0].credit_card
-      @billing_address ||= @memberships[0].address || Address.new
-      @cost = @memberships[0].cost
+    @membership = @user.membership
+    if !@membership.nil?
+      @existing_credit_card = @membership.credit_card
+      @billing_address ||= @membership.address || Address.new
+      @cost = @membership.cost
     end
     @existing_credit_card ||= CreditCard.new # Can't create card from params due to date issues
     
@@ -491,19 +567,21 @@ class UsersController < BaseController
       render :action => 'edit_billing' and return
     end
 
+    @membership = @user.membership
+
     # This will save the credit card record if the CC has changed
     if @existing_credit_card == nil || !@credit_card.equals?(@existing_credit_card)
       logger.debug "Saving changes to credit card..."
       @credit_card.save!
       
-      if @user.memberships != nil && @user.memberships.size > 0
-        @user.memberships[0].credit_card = @credit_card
+      if !@membership.nil?
+        @membership.credit_card = @credit_card
       end
     end
 
-    if @user.memberships != nil && @user.memberships.size > 0
+    if !@membership.nil?
       logger.debug "Saving membership(s)..."
-      @user.memberships[0].address = @billing_address
+      @membership.address = @billing_address
     end
 
     # We may need to execute a billing transaction right now
@@ -529,18 +607,20 @@ class UsersController < BaseController
      
       if (@response.success?)
         # Not sure this makes any sense... what are we billing for if no memberships?
-        unless @memberships && @memberships.size > 0
+        if @membership.nil
           @user.make_member(Membership::CREDIT_CARD_BILLING_METHOD,@cost,@billing_address,@credit_card,nil)
+          @membership = @user.membership
         end
-        @user.memberships[0].address = @billing_address if @billing_address
-        @user.memberships[0].credit_card = @credit_card
+        
+        @membership.address = @billing_address if @billing_address
+        @membership.credit_card = @credit_card
 
         history = MembershipBillingHistory.new
         pf = @response.params
         history.authorization_reference_number = "#{pf['pn_ref']}/#{pf['auth_code']}"
-        history.payment_method = @user.memberships[0].billing_method
-        history.credit_card = @user.memberships[0].credit_card
-        @user.memberships[0].membership_billing_histories << history
+        history.payment_method = @membership.billing_method
+        history.credit_card = @membership.credit_card
+        @membership.membership_billing_histories << history
       else
         flash.now[:error] = "Sorry, we are having technical difficulties contacting our payment gateway. Try again in a few minutes."
         @billing_gateway_error = "#{flash.now[:warning]} (#{@response.message})"
@@ -565,5 +645,40 @@ class UsersController < BaseController
     render :inline => choices
   end
 
+  protected
+  
+  def void_transaction (payment_response)
+    return false if payment_response.nil?
+    
+    # void the $1.00 payment
+    authorization = payment_response.params['pn_ref']        
+     
+    logger.debug ("*** VOIDING Temporary $1.00 TX: " + authorization)
+    
+    gateway = ActiveMerchant::Billing::PayflowGateway.new(
+      :login => Active_Merchant_payflow_gateway_username,
+      :password => Active_Merchant_payflow_gateway_password,
+      :partner => Active_Merchant_payflow_gateway_partner)
+
+    void_response = gateway.void(authorization)
+    if (!void_response.success?)
+      logger.error ("**** FAILED TO VOID: " + authorization)
+            
+      # send an email here so we make sure this TX gets cleaned up
+      begin
+        email_body = "Payflow transaction needs to be voided for authorization: #{authorization}/#{payment_response.params['auth_code']}"
+        m = Message.new(:to => User.admin.first.id, 
+                        :title => "Unable to void $1 Authorization TX", 
+                        :body => email_body)
+        m.save!
+      rescue
+        logger.warn ("Unable to send admin email: #{email_body}");
+      end
+      
+      return false
+    end
+    
+    return true    
+  end
 
 end

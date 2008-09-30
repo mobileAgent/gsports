@@ -11,3 +11,6 @@ set :httpd_path, "/usr/sbin/httpd"
 set :web_port, 80
 set :environment, "qa"
 set :migrate_env, "qa"
+
+set :branch, "qa_branch"
+set :repository_cache, "git_qa_branch"
