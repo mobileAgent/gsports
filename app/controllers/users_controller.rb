@@ -6,7 +6,11 @@ class UsersController < BaseController
   
   protect_from_forgery :only => [:create, :update, :destroy]
   skip_before_filter :gs_login_required, :only => [:signup, :register, :new, :create, :billing, :submit_billing, :auto_complete_for_user_team_name, :auto_complete_for_team_league_name, :forgot_password, :registration_fill_team]
-  skip_before_filter :billing_required, :only => [:account_expired, :renew, :billing, :edit_billing, :submit_billing, :update_billing, :auto_complete_for_user_league_name]
+  
+  skip_before_filter :billing_required, :only => [:billing, :edit_billing, :submit_billing, :update_billing, 
+                                                  :account_expired, :membership_canceled, :renew, :cancel_membership, 
+                                                  :auto_complete_for_user_league_name]
+  
   before_filter :admin_required, :only => [:assume, :destroy, :featured, :toggle_featured, :toggle_moderator, :disable]
   before_filter :find_user, :only => [:edit, :edit_pro_details, :show, :update, :destroy, :statistics, :disable ]
   
@@ -21,6 +25,13 @@ class UsersController < BaseController
     # they are the admin, themselves, the profile is public
     # or they are a friend of @user
     unless (current_user.admin? || current_user.id == @user.id || @user.profile_public || @user.accepted_friendships.collect(&:friend_id).member?(current_user.id))
+      render :action => 'private'
+    end
+    
+    @membership = @user.current_membership
+    
+    # Canceled memberships are hidden to all but admin users
+    if @membership && @membership.canceled? && !current_user.admin?
       render :action => 'private'
     end
     
@@ -304,14 +315,18 @@ class UsersController < BaseController
   def account_expired
     session[:promotion] = nil
     @user = current_user
-    @membership = @user.membership;
+    @membership = @user.current_membership
   end
   
   def renew    
-    @user = current_user
+    if current_user && current_user.admin? && params[:id]
+      @user = User.find(params[:id]) || current_user
+    else
+      @user = current_user
+    end
     
     # Get the user's best/most-recent membership
-    @membership = @user.membership;
+    @membership = @user.current_membership;
     
     # Pre-fill from the most recent membership, if available
     @billing_address = @membership ? @membership.address : Address.new;
@@ -503,7 +518,7 @@ class UsersController < BaseController
       flash[:notice] = "Insufficient permission to edit"
       redirect_to dashboard_user_path(current_user) and return
     end
-    @membership = @user.membership
+    @membership = @user.current_membership
     if !@membership.nil?
       # ActiveMerchant::Billing::CreditCard vs CreditCard confusion....
       @credit_card = @membership.credit_card
@@ -530,7 +545,7 @@ class UsersController < BaseController
     end
     
     # Have to have one of ours on the form and db
-    @membership = @user.membership
+    @membership = @user.current_membership
     if !@membership.nil?
       @existing_credit_card = @membership.credit_card
       @billing_address ||= @membership.address || Address.new
@@ -567,7 +582,7 @@ class UsersController < BaseController
       render :action => 'edit_billing' and return
     end
 
-    @membership = @user.membership
+    @membership = @user.current_membership
 
     # This will save the credit card record if the CC has changed
     if @existing_credit_card == nil || !@credit_card.equals?(@existing_credit_card)
@@ -609,7 +624,7 @@ class UsersController < BaseController
         # Not sure this makes any sense... what are we billing for if no memberships?
         if @membership.nil
           @user.make_member(Membership::CREDIT_CARD_BILLING_METHOD,@cost,@billing_address,@credit_card,nil)
-          @membership = @user.membership
+          @membership = @user.current_membership
         end
         
         @membership.address = @billing_address if @billing_address
@@ -643,6 +658,61 @@ class UsersController < BaseController
     @leagues = League.find(:all, :conditions => ["LOWER(name) like ?", params[:team][:league_name].downcase + '%' ], :order => "name ASC", :limit => 10 )
     choices = "<%= content_tag(:ul, @leagues.map { |l| content_tag(:li, h(l.name)) }) %>"    
     render :inline => choices
+  end  
+  
+  def cancel_membership
+    if current_user && current_user.admin? && params[:id]
+      @user = User.find(params[:id]) || current_user
+    else
+      @user = current_user
+    end
+    
+    @membership = @user.current_membership
+    if @membership && !@membership.canceled?
+      logger.info "Requesting membership cancellation for #{@user.id}: #{@user.email}"
+      @cancellation = MembershipCancellation.new
+      @cancellation.membership = @membership
+    else
+      logger.warn "Cannot cancel membership for #{@user.id}: #{@user.email}"
+      flash[:warn] = "Membership is already cancelled"
+      redirect_to user_path(@user)
+    end    
+  end
+  
+  def submit_cancellation
+    if current_user && current_user.admin?
+      id = params[:id] || params[:user][:id]
+      @user = User.find(id) || current_user
+    else
+      @user = current_user
+    end
+    
+    @membership = @user.current_membership
+    if @membership && !@membership.canceled?
+      logger.info "Cancelling membership for #{@user.id}: #{@user.email}"
+      
+      cancellation = MembershipCancellation.new params[:cancellation]
+      cancellation.membership = @membership
+      
+      @membership.status = Membership::STATUS_CANCELED
+      @membership.membership_cancellation = cancellation
+      @membership.save!
+      
+      flash[:notice] = "Membership has been cancelled"      
+      if @user.id == current_user.id
+        redirect_to :action => 'membership_canceled', :id => @user.id
+      else
+        redirect_to user_path(@user)
+      end
+    else
+      logger.warn "Cannot cancel membership for #{@user.id}: #{@user.email}"
+      flash[:warn] = "Membership is already cancelled"      
+      redirect_to user_path(@user)
+    end        
+  end
+  
+  def membership_canceled
+    @user = current_user
   end
 
   protected
@@ -681,4 +751,5 @@ class UsersController < BaseController
     return true    
   end
 
+  
 end

@@ -1,8 +1,10 @@
 .RegContent
-  .SideBar
-    %h1
-      Registration
-    %p= link_to "Already have an account?", "/login"
+  -# Do not show the sidebar if there is a logged in user. They will have the "MY TOOLS" menu displayed here
+  - unless current_user
+    .SideBar
+      %h1
+        Registration
+      %p= link_to "Already have an account?", "/login"
       
   .RegistrationContent
     .RegistrationTrail

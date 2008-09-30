@@ -32,8 +32,9 @@ class User < ActiveRecord::Base
   end
 
 
-  has_many :subscriptions
-  has_many :memberships, :through => :subscriptions
+  #has_many :subscriptions
+  #has_many :memberships, :through => :subscriptions
+  has_many :memberships
   has_many :credit_cards
   belongs_to :team
   belongs_to :league
@@ -219,7 +220,7 @@ class User < ActiveRecord::Base
       mem.address = addr
     else
       mem.address = address
-    end
+    end   
 
     if payment_authorization # else we may just be updating cc info
       history = MembershipBillingHistory.new
@@ -229,6 +230,15 @@ class User < ActiveRecord::Base
       history.credit_card = credit_card
       mem.membership_billing_histories << history
     end
+    
+    # check to see if this is a renewal
+    existing_mem = current_membership
+    if existing_mem && (existing_mem.active? || existing_mem.expired?)
+      logger.debug "Flagging existing membership as renewal"
+      existing_mem.status = Membership::STATUS_RENEWED
+      existing_mem.save!
+    end
+    
     memberships << mem
     save
   end
@@ -237,10 +247,10 @@ class User < ActiveRecord::Base
     cc = CreditCard.from_active_merchant_cc(ccinfo)
     cc.save
 
-    mem = membership
+    mem = current_membership
     if !mem.nil?
-      mem[0].credit_card = cc    
-      save
+      mem.credit_card = cc    
+      mem.save
     end    
   end
 
@@ -320,7 +330,6 @@ class User < ActiveRecord::Base
     u = find :first, :conditions => ['email = ?', login]
     u && u.authenticated?(password) && u.update_last_login ? u : nil
   end
-    
   
   def activity(page = {}, since = 1.week.ago)
     page.reverse_merge :size => 50, :current => 1
@@ -368,24 +377,31 @@ class User < ActiveRecord::Base
     admin? || friends_ids.member?(other_user.id)
   end
   
-  def membership
-    return nil if (memberships.nil? or memberships.empty?)
+  def current_membership
+    return nil if (memberships.nil? or memberships.empty?)    
     
-    # look for the first active membership
-    memberships.each do |m|
-      if !m.expired?
-        return m
+    # The last membership should be the most recent.
+    # If it is not active, then double check the rest
+    # of the memberships to be sure that they are not
+    # out of order and return an active one if found
+    if !memberships.last.active?
+      # look for the first active membership
+      memberships.reverse.each do |m|
+        logger.debug "testing membership ID #{m.id}, status #{m.status}"
+        if m.active?
+          return m
+        end
       end
     end
 
-    memberships[0]
+    memberships.last
   end
 
   def billing_needed?
     return false if Role.non_billable_role_ids.member?(role_id) 
     
-    mem = membership
-    return false if mem.nil?
+    mem = current_membership
+    return false if mem.nil? || !mem.active?
     
     if (mem.cost > 0 &&
           mem.billing_method == Membership::CREDIT_CARD_BILLING_METHOD &&
@@ -398,11 +414,10 @@ class User < ActiveRecord::Base
   end
 
   def credit_card_expired?
-    mem = membership
+    mem = current_membership
     return false if mem.nil?
     
-    if (mem.credit_card != nil &&
-          mem.credit_card.expiration_date < Date.today)
+    if mem.credit_card != nil && mem.credit_card.expired?
       logger.info "CREDIT CARD EXPIRED: #{mem.credit_card.expiration_date}"
       true
     else 
@@ -411,11 +426,15 @@ class User < ActiveRecord::Base
   end
 
   def credit_card
-    if credit_cards != nil && credit_cards.size > 0
-      credit_cards.first
-    else
-      nil
+    # use credit card from current membership
+    mem = current_membership    
+    if !mem.nil? && !mem.credit_card.nil?
+      return mem.credit_card
+    elsif credit_cards != nil && credit_cards.size > 0
+      return credit_cards.first
     end
+    
+    nil
   end
   
 end

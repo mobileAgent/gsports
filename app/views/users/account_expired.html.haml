@@ -1,6 +1,4 @@
-.RegContent
-  .SideBar
-      
+.RegContent     
   .RegistrationContent 
     = error_messages_for :promo_code, :object_name => 'Promotion Code'
     
@@ -34,3 +32,7 @@
       %br/
       %br/
       %br{ :clear=>:left }
+      
+    %p
+      You may also click here to 
+      =link_to 'cancel your membership', { :action => "cancel_membership" } 

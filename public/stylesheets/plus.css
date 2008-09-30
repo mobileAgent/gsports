@@ -126,11 +126,14 @@ table.unstyled td.numeric {
 
 
 .pageContentArea {
+  padding-top:20px;
+  padding-left: 20px;
+  padding-bottom: 20px;
+  padding-right: 20px;
+  float: left;
 }
 
 .pageContent {
-  margin: 0 5px 5px 25px;
-  padding-bottom: 10px;
 }
 
 .pageContent h1, .pageContent h2 {
@@ -249,37 +252,37 @@ object#homeFlash {
 }
 
 #flashArea {
-        margin-top: 5px;
+  margin-top: 5px;
 	float:right;
 	background-image: url(../gs/images/videoplayer_background.png);
 	background-repeat: no-repeat;
 }
 
 .playerContentArea {
-  background: #292e43;
-  width: 956px;
-  /*margin-top: 5px;*/
+  background: #888d99;/*#292e43;*/
+  width: 816px;
+  margin-left: 10px;
+  margin-top: 10px;
   height: auto;
   float: left;
 }
-  
 .leftNavColPlayer {
-  width: 130px;
-  padding: 10px;
+  /*width: 130px;*/
+  /*height: 350px;*/
+  /*float: left;*/
+  /*padding: 10px;*/
   margin: 0;
-  height: 350px;
   color: #cfcfcf;
-  float: left;
 }
 
 .leftNavColPlayer a {
-  margin-top: 5px;
+  margin: 10px 0px 10px 20px;
+  float: right;
 }
 
 .leftNavPlayer {
-  background: #888d99;
-  padding: 5px;
-  margin-top: 15px;
+  /* background: #888d99; */
+  margin: 10px 20px 10px 20px;
 }
 
 .commentArea {
@@ -731,13 +734,14 @@ div.signupCompletedContent{
 	margin-bottom: 15px;
 }
 .signupCompletedContent .contentLeftBox{
-	margin-left: 0px;
-	width: 450px;
+	margin-left: 20px;
+	width: 370px;
 	float: left;
-	margin-right: 80px;
+	margin-right: 60px;
 }
 .signupCompletedContent .contentRightBox{
 	width: 300px;
+  margin-right: 20px;
 	float: left;
 }
 
@@ -848,7 +852,7 @@ td.numeric {
 	padding: 0px 0px 0px 0px;
 }
 #sidebar a {
-	color: #cccccc;
+	color: #dbdbdb;
 	text-decoration: none;
 }
 #sidebar a:hover {
@@ -858,7 +862,7 @@ td.numeric {
 	/* padding+height=actual height */
 	height: 25px;
   padding-top: 10px; 	
-	color: #ffffff;
+	color: #dbdbdb;
 	font-size: 110%;
 	font-weight: bold;
 	text-transform: uppercase;
@@ -1113,14 +1117,14 @@ ul, ol {
 
 /* Use text for top nav instead of images */
 .topNav .leftTopNav a {
-  color: #cccccc;
+  color: #dbdbdb;
   text-decoration: none;
 }
 .topNav .leftTopNav a:hover {
   color: #ffffff;
 }
 .topNav .leftTopNav {    
-  color: #cccccc;
+  color: #dbdbdb;
   font-size: 110%;
   font-weight: bold;
   text-transform: uppercase;

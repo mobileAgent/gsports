@@ -4,8 +4,6 @@
       %span
         =link_to _('MY CLIPS'), user_video_clips_path(@user.id)
       = @user.full_name
-      
-  =render :partial => "users/profile_nav"
 
   .listings
     - if @video_clips.any?

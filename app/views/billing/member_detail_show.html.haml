@@ -5,7 +5,7 @@
   .yui-b
     .box.user_list
       %h3= link_to_unless_current "Billing Home", :controller => :billing
-      %h3= "#{AppConfig.community_name} Billing History for #{@member_name}"
+      %h3= "#{AppConfig.community_name} Billing History for #{@member.name}"
 
 
       %br.clear
@@ -14,6 +14,10 @@
           %th Authorization Reference Number
           %th Date
         = render :partial => "billing/billing_history", :collection => @billings
+        
+        - if @member.canceled?
+          %tr
+            %td
 
 
       %br.clear

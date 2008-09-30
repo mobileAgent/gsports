@@ -8,10 +8,9 @@
       .registrationCompleteTitle 
         Your registration is complete!
 
-
       -# Pull the cost out of the membership, NOT the user.role.plan
       -# since the user may have used a promotion
-      - membership = @user.membership
+      - membership = @user.current_membership
       - if !membership.nil?
         - cost = membership.cost
         - if cost > 0

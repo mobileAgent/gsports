@@ -4,17 +4,19 @@
 - renewal = current_user && !current_user.memberships.nil? && !current_user.memberships.empty?
 
 .RegContent
-  .SideBar
-    %h1
-      = renewal ? 'Account Renewal' : 'Registration'      
-    
-    - if !renewal
-      %p
-        This is the last step of the registration process.
-
-    - if !skip_payment
-      %p
-        Please enter the first and last name of the person as it appears on the credit card you will be using for payment
+  -# Do not show the sidebar if there is a logged in user. They will have the "MY TOOLS" menu displayed here
+  - unless current_user
+    .SideBar
+      %h1
+        = renewal ? 'Account Renewal' : 'Registration'      
+      
+      - if !renewal
+        %p
+          This is the last step of the registration process.
+  
+      - if !skip_payment
+        %p
+          Please enter the first and last name of the person as it appears on the credit card you will be using for payment
       
   .RegistrationContent
     - if !renewal

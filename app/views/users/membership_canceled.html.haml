@@ -1,0 +1,34 @@
+.profileContentArea.listingPage
+  .profilePageHeader
+    %h2.columnDescriptor
+      %span
+        CANCELED ACCOUNT
+      for
+      = @user.full_name
+  .listings
+    .box
+      %p     
+        %br/            
+        %h2 We're sorry to see you go...
+        %br/          
+            
+      %form{:action => "renew", :method => :post}
+        = hidden_field :cancellation, :membership_id
+        = hidden_field :user, :id
+                
+        If you change your mind....
+        %br/
+        %br/
+        .box
+          - form_tag 'renew' do |f|
+            %label{"for"=>"promo_code"}
+              If you have a promotion code, enter it in the box below.
+            %br
+              = text_field_tag :promo_code, params[:promo_code], :size => 24
+            %br 
+            %p
+              =submit_tag 'Renew Membership'
+            %br/
+        %br/
+        %br/
+        %br{ :clear=>:left }

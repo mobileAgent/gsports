@@ -24,6 +24,10 @@ class CreditCard < ActiveRecord::Base
     end
   end
   
+  def expired?
+    !expiration_date.nil? && expiration_date < Date.today
+  end
+  
   def self.from_active_merchant_cc(ccinfo)
     new(:first_name => ccinfo.first_name,
         :last_name => ccinfo.last_name,

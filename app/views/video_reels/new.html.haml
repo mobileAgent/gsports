@@ -1,14 +1,16 @@
 .profileContentArea
   .profilePageHeader
     %h2.columnDescriptor
-      NEW REEL
-  .toplink
-    = link_to "&laquo; back to my clips", user_video_clips_path(current_user)
-    = " / "
-    = link_to "my reels", user_video_reels_path(current_user)
-  .playerContentArea{:style => "background-color: #0c1329"}
+      %span
+        =link_to _('MY REELS'), user_video_reels_path(current_user.id)
+      New Reel
 
+  -# ECKMAN: removing since the sidebar is always displayed
+    .toplink
+      = link_to "&laquo; back to my clips", user_video_clips_path(current_user)
+      = " / "
+      = link_to "my reels", user_video_reels_path(current_user)
 
-    .flashArea#flashArea
-    = render(:partial => 'shared/video_player', :locals => { :fvars => { :dockeys => "#{@user_clip_dockeys}"}, :target => 'flashArea', :player_name => '/players/reelmaker.swf', :height => 650, :width => 945})
+  .flashArea#flashArea
+  = render(:partial => 'shared/video_player', :locals => { :fvars => { :dockeys => "#{@user_clip_dockeys}"}, :target => 'flashArea', :player_name => '/players/reelmaker.swf', :height => 650, :width => 956})
 

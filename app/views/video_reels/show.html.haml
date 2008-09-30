@@ -2,12 +2,13 @@
   .profilePageHeader
     %h2.columnDescriptor
       %span    
-        MY REELS
+        =link_to _('MY REELS'), user_video_reels_path(current_user.id)
       Player
-  .toplink
-    = link_to "&laquo; back to my clips", user_video_clips_path(current_user)
-    = " / "
-    = link_to "my reels", user_video_reels_path(current_user)
+  -# ECKMAN: removing since the sidebar is always displayed
+    .toplink
+      = link_to "&laquo; back to my clips", user_video_clips_path(current_user)
+      = " / "
+      = link_to "my reels", user_video_reels_path(current_user)
   .playerContentArea
     .leftNavColPlayer
       .leftNavPlayer
@@ -27,9 +28,9 @@
           = render :partial => 'shared/inappropriate_item', :locals => { :item => @video_reel }
       
     .flashArea#flashArea
-    - if @vidavee && session[:vidavee] && @video_reel.dockey
+    - if @vidavee && session[:vidavee] && @video_reel.dockey    
       = render(:partial => 'shared/video_player', :locals => { :fvars => {:dockey => @video_reel.dockey}, :target => 'flashArea', :height => 750, :width => 800 })
-      
+    
     .clearDiv
     
     .commentContainer
