@@ -69,16 +69,7 @@ class SearchController < BaseController
       @teams = sphinx_search_teams
       @leagues = sphinx_search_leagues
       @posts = sphinx_search_blogs
-      
-      
-      logger.debug "!!!!!!!!!!!!!!!!!!!!!"
-      logger.debug :teams
-      logger.debug @teams
-      logger.debug "!!!!!!!!!!!!!!!!!!!!!"
-      logger.debug :leagues
-      logger.debug @leagues
-      logger.debug "!!!!!!!!!!!!!!!!!!!!!"
-      
+            
       # The search layout looks dumb if two columns are empty
       if @users.size + @posts.size == 0
         render :action => 'video_listing'
