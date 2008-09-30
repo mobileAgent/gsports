@@ -4,9 +4,8 @@
   .profilePageHeader
     %h2.columnDescriptor
       %span
-        BILLING
+        =link_to 'BILLING', billing_index_path
       Memberships
-  =render :partial => "users/profile_nav"
   .listings
     .box
       %table{:border => 0, :cellspacing => 0, :cellpadding => 0, :width => '100%'}
@@ -23,8 +22,10 @@
             %td.padded.contentBoxHeader.la
               = _('Joined') 
             %td.padded.contentBoxHeader.la
+              = _('Canceled') 
+            %td.padded.contentBoxHeader.la
               = _('History') 
-        %tbody  
+        %tbody
           = render :partial => "billing/membership", :collection => @memberships
   
       - if @users && @users.any

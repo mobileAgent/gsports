@@ -7,8 +7,6 @@
         -else 
           =link_to _('MY PHOTOS'), user_photos_path(@user.id)
       = "#{@user.full_name}" unless @title
-      
-  =render :partial => "users/profile_nav"
   #single_upload
     .listings
       .contentBox.tanBackground
@@ -17,12 +15,11 @@
             Upload an Image
         .contentBoxContent
 
-
           = error_messages_for :photo
-          %a.right{"href"=>"#", "onclick"=>"$('single_upload').toggle(); $('multiple_upload').toggle(); return false"}
-            Want to upload multiple files at once?
 
           - form_for(:photo, :url => user_photos_path, :html => {:multipart =>true, :class => "MainForm"} ) do |f|
+            %a.right{"href"=>"#", "onclick"=>"$('single_upload').toggle(); $('multiple_upload').toggle(); return false"}
+              Want to upload multiple files at once?
             = f.file_field :uploaded_data
             %label
               %em

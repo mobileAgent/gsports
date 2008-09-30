@@ -1,14 +1,20 @@
 class Membership < ActiveRecord::Base
   has_one :address, :as => :addressable, :dependent => :destroy
-  has_one :subscription
-  has_one :user, :through => :subscription
+  # has_one :subscription
+  # has_one :user, :through => :subscription
   has_many :membership_billing_histories, :order => "created_at DESC"
   belongs_to :credit_card # fk: credit_card_id
   belongs_to :promotion # fk: promotion_id
+  has_one :membership_cancellation
+  belongs_to :user
    
   CREDIT_CARD_BILLING_METHOD = "cc"
   INVOICE_BILLING_METHOD = "invoice"
   FREE_BILLING_METHOD = "na"
+  
+  STATUS_CANCELED = "c";
+  STATUS_RENEWED = "r";
+  STATUS_ACTIVE = "a"
 
   STATES = {
     'AL' => 'Alabama',
@@ -71,13 +77,31 @@ class Membership < ActiveRecord::Base
     'WY' => 'Wyoming'
   }
 
-  named_scope :active, :conditions => {'(expiration_date is null or expiration_date < ?)', Date.new}
-  named_scope :expired, :conditions => {'expiration_date is not null and expiration_date > ?', Date.new}
-
-  def expired?
-    expiration_date != nil && expiration_date < Time.now
+  named_scope :canceled, 
+      :conditions => ['status=?',STATUS_CANCELED]
+  named_scope :active,
+      :conditions => ['status=? and (expiration_date is null or expiration_date > ?)', STATUS_ACTIVE, Time.now]
+  named_scope :expired, 
+      :conditions => ['status=? and expiration_date is not null and expiration_date < ?', STATUS_ACTIVE, Time.now]
+  named_scope :expires_on_date, 
+      lambda { |date| { :conditions => ['status=? and date(expiration_date)=date(?)', STATUS_ACTIVE, date] } }
+  
+  def active?
+    status==STATUS_ACTIVE && (expiration_date.nil? || expiration_date > Time.now)
   end
 
+  def canceled?
+    status==STATUS_CANCELED
+  end
+
+  def expired?
+    status==STATUS_ACTIVE && !expiration_date.nil? && expiration_date < Time.now
+  end
+
+  def renewed?
+    status==STATUS_RENEWED
+  end
+  
   def last_billed
     return nil if membership_billing_histories.empty?
     membership_billing_histories.first.created_at
@@ -86,8 +110,10 @@ class Membership < ActiveRecord::Base
   # Bill this member
   #
   def bill_recurring
+    return ActiveMerchant::Billing::PayflowResponse.new(false,"Membership canceled") if (canceled?)
     return ActiveMerchant::Billing::PayflowResponse.new(false,"Nothing to charge: $0") if (cost.nil? || cost == 0)
     return ActiveMerchant::Billing::PayflowResponse.new(false,"Missing credit card information") if credit_card.nil? 
+    return ActiveMerchant::Billing::PayflowResponse.new(false,"Expired credit card") if credit_card.expired?
 
     # convert to ActiveMerchant credit card for validation
     am_credit_card = self.credit_card.to_active_merchant_cc
@@ -115,6 +141,41 @@ class Membership < ActiveRecord::Base
       save
     end
     response # Let the caller get response 
+  end
+  
+  def renew
+    
+    # make a copy of this membership, using the current plan cost
+    new_membership = Membership.new self.attributes
+    new_membership.id = nil
+    new_membership.promotion = nil
+    new_membership.expiration_date = nil
+    new_membership.created_at = nil
+    new_membership.updated_at = nil
+    
+    # use the current price for the subscription plan
+    new_membership.cost = @user.role.plan.cost
+    if @billing_method.nil? || @billing_method == FREE_BILLING_METHOD
+      new_membership.billing_method = CREDIT_CARD_BILLING_METHOD
+    else
+      new_membership.billing_method = @billing_method
+    end
+    
+    if new_membership.save
+      # set the status to renewed for this membership
+      begin
+        self.status=STATUS_RENEWED
+        save!
+      rescue ActiveRecord::RecordNotSaved
+        logger.error "Record not saved!"
+      end
+      
+      # return the new membership
+      return new_membership
+    else 
+      logger.error "Unable to renew membership for user #{@user.id} #{@user.full_name}"
+      return nil
+    end
   end
   
 end

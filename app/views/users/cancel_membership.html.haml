@@ -1,0 +1,30 @@
+.profileContentArea.listingPage
+  .profilePageHeader
+    %h2.columnDescriptor
+      %span
+        =link_to _('ACCOUNT'), user_path(@user)
+      Cancellation for
+      = @user.full_name
+  .listings
+    .box
+      %p
+        %br/            
+        %h2 What went wrong?
+        %br/          
+            
+      - form_for :cancellation, :url => {:action => "submit_cancellation", :id => @user} do |f|
+        = hidden_field :cancellation, :membership_id
+        
+        %label{ :for=> "cancellation_reason" }
+          Please take a moment and let us know why you have decided to cancel.
+        %br
+        =text_area :cancellation, :reason, :size => '80x6'
+  
+        %br/
+        %br/
+        %p
+          =submit_tag 'Cancel Subscription'
+        %br/
+        %br/
+        %br/
+      %br{ :clear=>:left }

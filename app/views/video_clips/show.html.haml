@@ -4,10 +4,11 @@
       %span    
         =link_to _('MY CLIPS'), user_video_clips_path(@user.id)
       Player
-  .toplink
-    = link_to "&laquo; back to my clips", user_video_clips_path(current_user)
-    = " / "
-    = link_to "my reels", user_video_reels_path(current_user)
+  -# ECKMAN: removing since the sidebar is always displayed
+    .toplink
+      = link_to "&laquo; back to my clips", user_video_clips_path(current_user)
+      = " / "
+      = link_to "my reels", user_video_reels_path(current_user)
   .playerContentArea
     .leftNavColPlayer
       .leftNavPlayer

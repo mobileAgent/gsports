@@ -4,9 +4,7 @@
       %h2.columnDescriptor
         %span
           = _('TAGS')
-        = link_to h(@tag.name), tag_path(@tag.name)
-        
-    =render :partial => "users/profile_nav"    
+        = link_to h(@tag.name), tag_path(@tag.name)    
     .listings         
       - unless @pages.blank?
         .box

@@ -4,10 +4,11 @@
       %span
         = link_to _('MY VIDEOS'), url_for({:controller => 'search', :action => 'my_videos', :user_id => @user.id})        
       Player
-  .toplink
-    = link_to "&laquo; back to my clips", user_video_clips_path(current_user)
-    = " / "
-    = link_to "my reels", user_video_reels_path(current_user)
+  -# ECKMAN: removing since the sidebar is always displayed
+    .toplink
+      = link_to "&laquo; back to my clips", user_video_clips_path(current_user)
+      = " / "
+      = link_to "my reels", user_video_reels_path(current_user)
   .playerContentArea
     .leftNavColPlayer
       .leftNavPlayer
@@ -26,7 +27,7 @@
           %a.genericButton{ :href => edit_video_asset_path(@video_asset) }
             Edit
           = link_to 'Delete', video_asset_path(@video_asset), :confirm => 'Are you sure?', :method => :delete,  :class=>'genericButton'
-      
+        
     .flashArea#flashArea
     - if @vidavee && session[:vidavee] && @video_asset.dockey
       = render(:partial => 'shared/video_player', :locals => { :fvars => {:dockey => @video_asset.dockey}, :target => 'flashArea', :height => 635, :width => 800 })

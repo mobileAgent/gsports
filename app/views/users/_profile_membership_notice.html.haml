@@ -1,15 +1,41 @@
 - user = @user || current_user
 - if user && (user.id == current_user.id || current_user.admin?)
-  - membership = current_user.membership
-  - if membership && membership.expiration_date
-    .contentBox.tanBackground
-      .contentBoxHeader.yellowHeader
-        %h2.boxDescription
-          MEMBERSHIP NOTICE
-      .contentBoxContent{ :style => "height: auto" }
-        .featureSummary
-          Your 
-          - if membership.promotion
-            promotional
-          membership expires on 
-          = membership.expiration_date.to_date  
+  - membership = user.current_membership
+  - if membership
+    - if membership.expiration_date || membership.canceled?
+      .contentBox.tanBackground
+        .contentBoxHeader.yellowHeader
+          %h2.boxDescription
+            MEMBERSHIP NOTICE
+        .contentBoxContent{ :style => "height: auto" }
+          - if membership.canceled?
+            .featureSummary
+              %span{ :style => "font-weight: bold; color: red" }
+                Membership has been CANCELED
+              
+          - elsif membership.expiration_date
+            .featureSummary          
+              Your
+              - if membership.promotion
+                promotional
+              membership expires on
+              %span{ :style => membership.expiration_date < 1.week.until ? "color:red" : "" }
+                = membership.expiration_date.to_date
+              %br/
+              %br/
+              Following that date, the monthly membership cost will be
+              = number_to_currency user.role.plan.cost
+
+          - if user.id == current_user.id 
+            .featureSummary
+              .moreLink
+                - if user.id == current_user.id
+                  =link_to "Renew Now", { :action => "renew", :id => user }, :class => 'genericButton'
+                  or
+                  =link_to "Cancel Membership", { :action => "cancel_membership", :id => user }
+
+          - elsif current_user.admin? && !membership.canceled?
+            .featureSummary
+              .moreLink
+                =link_to "Cancel Membership", { :action => "cancel_membership", :id => user }
+              

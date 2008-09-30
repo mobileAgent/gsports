@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20080929210040) do
+ActiveRecord::Schema.define(:version => 20080929162827) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id",    :limit => 10
@@ -238,7 +238,6 @@ ActiveRecord::Schema.define(:version => 20080929210040) do
     t.string   "phone"
     t.string   "zip"
     t.string   "email"
-    t.boolean  "delta",                     :default => false
   end
 
   create_table "membership_billing_histories", :force => true do |t|
@@ -250,6 +249,15 @@ ActiveRecord::Schema.define(:version => 20080929210040) do
     t.integer  "credit_card_id",                 :limit => 11
   end
 
+  create_table "membership_cancellations", :force => true do |t|
+    t.integer  "membership_id", :limit => 11, :null => false
+    t.text     "reason"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "membership_cancellations", ["membership_id"], :name => "index_mem_cancellations_on mem_id"
+
   create_table "memberships", :force => true do |t|
     t.string   "name"
     t.string   "billing_method"
@@ -260,7 +268,12 @@ ActiveRecord::Schema.define(:version => 20080929210040) do
     t.integer  "promotion_id",    :limit => 11
     t.integer  "credit_card_id",  :limit => 11
     t.datetime "expiration_date"
+    t.string   "status",          :limit => 1,                                :default => "a"
+    t.integer  "user_id",         :limit => 11,                                                :null => false
   end
+
+  add_index "memberships", ["status"], :name => "index_memberships_on_status"
+  add_index "memberships", ["user_id"], :name => "index_memberships_on_user_id"
 
   create_table "messages", :force => true do |t|
     t.datetime "created_at"
@@ -367,10 +380,10 @@ ActiveRecord::Schema.define(:version => 20080929210040) do
     t.integer  "subscription_plan_id", :limit => 11
     t.string   "name"
     t.decimal  "cost",                               :precision => 8, :scale => 2
-    t.text     "content"
     t.text     "html_content"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.text     "content"
     t.boolean  "enabled"
     t.boolean  "reusable"
     t.integer  "period_days",          :limit => 11
@@ -452,7 +465,7 @@ ActiveRecord::Schema.define(:version => 20080929210040) do
     t.string   "fisrtname"
     t.string   "state_name"
     t.string   "link"
-    t.boolean  "is_sor",                     :default => false
+    t.boolean  "is_sor"
     t.string   "html_content"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -466,13 +479,6 @@ ActiveRecord::Schema.define(:version => 20080929210040) do
     t.string   "name"
     t.decimal  "cost",        :precision => 8, :scale => 2, :default => 0.0
     t.text     "description"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "subscriptions", :force => true do |t|
-    t.integer  "membership_id", :limit => 11
-    t.integer  "user_id",       :limit => 11
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -509,7 +515,6 @@ ActiveRecord::Schema.define(:version => 20080929210040) do
     t.string   "phone"
     t.string   "zip"
     t.string   "email"
-    t.boolean  "delta",                     :default => false
   end
 
   create_table "topics", :force => true do |t|
@@ -604,8 +609,8 @@ ActiveRecord::Schema.define(:version => 20080929210040) do
     t.string   "video_length"
     t.string   "video_type"
     t.string   "video_status"
-    t.integer  "sponsor_id",         :limit => 11
-    t.integer  "member_id",          :limit => 11
+    t.integer  "league_id",          :limit => 11
+    t.integer  "team_id",            :limit => 11
     t.integer  "user_id",            :limit => 11
     t.string   "sport"
     t.datetime "game_date"
@@ -617,8 +622,6 @@ ActiveRecord::Schema.define(:version => 20080929210040) do
     t.string   "game_level"
     t.string   "game_gender"
     t.integer  "view_count",         :limit => 11, :default => 0
-    t.integer  "team_id",            :limit => 11
-    t.integer  "league_id",          :limit => 11
     t.boolean  "public_video",                     :default => true
     t.boolean  "delta",                            :default => false
     t.integer  "home_score",         :limit => 11

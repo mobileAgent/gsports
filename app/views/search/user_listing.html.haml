@@ -15,8 +15,6 @@
         =link_to @league.name, league_path(@league)
       -else
         = pluralize(@users.total_entries, 'result')
-        
-  =render :partial => "users/profile_nav"
 
   .listings
     -#.contentBox.tanBackground

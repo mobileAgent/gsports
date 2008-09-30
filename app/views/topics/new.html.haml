@@ -7,9 +7,7 @@
         =link_to _('FORUMS'), forums_path
       = link_to h(@forum.name), forum_path(@topic.forum)
       \:
-      = _('New Topic')
-      
-  =render :partial => "users/profile_nav"    
+      = _('New Topic')    
   .listings
     .contentBox.tanBackground
       .contentBoxHeader.yellowHeader

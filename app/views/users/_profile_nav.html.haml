@@ -1,65 +1,65 @@
-.leftNavCol
-  #sidebar
-    .menutitle
-      = _('My Tools')
-    .menuitem
-      =link_to _('Dashboard'), dashboard_user_path(current_user)
-    .menuitem
-      =link_to _('Profile'), user_path(current_user.id)  
-    .menuitem
-      =link_to _('Favorites'), user_favorites_path(current_user.id)
-    .menuitem
-      =link_to _('Friends'), accepted_user_friendships_path(current_user.id)
-    .menuitem
-      =link_to _('Photos'), user_photos_path(current_user.id)
-    .menuitem
-      =link_to _('Video Clips'), user_video_clips_path(current_user.id)
-    .menuitem
-      =link_to _('Video Reels'), user_video_reels_path(current_user.id)
-    .menuitem
-      =link_to _('Forums'), forums_path
-    .menuitem
-      =link_to _('Blog'), user_posts_path(current_user.id)
-
-
-    - if current_user && current_user.admin?
-      -if @user && @user.id != current_user.id
+- if current_user
+  .leftNavCol
+    #sidebar
+      .menutitle
+        = _('My Tools')
+      .menuitem
+        =link_to _('Dashboard'), dashboard_user_path(current_user)
+      .menuitem
+        =link_to _('Profile'), user_path(current_user.id)  
+      .menuitem
+        =link_to _('Favorites'), user_favorites_path(current_user.id)
+      .menuitem
+        =link_to _('Friends'), accepted_user_friendships_path(current_user.id)
+      .menuitem
+        =link_to _('Photos'), user_photos_path(current_user.id)
+      .menuitem
+        =link_to _('Video Clips'), user_video_clips_path(current_user.id)
+      .menuitem
+        =link_to _('Video Reels'), user_video_reels_path(current_user.id)
+      .menuitem
+        =link_to _('Forums'), forums_path
+      .menuitem
+        =link_to _('Blog'), user_posts_path(current_user.id)
+  
+      - if current_user.admin?
+        -if @user && @user.id != current_user.id
+          .menuitem
+            = link_to( "Assume ID", assume_user_path(@user) )
+          .menuitem
+            = link_to( "Disable user", url_for({:controller => 'users', :action => 'disable', :id => @user}), {:method => :delete, :confirm => 'Are you sure you want to disable this user account?'} )
         .menuitem
-          = link_to( "Assume ID", assume_user_path(@user) )
+          = link_to('Admin Panel', url_for({:controller => 'admin', :action => 'dashboard'}))
+      
+      - if current_user && current_user.can_upload?
         .menuitem
-          = link_to( "Disable user", url_for({:controller => 'users', :action => 'disable', :id => @user}), {:method => :delete, :confirm => 'Are you sure you want to disable this user account?'} )
-      .menuitem
-        = link_to('Admin Panel', url_for({:controller => 'admin', :action => 'dashboard'}))
-    
-    - if current_user && current_user.can_upload?
-      .menuitem
-        = link_to 'Upload Video', user_video_assets_path(current_user)
-      
-    -if current_user.team_staff? || current_user.league_staff?
-      .menuitem
-        = link_to 'Upload Image', new_user_photo_path(current_user)
-    
-    -if current_user.team_staff?
-      .menuitem
-        = link_to 'Team Page', team_path(current_user.team)
-      .menuitem
-        = link_to 'Edit Team Info', edit_team_path(current_user.team)
-      
-    -if current_user.league_staff?
-      .menuitem
-        = link_to 'League Page', league_path(current_user.league)
-      .menuitem
-        = link_to 'Edit League Info', edit_league_path(current_user.league)
-      
-    -if current_user.team_admin? || current_user.league_admin?
-      .menuitem
-        = link_to 'Staff Accounts', staffs_path
-
-
-    .menuitem-hilite
-      =link_to _('Edit Profile'), edit_user_path(current_user)
-    .menuitem-hilite
-      =link_to _('Edit Account'), edit_account_user_path(current_user)
-    .menuitem-last
-      =link_to _('Manage Blog'), manage_user_posts_path(current_user)
+          = link_to 'Upload Video', user_video_assets_path(current_user)
         
+      -if current_user.team_staff? || current_user.league_staff?
+        .menuitem
+          = link_to 'Upload Image', new_user_photo_path(current_user)
+      
+      -if current_user.team_staff?
+        .menuitem
+          = link_to 'Team Page', team_path(current_user.team)
+        .menuitem
+          = link_to 'Edit Team Info', edit_team_path(current_user.team)
+        
+      -if current_user.league_staff?
+        .menuitem
+          = link_to 'League Page', league_path(current_user.league)
+        .menuitem
+          = link_to 'Edit League Info', edit_league_path(current_user.league)
+        
+      -if current_user.team_admin? || current_user.league_admin?
+        .menuitem
+          = link_to 'Staff Accounts', staffs_path
+  
+  
+      .menuitem-hilite
+        =link_to _('Edit Profile'), edit_user_path(current_user)
+      .menuitem-hilite
+        =link_to _('Edit Account'), edit_account_user_path(current_user)
+      .menuitem-last
+        =link_to _('Manage Blog'), manage_user_posts_path(current_user)
+          

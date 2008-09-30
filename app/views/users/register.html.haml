@@ -1,18 +1,20 @@
 = javascript_include_tag '/gs/scripts/registration.js'
 .RegContent
-  .SideBar
-    %h1
-      Registration
-    %p      
-      The Registration process is completed in three easy steps.
-    %p
-      First, select the type of account that best fits you or your organization.
-    %p
-      Then provide us with your personal user information. Lastly, provide your billing information and you&rsquo;re all set!        
-    %p
-      %a{ :href => "/info/membership" }
-        Read more about Account types &raquo;
-        
+  -# Do not show the sidebar if there is a logged in user. They will have the "MY TOOLS" menu displayed here
+  - unless current_user
+    .SideBar
+      %h1
+        Registration
+      %p      
+        The Registration process is completed in three easy steps.
+      %p
+        First, select the type of account that best fits you or your organization.
+      %p
+        Then provide us with your personal user information. Lastly, provide your billing information and you&rsquo;re all set!        
+      %p
+        %a{ :href => "/info/membership" }
+          Read more about Account types &raquo;
+          
   .RegistrationContent
     .RegistrationTrail
       %span.RegistrationComplete
