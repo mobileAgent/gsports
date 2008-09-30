@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20080924194002) do
+ActiveRecord::Schema.define(:version => 20080929210040) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id",    :limit => 10
@@ -238,6 +238,7 @@ ActiveRecord::Schema.define(:version => 20080924194002) do
     t.string   "phone"
     t.string   "zip"
     t.string   "email"
+    t.boolean  "delta",                     :default => false
   end
 
   create_table "membership_billing_histories", :force => true do |t|
@@ -504,6 +505,7 @@ ActiveRecord::Schema.define(:version => 20080924194002) do
     t.string   "phone"
     t.string   "zip"
     t.string   "email"
+    t.boolean  "delta",                     :default => false
   end
 
   create_table "topics", :force => true do |t|

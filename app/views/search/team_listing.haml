@@ -1,0 +1,25 @@
+.profileContentArea.listingPage
+  .profilePageHeader
+    %h2.columnDescriptor
+      %span
+        Team Search Results
+      = current_user.full_name
+    %h3
+      = pluralize(@teams.total_entries, 'result')
+        
+  =render :partial => "users/profile_nav"
+
+  .listings
+    
+    - if @teams && @teams.any?
+      = render :partial => "teams/team_listing", :collection => @teams
+      
+      
+      .apple_pagination
+        = will_paginate @teams
+    -else
+      .listingItem
+        There were no results from your search
+
+
+    

@@ -1,0 +1,25 @@
+.profileContentArea.listingPage
+  .profilePageHeader
+    %h2.columnDescriptor
+      %span
+        League Search Results
+      = current_user.full_name
+    %h3
+      = pluralize(@leagues.total_entries, 'result')
+        
+  =render :partial => "users/profile_nav"
+
+  .listings
+    
+    - if @leagues && @leagues.any?
+      = render :partial => "leagues/league_listing", :collection => @leagues
+      
+      
+      .apple_pagination
+        = will_paginate @leagues
+    -else
+      .listingItem
+        There were no results from your search
+
+
+    

@@ -1,0 +1,16 @@
+.listingItem
+  .listingImage
+    - if league_listing.avatar
+      %a{:href=>team_path(league_listing)}
+        %img{ :src=>league_listing.avatar.public_filename, :title=>league_listing.name, :alt=>league_listing.name }
+  
+  .listingDescription
+    %h4.schoolName
+      = link_to h(league_listing.name), url_for({:controller => 'leagues', :action => 'show', :id => league_listing })
+    %p
+      - if league_listing.city && league_listing.city.length > 0
+        = h "#{league_listing.city}, "
+      = h "#{league_listing.county_name}, #{league_listing.state_id ? league_listing.state.name : ''}"
+                
+  .clearDiv
+.clearDiv
