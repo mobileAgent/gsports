@@ -13,6 +13,8 @@ class VideoAsset < ActiveRecord::Base
   
   acts_as_commentable
   acts_as_taggable
+  acts_as_rateable
+  
   has_many :favorites, :as => :favoritable, :dependent => :destroy
   acts_as_activity :user, :if => Proc.new{|r| r.video_status == 'ready' && r.public_video }
   
