@@ -5,7 +5,10 @@ class UsersController < BaseController
   end
   
   protect_from_forgery :only => [:create, :update, :destroy]
-  skip_before_filter :gs_login_required, :only => [:signup, :register, :new, :create, :billing, :submit_billing, :auto_complete_for_user_team_name, :auto_complete_for_team_league_name, :forgot_password, :registration_fill_team]
+  skip_before_filter :gs_login_required, :only => [:signup, :register, :new, :create, :billing, :submit_billing, :forgot_password, 
+                                                   :registration_fill_team, :registration_fill_teams_by_state,
+                                                   :registration_fill_league, :registration_fill_leagues_by_state,
+                                                   :auto_complete_for_user_team_name, :auto_complete_for_team_league_name]
   
   skip_before_filter :billing_required, :only => [:billing, :edit_billing, :submit_billing, :update_billing, 
                                                   :account_expired, :membership_canceled, :renew, :cancel_membership, 
@@ -102,15 +105,6 @@ class UsersController < BaseController
     #render :action => 'new', :layout => 'beta' and return if AppConfig.closed_beta_mode
   end
 
-  # Fills in the registration team block when registering as team admin
-  def registration_fill_team
-    @team = Team.find_by_name(params[:name])
-    respond_to do |format|
-      format.xml  { render :xml => @team }
-      format.js { render :action => "registration_fill_team" } # => registration_fill_team.rjs
-    end
-  end
-
   def create
     @role = nil
     begin
@@ -128,23 +122,18 @@ class UsersController < BaseController
     logger.debug "Setting role for #{@user.email} to #{@user.role_id}"
 
     case @role.id
-    when Role[:team].id
-      @team = Team.find_or_create_by_name(params[:user][:team_name])
-      @team.attributes = params[:team]
-      if (@team.league.nil?)
-        @team.league = User.admin.first.league
-        logger.debug "Setting team league to admin value"
-      end
-      @team.save! 
-      @user.team = @team
-      if (@team.league)
-        @user.league = @team.league
-      end
-      
     when Role[:league].id
-      @league = League.find_or_create_by_name(params[:user][:league_name])
-      @league.attributes = params[:league]
-      @league.save!
+      begin
+        @league = League.find(params[:league][:id])
+        logger.debug "Existing league found: #{@league.id}: #{@league.name}"
+      rescue ActiveRecord::RecordNotFound        
+        # Should we try to find duplicates here or not?
+        #@league = League.find(:first, :conditions => { :name => p_league[:name].to_i, :state_id => p_league[:state_id].to_i })
+        
+        @league = League.new params[:league]
+        logger.debug "New league #{@league.name}"
+        @league.save!
+      end
       @user.league = @league
       @user.team = User.admin.first.team
       
@@ -152,15 +141,29 @@ class UsersController < BaseController
       @user.team = User.admin.first.team
       @user.league = User.admin.first.league
       
-    else
-        # Handling for member roles coming in
-        @team = Team.find_or_create_by_name(params[:user][:team_name])
-        if (@team.new_record?)
-          @team.league_id = User.admin.first.league_id
-          @team.save! 
+    else # when Role[:team].id || Role[:member].id
+      begin
+        @team = Team.find(params[:team][:id])
+        logger.debug "Existing team found: #{@team.id}: #{@team.name}"
+      rescue ActiveRecord::RecordNotFound        
+        # Should we try to find duplicates here or not?
+        #@team = Team.find(:first, :conditions => { :name => p_team[:name].to_i, :state_id => p_team[:state_id].to_i })
+        
+        @team = Team.new params[:team]
+        logger.debug "New team: #{@team.name}"
+        if @team.league.nil?
+          @team.league = User.admin.first.league
+          logger.debug "Setting team league to admin value"
         end
-        @user.team_id = @team.id
-        @user.league_id = @team.league_id
+        
+        logger.debug "Saving new team"
+        @team.save! 
+      end
+
+      @user.team = @team
+      if (@team.league)
+        @user.league = @team.league
+      end
     end   
     
     # Lookup up promo code if provided
@@ -181,7 +184,7 @@ class UsersController < BaseController
         end
         flash.now[:error] = "Sorry, the promotion code you entered is invalid: #{params[:promo_code]}."
         @promotion = nil
-        render :action => 'new', :role => @role.id and return false
+        raise Exception.new, "Invalid promotion code"
       else
         logger.debug  "Promotion: #{@promotion.promo_code}: #{@promotion.name}"
         flash[:notice] = "The promotion #{@promotion.name} has been applied!"
@@ -195,7 +198,19 @@ class UsersController < BaseController
     
     redirect_to :action => 'billing', :userid => @user.id
 
-  rescue ActiveRecord::RecordInvalid => e
+  rescue Exception
+  
+    # Need to fill the teams/leagues drop down before returning to the screen
+    if @role.id == Role[:league].id
+      if @league && @league.state_id
+        @leagues = _get_leagues_by_state @league.state_id
+      end
+    else
+      if @team && @team.state_id
+        @teams = _get_teams_by_state @team.state_id
+      end
+    end
+
     render :action => 'new'
   end  
 
@@ -713,11 +728,91 @@ class UsersController < BaseController
   
   def membership_canceled
     @user = current_user
+  end  
+
+  # Fills in the registration team block when registering as team admin
+  def registration_fill_team
+    if params[:team_id] && !params[:team_id].blank?
+      @team = Team.find_by_id(params[:team_id])
+    elsif params[:name] && !params[:name].blank?
+      @team = Team.find_by_name(params[:name])  
+    end
+    
+    # Preserve state_id if provided
+    if @team.nil?
+      if params[:state_id]
+        @team = Team.new :state_id => params[:state_id]
+      end
+    end
+    
+    respond_to do |format|
+      format.xml  { render :xml => @team }
+      format.js { render :action => "registration_fill_team" } # => registration_fill_team.rjs
+    end
   end
+  
+    # Fills in the registration team block when registering as team admin
+  def registration_fill_teams_by_state
+    @teams = _get_teams_by_state params[:state_id]
+
+    respond_to do |format|
+      format.xml  { render :xml => @teams }
+      format.js { render :action => "registration_fill_team" } # => registration_fill_team.rjs
+    end
+  end
+
+  # Fills in the registration league block when registering as league admin
+  def registration_fill_league
+    if params[:league_id] && !params[:league_id].blank?
+      @league = League.find_by_id(params[:league_id])
+    elsif params[:name] && !params[:name].blank?
+      @league = League.find_by_name(params[:name])  
+    end
+    
+    # Preserve state_id if provided
+    if @league.nil?
+      if params[:state_id]
+        @league = League.new :state_id => params[:state_id]
+      end
+    end
+    
+    respond_to do |format|
+      format.xml  { render :xml => @league }
+      format.js { render :action => "registration_fill_league" } # => registration_fill_league.rjs
+    end
+  end
+  
+    # Fills in the registration league block when registering as league admin
+  def registration_fill_leagues_by_state
+    @leagues = _get_leagues_by_state params[:state_id]
+    
+    respond_to do |format|
+      format.xml  { render :xml => @leagues }
+      format.js { render :action => "registration_fill_league" } # => registration_fill_league.rjs
+    end
+  end
+
+  
 
   protected
   
-  def void_transaction (payment_response)
+  def _get_teams_by_state(state_id)
+    if state_id && !state_id.blank?
+      teams = Team.find_all_by_state_id(state_id)
+      teams.sort {|x,y| x.name.upcase <=> y.name.upcase }
+      teams << (Team.new :name => "-- My school/club is not listed --", :state_id => state_id)
+    end      
+  end
+  
+  def _get_leagues_by_state(state_id)
+    if state_id && !state_id.blank?
+      leagues = League.find_all_by_state_id(state_id)
+      leagues.sort {|x,y| x.name.upcase <=> y.name.upcase }
+      leagues << (Team.new :name => "-- My league is not listed --", :state_id => state_id)
+    end      
+  end
+  
+  def void_transaction(payment_response)
     return false if payment_response.nil?
     
     # void the $1.00 payment

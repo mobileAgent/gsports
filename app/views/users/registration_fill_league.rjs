@@ -1,0 +1,11 @@
+if @leagues
+  @league = @leagues.first
+  page.replace('reg_league_pick', :partial => 'users/registration_pick_league', :locals => {:leagues => @leagues, :league => @league})
+  unless @league.id
+    @league.name = ''
+  end
+end
+
+if @league
+  page.replace('reg_league_info', :partial => 'users/registration_new_league', :locals => {:league => @league})
+end
