@@ -1,0 +1,62 @@
+class AddLongNameToStates < ActiveRecord::Migration
+  def self.up
+    add_column :states, :long_name, :string, :limit =>15
+    
+    execute "update states set long_name = 'Alabama' where name = 'AL'"
+    execute "update states set long_name = 'Alaska' where name = 'AK'"
+    execute "update states set long_name = 'Arizona' where name = 'AZ'"
+    execute "update states set long_name = 'Arkansas' where name = 'AR'"
+    execute "update states set long_name = 'California' where name = 'CA'"
+    execute "update states set long_name = 'Colorado' where name = 'CO'"
+    execute "update states set long_name = 'Connecticut' where name = 'CT'"
+    execute "update states set long_name = 'Delaware' where name = 'DE'"
+    execute "update states set long_name = 'Washington D.C.' where name = 'DC'"
+    execute "update states set long_name = 'Florida' where name = 'FL'"
+    execute "update states set long_name = 'Georgia' where name = 'GA'"
+    execute "update states set long_name = 'Hawaii' where name = 'HI'"
+    execute "update states set long_name = 'Idaho' where name = 'ID'"
+    execute "update states set long_name = 'Illinois' where name = 'IL'"
+    execute "update states set long_name = 'Indiana' where name = 'IN'"
+    execute "update states set long_name = 'Iowa' where name = 'IA'"
+    execute "update states set long_name = 'Kansas' where name = 'KS'"
+    execute "update states set long_name = 'Kentucky' where name = 'KY'"
+    execute "update states set long_name = 'Louisiana' where name = 'LA'"
+    execute "update states set long_name = 'Maine' where name = 'ME'"
+    execute "update states set long_name = 'Maryland' where name = 'MD'"
+    execute "update states set long_name = 'Massachusetts' where name = 'MA'"
+    execute "update states set long_name = 'Michigan' where name = 'MI'"
+    execute "update states set long_name = 'Minnesota' where name = 'MN'"
+    execute "update states set long_name = 'Mississippi' where name = 'MS'"
+    execute "update states set long_name = 'Missouri' where name = 'MO'"
+    execute "update states set long_name = 'Montana' where name = 'MT'"
+    execute "update states set long_name = 'Nebraska' where name = 'NE'"
+    execute "update states set long_name = 'Nevada' where name = 'NV'"
+    execute "update states set long_name = 'New Hampshire' where name = 'NH'"
+    execute "update states set long_name = 'New Jersey' where name = 'NJ'"
+    execute "update states set long_name = 'New Mexico' where name = 'NM'"
+    execute "update states set long_name = 'New York' where name = 'NY'"
+    execute "update states set long_name = 'North Carolina' where name = 'NC'"
+    execute "update states set long_name = 'North Dakota' where name = 'ND'"
+    execute "update states set long_name = 'Ohio' where name = 'OH'"
+    execute "update states set long_name = 'Oklahoma' where name = 'OK'"
+    execute "update states set long_name = 'Oregon' where name = 'OR'"
+    execute "update states set long_name = 'Pennsylvania' where name = 'PA'"
+    execute "update states set long_name = 'Rhode Island' where name = 'RI'"
+    execute "update states set long_name = 'South Carolina' where name = 'SC'"
+    execute "update states set long_name = 'South Dakota' where name = 'SD'"
+    execute "update states set long_name = 'Tennessee' where name = 'TN'"
+    execute "update states set long_name = 'Texas' where name = 'TX'"
+    execute "update states set long_name = 'Utah' where name = 'UT'"
+    execute "update states set long_name = 'Vermont' where name = 'VT'"
+    execute "update states set long_name = 'Virginia' where name = 'VA'"
+    execute "update states set long_name = 'Washington' where name = 'WA'"
+    execute "update states set long_name = 'West Virginia' where name = 'WV'"
+    execute "update states set long_name = 'Wisconsin' where name = 'WI'"
+    execute "update states set long_name = 'Wyoming' where name = 'WY'"
+    
+  end
+
+  def self.down
+    remove_column :states, :long_name
+  end
+end

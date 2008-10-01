@@ -12,7 +12,7 @@
   .playerContentArea
     .leftNavColPlayer
       .leftNavPlayer
-      
+        = render :partial => 'ratings/stars', :locals => { :item => @video_asset }
         = render :partial => 'shared/favorite_item', :locals => { :item => @video_asset }
         - if @video_asset.league_video?
           %a.genericButton{ :href => league_path( @video_asset.league_id )  }

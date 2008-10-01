@@ -29,14 +29,9 @@
       -#%label.verbalSemantic{ :for => "search[category]" }
         Category
       %select#searchCategory{ :name => "search[category]" }
-        %option{ :value => "0" }
-          All
-        %option{ :value => "1" }
-          Videos
-        %option{ :value => "2" }
-          Users
-        %option{ :value => "3" }
-          Blogs
+        - Search.top_nav_options.each do |id, text|
+          %option{ :value => id }
+            = text
       %label{ :for => "searchTerms" }
         -# this focus and value are to help select the field on IE
         %input#searchTerms{ :name => "search[keyword]", :type => "text", :value => '                  ', :onfocus => 'this.select()'}
