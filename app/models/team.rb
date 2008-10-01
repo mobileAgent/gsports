@@ -10,6 +10,7 @@ class Team < ActiveRecord::Base
 
   # Every team needs a name and a league
   validates_presence_of :name
+  validates_presence_of :state_id
   validates_presence_of :league_id
 
   delegate :league_avatar, :to => :league

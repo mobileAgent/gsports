@@ -10,6 +10,7 @@ class League < ActiveRecord::Base
   
   # Every league needs a name
   validates_presence_of :name
+  validates_presence_of :state_id
 
   alias_method :league_avatar, :avatar
   

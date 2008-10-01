@@ -50,11 +50,35 @@ a, a:visited, a:hover, a:active {
 	border: 1px solid red;
 }
 
+.RegistrationContent .bothCols {
+  width: 715px;
+}
+
+.RegistrationContent .bothCols .contentBox {
+  width: auto;
+  height: auto;
+  padding-right: 20px;
+}
+
+.RegistrationContent h1 {
+  font-size: 15pt;
+  width: 715px;
+  border-top-width: 0px;
+  border-right-width: 0px;
+  border-bottom-width: 5px;
+  border-left-width: 0px;
+  border-top-style: solid;
+  border-right-style: solid;
+  border-bottom-style: solid;
+  border-left-style: solid;
+  border-bottom-color: #000000;
+}
 
 .RegistrationContent .mainCol1 .contentBox, .RegistrationContent .mainCol2 .contentBox{
-	width: 315px;
+	width: 325px;
 	height: auto;
 	padding-right: 10px;
+	margin-right: 20px;
 }
 .RegistrationContent .contentBox{
 	margin-left: 0px;	
