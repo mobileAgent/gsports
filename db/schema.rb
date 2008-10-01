@@ -381,10 +381,10 @@ ActiveRecord::Schema.define(:version => 20080930205443) do
     t.integer  "subscription_plan_id", :limit => 11
     t.string   "name"
     t.decimal  "cost",                               :precision => 8, :scale => 2
-    t.text     "content"
     t.text     "html_content"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.text     "content"
     t.boolean  "enabled"
     t.boolean  "reusable"
     t.integer  "period_days",          :limit => 11
@@ -466,7 +466,7 @@ ActiveRecord::Schema.define(:version => 20080930205443) do
     t.string   "fisrtname"
     t.string   "state_name"
     t.string   "link"
-    t.boolean  "is_sor",                     :default => false
+    t.boolean  "is_sor"
     t.string   "html_content"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -612,8 +612,8 @@ ActiveRecord::Schema.define(:version => 20080930205443) do
     t.string   "video_length"
     t.string   "video_type"
     t.string   "video_status"
-    t.integer  "sponsor_id",         :limit => 11
-    t.integer  "member_id",          :limit => 11
+    t.integer  "league_id",          :limit => 11
+    t.integer  "team_id",            :limit => 11
     t.integer  "user_id",            :limit => 11
     t.string   "sport"
     t.datetime "game_date"
@@ -625,8 +625,6 @@ ActiveRecord::Schema.define(:version => 20080930205443) do
     t.string   "game_level"
     t.string   "game_gender"
     t.integer  "view_count",         :limit => 11, :default => 0
-    t.integer  "team_id",            :limit => 11
-    t.integer  "league_id",          :limit => 11
     t.boolean  "public_video",                     :default => true
     t.boolean  "delta",                            :default => false
     t.integer  "home_score",         :limit => 11
