@@ -101,15 +101,13 @@ end
 desc "Update the configuration"
 task :update_configuration, :roles => :app do
   rails_env = fetch(:rails_env, "development")
-  if rails_env == 'development'
-    set (:billing_gateway_password) do
-      Capistrano::CLI.ui.ask "Enter billing gateway password: "
-    end
-    configuration_path = "#{current_release}/config/environments/#{rails_env}.rb"
-    str = File.new(configuration_path).read
-    str.gsub!('INSERT-BILLING-GATEWAY-PASSWORD',billing_gateway_password)
-    put str, configuration_path
+  set (:billing_gateway_password) do
+    Capistrano::CLI.ui.ask "Enter billing gateway password: "
   end
+  configuration_path = "#{current_release}/config/environments/#{rails_env}.rb"
+  str = File.new(configuration_path).read
+  str.gsub!('INSERT-BILLING-GATEWAY-PASSWORD',billing_gateway_password)
+  put str, configuration_path
 end
 
 desc "Symlink in the shared stuff"
