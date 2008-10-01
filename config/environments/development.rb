@@ -24,7 +24,7 @@ config.cache_store = :mem_cache_store
 
 # THis thing is unbelievably noisy and log cluttering
 
-# Billing values
+# Billing values - INSERT-BILLING-GATEWAY-PASSWORD replaced with value
 ActiveMerchant::Billing::Base.mode = :test
 Active_Merchant_payflow_gateway_username = 'markdr'
 Active_Merchant_payflow_gateway_password = 'MarkDR1'
