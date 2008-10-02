@@ -23,6 +23,9 @@ class Post < ActiveRecord::Base
   # Return the two most viewed/favorited articles for the home page
   # That aren't already being used as athletes of the week
   def self.orig_highlighted_articles(exclude_ids=[-1])
+    if exclude_ids.size == 0
+      exclude_ids = [-1]
+    end
     p = Post.find(:all,
                   :conditions => ["published_as = ? AND id NOT IN (?)","live",exclude_ids],
                   :order => 'view_count desc, favorited_count desc, published_at desc',
@@ -32,6 +35,9 @@ class Post < ActiveRecord::Base
   # Return the two most recently admin favorited articles for the home page
   # That aren't already being used as athletes of the week
   def self.highlighted_articles(exclude_ids=[-1])
+    if exclude_ids.size == 0
+      exclude_ids = [-1]
+    end
     f = Favorite.find(:all,
                       :conditions => ["user_id = ? and favoritable_type = ? and favoritable_id NOT IN (?)",
                                       User.admin.first.id,Post.to_s,exclude_ids],
