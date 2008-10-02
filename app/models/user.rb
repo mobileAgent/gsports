@@ -426,19 +426,13 @@ class User < ActiveRecord::Base
     mem = current_membership
     return false if mem.nil? || !mem.active?
     
-    if mem.cost > 0
-      if mem.billing_method == Membership::CREDIT_CARD_BILLING_METHOD &&
-              mem.last_billed < (Time.now - (PAYMENT_DUE_CYCLE+5).days)
-        logger.info "NEED PAYMENT: #{mem.cost} last billed #{mem.last_billed}"
-        true
-      elsif mem.billing_method == Membership::INVOICE_BILLING_METHOD &&
-              (mem.purchase_order.nil? || !mem.purchase_order.accepted)
-        logger.info "INVOICE NOT YET PAID: #{mem.cost}"
-        true
-      end      
-    else 
-      false
+    if mem.cost > 0 && 
+          mem.billing_method == Membership::CREDIT_CARD_BILLING_METHOD &&
+          mem.last_billed < (Time.now - (PAYMENT_DUE_CYCLE+5).days)
+      logger.info "NEED PAYMENT: #{mem.cost} last billed #{mem.last_billed}"
+      return true
     end
+    false
   end
 
   def credit_card_expired?
@@ -447,11 +441,25 @@ class User < ActiveRecord::Base
     
     if mem.credit_card != nil && mem.credit_card.expired?
       logger.info "CREDIT CARD EXPIRED: #{mem.credit_card.expiration_date}"
-      true
-    else 
-      false
+      return true
     end
+
+    false
   end
+  
+  def pending_purchase_order?
+    mem = current_membership
+    return false if mem.nil?
+    
+    if mem.cost > 0 &&
+          mem.billing_method == Membership::INVOICE_BILLING_METHOD &&
+          (mem.purchase_order.nil? || !mem.purchase_order.accepted)
+      logger.info "INVOICE NOT YET PAID: #{mem.cost}"
+      return true
+    end
+    false
+  end
+
 
   def credit_card
     # use credit card from current membership

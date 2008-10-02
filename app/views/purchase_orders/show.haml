@@ -58,6 +58,7 @@
         td.spacer{ border-left: 0px; border-bottom: 0px; }
         td.line{ border-bottom: 1px solid black; }
         td.shipping{ width: 50% }
+        td.numeric{ text-align: right }
         
         .signature {
           width: 50%;
@@ -139,21 +140,37 @@
           %th
             Description
           %th
-            QTY
-          %th
             Unit Price
           %th
+            QTY
+          %th
             Total
+
+        -if @promotion && !@promotion.cost.nil?
+          %tr
+            %td
+              = @promotion.promo_code
+            %td
+              = @promotion.name
+              - if @promotion.period_days
+                =" (#{@promotion.period_days} days)"
+            %td.numeric
+              = number_to_currency(@promotion.cost)
+            %td.numeric
+              1
+            %td.numeric
+              = number_to_currency(@promotion.cost)
+        
         %tr
           %td
             = @po.item_number
           %td
             = @po.description
-          %td
+          %td.numeric
             = number_to_currency(@po.user.role.plan.cost)
-          %td
+          %td.numeric
             12
-          %td
+          %td.numeric
             = number_to_currency(12 * @po.user.role.plan.cost)
         
         %tr
@@ -168,7 +185,7 @@
           %td.spacer{ :colspan=>3 }
           %td
             Total
-          %td.totals
+          %td.totals.numeric
             = number_to_currency(12 * @po.user.role.plan.cost)
     
       %table

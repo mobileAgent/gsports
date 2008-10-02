@@ -86,7 +86,7 @@ class BaseController < ApplicationController
     membership_required
   end
 
-  # Ensure the status of the users membership, accounts for promotional period expirations
+  # Ensure the status of the users membership,Your account is inactive. You must provide billing informationYour account is inactive. You must provide billing information accounts for promotional period expirations
   def membership_required
     return true if current_user.nil?
 

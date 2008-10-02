@@ -28,8 +28,13 @@ class SessionsController < BaseController
       self.current_user = nil
       inactive_user = User.authenticate_inactive(params[:login],params[:password])
       if (inactive_user)
-        flash[:error] = 'Your account is inactive. You must provide billing information'
-        redirect_to :controller => 'users', :action => 'billing', :userid => inactive_user.id and return
+        if inactive_user.pending_purchase_order?
+          flash[:error] = "Your payment has not been received or processed yet."
+          redirect_to(url_for(:controller => 'base', :action => 'site_index')) and return false
+        else
+          flash[:error] = 'Your account is inactive. You must provide billing information'
+          redirect_to :controller => 'users', :action => 'billing', :userid => inactive_user.id and return
+        end
       else
         flash[:error] = "Uh oh. We couldn't log you in with the username and password you entered. Your username is your email address. Try again?"      
       end
