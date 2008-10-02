@@ -536,7 +536,7 @@ class UsersController < BaseController
     @membership = @user.current_membership
     if !@membership.nil?
       # ActiveMerchant::Billing::CreditCard vs CreditCard confusion....
-      @credit_card = @membership.credit_card
+      @credit_card = @membership.credit_card || @user.credit_card || CreditCard.new
       @billing_address = @membership.address || Address.new
     else
       @credit_card = CreditCard.new
