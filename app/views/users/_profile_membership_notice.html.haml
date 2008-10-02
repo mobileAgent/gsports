@@ -22,9 +22,10 @@
               %span{ :style => membership.expiration_date < 1.week.until ? "color:red" : "" }
                 = membership.expiration_date.to_date
               %br/
-              %br/
-              Following that date, the monthly membership cost will be
-              = number_to_currency user.role.plan.cost
+              - if membership.credit_card
+                %br/
+                Following that date, the monthly membership cost will be
+                = number_to_currency user.role.plan.cost
 
           - if user.id == current_user.id 
             .featureSummary
