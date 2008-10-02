@@ -301,11 +301,10 @@ object#homeFlash {
 
 .leftNavColPlayer a {
 	margin: 0px 0px 0px 10px;
-	display: inline-block;
 }
 
 .leftNavColPlayer div {
-	display: inline-block;
+	float: left;
 }
 
 .leftNavPlayer {
