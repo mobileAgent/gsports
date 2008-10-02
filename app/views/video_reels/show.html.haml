@@ -7,11 +7,12 @@
   .playerContentArea
     .leftNavColPlayer
       .leftNavPlayer
-        - if current_user.can_send_message_to?(@video_reel.user)
-          %a.genericButton{ :href => new_message_path(:to => @video_reel.user.id, :title => "Your clip '#{@video_reel.title}'") }
-            Send Message
-        
         = render :partial => 'ratings/stars', :locals => { :item => @video_reel }
+        - if current_user.can_send_message_to?(@video_reel.user)
+          %div
+            %a.genericButton{ :href => new_message_path(:to => @video_reel.user.id, :title => "Your clip '#{@video_reel.title}'") }
+              Send Message
+        
             
         = render :partial => 'shared/favorite_item', :locals => { :item => @video_reel }
 
@@ -26,7 +27,7 @@
       
     .flashArea#flashArea
     - if @vidavee && session[:vidavee] && @video_reel.dockey    
-      = render(:partial => 'shared/video_player', :locals => { :fvars => {:dockey => @video_reel.dockey}, :target => 'flashArea', :height => 750, :width => 800 })
+      = render(:partial => 'shared/video_player', :locals => { :fvars => {:dockey => @video_reel.dockey}, :target => 'flashArea', :height => 635, :width => 800 })
     
     .clearDiv
     
