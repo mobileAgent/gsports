@@ -855,6 +855,10 @@ a.btag, a.btag:visited {
   color: #0081c0 !important;
 }
 
+.homeText p {
+  text-align: justify;
+}
+
 #POInfo {
  padding-left: 15px;	
 }
