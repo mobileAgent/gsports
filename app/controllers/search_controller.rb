@@ -69,13 +69,15 @@ class SearchController < BaseController
       @teams = sphinx_search_teams
       @leagues = sphinx_search_leagues
       @posts = sphinx_search_blogs
-            
+
+      tl_size = @teams.size + @leagues.size
+      
       # The search layout looks dumb if two columns are empty
-      if @users.size + @posts.size == 0
+      if @users.size + @posts.size + tl_size == 0
         render :action => 'video_listing'
-      elsif @users.size + @videos.size == 0
+      elsif @users.size + @videos.size + tl_size == 0
         render :action => 'post_listing'
-      elsif @posts.size + @videos.size == 0
+      elsif @posts.size + @videos.size + tl_size == 0
         render :action => 'user_listing'
       else
         render :action => 'search'
@@ -99,20 +101,22 @@ class SearchController < BaseController
       render :action => 'post_listing'
       
     when Search::TEAMS  
+      logger.debug "Routing search to team category"
       @teams = sphinx_search_teams
       render :action => 'team_listing'
       
     when Search::LEAGUES  
+      logger.debug "Routing search to league category"
       @leagues = sphinx_search_leagues
       render :action => 'league_listing'
       
     when Search::TEAM_USERS
-      logger.debug "Routing search to team category"
+      logger.debug "Routing search to team user category"
       @users = activerecord_search_team
       render :action => 'user_listing'
       
     when Search::LEAGUE_USERS
-      logger.debug "Routing search to league category"
+      logger.debug "Routing search to league user category"
       @users = activerecord_search_league
       render :action => 'user_listing'
       
