@@ -4,8 +4,6 @@
       %span
         = link_to _('MY VIDEOS'), url_for({:controller => 'search', :action => 'my_videos', :user_id => @user.id})        
       = @user.full_name
-      
-  =render :partial => "users/profile_nav"
   .listings
     - if current_user.can_upload?
       .box

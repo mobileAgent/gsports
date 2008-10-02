@@ -1,0 +1,90 @@
+-# Allow the team to be edited iff we have selected a state, or they have selected an existing team
+- team_editable = @team && @team.state_id && !@team.id
+
+#reg_team_info
+  %table
+    %tr
+      %td.field-block
+        #team_name_other{ :style => team_editable ? "visibility: show" : "visibility: hidden" }
+          %label
+            * New School / Club Name
+          %br/
+          =text_field_with_auto_complete :team, :name, :autocomplete => "off", :size => 25, :style => "width: 170px", :value=>(@team.nil? ? '' : @team.name), :onblur => "#{remote_function(:url=>{:controller=>'users',:action=>'registration_fill_team'},:with=>'Form.Element.serialize(this)')}"
+      %td.field-block
+        %label.required 
+          * Nickname
+        %a{:href => "#", :onclick => "new Lightbox.base('nickname_help'); return false;", :class => 'helptip' }
+          what's this?          
+        %br/
+        = text_field :team, :nickname, :size => 18, :style => "width: 140px", :disabled => !team_editable, :readonly => !team_editable       
+      
+  -# Only team enrollee's can enter team details
+  -if @requested_role == Role[:team].id
+    %table
+      %tr
+        %td.field-block            
+          %label.required{"for"=>"address1"} 
+            Address Line One
+          %br
+          = text_field :team, :address1, :size => 16, :disabled => !team_editable, :readonly => !team_editable    
+        %td.field-block
+          %label{"for"=>"address2"} 
+            Address Line Two
+          %br
+          = text_field :team, :address2, :size => 16, :disabled => !team_editable, :readonly => !team_editable
+      %tr
+        %td.field-block            
+          %label.required{"for"=>"team_city"}
+            City
+          %br
+          = text_field :team, :city, :size => 16, :disabled => !team_editable, :readonly => !team_editable
+        %td.field-block
+          %label.required{"for"=>"team_zip"} 
+            Zip/Postal Code
+          %br
+          = text_field :team, :zip, :size => 12, :disabled => !team_editable, :readonly => !team_editable
+      %tr 
+        %td.field-block
+          %label.required
+            County
+          %br
+          = text_field :team, :county_name, :size => 16, :disabled => !team_editable, :readonly => !team_editable
+          
+        
+    .field-block
+      %label
+        Description
+      %br
+      = text_field :team, :description , :size => 35, :disabled => !team_editable, :readonly => !team_editable
+    
+    -# Removed 9/29
+      .field-block
+        %label.required{"for" => "team_league_name"}
+          * League
+        %br
+        = text_field_with_auto_complete :team, :league_name, :autocomplete => "off", :disabled => !team_editable, :readonly => !team_editable
+  
+    .field-block
+      %label.required{"for"=>"phone"} 
+        Phone
+      %br
+      = text_field :team, :phone, :size => 14, :disabled => !team_editable, :readonly => !team_editable
+      
+    .field-block
+      %label.required{"for"=>"email"}
+        Contact E-mail address
+      %br
+      = text_field :team, :email, :size => 24, :disabled => !team_editable, :readonly => !team_editable
+      
+    -#.field-block
+      %label.required{"for"=>"email"}
+        Team Logo (must be 100x100 or 234x60)
+      %br
+      = file_field :avatar, :uploaded_data, :size => "20", :disabled => !team_editable, :readonly => !team_editable
+
+  #nickname_help.help_box{:style => "display: none"}
+    Please provide a short name for your school/club.
+    For example, if your school is officially named "South Side Regional High School", 
+    the nickname would probably be "South Side". 
+    The nickname will be used for convenience in various places throughout the site.
+  

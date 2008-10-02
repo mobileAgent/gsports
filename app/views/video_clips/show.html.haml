@@ -4,28 +4,25 @@
       %span    
         =link_to _('MY CLIPS'), user_video_clips_path(@user.id)
       Player
-  .toplink
-    = link_to "&laquo; back to my clips", user_video_clips_path(current_user)
-    = " / "
-    = link_to "my reels", user_video_reels_path(current_user)
   .playerContentArea
     .leftNavColPlayer
       .leftNavPlayer
         - if current_user.can_send_message_to?(@video_clip.user)
           %a.genericButton{ :href => new_message_path(:to => @video_clip.user.id, :title => "Your clip '#{@video_clip.title}'") }
             Send Message
-            
         = render :partial => 'ratings/stars', :locals => { :item => @video_clip }
-            
+
         = render :partial => 'shared/favorite_item', :locals => { :item => @video_clip }
 
         - if current_user && current_user.can_edit?(@video_clip)
-          %a.genericButton{ :href => edit_video_clip_path(@video_clip) }
-            Edit
-          = link_to 'Delete', video_clip_path(@video_clip), {:confirm => 'Are you sure?', :method => :delete,  :class=>'genericButton'}
+          %div
+            %a.genericButton{ :href => edit_video_clip_path(@video_clip) }
+              Edit
+          %div
+            = link_to 'Delete', video_clip_path(@video_clip), {:confirm => 'Are you sure?', :method => :delete,  :class=>'genericButton'}
         - else
           = render :partial => 'shared/inappropriate_item', :locals => { :item => @video_clip }
-      
+
     .flashArea#flashArea
     - if @vidavee && session[:vidavee] && @video_clip.dockey
       = render(:partial => 'shared/video_player', :locals => { :fvars => {:dockey => @video_clip.dockey}, :target => 'flashArea', :height => 750, :width => 800 })

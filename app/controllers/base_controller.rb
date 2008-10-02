@@ -71,13 +71,11 @@ class BaseController < ApplicationController
   def gs_login_required
     login_required
   end
-
+  
   # Ensure the status of the users billing
   def billing_required
     # Need to check that when they edit billing, we go ahead
-    # and charge them at that time. Also the edit billng
-    # form is lame needs to look more like the registration form
-    #return true # Not ready to enable this yet 
+    # and charge them at that time.
     return true if current_user.nil?
    
     if current_user.billing_needed? || current_user.credit_card_expired?
@@ -92,13 +90,17 @@ class BaseController < ApplicationController
   def membership_required
     return true if current_user.nil?
 
-    membership = current_user.membership;
+    membership = current_user.current_membership
     return true if membership.nil?
 
     if membership.expired?
       flash[:error] = "Your membership has expired. Please renew your account."
       redirect_to(url_for(:controller => 'users', :action => 'account_expired')) and return false
+    elsif membership.canceled?
+      flash[:error] = "Your membership has been canceled. Please renew your account."
+      redirect_to(url_for(:controller => 'users', :action => 'membership_canceled')) and return false
     end
+    
     return true
   end
 

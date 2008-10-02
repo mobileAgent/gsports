@@ -50,11 +50,35 @@ a, a:visited, a:hover, a:active {
 	border: 1px solid red;
 }
 
+.RegistrationContent .bothCols {
+  width: 715px;
+}
+
+.RegistrationContent .bothCols .contentBox {
+  width: auto;
+  height: auto;
+  padding-right: 20px;
+}
+
+.RegistrationContent h1 {
+  font-size: 15pt;
+  width: 715px;
+  border-top-width: 0px;
+  border-right-width: 0px;
+  border-bottom-width: 5px;
+  border-left-width: 0px;
+  border-top-style: solid;
+  border-right-style: solid;
+  border-bottom-style: solid;
+  border-left-style: solid;
+  border-bottom-color: #000000;
+}
 
 .RegistrationContent .mainCol1 .contentBox, .RegistrationContent .mainCol2 .contentBox{
-	width: 315px;
+	width: 325px;
 	height: auto;
 	padding-right: 10px;
+	margin-right: 20px;
 }
 .RegistrationContent .contentBox{
 	margin-left: 0px;	
@@ -126,11 +150,14 @@ table.unstyled td.numeric {
 
 
 .pageContentArea {
+  padding-top:20px;
+  padding-left: 20px;
+  padding-bottom: 20px;
+  padding-right: 20px;
+  float: left;
 }
 
 .pageContent {
-  margin: 0 5px 5px 25px;
-  padding-bottom: 10px;
 }
 
 .pageContent h1, .pageContent h2 {
@@ -249,37 +276,41 @@ object#homeFlash {
 }
 
 #flashArea {
-        margin-top: 5px;
+  margin-top: 5px;
 	float:right;
 	background-image: url(../gs/images/videoplayer_background.png);
 	background-repeat: no-repeat;
 }
 
 .playerContentArea {
-  background: #292e43;
-  width: 956px;
-  /*margin-top: 5px;*/
+  background: #888d99;/*#292e43;*/
+  width: 816px;
+  margin-left: 10px;
+  margin-top: 10px;
   height: auto;
   float: left;
 }
-  
 .leftNavColPlayer {
-  width: 130px;
-  padding: 10px;
+  /*width: 130px;*/
+  /*height: 350px;*/
+  /*float: left;*/
+  /*padding: 10px;*/
   margin: 0;
-  height: 350px;
   color: #cfcfcf;
-  float: left;
 }
 
 .leftNavColPlayer a {
-  margin-top: 5px;
+	margin: 0px 0px 0px 10px;
+	display: inline-block;
+}
+
+.leftNavColPlayer div {
+	display: inline-block;
 }
 
 .leftNavPlayer {
-  background: #888d99;
-  padding: 5px;
-  margin-top: 15px;
+  /* background: #888d99; */
+  margin: 10px 20px 0 20px;
 }
 
 .commentArea {
@@ -731,13 +762,14 @@ div.signupCompletedContent{
 	margin-bottom: 15px;
 }
 .signupCompletedContent .contentLeftBox{
-	margin-left: 0px;
-	width: 450px;
+	margin-left: 20px;
+	width: 370px;
 	float: left;
-	margin-right: 80px;
+	margin-right: 60px;
 }
 .signupCompletedContent .contentRightBox{
 	width: 300px;
+  margin-right: 20px;
 	float: left;
 }
 
@@ -848,7 +880,7 @@ td.numeric {
 	padding: 0px 0px 0px 0px;
 }
 #sidebar a {
-	color: #cccccc;
+	color: #dbdbdb;
 	text-decoration: none;
 }
 #sidebar a:hover {
@@ -858,7 +890,7 @@ td.numeric {
 	/* padding+height=actual height */
 	height: 25px;
   padding-top: 10px; 	
-	color: #ffffff;
+	color: #dbdbdb;
 	font-size: 110%;
 	font-weight: bold;
 	text-transform: uppercase;
@@ -1046,6 +1078,13 @@ ul, ol {
 
 /* Ratings */
 
+.inline-rating{
+	display:-moz-inline-block;
+	display:-moz-inline-box;
+	display:inline-block;
+	vertical-align: middle;
+}
+
 .star-rating,
 .star-rating a:hover,
 .star-rating a:active,
@@ -1113,14 +1152,14 @@ ul, ol {
 
 /* Use text for top nav instead of images */
 .topNav .leftTopNav a {
-  color: #cccccc;
+  color: #dbdbdb;
   text-decoration: none;
 }
 .topNav .leftTopNav a:hover {
   color: #ffffff;
 }
 .topNav .leftTopNav {    
-  color: #cccccc;
+  color: #dbdbdb;
   font-size: 110%;
   font-weight: bold;
   text-transform: uppercase;

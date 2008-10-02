@@ -6,8 +6,6 @@
       %span
         BLOG
       = @post.category.name
-      
-  =render :partial => "users/profile_nav"
 
   .forumContainer
     - if @post.contest || @post.category  

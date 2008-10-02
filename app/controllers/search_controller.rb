@@ -52,53 +52,24 @@ class SearchController < BaseController
     end
   end
 
+
+  
+  
   # Main site search
   def q
     @category = (params[:search][:category] || "0").to_i
     @is_search_result = true
-    
-    if @category == 1 || @category == 0
-      logger.debug "Routing search to video category"
+        
+    case @category
+    when Search::ALL
       @videos = sphinx_search_videos
       protect_private_videos(@videos)
       @title = 'Search Results'
-      render_name = 'video_listing'
-    end
-    if @category == 2 || @category == 0
-      logger.debug "Routing search to user category"
       @users = sphinx_search_users
-      render_name = 'user_listing'
-    end
-    if @category == 3 || @category == 0
-      logger.debug "Routing search to blog category"
+      @teams = sphinx_search_teams
+      @leagues = sphinx_search_leagues
       @posts = sphinx_search_blogs
-      render_name = 'post_listing'
-    end
-    
-    if @category == 10
-      logger.debug "Routing search to team category"
-      @users = activerecord_search_team
-      render_name = 'user_listing'
-    end
-    
-    if @category == 11
-      logger.debug "Routing search to league category"
-      @users = activerecord_search_league
-      render_name = 'user_listing'
-    end
-
-    if @category == 13
-      logger.debug "Routing search to friend category"
-      @users = sphinx_search_friends
-      render_name = 'user_listing'
-    end
-
-
-    # Search all categories
-    if @category > 0
-      
-      render :action => render_name and return
-    else
+            
       # The search layout looks dumb if two columns are empty
       if @users.size + @posts.size == 0
         render :action => 'video_listing'
@@ -109,7 +80,49 @@ class SearchController < BaseController
       else
         render :action => 'search'
       end
+      
+    when Search::VIDEO
+      logger.debug "Routing search to video category"
+      @videos = sphinx_search_videos
+      protect_private_videos(@videos)
+      @title = 'Search Results'
+      render :action => 'video_listing'
+      
+    when Search::USERS
+      logger.debug "Routing search to user category"
+      @users = sphinx_search_users
+      render :action => 'user_listing'
+      
+    when Search::BLOGS
+      logger.debug "Routing search to blog category"
+      @posts = sphinx_search_blogs
+      render :action => 'post_listing'
+      
+    when Search::TEAMS  
+      @teams = sphinx_search_teams
+      render :action => 'team_listing'
+      
+    when Search::LEAGUES  
+      @leagues = sphinx_search_leagues
+      render :action => 'league_listing'
+      
+    when Search::TEAM_USERS
+      logger.debug "Routing search to team category"
+      @users = activerecord_search_team
+      render :action => 'user_listing'
+      
+    when Search::LEAGUE_USERS
+      logger.debug "Routing search to league category"
+      @users = activerecord_search_league
+      render :action => 'user_listing'
+      
+    when Search::FRIENDS
+      logger.debug "Routing search to friend category"
+      @users = sphinx_search_friends
+      render :action => 'user_listing'
+      
     end
+    
   end
 
   # The flash player uses this to get metadata for
@@ -312,6 +325,22 @@ class SearchController < BaseController
                          :per_page => 30,
                          :page => (params[:page] || 1),
                          :order => :full_name)
+  end
+
+  def sphinx_search_leagues
+    logger.debug "Running league search for #{params[:search][:keyword]}"
+    League.search(params[:search][:keyword],
+      :per_page => 6,
+      :page => (params[:page] || 1),
+      :order => :name)
+  end
+
+  def sphinx_search_teams
+    logger.debug "Running team search for #{params[:search][:keyword]}"
+    Team.search(params[:search][:keyword],
+      :per_page => 6,
+      :page => (params[:page] || 1),
+      :order => :nickname)
   end
   
   def sphinx_search_blogs

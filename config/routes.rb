@@ -17,7 +17,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :staffs
   map.resources :purchase_orders
   map.resources :ratings
-  
+
   map.register         'register',        :controller => 'users', :action => 'register'
   map.forgot_password  'forgot_password', :controller => 'users', :action => 'forgot_password'
 
@@ -28,7 +28,6 @@ ActionController::Routing::Routes.draw do |map|
 
   # Turn on community engine routes
   map.from_plugin :community_engine
-
 
   # Add resources to the community engine routes
   map.resources :users, :member_path => '/:id', :nested_member_path => '/:user_id', :member => {

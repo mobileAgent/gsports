@@ -4,10 +4,8 @@
   .profilePageHeader
     %h2.columnDescriptor
       %span
-        BILLING
+        =link_to 'BILLING', billing_index_path
       = "Details for #{@member.name}"
-      
-  =render :partial => "users/profile_nav"
   .listings
     .box
       %table{:border => 0, :cellspacing => 0, :cellpadding => 0, :width => '100%'}

@@ -33,6 +33,15 @@ class MembershipNotifier < ActionMailer::Base
     @body[:url] = "#{APP_URL}"
   end
 
+  def membership_expiring(email, membership)
+    setup_sender_info
+    @recipients  = "#{email}"
+    @subject     = "[#{AppConfig.community_name}] News about your account"
+    @sent_on     = Time.now
+    @body[:message] = "Hi #{membership.name},\n\nYour promotional membership is going to expire on #{membership.expiration_date.to_date}.\n\nNo action is required at this time to continue using #{AppConfig.community_name}. On that date, you will be billed the monthly cost for your membership on your credit card (ending in #{membership.credit_card.displayable_number}).\n\nIf you would like to cancel your membership, please login before your account expires to prevent the first month's billing.\n\nThank you!"
+    @body[:url] = "#{APP_URL}"
+  end
+
   protected
   def setup_email(user)
     setup_sender_info

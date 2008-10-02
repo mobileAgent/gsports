@@ -2,12 +2,8 @@
   .profilePageHeader
     %h2.columnDescriptor
       %span    
-        MY REELS
+        =link_to _('MY REELS'), user_video_reels_path(current_user.id)
       Player
-  .toplink
-    = link_to "&laquo; back to my clips", user_video_clips_path(current_user)
-    = " / "
-    = link_to "my reels", user_video_reels_path(current_user)
   .playerContentArea
     .leftNavColPlayer
       .leftNavPlayer
@@ -20,16 +16,18 @@
         = render :partial => 'shared/favorite_item', :locals => { :item => @video_reel }
 
         - if current_user && current_user.can_edit?(@video_reel)
-          %a.genericButton{ :href => edit_video_reel_path(@video_reel) }
-            Edit
-          = link_to 'Delete', video_reel_path(@video_reel), :confirm => 'Are you sure?', :method => :delete,  :class=>'genericButton'
+          %div
+            %a.genericButton{ :href => edit_video_reel_path(@video_reel) }
+              Edit
+          %div
+            = link_to 'Delete', video_reel_path(@video_reel), :confirm => 'Are you sure?', :method => :delete,  :class=>'genericButton'
         - else
           = render :partial => 'shared/inappropriate_item', :locals => { :item => @video_reel }
       
     .flashArea#flashArea
-    - if @vidavee && session[:vidavee] && @video_reel.dockey
+    - if @vidavee && session[:vidavee] && @video_reel.dockey    
       = render(:partial => 'shared/video_player', :locals => { :fvars => {:dockey => @video_reel.dockey}, :target => 'flashArea', :height => 750, :width => 800 })
-      
+    
     .clearDiv
     
     .commentContainer

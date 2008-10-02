@@ -4,10 +4,8 @@
   .profilePageHeader
     %h2.columnDescriptor
       %span
-        BILLING
+        =link_to 'BILLING', billing_index_path
       = "History for #{@member_name}"
-      
-  =render :partial => "users/profile_nav"
   .listings
     .box
 
@@ -23,7 +21,17 @@
             %td.padded.contentBoxHeader.numeric
               Authorization Reference Number 
         %tbody
-          = render :partial => "membership/billing_history", :collection => @billings
-  
+          = render :partial => "membership/billing_history", :collection => @billings 
+        
+          - if @member && @member.canceled?
+            %tr.forumList
+              %td.forumList
+                - if @member.membership_cancellation
+                  =@member.membership_cancellation.created_at.to_date
+              %td.forumList.numeric{ :style => "color:red" }
+                CANCELED                
+              %td.forumList{ :colspan => 2 }
+                - if @member.membership_cancellation
+                  =@member.membership_cancellation.reason
       
       %br.clear
