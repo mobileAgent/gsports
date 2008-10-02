@@ -4,6 +4,7 @@ class Membership < ActiveRecord::Base
   # has_one :user, :through => :subscription
   has_many :membership_billing_histories, :order => "created_at DESC"
   belongs_to :credit_card # fk: credit_card_id
+  belongs_to :purchase_order # fk: purchase_order_id  
   belongs_to :promotion # fk: promotion_id
   has_one :membership_cancellation
   belongs_to :user
@@ -40,7 +41,7 @@ class Membership < ActiveRecord::Base
     'KY' => 'Kentucky',
     'LA' => 'Louisiana',
     'ME' => 'Maine',
-    'MH' => 'Islands1',
+    'MH' => 'Marshall Islands',
     'MD' => 'Maryland',
     'MA' => 'Massachusetts',
     'MI' => 'Michigan',

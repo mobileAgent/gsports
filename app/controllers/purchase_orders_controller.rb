@@ -11,13 +11,19 @@ class PurchaseOrdersController < BaseController
   def new
     @po = PurchaseOrder.new(params[:purchase_order])
     @promotion = session[:promotion]
-    @cost = (@promotion && @promotion.cost) ? @promotion.cost : @po.user.role.plan.cost
+    
+    # Purchase orders are made for the full retail price
+    @cost = @po.user.role.plan.cost
+    #@cost = (@promotion && !@promotion.cost.nil?) ? @promotion.cost : @po.user.role.plan.cost
   end
   
   def create
     @po = PurchaseOrder.new(params[:purchase_order])
     @promotion = session[:promotion]
-    @cost = (@promotion && @promotion.cost) ? @promotion.cost : @po.user.role.plan.cost
+    
+    # Purchase orders are made for the full retail price
+    @cost = @po.user.role.plan.cost
+    #@cost = (@promotion && !@promotion.cost.nil?) ? @promotion.cost : @po.user.role.plan.cost
     
     if params[:confirm] == 'yes'
       if !params[:tos] || !params[:suba]
@@ -25,6 +31,9 @@ class PurchaseOrdersController < BaseController
         render :action=>:confirm
       else
         @po.save!
+        
+        # Add the membership record here
+        @po.user.make_member_by_invoice(@cost,@po,@promotion)
 
         #########################
         # If we have to auto-enable users when a po is submitted, here is how
@@ -56,9 +65,17 @@ class PurchaseOrdersController < BaseController
     if pos
       pos.each { |poid|
         po = PurchaseOrder.find(poid.to_i)
-        po.user.enabled = true
-        po.user.activated_at = Time.now
-        po.user.save!
+        po.accepted = true
+        po.accepted_by = current_user
+        po.accepted_at = Time.now
+        
+        # This may be a renewal...
+        # so only set the user's enabled and activated fields for new enrollments
+        if !po.user.enabled || po.user.activated_at.nil?
+          po.user.enabled = true
+          po.user.activated_at = Time.now
+          po.user.save!
+        end
         UserNotifier.deliver_welcome(po.user)
       }
     end

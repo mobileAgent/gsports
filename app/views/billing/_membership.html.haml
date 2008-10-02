@@ -5,6 +5,8 @@
   %td.forumList
     - if membership.billing_method == Membership::CREDIT_CARD_BILLING_METHOD
       =link_to 'Credit Card',:controller => :membership, :action => :member_billing_method_info ,:id => membership.id
+    - elsif membership.purchase_order
+      =link_to 'Purchase Order',:controller => :purchase_order, :action => :show, :id => membership.purchase_order.id
     - else
       = membership.billing_method
   %td.forumList.numeric

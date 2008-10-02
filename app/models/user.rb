@@ -190,11 +190,52 @@ class User < ActiveRecord::Base
     return false
   end
   
-  def make_member(billing_method,cost,address,credit_card=nil,payment_authorization=nil,promotion=nil)
-    mem = Membership.new(:billing_method=>billing_method)
-    mem.cost = cost == nil ? role.plan.cost : cost
+  def make_member_by_invoice (monthly_cost, purchase_order, promotion=nil)
+    mem = Membership.new(:billing_method => Membership::INVOICE_BILLING_METHOD)
+    mem.name = full_name
+    mem.purchase_order = purchase_order
+
+    mem.cost = (monthly_cost.nil? ? role.plan.cost : monthly_cost) * 12
+    
+    # Next membership expiration comes after the end of the current
+    # membership, if one exists and is active
+    existing_mem = current_membership
+    if existing_mem && 
+          existing_mem.active? &&
+          existing_mem.expiration_date && 
+          existing_mem.expiration_date > Time.now
+      mem.expiration_date = existing_mem.expiration_date + 12.months
+    else
+      mem.expiration_date = Time.now + 12.months
+    end
+    logger.debug "Invoice Expiration is #{mem.expiration_date}"
+    
+    if promotion
+      mem.promotion = promotion
+      if !promotion.period_days.nil? && promotion.period_days > 0
+        mem.expiration_date += promotion.period_days.days       
+        logger.debug "Promotional Invoice Expiration is #{mem.expiration_date}"
+      end
+    end
+
+    add_membership(mem)
+  end
+  
+  def make_member_by_credit_card (monthly_cost, address, credit_card=nil, payment_auth=nil, promotion=nil)
+    mem = Membership.new(:billing_method => Membership::CREDIT_CARD_BILLING_METHOD)
+    mem.cost = monthly_cost.nil? ? role.plan.cost : monthly_cost
     mem.name = full_name
     mem.credit_card = credit_card
+    
+    if payment_authorization # else we may just be updating cc info
+      history = MembershipBillingHistory.new
+      pf = payment_authorization.params
+      history.authorization_reference_number = "#{pf['pn_ref']}/#{pf['auth_code']}"
+      history.payment_method = billing_method
+      history.credit_card = credit_card
+      mem.membership_billing_histories << history
+    end
+    
     if promotion
       mem.promotion = promotion
       if !promotion.period_days.nil? && promotion.period_days > 0
@@ -220,30 +261,12 @@ class User < ActiveRecord::Base
       mem.address = addr
     else
       mem.address = address
-    end   
-
-    if payment_authorization # else we may just be updating cc info
-      history = MembershipBillingHistory.new
-      pf = payment_authorization.params
-      history.authorization_reference_number = "#{pf['pn_ref']}/#{pf['auth_code']}"
-      history.payment_method = billing_method
-      history.credit_card = credit_card
-      mem.membership_billing_histories << history
-    end
-    
-    # check to see if this is a renewal
-    existing_mem = current_membership
-    if existing_mem && (existing_mem.active? || existing_mem.expired?)
-      logger.debug "Flagging existing membership as renewal"
-      existing_mem.status = Membership::STATUS_RENEWED
-      existing_mem.save!
-    end
-    
-    memberships << mem
-    save
+    end       
+        
+    add_membership(mem)
   end
 
-  def set_payment(ccinfo)
+  def set_credit_card(ccinfo)
     cc = CreditCard.from_active_merchant_cc(ccinfo)
     cc.save
 
@@ -403,11 +426,16 @@ class User < ActiveRecord::Base
     mem = current_membership
     return false if mem.nil? || !mem.active?
     
-    if (mem.cost > 0 &&
-          mem.billing_method == Membership::CREDIT_CARD_BILLING_METHOD &&
-          mem.last_billed < (Time.now - (PAYMENT_DUE_CYCLE+5).days))
-      logger.info "NEED PAYMENT: #{mem.cost} last billed #{mem.last_billed}"
-      true
+    if mem.cost > 0
+      if mem.billing_method == Membership::CREDIT_CARD_BILLING_METHOD &&
+              mem.last_billed < (Time.now - (PAYMENT_DUE_CYCLE+5).days)
+        logger.info "NEED PAYMENT: #{mem.cost} last billed #{mem.last_billed}"
+        true
+      elsif mem.billing_method == Membership::INVOICE_BILLING_METHOD &&
+              (mem.purchase_order.nil? || !mem.purchase_order.accepted)
+        logger.info "INVOICE NOT YET PAID: #{mem.cost}"
+        true
+      end      
     else 
       false
     end
@@ -435,6 +463,23 @@ class User < ActiveRecord::Base
     end
     
     nil
+  end
+  
+  protected 
+  
+  def add_membership(membership)
+    if membership
+      # check to see if this is a renewal
+      existing_mem = current_membership
+      if existing_mem && (existing_mem.active? || existing_mem.expired?)
+        logger.debug "Flagging existing membership as renewal"
+        existing_mem.status = Membership::STATUS_RENEWED
+        existing_mem.save!
+      end
+      
+      memberships << membership
+      save
+    end    
   end
   
 end

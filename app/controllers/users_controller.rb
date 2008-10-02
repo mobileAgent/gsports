@@ -222,7 +222,7 @@ class UsersController < BaseController
     @promotion = session[:promotion]
     
     # check for promotional pricing
-    if @promotion != nil && @promotion.cost != nil
+    if (@promotion && !@promotion.cost.nil?)
       @cost = @promotion.cost
       logger.debug "Using promotional pricing: #{@cost}"
     else
@@ -233,7 +233,7 @@ class UsersController < BaseController
     # need to provide credit card even if price == 0
     @billing_address = Address.new(params[:billing_address])
     @credit_card = ActiveMerchant::Billing::CreditCard.new(params[:credit_card])
-    @offer_PO = @cost > 0 && (@user.team_staff? || @user.league_staff?)
+    @offer_PO = @user.team_staff? || @user.league_staff?
   
     #@credit_card.first_name = @user.firstname if (! @credit_card.first_name) 
     #@credit_card.last_name = @user.lastname if (! @credit_card.last_name)
@@ -250,7 +250,7 @@ class UsersController < BaseController
     
     @promotion = session[:promotion]
     
-    if @promotion != nil && @promotion.cost != nil
+    if (@promotion && !@promotion.cost.nil?)
       @cost = @promotion.cost
       logger.debug "Using promotional pricing: #{@cost}"      
     else
@@ -296,7 +296,7 @@ class UsersController < BaseController
       credit_card_for_db.user = @user
       credit_card_for_db.save!
 
-      @user.make_member(Membership::CREDIT_CARD_BILLING_METHOD,@cost,@billing_address,credit_card_for_db,@response,@promotion)
+      @user.make_member_by_credit_card(@cost,@billing_address,credit_card_for_db,@response,@promotion)
 
     else
       @billing_address ||= Address.new
@@ -389,7 +389,7 @@ class UsersController < BaseController
       end
     end
 
-    @cost = @promotion && @promotion.cost ? @promotion.cost : @user.role.plan.cost
+    @cost = (@promotion && !@promotion.cost.nil?) ? @promotion.cost : @user.role.plan.cost
     render :action => 'billing', :userid => @user.id
   end
   
@@ -536,7 +536,7 @@ class UsersController < BaseController
     @membership = @user.current_membership
     if !@membership.nil?
       # ActiveMerchant::Billing::CreditCard vs CreditCard confusion....
-      @credit_card = @membership.credit_card
+      @credit_card = @membership.credit_card || @user.credit_card || CreditCard.new
       @billing_address = @membership.address || Address.new
     else
       @credit_card = CreditCard.new
@@ -638,7 +638,7 @@ class UsersController < BaseController
       if (@response.success?)
         # Not sure this makes any sense... what are we billing for if no memberships?
         if @membership.nil
-          @user.make_member(Membership::CREDIT_CARD_BILLING_METHOD,@cost,@billing_address,@credit_card,nil)
+          @user.make_member_by_credit_card(@cost,@billing_address,@credit_card,nil)
           @membership = @user.current_membership
         end
         

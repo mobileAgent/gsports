@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20080930205443) do
+ActiveRecord::Schema.define(:version => 20081002200544) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id",    :limit => 10
@@ -262,15 +262,16 @@ ActiveRecord::Schema.define(:version => 20080930205443) do
   create_table "memberships", :force => true do |t|
     t.string   "name"
     t.string   "billing_method"
-    t.decimal  "cost",                          :precision => 8, :scale => 2, :default => 0.0
-    t.integer  "address_id",      :limit => 11
+    t.decimal  "cost",                            :precision => 8, :scale => 2, :default => 0.0
+    t.integer  "address_id",        :limit => 11
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "promotion_id",    :limit => 11
-    t.integer  "credit_card_id",  :limit => 11
+    t.integer  "promotion_id",      :limit => 11
+    t.integer  "credit_card_id",    :limit => 11
     t.datetime "expiration_date"
-    t.string   "status",          :limit => 1,                                :default => "a"
-    t.integer  "user_id",         :limit => 11,                                                :null => false
+    t.string   "status",            :limit => 1,                                :default => "a"
+    t.integer  "user_id",           :limit => 11,                                                :null => false
+    t.integer  "purchase_order_id", :limit => 11
   end
 
   add_index "memberships", ["status"], :name => "index_memberships_on_status"
@@ -381,10 +382,10 @@ ActiveRecord::Schema.define(:version => 20080930205443) do
     t.integer  "subscription_plan_id", :limit => 11
     t.string   "name"
     t.decimal  "cost",                               :precision => 8, :scale => 2
-    t.text     "content"
     t.text     "html_content"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.text     "content"
     t.boolean  "enabled"
     t.boolean  "reusable"
     t.integer  "period_days",          :limit => 11
@@ -395,9 +396,12 @@ ActiveRecord::Schema.define(:version => 20080930205443) do
   create_table "purchase_orders", :force => true do |t|
     t.string   "rep_name"
     t.string   "po_number"
-    t.integer  "user_id",    :limit => 11
+    t.integer  "user_id",     :limit => 11
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "accepted",                  :default => false
+    t.datetime "accepted_at"
+    t.integer  "accepted_by", :limit => 11
   end
 
   create_table "ratings", :force => true do |t|
@@ -466,7 +470,7 @@ ActiveRecord::Schema.define(:version => 20080930205443) do
     t.string   "fisrtname"
     t.string   "state_name"
     t.string   "link"
-    t.boolean  "is_sor",                     :default => false
+    t.boolean  "is_sor"
     t.string   "html_content"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -612,8 +616,8 @@ ActiveRecord::Schema.define(:version => 20080930205443) do
     t.string   "video_length"
     t.string   "video_type"
     t.string   "video_status"
-    t.integer  "sponsor_id",         :limit => 11
-    t.integer  "member_id",          :limit => 11
+    t.integer  "league_id",          :limit => 11
+    t.integer  "team_id",            :limit => 11
     t.integer  "user_id",            :limit => 11
     t.string   "sport"
     t.datetime "game_date"
@@ -625,8 +629,6 @@ ActiveRecord::Schema.define(:version => 20080930205443) do
     t.string   "game_level"
     t.string   "game_gender"
     t.integer  "view_count",         :limit => 11, :default => 0
-    t.integer  "team_id",            :limit => 11
-    t.integer  "league_id",          :limit => 11
     t.boolean  "public_video",                     :default => true
     t.boolean  "delta",                            :default => false
     t.integer  "home_score",         :limit => 11

@@ -1,6 +1,7 @@
 class PurchaseOrder < ActiveRecord::Base
   
   belongs_to :user
+  has_one :membership
   
   validates_presence_of :rep_name
   validates_presence_of :po_number
@@ -22,7 +23,7 @@ class PurchaseOrder < ActiveRecord::Base
     if user.team_staff?
       "Monthly Member Firm Subscription"
     else #if user.league_staff?
-      "Monthly Sponsor Organiztion Subscription"
+      "Monthly Sponsor Organization Subscription"
     end
   end
   
@@ -32,6 +33,14 @@ class PurchaseOrder < ActiveRecord::Base
   
   def date
     created_at.strftime '%d-%m-%Y'
+  end
+  
+  def accepted?
+    accepted
+  end
+  
+  def accepted_by_user
+    accepted_by ? User.find(accepted_by) : nil
   end
   
 end
