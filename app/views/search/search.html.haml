@@ -74,6 +74,40 @@
     .mainCol2{:style=>"width: 265px"}
       %h2.columnDescriptor
         = link_to 'NETWORK', url_for({:controller => 'search', :action => 'q', 'search[category]' => 2, 'search[keyword]' => params[:search][:keyword]})
+        
+      - for team in @teams
+        .contentBox.tanBackground
+          .contentBoxContent
+            .profileFeature
+              .featureSummaryThumb.thumbFIT
+                = link_to image_tag( team.avatar_photo_url(:thumb), :class => "polaroid" ), team_path(team)
+              .featureText
+                %span.profileSubHeading
+                  = h team.name
+                  = h team.nickname
+                %br/
+                %span.featureSummaryText
+                  = team.description
+                %br/
+                .clearDiv
+                /
+      
+      - for league in @leagues
+        .contentBox.tanBackground
+          .contentBoxContent
+            .profileFeature
+              .featureSummaryThumb.thumbFIT
+                = link_to image_tag( league.avatar_photo_url(:thumb), :class => "polaroid" ), league_path(league)
+              .featureText
+                %span.profileSubHeading
+                  = h league.name
+                %br/
+                %span.featureSummaryText
+                  = league.description
+                %br/
+                .clearDiv
+                /
+        
       - for user in @users
         .contentBox.tanBackground
           .contentBoxContent

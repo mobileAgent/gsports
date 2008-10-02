@@ -10,6 +10,21 @@ class League < ActiveRecord::Base
   
   # Every league needs a name
   validates_presence_of :name
+  validates_presence_of :state_id
+
+
+  # set indexes for sphinx
+  define_index do
+    indexes :name, :sortable => true
+    indexes :description
+    indexes updated_at, :sortable => true
+    indexes [address1, address2, city, zip, state.name, state.long_name], :as => :address
+    
+    has created_at, updated_at
+    set_property :delta => true
+  end
+
+
 
   alias_method :league_avatar, :avatar
   

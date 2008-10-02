@@ -2,19 +2,6 @@
 .section-head School or Club Association
 %br
 
-.field-block
-  %label.required{"for" => "team_name"}
-    * School or Club
-    %em
-      %a{:href => "#", :onclick => "new Lightbox.base('team_help'); return false;", :class => 'helptip' }
-        what's this?
-  %br
-  = text_field_with_auto_complete :user, :team_name, :autocomplete => 'off', :value=>(@team.nil? ? '' : @team.name)
+=render :partial => 'registration_pick_team'
 
-#team_help.help_box{:style => "display: none"}
-  When you associate yourself with a school or club, each time you log
-  into your Global Sports account your landing page will contain
-  custom content provided by your school or club such as Athletes of
-  the Week, Game of the Week and other news. In addition, your chosen
-  school or club receives a donation from Global Sports for each
-  member that associates herself/himself with them.
+=render :partial => 'registration_new_team'

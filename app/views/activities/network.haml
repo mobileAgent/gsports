@@ -7,8 +7,6 @@
         PROFILE
       = @user.full_name
       = " (( PRIVATE PROFILE )) " unless @user.profile_public?
-      
-  =render :partial => "users/profile_nav"
 
   .listings    
     .contentBox.tanBackground

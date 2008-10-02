@@ -7,18 +7,18 @@
         -else 
           =link_to _('MY PHOTOS'), user_photos_path(@user.id)
       = "#{@user.full_name}" unless @title
-      
-  =render :partial => "users/profile_nav"
 
   .listings
     -if @is_current_user
       .listingItem
-        = link_to 'New photo.', new_user_photo_path(@user), :class => 'genericButton'
+        = link_to 'New photo', new_user_photo_path(@user), :class => 'genericButton'
 
-    =render :partial => 'photo_listing', :collection => @photos
-        
-    .pagination
-      = pagination_info_for @pages
-      = pagination_links_for @pages, {:link_to_current_page => true} if @pages.length > 1
+    .box
+      =render :partial => 'photo_listing', :collection => @photos
+      
+      -if !@photos.nil? && !@photos.empty?
+        .pagination
+          = pagination_info_for @pages
+          = pagination_links_for @pages, {:link_to_current_page => true} if @pages.length > 1
 
         

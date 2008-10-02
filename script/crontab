@@ -2,7 +2,9 @@
 0,30 * * * * $HOME/bin/update_gamex_vidavee_status
 0  01 * * *  $HOME/bin/gamex_update_notify_stale_videos
 # GlobalSports
-*/5 * * * * /var/apps/globalsports/current/script/vidavee_status_check
-5  22 * * * /var/apps/globalsports/current/script/sphinx_index
-5  23 * * * /var/apps/globalsports/current/script/nightly_billing
-5  21 1 * * /var/apps/globalsports/current/script/expiring_card_notice
+*/5  * * * * /var/apps/globalsports/current/script/vidavee_status_check
+5   22 * * * /var/apps/globalsports/current/script/sphinx_index
+5   23 * * * /var/apps/globalsports/current/script/nightly_billing
+5   21 1 * * /var/apps/globalsports/current/script/expiring_card_notice
+35  21 * * * /var/apps/globalsports/current/script/expiring_membership_notice
+

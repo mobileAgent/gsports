@@ -7,8 +7,6 @@
         -else 
           =link_to _('MY PHOTOS'), user_photos_path(@user.id)
       = "#{@user.full_name}" unless @title
-      
-  =render :partial => "users/profile_nav"
   .listings
     .contentBox.tanBackground
       .contentBoxHeader.yellowHeader

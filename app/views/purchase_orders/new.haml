@@ -1,13 +1,15 @@
 - renewal = current_user && !current_user.memberships.nil? && !current_user.memberships.empty?
 
 .RegContent
-  .SideBar
-    %h1
-      = renewal ? 'Account Renewal' : 'Registration'      
-    
-    - if !renewal
-      %p
-        This is the last step of the registration process.
+  -# Do not show the sidebar if there is a logged in user. They will have the "MY TOOLS" menu displayed here
+  - unless current_user
+    .SideBar
+      %h1
+        = renewal ? 'Account Renewal' : 'Registration'      
+      
+      - if !renewal
+        %p
+          This is the last step of the registration process.
 
   .RegistrationContent
     - if !renewal

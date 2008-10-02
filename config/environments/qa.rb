@@ -29,8 +29,7 @@ APP_URL = "http://gsports.integratedcc.com"
 config.cache_store = :mem_cache_store
 #ActionController::Base.cache_store = :mem_cache_store, "localhost"
 
-# Billing values
-# NOTE: Change these to GS real values
+# Billing values - INSERT-BILLING-GATEWAY-PASSWORD replaced with value
 ActiveMerchant::Billing::Base.mode = :test
 Active_Merchant_payflow_gateway_username = 'markdr'
 Active_Merchant_payflow_gateway_password = 'MarkDR1'

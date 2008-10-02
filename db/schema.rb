@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20080924194002) do
+ActiveRecord::Schema.define(:version => 20080930205443) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id",    :limit => 10
@@ -238,6 +238,7 @@ ActiveRecord::Schema.define(:version => 20080924194002) do
     t.string   "phone"
     t.string   "zip"
     t.string   "email"
+    t.boolean  "delta",                     :default => false
   end
 
   create_table "membership_billing_histories", :force => true do |t|
@@ -249,6 +250,15 @@ ActiveRecord::Schema.define(:version => 20080924194002) do
     t.integer  "credit_card_id",                 :limit => 11
   end
 
+  create_table "membership_cancellations", :force => true do |t|
+    t.integer  "membership_id", :limit => 11, :null => false
+    t.text     "reason"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "membership_cancellations", ["membership_id"], :name => "index_mem_cancellations_on mem_id"
+
   create_table "memberships", :force => true do |t|
     t.string   "name"
     t.string   "billing_method"
@@ -259,7 +269,12 @@ ActiveRecord::Schema.define(:version => 20080924194002) do
     t.integer  "promotion_id",    :limit => 11
     t.integer  "credit_card_id",  :limit => 11
     t.datetime "expiration_date"
+    t.string   "status",          :limit => 1,                                :default => "a"
+    t.integer  "user_id",         :limit => 11,                                                :null => false
   end
+
+  add_index "memberships", ["status"], :name => "index_memberships_on_status"
+  add_index "memberships", ["user_id"], :name => "index_memberships_on_user_id"
 
   create_table "messages", :force => true do |t|
     t.datetime "created_at"
@@ -459,19 +474,13 @@ ActiveRecord::Schema.define(:version => 20080924194002) do
 
   create_table "states", :force => true do |t|
     t.string "name"
+    t.string "long_name", :limit => 15
   end
 
   create_table "subscription_plans", :force => true do |t|
     t.string   "name"
     t.decimal  "cost",        :precision => 8, :scale => 2, :default => 0.0
     t.text     "description"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "subscriptions", :force => true do |t|
-    t.integer  "membership_id", :limit => 11
-    t.integer  "user_id",       :limit => 11
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -508,6 +517,7 @@ ActiveRecord::Schema.define(:version => 20080924194002) do
     t.string   "phone"
     t.string   "zip"
     t.string   "email"
+    t.boolean  "delta",                     :default => false
   end
 
   create_table "topics", :force => true do |t|

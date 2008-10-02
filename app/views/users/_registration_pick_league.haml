@@ -1,0 +1,17 @@
+- state_selected = @leagues
+#reg_league_pick
+  %table
+    %tr
+      %td.field-block
+        %label
+          State
+        %br
+          =collection_select :league, :state_id, State.all, :id, :name, { :prompt => 'State' }, { :style => "width: 60px", :onchange => "#{remote_function(:url=>{:controller=>'users',:action=>'registration_fill_leagues_by_state'},:with=>"'state_id='+value")}" }
+      %td.field-block
+        %label.required
+          * League Name
+        %br
+          - if state_selected
+            =collection_select :league, :id, @leagues, :id, :name, { }, { :style => "width: 255px", :onchange => "#{remote_function(:url=>{:controller=>'users',:action=>'registration_fill_league'},:with=>"'state_id=#{@league.state_id}&league_id='+value")}" }
+          - else
+            =text_field :league, :id, :value => '<< Select a state', :disabled => true, :style => "width: 255px"

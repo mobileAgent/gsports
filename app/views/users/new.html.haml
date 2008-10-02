@@ -1,8 +1,21 @@
+- page_title = 'User Information'
+- case @requested_role
+  - when Role[:team].id
+    -page_title = 'School / Club Information'
+  - when Role[:league].id
+    -page_title = 'League / Conference Information'
+  - when Role[:scout].id
+    -page_title = 'Scout / Recruiter Information'
+  - else #when Role[:member].id
+    -page_title = 'User Information'
+
 .RegContent
-  .SideBar
-    %h1
-      Registration
-    %p= link_to "Already have an account?", "/login"
+  -# Do not show the sidebar if there is a logged in user. They will have the "MY TOOLS" menu displayed here
+  - unless current_user
+    .SideBar
+      %h1
+        Registration
+      %p= link_to "Already have an account?", "/login"
       
   .RegistrationContent
     .RegistrationTrail
@@ -11,12 +24,31 @@
         PART 2: USER INFORMATION &raquo;
       PART 3: BILLING INFORMATION
   
-    = error_messages_for :user, :team, :league, :object_name => 'User Information'
+    = error_messages_for :user, :team, :league, :promotion, :object_name => page_title
     
     %p
-      %br
-      %h1 Part 2: User Information
-    
+      %br/
+      .bothCols
+        %div{ :style => "float: right; text-align: right" }
+          (* = required information)
+        %h1
+          Part 2: 
+          =page_title
+          
+        %br/
+        .contentBox{ :style => "margin-bottom: 0px" }
+          - case @requested_role
+            - when Role[:team].id
+              You are registering as the administrator of your school's/club's Global Sports account.
+              Please provide your personal ino, as well as your organization's info below.
+              This will create your personal profile and your school's public front-page that you, as the administrator, can customize and manage.
+            - when Role[:league].id
+              / No content yet
+            - when Role[:scout].id
+              / No content yet
+            - else #when Role[:member].id
+              / No content yet
+
     -# form_for :user, :url => users_path, :html => {:class => 'userForm'} do |f|
     - form_tag 'create' do |f|
     
@@ -25,11 +57,20 @@
           %hr 
           
           %nobr
-            %span.section-head Your Information
-            (* = required information)
+            %span.section-head 
+              - case @requested_role
+                - when Role[:team].id
+                  Administrator Information
+                - else
+                  Your Information
           %br
           %br
 
+          Please enter your personal information here.
+          Your address info will not be shown publicly.
+
+          %br
+          %br
           %table
             %tr
               %td.field-block 
@@ -97,22 +138,6 @@
           %br
           %br
           
-          -# Team/League Stuff
-        
-          - case @requested_role
-          - when Role[:team].id
-            =render :partial => 'new_team'
-          - when Role[:league].id
-            = render :partial => "new_league"
-          - when Role[:scout].id
-            = render :partial => "new_scout"
-          - else #when Role[:member].id
-            = render :partial => "new_member"
-
-
-      .mainCol2
-        .contentBox
-      
           %hr  
           .section-head Username and Password
           %br
@@ -156,6 +181,20 @@
             %br
             = date_select :user, :birthday, {:start_year => 1926, :end_year => Time.now.year - 13}          
           
+      .mainCol2
+        .contentBox
+
+          -# Team/League Stuff
+        
+          - case @requested_role
+            - when Role[:team].id
+              =render :partial => 'new_team'
+            - when Role[:league].id
+              = render :partial => "new_league"
+            - when Role[:scout].id
+              = render :partial => "new_scout"
+            - else #when Role[:member].id
+              = render :partial => "new_member"
           %br
           %br
           %hr  

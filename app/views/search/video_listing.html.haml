@@ -4,8 +4,6 @@
       %span
         = @title || "My Videos"
       = "#{@user.full_name}" unless @title
-      
-  =render :partial => "users/profile_nav"
 
   .listings
     -#- if @is_search_result

@@ -14,7 +14,7 @@ set :scm_verbose, true
 
 set :user, ENV["USER"]
 
-set :rails_env, "production"
+set :rails_env, "development"
 set :use_sudo, false
 
 set :file_size_limit, 2684354560
@@ -41,16 +41,18 @@ namespace :deploy do
 
   desc "Do sphinx stuff on new app"
   task :after_update_code do
+    migrate
     sphinx.restart
     create_symlinks
     poller.restart_poller
     memcached.clear
+    update_configuration
   end
 
   desc "Migration is broken in recipe.rb line 341, try fixing it here"
   task :migrate, :roles => :db, :only => { :primary => true } do 
     rake = fetch(:rake, "rake")
-    rails_env = fetch(:rails_env, "production")
+    rails_env = fetch(:rails_env, "development")
     migrate_env = fetch(:migrate_env, "")
     migrate_target = fetch(:migrate_target, :latest)
  
@@ -69,7 +71,7 @@ namespace :memcached do
   desc "Clear the cache"
   task :clear do
     rake = fetch(:rake, "rake")
-    rails_env = fetch(:environment, "production")
+    rails_env = fetch(:environment, "development")
     run "cd #{current_release}; RAILS_ENV=#{rails_env} #{rake} gsports:clear_cache"
   end
 end
@@ -85,16 +87,28 @@ namespace :poller do
   desc "stop previous poller"
   task :stop_prior_poller, :roles=>:app do
     if previous_release
-      rails_env = fetch(:environment, "production")
+      rails_env = fetch(:environment, "development")
       run "cd #{previous_release}; RAILS_ENV=#{rails_env} script/poller stop"
     end
   end
   
   desc "start poller"
   task :start_poller, :roles=>:app do
-    rails_env = fetch(:environment, "production")
+    rails_env = fetch(:environment, "development")
     run "cd #{current_release}; RAILS_ENV=#{rails_env} script/poller start"
   end
+end
+
+desc "Update the configuration"
+task :update_configuration, :roles => :app do
+  rails_env = fetch(:rails_env, "development")
+  set (:billing_gateway_password) do
+    Capistrano::CLI.ui.ask "Enter billing gateway password: "
+  end
+  configuration_path = "#{current_release}/config/environments/#{rails_env}.rb"
+  str = File.new(configuration_path).read
+  str.gsub!('INSERT-BILLING-GATEWAY-PASSWORD',billing_gateway_password)
+  put str, configuration_path
 end
 
 desc "Symlink in the shared stuff"
@@ -110,7 +124,7 @@ namespace :sphinx do
   desc "Restart sphinx"
   task :restart do
     rake = fetch(:rake, "rake")
-    rails_env = fetch(:environment, "production")
+    rails_env = fetch(:environment, "development")
     begin
       run "cd #{current_release}; #{rake} RAILS_ENV=#{rails_env} thinking_sphinx:stop"
     rescue

@@ -5,8 +5,6 @@
         =link_to _('ACCOUNT'), user_path
       Billing for
       = "#{current_user.admin? ? @user.full_name : current_user.full_name}"
-      
-  =render :partial => "users/profile_nav"
   .listings
     .contentBox.tanBackground
       .contentBoxHeader.yellowHeader

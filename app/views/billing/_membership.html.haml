@@ -1,6 +1,7 @@
 %tr.forumList
   %td.forumList
     =link_to membership.name, user_path(membership.user.id)
+    ="(#{membership.user.id})"
   %td.forumList
     - if membership.billing_method == Membership::CREDIT_CARD_BILLING_METHOD
       =link_to 'Credit Card',:controller => :membership, :action => :member_billing_method_info ,:id => membership.id
@@ -13,5 +14,12 @@
       =link_to membership.promotion.promo_code, promotion_path(membership.promotion.id)
   %td.forumList
     =membership.created_at.to_date
+  %td.forumList
+    - if membership.canceled?
+      %span{ :style => "color:red" }
+        - if membership.membership_cancellation.nil?
+          Canceled
+        - else
+          =membership.membership_cancellation.created_at.to_date
   %td.forumList
     =link_to 'Billing History', :controller => :membership, :action => "member_billing_history", :id => membership.id 

@@ -1,0 +1,29 @@
+- state_selected = @teams
+
+#reg_team_pick
+  %table
+    %tr
+      %td.field-block
+        %label
+          State
+        %br
+          =collection_select :team, :state_id, State.all, :id, :name, { :prompt => 'State' }, { :style => "width: 60px", :onchange => "#{remote_function(:url=>{:controller=>'users',:action=>'registration_fill_teams_by_state'},:with=>"'requested_role=#{@requested_role}&state_id='+value")}" }
+      %td.field-block
+        %span{ :style=>"float:right" }
+          %a{:href => "#", :onclick => "new Lightbox.base('team_help'); return false;", :class => 'helptip' }
+            what's this?
+        %label.required
+          * School / Club Name
+        %br
+          - if state_selected
+            =collection_select :team, :id, @teams, :id, :name, { }, { :style => "width: 255px", :onchange => "#{remote_function(:url=>{:controller=>'users',:action=>'registration_fill_team'},:with=>"'requested_role=#{@requested_role}&state_id=#{@team.state_id}&team_id='+value")}" }
+          - else
+            =text_field "foo", "bar", :value => '<< Select a state', :disabled => true, :style => "width: 255px"
+
+  #team_help.help_box{:style => "display: none"}
+    When you associate yourself with a school or club, each time you log
+    into your Global Sports account your landing page will contain
+    custom content provided by your school or club such as Athletes of
+    the Week, Game of the Week and other news. In addition, your chosen
+    school or club receives a donation from Global Sports for each
+    member that associates herself/himself with them.
