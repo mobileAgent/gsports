@@ -41,6 +41,7 @@ namespace :deploy do
 
   desc "Do sphinx stuff on new app"
   task :after_update_code do
+    migrate
     sphinx.restart
     create_symlinks
     poller.restart_poller
