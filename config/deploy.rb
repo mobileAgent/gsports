@@ -101,12 +101,13 @@ end
 
 desc "Update the configuration"
 task :update_configuration, :roles => :app do
-  rails_env = fetch(:rails_env, "development")
+  rails_env = fetch(:environment, "development")
   set (:billing_gateway_password) do
     Capistrano::CLI.ui.ask "Enter billing gateway password: "
   end
   configuration_path = "#{current_release}/config/environments/#{rails_env}.rb"
-  str = File.new(configuration_path).read
+  get configuration_path, "/tmp/#{rails_env}.rb"
+  str = File.new("/tmp/#{rails_env}.rb").read
   str.gsub!('INSERT-BILLING-GATEWAY-PASSWORD',billing_gateway_password)
   put str, configuration_path
 end

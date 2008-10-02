@@ -47,7 +47,7 @@ class AthleteOfTheWeek < Post
     
     posts = AthleteOfTheWeek.find(:all,
       :conditions => ["category_id = ? and users.role_id IN (?) and published_at > ?",
-                      my_category.id,legal_role_ids,14.days.ago],
+                      my_category.id,legal_role_ids,28.days.ago],
       :include => [:user],
       :order => "published_at DESC")
 

@@ -19,6 +19,7 @@ class Team < ActiveRecord::Base
     indexes :name, :sortable => true
     indexes :nickname, :sortable => true
     indexes :description
+    indexes :county_name
     indexes updated_at, :sortable => true
     indexes [address1, address2, city, zip, state.name, state.long_name], :as => :address
         
