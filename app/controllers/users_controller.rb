@@ -799,7 +799,8 @@ class UsersController < BaseController
   def _get_teams_by_state(state_id)
     if state_id && !state_id.blank?
       teams = Team.find_all_by_state_id(state_id)
-      teams.sort {|x,y| x.name.upcase <=> y.name.upcase }
+      teams.delete(User.admin.first.team)
+      teams.sort! {|x,y| x.name.upcase <=> y.name.upcase }
       teams << (Team.new :name => "-- My school/club is not listed --", :state_id => state_id)
     end      
   end
@@ -807,7 +808,8 @@ class UsersController < BaseController
   def _get_leagues_by_state(state_id)
     if state_id && !state_id.blank?
       leagues = League.find_all_by_state_id(state_id)
-      leagues.sort {|x,y| x.name.upcase <=> y.name.upcase }
+      leagues.delete(User.admin.first.league)
+      leagues.sort! {|x,y| x.name.upcase <=> y.name.upcase }
       leagues << (Team.new :name => "-- My league is not listed --", :state_id => state_id)
     end      
   end

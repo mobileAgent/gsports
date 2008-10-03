@@ -120,7 +120,7 @@
                 %label.required{"for"=>"state"} 
                   * State
                 %br
-                =collection_select(:user ,:state_id,State.all,"id","name", { :prompt => 'State'})
+                =collection_select(:user ,:state_id,State.all(:order => "name asc"),"id","name", { :prompt => 'State'})
 
 
               %td.field-block
