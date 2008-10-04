@@ -59,7 +59,7 @@
                 %label{"for"=>"state"} 
                   %h3
                     * State
-                  =collection_select(:user ,:state_id,State.all,"id","name", { :prompt => 'Choose State', :selected => (@user.state_id? ? @user.state.name : '') })
+                  =collection_select(:user ,:state_id,State.all(:order => "name asc"),"id","name", { :prompt => 'Choose State', :selected => (@user.state_id? ? @user.state.name : '') })
               %td
                 %label{"for"=>"zip"}
                   %h3

@@ -7,7 +7,7 @@
         %label
           State
         %br
-          =collection_select :team, :state_id, State.all, :id, :name, { :prompt => 'State' }, { :style => "width: 60px", :onchange => "#{remote_function(:url=>{:controller=>'users',:action=>'registration_fill_teams_by_state'},:with=>"'requested_role=#{@requested_role}&state_id='+value")}" }
+          =collection_select :team, :state_id, State.all(:order => "name asc"), :id, :name, { :prompt => 'State' }, { :style => "width: 60px", :onchange => "#{remote_function(:url=>{:controller=>'users',:action=>'registration_fill_teams_by_state'},:with=>"'requested_role=#{@requested_role}&state_id='+value")}" }
       %td.field-block
         %span{ :style=>"float:right" }
           %a{:href => "#", :onclick => "new Lightbox.base('team_help', { closeOnOverlayClick : true }); return false;", :class => 'helptip' }

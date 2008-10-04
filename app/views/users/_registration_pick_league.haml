@@ -6,7 +6,7 @@
         %label
           State
         %br
-          =collection_select :league, :state_id, State.all, :id, :name, { :prompt => 'State' }, { :style => "width: 60px", :onchange => "#{remote_function(:url=>{:controller=>'users',:action=>'registration_fill_leagues_by_state'},:with=>"'state_id='+value")}" }
+          =collection_select :league, :state_id, State.all(:order => "name asc"), :id, :name, { :prompt => 'State' }, { :style => "width: 60px", :onchange => "#{remote_function(:url=>{:controller=>'users',:action=>'registration_fill_leagues_by_state'},:with=>"'state_id='+value")}" }
       %td.field-block
         %label.required
           * League Name
