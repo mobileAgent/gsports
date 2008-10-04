@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20081002200544) do
+ActiveRecord::Schema.define(:version => 20081004003848) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id",    :limit => 10
@@ -402,6 +402,7 @@ ActiveRecord::Schema.define(:version => 20081002200544) do
     t.boolean  "accepted",                  :default => false
     t.datetime "accepted_at"
     t.integer  "accepted_by", :limit => 11
+    t.datetime "due_date"
   end
 
   create_table "ratings", :force => true do |t|
@@ -467,7 +468,7 @@ ActiveRecord::Schema.define(:version => 20081002200544) do
   create_table "sor_search_logs", :force => true do |t|
     t.integer  "user_id",      :limit => 11
     t.string   "lastname"
-    t.string   "fisrtname"
+    t.string   "firstname"
     t.string   "state_name"
     t.string   "link"
     t.boolean  "is_sor"

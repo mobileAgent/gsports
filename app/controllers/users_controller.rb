@@ -145,6 +145,10 @@ class UsersController < BaseController
       begin
         @team = Team.find(params[:team][:id])
         logger.debug "Existing team found: #{@team.id}: #{@team.name}"
+        if @role.id == Role[:team].id
+          logger.debug "Updating attributes for team from form"
+          @team.update_attributes! params[:team]
+        end
       rescue ActiveRecord::RecordNotFound        
         # Should we try to find duplicates here or not?
         #@team = Team.find(:first, :conditions => { :name => p_team[:name].to_i, :state_id => p_team[:state_id].to_i })
@@ -638,7 +642,7 @@ class UsersController < BaseController
       if (@response.success?)
         # Not sure this makes any sense... what are we billing for if no memberships?
         if @membership.nil
-          @user.make_member_by_credit_card(@cost,@billing_address,@credit_card,nil)
+          @user.make_member_by_credit_card(@cost,@billing_address,@credit_card,@response)
           @membership = @user.current_membership
         end
         

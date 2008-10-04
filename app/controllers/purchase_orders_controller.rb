@@ -30,6 +30,12 @@ class PurchaseOrdersController < BaseController
         @po.errors.add('', "Please accept the Terms of Service and the Subscriber Agreement") 
         render :action=>:confirm
       else
+        
+        @po.due_date = Time.now + 2.weeks
+        if @promotion && @promotion.period_days
+          @po.due_date += @promotion.period_days.days
+        end
+        
         @po.save!
         
         # Add the membership record here
@@ -44,7 +50,7 @@ class PurchaseOrdersController < BaseController
         # UserNotifier.deliver_welcome(@po.user)
         #########################
         
-        render :action=>:show, :layout => false, :id=>@po.id
+        redirect_to :action=>:show, :layout => false, :id=>@po.id
       end
     else    
       raise(ActiveRecord::RecordInvalid.new(@po)) if !@po.valid?

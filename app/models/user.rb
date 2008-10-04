@@ -221,18 +221,18 @@ class User < ActiveRecord::Base
     add_membership(mem)
   end
   
-  def make_member_by_credit_card (monthly_cost, address, credit_card=nil, payment_auth=nil, promotion=nil)
+  def make_member_by_credit_card(monthly_cost, address, cc, payment_authorization, promotion=nil)
     mem = Membership.new(:billing_method => Membership::CREDIT_CARD_BILLING_METHOD)
     mem.cost = monthly_cost.nil? ? role.plan.cost : monthly_cost
     mem.name = full_name
-    mem.credit_card = credit_card
+    mem.credit_card = cc
     
     if payment_authorization # else we may just be updating cc info
       history = MembershipBillingHistory.new
       pf = payment_authorization.params
       history.authorization_reference_number = "#{pf['pn_ref']}/#{pf['auth_code']}"
-      history.payment_method = billing_method
-      history.credit_card = credit_card
+      history.payment_method = mem.billing_method
+      history.credit_card = mem.credit_card
       mem.membership_billing_histories << history
     end
     

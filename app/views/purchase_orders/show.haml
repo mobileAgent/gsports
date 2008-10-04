@@ -59,6 +59,7 @@
         td.line{ border-bottom: 1px solid black; }
         td.shipping{ width: 50% }
         td.numeric{ text-align: right }
+        .commentsBox{ margin-left: 20px; }
         
         .signature {
           width: 50%;
@@ -201,7 +202,14 @@
             Larchmont, NY 10358
           %td
             Special Instructions / Comments:
-  
+            %br
+            - if @po.due_date
+              %br
+              - if @po.membership.promotion && @po.membership.promotion.period_days
+                = "#{@po.org.name} agrees to pay the amount shown by #{@po.due_date.to_date} unless membership is canceled during the trial period."
+              - else 
+                = "#{@po.org.name} agrees to pay the amount shown by #{@po.due_date.to_date}."
+             
       .signature
         %table
           %tr

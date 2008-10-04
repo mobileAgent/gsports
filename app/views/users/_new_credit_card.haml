@@ -1,0 +1,125 @@
+- skip_billing_addr = @billing_address.nil? || @billing_address.address1.blank?
+- renewal = current_user && !current_user.memberships.nil? && !current_user.memberships.empty?
+
+.mainCol1
+  .contentBox
+
+    - if @cost == 0
+      %p
+        %strong NOTE:
+        A valid credit card is required for membership. Your credit card will be verified, but not charged.
+        %br/
+    %br/
+
+    %p
+      Please enter the first and last name of the person as it appears on the credit card you will be using for payment
+
+    %form{:action=>'/users/submit_billing',:method => :post}
+
+      = error_messages_for :credit_card, :user, :billing_address, :object_name => 'Billing Information'
+      - if @billing_gateway_error
+        .warning
+          = @billing_gateway_error
+        
+      %label{"for"=>"firstname"}
+        * First Name
+        %br
+        = text_field :credit_card, :first_name
+
+      %br
+      %label{"for"=>"lastname"}
+        * Last Name
+        %br
+        = text_field :credit_card,:last_name
+
+      %fieldset.inline
+        %label{"for"=>"expiration_date"}
+          * Expiration Date:
+          %br/
+          %table
+            %tr
+              %td
+                =collection_select(:credit_card, :year, cc_years,"number","name",{:prompt => '-Year-'}, {:selected => @credit_card.year })
+              %td
+                =collection_select(:credit_card, :month, cc_months,"number","name",{:prompt => '-Month-'}, {:selected => @credit_card.month })
+
+      %label{"for"=>"number"}
+        * Card Number
+        %br
+        = text_field :credit_card, :number, :size => 16, :maxlength => 16
+
+      %br
+      %label{"for"=>"verification_value"}
+        * Verification number
+        %br
+        = text_field :credit_card, :verification_value, {:size => 4, :maxlength => 4}
+
+      %br
+      %br
+
+      - if skip_billing_addr
+        %fieldset.inline
+          %input{:type => 'checkbox', :checked => (skip_billing_addr ? 'checked' : ''), :name => 'skip_billing_address', :id => 'skip_billing_address', :onclick => "this.checked ? $$('#billingAddress')[0].hide() : $$('#billingAddress')[0].show()"}
+          %label{:for => 'skip_billing_address'}
+            Use primary account address as billing address
+      - elsif @billing_address
+        = hidden_field_tag 'billing_address[id]', @billing_address.id
+
+      %div{:id => 'billingAddress', :style => (skip_billing_addr ? "display:none" : "display:block")}
+
+        %br
+        %label{:for=>'address1'}
+          Address Line 1
+          %br/
+          = text_field :billing_address, :address1
+
+        %br
+        %label{:for=>'address2'}
+          Address Line 2
+          %br/
+          = text_field :billing_address, :address2
+
+        %br
+        %label{:for=>'city'}
+          City
+          %br/
+          = text_field :billing_address, :city
+
+        %br
+        %label{:for => 'state'}
+          State
+          %br/
+          =collection_select(:billing_address ,:state , State.all,"name","name", { :prompt => 'State', :selected => (@billing_address.state? ? @billing_address.state : '') })
+    
+        %br
+        %label{:for=>'zip'}
+          Zip/Postal Code
+          %br/
+          = text_field :billing_address, :zip
+        / end of billing address 
+        
+        %br
+        %br
+
+      %fieldset.inline
+        %input#tos{:name=>"tos", :type=>"checkbox", :value=>"tos", :checked=>params[:tos]}
+        %label{:for => "tos"}
+          I have read and agree to the
+          =link_to("#{AppConfig.community_name} Terms of Service", '/info/terms', {:target => "_blank"})
+
+      %fieldset.inline
+        %input#suba{ :name=>'suba', :type=>'checkbox', :value=>'suba', :checked=>params[:suba]}
+        %label{:for => "suba"}
+          I have read and agree to the
+          =link_to("#{AppConfig.community_name} Subscriber Agreement", "/info/subscriber_#{@user.role.name}", {:target => "_blank"})
+  
+      = hidden_field_tag :inviter_id, params[:inviter_id]
+      = hidden_field_tag :inviter_code, params[:inviter_code]
+      = hidden_field_tag :role, @requested_role
+      = hidden_field_tag :userid, @user.id
+      %p= submit_tag('Submit', :onclick => "if ($$('#tos')[0].checked && $$('#suba')[0].checked) { return true; } else { alert('You must agree to the Terms of Service and the Subscriber Agreement'); return false; }")
+
+.mainCol2
+  .contentBox
+    = render :partial => "billing/credit_card_help"
+      
