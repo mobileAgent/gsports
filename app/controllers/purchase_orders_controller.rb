@@ -24,19 +24,18 @@ class PurchaseOrdersController < BaseController
       logger.debug "Got Purchase Order off the session"
       @po = session[:purchase_order]
       @promotion = session[:promotion]
+      @cost = @po.user.role.plan.cost
       redirect_to :action=>:show, :layout => false
     else
       @po = PurchaseOrder.new(params[:purchase_order])
       @promotion = session[:promotion]
       
+      # Purchase orders are made for the full retail price
+      @cost = @po.user.role.plan.cost
       
       if params[:confirm] == 'yes'
         if !params[:tos] || !params[:suba]
           @po.errors.add('', "Please accept the Terms of Service and the Subscriber Agreement") 
-          
-          # Purchase orders are made for the full retail price
-          @cost = @po.user.role.plan.cost
-          
           render :action=>:confirm
         else
           
@@ -89,6 +88,7 @@ class PurchaseOrdersController < BaseController
     end
     
     @promotion = @po.membership.promotion
+    @cost = @po.user.role.plan.cost
     
     render :layout => false
   end
