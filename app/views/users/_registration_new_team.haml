@@ -1,5 +1,5 @@
 -# Allow the team to be edited iff we have selected a state, or they have selected an existing team
-- team_editable = @team && @team.state_id && !@team.id
+- team_editable = true || @team && @team.state_id && !@team.id
 
 #reg_team_info
   %table
