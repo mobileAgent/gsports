@@ -35,9 +35,10 @@
         = render :partial => "shared/messages"
         
         %div{:class => (logged_in? ? 'mainContentArea' : 'landingContentArea')}
-          - unless current_page?(:controller => 'users', :action => 'dashboard')
-            -unless current_page?(:controller => 'video_reels', :action => 'new')
-              =render :partial => "users/profile_nav"
+          - unless current_page?(:controller => 'pages', :action => 'show')
+            - unless current_page?(:controller => 'users', :action => 'dashboard')
+              -unless current_page?(:controller => 'video_reels', :action => 'new')
+                =render :partial => "users/profile_nav"
         
           = @content_for_layout
           .clearDiv/
