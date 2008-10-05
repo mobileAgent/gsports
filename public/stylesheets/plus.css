@@ -150,6 +150,10 @@ table.unstyled td.numeric {
 
 
 .pageContentArea {
+  background-color: #ffffff;
+}
+
+.pageContentArea .withSidebar {
   padding-top:20px;
   padding-left: 20px;
   padding-bottom: 20px;
