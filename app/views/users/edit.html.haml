@@ -2,9 +2,9 @@
   .profilePageHeader
     %h2.columnDescriptor
       %span
-        =link_to _('PROFILE'), user_path
+        =link_to _('PROFILE'), user_path(current_user.admin? ? @user : current_user)
       Edit
-      = current_user.full_name()
+      = "#{current_user.admin? ? @user.full_name : current_user.full_name}"
                     
   .listings    
       
