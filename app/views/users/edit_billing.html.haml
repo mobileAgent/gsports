@@ -2,7 +2,7 @@
   .profilePageHeader
     %h2.columnDescriptor
       %span
-        =link_to _('ACCOUNT'), user_path
+        =link_to _('ACCOUNT'), user_path(current_user)
       Billing for
       = "#{current_user.admin? ? @user.full_name : current_user.full_name}"
   .listings
