@@ -126,6 +126,15 @@ class UsersController < BaseController
       begin
         @league = League.find(params[:league][:id])
         logger.debug "Existing league found: #{@league.id}: #{@league.name}"
+
+        @league_admin = @league.admin_user
+        if @league_admin
+           message = "#{@league.name} has already been registered by #{@league_admin.full_name}"
+           logger.error message
+           @league.errors.add('',message)
+           raise Exception.new message
+        end
+
       rescue ActiveRecord::RecordNotFound        
         # Should we try to find duplicates here or not?
         #@league = League.find(:first, :conditions => { :name => p_league[:name].to_i, :state_id => p_league[:state_id].to_i })
@@ -141,18 +150,20 @@ class UsersController < BaseController
       @user.team = User.admin.first.team
       @user.league = User.admin.first.league
       
-    else # when Role[:team].id || Role[:member].id
+    when Role[:team].id 
       begin
         @team = Team.find(params[:team][:id])
         logger.debug "Existing team found: #{@team.id}: #{@team.name}"
-        if @role.id == Role[:team].id
-          logger.debug "Updating attributes for team from form"
-          @team.update_attributes! params[:team]
+        @team_admin = @team.admin_user
+        if @team_admin
+           message = "#{@team.name} has already been registered by #{@team_admin.full_name}"
+           logger.error message
+           @team.errors.add('',message)
+           raise Exception.new message
         end
+        logger.debug "Updating attributes for team from form"
+        @team.update_attributes! params[:team]
       rescue ActiveRecord::RecordNotFound        
-        # Should we try to find duplicates here or not?
-        #@team = Team.find(:first, :conditions => { :name => p_team[:name].to_i, :state_id => p_team[:state_id].to_i })
-        
         @team = Team.new params[:team]
         logger.debug "New team: #{@team.name}"
         if @team.league.nil?
@@ -168,6 +179,26 @@ class UsersController < BaseController
       if (@team.league)
         @user.league = @team.league
       end
+    else # when Role[:member].id
+      begin
+        @team = Team.find(params[:team][:id])
+      rescue ActiveRecord::RecordNotFound        
+        @team = Team.new params[:team]
+        logger.debug "New team: #{@team.name}"
+        if @team.league.nil?
+          @team.league = User.admin.first.league
+          logger.debug "Setting team league to admin value"
+        end
+        
+        logger.debug "Saving new team"
+        @team.save! 
+      end
+
+      @user.team = @team
+      if (@team.league)
+        @user.league = @team.league
+      end
+
     end   
     
     # Lookup up promo code if provided
@@ -186,8 +217,7 @@ class UsersController < BaseController
         else
           logger.debug "Promotion not valid for role: #{@role.plan.id} != #{@promotion.subscription_plan_id}"
         end
-        flash.now[:error] = "Sorry, the promotion code you entered is invalid: #{params[:promo_code]}."
-        @promotion = nil
+        @promotion.errors.add('', "Sorry, the promotion code you entered is invalid: #{params[:promo_code]}.")
         raise Exception.new, "Invalid promotion code"
       else
         logger.debug  "Promotion: #{@promotion.promo_code}: #{@promotion.name}"
@@ -748,7 +778,7 @@ class UsersController < BaseController
         @team = Team.new :state_id => params[:state_id]
       end
     end
-    
+   
     respond_to do |format|
       format.xml  { render :xml => @team }
       format.js { render :action => "registration_fill_team" } # => registration_fill_team.rjs

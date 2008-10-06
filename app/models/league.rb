@@ -52,7 +52,15 @@ class League < ActiveRecord::Base
       end
     end
   end
-  
+
+  def admin_user
+    # need to use the named_scope to pull the users for this league
+    # since users are not always pulled by the ActiveRecord
+    admins = User.league_admin(self.id)
+    logger.debug "League has #{admins.size} admin users"
+    return admins.empty? ? nil : admins[0]
+  end
+
   protected
 
   def reassign_dependent_items

@@ -35,7 +35,7 @@ class Team < ActiveRecord::Base
   named_scope :having_videos,
     :conditions => ["teams.id in (select distinct tid from (select team_id as tid from video_assets union select home_team_id as tid from video_assets union select visiting_team_id as tid from video_assets) ttt)"]
   
-  
+
   def self.find_list(tag_list)
     find(:all, :conditions => [ 'LOWER(name) LIKE ?', '%' + tag_list + '%' ])
   end
@@ -131,6 +131,13 @@ class Team < ActiveRecord::Base
           AppConfig.photo['missing_medium']
       end
     end
+  end
+
+  def admin_user
+    return nil if self.users.nil? || self.users.empty?
+    logger.debug "Team has #{users.size} users"
+    admins = self.users.find_all{|user| user.enabled? && user.role_id == Role[:team].id }
+    return admins.empty? ? nil : admins[0]
   end
 
   protected

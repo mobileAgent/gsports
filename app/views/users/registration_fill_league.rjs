@@ -7,5 +7,8 @@ if @leagues
 end
 
 if @league
-  page.replace('reg_league_info', :partial => 'users/registration_new_league', :locals => {:league => @league})
+  if @league.id
+    @league_admin = @league.admin_user
+  end
+  page.replace('reg_league_info', :partial => 'users/registration_new_league', :locals => {:league => @league, :league_admin => @league_admin})
 end

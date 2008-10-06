@@ -1,58 +1,65 @@
 -# Allow the league to be edited iff we have selected a state, or they have selected an existing league
-- league_editable = @league && @league.state_id
+- league_editable = @league_admin.nil? && @league && @league.state_id
 
 #reg_league_info
-  - if league_editable
+  -# Don't allow enrollment if administrator exists for this league
+  - if @league && @league_admin
+    #reg_league_error.errorExplanation
+      %h3= "#{@league.name} has already been registered."             
+      %br/
+      %p
+        = "The administrator for #{@league.name} is "
+        %strong
+          = " #{@league_admin.full_name}."
+      %br/
+      %p Please coordinate with the league administrator if you would like a staff account to be created for you.
+
+  %div{ :style => @league && @league_admin ? "visibility: hidden" : "visibility: visible" }
     %table
       %tr
         %td.field-block
-          #league_name_other{ :style => league_editable ? "visibility: show" : "visibility: hidden" }
-            %label
-              * New League Name
-            %br/
-            =text_field_with_auto_complete :league, :name, :autocomplete => "off", :size => 25, :style => "width: 170px", :value=>(@league.nil? ? '' : @league.name), :onblur => "#{remote_function(:url=>{:controller=>'users',:action=>'registration_fill_league'},:with=>'Form.Element.serialize(this)')}"
+          %label
+            * New League Name
+          %br/
+          =text_field_with_auto_complete :league, :name, :autocomplete => "off", :size => 25, :style => "width: 170px", :value=>(@league.nil? ? '' : @league.name), :onblur => "#{remote_function(:url=>{:controller=>'users',:action=>'registration_fill_league'},:with=>'Form.Element.serialize(this)')}", :disabled => !league_editable
     
-  %table
-    %tr
-      %td.field-block            
-        %label.required{"for"=>"address1"} 
-          Address Line One
-        %br
-        = text_field :league, :address1, :size => 16, :disabled => !league_editable    
-      %td.field-block
-        %label{"for"=>"address2"} 
-          Address Line Two
-        %br
-        = text_field :league, :address2, :size => 16, :disabled => !league_editable
-    %tr
-      %td.field-block            
-        %label.required{"for"=>"league_city"}
-          City
-        %br
-        = text_field :league, :city, :size => 16, :disabled => !league_editable
-      %td.field-block
-        %label.required{"for"=>"league_zip"} 
-          Zip/Postal Code
-        %br
-        = text_field :league, :zip, :size => 12, :disabled => !league_editable
-      
-  .field-block
-    %label
-      Description
-    %br
-    = text_field :league, :description , :size => 35, :disabled => !league_editable
-  
-  .field-block
-    %label.required{"for"=>"phone"} 
-      Phone
-    %br
-    = text_field :league, :phone, :size => 14, :disabled => !league_editable
-    
-  .field-block
-    %label.required{"for"=>"email"}
-      Contact E-mail address
-    %br
-    = text_field :league, :email, :size => 24, :disabled => !league_editable
-    
-  
-  
+    %table
+      %tr
+        %td.field-block            
+          %label.required{"for"=>"address1"} 
+            Address Line One
+          %br
+          = text_field :league, :address1, :size => 16, :disabled => !league_editable    
+        %td.field-block
+          %label{"for"=>"address2"} 
+            Address Line Two
+          %br
+          = text_field :league, :address2, :size => 16, :disabled => !league_editable
+      %tr
+        %td.field-block            
+          %label.required{"for"=>"league_city"}
+            City
+          %br
+          = text_field :league, :city, :size => 16, :disabled => !league_editable
+        %td.field-block
+          %label.required{"for"=>"league_zip"} 
+            Zip/Postal Code
+          %br
+          = text_field :league, :zip, :size => 12, :disabled => !league_editable
+      %tr
+        %td.field-block{ :colspan => "3" }
+          %label
+            Description
+          %br
+          = text_field :league, :description , :size => 35, :disabled => !league_editable
+      %tr
+        %td.field-block            
+          %label.required{"for"=>"phone"} 
+            Phone
+          %br
+          = text_field :league, :phone, :size => 14, :disabled => !league_editable      
+        %td.field-block
+          %label.required{"for"=>"email"}
+            Contact E-mail address
+          %br
+          = text_field :league, :email, :size => 24, :disabled => !league_editable

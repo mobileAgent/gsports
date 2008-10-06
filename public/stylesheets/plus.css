@@ -19,6 +19,15 @@ a, a:visited, a:hover, a:active {
   background-color: #e2e4a7;
   border: 2px solid #68a34e;
 }
+/* re-using flash_info color scheme */
+#reg_team_error, #reg_league_error {
+  width: 280px; 
+  margin-left: 10px; 
+  position: absolute;
+}
+#reg_team_error h3, #reg_league_error h3 {
+  text-align: center;
+}
 
 /* forms */
 
@@ -219,8 +228,12 @@ input[type='submit']:hover {
 	border: 1px solid #fc0;
 	background: #fff3c5;
 	color: #6b5e2b;
+  margin-top: 1em;
+  margin-bottom: 1em;
 }
-
+.errorExplanation ul, .errorExplanation ol, .errorExplanation p {
+  padding-top: 1em;
+}
 
 
 .headerLogin {
@@ -1171,3 +1184,4 @@ ul, ol {
   font-weight: bold;
   text-transform: uppercase;
 }
+

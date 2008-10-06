@@ -1,65 +1,85 @@
+- is_team_enrollment = @requested_role == Role[:team].id
+
+-# Only team admin enrollments need to worry about existing admin users
+- unless is_team_enrollment
+  - @team_admin = nil
+
 -# Allow the team to be edited iff we have selected a state, or they have selected an existing team
-- team_editable = @team && @team.state_id
+- team_editable = @team_admin.nil? && @team && @team.state_id && (is_team_enrollment || !@team.id)
 
 #reg_team_info
-  %table
-    %tr
-      %td.field-block
-        %span{ :style => team_editable ? "visibility: show" : "visibility: hidden" }
-          %label
-            * Your School / Club Name
-          %br/
-          =text_field_with_auto_complete :team, :name, :autocomplete => "off", :size => 25, :style => "width: 170px", :value=>(@team.nil? ? '' : @team.name), :onblur => "#{remote_function(:url=>{:controller=>'users',:action=>'registration_fill_team'},:with=>'Form.Element.serialize(this)')}"
+  -# Don't allow enrollment if administrator exists for this team
+  - if @team && @team_admin
+    #reg_team_error.errorExplanation
+      %h3= "#{@team.name} has already been registered." 
+      %br/
+      %p
+        = "The administrator for #{@team.name} is "
+        %strong
+          = " #{@team_admin.full_name}."
+      %br/
+      %p Please coordinate with the team administrator if you would like a staff account to be created for you.
 
-      -# Only team enrollee's can enter team details
-      -if @requested_role == Role[:team].id
-        %td.field-block
-          %label.required 
-            * Nickname
-          %a{:href => "#", :onclick => "new Lightbox.base('team_nickname_help', { closeOnOverlayClick : true }); return false;", :class => 'helptip' }
-            what's this?          
-          %br/
-          = text_field :team, :nickname, :size => 18, :style => "width: 140px", :disabled => !team_editable, :readonly => !team_editable       
-      
-  -# Only team enrollee's can enter team details
-  -if @requested_role == Role[:team].id
+  %div{ :style => @team && @team_admin ? "visibility: hidden" : "visibility: visible" }
     %table
       %tr
-        %td.field-block            
-          %label.required{:for => "team_address2"} 
-            Address Line One
-          %br
-          = text_field :team, :address1, :size => 16, :disabled => !team_editable, :readonly => !team_editable    
         %td.field-block
-          %label{:for => "team_address2"} 
-            Address Line Two
-          %br
-          = text_field :team, :address2, :size => 16, :disabled => !team_editable, :readonly => !team_editable
-      %tr
-        %td.field-block            
-          %label.required{:for => "team_city"}
-            City
-          %br
-          = text_field :team, :city, :size => 16, :disabled => !team_editable, :readonly => !team_editable
-        %td.field-block
-          %label.required{:for => "team_zip"} 
-            Zip/Postal Code
-          %br
-          = text_field :team, :zip, :size => 12, :disabled => !team_editable, :readonly => !team_editable
-      %tr 
-        %td.field-block
-          %label.required{:for => "team_county_name"} 
-            County
-          %br
-          = text_field :team, :county_name, :size => 16, :disabled => !team_editable, :readonly => !team_editable
-      %tr
-        %td.field-block            
-          %label.required{:for => "team_phone"} 
-            Phone
-          %br
-          = text_field :team, :phone, :size => 16, :disabled => !team_editable, :readonly => !team_editable
-        %td.field-block
-          %label.required{:for => "team_email"}
-            Contact E-mail address
-          %br
-          = text_field :team, :email, :size => 24, :disabled => !team_editable, :readonly => !team_editable
+          %span{ :style => team_editable ? "visibility: visible" : "visibility: hidden" }
+            %label
+              * Your School / Club Name
+            %br/
+            =text_field_with_auto_complete :team, :name, :autocomplete => "off", :size => 25, :style => "width: 170px", :value=>(@team.nil? ? '' : @team.name), :onblur => "#{remote_function(:url=>{:controller=>'users',:action=>'registration_fill_team'},:with=>'Form.Element.serialize(this)')}"
+
+        -# Only team enrollee's can enter team details
+        -if @requested_role == Role[:team].id
+          %td.field-block
+            %label.required 
+              * Nickname
+            %a{:href => "#", :onclick => "new Lightbox.base('team_nickname_help', { closeOnOverlayClick : true }); return false;", :class => 'helptip' }
+              what's this?          
+            %br/
+            = text_field :team, :nickname, :size => 18, :style => "width: 140px", :disabled => !team_editable, :readonly => !team_editable       
+      
+    -# Only team enrollee's can enter team details
+    -if @requested_role == Role[:team].id
+      %table
+        %tr
+          %td.field-block            
+            %label.required{:for => "team_address2"} 
+              Address Line One
+            %br
+            = text_field :team, :address1, :size => 16, :disabled => !team_editable, :readonly => !team_editable    
+          %td.field-block
+            %label{:for => "team_address2"} 
+              Address Line Two
+            %br
+            = text_field :team, :address2, :size => 16, :disabled => !team_editable, :readonly => !team_editable
+        %tr
+          %td.field-block            
+            %label.required{:for => "team_city"}
+              City
+            %br
+            = text_field :team, :city, :size => 16, :disabled => !team_editable, :readonly => !team_editable
+          %td.field-block
+            %label.required{:for => "team_zip"} 
+              Zip/Postal Code
+            %br
+            = text_field :team, :zip, :size => 12, :disabled => !team_editable, :readonly => !team_editable
+        %tr 
+          %td.field-block
+            %label.required{:for => "team_county_name"} 
+              County
+            %br
+            = text_field :team, :county_name, :size => 16, :disabled => !team_editable, :readonly => !team_editable
+        %tr
+          %td.field-block            
+            %label.required{:for => "team_phone"} 
+              Phone
+            %br
+            = text_field :team, :phone, :size => 16, :disabled => !team_editable, :readonly => !team_editable
+          %td.field-block
+            %label.required{:for => "team_email"}
+              Contact E-mail address
+            %br
+            = text_field :team, :email, :size => 24, :disabled => !team_editable, :readonly => !team_editable
+
