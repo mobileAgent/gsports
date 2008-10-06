@@ -2,8 +2,8 @@
   .profilePageHeader
     %h2.columnDescriptor
       %span
-        =link_to _('ACCOUNT'), user_path
-      = current_user.full_name
+        =link_to _('ACCOUNT'), user_path(current_user.admin? ? @user : current_user)
+      = "#{current_user.admin? ? @user.full_name : current_user.full_name}"
   .listings
   
     = error_messages_for :user
