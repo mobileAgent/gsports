@@ -11,6 +11,15 @@
         %p
           This is the last step of the registration process.
 
+      - if @credit_card
+        - if @offer_PO
+          %p
+            = link_to 'Pay by Check or Purchase Order?', new_purchase_order_path
+          %br
+      - else
+        %p
+          = link_to 'Pay by Credit Card?', url_for(:controller=>:users, :action=>:billing, :userid=>@po.user.id)
+
   .RegistrationContent
     - if !renewal
       .RegistrationTrail
@@ -43,8 +52,6 @@
 
             = error_messages_for :po, :object_name => 'Purchase Order'
 
-            = f.hidden_field :user_id
-  
             %label
               Representative
               %br/
@@ -66,11 +73,4 @@
 
     .mainCol2
       .contentBox
-        %p
-          = link_to 'Pay by Credit Card?', url_for(:controller=>:users, :action=>:billing, :userid=>@po.user.id)
-        %br
-        
-        
-        
-        
         

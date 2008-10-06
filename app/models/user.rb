@@ -15,7 +15,7 @@ class User < ActiveRecord::Base
   #validates_presence_of :country
 
   validates_presence_of :phone
-  validates_presence_of :team_id
+  #validates_presence_of :team_id
   
   def validate
     

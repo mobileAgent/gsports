@@ -78,6 +78,8 @@ class UsersController < BaseController
   def register
     @inviter_id = session[:inviter_id] || params[:inviter_id]
     @inviter_code = session[:inviter_code] || params[:inviter_code]
+
+    _cleanup_session_for_signup
   end
 
   # registration step 2
@@ -135,13 +137,22 @@ class UsersController < BaseController
            raise Exception.new message
         end
 
+        @league.attributes= params[:league]
+
+        # Not doing DB updates here yet. Wait until after payment
+        # @league.save!
+
+        session[:reg_user_league] = @league
       rescue ActiveRecord::RecordNotFound        
         # Should we try to find duplicates here or not?
         #@league = League.find(:first, :conditions => { :name => p_league[:name].to_i, :state_id => p_league[:state_id].to_i })
         
         @league = League.new params[:league]
         logger.debug "New league #{@league.name}"
-        @league.save!
+        # Not doing DB updates here yet. Wait until after payment
+        # @league.save!
+
+        session[:reg_user_league] = @league
       end
       @user.league = @league
       @user.team = User.admin.first.team
@@ -154,6 +165,12 @@ class UsersController < BaseController
       begin
         @team = Team.find(params[:team][:id])
         logger.debug "Existing team found: #{@team.id}: #{@team.name}"
+
+        @user.team = @team
+        if (@team.league)
+          @user.league = @team.league
+        end
+
         @team_admin = @team.admin_user
         if @team_admin
            message = "#{@team.name} has already been registered by #{@team_admin.full_name}"
@@ -162,7 +179,14 @@ class UsersController < BaseController
            raise Exception.new message
         end
         logger.debug "Updating attributes for team from form"
-        @team.update_attributes! params[:team]
+
+        @team.attributes= params[:team]
+
+        # REG_NO_SAVE
+        # Not doing DB updates here yet. Wait until after payment
+        # @team.save!
+
+        session[:reg_user_team] = @team
       rescue ActiveRecord::RecordNotFound        
         @team = Team.new params[:team]
         logger.debug "New team: #{@team.name}"
@@ -171,17 +195,19 @@ class UsersController < BaseController
           logger.debug "Setting team league to admin value"
         end
         
-        logger.debug "Saving new team"
-        @team.save! 
-      end
+        # REG_NO_SAVE
+        # Not doing DB updates here yet. Wait until after payment
+        # @team.save!
 
-      @user.team = @team
-      if (@team.league)
-        @user.league = @team.league
+        session[:reg_user_team] = @team
       end
     else # when Role[:member].id
       begin
         @team = Team.find(params[:team][:id])
+        @user.team = @team
+        if (@team.league)
+          @user.league = @team.league
+        end
       rescue ActiveRecord::RecordNotFound        
         @team = Team.new params[:team]
         logger.debug "New team: #{@team.name}"
@@ -190,17 +216,30 @@ class UsersController < BaseController
           logger.debug "Setting team league to admin value"
         end
         
-        logger.debug "Saving new team"
-        @team.save! 
-      end
+        # REG_NO_SAVE
+        # Not doing DB updates here yet. Wait until after payment
+        # @team.save!
 
-      @user.team = @team
-      if (@team.league)
-        @user.league = @team.league
+        session[:reg_user_team] = @team
       end
-
     end   
-    
+   
+    #We never use this, but it is required for validation
+    @user.login= "gs#{Time.now.to_i}#{rand(1000)}"
+
+    unless @user.valid?
+      logger.warn "Have user validation errors"
+      raise ActiveRecord::RecordInvalid.new(@user)
+    end
+    if !@team.nil? && !@team.valid?
+      logger.warn "Have team validation errors"
+      raise ActiveRecord::RecordInvalid.new(@team)
+    end
+    if !@league.nil? && !@league.valid?
+      logger.warn "Have league validation errors"
+      raise ActiveRecord::RecordInvalid.new(@league)
+    end
+ 
     # Lookup up promo code if provided
     unless params[:promo_code].blank?
       logger.debug "Looking up promo code #{params[:promo_code]}"
@@ -226,11 +265,14 @@ class UsersController < BaseController
       end
     end
     
-    @user.login= "gs#{Time.now.to_i}#{rand(1000)}" # We never use this
-    @user.save!
+    # REG_NO_SAVE
+    # Not saving user to DB until after they have paid
+    # @user.save!
+    session[:reg_user] = @user
+
     create_friendship_with_inviter(@user, params)
     
-    redirect_to :action => 'billing', :userid => @user.id
+    redirect_to :action => 'billing'
 
   rescue Exception
   
@@ -250,8 +292,10 @@ class UsersController < BaseController
 
   # registration step 3
   def billing
-    id = params[:userid] || params[:id] || current_user.id
-    @user = User.find(id)
+    # REG_NO_SAVE
+    #id = params[:userid] || params[:id] || current_user.id
+    #@user = User.find(id)
+    @user = session[:reg_user]
 
     @promotion = session[:promotion]
     
@@ -279,9 +323,11 @@ class UsersController < BaseController
   # Capture payment
   #
   def submit_billing
-    id = params[:userid] || params[:id] || current_user.id
-    @user = User.find(id)
-    
+    # REG_NO_SAVE
+    #id = params[:userid] || params[:id] || current_user.id
+    #@user = User.find(id)
+    @user = session[:reg_user]
+
     @promotion = session[:promotion]
     
     if (@promotion && !@promotion.cost.nil?)
@@ -330,7 +376,6 @@ class UsersController < BaseController
       credit_card_for_db.user = @user
       credit_card_for_db.save!
 
-      @user.make_member_by_credit_card(@cost,@billing_address,credit_card_for_db,@response,@promotion)
 
     else
       @billing_address ||= Address.new
@@ -344,30 +389,49 @@ class UsersController < BaseController
       render :action => 'billing', :userid => @user.id
       return false;
     end      
+
+    if session[:reg_user_team]
+      logger.info "* Saving TEAM"
+      @team = session[:reg_user_team]
+      @team.save!
+      @user.team = @team;
+      @user.league = @team.league || User.admin.first.league
+    end
+    if session[:reg_user_league]
+      logger.info "* Saving LEAGUE"
+      @league = session[:reg_user_league]
+      @league.save!
+      @user.league = @league;
+      @user.team |= User.admin.first.team;
+    end
     
     @user.enabled = true
     @user.activated_at = Time.now
+
+    logger.debug "* Saving user record"
     @user.save!
+
+    logger.info "* Saving USER Membership"
+    @user.make_member_by_credit_card(@cost,@billing_address,credit_card_for_db,@response,@promotion)
+
     self.current_user = @user # Log them in right now!
     UserNotifier.deliver_welcome(@user)
     redirect_to signup_completed_user_path(@user)
   end
   
-  
   def signup_completed
-    if session[:promotion]
-      logger.debug "Clearing out promotion from the session..."
-      session[:promotion] = nil
-    end
+    _cleanup_session_for_signup
   end
   
   def account_expired
-    session[:promotion] = nil
+    _cleanup_session_for_signup
     @user = current_user
     @membership = @user.current_membership
   end
   
   def renew    
+    _cleanup_session_for_signup
+
     if current_user && current_user.admin? && params[:id]
       @user = User.find(params[:id]) || current_user
     else
@@ -882,5 +946,23 @@ class UsersController < BaseController
     return true    
   end
 
+  def _cleanup_session_for_signup
+    if session[:promotion]
+      session[:promotion] = nil
+    end
+    if session[:purchase_order]
+      session[:purchase_order] = nil
+    end
+    if session[:reg_user_team]
+      session[:reg_user_team] = nil
+    end
+    if session[:reg_user_league]
+      session[:reg_user_league] = nil
+    end
+    if session[:reg_user]
+      session[:reg_user] = nil
+    end
+  end
+ 
   
 end

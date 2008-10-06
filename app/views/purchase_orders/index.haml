@@ -39,10 +39,10 @@
                 %td.forumList
                   = po.po_number
                 %td.forumList
-                  = human_date(po.created_at)
+                  = link_to po.created_at.to_date, purchase_order_path(po)
                 %td.forumList
                   - if po.user.activated_at
-                    = human_date(po.user.activated_at)
+                    = po.user.activated_at.to_date
                   - else
                     = check_box_tag 'pos[]', po.id
   

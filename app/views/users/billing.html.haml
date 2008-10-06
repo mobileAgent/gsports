@@ -15,7 +15,7 @@
       - if @credit_card
         - if @offer_PO
           %p
-            = link_to 'Pay by Check or Purchase Order?', new_purchase_order_path(:purchase_order=>{:user_id=>@user.id})
+            = link_to 'Pay by Check or Purchase Order?', new_purchase_order_path
           %br
       - else
         %p

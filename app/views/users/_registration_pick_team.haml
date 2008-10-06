@@ -12,7 +12,7 @@
         %span{ :style=>"float:right" }
           %a{:href => "#", :onclick => "new Lightbox.base('team_help', { closeOnOverlayClick : true }); return false;", :class => 'helptip' }
             what's this?
-        %label.required
+        %label.required{ :for => "team_id" }
           * School / Club Name
         %br
           - if state_selected
