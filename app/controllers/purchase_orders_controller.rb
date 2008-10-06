@@ -11,8 +11,8 @@ class PurchaseOrdersController < BaseController
   def new
     session[:purchase_order] = nil
     @po = PurchaseOrder.new(params[:purchase_order])
+    @po.user = current_user || session[:reg_user] 
     @promotion = session[:promotion]
-    
     # Purchase orders are made for the full retail price
     @cost = @po.user.role.plan.cost
     #@cost = (@promotion && !@promotion.cost.nil?) ? @promotion.cost : @po.user.role.plan.cost
@@ -23,11 +23,17 @@ class PurchaseOrdersController < BaseController
     if current_user.nil? && session[:purchase_order]
       logger.debug "Got Purchase Order off the session"
       @po = session[:purchase_order]
+      @user = current_user || session[:reg_user]
+      @po.user = @user
       @promotion = session[:promotion]
       @cost = @po.user.role.plan.cost
       redirect_to :action=>:show, :layout => false
     else
-      @po = PurchaseOrder.new(params[:purchase_order])
+      logger.debug "Reading purchase order params from form..."
+      @po = PurchaseOrder.new params[:purchase_order]
+      logger.debug "Done reading purchase order params from form..."
+      @user = current_user || session[:reg_user]
+      @po.user = @user
       @promotion = session[:promotion]
       
       # Purchase orders are made for the full retail price
@@ -44,10 +50,31 @@ class PurchaseOrdersController < BaseController
             @po.due_date += @promotion.period_days.days
           end
           
+          if session[:reg_user_team]
+           logger.info "* Saving TEAM"
+            @team = session[:reg_user_team]
+            @team.save!
+            @user.team = @team;
+            @user.league = @team.league;
+          end
+          if session[:reg_user_league]
+            logger.info "* Saving LEAGUE"
+            @league = session[:reg_user_league]
+            @league.save!
+            @user.league = @league;
+          end
+        
+          logger.debug "* Saving user record"
+          @user.save!
+
+          logger.debug "* Saving purchase order"
+          @po.user = @user
           @po.save!
-          
+  
           # Add the membership record here
-          @po.user.make_member_by_invoice(@cost,@po,@promotion)
+          logger.debug "* Saving user membership"
+          @user.make_member_by_invoice(@cost,@po,@promotion)
+     
   
           #########################
           # If we have to auto-enable users when a po is submitted, here is how
@@ -66,7 +93,7 @@ class PurchaseOrdersController < BaseController
           redirect_to :action=>:show, :layout => false
         end
       else    
-        raise(ActiveRecord::RecordInvalid.new(@po)) if !@po.valid?
+        #raise(ActiveRecord::RecordInvalid.new(@po)) if !@po.valid?
         render :action=>:confirm
       end
     end    
@@ -87,8 +114,9 @@ class PurchaseOrdersController < BaseController
       end
     end
     
-    @promotion = @po.membership.promotion
-    @cost = @po.user.role.plan.cost
+    @promotion = @po.membership ? @po.membership.promotion : nil
+    @user = @po.user
+    @cost = @user.role.plan.cost
     
     render :layout => false
   end
