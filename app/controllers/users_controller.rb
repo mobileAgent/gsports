@@ -641,7 +641,7 @@ class UsersController < BaseController
      
       if (@response.success?)
         # Not sure this makes any sense... what are we billing for if no memberships?
-        if @membership.nil
+        if @membership.nil?
           @user.make_member_by_credit_card(@cost,@billing_address,@credit_card,@response)
           @membership = @user.current_membership
         end
