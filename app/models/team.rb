@@ -144,20 +144,27 @@ class Team < ActiveRecord::Base
   protected
 
   def reassign_dependent_items
-    ateam_id = User.admin.first.team_id
-    
+    logger.info "** Re-assigning teams before deleting #{self.id}"
+    auser = User.admin.first :conditions => [ "team_id <> ?", self.id]
+    if auser.nil? || auser.team_id == self.id
+      raise ActiveRecord::ActiveRecordError.new "Cannot delete the admin team"
+    end
+
+    ateam_id = auser.team_id
+    logger.debug "** New team id will be #{ateam_id}"
+ 
     v = VideoAsset.find_all_by_team_id(self.id)
-    v.each { |x| x.update_attributes(:team_id => ateam_id) }
+    v.each { |x| x.update_attribute_with_validation_skipping(:team_id, ateam_id) }
     v = VideoAsset.find_all_by_home_team_id(self.id)
-    v.each { |x| x.update_attributes(:home_team_id => ateam_id) }
+    v.each { |x| x.update_attribute_with_validation_skipping(:team_id, ateam_id) }
     v = VideoAsset.find_all_by_visiting_team_id(self.id)
-    v.each { |x| x.update_attributes(:visiting_team_id => ateam_id) }
+    v.each { |x| x.update_attribute_with_validation_skipping(:team_id, ateam_id) }
 
     u = User.find_all_by_team_id(self.id)
-    u.each { |x| x.update_attributes(:team_id => ateam_id) }
-    
+    u.each { |x| x.update_attribute_with_validation_skipping(:team_id, ateam_id) }
+ 
     p = Post.find_all_by_team_id(self.id)
-    p.each { |x| x.update_attributes(:team_id => ateam_id) }
+    p.each { |x| x.update_attribute_with_validation_skipping(:team_id, ateam_id) }
   end
   
 end
