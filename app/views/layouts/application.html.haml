@@ -1,3 +1,5 @@
+- excluded_sidebar_pages = [ {:controller => 'pages', :action => 'show'}, {:controller => 'teams', :action => 'show'}, {:controller => 'users', :action => 'dashboard'}, {:controller => 'video_reels', :action => 'new'} ]
+
 !!! Strict
 %html{:xmlns=>"http://www.w3.org/1999/xhtml", 'xml:lang'=>"en", :lang=>"en"}
   %head
@@ -35,11 +37,9 @@
         = render :partial => "shared/messages"
         
         %div{:class => (logged_in? ? 'mainContentArea' : 'landingContentArea')}
-          - unless current_page?(:controller => 'pages', :action => 'show')
-            - unless current_page?(:controller => 'users', :action => 'dashboard')
-              -unless current_page?(:controller => 'video_reels', :action => 'new')
-                =render :partial => "users/profile_nav"
-        
+          - if excluded_sidebar_pages.select { |page| current_page?(page) }.empty?
+            =render :partial => "users/profile_nav"
+
           = @content_for_layout
           .clearDiv/
         
