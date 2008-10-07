@@ -1,6 +1,6 @@
 class SearchController < BaseController
   
-  skip_before_filter :verify_authenticity_token, :only => [ :quickfind ]
+  skip_before_filter :verify_authenticity_token, :only => [ :quickfind, :quickfind_select_state, :quickfind_select_county, :quickfind_select_school ]
   skip_before_filter :gs_login_required, :only => [:teamfind,:update_teamfind_counties,:update_teamfind_cities]
   before_filter :vidavee_login
   
