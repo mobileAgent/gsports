@@ -114,7 +114,7 @@ class Team < ActiveRecord::Base
   end
 
   def title_name
-    if (self.nickname && self.nickname.length > 0)
+    if (self.nickname && !self.nickname.blank?)
       self.nickname
     else
       self.name
