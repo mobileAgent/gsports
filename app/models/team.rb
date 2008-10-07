@@ -156,9 +156,9 @@ class Team < ActiveRecord::Base
     v = VideoAsset.find_all_by_team_id(self.id)
     v.each { |x| x.update_attribute_with_validation_skipping(:team_id, ateam_id) }
     v = VideoAsset.find_all_by_home_team_id(self.id)
-    v.each { |x| x.update_attribute_with_validation_skipping(:team_id, ateam_id) }
+    v.each { |x| x.update_attribute_with_validation_skipping(:home_team_id, ateam_id) }
     v = VideoAsset.find_all_by_visiting_team_id(self.id)
-    v.each { |x| x.update_attribute_with_validation_skipping(:team_id, ateam_id) }
+    v.each { |x| x.update_attribute_with_validation_skipping(:visiting_team_id, ateam_id) }
 
     u = User.find_all_by_team_id(self.id)
     u.each { |x| x.update_attribute_with_validation_skipping(:team_id, ateam_id) }
