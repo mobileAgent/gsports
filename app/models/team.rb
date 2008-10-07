@@ -10,9 +10,10 @@ class Team < ActiveRecord::Base
 
   # Every team needs a name and a league
   validates_presence_of :name
-  validates_presence_of :state_id
   validates_presence_of :league_id
 
+  # Every team should have a state
+  # validates_presence_of :state_id
 
   # set indexes for sphinx
   define_index do
