@@ -28,7 +28,7 @@ class TeamTest < ActiveSupport::TestCase
     u = User.find_by_team_id t.id
     t.destroy
     u.reload
-    assert_not_equal u.team_id, t.id, 'User team ID not updated after team destroyed'
+    assert_not_equal u.team_id, team_id, 'User team ID not updated after team destroyed'
   end
 
 end

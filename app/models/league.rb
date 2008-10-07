@@ -64,18 +64,27 @@ class League < ActiveRecord::Base
   protected
 
   def reassign_dependent_items
+    logger.info "** Re-assigning leagues before deleting #{self.id}"
+    auser = User.admin.first :conditions => [ "league_id <> ?", self.id]
+    if auser.nil? || auser.league_id == self.id
+      raise ActiveRecord::ActiveRecordError.new "Cannot delete the admin league"
+    end
+
+    alg_id = auser.league_id
+    logger.debug "** New league id will be #{alg_id}"
+
     alg_id = User.admin.first.league_id
     v = VideoAsset.find_all_by_league_id(self.id)
-    v.each { |x| x.update_attributes(:league_id => alg_id) }
+    v.each { |x| x.update_attribute_with_validation_skipping(:league_id, alg_id) }
 
     u = User.find_all_by_league_id(self.id)
-    u.each { |x| x.update_attributes(:league_id => alg_id) }
+    u.each { |x| x.update_attribute_with_validation_skipping(:league_id, alg_id) }
 
     t = Team.find_all_by_league_id(self.id)
-    t.each { |x| x.update_attributes(:league_id => alg_id) }
+    t.each { |x| x.update_attribute_with_validation_skipping(:league_id, alg_id) }
                                    
     p = Post.find_all_by_league_id(self.id)
-    p.each { |x| x.update_attributes(:league_id => alg_id) }
+    p.each { |x| x.update_attribute_with_validation_skipping(:league_id, alg_id) }
     
   end
   
