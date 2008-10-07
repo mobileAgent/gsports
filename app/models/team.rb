@@ -10,9 +10,10 @@ class Team < ActiveRecord::Base
 
   # Every team needs a name and a league
   validates_presence_of :name
-  validates_presence_of :state_id
   validates_presence_of :league_id
 
+  # Every team should have a state
+  # validates_presence_of :state_id
 
   # set indexes for sphinx
   define_index do
@@ -35,7 +36,7 @@ class Team < ActiveRecord::Base
   named_scope :having_videos,
     :conditions => ["teams.id in (select distinct tid from (select team_id as tid from video_assets union select home_team_id as tid from video_assets union select visiting_team_id as tid from video_assets) ttt)"]
   
-  
+
   def self.find_list(tag_list)
     find(:all, :conditions => [ 'LOWER(name) LIKE ?', '%' + tag_list + '%' ])
   end
@@ -113,7 +114,7 @@ class Team < ActiveRecord::Base
   end
 
   def title_name
-    if (self.nickname && self.nickname.length > 0)
+    if (self.nickname && !self.nickname.blank?)
       self.nickname
     else
       self.name
@@ -133,23 +134,37 @@ class Team < ActiveRecord::Base
     end
   end
 
+  def admin_user
+    return nil if self.users.nil? || self.users.empty?
+    logger.debug "Team has #{users.size} users"
+    admins = self.users.find_all{|user| user.enabled? && user.role_id == Role[:team].id }
+    return admins.empty? ? nil : admins[0]
+  end
+
   protected
 
   def reassign_dependent_items
-    ateam_id = User.admin.first.team_id
-    
+    logger.info "** Re-assigning teams before deleting #{self.id}"
+    auser = User.admin.first :conditions => [ "team_id <> ?", self.id]
+    if auser.nil? || auser.team_id == self.id
+      raise ActiveRecord::ActiveRecordError.new "Cannot delete the admin team"
+    end
+
+    ateam_id = auser.team_id
+    logger.debug "** New team id will be #{ateam_id}"
+ 
     v = VideoAsset.find_all_by_team_id(self.id)
-    v.each { |x| x.update_attributes(:team_id => ateam_id) }
+    v.each { |x| x.update_attribute_with_validation_skipping(:team_id, ateam_id) }
     v = VideoAsset.find_all_by_home_team_id(self.id)
-    v.each { |x| x.update_attributes(:home_team_id => ateam_id) }
+    v.each { |x| x.update_attribute_with_validation_skipping(:home_team_id, ateam_id) }
     v = VideoAsset.find_all_by_visiting_team_id(self.id)
-    v.each { |x| x.update_attributes(:visiting_team_id => ateam_id) }
+    v.each { |x| x.update_attribute_with_validation_skipping(:visiting_team_id, ateam_id) }
 
     u = User.find_all_by_team_id(self.id)
-    u.each { |x| x.update_attributes(:team_id => ateam_id) }
-    
+    u.each { |x| x.update_attribute_with_validation_skipping(:team_id, ateam_id) }
+ 
     p = Post.find_all_by_team_id(self.id)
-    p.each { |x| x.update_attributes(:team_id => ateam_id) }
+    p.each { |x| x.update_attribute_with_validation_skipping(:team_id, ateam_id) }
   end
   
 end
