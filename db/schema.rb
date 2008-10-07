@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20081004003848) do
+ActiveRecord::Schema.define(:version => 20081007132715) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id",    :limit => 10
@@ -629,18 +629,22 @@ ActiveRecord::Schema.define(:version => 20081004003848) do
     t.string   "uploaded_file_path"
     t.string   "game_level"
     t.string   "game_gender"
-    t.integer  "view_count",         :limit => 11, :default => 0
-    t.boolean  "public_video",                     :default => true
-    t.boolean  "delta",                            :default => false
+    t.integer  "view_count",         :limit => 11,  :default => 0
+    t.boolean  "public_video",                      :default => true
+    t.boolean  "delta",                             :default => false
     t.integer  "home_score",         :limit => 11
     t.integer  "visitor_score",      :limit => 11
     t.string   "game_type"
     t.string   "gsan"
-    t.boolean  "ignore_game_day",                  :default => false
-    t.boolean  "ignore_game_month",                :default => false
+    t.boolean  "ignore_game_day",                   :default => false
+    t.boolean  "ignore_game_month",                 :default => false
     t.string   "game_date_str"
     t.text     "internal_notes"
-    t.boolean  "missing_audio",                    :default => false
+    t.boolean  "missing_audio",                     :default => false
+    t.string   "filmed_by_name",     :limit => 100
+    t.integer  "filmed_by",          :limit => 11
+    t.string   "announcer_name",     :limit => 100
+    t.integer  "announcer",          :limit => 11
   end
 
   create_table "video_clips", :force => true do |t|

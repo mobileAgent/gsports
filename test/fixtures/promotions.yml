@@ -6,6 +6,7 @@ free_promo:
   content: Congrats, you are using free_promo_123
   html_content: <p>Congrats, you are using <strong>free_promo_123</strong></p>
   subscription_plan: member
+  period_days: 60
 cheap_promo:
   promo_code: cheap_promo_123
   name: This is the name for cheap promo 123
@@ -13,3 +14,4 @@ cheap_promo:
   content: Congrats, you are using cheap_promo_123
   html_content: <p>Congrats, you are using <strong>cheap_promo_123</strong></p>
   subscription_plan: basic
+  period_days: nil
