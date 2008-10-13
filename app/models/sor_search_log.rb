@@ -1,29 +1,30 @@
-require 'rubygems'
+#require 'rubygems'
 require 'mechanize'
 require 'logger'
 
 class SorSearchLog < ActiveRecord::Base
   def self.do_search
-    @users = User.find(:all, :conditions => "enabled = true and created_at > '#{1.days.ago}'")
-
-    if @users.size >0
+    users1 = User.find(:all, :conditions => "enabled = true and created_at > '#{1.days.ago}'")
+    users2 = self.find_memberships_to_bill_next_day
+    users =(users1 +users2).uniq
+    SorSearchLog.delete_all
+    if users.size >0
       agent = WWW::Mechanize.new
-      for user in @users
-        level =0
-        self.search_user_with_sor(user, agent,level)
+      for user in users
+        self.search_user_with_sor(user, agent)
       end
     end
   end
 
-  def self.search_user_with_sor(user,agent,level)
+  def self.search_user_with_sor(user,agent)
     if user.state_id
-      SorSearchLog.send("search_user_state_#{user.state_id}".to_sym, user, agent,level)
+      SorSearchLog.send("search_user_state_#{user.state_id}".to_sym, user, agent)
     end
   end
 
   # id = 1 state AL (Alabama)
   # Search field: (LastName) ctl00$BodyArea1$UcSexOffender1$txtLastName -->  used http://www.familywatchdog.us/search.asp
-  def self.search_user_state_1(user,agent,level)
+  def self.search_user_state_1(user,agent)
     self.search_user_in_family_watchdog(user,agent)
   end
 
@@ -32,14 +33,16 @@ class SorSearchLog < ActiveRecord::Base
   # more field:  SearchForm$City , SearchForm$ZipCodes
   # accept : N/A
   # link result : yes
-  def self.search_user_state_2(user,agent,level)
+  def self.search_user_state_2(user,agent)
     page = agent.get("http://www.dps.state.ak.us/Sorweb/Search.aspx")
     search_form = page.forms.with.name("SearchFormControl").first
     search_form.FirstName =user.firstname
     search_form.LastName =user.lastname
-    if level ==1
+    if user.city?
       search_form.field("SearchForm$City").value =user.city
-      search_form.field("SearchForm$ZipCodes").value =user.zipcode
+    end
+    if user.zip?
+      search_form.field("SearchForm$ZipCodes").value =user.zip
     end
     search_result = agent.submit(search_form)
     if search_result.links.size >16
@@ -48,11 +51,7 @@ class SorSearchLog < ActiveRecord::Base
       result.firstname = user.firstname
       result.user_id =user.id
       result.state_name = 'AK'
-      if level ==0
-        result.link ="http://www.dps.state.ak.us/Sorweb/list.aspx?Preview=FALSE&PgNum=1&SEARCH_TYPE=search&FirstName=#{user.firstname}&LastName=#{user.lastname}&AddressType=&StreetName=&SearchForm%24ZipCodes=All+Zip+Codes&SearchForm%24City=All+Cities&ExecuteQry=Submit+Query"
-      else
-        result.link ="http://www.dps.state.ak.us/Sorweb/list.aspx?Preview=FALSE&PgNum=1&SEARCH_TYPE=search&FirstName=#{user.firstname}&LastName=#{user.lastname}&AddressType=&StreetName=&SearchForm%24ZipCodes=#{user.zipcode}&SearchForm%24City=#{user.city}&ExecuteQry=Submit+Query"
-      end
+      result.link ="http://www.dps.state.ak.us/Sorweb/list.aspx?Preview=FALSE&PgNum=1&SEARCH_TYPE=search&FirstName=#{user.firstname}&LastName=#{user.lastname}&AddressType=&StreetName=&SearchForm%24ZipCodes=#{user.zip}&SearchForm%24City=#{user.city}&ExecuteQry=Submit+Query"
       result.html_content =search_result.body
       result.save
     end
@@ -64,7 +63,7 @@ class SorSearchLog < ActiveRecord::Base
   # accept : N/A
   # link result : N/A
   # soundex -->  used http://www.familywatchdog.us/search.asp
-  def self.search_user_state_3(user,agent,level)
+  def self.search_user_state_3(user,agent)
     self.search_user_in_family_watchdog(user,agent)
   end
 
@@ -73,7 +72,7 @@ class SorSearchLog < ActiveRecord::Base
   # more field: city, county, state
   #http://www.acic.org/soff/index.php
   # search use Soundex
-  def self.search_user_state_4(user,agent,level)
+  def self.search_user_state_4(user,agent)
     self.search_user_in_family_watchdog(user,agent)
     page = agent.get("http://www.acic.org/soff/index.php")
     accept_form = page.forms.first
@@ -83,11 +82,15 @@ class SorSearchLog < ActiveRecord::Base
     end
     search_form = page.forms.first
     search_form.field("name").value =user.firstname + ', ' +  user.lastname
-    if level ==1
-      search_form.zip =user.zipcode
-      search_form.city =user.city
-      #search_form.county =user.
+    if user.zip?
+      search_form.zip =user.zip
     end
+    if user.city?
+      search_form.city =user.city
+    end
+  #  if user.county?
+  #    search_form.county =user.county
+  #  end
     button=search_form.buttons.with.value("Search")
     search_result = search_form.click_button(button)
     if search_result.links.size >13
@@ -96,7 +99,7 @@ class SorSearchLog < ActiveRecord::Base
       result.firstname = user.firstname
       result.user_id =user.id
       result.state_name = 'AR'
-      result.link ="N/A"
+      result.link =""
       result.html_content =search_result.body
       result.save
     end
@@ -108,7 +111,7 @@ class SorSearchLog < ActiveRecord::Base
   # accept : yes
   # link result : yes
   #http://meganslaw.ca.gov/disclaimer.htm
-  def self.search_user_state_5(user,agent,level)
+  def self.search_user_state_5(user,agent)
     page = agent.get("http://meganslaw.ca.gov/disclaimer.htm")
     accept_form = page.forms.first
     unless  accept_form.buttons.with.value("Continue").nil?
@@ -136,13 +139,13 @@ class SorSearchLog < ActiveRecord::Base
 
   # id = 6 state = CO (Colorado)
   # can't use auto browser --> used http://www.familywatchdog.us/search.asp
-  def self.search_user_state_6(user,agent,level)
+  def self.search_user_state_6(user,agent)
     self.search_user_in_family_watchdog(user,agent)
   end
 
   # id = 7 state = CT (Connecticut)
   # network timeout --> used http://www.familywatchdog.us/search.asp
-  def self.search_user_state_7(user,agent,level)
+  def self.search_user_state_7(user,agent)
     self.search_user_in_family_watchdog(user,agent)
   end
 
@@ -152,7 +155,7 @@ class SorSearchLog < ActiveRecord::Base
   # multi form
   # linkresult :N/A
   # Acceptment :N/A
-  def self.search_user_state_8(user,agent,level)
+  def self.search_user_state_8(user,agent)
     page = agent.get("http://sexoffender.dsp.delaware.gov/sor_search.htm")
     search_form = page.forms.with.name("nsearch").first
     if search_form == nil
@@ -167,7 +170,7 @@ class SorSearchLog < ActiveRecord::Base
         result.firstname = user.firstname
         result.user_id =user.id
         result.state_name = 'DE'
-        result.link ="N/A"
+        result.link =""
         result.html_content =search_result.body
         result.save
       end
@@ -177,7 +180,7 @@ class SorSearchLog < ActiveRecord::Base
   # id = 9 state = DC (District Of Columbia )
   # Search field: txtLast (lastname), txtFirst (firstname)
   # more field: txtDictric1 (District), drpQuad (City Quadrant)
-  def self.search_user_state_9(user,agent,level)
+  def self.search_user_state_9(user,agent)
     page = agent.get("http://sor.csosa.net/sor/public/publicSearch.asp")
     search_form = page.forms.with.name("form").first
     if search_form == nil
@@ -185,7 +188,7 @@ class SorSearchLog < ActiveRecord::Base
     else
       search_form.txtLast =user.lastname
       search_form.txtFirst =user.firstname
-      if level == 1
+      if user.city?
         search_form.drpQuad = user.city
       end
       search_result = agent.submit(search_form)
@@ -195,7 +198,7 @@ class SorSearchLog < ActiveRecord::Base
         result.firstname = user.firstname
         result.user_id =user.id
         result.state_name = 'DC'
-        result.link ="N/A"
+        result.link =""
         result.html_content =search_result.body
         result.save
       end
@@ -205,7 +208,7 @@ class SorSearchLog < ActiveRecord::Base
   # id = 10 state = FL (Florida)
   # http://offender.fdle.state.fl.us/offender/offenderSearchNav.do?link=advanced
   # search field: firstName, LastName, city, county
-  def self.search_user_state_10(user,agent,level)
+  def self.search_user_state_10(user,agent)
     self.search_user_in_family_watchdog(user,agent)
   end
 
@@ -213,7 +216,7 @@ class SorSearchLog < ActiveRecord::Base
   # http://services.georgia.gov/gbi/gbisor/SORSearch.jsp
   # search field = fname, lastname
   # more field = city , county
-  def self.search_user_state_11(user,agent,level)
+  def self.search_user_state_11(user,agent)
     page = agent.get("http://services.georgia.gov/gbi/gbisor/SORSearch.jsp")
     search_form = page.forms.with.name("SearchOffender").first
     if search_form == nil
@@ -221,10 +224,12 @@ class SorSearchLog < ActiveRecord::Base
     else
       search_form.lname =user.lastname
       search_form.fname =user.firstname
-      if level ==1
+      if user.city?
         search_form.city =user.city
-        #search_form.county =user.
       end
+    #  if user.county?
+    #    search_form.county =user.county
+    #  end
       search_result = agent.submit(search_form)
       if search_result.links.size >0
         result = SorSearchLog.new
@@ -232,7 +237,7 @@ class SorSearchLog < ActiveRecord::Base
         result.firstname = user.firstname
         result.user_id =user.id
         result.state_name = 'GA'
-        result.link ="N/A"
+        result.link =""
         result.html_content =search_result.body
         result.save
       end
@@ -243,7 +248,7 @@ class SorSearchLog < ActiveRecord::Base
   #http://sexoffenders.ehawaii.gov/sexoff/search.jsp
   # search field: LNAME, FNAME
   # more field :ZIP
-  def self.search_user_state_12(user,agent,level)
+  def self.search_user_state_12(user,agent)
     page = agent.get("http://sexoffenders.ehawaii.gov/sexoff/search.jsp")
     search_form = page.forms.first
     if search_form == nil
@@ -251,7 +256,7 @@ class SorSearchLog < ActiveRecord::Base
     else
       search_form.LNAME =user.lastname
       search_form.FNAME =user.firstname
-      if level ==1
+      if user.zip?
         search_form.ZIP =user.zip
       end
       search_result = agent.submit(search_form)
@@ -261,7 +266,7 @@ class SorSearchLog < ActiveRecord::Base
         result.firstname = user.firstname
         result.user_id =user.id
         result.state_name = 'HI'
-        result.link ="N/A"
+        result.link =""
         result.html_content =search_result.body
         result.save
       end
@@ -272,7 +277,7 @@ class SorSearchLog < ActiveRecord::Base
   # Search field :fnm (firstname), lnm (lastname)
   # More field :cty (City),cnt (County)
   #http://www.isp.state.id.us/sor_id/search_regnam.htm
-  def self.search_user_state_13(user,agent,level)
+  def self.search_user_state_13(user,agent)
     page = agent.get("http://www.isp.state.id.us/sor_id/search_regnam.htm")
     search_form = page.forms.with.name("searchform").first
     if search_form == nil
@@ -280,10 +285,12 @@ class SorSearchLog < ActiveRecord::Base
     else
       search_form.lnm =user.lastname
       search_form.fnm =user.firstname
-      if level ==1
+      if user.city?
         search_form.cty =user.city
-      #  search_form.cnt =user.
       end
+     # if user.county?
+     #   search_form.cnt =user.county
+     # end
       search_result = agent.submit(search_form)
       if search_result.links.size >17
         result = SorSearchLog.new
@@ -291,7 +298,7 @@ class SorSearchLog < ActiveRecord::Base
         result.firstname = user.firstname
         result.user_id =user.id
         result.state_name = 'ID'
-        result.link ="N/A"
+        result.link =""
         result.html_content =search_result.body
         result.save
       end
@@ -302,7 +309,7 @@ class SorSearchLog < ActiveRecord::Base
   # search field: lastname,  city
   # more field: county, zipcode
 # http://www.isp.state.il.us/sor/
-  def self.search_user_state_14(user,agent,level)
+  def self.search_user_state_14(user,agent)
     page = agent.get("http://www.isp.state.il.us/sor/")
     accept_form = page.forms.with.name("disc").first
     unless  accept_form.buttons.with.value("I Agree").nil?
@@ -314,11 +321,15 @@ class SorSearchLog < ActiveRecord::Base
       logger.info "The page site is not available at the moment!!!"
     else
       search_form.lastname =user.lastname
-      if level==1
-        search_form.cty =user.city
-        search_form.zipcode=user.zipcode
-        # search_form.county =user.
+      if user.city?
+        search_form.city =user.city
       end
+      if user.zip?
+        search_form.zipcode=user.zip
+      end
+    #  if user.county?
+    #    search_form.county =user.county
+    #  end
       search_result = agent.submit(search_form)
       if search_result.links.size >28
         result = SorSearchLog.new
@@ -326,7 +337,7 @@ class SorSearchLog < ActiveRecord::Base
         result.firstname = user.firstname
         result.user_id =user.id
         result.state_name = 'IL'
-        result.link ="N/A"
+        result.link =""
         result.html_content =search_result.body
         result.save
       end
@@ -336,7 +347,7 @@ class SorSearchLog < ActiveRecord::Base
   # id = 15 state = IN (Indiana)
   # http://www.insor.org/insasoweb/
   # multi form
-  def self.search_user_state_15(user,agent,level)
+  def self.search_user_state_15(user,agent)
     page = agent.get("http://www.insor.org/insasoweb/")
     accept_form = page.forms.with.name("agreementForm").first
     unless accept_form ==nil
@@ -347,9 +358,9 @@ class SorSearchLog < ActiveRecord::Base
     search_form = page.forms.with.name("advancedSearchForm").first
     search_form.lastName =user.lastname
     search_form.firstName =user.firstname
-    if level ==1
-     # search_form.countyList =user.
-    end
+   # if user.county?
+   #   search_form.countyList =user.county
+   # end
     search_result = search_form.submit
     if search_result.links.size >9
       result = SorSearchLog.new
@@ -357,7 +368,7 @@ class SorSearchLog < ActiveRecord::Base
       result.firstname = user.firstname
       result.user_id =user.id
       result.state_name = 'IN'
-      result.link ="N/A"
+      result.link =""
       result.html_content =search_result.body
       result.save
     end
@@ -367,7 +378,7 @@ class SorSearchLog < ActiveRecord::Base
   # http://www.iowasexoffender.com/search.php
   # search field: lname, fname
   # more field: city , rzip, countysearch
-  def self.search_user_state_16(user,agent,level)
+  def self.search_user_state_16(user,agent)
     page = agent.get("http://www.iowasexoffender.com/search.php")
     link = page.links.href("http://www.iowasexoffender.com/proc01.php")
     unless link.nil?
@@ -380,11 +391,15 @@ class SorSearchLog < ActiveRecord::Base
     else
       search_form.lname =user.lastname
       search_form.fname = user.firstname
-      if level ==1
-        search_form.rzip = user.zipcode
-        search_form.city = user.city
-        # county
+      if user.zip?
+        search_form.rzip = user.zip
       end
+      if user.city?
+        search_form.city = user.city
+      end
+  #    if user.county?
+  #      search_form.countysearch =user.county
+  #    end
       search_result =search_form.submit
       if search_result.links.size >19
         result = SorSearchLog.new
@@ -392,11 +407,7 @@ class SorSearchLog < ActiveRecord::Base
         result.firstname = user.firstname
         result.user_id =user.id
         result.state_name = 'IA'
-        if level ==0
-          result.link ="http://www.iowasexoffender.com/searchENG.php?lname=#{user.lastname}&fname=#{user.firstname}&city=&rzip=&weight=&aage=&countysearch=ALL&ogender=0&bgender=0&race=0&feet=0&inches=0&hcolor=0&ecolor=0&consearch=ALL"
-        else
-          result.link ="http://www.iowasexoffender.com/searchENG.php?lname=#{user.lastname}&fname=#{user.firstname}&city=#{user.city}&rzip=#{user.zipcode}&weight=&aage=&countysearch=ALL&ogender=0&bgender=0&race=0&feet=0&inches=0&hcolor=0&ecolor=0&consearch=ALL"
-        end
+        result.link ="http://www.iowasexoffender.com/searchENG.php?lname=#{user.lastname}&fname=#{user.firstname}&city=#{user.city}&rzip=#{user.zip}&weight=&aage=&countysearch=ALL&ogender=0&bgender=0&race=0&feet=0&inches=0&hcolor=0&ecolor=0&consearch=ALL"
         result.html_content =search_result.body
         result.save
       end
@@ -405,7 +416,7 @@ class SorSearchLog < ActiveRecord::Base
 
   # id = 17 state = KS (Kansas)
   #https://www.accesskansas.org/ssrv-registered-offender/index.do
-  def self.search_user_state_17(user,agent,level)
+  def self.search_user_state_17(user,agent)
     page = agent.get("https://www.accesskansas.org/ssrv-registered-offender/index.do")
     search_form = page.forms.with.name("nameForm").first
     if search_form == nil
@@ -420,7 +431,7 @@ class SorSearchLog < ActiveRecord::Base
         result.firstname = user.firstname
         result.user_id =user.id
         result.state_name = 'KS'
-        result.link ="N/A"
+        result.link =""
         result.html_content =search_result.body
         result.save
       end
@@ -430,7 +441,7 @@ class SorSearchLog < ActiveRecord::Base
   # id = 18 state = KY (Kentucky)
   # http://kspsor.state.ky.us/
   # page = agent.get("http://kspsor.state.ky.us/html/SORSearch.htm")
-  def self.search_user_state_18(user,agent,level)
+  def self.search_user_state_18(user,agent)
     self.search_user_in_family_watchdog(user,agent)
   end
 
@@ -439,7 +450,7 @@ class SorSearchLog < ActiveRecord::Base
   # Search field: OfndrLast, OfndrFirst
   # More field : OfndrCity
   # Trang nay su dung frame cua page  http://www.icrimewatch.net
-  def self.search_user_state_19(user,agent,level)
+  def self.search_user_state_19(user,agent)
     page = agent.get("http://www.lsp.org/socpr/disclaimer.html")
     accept_form = page.forms.with.action("http://www.icrimewatch.net/louisiana.php").first
     page =accept_form.submit
@@ -450,8 +461,8 @@ class SorSearchLog < ActiveRecord::Base
     else
       search_form.OfndrLast = user.lastname
       search_form.OfndrFirst = user.firstname
-      if level ==1
-        search_form.city =user.city
+      if user.city?
+        search_form.OfndrCity =user.city
       end
       search_result =search_form.submit(search_form.buttons.first)
       if search_result.links.size >17
@@ -460,11 +471,7 @@ class SorSearchLog < ActiveRecord::Base
         result.firstname = user.firstname
         result.user_id =user.id
         result.state_name = 'LA'
-        if level ==0
-          result.link ="http://www.icrimewatch.net/results.php?AgencyID=54450&SubmitNameSearch=1&OfndrCity=&OfndrLast=#{user.lastname}&OfndrFirst=#{user.firstname}"
-        else
-          result.link ="http://www.icrimewatch.net/results.php?AgencyID=54450&SubmitNameSearch=1&OfndrCity=#{user.city}&OfndrLast=#{user.lastname}&OfndrFirst=#{user.firstname}"
-        end
+        result.link ="http://www.icrimewatch.net/results.php?AgencyID=54450&SubmitNameSearch=1&OfndrCity=#{user.city}&OfndrLast=#{user.lastname}&OfndrFirst=#{user.firstname}"
         result.html_content =search_result.body
         result.save
       end
@@ -475,7 +482,7 @@ class SorSearchLog < ActiveRecord::Base
   # http://sor.informe.org/sor/
   # search field: first_name, last_name
   # more field: zip, city
-  def self.search_user_state_20(user,agent,level)
+  def self.search_user_state_20(user,agent)
     page = agent.get("http://sor.informe.org/sor/")
     accept_form = page.forms.with.action("/cgi-bin/sor/step1.pl").first
     page =accept_form.submit
@@ -485,9 +492,11 @@ class SorSearchLog < ActiveRecord::Base
     else
       search_form.last_name = user.lastname
       search_form.first_name = user.firstname
-      if level ==1
+      if user.city?
         search_form.city =user.city
-        search_form.zip =user.zipcode
+      end
+      if user.zip?
+        search_form.zip =user.zip
       end
       search_result = search_form.submit
       if search_result.links.size >13
@@ -496,11 +505,7 @@ class SorSearchLog < ActiveRecord::Base
         result.firstname = user.firstname
         result.user_id =user.id
         result.state_name = 'ME'
-        if level ==0
-          result.link ="http://sor.informe.org/cgi-bin/sor/step2.pl?city=&search=3&zip=&first_name=#{user.firstname}&last_name=#{user.lastname}&area=0&limiter="
-        else
-          result.link ="http://sor.informe.org/cgi-bin/sor/step2.pl?city=#{user.city}&search=3&zip=#{user.zipcode}&first_name=#{user.firstname}&last_name=#{user.lastname}&area=0&limiter="
-        end
+        result.link ="http://sor.informe.org/cgi-bin/sor/step2.pl?city=#{user.city}&search=3&zip=#{user.zip}&first_name=#{user.firstname}&last_name=#{user.lastname}&area=0&limiter="
         result.html_content =search_result.body
         result.save
       end
@@ -510,7 +515,7 @@ class SorSearchLog < ActiveRecord::Base
   # id = 21 state = MD (Maryland)
   # http://dpscs.md.gov/onlineservs/socem/portal.shtml
   # multi form
-  def self.search_user_state_21(user,agent,level)
+  def self.search_user_state_21(user,agent)
     page = agent.get("http://dpscs.md.gov/onlineservs/socem/portal.shtml")
     accept_form = page.forms.with.action("http://www.dpscs.state.md.us/sorSearch/").first
     unless accept_form == nil
@@ -540,7 +545,7 @@ class SorSearchLog < ActiveRecord::Base
 
   # id =22 state = MA (Massachusetts)
   # LastName, County , CityName
-  def self.search_user_state_22(user,agent,level)
+  def self.search_user_state_22(user,agent)
     self.search_user_in_family_watchdog(user,agent)
   end
 
@@ -548,14 +553,14 @@ class SorSearchLog < ActiveRecord::Base
   # id = 23 state = MI (Michigan)
   # http://www.mipsor.state.mi.us/
   # Nhan dang anh --> used http://www.familywatchdog.us/search.asp
-  def self.search_user_state_23(user,agent,level)
+  def self.search_user_state_23(user,agent)
     self.search_user_in_family_watchdog(user,agent)
   end
 
   # id = 24 state = MN (Minnesota)
   # https://por.state.mn.us/OffenderSearch.aspx
   # time out --> used http://www.familywatchdog.us/search.asp
-  def self.search_user_state_24(user,agent,level)
+  def self.search_user_state_24(user,agent)
     self.search_user_in_family_watchdog(user,agent)
   end
 
@@ -563,7 +568,7 @@ class SorSearchLog < ActiveRecord::Base
   # http://www.sor.mdps.state.ms.us/sorpublic/hpsor_search.aspx
   # search field: txtFirstName, txtLastName
   # more field: txtZipCode,txtCity ddlCounty
-  def self.search_user_state_25(user,agent,level)
+  def self.search_user_state_25(user,agent)
     page = agent.get("http://www.sor.mdps.state.ms.us/sorpublic/hpsor_search.aspx")
     search_form = page.forms.with.name("Form1").first
     if search_form == nil
@@ -571,11 +576,15 @@ class SorSearchLog < ActiveRecord::Base
     else
       search_form.txtLastName =user.lastname
       search_form.txtFirstName =user.firstname
-      if level ==1
-        #search_form.ddlCounty =
+      if user.city?
         search_form.txtCity =user.city
-        search_form.txtZipCode =user.zipcode
       end
+      if user.zip?
+        search_form.txtZipCode =user.zip
+      end
+     # if user.county?
+     #   search_form.ddlCounty = user.county
+     # end
       search_result = search_form.submit(search_form.buttons.first)
       if search_result.links.size >1
         result = SorSearchLog.new
@@ -583,7 +592,7 @@ class SorSearchLog < ActiveRecord::Base
         result.firstname = user.firstname
         result.user_id =user.id
         result.state_name = 'MS'
-        result.link ="N/A"
+        result.link =""
         result.html_content =search_result.body
         result.save
       end
@@ -595,7 +604,7 @@ class SorSearchLog < ActiveRecord::Base
   #http://www.mshp.dps.mo.gov/CJ38/search.jsp
   # search field: searchLast, searchFirst
   # More field: searchCity, searchZip, searchCounty
-  def self.search_user_state_26(user,agent,level)
+  def self.search_user_state_26(user,agent)
    # page = agent.get("http://www.mshp.dps.missouri.gov/MSHPWeb/PatrolDivisions/CRID/SOR/SORPage.html")
     page = agent.get("http://www.mshp.dps.mo.gov/CJ38/search.jsp")
     search_form = page.forms.with.name("searchForm").first
@@ -604,11 +613,15 @@ class SorSearchLog < ActiveRecord::Base
     else
       search_form.searchLast =user.lastname
       search_form.searchFirst =user.firstname
-      if level ==1
-        #search_form.searchCounty =
+      if user.city?
         search_form.searchCity =user.city
-        search_form.searchZip =user.zipcode
       end
+      if user.zip?
+        search_form.searchZip =user.zip
+      end
+    #  if user.county?
+    #    search_form.searchCounty = user.county
+    #  end
       search_result = agent.submit(search_form)
       if search_result.links.size >12
         result = SorSearchLog.new
@@ -616,7 +629,7 @@ class SorSearchLog < ActiveRecord::Base
         result.firstname = user.firstname
         result.user_id =user.id
         result.state_name = 'MO'
-        result.link ="N/A"
+        result.link =""
         result.html_content =search_result.body
         result.save
       end
@@ -627,18 +640,22 @@ class SorSearchLog < ActiveRecord::Base
   # http://doj.mt.gov/svor/search.asp
   # Search field: NameLast
   # more field: County, City, Zip
-  def self.search_user_state_27(user,agent,level)
+  def self.search_user_state_27(user,agent)
     page = agent.get("http://doj.mt.gov/svor/search.asp")
     search_form = page.forms.with.name("frmSearch").first
     if search_form == nil
       logger.info "The page site is not available at the moment!!!"
     else
       search_form.NameLast =user.lastname
-      if level ==1
-        #search_form.County =
+      if user.city?
         search_form.City =user.city
-        search_form.Zip =user.zipcode
       end
+      if user.zip?
+        search_form.Zip =user.zip
+      end
+    #  if user.county?
+    #    search_form.County =user.county
+    #  end
       search_result = agent.submit(search_form)
       if search_result.links.size >92
         result = SorSearchLog.new
@@ -646,11 +663,7 @@ class SorSearchLog < ActiveRecord::Base
         result.firstname = user.firstname
         result.user_id =user.id
         result.state_name = 'MT'
-        if level ==0
-          result.link ="http://doj.mt.gov/svor/searchlist.asp?County=&City=&Zip=&NameLast=#{user.lastname}&OffenderType="
-        else
-          result.link ="http://doj.mt.gov/svor/searchlist.asp?County=&City=#{user.city}&Zip=#{user.zipcode}&NameLast=#{user.lastname}&OffenderType="
-        end
+        result.link ="http://doj.mt.gov/svor/searchlist.asp?County=&City=#{user.city}&Zip=#{user.zip}&NameLast=#{user.lastname}&OffenderType="
         result.html_content =search_result.body
         result.save
       end
@@ -661,7 +674,7 @@ class SorSearchLog < ActiveRecord::Base
   # http://www.nsp.state.ne.us/sor/find.cfm
   # Search field: LNAME, FNAME
   # More field: COUNTY, ZIP, CITY
-  def self.search_user_state_28(user,agent,level)
+  def self.search_user_state_28(user,agent)
     page = agent.get("http://www.nsp.state.ne.us/sor/find.cfm")
     search_form = page.forms.with.name("search").first
     if search_form == nil
@@ -669,11 +682,15 @@ class SorSearchLog < ActiveRecord::Base
     else
       search_form.LNAME =user.lastname
       search_form.FNAME =user.firstname
-      if level ==1
-        #search_form.COUNTY =
+      if user.city?
         search_form.CITY =user.city
-        search_form.ZIP =user.zipcode
       end
+      if user.zip?
+        search_form.ZIP =user.zip
+      end
+    #  if user.county?
+    #    search_form.COUNTY =user.county
+    #  end
       search_result = search_form.submit(search_form.buttons.first)
       if search_result.links.size >17
         result = SorSearchLog.new
@@ -681,11 +698,7 @@ class SorSearchLog < ActiveRecord::Base
         result.firstname = user.firstname
         result.user_id =user.id
         result.state_name = 'NE'
-        if level ==0
-          result.link ="http://www.nsp.state.ne.us/sor/SearchAction.cfm?LNAME=#{user.lastname}&CITY=&FNAME=#{user.firstname}&COUNTY=&SORT=Name&ZIP=&PICS=on"
-        else
-          result.link ="http://www.nsp.state.ne.us/sor/SearchAction.cfm?LNAME=#{user.lastname}&CITY=#{user.city}&FNAME=#{user.firstname}&COUNTY=&SORT=Name&ZIP=#{user.zipcode}&PICS=on"
-        end
+        result.link ="http://www.nsp.state.ne.us/sor/SearchAction.cfm?LNAME=#{user.lastname}&CITY=#{user.city}&FNAME=#{user.firstname}&COUNTY=&SORT=Name&ZIP=#{user.zip}&PICS=on"
         result.html_content =search_result.body
         result.save
       end
@@ -696,7 +709,7 @@ class SorSearchLog < ActiveRecord::Base
   # http://www.nvsexoffenders.gov/Search.aspx
   # Search field: TextBoxFirstName, TextBoxLastName
   # More field: TextBoxCity,TextBoxZipCode
-  def self.search_user_state_29(user,agent,level)
+  def self.search_user_state_29(user,agent)
     page = agent.get("http://www.nvsexoffenders.gov/Search.aspx")
     search_form = page.forms.with.name("SearchForm").first
     if search_form == nil
@@ -704,11 +717,15 @@ class SorSearchLog < ActiveRecord::Base
     else
       search_form.TextBoxLastName =user.lastname
       search_form.TextBoxFirstName =user.firstname
-      if level ==1
-        #search_form.COUNTY =
+      if user.city?
         search_form.TextBoxCity =user.city
-        search_form.TextBoxZipCode =user.zipcode
       end
+      if user.zip?
+        search_form.TextBoxZipCode =user.zip
+      end
+     # if user.county?
+     #   search_form.COUNTY = user.county
+     # end
       search_result = search_form.submit(search_form.buttons.first)
       if search_result.title == "State of Nevada Sexual Offenders Search Result Page"
         result = SorSearchLog.new
@@ -716,7 +733,7 @@ class SorSearchLog < ActiveRecord::Base
         result.firstname = user.firstname
         result.user_id =user.id
         result.state_name = 'NV'
-        result.link ="N/A"
+        result.link =""
         result.html_content =search_result.body
         result.save
       end
@@ -726,14 +743,14 @@ class SorSearchLog < ActiveRecord::Base
   # id = 30 state = NH (New Hampshire)
   # http://www.oit.nh.gov/nsor/search.asp
   # page load error: network timeout --> used http://www.familywatchdog.us/search.asp
-  def self.search_user_state_30(user,agent,level)
+  def self.search_user_state_30(user,agent)
     self.search_user_in_family_watchdog(user,agent)
   end
 
    # id =31 , state NJ (New Jersey)
    # search field: lnme, fnme
    # multi form
-  def self.search_user_state_31(user,agent,level)
+  def self.search_user_state_31(user,agent)
     page = agent.get("https://www6.state.nj.us/LPS_spoff/individualsearch.jsp")
     accept_form =page.forms.with.name("OK").first
     unless accept_form == nil
@@ -764,7 +781,7 @@ class SorSearchLog < ActiveRecord::Base
   # http://www.nmsexoffender.dps.state.nm.us/fname.html
   # Search field: lname_txt
   # multi form
-  def self.search_user_state_32(user,agent,level)
+  def self.search_user_state_32(user,agent)
     page = agent.get("http://www.nmsexoffender.dps.state.nm.us/fname.html")
     search_form = page.forms.with.name("form3").first
     if search_form == nil
@@ -788,17 +805,19 @@ class SorSearchLog < ActiveRecord::Base
    # id =33 , state NY (New York)
    # Search field: LastName
    # More field: County, Zip
-  def self.search_user_state_33(user,agent,level)
+  def self.search_user_state_33(user,agent)
     page = agent.get("http://www.criminaljustice.state.ny.us/nsor/search_index.htm")
     search_form = page.forms.with.action("/cgi/internet/nsor/fortecgi").first
     if search_form == nil
       logger.info "The page site is not available at the moment!!!"
     else
       search_form.LastName =user.lastname
-      if level ==1
-        # search_form.County =user.
-        search_form.County =user.zipcode
+      if user.zip?
+         search_form.County =user.zip
       end
+     # if user.county?
+     #   search_form.County =user.county
+     # end
       search_result = agent.submit(search_form)
       if search_result.links.size >1
         result = SorSearchLog.new
@@ -806,11 +825,7 @@ class SorSearchLog < ActiveRecord::Base
         result.firstname = user.firstname
         result.user_id =user.id
         result.state_name = 'NY'
-        if level==0
-          result.link ="http://www.criminaljustice.state.ny.us/cgi/internet/nsor/fortecgi?ServiceName=WebNSOR&TemplateName=results.htm&RequestingHandler=WebNSORSearchResultsHandler&LastName=#{user.lastname}&Zip=&reset=Clear&County=+"
-        else
-          result.link ="http://www.criminaljustice.state.ny.us/cgi/internet/nsor/fortecgi?ServiceName=WebNSOR&TemplateName=results.htm&RequestingHandler=WebNSORSearchResultsHandler&LastName=#{user.lastname}&Zip=#{user.zipcode}&reset=Clear&County=+"
-        end
+        result.link ="http://www.criminaljustice.state.ny.us/cgi/internet/nsor/fortecgi?ServiceName=WebNSOR&TemplateName=results.htm&RequestingHandler=WebNSORSearchResultsHandler&LastName=#{user.lastname}&Zip=#{user.zip}&reset=Clear&County=+"
         result.html_content =search_result.body
         result.save
       end
@@ -821,7 +836,7 @@ class SorSearchLog < ActiveRecord::Base
   # http://ncfindoffender.com/disclaimer.aspx
   # search field: fname, lname
   # more field zip,city, county
-  def self.search_user_state_34(user,agent,level)
+  def self.search_user_state_34(user,agent)
     page = agent.get("http://ncfindoffender.com/disclaimer.aspx")
     accept_form = page.forms.with.name("Form2").first
     unless accept_form == nil
@@ -833,11 +848,15 @@ class SorSearchLog < ActiveRecord::Base
     else
       search_form.lname =user.lastname
       search_form.fname =user.firstname
-      if level ==1
-        search_form.zip =user.zipcode
+      if user.city?
         search_form.city =user.city
-        #search_form.county=
       end
+      if user.zip?
+        search_form.zip =user.zip
+      end
+     # if user.county?
+     #   search_form.county=user.county
+     # end
       search_result = search_form.submit(search_form.buttons.with.name("searchbutton1").first)
       if search_result.links.size >20
         result = SorSearchLog.new
@@ -845,7 +864,7 @@ class SorSearchLog < ActiveRecord::Base
         result.firstname = user.firstname
         result.user_id =user.id
         result.state_name = 'NC'
-        result.link ="N/A"
+        result.link =""
         result.html_content =search_result.body
         result.save
       end
@@ -855,7 +874,7 @@ class SorSearchLog < ActiveRecord::Base
   # id = 35 state = ND (North Dakota)
   # http://www.sexoffender.nd.gov/
   # http://www.sexoffender.nd.gov/offdisclaimer.aspx
-  def self.search_user_state_35(user,agent,level)
+  def self.search_user_state_35(user,agent)
     self.search_user_in_family_watchdog(user,agent)
   end
 
@@ -863,7 +882,7 @@ class SorSearchLog < ActiveRecord::Base
   # http://www.esorn.ag.state.oh.us/Secured/p21_2.aspx
   # Search field: txtLastName,txtFirstName
   # More field: txtZip, cboCounty
-  def self.search_user_state_36(user,agent,level)
+  def self.search_user_state_36(user,agent)
     page = agent.get("http://www.esorn.ag.state.oh.us/Secured/p21_2.aspx")
     search_form = page.forms.with.name("frmOffenderSearch").first
     if search_form == nil
@@ -871,10 +890,12 @@ class SorSearchLog < ActiveRecord::Base
     else
       search_form.txtLastName =user.lastname
       search_form.txtFirstName =user.firstname
-      if level ==1
-        search_form.txtZip =user.zipcode
-        #search_form.cboCounty =user.
+      if user.zip?
+        search_form.txtZip =user.zip
       end
+     # if user.county?
+     #   search_form.cboCounty =user.county
+     # end
       search_result = search_form.submit(search_form.buttons.first)
       if search_result.links.size >38
         result = SorSearchLog.new
@@ -882,7 +903,7 @@ class SorSearchLog < ActiveRecord::Base
         result.firstname = user.firstname
         result.user_id =user.id
         result.state_name = 'OH'
-        result.link ="N/A"
+        result.link =""
         result.html_content =search_result.body
         result.save
       end
@@ -895,7 +916,7 @@ class SorSearchLog < ActiveRecord::Base
   # More field: county, zip, city
   # Khong submit duoc ket qua search, chua ro ly do"WWW::Mechanize::ResponseCodeError: 404 => Net::HTTPNotFound" nhung lam ngoai web ra
 
-  def self.search_user_state_37(user,agent,level)
+  def self.search_user_state_37(user,agent)
     self.search_user_in_family_watchdog(user,agent)
   end
 
@@ -903,7 +924,7 @@ class SorSearchLog < ActiveRecord::Base
   # http://sexoffenders.oregon.gov/
   # Search field: LAST, FIRST
   # More field: COUNTY, CITY, ZIP
-  def self.search_user_state_38(user,agent,level)
+  def self.search_user_state_38(user,agent)
     page = agent.get("http://sexoffenders.oregon.gov/")
     accept_form = page.forms.with.name("myform").first
     unless accept_form == nil
@@ -915,11 +936,15 @@ class SorSearchLog < ActiveRecord::Base
     else
       search_form.LAST =user.lastname
       search_form.FIRST =user.firstname
-      if level ==1
-        search_form.ZIP =user.zipcode
+      if user.city?
         search_form.CITY =user.city
-        #search_form.COUNTY=
       end
+      if user.zip?
+        search_form.ZIP =user.zip
+      end
+     # if user.county?
+     #   search_form.COUNTY=user.county
+     # end
       search_result = search_form.submit(search_form.buttons.with.name("SEND").first)
       if search_result.links.size >12
         result = SorSearchLog.new
@@ -927,7 +952,7 @@ class SorSearchLog < ActiveRecord::Base
         result.firstname = user.firstname
         result.user_id =user.id
         result.state_name = 'OR'
-        result.link ="N/A"
+        result.link =""
         result.html_content =search_result.body
         result.save
       end
@@ -939,14 +964,14 @@ class SorSearchLog < ActiveRecord::Base
   # Search field: txtFirstName, txtLastName
   # multiform
   # Khong submit vao trang trong duoc, chua ro ly do
-  def self.search_user_state_39(user,agent,level)
+  def self.search_user_state_39(user,agent)
     self.search_user_in_family_watchdog(user,agent)
   end
 
   # id = 40 state = RI (Rhode Island)
   # http://www.paroleboard.ri.gov/sexoffender/agree.php
   # trang nay chi search theo location khong co search theo name
-  def self.search_user_state_40(user,agent,level)
+  def self.search_user_state_40(user,agent)
     self.search_user_in_family_watchdog(user,agent)
   end
 
@@ -955,7 +980,7 @@ class SorSearchLog < ActiveRecord::Base
   # Note: Name search is a SOUNDEx ("sounds like") search on both name and alias. --> khong dung duoc
   # txt_name
   # multi form
-  def self.search_user_state_41(user,agent,level)
+  def self.search_user_state_41(user,agent)
     self.search_user_in_family_watchdog(user,agent)
   end
 
@@ -963,7 +988,7 @@ class SorSearchLog < ActiveRecord::Base
   # http://sor.sd.gov/disclaimer.asp?page=search&nav=2
   # seach field: lname, fname
   # More field: county, city, zipcode
-  def self.search_user_state_42(user,agent,level)
+  def self.search_user_state_42(user,agent)
     self.search_user_in_family_watchdog(user,agent)
   end
 
@@ -971,7 +996,7 @@ class SorSearchLog < ActiveRecord::Base
   # http://www.ticic.state.tn.us/sorinternet/sosearch.aspx
   # Search field: txtLastName, txtFirstName
   # More field: txtcity, txtZip, ddlCounty
-  def self.search_user_state_43(user,agent,level)
+  def self.search_user_state_43(user,agent)
     page = agent.get("http://www.ticic.state.tn.us/sorinternet/sosearch.aspx")
     search_form = page.forms.with.name("Form2").first
     if search_form == nil
@@ -979,11 +1004,15 @@ class SorSearchLog < ActiveRecord::Base
     else
       search_form.txtLastName =user.lastname
       search_form.txtFirstName =user.firstname
-      if level ==1
+      if user.city?
         search_form.txtcity =user.city
-        search_form.txtZip =user.zipcoe
-        # search_form.ddlCounty =user.
       end
+      if user.zip?
+        search_form.txtZip =user.zip
+      end
+     # if user.county?
+     #   search_form.ddlCounty =user.county
+     # end
       button=search_form.buttons.with.name("btnFind").first
       search_result =search_form.submit(button)
       if search_result.links.size >4
@@ -992,7 +1021,7 @@ class SorSearchLog < ActiveRecord::Base
         result.firstname = user.firstname
         result.user_id =user.id
         result.state_name = 'TN'
-        result.link ="N/A"
+        result.link =""
         result.html_content =search_result.body
         result.save
       end
@@ -1004,7 +1033,7 @@ class SorSearchLog < ActiveRecord::Base
   # Search field: CurrentDPStemplateBase$ctl06$ctl00$txtLNA_TXT,CurrentDPStemplateBase$ctl06$ctl00$txtFNA_TXT
   # More filed: CurrentDPStemplateBase$ctl06$ctl00$ddlCounty (county)
   # multi form
-  def self.search_user_state_44(user,agent,level)
+  def self.search_user_state_44(user,agent)
     page = agent.get("https://records.txdps.state.tx.us/DPS_WEB/SorNew/PublicSite/index.aspx?SearchType=Name")
     accept_link = page.links.text("I have read the Web Site Caveats and agree to the terms ")
     unless accept_link.nil?
@@ -1016,9 +1045,9 @@ class SorSearchLog < ActiveRecord::Base
     else
       search_form.field("CurrentDPStemplateBase$ctl06$ctl00$txtLNA_TXT").value =user.lastname
       search_form.field("CurrentDPStemplateBase$ctl06$ctl00$txtFNA_TXT").value =user.firstname
-      if level ==1
-        #search_form.field("CurrentDPStemplateBase$ctl06$ctl00$ddlCounty").value=
-      end
+     # if user.county?
+     #   search_form.field("CurrentDPStemplateBase$ctl06$ctl00$ddlCounty").value=user.county
+     # end
       button = search_form.buttons.first
       search_result = search_form.click_button(button)
       if search_result.links.size >15
@@ -1027,7 +1056,7 @@ class SorSearchLog < ActiveRecord::Base
         result.firstname = user.firstname
         result.user_id =user.id
         result.state_name = 'TX'
-        result.link ="N/A"
+        result.link =""
         result.html_content=search_result.body
         result.save
       end
@@ -1039,35 +1068,35 @@ class SorSearchLog < ActiveRecord::Base
   # http://www.communitynotification.com/cap_office_disclaimer.php?office=54438
   # multi form
   #Trang nay su dung frame cua page  http://www.icrimewatch.net
-  def self.search_user_state_45(user,agent,level)
+  def self.search_user_state_45(user,agent)
     self.search_user_in_family_watchdog(user,agent)
   end
 
   # id = 46 state = VT (Vermont)
   # http://170.222.137.2:8080/sor/
   # lastname or county
-  def self.search_user_state_46(user,agent,level)
+  def self.search_user_state_46(user,agent)
     self.search_user_in_family_watchdog(user,agent)
   end
 
   # id = 47 state = VA (Virginia)
   # http://sex-offender.vsp.virginia.gov/sor/policy.html?original_requestUrl=http%3A%2F%2Fsex-offender.vsp.virginia.gov%3A80%2Fsor%2FzipSearch.html&original_request_method=GET&original_request_parameters=
   # Nhan dang hinh
-  def self.search_user_state_47(user,agent,level)
+  def self.search_user_state_47(user,agent)
     self.search_user_in_family_watchdog(user,agent)
   end
 
   # id = 48 state = WA (Washington)
   # http://ml.waspc.org/Accept.aspx?ReturnUrl=/index.aspx
   # The page cannot be displayed
-  def self.search_user_state_48(user,agent,level)
+  def self.search_user_state_48(user,agent)
     self.search_user_in_family_watchdog(user,agent)
   end
 
   # id = 49 state = WV (West Virginia)
   # http://www.wvstatepolice.com/sexoff/mainsearch_r07.cfm
   # Khong ro nguyen nhan nhung submit accpet thi nhay sang index chu khong phai search form
-  def self.search_user_state_49(user,agent,level)
+  def self.search_user_state_49(user,agent)
     self.search_user_in_family_watchdog(user,agent)
   end
 
@@ -1075,7 +1104,7 @@ class SorSearchLog < ActiveRecord::Base
   # http://offender.doc.state.wi.us/public/search/searchbyname.jsp
   # multi form
   # last_name, first_name
-  def self.search_user_state_50(user,agent,level)
+  def self.search_user_state_50(user,agent)
     page = agent.get("http://offender.doc.state.wi.us/public/search/searchbyname.jsp")
     search_form = page.forms.with.action("sor").first
     if search_form == nil
@@ -1088,7 +1117,7 @@ class SorSearchLog < ActiveRecord::Base
       search_result =accept_form.submit
       if search_result.links.size >21
         result = SorSearchLog.create(:lastname => user.lastname, :firstname => user.firstname, :user_id =>user.id,
-                                  :state_name => 'WI', :link => "N/A" , :html_content =>search_result.body)
+                                  :state_name => 'WI', :link => "" , :html_content =>search_result.body)
       end
     end
   end
@@ -1097,7 +1126,7 @@ class SorSearchLog < ActiveRecord::Base
   # http://wysors.dci.wyo.gov/
   # Search field: lnm
   # more field: cty, cnt
-  def self.search_user_state_51(user,agent,level)
+  def self.search_user_state_51(user,agent)
     page = agent.get("http://wysors.dci.wyo.gov/")
     accept_form = page.forms.with.name("df").first
     unless accept_form == nil
@@ -1111,10 +1140,12 @@ class SorSearchLog < ActiveRecord::Base
       logger.info "The page site is not available at the moment!!!"
     else
       search_form.lnm =user.lastname
-      if level ==1
+      if user.city?
         search_form.cty =user.city
-        #search_form.cnt=
       end
+     # if user.county?
+     #   search_form.cnt=user.county
+     # end
       search_result = search_form.submit
       if search_result.links.size >26
         result = SorSearchLog.new
@@ -1122,7 +1153,7 @@ class SorSearchLog < ActiveRecord::Base
         result.firstname = user.firstname
         result.user_id =user.id
         result.state_name = 'WY'
-        result.link ="N/A"
+        result.link =""
         result.html_content =search_result.body
         result.save
       end
@@ -1142,8 +1173,21 @@ class SorSearchLog < ActiveRecord::Base
       search_result =search_form.submit
       if search_result.links.size >20
         result = SorSearchLog.create(:lastname => user.lastname, :firstname => user.firstname, :user_id =>user.id,
-                                  :state_name => state, :link => "N/A", :html_content =>search_result.body)
+                                  :state_name => state, :link => "", :html_content =>search_result.body)
       end
     end
+  end
+
+  def self.time_diff_in_days(time = Time.now)
+    ((Time.now - time).round)/SECONDS_PER_DAY
+  end
+
+  def self.find_memberships_to_bill_next_day
+    users = []
+    mships = Membership.active.find(:all, :conditions => ['billing_method = ? and cost > 0', Membership::CREDIT_CARD_BILLING_METHOD])
+    mships.each {|m|
+      users << m.user if (m.last_billed.nil? || (time_diff_in_days(m.last_billed) >= PAYMENT_DUE_CYCLE - 1))
+    }
+    users
   end
 end
