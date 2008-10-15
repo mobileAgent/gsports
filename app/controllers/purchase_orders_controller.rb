@@ -12,32 +12,35 @@ class PurchaseOrdersController < BaseController
     session[:purchase_order] = nil
     @po = PurchaseOrder.new(params[:purchase_order])
     @po.user = current_user || session[:reg_user] 
-    @promotion = session[:promotion]
+    
+    unless session[:promo_id].nil?
+      @promotion = Promotion.find(session[:promo_id].to_i)
+    end    
+
     # Purchase orders are made for the full retail price
     @cost = @po.user.role.plan.cost
     #@cost = (@promotion && !@promotion.cost.nil?) ? @promotion.cost : @po.user.role.plan.cost
   end
   
   def create
+    @user = current_user || session[:reg_user]
+    @po.user = @user
+    # Purchase orders are made for the full retail price
+    @cost = @po.user.role.plan.cost
+
+    unless session[:promo_id].nil?
+      @promotion = Promotion.find(session[:promo_id].to_i)
+    end    
+    
     # Catch the case when the user clicks the Print button multiple times
     if current_user.nil? && session[:purchase_order]
       logger.debug "Got Purchase Order off the session"
       @po = session[:purchase_order]
-      @user = current_user || session[:reg_user]
-      @po.user = @user
-      @promotion = session[:promotion]
-      @cost = @po.user.role.plan.cost
       redirect_to :action=>:show, :layout => false
     else
       logger.debug "Reading purchase order params from form..."
       @po = PurchaseOrder.new params[:purchase_order]
       logger.debug "Done reading purchase order params from form..."
-      @user = current_user || session[:reg_user]
-      @po.user = @user
-      @promotion = session[:promotion]
-      
-      # Purchase orders are made for the full retail price
-      @cost = @po.user.role.plan.cost
       
       if params[:confirm] == 'yes'
         if !params[:tos] || !params[:suba]

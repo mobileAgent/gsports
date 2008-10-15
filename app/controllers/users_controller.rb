@@ -23,6 +23,8 @@ class UsersController < BaseController
   uses_tiny_mce(:options => AppConfig.narrow_mce_options.merge({:width => 300}),
                 :only => [:show])
   
+  VERIFICATION_COST = 9.99
+  
   def show
     # The current user can see @user's profile only if
     # they are the admin, themselves, the profile is public
@@ -84,6 +86,8 @@ class UsersController < BaseController
 
   # registration step 2
   def new
+    _cleanup_session_for_signup
+    
     @requested_role = (params[:role] || Role[:member].id).to_i
     
     case @requested_role
@@ -101,8 +105,6 @@ class UsersController < BaseController
     @user = User.new( default_options.merge(params[:user] || {}) )
     @inviter_id = params[:id]
     @inviter_code = params[:code]
-    
-    session[:promotion] = nil
     
     #render :action => 'new', :layout => 'beta' and return if AppConfig.closed_beta_mode
   end
@@ -122,6 +124,10 @@ class UsersController < BaseController
     @user = User.new(params[:user])
     @user.role_id = @role.id
     logger.debug "Setting role for #{@user.email} to #{@user.role_id}"
+    session[:reg_user] = @user
+
+    # set the role id in case there are validation errors
+    @requested_role = @role.id
 
     case @role.id
     when Role[:league].id
@@ -227,14 +233,25 @@ class UsersController < BaseController
     #We never use this, but it is required for validation
     @user.login= "gs#{Time.now.to_i}#{rand(1000)}"
 
+    # since the user gets put on the session, make sure we don't 
+    # repeat any error reporting from previous cycles
+    @user.errors.clear unless @user.nil?
     unless @user.valid?
       logger.warn "Have user validation errors"
       raise ActiveRecord::RecordInvalid.new(@user)
     end
+    
+    # since the team gets put on the session, make sure we don't 
+    # repeat any error reporting from previous cycles
+    @team.errors.clear unless @team.nil?
     if !@team.nil? && !@team.valid?
       logger.warn "Have team validation errors"
       raise ActiveRecord::RecordInvalid.new(@team)
     end
+    
+    # since the league gets put on the session, make sure we don't 
+    # repeat any error reporting from previous cycles
+    @league.errors.clear unless @league.nil?
     if !@league.nil? && !@league.valid?
       logger.warn "Have league validation errors"
       raise ActiveRecord::RecordInvalid.new(@league)
@@ -261,7 +278,7 @@ class UsersController < BaseController
       else
         logger.debug  "Promotion: #{@promotion.promo_code}: #{@promotion.name}"
         flash[:notice] = "The promotion #{@promotion.name} has been applied!"
-        session[:promotion] = @promotion
+        session[:promo_id] = @promotion.id
       end
     end
     
@@ -274,8 +291,9 @@ class UsersController < BaseController
     
     redirect_to :action => 'billing'
 
-  rescue Exception
-  
+  rescue Exception => e
+    logger.error "CAUGHT EXCEPTION #{e.message}"
+    
     # Need to fill the teams/leagues drop down before returning to the screen
     if @role.id == Role[:league].id
       if @league && @league.state_id
@@ -286,6 +304,9 @@ class UsersController < BaseController
         @teams = _get_teams_by_state @team.state_id
       end
     end
+    
+    # make sure any updates to the user are saved on the session
+    session[:reg_user] = @user
 
     render :action => 'new'
   end  
@@ -297,7 +318,9 @@ class UsersController < BaseController
     #@user = User.find(id)
     @user = session[:reg_user]
 
-    @promotion = session[:promotion]
+    unless session[:promo_id].nil?
+      @promotion = Promotion.find(session[:promo_id].to_i)
+    end    
     
     # check for promotional pricing
     if (@promotion && !@promotion.cost.nil?)
@@ -328,7 +351,9 @@ class UsersController < BaseController
     #@user = User.find(id)
     @user = session[:reg_user]
 
-    @promotion = session[:promotion]
+    unless session[:promo_id].nil?
+      @promotion = Promotion.find(session[:promo_id].to_i)
+    end    
     
     if (@promotion && !@promotion.cost.nil?)
       @cost = @promotion.cost
@@ -358,8 +383,8 @@ class UsersController < BaseController
       :password => Active_Merchant_payflow_gateway_password,
       :partner => Active_Merchant_payflow_gateway_partner)
 
-    # if the cost is 0, we need to make a $1, and then void it for verification 
-    cost_for_gateway = @cost == 0 ? 1.to_i : (@cost * 100).to_i
+    # if the cost is 0, we need to make a $9.99, and then void it for verification 
+    cost_for_gateway = @cost == 0 ? (VERIFICATION_COST * 100).to_i : (@cost * 100).to_i
     @response = gateway.purchase(cost_for_gateway, @credit_card)
 
     logger.debug "Response from gateway #{@response.inspect} for #{@user.full_name} at #{cost_for_gateway}"
@@ -483,7 +508,7 @@ class UsersController < BaseController
       else
         logger.debug  "Promotion: #{@promotion.promo_code}: #{@promotion.name}"
         flash[:notice] = "The promotion #{@promotion.name} has been applied!"
-        session[:promotion] = @promotion
+        session[:promo_id] = @promotion.id
       end
     end
 
@@ -789,7 +814,7 @@ class UsersController < BaseController
       logger.warn "Cannot cancel membership for #{@user.id}: #{@user.email}"
       flash[:warn] = "Membership is already cancelled"
       redirect_to user_path(@user)
-    end    
+    end
   end
   
   def submit_cancellation
@@ -918,7 +943,7 @@ class UsersController < BaseController
     # void the $1.00 payment
     authorization = payment_response.params['pn_ref']        
      
-    logger.debug ("*** VOIDING Temporary $1.00 TX: " + authorization)
+    logger.debug ("*** VOIDING Temporary Authorization TX: " + authorization)
     
     gateway = ActiveMerchant::Billing::PayflowGateway.new(
       :login => Active_Merchant_payflow_gateway_username,
@@ -933,7 +958,7 @@ class UsersController < BaseController
       begin
         email_body = "Payflow transaction needs to be voided for authorization: #{authorization}/#{payment_response.params['auth_code']}"
         m = Message.new(:to => User.admin.first.id, 
-                        :title => "Unable to void $1 Authorization TX", 
+                        :title => "Unable to void Authorization TX", 
                         :body => email_body)
         m.save!
       rescue
@@ -947,6 +972,10 @@ class UsersController < BaseController
   end
 
   def _cleanup_session_for_signup
+    if session[:promo_id]
+      session[:promo_id] = nil
+    end
+    # should not be used any more...
     if session[:promotion]
       session[:promotion] = nil
     end
