@@ -5,8 +5,25 @@ class Message < ActiveRecord::Base
   validates_presence_of :to_id
   validates_presence_of :from_id
   belongs_to :user, :foreign_key => :to_id
-
+  
+  
   attr_protected :to_ids, :to_name
+  
+  # prototype sql was: select id, thread_id, title, from_id, to_id, count(*) from messages  where to_id = 9 group by ifnull(thread_id, id) ;
+  # it would be ideal to pick up the reply count as above
+  # this has an issue of picking the first message in the thread.  attempts to group on an produce the latest item have been futile
+  named_scope :user_threads, lambda { |user_id| { :conditions => ["to_id = ?", user_id], :group => "ifnull(thread_id, id)" } }
+  
+  named_scope :message_thread, lambda { |message| { :conditions => ["ifnull(thread_id, id) = ?", message.real_thread_id ] } }
+  
+  named_scope :owned_by, lambda { |user_id| { :conditions => ["from_id = :me OR to_id = :me", { :me => user_id } ] } }
+  
+  named_scope :unread, lambda { |user_id| { :conditions => ['`read` = 0 AND to_id = ?', user_id ] } }
+  
+  
+  def real_thread_id
+    thread_id || id
+  end
   
   def self.alias_name(id)
     case id 
@@ -50,13 +67,7 @@ class Message < ActiveRecord::Base
   end
   
   def self.inbox(user)
-    msgs = []
-    #begin
-      msgs = find(:all, :conditions => ["to_id = ?", user.id], :order => "created_at DESC")
-    #rescue Exception => e
-      #none
-    #end
-    msgs
+    user_threads(user.id).all(:order => "created_at DESC")
   end
   
   def sender()
@@ -122,6 +133,7 @@ class Message < ActiveRecord::Base
     end
     [recipient_ids,is_alias]
   end
+  
 
   def unread?
     ! read

@@ -1,0 +1,45 @@
+.profileContentArea.listingPage
+  .profilePageHeader
+    %h2.columnDescriptor
+      %span
+        MAILBOX
+      = @title || @msgs.first.title
+      
+  %form#Forum{ :action => "#", :method => "post" }
+    .mailContainer
+      /
+        Search
+      .mailMarginTop
+      .contentBox.tanBackground
+        .contentBoxHeader.yellowHeader
+          %h2.boxDescription
+            Messages
+      
+      .mailMoreLink
+        = link_to 'Inbox', messages_path
+        = link_to 'Compose', new_message_path
+        - if @unread_count > 0
+          = link_to 'Mark Thread as Read', :action=>'thread_read', :id=>@msgs.first.real_thread_id
+        %br
+        - if @msgs.respond_to?('total_pages') && @msgs.total_pages > 1
+          .apple_pagination
+            = will_paginate @msgs
+          
+      .forumContentBox
+        .forumBoxHeader
+
+        = render :partial => 'messages/message', :collection => @msgs, :locals => {:thread_summary => false}
+
+        %div
+          \&nbsp;
+          %br/
+          %br/
+        .forumIEfix
+          \&nbsp;
+          
+          
+          
+        .clearDiv
+      .clearDiv
+      .clearDiv
+  .clearDiv
