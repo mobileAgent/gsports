@@ -5,8 +5,30 @@ class MessagesController < BaseController
   # GET /messages
   # GET /messages.xml
   def index
-    @msgs = Message.paginate(:all, :conditions => ["to_id = ?", current_user.id], :order => "created_at DESC", :page => params[:page])
+    @thread_summary = true
+    #@msgs = Message.paginate(:all, :conditions => ["to_id = ?", current_user.id], :order => "created_at DESC", :page => params[:page])
+    @msgs = Message.user_threads(current_user.id).paginate(:page => params[:page], :order => "created_at DESC")
     render :action => 'inbox'
+  end
+  
+  def thread
+    @thread_summary = false
+    thread = Message.find(params[:id])
+    msgs = Message.message_thread(thread).owned_by(current_user.id)
+    @unread_count = msgs.unread(current_user.id).size
+    @msgs = msgs.paginate(:page => params[:page], :order => "created_at DESC")
+    
+    render :action => 'thread'
+  end
+  
+  def thread_read
+    thread = Message.find(params[:id])
+    Message.message_thread(thread).unread(current_user.id).each do |msg|
+      next if msg.to_id != current_user.id
+      msg.read = 1
+      msg.save!
+    end
+    redirect_to :action => 'thread', :id => params[:id]
   end
   
   # GET /messages/new
@@ -20,6 +42,14 @@ class MessagesController < BaseController
     
     @message = Message.new(params[:message])
     logger.debug("built message #{@message.inspect} from params #{params.inspect}")
+    
+    if params[:re]
+      @reply_to = Message.find(params[:re].to_i)
+      @message.thread_id = @reply_to.thread_id || @reply_to.id
+      @message.to_name= User.find(@reply_to.from_id).full_name
+      @message.title = @reply_to.title
+    end
+    
     if params[:to]
       begin
         @message.to_name= User.find(params[:to]).full_name
@@ -119,7 +149,7 @@ class MessagesController < BaseController
 
   def show
     @message = Message.find(params[:id])
-    if (! (current_user.admin? || current_user.id == @message.to_id))
+    if (! (current_user.admin? || current_user.id == @message.to_id || current_user.id == @message.from_id) )
       redirect_to user_path(current_user)
       return
     end

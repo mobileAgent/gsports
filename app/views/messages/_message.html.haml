@@ -8,8 +8,10 @@
     = link_to message.sender.full_name, user_path(message.sender)
   = render :partial => "message_body", :locals => {:message_body => message, :summary => true}
   .forumActions
-    = link_to 'Reply', url_for({ :controller => 'messages', :action => 'new', :title => "Re: #{message.title}", :to => message.from_id}), :style => "float:right", :class => 'genericButton'
+    - if message.from_id != current_user.id
+      = link_to 'Reply', url_for({ :controller => 'messages', :action => 'new', :re => message.id }), :style => "float:right", :class => 'genericButton'
     %br
     %br
-    = link_to_remote 'Delete', {:url => { :controller => 'messages', :action => 'destroy', :id => message}, :method => :delete} , :style => "float:right", :class => 'genericButton'
+    - if message.to_id == current_user.id
+      = link_to_remote 'Delete', {:url => { :controller => 'messages', :action => 'destroy', :id => message}, :method => :delete} , :style => "float:right", :class => 'genericButton'
   .clearDiv
