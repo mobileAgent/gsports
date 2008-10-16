@@ -127,7 +127,8 @@ class UsersController < BaseController
     @user.role_id = @role.id
     logger.debug "Setting role for #{@user.email} to #{@user.role_id}"
     # CAUTION: putting the user on the session risks overflowing the 4K cookie max
-    session[:reg_user] = @user
+    #session[:reg_user] = @user     
+    cookies.delete :reg_user_xml  
     
     # set the role id in case there are validation errors
     @requested_role = @role.id
@@ -159,7 +160,7 @@ class UsersController < BaseController
       # Not doing DB updates here yet. Wait until after payment
       # @league.save!
       #session[:reg_user_league] = @league
-      cookies[:reg_user_league_xml] = @league.to_xml(:only => params[:league].reject { |k,v| v.nil? || v.blank? }.keys)
+      _to_cookie @league
       
     when Role[:scout].id
       @user.team = User.admin.first.team
@@ -200,7 +201,7 @@ class UsersController < BaseController
       # @team.save!
 
       #session[:reg_user_team] = @team
-      cookies[:reg_user_team_xml] = @team.to_xml(:skip_instruct => true, :skip_types => true, :only => @team.attributes.reject { |k,v| v.nil? || v.blank? }.keys)
+      _to_cookie @team
       
     else # when Role[:member].id
       begin
@@ -223,8 +224,7 @@ class UsersController < BaseController
       # @team.save!
 
       #session[:reg_user_team] = @team
-      #cookies[:reg_user_team_xml] = @team.to_xml(:only => params[:team].reject { |k,v| v.nil? || v.blank? }.keys)
-      cookies[:reg_user_team_xml] = @team.to_xml(:skip_instruct => true, :skip_types => true, :only => @team.attributes.reject { |k,v| v.nil? || v.blank? }.keys)
+      _to_cookie @team
       
     end
    
@@ -283,7 +283,7 @@ class UsersController < BaseController
     # REG_NO_SAVE
     # Not saving user to DB until after they have paid
     # @user.save!
-    session[:reg_user] = @user
+    _to_cookie @user    
 
     create_friendship_with_inviter(@user, params)
     
@@ -304,7 +304,8 @@ class UsersController < BaseController
     end
     
     # make sure any updates to the user are saved on the session
-    session[:reg_user] = @user
+    #session[:reg_user] = @user
+    _to_cookie @user
 
     render :action => 'new'
   end  
@@ -314,7 +315,8 @@ class UsersController < BaseController
     # REG_NO_SAVE
     #id = params[:userid] || params[:id] || current_user.id
     #@user = User.find(id)
-    @user = session[:reg_user]
+    #@user = session[:reg_user]
+    @user = reg_user_from_cookie
 
     unless session[:promo_id].nil?
       @promotion = Promotion.find(session[:promo_id].to_i)
@@ -347,7 +349,8 @@ class UsersController < BaseController
     # REG_NO_SAVE
     #id = params[:userid] || params[:id] || current_user.id
     #@user = User.find(id)
-    @user = session[:reg_user]
+    #@user = session[:reg_user]
+    @user = reg_user_from_cookie
 
     unless session[:promo_id].nil?
       @promotion = Promotion.find(session[:promo_id].to_i)
@@ -414,20 +417,16 @@ class UsersController < BaseController
     end      
 
     # Are the team updates stashed in a cookie?
-    unless cookies[:reg_user_team_xml].blank?
-      logger.debug "Parsing registration team cookie"
-      logger.debug "#{cookies[:reg_user_team_xml]}"
-      @team = Team.new.from_xml cookies[:reg_user_team_xmol]
+    @team = reg_team_from_cookie
+    if @team
       logger.info "* Saving TEAM"
       @team.save!
       @user.team = @team;
       @user.league = @team.league || User.admin.first.league
     end
     # Are the league updates stashed in a cookie?
-    unless cookies[:reg_user_league_xml].blank?
-      logger.debug "Parsing registration league cookie"
-      logger.debug "#{cookies[:reg_user_league_xml]}"      
-      @league = League.new.from_xml cookies[:reg_user_league_xml]
+    @league = reg_league_from_cookie
+    if @league
       logger.info "* Saving LEAGUE"
       @league.save!
       @user.league = @league;
@@ -924,6 +923,54 @@ class UsersController < BaseController
   end
 
   
+  def reg_team_from_cookie
+    logger.debug "Parsing registration team cookie"
+    if session[:reg_team_id]
+      team = Team.find session[:reg_team_id].to_i
+    end
+    unless cookies[:reg_team_xml].blank?
+      xml = cookies[:reg_team_xml]
+      logger.debug "#{xml}"
+      if team.nil?
+        team = Team.new
+      end
+      team.from_xml xml
+    end
+  end
+
+  def reg_league_from_cookie
+    logger.debug "Parsing registration league cookie"
+    if session[:reg_league_id]
+      league = League.find session[:reg_league_id].to_i
+    end
+    unless cookies[:reg_league_xml].blank?
+      xml = cookies[:reg_league_xml]
+      logger.debug "#{xml}"
+      if league.nil?
+        league = League.new
+      end
+      league.from_xml xml
+    end
+  end
+
+  def reg_user_from_cookie
+    logger.debug "Parsing registration user cookie"
+    unless cookies[:reg_user_xml].blank?
+      xml = cookies[:reg_user_xml]
+      logger.debug "#{xml}"
+      user = User.new.from_xml xml
+      if session[:reg_user_role_id]
+        logger.debug "Role ID from session #{session[:reg_user_role_id].to_i}"
+        user.role_id = session[:reg_user_role_id].to_i
+      end
+      if session[:reg_user_password]
+        logger.debug "Setting password #{session[:reg_user_password]}"
+        user.password = session[:reg_user_password]
+        user.password_confirmation = session[:reg_user_password]
+      end
+      user
+    end
+  end
 
   protected
   
@@ -980,33 +1027,43 @@ class UsersController < BaseController
   end
 
   def _cleanup_session_for_signup
-    if session[:promo_id]
-      session[:promo_id] = nil
-    end
-    if session[:purchase_order]
-      session[:purchase_order] = nil
-    end
-    if session[:reg_user]
-      session[:reg_user] = nil
-    end
+    session[:promo_id] = nil
+    session[:reg_team_id] = nil
+    session[:reg_league_id] = nil
+    session[:reg_user_role_id] = nil
+    session[:reg_user_password] = nil
+    session[:purchase_order] = nil
 
     if cookies.size
       logger.debug "Deleting registration cookies (#{cookies.size} total cookies)"
-      cookies.delete :reg_user_team_xml unless cookies[:reg_user_team_xml].blank?
-      cookies.delete :reg_user_league_xml unless cookies[:reg_user_league_xml].blank?
-      logger.debug "Have #{cookies.size} cookies"
+      cookies.delete :reg_user_xml unless cookies[:reg_user_xml].blank?
+      cookies.delete :reg_team_xml unless cookies[:reg_team_xml].blank?
+      cookies.delete :reg_league_xml unless cookies[:reg_league_xml].blank?
+      logger.debug "Have #{request.cookies.size} cookies"
     end
 
-    # these are obsolete and should not be used any more...
-    # but clean up just in case...
-    if session[:promotion]
-      session[:promotion] = nil
-    end
-    if session[:reg_user_team]
-      session[:reg_user_team] = nil
-    end
-    if session[:reg_user_league]
-      session[:reg_user_league] = nil
-    end
   end   
+  
+  def _to_cookie(record, options = {})
+    logger.debug "Called to_cookie for ... #{record}"
+    options.merge! (:skip_instruct => true, :skip_types => true, :only => record.attributes.reject { |k,v| v.nil? || v.blank? }.keys)
+    c = record.to_xml options
+
+    if Team === record
+      logger.debug("Team to cookie...")
+      session[:reg_team_id] = record.id.to_s unless record.id.nil?
+      cookies[:reg_team_xml] = c
+    elsif League === record
+      logger.debug("League to cookie...")
+      session[:reg_league_id] = record.id.to_s unless record.id.nil?
+      cookies[:reg_league_xml] = c
+    elsif User === record
+      logger.debug("User to cookie...")
+      # extract protected attributes here and put on the session separately
+      session[:reg_user_role_id] = record.role_id.to_s unless record.role_id.nil?
+      session[:reg_user_password] = record.password unless record.password.nil?
+      cookies[:reg_user_xml] = c
+    end
+  end
+
 end
