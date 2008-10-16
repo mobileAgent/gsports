@@ -70,9 +70,11 @@ class UsersController < BaseController
 
   # registration step 0, coming from an invitation link
   # need to grab the inviter stuff while it is hot
-  def signup
+  def signup    
     session[:inviter_id] = params[:inviter_id]
     session[:inviter_code] = params[:inviter_code]
+    _cleanup_session_for_signup
+
     redirect_to '/info/about'
   end
 
@@ -124,8 +126,9 @@ class UsersController < BaseController
     @user = User.new(params[:user])
     @user.role_id = @role.id
     logger.debug "Setting role for #{@user.email} to #{@user.role_id}"
+    # CAUTION: putting the user on the session risks overflowing the 4K cookie max
     session[:reg_user] = @user
-
+    
     # set the role id in case there are validation errors
     @requested_role = @role.id
 
@@ -145,23 +148,18 @@ class UsersController < BaseController
 
         @league.attributes= params[:league]
 
-        # Not doing DB updates here yet. Wait until after payment
-        # @league.save!
-
-        session[:reg_user_league] = @league
       rescue ActiveRecord::RecordNotFound        
         # Should we try to find duplicates here or not?
         #@league = League.find(:first, :conditions => { :name => p_league[:name].to_i, :state_id => p_league[:state_id].to_i })
         
         @league = League.new params[:league]
         logger.debug "New league #{@league.name}"
-        # Not doing DB updates here yet. Wait until after payment
-        # @league.save!
-
-        session[:reg_user_league] = @league
       end
-      @user.league = @league
-      @user.team = User.admin.first.team
+
+      # Not doing DB updates here yet. Wait until after payment
+      # @league.save!
+      #session[:reg_user_league] = @league
+      cookies[:reg_user_league_xml] = @league.to_xml(:only => params[:league].reject { |k,v| v.nil? || v.blank? }.keys)
       
     when Role[:scout].id
       @user.team = User.admin.first.team
@@ -188,25 +186,22 @@ class UsersController < BaseController
 
         @team.attributes= params[:team]
 
-        # REG_NO_SAVE
-        # Not doing DB updates here yet. Wait until after payment
-        # @team.save!
-
-        session[:reg_user_team] = @team
       rescue ActiveRecord::RecordNotFound        
         @team = Team.new params[:team]
         logger.debug "New team: #{@team.name}"
         if @team.league.nil?
           @team.league = User.admin.first.league
           logger.debug "Setting team league to admin value"
-        end
-        
-        # REG_NO_SAVE
-        # Not doing DB updates here yet. Wait until after payment
-        # @team.save!
-
-        session[:reg_user_team] = @team
+        end        
       end
+      
+      # REG_NO_SAVE
+      # Not doing DB updates here yet. Wait until after payment
+      # @team.save!
+
+      #session[:reg_user_team] = @team
+      cookies[:reg_user_team_xml] = @team.to_xml(:skip_instruct => true, :skip_types => true, :only => @team.attributes.reject { |k,v| v.nil? || v.blank? }.keys)
+      
     else # when Role[:member].id
       begin
         @team = Team.find(params[:team][:id])
@@ -221,14 +216,17 @@ class UsersController < BaseController
           @team.league = User.admin.first.league
           logger.debug "Setting team league to admin value"
         end
-        
-        # REG_NO_SAVE
-        # Not doing DB updates here yet. Wait until after payment
-        # @team.save!
-
-        session[:reg_user_team] = @team
       end
-    end   
+
+      # REG_NO_SAVE
+      # Not doing DB updates here yet. Wait until after payment
+      # @team.save!
+
+      #session[:reg_user_team] = @team
+      #cookies[:reg_user_team_xml] = @team.to_xml(:only => params[:team].reject { |k,v| v.nil? || v.blank? }.keys)
+      cookies[:reg_user_team_xml] = @team.to_xml(:skip_instruct => true, :skip_types => true, :only => @team.attributes.reject { |k,v| v.nil? || v.blank? }.keys)
+      
+    end
    
     #We never use this, but it is required for validation
     @user.login= "gs#{Time.now.to_i}#{rand(1000)}"
@@ -415,20 +413,30 @@ class UsersController < BaseController
       return false;
     end      
 
-    if session[:reg_user_team]
+    # Are the team updates stashed in a cookie?
+    unless cookies[:reg_user_team_xml].blank?
+      logger.debug "Parsing registration team cookie"
+      logger.debug "#{cookies[:reg_user_team_xml]}"
+      @team = Team.new.from_xml cookies[:reg_user_team_xmol]
       logger.info "* Saving TEAM"
-      @team = session[:reg_user_team]
       @team.save!
       @user.team = @team;
       @user.league = @team.league || User.admin.first.league
     end
-    if session[:reg_user_league]
+    # Are the league updates stashed in a cookie?
+    unless cookies[:reg_user_league_xml].blank?
+      logger.debug "Parsing registration league cookie"
+      logger.debug "#{cookies[:reg_user_league_xml]}"      
+      @league = League.new.from_xml cookies[:reg_user_league_xml]
       logger.info "* Saving LEAGUE"
-      @league = session[:reg_user_league]
       @league.save!
       @user.league = @league;
       @user.team |= User.admin.first.team;
     end
+    
+    # fallback league and team settings
+    @user.league = User.admin.first.league if @user.league.nil?
+    @user.team = User.admin.first.team if @user.team.nil?
     
     @user.enabled = true
     @user.activated_at = Time.now
@@ -975,12 +983,24 @@ class UsersController < BaseController
     if session[:promo_id]
       session[:promo_id] = nil
     end
-    # should not be used any more...
-    if session[:promotion]
-      session[:promotion] = nil
-    end
     if session[:purchase_order]
       session[:purchase_order] = nil
+    end
+    if session[:reg_user]
+      session[:reg_user] = nil
+    end
+
+    if cookies.size
+      logger.debug "Deleting registration cookies (#{cookies.size} total cookies)"
+      cookies.delete :reg_user_team_xml unless cookies[:reg_user_team_xml].blank?
+      cookies.delete :reg_user_league_xml unless cookies[:reg_user_league_xml].blank?
+      logger.debug "Have #{cookies.size} cookies"
+    end
+
+    # these are obsolete and should not be used any more...
+    # but clean up just in case...
+    if session[:promotion]
+      session[:promotion] = nil
     end
     if session[:reg_user_team]
       session[:reg_user_team] = nil
@@ -988,10 +1008,5 @@ class UsersController < BaseController
     if session[:reg_user_league]
       session[:reg_user_league] = nil
     end
-    if session[:reg_user]
-      session[:reg_user] = nil
-    end
-  end
- 
-  
+  end   
 end
