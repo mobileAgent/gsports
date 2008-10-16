@@ -964,7 +964,6 @@ class UsersController < BaseController
         user.role_id = session[:reg_user_role_id].to_i
       end
       if session[:reg_user_password]
-        logger.debug "Setting password #{session[:reg_user_password]}"
         user.password = session[:reg_user_password]
         user.password_confirmation = session[:reg_user_password]
       end
