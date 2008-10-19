@@ -95,12 +95,12 @@ GSports.SwfUpload = Class.create({
 	    file.id = "singlefile";	// This makes it so FileProgress only makes a single UI element, instead of one for each file
 	    var progress = new FileProgress(file, this.swfu.customSettings.progress_target);
 	    progress.setProgress(percent);
-            if (percent == 100)
+            if (bytesLoaded == bytesTotal)
             {
   	      progress.setStatus("Wrapping up...");
               progress.toggleCancel(false);
               //alert("Set timeout 60 sec on upload success");
-              setTimeout(function() {
+              setTimeout(function() {n
                 if (document.getElementById("hidFileID").value == "-2")
                 {
                   // alert("Forced form submit cancelled");
