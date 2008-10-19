@@ -214,7 +214,22 @@ class VideoAssetsController < BaseController
   # POST /vidapi/save_video (the rest of the form after the swfupload)
   def save_video
     if params[:hidFileID]
-      @video_asset = VideoAsset.find(params[:hidFileID])
+      # Here we are hacking around a problem with ultra large
+      # uploads where swfupload flash object is apparently timing out
+      # and closing the connection, never getting the response from
+      # the swfupload action above. Since it doesn't have the @video.id
+      # it's going to send us a -1 when the form submit is forces
+      # and we will just look up the last pending upload for the user.
+      if (params[:hidFileID] == "-1")
+        @video_asset = VideoAsset.find(:last, :conditions => ["user_id = ? and title = 'Upload in Progress' and dockey is null",current_user.id])
+        if @video_asset.nil?
+          flash[:notice] = "There was a problem with the video"
+          render :action=>:upload and return
+        end
+        logger.debug "Forcing video save fix for video #{@video_asset.id}"
+      else
+        @video_asset = VideoAsset.find(params[:hidFileID])
+      end
       @video_asset.attributes= params[:video_asset]
     else
       @video_asset = VideoAsset.new params[:video_asset]
