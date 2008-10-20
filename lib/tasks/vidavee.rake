@@ -59,7 +59,7 @@ namespace :vidavee do
         if (asset.video_status == 'ready' && asset.uploaded_file_path)
           FileUtils.rm_f asset.uploaded_file_path
 
-        elsif (asset.video_status == 'blocked')
+        elsif (asset.video_status == 'blocked' || asset.video_status == 'failed')
           # Vidavee had a problem with it, notify the admin and the owner
           fn = fullpath[File.dirname(asset.uploaded_file_path).length+1..-1]
           [User.find_by_email(ADMIN_EMAIL),video_asset.user_id].uniq.each do |u|
@@ -70,7 +70,6 @@ namespace :vidavee do
           end
         end
       end
-      sleep 1 # help vidavee with their timestamp problems
     end
   end
 

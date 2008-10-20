@@ -95,8 +95,28 @@ GSports.SwfUpload = Class.create({
 	    file.id = "singlefile";	// This makes it so FileProgress only makes a single UI element, instead of one for each file
 	    var progress = new FileProgress(file, this.swfu.customSettings.progress_target);
 	    progress.setProgress(percent);
-	    progress.setStatus("Uploading...");
+            if (bytesLoaded == bytesTotal)
+            {
+  	      progress.setStatus("Wrapping up...");
+              progress.toggleCancel(false);
+              //alert("Set timeout 60 sec on upload success");
+              setTimeout(function() {n
+                if (document.getElementById("hidFileID").value == "-2")
+                {
+                  // alert("Forced form submit cancelled");
+                  return;
+                }
+		document.getElementById("hidFileID").value = "-1";
+                var form = document.getElementById('upload_form');
+                form.submit();
+              },60000);
+            }
+            else
+            {
+  	      progress.setStatus("Uploading (" + percent + "%) ...");
+            }
 	} catch (e) {
+          //alert("Problem in uploadProgress: " + e);
 	}
     },
 
@@ -104,10 +124,11 @@ GSports.SwfUpload = Class.create({
 	try {
 	    file.id = "singlefile";	// This makes it so FileProgress only makes a single UI element, instead of one for each file
 	    var progress = new FileProgress(file, this.swfu.customSettings.progress_target);
+
 	    progress.setComplete();
 	    progress.setStatus("Complete.");
 	    progress.toggleCancel(false);
-	    
+
 	    if (serverData === " " || serverData.indexOf("Error") > -1) {
 		this.swfu.customSettings.upload_successful = false;
 	    } else {
@@ -134,6 +155,8 @@ GSports.SwfUpload = Class.create({
 		
 		var txtFileName = document.getElementById("uploaded_file_path");
 		txtFileName.value = "";
+                // This will cancel any pending forced form submit
+		document.getElementById("hidFileID").value = "-2";
 		validateForm();
 
 		alert("There was a problem with the upload.\nThe server did not accept it.");
