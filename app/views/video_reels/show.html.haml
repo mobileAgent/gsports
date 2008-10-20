@@ -12,8 +12,10 @@
           %div
             %a.genericButton{ :href => new_message_path(:to => @video_reel.user.id, :title => "Your clip '#{@video_reel.title}'") }
               Send Message
-        
             
+        %div
+          =link_to "Share", {:action => 'share', :id => @video_reel.id}, :class => 'genericButton'
+
         = render :partial => 'shared/favorite_item', :locals => { :item => @video_reel }
 
         - if current_user && current_user.can_edit?(@video_reel)

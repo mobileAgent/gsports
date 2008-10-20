@@ -8,10 +8,14 @@
     .leftNavColPlayer
       .leftNavPlayer
         = render :partial => 'ratings/stars', :locals => { :item => @video_clip }
+
         - if current_user.can_send_message_to?(@video_clip.user)
           %div
             %a.genericButton{ :href => new_message_path(:to => @video_clip.user.id, :title => "Your clip '#{@video_clip.title}'") }
               Send Message
+
+        %div
+          =link_to "Share", {:action => 'share', :id => @video_clip.id}, :class => 'genericButton'
 
         = render :partial => 'shared/favorite_item', :locals => { :item => @video_clip }
 

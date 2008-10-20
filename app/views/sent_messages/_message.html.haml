@@ -8,7 +8,7 @@
     .msgHeader
       = "To: "
       %span.msgField
-        = truncate(h(message.to_ids_user_names_array.join(", ")),85)
+        = truncate(h(message.recipient_display_array.join(", ")),85)
     .msgHeader
       = "Subject: "
       %span.msgField
@@ -26,7 +26,7 @@
     .msgHeader
       = "To: "
       %span.msgField
-        =h message.to_ids_user_names_array.join(", ")
+        =h message.recipient_display_array.join(", ")
     .msgHeader
       = "Subject: "
       %span.msgField

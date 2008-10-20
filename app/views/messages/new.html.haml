@@ -3,7 +3,11 @@
     %h2.columnDescriptor
       %span
         MAILBOX
-      New Message
+      - if @shared_access
+        Sharing 
+        = truncate(@shared_access.item.title,85)
+      - else
+        New Message
 
   .listings    
     .contentBox.tanBackground
@@ -14,36 +18,49 @@
         = error_messages_for :message
       
         - form_for(@message ||= Message.new, :html => {:id => "EditProfile"}) do |f|
-          %label
-            To:
-            %em (required, separate multiple names with commas)
-            %br/
-            %em (Start typing a few letters of the name of the friend you want to send to...)
-            -if current_user.admin?
+          -if (current_user.accepted_friendships.size > 0 || current_user.admin? || current_user.team_staff? || current_user.league_staff?)
+            %label
+              To:
+              %em (required, separate multiple names with commas)
               %br/
-              %em (you can enter the keyword 'all' to send to all users, it will take a while)
-            - if current_user.team_staff?
-              %br/
-              %em= "(you can enter the keyword 'team' to send to all users associated with #{current_user.team.name})"
-            - if current_user.league_staff?
-              %br/
-              %em= "(you can enter the keyword 'league' to send to all users associated with #{current_user.league.name})"
-          %p
-            = text_field_with_auto_complete :message, :to_name, {:autocomplete => 'off'},{:url => { :controller => 'messages', :action => 'auto_complete_for_friend_full_name'}, :tokens => [',']}
-          
+              %em (Start typing a few letters of the name of the friend you want to send to...)
+              -if current_user.admin?
+                %br/
+                %em (you can enter the keyword 'all' to send to all users, it will take a while)
+              - if current_user.team_staff?
+                %br/
+                %em= "(you can enter the keyword 'team' to send to all users associated with #{current_user.team.name})"
+              - if current_user.league_staff?
+                %br/
+                %em= "(you can enter the keyword 'league' to send to all users associated with #{current_user.league.name})"
+            %p
+              = text_field_with_auto_complete :message, :to_name, {:autocomplete => 'off', :style => 'width:80%'},{:url => { :controller => 'messages', :action => 'auto_complete_for_friend_full_name'}, :tokens => [',']}
+         
+          - if @shared_access 
+            %p
+            %label
+              Email address of non-member
+              %em (separate multiple emails with commas)
+            %p
+              = f.text_field :to_email, :style => 'width:80%;'
+
           %p
           %label
             Subject 
             %em (required)
           %p
-            = f.text_field :title
+            = f.text_field :title, :style => 'width:80%;'
 
           %p
           %label
             Body Text 
             %em (required)
           %p
-            = f.text_area :body, :rows => 10, :style => "width:80%;"
+            = f.text_area :body, :rows => 10, :style => 'width:80%;'
+
+          -if @shared_access
+            = f.hidden_field :shared_access_id
+            =render :partial => 'messages/shared_item', :locals => {:body => nil}
 
           %p
             = f.hidden_field :thread_id

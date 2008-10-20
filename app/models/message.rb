@@ -2,10 +2,10 @@ class Message < ActiveRecord::Base
 
   validates_presence_of :title
   validates_presence_of :body
-  validates_presence_of :to_id
+  validates_presence_of :to_id, :unless => :external_email_present?
   validates_presence_of :from_id
   belongs_to :user, :foreign_key => :to_id
-  
+  belongs_to :shared_access
   
   attr_protected :to_ids, :to_name
   
@@ -31,7 +31,7 @@ class Message < ActiveRecord::Base
       'all'
     when -2
       'team'
-    when-3
+    when -3
       'league'
     end
   end
@@ -59,7 +59,8 @@ class Message < ActiveRecord::Base
   end
 
   def to_name
-    self.to_id? ? User.find(self.to_id).full_name : nil
+    # support for external email addresses
+    self.to_id? ? User.find(self.to_id).full_name : to_email
   end
   
   def self.unread(user)
@@ -77,7 +78,12 @@ class Message < ActiveRecord::Base
   
   def recipient()
     return @recipient if @recipient
-    @recipient = User.find to_id.to_i
+    if to_id
+      @recipient = User.find to_id.to_i
+    elsif to_email
+      # support for external email addresses
+      @recipient = User.new :email => to_email
+    end
   end
   
   def sent_on_display(format = "%Y/%m/%d")
@@ -133,10 +139,31 @@ class Message < ActiveRecord::Base
     end
     [recipient_ids,is_alias]
   end
-  
+ 
+  def self.get_message_emails(email_str)
+    to_emails = []
+    emails = email_str.split(',')
+    emails.each do |email|
+      # validate the email
+
+      unless /^([^@\s]+)@((?:[-a-z0-9A-Z]+\.)+[a-zA-Z]{2,})$/.match(email)
+        logger.error "Invalid email address #{email}"
+      else
+        to_emails << email
+      end
+    end
+    to_emails
+  end 
 
   def unread?
     ! read
   end
 
+  def external_email_present?
+    to_id.nil? && !email.nil? && !email.blank?
+  end
+    
+  def external_email_ok?
+    !shared_item_id.nil?
+  end
 end

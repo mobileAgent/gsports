@@ -1,0 +1,31 @@
+-if @shared_access
+  - shared_item= @shared_access.item
+  %div{ :style => "margin: 10px 10px 10px 10px" }
+
+    - if body && !body.blank?
+      %p= "#{current_user.full_name} has sent you a video:"
+      %br/
+      %div{ :style => "padding-left: 20px" }
+        %pre= body
+        %br/
+        %br/
+
+    %table
+      %tr{ :valign => "top" }
+        %td
+          - if @shared_access.video? && shared_item.thumbnail_dockey
+            %a{ :href => url_for(:controller => "shared_item", :action => "show", :key => @shared_access.key)}
+              = "<img src='#{@vidavee.file_thumbnail_medium(shared_item.thumbnail_dockey)}' align='left' style='margin: 0px 10px 10px 0px'>"
+        %td 
+          %p
+            %a{ :href => url_for(:controller => "shared_item", :action => "show", :key => @shared_access.key)}
+              %strong
+                = shared_item.title
+            %br/
+
+          %p= shared_item.description 
+          %br/
+
+          %p
+            =link_to "Click here to view this item", {:controller => "shared_access", :action => "show", :key => @shared_access.key}
+

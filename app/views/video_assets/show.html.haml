@@ -9,6 +9,10 @@
       .leftNavPlayer
         = render :partial => 'ratings/stars', :locals => { :item => @video_asset }
         = render :partial => 'shared/favorite_item', :locals => { :item => @video_asset }
+
+        %div
+          =link_to "Share", {:action => 'share', :id => @video_asset.id}, :class => 'genericButton'
+
         - if @video_asset.league_video?
           %div
             %a.genericButton{ :href => league_path( @video_asset.league_id )  }
@@ -20,6 +24,7 @@
               %span
                 School Profile
             
+
         - if current_user && current_user.can_edit?(@video_asset)
           %div
             %a.genericButton{ :href => edit_video_asset_path(@video_asset) }

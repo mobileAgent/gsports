@@ -4,7 +4,7 @@
     .contentBoxHeader.yellowHeader
       %h2 Sent Message
     %span.profileSubHeading To:
-    = @sent_message.to_ids_user_names_array.join(", ")
+    = @sent_message.recipient_display_array.join(", ")
     %br/
     %span.profileSubHeading Date:
     = "#{@sent_message.created_at.to_s(:readable)}"

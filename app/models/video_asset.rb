@@ -1,12 +1,14 @@
 require 'fileutils'
 class VideoAsset < ActiveRecord::Base
-  
+  include SharedItem
+ 
   belongs_to :league
   belongs_to :team
   belongs_to :user
   belongs_to :home_team, :class_name => 'Team', :foreign_key => 'home_team_id'
   belongs_to :visiting_team, :class_name => 'Team', :foreign_key => 'visiting_team_id'
   has_many :video_clips, :dependent => :destroy
+  belongs_to :shared_accesses, :dependent => :destroy
   
   # Every video needs a title
   validates_presence_of :title
