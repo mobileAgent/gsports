@@ -18,7 +18,7 @@
               = "<img src='#{@vidavee.file_thumbnail_medium(shared_item.thumbnail_dockey)}' align='left' style='margin: 0px 10px 10px 0px'>"
         %td 
           %p
-            %a{ :href => url_for(:controller => "shared_item", :action => "show", :key => @shared_access.key)}
+            %a{ :href => url_for(:controller => "shared_access", :action => "show", :key => @shared_access.key)}
               %strong
                 = shared_item.title
             %br/
