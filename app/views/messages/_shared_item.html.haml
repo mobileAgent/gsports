@@ -14,7 +14,7 @@
       %tr{ :valign => "top" }
         %td
           - if @shared_access.video? && shared_item.thumbnail_dockey
-            %a{ :href => url_for(:controller => "shared_item", :action => "show", :key => @shared_access.key)}
+            %a{ :href => url_for(:controller => "shared_access", :action => "show", :key => @shared_access.key)}
               = "<img src='#{@vidavee.file_thumbnail_medium(shared_item.thumbnail_dockey)}' align='left' style='margin: 0px 10px 10px 0px'>"
         %td 
           %p
