@@ -1,5 +1,4 @@
 class SharedAccessController < BaseController
-
   skip_before_filter :gs_login_required, :only => [:show]
   skip_before_filter :billing_required, :only => [:show]
  
@@ -20,6 +19,10 @@ class SharedAccessController < BaseController
     if @shared_access.video?
       @shared_dockey_string = @shared_item.dockey
     end
+
+    # set up the athletes of the week, etc.
+    prepare_site_index_content
+
   rescue Exception => e
     logger.error "#{e.message}"
     flash[:notice] = 'That item could not be found.'

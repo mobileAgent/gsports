@@ -24,20 +24,11 @@ class BaseController < ApplicationController
     end
 
     # Not logged in, show featured games and athletes
-    @athletes_of_the_week =
-      Rails.cache.fetch('athletes_of_the_week', :expires_in => 30.minutes) do
-      AthleteOfTheWeek.for_home_page
-    end
-    @articles_of_the_week =
-      Rails.cache.fetch('articles_of_the_week', :expires_in => 30.minutes) do
-      Post.highlighted_articles(@athletes_of_the_week.collect(&:id)) 
-    end
-    @games_of_the_week =
-      Rails.cache.fetch('games_of_the_week', :expires_in => 30.minutes) do
-      GameOfTheWeek.for_home_page || []
-    end
     @game_dockey_string = @games_of_the_week.collect(&:dockey).join(",")
+
+    prepare_site_index_content
   end
+
 
   # Turn off CE action caching, we are going to use Rails.cache
   def cache_action?
@@ -45,6 +36,22 @@ class BaseController < ApplicationController
   end
   
   protected
+ 
+  # shared by the shared_access_controller for preparing the index page 
+  def prepare_site_index_content
+    @athletes_of_the_week =
+      Rails.cache.fetch('athletes_of_the_week', :expires_in => 30.minutes) do
+      AthleteOfTheWeek.for_home_page
+    end
+    @articles_of_the_week =
+      Rails.cache.fetch('articles_of_the_week', :expires_in => 30.minutes) do
+      Post.highlighted_articles(@athletes_of_the_week.collect(&:id))
+    end
+    @games_of_the_week =
+      Rails.cache.fetch('games_of_the_week', :expires_in => 30.minutes) do
+      GameOfTheWeek.for_home_page || []
+    end
+  end
 
   # This is a wrapper around the CE base_controllers login_required
   # which is commonly used as a before_filter. Really it comes from

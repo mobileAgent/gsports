@@ -25,8 +25,12 @@ namespace :billing do
       if user.role.plan.cost > 0
         if membership.credit_card
           if user.enabled?
-            puts "Sending email to #{user.email}"
-            MembershipNotifier.deliver_membership_expiring(user.email,membership)
+            if !membership.promotion.nil? && membership.promotion.promo_code == 'GS7DAYSFREE'
+              puts "* Excluding promotion GS7DAYSFREE from auto-renewal"
+            else
+              puts "Sending email to #{user.email}"
+              MembershipNotifier.deliver_membership_expiring(user.email,membership)
+            end
           end
         end
       else

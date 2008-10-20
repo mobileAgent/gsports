@@ -1,5 +1,6 @@
 -if @shared_access
   - shared_item= @shared_access.item
+  - url= "#{APP_URL}#{url_for(:controller => 'shared_access', :action => 'show', :key => @shared_access.key)}"
   %div{ :style => "margin: 10px 10px 10px 10px" }
 
     - if body && !body.blank?
@@ -14,11 +15,11 @@
       %tr{ :valign => "top" }
         %td
           - if @shared_access.video? && shared_item.thumbnail_dockey
-            %a{ :href => url_for(:controller => "shared_access", :action => "show", :key => @shared_access.key)}
+            %a{ :href => url }
               = "<img src='#{@vidavee.file_thumbnail_medium(shared_item.thumbnail_dockey)}' align='left' style='margin: 0px 10px 10px 0px'>"
         %td 
           %p
-            %a{ :href => url_for(:controller => "shared_access", :action => "show", :key => @shared_access.key)}
+            %a{ :href => url }
               %strong
                 = shared_item.title
             %br/
@@ -27,5 +28,5 @@
           %br/
 
           %p
-            =link_to "Click here to view this item", {:controller => "shared_access", :action => "show", :key => @shared_access.key}
+            =link_to "Click here to view this item", url
 
