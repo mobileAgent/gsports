@@ -46,7 +46,7 @@
       -if logged_in?
         = render :partial => "shared/block_weeklyFeature"
       -else
-        - if (current_page?(:controller => 'base', :action => 'site_index'))
+        - if (current_page?(:controller => 'base', :action => 'site_index') || current_page?(:controller => 'shared_access', :action => 'show'))
           = render :partial => "shared/block_guest_features"
 
       .clearDiv/
