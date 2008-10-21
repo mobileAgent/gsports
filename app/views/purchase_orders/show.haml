@@ -164,18 +164,19 @@
               1
             %td.numeric
               = number_to_currency(@promotion.cost)
-                
-        %tr
-          %td
-            = @po.item_number
-          %td
-            = @po.description
-          %td.numeric
-            = number_to_currency(@cost)
-          %td.numeric
-            12
-          %td.numeric
-            = number_to_currency(12 * @cost)
+
+        - if @promotion.nil? || (!@promotion.period_days.nil? && @promotion.period_days > 0)
+          %tr
+            %td
+              = @po.item_number
+            %td
+              = @po.description
+            %td.numeric
+              = number_to_currency(@cost)
+            %td.numeric
+              12
+            %td.numeric
+              = number_to_currency(12 * @cost)
         
         %tr
           %td
