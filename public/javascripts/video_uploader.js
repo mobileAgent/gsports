@@ -100,7 +100,7 @@ GSports.SwfUpload = Class.create({
   	      progress.setStatus("Wrapping up...");
               progress.toggleCancel(false);
               //alert("Set timeout 60 sec on upload success");
-              setTimeout(function() {n
+              setTimeout(function() {
                 if (document.getElementById("hidFileID").value == "-2")
                 {
                   // alert("Forced form submit cancelled");
