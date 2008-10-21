@@ -89,15 +89,25 @@ class MessagesController < BaseController
       @shared_access = SharedAccess.find(shared_access_id.to_i)
     end
 
+    @message = Message.new(params[:message])
+
     if (params[:message][:to_name])
-      recipient_ids,is_alias =
-        Message.get_message_recipient_ids(params[:message][:to_name], current_user)
+      begin
+        recipient_ids,is_alias =
+          Message.get_message_recipient_ids(params[:message][:to_name], current_user)
+      rescue Exception => e
+        logger.error "Error parsing friend names: #{e.message}"
+      end
     else
       recipient_ids,is_alias = params[:message][:to_id],false
     end
 
     if (params[:message][:to_email])
-      recipient_emails = Message.get_message_emails(params[:message][:to_email])
+      begin
+        recipient_emails = Message.get_message_emails(params[:message][:to_email])
+      rescue Exception => e
+        logger.error "Error parsing email addresses: #{e.message}"
+      end
     end 
 
     if (recipient_ids.nil? || recipient_ids.empty?) && (recipient_emails.nil? || recipient_emails.empty?)
@@ -111,10 +121,9 @@ class MessagesController < BaseController
       render :action => :new and return
     end
 
-    logger.debug "Sending message from #{current_user.id} to #{recipient_ids.to_json}, #{recipient_emails.join(',')}"
+    logger.debug "Sending message from #{current_user.id} to #{recipient_emails.nil? ? '-' : recipient_ids.to_json}, #{recipient_emails.nil? ? '-' : recipient_emails.join(',')}"
     # Now we have all the ids, send the message to each one
 
-    @message = Message.new(params[:message])
     @body = @message.body
     is_html = false;
 
@@ -122,7 +131,6 @@ class MessagesController < BaseController
       @shared_item = @shared_access.item
       is_html = true;
       @body = render_to_string :partial => "messages/shared_item", :locals => { :body => @message.body }
-      logger.debug ("BODY\n #{@body}")
     end
 
     @message = nil # pull out to scope for rescue render

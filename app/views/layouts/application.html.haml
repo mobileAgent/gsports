@@ -46,8 +46,8 @@
       -if logged_in?
         = render :partial => "shared/block_weeklyFeature"
       -else
-        # show the guest features on the home page, or any other page that sets up the athletes of the week or articles of the week
-        # arrays using the BaseController.prepare_site_index_content method
+        -# show the guest features on the home page, or any other page that sets up the athletes of the week or articles of the week
+        -# arrays using the BaseController.prepare_site_index_content method
         - if (current_page?(:controller => 'base', :action => 'site_index') || @athletes_of_the_week || @articles_of_the_week)
           = render :partial => "shared/block_guest_features"
 
