@@ -1,55 +1,60 @@
-.listingItem{:id => "video_asset_#{video_listing.id}"}
-  .listingImage
-    = link_to "<img src='#{@vidavee.file_thumbnail_medium(video_listing.dockey)}' title='#{h(video_listing.title).gsub(/\'/,'')}' alt='Video'/>", video_asset_path(video_listing)
-  .listingDescription
-    %h4
-      = truncate(h(video_listing.title),75)
-    %span.schoolName
-      Views:
-    %span.recentFriendFeed
-      = number_with_delimiter(video_listing.view_count)
-    = render :partial => 'shared/favorite_count', :locals => {:item => video_listing}
-    %br/
-    .tall_listing_line
-      = video_listing.video_length
-    - if video_listing.home_team_id || video_listing.visiting_team_id
+.listingBox-2cols{:id => "video_asset_#{video_listing.id}"}
+  .frameTop
+  .col1
+    .listingBoxHeader
+      - if video_listing.video_length
+        .title{ :style => "float:right; width:60px; text-align:right;" }
+          = "(#{video_listing.video_length})"
+      .title{:style => "width: 270px"}
+        = truncate(video_listing.title,40)
+    .thumb
+      = link_to "<img src='#{@vidavee.file_thumbnail_medium(video_listing.dockey)}' title='#{h(video_listing.title).gsub(/\'/,'')}' alt='Video'/>", video_asset_path(video_listing)
+    .listingBoxContent
+      %p= truncate(video_listing.description,200)
+      %br
+
+      - if video_listing.home_team_id || video_listing.visiting_team_id
+        %p
+          In this video:
+          %span.recentFriendFeed
+            - if video_listing.home_team_id
+              = link_to h(video_listing.home_team.title_name), team_path(video_listing.home_team_id)
+              - if video_listing.visiting_team_id
+                = ", "
+            - if video_listing.visiting_team_id
+              = link_to h(video_listing.visiting_team.title_name), team_path(video_listing.visiting_team_id)
+
+      %br
+      %p
+        Views:
+        = number_with_delimiter(video_listing.view_count)
+        = render :partial => 'shared/favorite_count', :locals => {:item => video_listing}
+
+    .clearDiv
+    .listingBoxFooter
       %span.schoolName
-        In this video:
+        Uploaded by:
       %span.recentFriendFeed
-        - if video_listing.home_team_id
-          = link_to h(video_listing.home_team.title_name), team_path(video_listing.home_team_id)
-          - if video_listing.visiting_team_id
-            = ", "
-        - if video_listing.visiting_team_id
-          = link_to h(video_listing.visiting_team.title_name), team_path(video_listing.visiting_team_id)
-      %br/
-    %span.schoolName
-      Uploaded by:
-    %span.recentFriendFeed
       - if video_listing.league_video?
         = link_to h(video_listing.league_name), league_path(video_listing.league_id)
       - else
         = link_to h(video_listing.team_name), team_path(video_listing.team_id)
       on
       = video_listing.created_at.strftime("%B %d, %Y")
-  - skip_controls ||= false
-  %ul.listingActions
-    %li
+
+
+  .col2
+    - skip_controls ||= false
+    .listingBoxActions
       = link_to "Watch Video", video_asset_path(video_listing), :class => 'genericButton'
-    - if video_listing.league_video?
-      %li
+      - if video_listing.league_video?
         = link_to "League Profile", league_path( video_listing.league_id ), :class => 'genericButton'
-    - else
-      %li
+      - else
         = link_to "School Profile", team_path( video_listing.team_id), :class => 'genericButton'
-    %li
       = render :partial => 'shared/favorite_item', :locals => { :item => video_listing }
 
-    - if current_user && current_user.can_edit?(video_listing)
-      %li
+      - if current_user && current_user.can_edit?(video_listing)
         = link_to "Edit", edit_video_asset_path(video_listing), :class => 'genericButton'
-      %li
         = link_to_remote 'Delete', {:url => url_for(video_listing), :confirm => 'Are you sure?', :method => :delete},  :class=>'genericButton'
-      
   .clearDiv
-.clearDiv
+  .frameBtm

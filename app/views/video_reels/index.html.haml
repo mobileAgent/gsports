@@ -10,6 +10,7 @@
       =link_to "New Reel", new_video_reel_path, {:class => 'genericButton'}
     - if @video_reels.any?
       = render :partial => 'video_listing', :collection => @video_reels
+      .clearDiv
         
       - if @video_reels.respond_to?('total_pages')
         .apple_pagination
