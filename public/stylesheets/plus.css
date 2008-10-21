@@ -1057,7 +1057,8 @@ a img.framed,
 a.framed img, 
 .featureItemThumb a img, 
 .commentPoster a img,
-.forumPoster a img 
+.forumPoster a img,
+.thumb a img
 {
   border: 2px solid #333333;
 }
@@ -1066,7 +1067,8 @@ a:hover img.framed,
 a:hover.framed img, 
 .featureItemThumb a:hover img, 
 .commentPoster a:hover img,
-.forumPoster a:hover img 
+.forumPoster a:hover img,
+.thumb a:hover img
 {	
   border: 2px solid #0066CC;
 }
@@ -1186,4 +1188,3 @@ ul, ol {
   font-weight: bold;
   text-transform: uppercase;
 }
-

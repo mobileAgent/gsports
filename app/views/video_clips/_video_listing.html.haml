@@ -1,39 +1,41 @@
-.listingItem{:id => "video_clip_#{video_listing.id}"}
-  .listingImage
-    = "<a href='#{user_video_clip_path(video_listing.user_id,video_listing)}'><img src='#{@vidavee.file_thumbnail_medium(video_listing.dockey)}' title='#{h(video_listing.title).gsub(/\'/,'')}' alt='Clip'/></a>"
-  .listingDescription{ :style => "width: 500px" }
-    %h4
-      = h video_listing.title
-    %span.schoolName
-      Views:
-    %span.recentFriendFeed
-      = number_with_delimiter(video_listing.view_count)
-    = render :partial => 'shared/favorite_count', :locals => {:item => video_listing}
-    %br/
-    .tall_listing_line
-      = video_listing.video_length
-    - if video_listing.video_asset_id
-      %span.schoolName
-        Clipped from:
-      - title = video_listing.video_asset.title
-      = link_to truncate(h(title),75),video_asset_path( video_listing.video_asset_id )
-      
-  - skip_controls ||= false
-  %ul.listingActions
-    %li
+.listingBox-2cols{:id => "video_clip_#{video_listing.id}"}
+  .frameTop
+  .col1
+    .listingBoxHeader
+      .title{ :style => "float:right; width:70px; text-align:right;" } 
+        = "(#{video_listing.video_length})"
+      .title{:style => "width: 260px"}
+        = truncate(video_listing.title,80)
+    .thumb
+      = "<a href='#{user_video_clip_path(video_listing.user_id,video_listing)}'><img src='#{@vidavee.file_thumbnail_medium(video_listing.dockey)}' title='#{h(video_listing.title).gsub(/\'/,'')}' alt='Clip'/></a>"
+    .listingBoxContent
+      %p= truncate(video_listing.description,200)
+
+      %br
+      %p
+        Views:
+        = number_with_delimiter(video_listing.view_count)
+        = render :partial => 'shared/favorite_count', :locals => {:item => video_listing}
+
+    .clearDiv
+    .listingBoxFooter
+      - if video_listing.video_asset_id
+        %div{ :style => "text-align:right; font-weight:bold" }
+          Clipped from:
+          - title = video_listing.video_asset.title
+          = link_to truncate(h(title),40),video_asset_path( video_listing.video_asset_id )
+
+  .col2      
+    - skip_controls ||= false
+    .listingBoxActions
       = link_to "Watch Clip", video_clip_path(video_listing), :class => 'genericButton'
-    - if video_listing.user && current_user && current_user.id != video_listing.user_id
-      %li
+      - if video_listing.user && current_user && current_user.id != video_listing.user_id
         = link_to "User Profile", user_path( video_listing.user.id ), :class => 'genericButton'
-      - if current_user.can_send_message_to?(video_listing.user)
-        %li
+        - if current_user.can_send_message_to?(video_listing.user)
           = link_to "Send Message", new_message_path(:to => video_listing.user.id, :title => "Your clip '#{video_listing.title}'"), :class => 'genericButton'
-    %li
       = render :partial => 'shared/favorite_item', :locals => { :item => video_listing }
-    -if current_user && current_user.can_edit?(video_listing)
-      %li
+      -if current_user && current_user.can_edit?(video_listing)
         = link_to "Edit", edit_video_clip_path(video_listing), :class => 'genericButton'
-      %li
         = link_to_remote 'Delete', {:url => url_for(video_listing), :confirm => 'Are you sure?', :method => :delete}, :class=>'genericButton'
   .clearDiv
-.clearDiv
+  .frameBtm

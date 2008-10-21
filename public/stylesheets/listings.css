@@ -1,0 +1,93 @@
+.listingBox-2cols {
+  width: 390px;
+  background-image: url(../images/listingBoxBg.jpg);
+  background-color: #C6C97C;
+  background-repeat: repeat-y;
+  margin: 5px 5px 5px 5px;
+  float: left;
+}
+.listingBox-2cols .frameTop {
+  height: 10px;
+  width: 390px;
+  background-image: url(../images/listingBoxTop.jpg);
+  background-repeat: repeat-y;
+}
+.listingBox-2cols .frameBtm {
+  height: 10px;
+  width: 390px;
+  background-image: url(../images/listingBoxBottom.jpg);
+  background-repeat: repeat-y;
+  float: clear;
+}
+.listingBox-2cols .listingBoxHeader {
+  padding: 0px 10px 10px 10px;
+  display: block;
+  float: clear;
+}
+.listingBox-2cols .listingBoxHeader .title {
+  font-weight: bold;
+  color: #000000;
+  font-size: 110%;
+  width: 330px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  float: left;
+}
+.listingBox-2cols .col1 {
+  width: 350px;
+  float: left;
+}
+.listingBox-2cols .col2 {
+  width: 40px;
+  /* This is the key height property for the listing box... 
+   * Make sure to include the 10px each for the frameTop and frameBtm
+   * for the total height 170 = 150 + 10 + 10
+   * */
+  height: 150px;
+  float: left;
+}
+
+.listingBox-2cols .col1 .thumb {
+  width: 120px;
+  height: 95px;
+  text-align: center; 
+  padding: 10px 5px 0px 10px;
+  float: left;
+  overflow: hidden;
+}
+
+.listingBox-2cols .col1 .listingBoxContent {
+  width: 200px;
+  height: 85px;
+  padding: 15px 10px 0px 5px;
+  float: left;
+}
+
+.listingBox-2cols .col1 .listingBoxFooter {
+  width: 330px;
+  padding: 10px 10px 0px 5px;
+  float: clear;
+}
+
+
+.listingBox-2cols .col1 .listingBoxContent .summary {
+  margin: 5px 1px 5px 1px;
+  padding: 10px 5px 10px 5px;
+  width: 180px;
+  background-color: white;
+}
+
+.listingBox-2cols .col2 .listingBoxActions {
+  vertical-align: top;
+  padding: 0px 10px 0px 5px;
+}
+.listingBox-2cols .col2 .listingBoxActions a {
+  width: 28px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: clip;
+  margin-bottom: 10px;
+  display: block;
+  text-align: center;
+}
