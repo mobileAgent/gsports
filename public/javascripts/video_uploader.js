@@ -109,7 +109,7 @@ GSports.SwfUpload = Class.create({
 		document.getElementById("hidFileID").value = "-1";
                 var form = document.getElementById('upload_form');
                 form.submit();
-              },60000);
+              },300000);
             }
             else
             {
