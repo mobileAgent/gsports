@@ -29,6 +29,22 @@ include UsersHelper
     return dtm.to_s(:readable)
   end
 
+  def human_date_time(dtm)
+    return '' if dtm.nil?
+    case Date.today - dtm.to_date
+    when 1 
+      day = "Yesterday"
+    when 0
+      day = "Today"
+    when -1
+      day = "Tomorrow"
+    else
+      day = dtm.strftime("%B %e, %Y")
+    end
+
+    day + " at " + dtm.strftime("%h:%M %p")
+  end
+    
   class Pair
     attr_accessor :name, :number
   end
@@ -60,12 +76,12 @@ include UsersHelper
   def video_image_link(video)
     title = h(video.title.gsub(/\'/,''))
     target = '#'
-    case video.class.to_s
-    when VideoAsset.to_s
+    case video
+    when VideoAsset
       target = video_asset_path(video)
-    when VideoClip.to_s
+    when VideoClip
       target = video_clip_path(video)
-    when VideoReel.to_s
+    when VideoReel
       target = video_reel_path(video)
     end
     
@@ -74,11 +90,23 @@ include UsersHelper
   end
 
   def generate_link_for_message(item)
-    if item.class.to_s == 'Comment'
-      "/#{item.class.to_s.tableize}/show/#{item.id}"
-    else
-      "/#{item.class.to_s.tableize}/#{item.id}"
+    case item
+    when User
+      link = "/#{item.id}"
+    when Comment
+      link = "/#{item.class.to_s.tableize}/show/#{item.id}"
+    when Photo, Post, VideoClip, VideoReel, VideoAsset
+      if item.user_id
+        link = "/#{item.user_id}/#{item.class.to_s.tableize}/#{item.id}"
+      end
     end
+
+    if link.nil?
+      logger.debug "Generating generic link for class #{item.class.to_s}"
+      link ="/#{item.class.to_s.tableize}/#{item.id}"
+    end
+
+    link
   end
   
 end

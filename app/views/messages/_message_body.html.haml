@@ -1,29 +1,19 @@
-.mailPostSummary{:id => "mail_item_#{message_body.id}"}
-  .mailPostSummaryDate
-    = message_body.created_at.to_s(:game_date)
-  .mailPostSummaryBody{:class => (message_body.unread? && (message_body.to_id == current_user.id) ? "unread" : "read")}
-    %p
-      %strong
-        - if !summary
-          To:
-          = h(message_body.recipient.full_name)
-          %br
-        Subject: 
-        = truncate(h(message_body.title),85)
-      %br/
-      - if summary
-        = truncate_words message_body.body,40
-      - else
-        = message_body.body
+- msg_unread = message_body.unread? && (message_body.to_id == current_user.id)
+- thread_unread = thread_unread || false
+.mailPostBody{:id => "mail_item_#{message_body.id}"}
+  .mailPostSummaryBody{:class => (thread_unread || msg_unread ? "unread" : "read")}
+    - truncated = summary && count_words(message_body.body) > 40
+    - if truncated 
+      = truncate_words message_body.body,40
+    - else
+      = message_body.body
         
   .mailReadMessage
-    - if @thread_summary
-      - mthread = Message.message_thread(message_body)
-      - if mthread.size > 1
-        - unread_count = mthread.unread(current_user.id).size
-        = link_to "read thread of #{mthread.size} messages" + (unread_count > 0 ? " (#{unread_count} unread)" : ""), :action => :thread, :id => message_body.real_thread_id
     - if summary
-      = link_to_remote "read full message &raquo;", { :url => url_for(message_body), :method => :get }
+      - if truncated
+        = link_to_remote "read full message &raquo;", { :url => url_for(message_body), :method => :get }
+      - elsif msg_unread
+        = link_to_remote "mark as read", { :url => url_for(message_body), :method => :get }
     - else
       = link_to_remote "close full message &raquo;", { :url => url_for(:controller => :messages, :action => :show, :id => message_body, :summary => true), :method => :get }
     

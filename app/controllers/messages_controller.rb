@@ -59,7 +59,7 @@ class MessagesController < BaseController
     if params[:re]
       @reply_to = Message.find(params[:re].to_i)
       @message.thread_id = @reply_to.thread_id || @reply_to.id
-      @message.to_name= User.find(@reply_to.from_id).full_name
+      @message.to_id= @reply_to.from_id == current_user.id ? @reply_to.to_id : @reply_to.from_id
       @message.title = @reply_to.title
     end
     
@@ -187,7 +187,12 @@ class MessagesController < BaseController
     respond_to do |format|
       format.html { 
         flash[:notice] = "Your message was sent successfully."
-        redirect_to messages_url and return
+        if @message.thread_id
+          logger.debug "thread id #{@message.thread_id}, id #{@message.id}, read #{@message.real_thread_id}"
+          redirect_to :action => 'thread', :id => @message.real_thread_id and return
+        else
+          redirect_to messages_url and return
+        end
       }
       format.js
     end

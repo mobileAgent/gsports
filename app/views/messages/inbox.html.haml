@@ -2,7 +2,7 @@
   .profilePageHeader
     %h2.columnDescriptor
       %span
-        MAILBOX
+        =link_to "MAILBOX", messages_path
       = @title || "My Inbox"
       
   %form#Forum{ :action => "#", :method => "post" }
@@ -14,6 +14,17 @@
         .contentBoxHeader.yellowHeader
           %h2.boxDescription
             Messages
+        %div{ :style => "padding: 10px 20px 10px 20px" }
+          .mailMoreLink{ :style => "float:left" }
+            = link_to 'Sent Messages', sent_messages_path
+            &nbsp;
+            = link_to 'Compose', new_message_path
+          %br
+          - if @msgs.respond_to?('total_pages') && @msgs.total_pages > 1
+            .apple_pagination
+              = will_paginate @msgs
+          
+
         -#.contentBoxContent.friendSearchWidgetArea
           .mailSearchOptions
             .mailButtonsRight
@@ -72,15 +83,7 @@
       
       /
         Search
-      .mailMoreLink
-        = link_to 'Sent Messages', sent_messages_path
-        = link_to 'Compose', new_message_path
-        %br
-        - if @msgs.respond_to?('total_pages') && @msgs.total_pages > 1
-          .apple_pagination
-            = will_paginate @msgs
-          
-          
+
       .forumContentBox
         .forumBoxHeader
 
