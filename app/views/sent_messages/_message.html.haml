@@ -14,25 +14,31 @@
       %span.msgField
         = truncate(h(message.title),85)
     .msgBody
-      = truncate_words (message.body,50)
+      - truncated = count_words(message.body) > 40
+      - if truncated 
+        = truncate_words message.body,40
+      - else
+        = message.body
       %br/
     .mailReadMessage
-      = link_to "read full message &raquo;", '#', :class => "morelink", :onclick => "$$('div#mail_summary_#{message.id}')[0].hide();$$('div#mail_full_#{message.id}')[0].show();return false;"
-  .messageSummary{:id => "mail_full_#{message.id}", :style => "display:none"}
-    .msgHeader
-      = "Date: "
-      %span.msgField
-        = message.created_at.to_s(:game_date)
-    .msgHeader
-      = "To: "
-      %span.msgField
-        =h message.recipient_display_array.join(", ")
-    .msgHeader
-      = "Subject: "
-      %span.msgField
-        =h message.title
-    .msgBody
-      = message.body
-    .mailReadMessage
-      = link_to "close full message &raquo;", '#', :class => "morelink", :onclick => "$$('div#mail_full_#{message.id}')[0].hide();$$('div#mail_summary_#{message.id}')[0].show();return false;"
+      - if truncated
+        = link_to "read full message &raquo;", '#', :class => "morelink", :onclick => "$$('div#mail_summary_#{message.id}')[0].hide();$$('div#mail_full_#{message.id}')[0].show();return false;"
+  -if truncated
+    .messageSummary{:id => "mail_full_#{message.id}", :style => "display:none"}
+      .msgHeader
+        = "Date: "
+        %span.msgField
+          = message.created_at.to_s(:game_date)
+      .msgHeader
+        = "To: "
+        %span.msgField
+          =h message.recipient_display_array.join(", ")
+      .msgHeader
+        = "Subject: "
+        %span.msgField
+          =h message.title
+      .msgBody
+        = message.body
+      .mailReadMessage
+        = link_to "close full message &raquo;", '#', :class => "morelink", :onclick => "$$('div#mail_full_#{message.id}')[0].hide();$$('div#mail_summary_#{message.id}')[0].show();return false;"
     

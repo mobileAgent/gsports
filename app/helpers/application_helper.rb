@@ -29,6 +29,22 @@ include UsersHelper
     return dtm.to_s(:readable)
   end
 
+  def human_date_time(dtm)
+    return '' if dtm.nil?
+    case Date.today - dtm.to_date
+    when 1 
+      day = "Yesterday"
+    when 0
+      day = "Today"
+    when -1
+      day = "Tomorrow"
+    else
+      day = dtm.strftime("%B %e, %Y")
+    end
+
+    day + " at " + dtm.strftime("%h:%M %p")
+  end
+    
   class Pair
     attr_accessor :name, :number
   end

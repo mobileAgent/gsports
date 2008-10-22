@@ -2,7 +2,8 @@
   .profilePageHeader
     %h2.columnDescriptor
       %span
-        MAILBOX
+        =link_to "MAILBOX", messages_path
+      Thread:
       = @title || @msgs.first.title
       
   %form#Forum{ :action => "#", :method => "post" }
@@ -13,22 +14,32 @@
       .contentBox.tanBackground
         .contentBoxHeader.yellowHeader
           %h2.boxDescription
-            Messages
-      
-      .mailMoreLink
-        = link_to 'Inbox', messages_path
-        = link_to 'Compose', new_message_path
-        - if @unread_count > 0
-          = link_to 'Mark Thread as Read', :action=>'thread_read', :id=>@msgs.first.real_thread_id
-        %br
-        - if @msgs.respond_to?('total_pages') && @msgs.total_pages > 1
-          .apple_pagination
-            = will_paginate @msgs
+            Thread 
+        %div{ :style => "padding: 10px 20px 10px 20px" }
+          .mailMoreLink{ :style => "float:left" }
+            = link_to 'Inbox', messages_path
+            &nbsp;
+            = link_to 'Sent Messages', sent_messages_path
+            &nbsp;
+            = link_to 'Compose', new_message_path
+            &nbsp;
+            - if @unread_count > 0
+              = link_to 'Mark Thread as Read', :action=>'thread_read', :id=>@msgs.first.real_thread_id
+
+          %div{ :style => "float:right" }
+            = link_to 'Reply', url_for({ :controller => 'messages', :action => 'new', :re => @msgs.first.id }), :style => "float:right", :class => 'genericButton'
+
+          .clearDiv 
+          %br
+
+      - if @msgs.respond_to?('total_pages') && @msgs.total_pages > 1
+        .apple_pagination
+          = will_paginate @msgs
           
       .forumContentBox
         .forumBoxHeader
 
-        = render :partial => 'messages/message', :collection => @msgs, :locals => {:thread_summary => false}
+        = render :partial => 'messages/message', :collection => @msgs, :locals => {:thread => true}
 
         %div
           \&nbsp;
