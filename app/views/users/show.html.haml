@@ -5,11 +5,15 @@
 
 .profileContentArea
   .profilePageHeader
+    -if current_user && current_user.id != @user.id
+      %div{ :style => "float:right; margin-right: 20px" }
+        =render :partial => "shared/inappropriate_item", :locals => {:item, @user}
     %h2.columnDescriptor
       %span
         =link_to _('PROFILE'), user_path
       = @user.full_name
       - if current_user && current_user.can_request_friendship_with(@user)
+        &nbsp; &nbsp;
         = add_friend_link(@user)
   /
     col1 content
