@@ -58,6 +58,7 @@
 
     - if @posts && @posts.any?
       = render :partial => "posts/post_listing", :collection => @posts
+      .clearDiv
       .apple_pagination
         = will_paginate @posts
     -else

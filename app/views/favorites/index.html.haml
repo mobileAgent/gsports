@@ -11,6 +11,7 @@
   .listings
 
     =render :partial => 'favorite', :collection => @favorites
+    .clearDiv
         
     - if @favorites.respond_to?('total_pages') && @favorites.total_pages > 1
       .apple_pagination

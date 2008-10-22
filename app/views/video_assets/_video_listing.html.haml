@@ -32,8 +32,7 @@
 
     .clearDiv
     .listingBoxFooter
-      %span.schoolName
-        Uploaded by:
+      Uploaded by:
       %span.recentFriendFeed
       - if video_listing.league_video?
         = link_to h(video_listing.league_name), league_path(video_listing.league_id)
@@ -41,7 +40,6 @@
         = link_to h(video_listing.team_name), team_path(video_listing.team_id)
       on
       = video_listing.created_at.strftime("%B %d, %Y")
-
 
   .col2
     - skip_controls ||= false

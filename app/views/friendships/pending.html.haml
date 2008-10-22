@@ -23,6 +23,7 @@
     
             .userList
               = render :partial => "friendships/friendship", :collection => @friendships, :locals => {:owner => @user}
+              .clearDiv
           - else 
             .padded
               You have no pending friendships      

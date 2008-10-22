@@ -8,7 +8,7 @@
   - when 'photos'
     = render :partial => "photos/photo_listing", :locals => {:photo_listing => favorite.favoritable, :photo_type => :thumb}
   - when 'posts'
-    = render :partial => "posts/favorited_post", :locals => {:post => favorite.favoritable}
+    = render :partial => "posts/post_listing", :locals => {:post_listing => favorite.favoritable}
 
 -#
   - when 'clippings'

@@ -8,7 +8,7 @@
         =link_to _('BLOG'), user_posts_path(@user.id)
       = @user.full_name
 
-  .forumContainer
+  .listings
       
     .contentBox.tanBackground
       .contentBoxHeader.yellowHeader
@@ -21,10 +21,10 @@
         = link_to _('New post.'), new_user_post_path(@user), {:class => "genericButton"}  if @is_current_user
         %br
         
-    .forumContentBox
-      = render :partial => 'post', :collection => @posts
+    = render :partial => 'post_listing', :collection => @posts
+    .clearDiv
 
-    - if @posts.respond_to?('total_pages') && @posts.total_pages > 1
-      .apple_pagination
-        = will_paginate @posts
+  - if @posts.respond_to?('total_pages') && @posts.total_pages > 1
+    .apple_pagination
+      = will_paginate @posts
 

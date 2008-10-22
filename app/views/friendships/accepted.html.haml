@@ -35,9 +35,11 @@
                     %input#friendSearchTerms{ :name => "search[keyword]", :type => "text", :size => 30 }
                     %input.submit{ :name => "submit", :src => "/gs/images/top_nav_search.gif", :type => "image", :value => "search", :alt => "Search" }/
                     %br/
-            .userList
-              = render :partial => "friendships/friendship", :collection => @friendships, :locals => {:owner => @user}
           - else 
             .listingItem
               You have no friendships
-        
+
+    - if current_user
+      - if @friendships.length > 0
+        = render :partial => "friendships/friendship", :collection => @friendships, :locals => {:owner => @user}
+        .clearDiv        

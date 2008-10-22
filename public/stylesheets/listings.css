@@ -3,7 +3,7 @@
   background-image: url(../images/listingBoxBg.jpg);
   background-color: #C6C97C;
   background-repeat: repeat-y;
-  margin: 5px 5px 5px 5px;
+  margin: 5px 5px 5px 10px;
   float: left;
 }
 .listingBox-2cols .frameTop {
@@ -81,9 +81,9 @@
 
 
 .listingBox-2cols .col1 .listingBoxContent .summary {
-  margin: 5px 1px 5px 1px;
-  padding: 10px 5px 10px 5px;
-  width: 180px;
+  margin: 10px 0px 10px 0px;
+  padding: 5px 5px 5px 5px;
+  width: 190px;
   background-color: white;
 }
 
@@ -93,6 +93,13 @@
   font-size: 110%;
   width: 200px;
   margin-bottom: 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.listingBox-2cols .col1 .one-liner {
+  width: 200px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

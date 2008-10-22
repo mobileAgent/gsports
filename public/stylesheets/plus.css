@@ -177,6 +177,12 @@ table.unstyled td.numeric {
   margin-bottom: 10px;
 }
 
+/* widening listings container from 801 */
+.listings{
+  width:811px;
+}
+
+
 input[type='button'].submit {
   color: #c7c7c7;
   background-color: #363636;

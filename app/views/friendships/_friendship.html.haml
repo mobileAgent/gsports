@@ -1,31 +1,31 @@
 - user = friendship.friend
 
-.listingItem
-  .listingImage
-    = link_to image_tag( user.avatar_photo_url(:thumb)), user_path(user)
-  .listingDescription
-    %h4
-      = user.full_name
-    - if friendship.friendship_status == FriendshipStatus[:accepted]
-      = "Friends since #{human_date friendship.created_at}"
-    - elsif friendship.friendship_status == FriendshipStatus[:pending]
-      Friendship requested 
-      = time_ago_in_words friendship.created_at
-    - else
-      = friendship.friendship_status.name
-    .schoolName
-      = "#{h user.team.name}"
-    .recentFriendFeed
-      = "#{user.description}"
-
-  %ul.listingActions
-    - friendship_control_links(friendship,owner||current_user,current_user).each do |anchor, href, options|
-      %li
-        = link_to anchor, href, options
-    - if current_user.can_request_friendship_with(user)
-      %li
-        = add_friend_button(user)
+.listingBox-2cols{:id => "friend_#{user.id}"}
+  .frameTop
+  .col1
+    .thumb.thumb-tall
+      = link_to image_tag( user.avatar_photo_url(:thumb)), user_path(user)
+    .listingBoxContent
+      .title
+        = user.full_name
     
+      - if friendship.friendship_status == FriendshipStatus[:accepted]
+        = "Friends since #{human_date friendship.created_at}"
+      - elsif friendship.friendship_status == FriendshipStatus[:pending]
+        Friendship requested 
+        = time_ago_in_words friendship.created_at
+      - else
+        = friendship.friendship_status.name
+      .schoolName
+        = "#{h user.team.name}"
+      .recentFriendFeed
+        = "#{user.description}"
+  .col2
+    .listingBoxActions
+      - friendship_control_links(friendship,owner||current_user,current_user).each do |anchor, href, options|
+        = link_to anchor, href, options
+      - if current_user.can_request_friendship_with(user)
+        = add_friend_button(user)
 
   .clearDiv
-.clearDiv
+  .frameBtm
