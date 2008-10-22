@@ -4,7 +4,7 @@
   %p
     Sorry, we could not start the video player. To view video content you will need to have Adobe Flash player installed and  JavaScript enabled on your browser.
 
-= render :partial => 'shared/video_player', :locals => {:target => 'homeFlash', :player_name => '/players/previewplayer.swf', :fvars => {:dockey => @shared_dockey_string, :sakey => @shared_access.key, :registerLink => '/register', :dockeys => @game_dockey_string } }
+= render :partial => 'shared/video_player', :locals => {:target => 'homeFlash', :player_name => '/players/previewplayer.swf', :fvars => {:sakey => @shared_access.key, :registerLink => '/register', :dockeys => @game_dockey_string } }
 
 .homeText
   %h1.homeTextWelcome= "Welcome to #{AppConfig.community_name}!"
