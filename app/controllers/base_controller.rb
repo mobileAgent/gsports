@@ -23,13 +23,6 @@ class BaseController < ApplicationController
       redirect_to(dashboard_user_path(current_user)) and return
     end
 
-    # Not logged in, show featured games and athletes
-    @games_of_the_week =
-      Rails.cache.fetch('games_of_the_week', :expires_in => 30.minutes) do
-      GameOfTheWeek.for_home_page || []
-    end
-    @game_dockey_string = @games_of_the_week.collect(&:dockey).join(",")
-
     prepare_site_index_content
   end
 
@@ -51,6 +44,16 @@ class BaseController < ApplicationController
       Rails.cache.fetch('articles_of_the_week', :expires_in => 30.minutes) do
       Post.highlighted_articles(@athletes_of_the_week.collect(&:id))
     end
+    @games_of_the_week = games_of_the_week()
+    @game_dockey_string = @games_of_the_week.collect(&:dockey).join(",")
+  end
+
+  def games_of_the_week
+    games =
+      Rails.cache.fetch('games_of_the_week', :expires_in => 30.minutes) do
+      GameOfTheWeek.for_home_page || []
+    end
+    games
   end
 
   # This is a wrapper around the CE base_controllers login_required

@@ -134,23 +134,32 @@ class SearchController < BaseController
   def dd
     dockey = params[:dockey]
     sakey = params[:sakey]
-    unless dockey.nil? || sakey.nil?
+    unless dockey.nil?
+      unless sakey.nil?
+        shared_access = SharedAccess.find_by_key(sakey);
+        if shared_access
+          case shared_access.item_type
+          when SharedAccess::TYPE_VIDEO
+            @video = VideoAsset.first :conditions => { :id => shared_access.item_id.to_i, :dockey => dockey }
+          when SharedAccess::TYPE_CLIP
+            @video = VideoClip.first :conditions => { :id => shared_access.item_id.to_i, :dockey => dockey }
+          when SharedAccess::TYPE_REEL
+            @video = VideoReel.first :conditions => { :id => shared_access.item_id.to_i, :dockey => dockey }
+          end
+        end
+      end
 
-      shared_access = SharedAccess.find_by_key(sakey);
-      if shared_access
-        case shared_access.item_type
-        when SharedAccess::TYPE_VIDEO
-          @video = VideoAsset.first :conditions => { :id => shared_access.item_id.to_i, :dockey => dockey }
-        when SharedAccess::TYPE_CLIP
-          @video = VideoClip.first :conditions => { :id => shared_access.item_id.to_i, :dockey => dockey }
-        when SharedAccess::TYPE_REEL
-          @video = VideoReel.first :conditions => { :id => shared_access.item_id.to_i, :dockey => dockey }
+      if @video.nil?
+        # check to see if this dockey is one of the allowable games of the week
+        if games_of_the_week().select {|v| v.dockey == dockey}
+          logger.debug "Allowing access to 'd' method for Game of the week...."
+          return d()
         end
+      end
      
-        if @video 
-          xstr = video_metadata_xml @video
-          render :xml => xstr and return if xstr
-        end
+      if @video 
+        xstr = video_metadata_xml @video
+        render :xml => xstr and return if xstr
       end
     end
     render :inline => '<video-asset>not found</video-asset>' and return   
@@ -346,98 +355,100 @@ class SearchController < BaseController
   end
 
   def video_metadata_xml(video)
-    case @video
+    case video
     when VideoAsset
-      xstr = @video.to_xml(:except => [:game_date, :game_date_str, :created_at, :updated_at, :uploaded_file_path, :league_id, :team_id, :user_id, :delta, :video_type, :visiting_team_id, :home_team_id, :ignore_game_day, :ignore_game_month, :gsan, :internal_notes], :dasherize => false, :skip_types => true ) do |xml|
-        xml.created_at @video.created_at.to_s(:readable)
-        xml.updated_at @video.updated_at.to_s(:readable)
-        xml.game_date @video.human_game_date_string
-        xml.league_name @video.league_name if @video.league_id
-        xml.team_name @video.team.title_name if @video.team_id
-        if @video.league_video?
-          xml.owner_name @video.league_name
-          xml.owner_name_url league_path(@video.league)
-        elsif (@video.team_id?)
-          xml.owner_name @video.team.title_name
-          xml.owner_name_url team_path(@video.team)
+      logger.debug "Video Asset to xml..."
+      xstr = video.to_xml(:except => [:game_date, :game_date_str, :created_at, :updated_at, :uploaded_file_path, :league_id, :team_id, :user_id, :delta, :video_type, :visiting_team_id, :home_team_id, :ignore_game_day, :ignore_game_month, :gsan, :internal_notes], :dasherize => false, :skip_types => true ) do |xml|
+        xml.created_at video.created_at.to_s(:readable)
+        xml.updated_at video.updated_at.to_s(:readable)
+        xml.game_date video.human_game_date_string
+        xml.league_name video.league_name if video.league_id
+        xml.team_name video.team.title_name if video.team_id
+        if video.league_video?
+          xml.owner_name video.league_name
+          xml.owner_name_url league_path(video.league)
+        elsif (video.team_id?)
+          xml.owner_name video.team.title_name
+          xml.owner_name_url team_path(video.team)
         else
-          xml.owner_name @video.user.full_name
-          xml.owner_name_url user_path(@video.user_id)
+          xml.owner_name video.user.full_name
+          xml.owner_name_url user_path(video.user_id)
         end
-        if @video.user_id
-          xml.user_name @video.user.full_name
+        if video.user_id
+          xml.user_name video.user.full_name
         else
           xml.user_name 'system'
         end
-        if @video.visiting_team_id
-          xml.visiting_team_name @video.visiting_team.title_name 
-          xml.visiting_team_url team_path(@video.visiting_team)
+        if video.visiting_team_id
+          xml.visiting_team_name video.visiting_team.title_name 
+          xml.visiting_team_url team_path(video.visiting_team)
         end
-        if @video.home_team_id
-          xml.home_team_name @video.home_team.title_name
-          xml.home_team_url team_path(@video.home_team)
+        if video.home_team_id
+          xml.home_team_name video.home_team.title_name
+          xml.home_team_url team_path(video.home_team)
         end
-        xml.tags @video.tags.collect(&:name).join(', ')
-        xml.favorite_count @video.favorites.size
-        xml.thumbnail_url @vidavee.file_thumbnail_medium(@video.dockey)
+        xml.tags video.tags.collect(&:name).join(', ')
+        xml.favorite_count video.favorites.size
+        xml.thumbnail_url @vidavee.file_thumbnail_medium(video.dockey)
         #xml.rating 0
         xml.type 'VideoAsset'
       end
     when VideoClip
-      xstr = @video.to_xml(:except => [:created_at, :updated_at, :user_id, :delta, :video_asset_id], :dasherize => false, :skip_types => true ) do |xml|
+      logger.debug "Video Clip to xml..."
+      xstr = video.to_xml(:except => [:created_at, :updated_at, :user_id, :delta, :video_asset_id], :dasherize => false, :skip_types => true ) do |xml|
         xml.type 'VideoClip'
-        xml.created_at @video.created_at.to_s(:readable)
-        xml.updated_at @video.updated_at.to_s(:readable)
-        xml.parent_dockey @video.video_asset.dockey
-        xml.parent_name @video.video_asset.title
-        xml.parent_url video_asset_path(@video.video_asset_id)
-        xml.favorite_count @video.favorites.size
-        xml.tags @video.tags.collect(&:name).join(', ')
-        xml.thumbnail_url @vidavee.file_thumbnail_medium(@video.dockey)
-        xml.rating @video.rating
-        xml.rate_url "/ratings/rate/#{@video.id}?type=VideoClip&rating="
-        if @video.user_id
-          xml.owner_name @video.user.full_name
-          xml.owner_name_url user_path(@video.user)
-          unless @video.user.league_staff?
-            xml.team_name @video.user.team.title_name 
-            xml.team_url team_path(@video.user.team)
+        xml.created_at video.created_at.to_s(:readable)
+        xml.updated_at video.updated_at.to_s(:readable)
+        xml.parent_dockey video.video_asset.dockey
+        xml.parent_name video.video_asset.title
+        xml.parent_url video_asset_path(video.video_asset_id)
+        xml.favorite_count video.favorites.size
+        xml.tags video.tags.collect(&:name).join(', ')
+        xml.thumbnail_url @vidavee.file_thumbnail_medium(video.dockey)
+        xml.rating video.rating
+        xml.rate_url "/ratings/rate/#{video.id}?type=VideoClip&rating="
+        if video.user_id
+          xml.owner_name video.user.full_name
+          xml.owner_name_url user_path(video.user)
+          unless video.user.league_staff?
+            xml.team_name video.user.team.title_name 
+            xml.team_url team_path(video.user.team)
           end
-          if @video.user.league_staff?
-            xml.league_name @video.user.league_name
-            xml.league_url league_path(@video.user.league)
+          if video.user.league_staff?
+            xml.league_name video.user.league_name
+            xml.league_url league_path(video.user.league)
           end
         else
           xml.user_name 'system'
         end
       end
     when VideoReel
-      xstr = @video.to_xml(:except => [:created_at, :updated_at, :user_id, :delta], :dasherize => false, :skip_types => true) do |xml|
+      logger.debug "Video Reel to xml..."
+      xstr = video.to_xml(:except => [:created_at, :updated_at, :user_id, :delta], :dasherize => false, :skip_types => true) do |xml|
         xml.type 'VideoReel'
-        xml.created_at @video.created_at.to_s(:readable)
-        xml.updated_at @video.updated_at.to_s(:readable)
-        if @video.user_id
-          xml.owner_name @video.user.full_name
-          xml.owner_name_url user_path(@video.user)
-          unless @video.user.league_staff?           
-            xml.team_name @video.user.team.title_name
-            xml.team_url team_path(@video.user.team)
+        xml.created_at video.created_at.to_s(:readable)
+        xml.updated_at video.updated_at.to_s(:readable)
+        if video.user_id
+          xml.owner_name video.user.full_name
+          xml.owner_name_url user_path(video.user)
+          unless video.user.league_staff?           
+            xml.team_name video.user.team.title_name
+            xml.team_url team_path(video.user.team)
           end
-          if @video.user.league_staff?
-            xml.league_name @video.user.league_name
-            xml.league_url league_path(@video.user.league)
+          if video.user.league_staff?
+            xml.league_name video.user.league_name
+            xml.league_url league_path(video.user.league)
           end
         else
           xml.user_name 'system'
         end
-        xml.favorite_count @video.favorites.size
-        xml.tags @video.tags.collect(&:name).join(', ')
-        xml.thumbnail_url @vidavee.file_thumbnail_medium(@video.thumbnail_dockey)
-        xml.rating @video.rating
-        xml.rate_url "/ratings/rate/#{@video.id}?type=VideoReel&rating="
+        xml.favorite_count video.favorites.size
+        xml.tags video.tags.collect(&:name).join(', ')
+        xml.thumbnail_url @vidavee.file_thumbnail_medium(video.thumbnail_dockey)
+        xml.rating video.rating
+        xml.rate_url "/ratings/rate/#{video.id}?type=VideoReel&rating="
       end
     end
-
-    return xstr
+    xstr
   end
 end
