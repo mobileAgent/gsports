@@ -16,12 +16,19 @@ class SharedAccessController < BaseController
         redirect_to user_video_asset_path(@shared_item.user_id, @shared_access.item_id)
       end
     end
-    if @shared_access.video?
-      @shared_dockey_string = @shared_item.dockey
-    end
+
 
     # set up the athletes of the week, etc.
     prepare_site_index_content
+
+    if @shared_access.video?
+      if @game_dockey_string
+        @game_dockey_string = @shared_item.dockey + "," + @game_dockey_string
+      else
+        @game_dockey_string = @shared_item.dockey
+      end
+    end
+
 
   rescue Exception => e
     logger.error "#{e.message}"
