@@ -19,11 +19,12 @@
 
     .clearDiv
     .listingBoxFooter
-      - if VideoClip===video_listing && video_listing.video_asset_id
-        %div{ :style => "text-align:right; font-weight:bold" }
-          Clipped from:
-          - title = video_listing.video_asset.title
-          = link_to truncate(h(title),40),video_asset_path( video_listing.video_asset_id )
+      %span.schoolName
+        Created by:
+      %span.recentFriendFeed
+        = link_to h(video_listing.user.full_name), user_path(video_listing.user_id)
+      on
+      = video_listing.created_at.strftime("%B %d, %Y")
 
   .col2
     - skip_controls ||= false
