@@ -1,25 +1,23 @@
-.listingItem{:id => "photo_item_#{photo_listing.id}"}
-  .listingImage
-    = link_to image_tag( photo_listing.public_filename(:thumb), :class => "polaroid"), user_photo_path(@user, photo_listing)
-  .listingDescription
-    %h4
-      = h photo_listing.display_name
-    .schoolName
-      = photo_listing.created_at.to_s(:readable)
-    .recentFriendFeed
-      = truncate_words(h(photo_listing.description),35)
-      %br/
-      = photo_listing.tags.collect{|t| link_to( h(t.name), tag_url(t.name), :class => 'tag') }.join(", ")
-  %ul.listingActions
-
-    %li
+.listingBox-2cols{:id => "photo_item_#{photo_listing.id}"}
+  .frameTop
+  .col1
+    .thumb.thumb-tall
+      = link_to image_tag( photo_listing.public_filename(:thumb)), user_photo_path(@user, photo_listing)
+    .listingBoxContent
+      .title
+        = h photo_listing.display_name
+      .schoolName
+        = photo_listing.created_at.to_s(:readable)
+      .recentFriendFeed
+        = truncate_words(h(photo_listing.description),35)
+        %br/
+        = photo_listing.tags.collect{|t| link_to( h(t.name), tag_url(t.name), :class => 'tag') }.join(", ")
+  .col2
+    .listingBoxActions
       = render :partial => 'shared/favorite_item', :locals => { :item => photo_listing }
-    - if current_user.id == photo_listing.user_id
-      %li
+      - if current_user.id == photo_listing.user_id
         %a.genericButton{ :href => edit_user_photo_path(current_user,photo_listing) }
-          %span
-            Edit
-      %li
+          Edit
         = link_to_remote 'Delete', { :url => user_photo_path(current_user,photo_listing), :confirm => 'Are you sure?', :method => :delete },  :class=>'genericButton'
   .clearDiv
-.clearDiv
+  .frameBtm

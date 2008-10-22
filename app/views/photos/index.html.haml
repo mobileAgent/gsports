@@ -13,12 +13,12 @@
       .listingItem
         = link_to 'New photo', new_user_photo_path(@user), :class => 'genericButton'
 
-    .box
-      =render :partial => 'photo_listing', :collection => @photos
+    =render :partial => 'photo_listing', :collection => @photos
+    .clearDiv
       
-      -if !@photos.nil? && !@photos.empty?
-        .pagination
-          = pagination_info_for @pages
-          = pagination_links_for @pages, {:link_to_current_page => true} if @pages.length > 1
+    -if !@photos.nil? && !@photos.empty?
+      .pagination
+        = pagination_info_for @pages
+        = pagination_links_for @pages, {:link_to_current_page => true} if @pages.length > 1
 
         

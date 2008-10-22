@@ -6,7 +6,7 @@
         = "(#{video_listing.video_length})"
       .title{:style => "width: 270px"}
         = truncate(video_listing.title,40)
-    .thumb
+    .thumb-tall
       = "<a href='#{user_video_reel_path(video_listing.user_id,video_listing)}'><img src='#{@vidavee.file_thumbnail_medium(video_listing.thumbnail_dockey)}' title='#{h(video_listing.title).gsub(/\'/,'')}' alt='Reel'/></a>"
     .listingBoxContent
       %p= truncate(video_listing.description,200)

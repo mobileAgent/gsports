@@ -48,13 +48,19 @@
   float: left;
 }
 
-.listingBox-2cols .col1 .thumb {
+.listingBox-2cols .col1 .thumb,
+.listingBox-2cols .col1 .thumb-tall
+{
   width: 120px;
   height: 95px;
   text-align: center; 
   padding: 10px 5px 0px 10px;
   float: left;
   overflow: hidden;
+}
+/* use this when there is no listingBoxHeader */
+.listingBox-2cols .col1 .thumb-tall {
+  height: 110px;
 }
 
 .listingBox-2cols .col1 .listingBoxContent {
@@ -79,6 +85,17 @@
   padding: 10px 5px 10px 5px;
   width: 180px;
   background-color: white;
+}
+
+.listingBox-2cols .col1 .listingBoxContent .title {
+  font-weight: bold;
+  color: #000000;
+  font-size: 110%;
+  width: 200px;
+  margin-bottom: 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .listingBox-2cols .col2 .listingBoxActions {
