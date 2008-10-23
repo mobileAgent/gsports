@@ -42,7 +42,7 @@ include UsersHelper
       day = dtm.strftime("%B %e, %Y")
     end
 
-    day + " at " + dtm.strftime("%h:%M %p")
+    day + " at " + dtm.strftime("%I:%M %p")
   end
     
   class Pair

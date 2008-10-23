@@ -1,10 +1,10 @@
 .listingItem{:id => "message_#{message.id}"}
-  = link_to_remote 'Delete', {:url => { :controller => 'sent_messages', :action => 'destroy', :id => message}, :method => :delete} , :style => "float:right", :class => 'genericButton'
+  = link_to_remote 'Delete', {:url => { :controller => 'sent_messages', :action => 'destroy', :id => message}, :method => :delete, :confirm => 'Are you sure?'} , :style => "float:right", :class => 'genericButton'
   .messageSummary{:id => "mail_summary_#{message.id}"}
     .msgHeader
       = "Date: "
       %span.msgField
-        = message.created_at.to_s(:game_date)
+        = human_date_time message.created_at
     .msgHeader
       = "To: "
       %span.msgField
