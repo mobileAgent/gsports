@@ -191,7 +191,8 @@
           %td
             Total
           %td.totals.numeric
-            = number_to_currency(12 * @po.user.role.plan.cost)
+            - if @cost
+              = number_to_currency(12 * @cost)
     
       %table
         %tr
