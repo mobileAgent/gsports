@@ -1,9 +1,15 @@
 - msg_unread = message_body.unread? && (message_body.to_id == current_user.id)
-- thread_unread = thread_unread || false
+- thread_unread = thread_unread && thread_unread.to_i > 0
+- truncated = count_words(message_body.body) > 40
+
+- if summary && (truncated || msg_unread)
+  - rmt_function = remote_function(:url => url_for(message_body), :method => :get) 
+- elsif !summary
+  - rmt_function = remote_function(:url => url_for(:controller => :messages, :action => :show, :id => message_body, :summary => true), :method => :get) 
+
 .mailPostBody{:id => "mail_item_#{message_body.id}"}
-  .mailPostSummaryBody{:class => (thread_unread || msg_unread ? "unread" : "read")}
-    - truncated = summary && count_words(message_body.body) > 40
-    - if truncated 
+  .mailPostSummaryBody{:class => (thread_unread || msg_unread ? "unread" : "read"), :onclick => (rmt_function ? rmt_function : "return true"), :style => (rmt_function ? "cursor:pointer" : "")}
+    - if summary && truncated 
       = truncate_words message_body.body,40
     - else
       = message_body.body
@@ -14,6 +20,6 @@
         = link_to_remote "read full message &raquo;", { :url => url_for(message_body), :method => :get }
       - elsif msg_unread
         = link_to_remote "mark as read", { :url => url_for(message_body), :method => :get }
-    - else
+    - elsif truncated
       = link_to_remote "close full message &raquo;", { :url => url_for(:controller => :messages, :action => :show, :id => message_body, :summary => true), :method => :get }
     
