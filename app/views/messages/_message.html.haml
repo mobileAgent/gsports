@@ -1,17 +1,54 @@
+-thread |= @thread
+- if !thread
+  - mthread = Message.message_thread(message)
+  - if mthread.size > 1
+    - unread_count = mthread.unread(current_user.id).size
+
+- thread_size = (mthread ? mthread.size : 0).to_i
+- thread_unread = unread_count || 0
+
 .mailItem{:id => "message_#{message.id}"}
   .mailSenderSelect
-    %input{ :name => "mailSelct", :type => "checkbox", :value => message.id, :onchange => "selectThisMessage(this)" }/
+    -#
+      %input{ :name => "mailSelct", :type => "checkbox", :value => message.id, :onchange => "selectThisMessage(this)" }/
   .mailPoster
     %span.mailPosterImg
       %a{:href=>"#{user_path(message.sender)}", :class=>"photo"}
         =image_tag(message.sender.avatar_photo_url(:thumb), :alt=>"Profile Picture", :width=>"80", :height=>"80")
     = link_to message.sender.full_name, user_path(message.sender)
-  = render :partial => "message_body", :locals => {:message_body => message, :summary => true}
+  .mailPostSummary
+    .mailPostSummaryDate
+      =human_date_time(message.created_at)
+    %p
+      - if !thread
+        %p
+          %strong
+            - if message.recipient.id != current_user.id
+              To:
+              = h(message.recipient.full_name)
+              %br
+            Subject: 
+            = truncate(h(message.title),85)
+            - if thread_size > 1
+              = " (#{thread_size})"
+            %br
+    %br
+    - if thread_size > 1
+      %div{ :onclick => "window.location='#{url_for(:action => :thread, :id => message.real_thread_id)}'", :style => "cursor:pointer" }
+        = render :partial => "message_body", :locals => {:message_body => message, :summary => true, :thread_unread => thread_unread}
+    - else
+      = render :partial => "message_body", :locals => {:message_body => message, :summary => true, :thread_unread => thread_unread}
+
+    - if thread_size > 1
+      .mailReadMessage 
+        = link_to "read thread of #{thread_size} messages &raquo;" + (thread_unread > 0 ? " (#{thread_unread} unread)" : ""), :action => :thread, :id => message.real_thread_id
+
   .forumActions
-    - if message.from_id != current_user.id
-      = link_to 'Reply', url_for({ :controller => 'messages', :action => 'new', :re => message.id }), :style => "float:right", :class => 'genericButton'
-    %br
-    %br
+    - if !thread && message.from_id != current_user.id
+      = link_to 'Reply', url_for({ :controller => 'messages', :action => 'new', :re => message.id }), :class => 'genericButton'
+      %br
     - if message.to_id == current_user.id
-      = link_to_remote 'Delete', {:url => { :controller => 'messages', :action => 'destroy', :id => message}, :method => :delete} , :style => "float:right", :class => 'genericButton'
+      = link_to_remote 'Delete', {:url => { :controller => 'messages', :action => 'destroy', :id => message}, :method => :delete, :confirm => 'Are you sure?'}, :class => 'genericButton'
+      %br
+      = render :partial => 'shared/inappropriate_item', :locals => {:item => message}
   .clearDiv

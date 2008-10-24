@@ -835,13 +835,7 @@ class UsersController < BaseController
     @membership = @user.current_membership
     if @membership && !@membership.canceled?
       logger.info "Cancelling membership for #{@user.id}: #{@user.email}"
-      
-      cancellation = MembershipCancellation.new params[:cancellation]
-      cancellation.membership = @membership
-      
-      @membership.status = Membership::STATUS_CANCELED
-      @membership.membership_cancellation = cancellation
-      @membership.save!
+      @membersip.cancel! params[:cancellation][:reason]      
       
       flash[:notice] = "Membership has been cancelled"      
       if @user.id == current_user.id

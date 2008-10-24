@@ -1,30 +1,31 @@
-%br/
-.profileContentArea
-  .contentBox.tanBackground
-    .contentBoxHeader.yellowHeader
-      %h2 Inbox Message
-    %span.profileSubHeading From:
-    = "#{@message.sender.full_name}"
-    %br/
-    %span.profileSubHeading Date:
-    = "#{@message.created_at.to_s(:readable)}"
-    %br/
-    %span.profileSubHeading Subject:
-    = h @message.title
-    %br/
-    %br/
-    = "#{@message.body}"
-  %br/
+.profileContentArea.listingPage
+  .profilePageHeader
+    %h2.columnDescriptor
+      %span
+        =link_to "MAILBOX", messages_path
+      = @title || "Inbox Message"
 
-.yui-b
-  .box
-    %h3 Controls
-    %ul.list.checks
-      %li= link_to 'Delete Message', message_path(@message), :confirm => 'Are you sure?', :method => :delete
-  
-.yui-b  
-  .box
-    %h3 Mailbox
-    %ul.list.checks
-      %li= link_to 'Inbox', messages_path
-      %li= link_to 'Sent Messages', sent_messages_path
+  .mailContainer
+
+    .profileContentArea
+      %br/
+      %br/
+      .contentBox.tanBackground
+        .contentBoxHeader.yellowHeader
+          %h4 Message
+
+        %div{ :style => "padding:20px 20px 20px 20px" }
+          %div{ :style => "float:right" }
+            = link_to 'Delete Message', message_path(@message), :confirm => 'Are you sure?', :method => :delete, :class => 'genericButton'
+          %span.profileSubHeading From:
+          = "#{@message.sender.full_name}"
+          %br/
+          %span.profileSubHeading Date:
+          = human_date_time(@message.created_at)
+          %br/
+          %span.profileSubHeading Subject:
+          = h @message.title
+        .clearDiv
+        %div{ :style => "padding:20px 20px 20px 20px" }
+          = "#{@message.body}"
+          %br/

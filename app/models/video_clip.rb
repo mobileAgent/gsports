@@ -1,7 +1,9 @@
 class VideoClip < ActiveRecord::Base
+  include SharedItem
 
   belongs_to :video_asset
   belongs_to :user
+  belongs_to :shared_accesses, :dependent => :destroy
   
   acts_as_commentable
   acts_as_taggable
@@ -90,5 +92,4 @@ class VideoClip < ActiveRecord::Base
     end
     self[:video_length]
   end
-  
 end

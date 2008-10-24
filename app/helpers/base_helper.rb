@@ -110,4 +110,20 @@ module BaseHelper
       "****************"
     end
   end
+
+  def count_words(text)
+    return 0 if text.blank?
+    words = strip_tags(text).split()
+    words.length
+  end
+
+  def truncate_words(text, length = 30, end_string = '...')
+    return if text.blank?
+    words = strip_tags(text).split()
+    if words.length > length
+      words[0..(length-1)].join(' ') + (words.length > length ? end_string : '')
+    else
+      text
+    end
+  end
 end

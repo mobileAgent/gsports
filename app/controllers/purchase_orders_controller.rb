@@ -21,18 +21,28 @@ class PurchaseOrdersController < UsersController
     end    
 
     # Purchase orders are made for the full retail price
-    @cost = @po.user.role.plan.cost
-    #@cost = (@promotion && !@promotion.cost.nil?) ? @promotion.cost : @po.user.role.plan.cost
+    # as long as the promotion has a limited period
+    if @promotion && (@promotion.period_days.nil? || @promotion.period_days == 0)
+      @cost = @promotion.cost
+    else
+      @cost = @po.user.role.plan.cost
+    end
   end
   
   def create
     @user = current_user || reg_user_from_cookie 
-    # Purchase orders are made for the full retail price
-    @cost = @user.role.plan.cost
 
     unless session[:promo_id].nil?
       @promotion = Promotion.find(session[:promo_id].to_i)
     end    
+
+    # Purchase orders are made for the full retail price
+    # as long as the promotion has a limited period
+    if @promotion && (@promotion.period_days.nil? || @promotion.period_days == 0)
+      @cost = @promotion.cost
+    else
+      @cost = @po.user.role.plan.cost
+    end
     
     # Catch the case when the user clicks the Print button multiple times
     if current_user.nil? && session[:purchase_order]
@@ -51,10 +61,11 @@ class PurchaseOrdersController < UsersController
           @po.errors.add('', "Please accept the Terms of Service and the Subscriber Agreement") 
           render :action=>:confirm
         else
-          
-          @po.due_date = Time.now + 2.weeks
-          if @promotion && @promotion.period_days
-            @po.due_date += @promotion.period_days.days
+          if @cost > 0
+            @po.due_date = Time.now + 2.weeks
+            if @promotion && @promotion.period_days
+              @po.due_date += @promotion.period_days.days
+            end
           end
 
           #NOTE: this is duplicate code from submit_billing          

@@ -178,5 +178,20 @@ class Membership < ActiveRecord::Base
       return nil
     end
   end
+
+  def cancel!(reason=nil)
+    if !canceled?
+      logger.info "Cancelling membership for #{@user.id}: #{@user.email}"
+
+      cancellation= MembershipCancellation.new
+      cancellation.reason= reason
+      cancellation.membership= self
+
+      self.status= STATUS_CANCELED
+      self.membership_cancellation = cancellation
+      self.save!
+    end
+    true  
+  end
   
 end

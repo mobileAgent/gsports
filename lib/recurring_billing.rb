@@ -77,18 +77,24 @@ class RecurringBilling
     renewal_success = 0
     renewal_error = 0
     renewals.each {|mexpired| 
-      @billing_logger.info "Need to renew #{mexpired.user.id} #{mexpired.name}"
-      # Bill the member 
-      new_membership = mexpired.renew
-
-      if !new_membership.nil? && new_membership.active?
-        renewal_success += 1
-        renewal_message << "Successfully renewed #{mexpired.user.id} #{mexpired.name} #{membership_user_details(mexpired)}"
-        @billing_logger.info "Successfully renewed #{mexpired.user.id} #{mexpired.name}"
+      if !mexpired.promotion.nil? && mexpired.promotion.promo_code == 'GS7DAYSFREE'
+        puts "* Excluding promotion GS7DAYSFREE from auto-renewal"
+        @billing_logger.info "Auto-cancelling #{mexpired.user.id} #{mexpired.name} for promo #{mexpired.promotion.promo_code}"
+        mexpired.cancel! 'Auto-cancelling GS7DAYSFREE promotion'
       else
-        renewal_error += 1
-        renewal_message << "Unable to renew #{mexpired.user.id} #{mexpired.name} #{membership_user_details(mexpired)}"
-        @billing_logger.info "Unable to renew #{mexpired.user.id} #{mexpired.name}" 
+        @billing_logger.info "Need to renew #{mexpired.user.id} #{mexpired.name}"
+        # Bill the member 
+        new_membership = mexpired.renew
+
+        if !new_membership.nil? && new_membership.active?
+          renewal_success += 1
+          renewal_message << "Successfully renewed #{mexpired.user.id} #{mexpired.name} #{membership_user_details(mexpired)}"
+          @billing_logger.info "Successfully renewed #{mexpired.user.id} #{mexpired.name}"
+        else
+          renewal_error += 1
+          renewal_message << "Unable to renew #{mexpired.user.id} #{mexpired.name} #{membership_user_details(mexpired)}"
+          @billing_logger.info "Unable to renew #{mexpired.user.id} #{mexpired.name}" 
+        end
       end
     }
     # Send an email

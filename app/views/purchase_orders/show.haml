@@ -149,14 +149,15 @@
             QTY
           %th
             Total
-
+        -total=0
         -if @promotion && !@promotion.cost.nil?
+          -total+=@promotion.cost
           %tr
             %td
               = @promotion.promo_code
             %td
               = @promotion.name
-              - if @promotion.period_days
+              - if @promotion.period_days && @promotion.period_days > 0
                 =" (#{@promotion.period_days} days)"
             %td.numeric
               = number_to_currency(@promotion.cost)
@@ -164,18 +165,21 @@
               1
             %td.numeric
               = number_to_currency(@promotion.cost)
-        
-        %tr
-          %td
-            = @po.item_number
-          %td
-            = @po.description
-          %td.numeric
-            = number_to_currency(@po.user.role.plan.cost)
-          %td.numeric
-            12
-          %td.numeric
-            = number_to_currency(12 * @po.user.role.plan.cost)
+              
+
+        - if @promotion.nil? || (!@promotion.period_days.nil? && @promotion.period_days > 0)
+          -total+=@cost
+          %tr
+            %td
+              = @po.item_number
+            %td
+              = @po.description
+            %td.numeric
+              = number_to_currency(@cost)
+            %td.numeric
+              12
+            %td.numeric
+              = number_to_currency(12 * @cost)
         
         %tr
           %td
@@ -190,7 +194,8 @@
           %td
             Total
           %td.totals.numeric
-            = number_to_currency(12 * @po.user.role.plan.cost)
+            - if total
+              = number_to_currency(12 * total)
     
       %table
         %tr

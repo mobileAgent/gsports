@@ -148,4 +148,13 @@ class VideoReelsController < BaseController
     flash[:notice] = 'That reel could not be found.'
     redirect_to url_for({ :controller => "search", :action => "my_videos" })
   end
+
+  def share
+    video = VideoReel.find(params[:id])
+    video.share!
+    redirect_to new_message_path(:shared_access_id => video.shared_access_id) 
+  rescue ActiveRecord::RecordNotFound
+    flash[:notice] = 'That reel could not be found.'
+    redirect_to url_for({ :controller => "search", :action => "my_videos" })
+  end
 end

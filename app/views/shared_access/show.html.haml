@@ -1,0 +1,31 @@
+#homeFlash.homeFlash
+  %h1
+    Problems Starting Video Player.
+  %p
+    Sorry, we could not start the video player. To view video content you will need to have Adobe Flash player installed and  JavaScript enabled on your browser.
+
+= render :partial => 'shared/video_player', :locals => {:target => 'homeFlash', :player_name => '/players/previewplayer.swf', :fvars => {:sakey => @shared_access.key, :registerLink => '/register', :dockeys => @game_dockey_string } }
+
+.homeText
+  %h1.homeTextWelcome= "Welcome to #{AppConfig.community_name}!"
+  %br/
+  %br/
+  %p
+    %strong
+      Full Game Video
+    Global Sports has partnered with schools and private clubs to assemble the largest full game video sports library on the Web! Watch games from start to finish or just the big plays on your computer whenever and wherever you want.
+  %p
+    %strong
+      Safe and Secure
+    We pride ourselves on being a trusted partner to schools, parents, coaches and our youth.  We have built an extremely secure site and screen our users to minimize inappropriate content and misuse of our platform.
+  %p
+    %strong
+      Create and Edit
+    Global Sports is the only multimedia sports site that allows users to edit full game video and create personalized video clips. Through our unique technology you can also string together multiple clips to create highlights reels that can be shared with family and friends across town or across the country.
+  %p
+    %strong
+      Stay Current... or Reminisce
+    Our Members are constantly adding new content to the site to bring you the latest games. We also have a vintage &quot;Classics&quot; section of the site where we have games from the 1950&rsquo;s, 60&rsquo;s, 70&rsquo;s and 80&rsquo;s.
+  = link_to image_tag('/images/watch_demo2.gif', :alt => 'Click here to watch the demo video and learn more about Global Sports...', :title => 'Click here to watch the demo video and learn more about Global Sports...'), '/info/demo'
+/
+  end col 2
