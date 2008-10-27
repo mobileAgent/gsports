@@ -3,7 +3,7 @@ class VideoClip < ActiveRecord::Base
 
   belongs_to :video_asset
   belongs_to :user
-  belongs_to :shared_accesses, :dependent => :destroy
+  belongs_to :shared_access, :dependent => :destroy
   
   acts_as_commentable
   acts_as_taggable
