@@ -356,8 +356,9 @@ class Vidavee < ActiveRecord::Base
     extheader = {'content-type' => "multipart/form-data; boundary=--------#{ boundary }__xyzzy"}
 
     # Name and open the files
-    upload_params = {'Asset' => open(file_path)}
-
+    video_file = open(file_path)
+    upload_params = {'Asset' => video_file }
+    
     # Send in any extra parameters the upload form requires
     upload_params['title'] = video_asset.title
     upload_params['description'] = video_asset.description
@@ -378,6 +379,8 @@ class Vidavee < ActiveRecord::Base
     rescue TimeoutError
       logger.error "Could not contact Vidavee backend"
       response = "Timeout"
+    ensure
+      video_file.close
     end
     dockey_elem = extract(response.content,'//dockey')
 
