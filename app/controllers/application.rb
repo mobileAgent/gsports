@@ -49,6 +49,8 @@ class ApplicationController < ActionController::Base
     Moniker
     User
     Favorite
+    SharedItem
+    SharedAccess
     VideoAsset
     VideoClip
     VideoReel

@@ -2,7 +2,7 @@ class VideoReel < ActiveRecord::Base
   include SharedItem
   
   belongs_to :user
-  belongs_to :shared_accesses, :dependent => :destroy
+  belongs_to :shared_access, :dependent => :destroy
   
   acts_as_commentable
   acts_as_taggable
