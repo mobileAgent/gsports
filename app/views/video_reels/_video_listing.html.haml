@@ -28,17 +28,8 @@
       = video_listing.created_at.strftime("%B %d, %Y")
 
   .col2
-    - skip_controls ||= false
     .listingBoxActions
-      = link_to "Watch Reel", user_video_reel_path(video_listing.user_id,video_listing), :class => 'genericButton'
-      - if video_listing.user && current_user && current_user.id != video_listing.user_id
-        = link_to "User Profile",user_path( video_listing.user.id ),:class => 'genericButton'
-        - if current_user.can_send_message_to?(video_listing.user)
-          = link_to "Send Message", new_message_path(:to => video_listing.user.id, :title => "Your reel '#{video_listing.title}'"), :class => 'genericButton'
-      = render :partial => 'shared/favorite_item', :locals => { :item => video_listing }
-      -if current_user && current_user.can_edit?(video_listing)
-        = link_to "Edit", edit_video_reel_path(video_listing), :class => 'genericButton'
-        = link_to_remote 'Delete', {:url => url_for(video_listing), :confirm => 'Are you sure?', :method => :delete}, :class=>'genericButton'
+      = render :partial => 'shared/video_actions', :locals => { :video_listing => video_listing, :listing => true }
       
   .clearDiv
   .frameBtm

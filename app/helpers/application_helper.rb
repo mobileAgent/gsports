@@ -108,5 +108,15 @@ include UsersHelper
 
     link
   end
-  
+
+  # extend the ActionView::Helpers::AssetTagHelper#image_tag to support mouseclick image
+  def image_tag(source, options={})
+    if mouseclick = options.delete(:mouseclick)
+      options[:onmousedown] = "this.src='#{image_path(mouseclick)}';return true"
+      options[:onmouseup]  = "this.src='#{path_to_image(source)}'; return true"
+      options[:onmouseout]  = "this.src='#{path_to_image(source)}'; return true"
+    end
+
+    super source, options
+  end  
 end
