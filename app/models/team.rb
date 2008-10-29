@@ -147,7 +147,7 @@ class Team < ActiveRecord::Base
     logger.info "** Re-assigning teams before deleting #{self.id}"
     auser = User.admin.first :conditions => [ "team_id <> ?", self.id]
     if auser.nil? || auser.team_id == self.id
-      raise ActiveRecord::ActiveRecordError.new "Cannot delete the admin team"
+      raise ActiveRecord::ActiveRecordError.new("Cannot delete the admin team")
     end
 
     ateam_id = auser.team_id
