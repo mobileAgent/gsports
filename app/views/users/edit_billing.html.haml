@@ -6,6 +6,8 @@
       Billing for
       = "#{current_user.admin? ? @user.full_name : current_user.full_name}"
   .listings
+    =render :partial => "users/profile_membership_notice"
+
     .contentBox.tanBackground
       .contentBoxHeader.yellowHeader
         %h2.boxDescription
