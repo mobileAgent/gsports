@@ -1,18 +1,18 @@
-%div{ :class=>"desc-#{avht}" }
+%div{ :class=>"desc-#{avatar_height}" }
+  %h2= h @team.name
   %p
     - if @team.address1 && @team.address1.length > 0
       = h @team.address1
     - if @team.address2 && @team.address2.length > 0
       = h @team.address2
+    |
     - if @team.city || @team.state_id
       = h [@team.city,(@team.state_id ? @team.state.name : nil),@team.zip].compact.join(' ')
-  - if (@team.phone && @team.phone.length > 0) || (@team.email && @team.email.length > 0)
+  -# if (@team.phone && @team.phone.length > 0) || (@team.email && @team.email.length > 0)
     %p
       =h @team.phone
       - if @team.phone && @team.phone.length > 0 && @team.email && @team.email.length > 0
         |
         =h @team.email
-  - if current_user
-    %p
-      = link_to "View #{@team.nickname} Members", "/search/q?search[category]=10&team_id=#{@team.id}", :class=>'member-link'
-
+  - if current_user && (current_user.team_admin?(@team) || current_user.admin?)
+    = link_to 'Edit', edit_team_path(@team), :class=>"edit-#{avatar_height}"

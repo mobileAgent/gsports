@@ -1,6 +1,6 @@
 - if current_user && @team.avatar
-  %a{ :href=>team_path(@team), :class=>"logo-#{avht}" }
+  %a{ :href=>team_path(@team), :class=>"logo-#{avatar_height}" }
     %img{ :src=>@team.avatar.public_filename, :title=>@team.team_name, :alt=>@team.team_name }
 - if !current_user && @team.avatar 
-  %span{:class=>"logo-#{avht}" }
+  %span{:class=>"logo-#{avatar_height}" }
     %img{ :src=>@team.avatar.public_filename, :title=>@team.team_name, :alt=>@team.team_name }

@@ -165,6 +165,7 @@ class TeamsController < BaseController
   protected
 
   def load_team_and_related_videos(team_id)
+    load_team_favorites(team_id)
     @team = Team.find(team_id)
     @team_videos = VideoAsset.for_team(@team).all(:limit => 10, :order => 'updated_at DESC')
     @team_popular_videos = VideoAsset.for_team(@team).all(:limit => 10, :order => 'view_count DESC')
@@ -174,6 +175,19 @@ class TeamsController < BaseController
     @team_clips_reels.sort! { |a,b| a.created_at <=> b.created_at }
   end
 
+  def load_team_favorites(team_id)
+    photo_picks = Favorite.ftype('Photo').for_team_staff(team_id)
+    @team_photo_picks = photo_picks.map(){|f|Photo.find(f.favoritable_id)}
+    
+    @player_title = 'Featured Videos'
+    video_picks = Favorite.ftypes('VideoAsset','VideoReel','VideoClip')
+    if(video_picks.empty?)
+      @player_title = 'Recent Uplaods'
+      @hide_recent_uploads = true
+      video_picks = Favorite.ftypes('VideoAsset','VideoReel','VideoClip')
+    end
+    @team_video_picks = video_picks.for_team_staff(team_id).map(){|f|eval "#{f.favoritable_type}.find(f.favoritable_id)"}.collect(&:dockey).join(",")
+  end
 
   def cache_control
     Rails.cache.delete('quickfind_states')

@@ -30,6 +30,12 @@ class Favorite < ActiveRecord::Base
   named_scope :featured_games,
     lambda {|userids| {:conditions => ["user_id IN (?) and favoritable_type = ?",userids,VideoAsset.to_s], :order => "created_at DESC", :limit => 2} }
 
+  named_scope :for_team_staff, lambda { |team| { 
+    :joins => :user, 
+    :conditions => ["users.team_id = ? and (users.role_id = ? or users.role_id = ?)", team.id, Role[:team].id, Role[:team_staff].id] 
+  } }
+
+
   def self.favorite? (user, item)
     Favorite.user(user).item(item).count > 0
   end
