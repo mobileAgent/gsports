@@ -28,7 +28,7 @@
             %label.required{:for => "team_name"}
               * Your School / Club Name
             %br/
-            =text_field_with_auto_complete :team, :name, :autocomplete => "off", :size => 25, :style => "width: 170px", :value=>(@team.nil? ? '' : @team.name), :onblur => "#{remote_function(:url=>{:controller=>'users',:action=>'registration_fill_team'},:with=>'Form.Element.serialize(this)')}"
+            =text_field_with_auto_complete :team, :name, {:autocomplete => "off", :size => 25, :style => "width: 170px", :value=>(@team.nil? ? '' : @team.name), :onblur => "#{remote_function(:url=>{:controller=>'users',:action=>'registration_fill_team'},:with=>"Form.Element.serialize(this)")}"}, :with=>"'team[name]='+encodeURIComponent(element.value)+'&state_id=#{@team.nil? ? '' : @team.state_id}'"
 
         -# Only team enrollee's can enter team details
         -if @requested_role == Role[:team].id
