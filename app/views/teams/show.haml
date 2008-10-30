@@ -54,7 +54,7 @@
             %a{ :href=>'javascript:Tabs.open(2)' }
               Recent Uploads
               
-      - if @team.active 
+      - if @team.active && (@team_photo_picks && !@team_photo_picks.empty?)
         #tab3.orgTab
           %h2.boxDescription
             %a{ :href=>'javascript:Tabs.open(3)' }
@@ -90,15 +90,8 @@
             
     - if @team.active
 
-      -#      Clips / Reels
-      #tabBody2.contentBox.tanBackground.tabBody{ :style=>'display: none' }
-        .contentBoxHeader.yellowHeader
-          %h2.boxDescription
-        .contentBoxContent
-          =render :partial => 'video_assets/video_feature', :collection => @team_clips_reels, :locals => {:nolinks => current_user.nil? }
-        
       -#      Recent Uploads
-      #tabBody3.contentBox.tanBackground.tabBody{ :style=>'display: none' }
+      #tabBody2.contentBox.tanBackground.tabBody{ :style=>'display: none' }
         .contentBoxHeader.yellowHeader
           %h2.boxDescription
         .contentBoxContent
@@ -108,6 +101,13 @@
               = link_to "More Videos...", url_for(:controller => 'search', :action => 'team_video_assets', :team_id => @team.id)
             - else
               = "More Videos available to members!"
+        
+      -#      Clips / Reels
+      #tabBody3.contentBox.tanBackground.tabBody{ :style=>'display: none' }
+        .contentBoxHeader.yellowHeader
+          %h2.boxDescription
+        .contentBoxContent
+          =render :partial => 'video_assets/video_feature', :collection => @team_clips_reels, :locals => {:nolinks => current_user.nil? }
 
     .orgBoxTail
       .left
@@ -122,7 +122,7 @@
       .contentBoxHeader.yellowHeader
         %h2.boxDescription
           = @player_title
-          - 
+          \- 
           = @team.name
           
       .contentBoxContent.orgPlayer
@@ -133,37 +133,28 @@
         - flashvars[:dockeys]= @team_video_picks
         
         = render :partial => 'shared/video_player', :locals => {:target => 'flashArea', :player_name => '/players/schoolhome.swf', :fvars => flashvars, :width=>'587px', :height=>'341px' }
-              
-            
-    -#.contentBox.tanBackground.orgFeature
-      .contentBoxHeader.yellowHeader
-        %h2.boxDescription
-          Athlete Photo Gallery 
-          = @team.name
-      .contentBoxContent
-        -# @team_photo_picks
-        =render :partial => 'video_assets/video_feature', :collection => @team_popular_videos, :locals => {:nolinks => current_user.nil? }
-
-        - if @team_popular_videos.size >= 10
-          - if current_user
-            = link_to "More Videos...", url_for(:controller => 'search', :action => 'team_video_assets', :team_id => @team.id)
-          - else
-            = "More Videos available to members!"
-
     
-    -#.contentBox.tanBackground.orgFeature
-      .contentBoxHeader.yellowHeader
-        %h2.boxDescription
-          Clips / Reels - 
-          = @team.name
-      .contentBoxContent.orgPhotos
-        =render :partial => 'video_assets/video_feature', :collection => @team_popular_videos, :locals => {:nolinks => current_user.nil? }
+    - if @team_photo_picks && !@team_photo_picks.empty?
+      .contentBox.tanBackground.orgPhotos
+        .contentBoxHeader.yellowHeader
+          %h2.boxDescription
+            Athlete Photo Gallery 
+            = @team.name
+        .contentBoxContent
+          - @team_photo_picks.each do |photo|
+            .orgPhoto{:style => "text-align: center; vertical-align: middle"}
+              = link_to image_tag( photo.public_filename(:thumb)), user_photo_path(photo.user, photo), :class => 'framed'
+        
+    - elsif @team_clips_reels && !@team_clips_reels.empty?
+    
+      .contentBox.tanBackground.orgFeature
+        .contentBoxHeader.yellowHeader
+          %h2.boxDescription
+            Clips / Reels - 
+            = @team.name
+        .contentBoxContent
+          =render :partial => 'video_assets/video_feature', :collection => @team_clips_reels[0..1], :locals => {:nolinks => current_user.nil? }
 
-        - if @team_popular_videos.size >= 10
-          - if current_user
-            = link_to "More Videos...", url_for(:controller => 'search', :action => 'team_video_assets', :team_id => @team.id)
-          - else
-            = "More Videos available to members!"
 
                 
                 
