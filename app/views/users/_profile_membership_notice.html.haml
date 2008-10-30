@@ -31,8 +31,9 @@
             .featureSummary
               .moreLink
                 - if user.id == current_user.id
-                  =link_to "Renew Now", { :action => "renew", :id => user }, :class => 'genericButton'
-                  or
+                  -# Renew not used anymore, since we have auto-billing
+                    =link_to "Renew Now", { :action => "renew", :id => user }, :class => 'genericButton'
+                    or
                   =link_to "Cancel Membership", { :action => "cancel_membership", :id => user }
 
           - elsif current_user.admin? && !membership.canceled?

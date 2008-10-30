@@ -1,0 +1,29 @@
+- listing ||= false
+
+
+= render :partial => 'shared/favorite_listing', :locals => { :item => video_listing }
+
+- unless listing
+  =link_to image_tag('/images/listing_icons/share.png', :mouseclick => '/images/listing_icons/sel-share.png', :border=>0, :alt => 'Share', :title => 'Share'), {:action => 'share', :id => video_listing.id}, :class => 'listingButton'
+
+  - if video_listing.user && current_user.can_send_message_to?(video_listing.user)
+    = link_to image_tag('/images/listing_icons/message.png', :mouseclick => '/images/listing_icons/sel-message.png', :border=>0, :alt => 'Send Message', :title => 'Send Message'), new_message_path(:to => video_listing.user.id, :title => "Your reel '#{video_listing.title}'"), :class => 'listingButton'
+
+- if VideoAsset === video_listing && video_listing.league_video?
+  = link_to image_tag('/images/listing_icons/view.png', :mouseclick => '/images/listing_icons/sel-view.png', :border=>0, :alt => 'League Profile', :title => 'League Profile'), league_path( video_listing.league_id ), :class => 'listingButton'
+- elsif VideoAsset === video_listing
+  = link_to image_tag('/images/listing_icons/view.png', :mouseclick => '/images/listing_icons/sel-view.png', :border=>0, :alt => 'School Profile', :title => 'School Profile'), team_path( video_listing.team_id), :class => 'listingButton'
+- elsif video_listing.user && current_user && current_user.id != video_listing.user_id
+  = link_to image_tag('/images/listing_icons/view.png', :mouseclick => '/images/listing_icons/sel-view.png', :border=>0, :alt => 'User Profile', :title => 'User Profile'), user_path( video_listing.user.id ), :class => 'listingButton'
+  - if current_user.can_send_message_to?(video_listing.user)
+    = link_to image_tag('/images/listing_icons/message.png', :mouseclick => '/images/listing_icons/sel-message.png', :border=>0, :alt => 'Send Message', :title => 'Send Message'), new_message_path(:to => video_listing.user.id, :title => "Your video '#{video_listing.title}'"), :class => 'listingButton'
+
+
+- if current_user && current_user.can_edit?(video_listing)
+  = link_to image_tag('/images/listing_icons/edit.png', :mouseclick => '/images/listing_icons/sel-edit.png', :border=>0, :alt => 'Edit', :title => 'Edit'), edit_video_asset_path(video_listing), :class => 'listingButton'
+  = link_to_remote image_tag('/images/listing_icons/delete.png', :mouseclick => '/images/listing_icons/sel-delete.png', :border=>0, :alt => 'Delete', :title => 'Delete'), {:url => url_for(video_listing), :confirm => 'Are you sure?', :method => :delete},  :class=>'listingButton'
+- else
+  = render :partial => 'shared/inappropriate_listing', :locals => { :item => video_listing }
+
+- if listing
+  = link_to image_tag('/images/listing_icons/play.png', :mouseclick => '/images/listing_icons/sel-play.png', :border=>0, :alt => 'Watch Video', :title => 'Watch Video'), video_asset_path(video_listing), :class => 'listingButton'

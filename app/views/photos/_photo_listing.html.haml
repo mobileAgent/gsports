@@ -14,13 +14,13 @@
         = photo_listing.tags.collect{|t| link_to( h(t.name), tag_url(t.name), :class => 'tag') }.join(", ")
   .col2
     .listingBoxActions
-      = render :partial => 'shared/favorite_item', :locals => { :item => photo_listing }
+      = render :partial => 'shared/favorite_listing', :locals => { :item => photo_listing }
+
       - if (current_user && (current_user.admin? || current_user.id == photo_listing.user_id))
-        %a.genericButton{ :href => edit_user_photo_path(photo_listing.user_id,photo_listing) }
-          Edit
-        = link_to_remote 'Delete', { :url => user_photo_path(photo_listing.user_id,photo_listing), :confirm => 'Are you sure?', :method => :delete },  :class=>'genericButton'
+        = link_to image_tag('/images/listing_icons/edit.png', :mouseclick => '/images/listing_icons/sel-edit.png', :border=>0, :alt => 'Edit', :title => 'Edit'), edit_user_photo_path(photo_listing.user_id,photo_listing), :class => 'listingButton'
+        = link_to_remote image_tag('/images/listing_icons/delete.png', :mouseclick => '/images/listing_icons/sel-delete.png', :border=>0, :alt => 'Delete', :title => 'Delete'), {:url => user_photo_path(photo_listing.user_id,photo_listing), :confirm => 'Are you sure?', :method => :delete},  :class=>'listingButton'
       - else
-        = render :partial => 'shared/inappropriate_item', :locals => { :item => photo_listing }
+        = render :partial => 'shared/inappropriate_listing', :locals => { :item => photo_listing }
 
   .clearDiv
   .frameBtm

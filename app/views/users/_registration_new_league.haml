@@ -21,7 +21,7 @@
           %label
             * New League Name
           %br/
-          =text_field_with_auto_complete :league, :name, :autocomplete => "off", :size => 25, :style => "width: 170px", :value=>(@league.nil? ? '' : @league.name), :onblur => "#{remote_function(:url=>{:controller=>'users',:action=>'registration_fill_league'},:with=>'Form.Element.serialize(this)')}", :disabled => !league_editable
+          =text_field_with_auto_complete :league, :name, {:autocomplete => "off", :size => 25, :style => "width: 170px", :value=>(@league.nil? ? '' : @league.name), :onblur => "#{remote_function(:url=>{:controller=>'users',:action=>'registration_fill_league'},:with=>'Form.Element.serialize(this)')}", :disabled => !league_editable}, :with=>"'league[name]='+encodeURIComponent(element.value)+'&state_id=#{@league.nil? ? '' : @league.state_id}'"
     
     %table
       %tr

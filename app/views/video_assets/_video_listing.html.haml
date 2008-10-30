@@ -42,17 +42,8 @@
       = video_listing.created_at.strftime("%B %d, %Y")
 
   .col2
-    - skip_controls ||= false
     .listingBoxActions
-      = link_to "Watch Video", video_asset_path(video_listing), :class => 'genericButton'
-      - if video_listing.league_video?
-        = link_to "League Profile", league_path( video_listing.league_id ), :class => 'genericButton'
-      - else
-        = link_to "School Profile", team_path( video_listing.team_id), :class => 'genericButton'
-      = render :partial => 'shared/favorite_item', :locals => { :item => video_listing }
+      = render :partial => 'shared/video_actions', :locals => { :video_listing => video_listing, :listing => true }
 
-      - if current_user && current_user.can_edit?(video_listing)
-        = link_to "Edit", edit_video_asset_path(video_listing), :class => 'genericButton'
-        = link_to_remote 'Delete', {:url => url_for(video_listing), :confirm => 'Are you sure?', :method => :delete},  :class=>'genericButton'
   .clearDiv
   .frameBtm

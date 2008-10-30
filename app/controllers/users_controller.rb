@@ -8,11 +8,11 @@ class UsersController < BaseController
   skip_before_filter :gs_login_required, :only => [:signup, :register, :new, :create, :billing, :submit_billing, :forgot_password, 
                                                    :registration_fill_team, :registration_fill_teams_by_state,
                                                    :registration_fill_league, :registration_fill_leagues_by_state,
-                                                   :auto_complete_for_user_team_name, :auto_complete_for_team_league_name]
+                                                   :auto_complete_for_team_name, :auto_complete_for_league_name]
   
   skip_before_filter :billing_required, :only => [:billing, :edit_billing, :submit_billing, :update_billing, 
                                                   :account_expired, :membership_canceled, :renew, :cancel_membership, 
-                                                  :auto_complete_for_user_league_name]
+                                                  :auto_complete_for_team_name, :auto_complete_for_league_name]
   
   before_filter :admin_required, :only => [:assume, :destroy, :featured, :toggle_featured, :toggle_moderator, :disable]
   before_filter :find_user, :only => [:edit, :edit_pro_details, :show, :update, :destroy, :statistics, :disable ]
@@ -578,18 +578,45 @@ class UsersController < BaseController
     redirect_to user_photo_path(@user, @photo)
   end
 
-  def auto_complete_for_user_team_name
-    @teams = Team.find(:all, :conditions => ["LOWER(name) like ?", '%' + params[:user][:team_name].downcase + '%'], :order => "name ASC", :limit => 10)
+  def auto_complete_for_team_name
+    if params[:team] && params[:team][:name]
+      conditions = ["LOWER(name) like ?", params[:team][:name].downcase + '%' ]
+      if params[:state_id]
+        conditions[0] = conditions[0] + " and (state_id is null or state_id=?)"
+        conditions[conditions.length] = params[:state_id].to_i
+      end
+      @teams = Team.find(:all, :conditions => conditions, :order => "name ASC", :limit => 10)
+    end
     choices = "<%= content_tag(:ul, @teams.map { |t| content_tag(:li, h(t.name)) }) %>"    
     render :inline => choices
   end
   
-  def auto_complete_for_user_league_name
-    @leagues = League.find(:all, :conditions => ["LOWER(name) like ?", '%' + params[:user][:league_name].downcase + '%'], :order => "name ASC", :limit => 10)
-    choices = "<%= content_tag(:ul, @leagues.map { |l| content_tag(:li, h(l.name)) }) %>"    
+  def auto_complete_for_league_name
+    if params[:league] && params[:league][:name]
+      conditions = ["LOWER(name) like ?", params[:league][:name].downcase + '%' ]
+      if params[:state_id]
+        conditions[0] = conditions[0] + " and (state_id is null or state_id=?)"
+        conditions[conditions.length] = params[:state_id].to_i
+      end
+      @leagues = League.find(:all, :conditions => conditions, :order => "name ASC", :limit => 10)
+      choices = "<%= content_tag(:ul, @leagues.map { |l| content_tag(:li, h(l.name)) }) %>"    
+    end
     render :inline => choices
   end
 
+  def auto_complete_for_team_league_name
+    if params[:team] && params[:team][:league_name]
+      conditions = ["LOWER(name) like ?", params[:team][:league_name].downcase + '%' ]
+      if params[:state_id]
+        conditions[0] = conditions[0] + " and (state_id is null or state_id=?)"
+        conditions[conditions.length] = params[:state_id].to_i
+      end
+      @leagues = League.find(:all, :conditions => conditions, :order => "name ASC", :limit => 10 )
+      choices = "<%= content_tag(:ul, @leagues.map { |l| content_tag(:li, h(l.name)) }) %>"    
+    end
+    render :inline => choices
+  end  
+  
   def update
     @user.attributes = params[:user]
     @avatar = Photo.new(params[:avatar])
@@ -799,12 +826,6 @@ class UsersController < BaseController
     end
   end
 
-  def auto_complete_for_team_league_name
-    @leagues = League.find(:all, :conditions => ["LOWER(name) like ?", params[:team][:league_name].downcase + '%' ], :order => "name ASC", :limit => 10 )
-    choices = "<%= content_tag(:ul, @leagues.map { |l| content_tag(:li, h(l.name)) }) %>"    
-    render :inline => choices
-  end  
-  
   def cancel_membership
     if current_user && current_user.admin? && params[:id]
       @user = User.find(params[:id]) || current_user
