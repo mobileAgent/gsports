@@ -32,7 +32,7 @@ class Favorite < ActiveRecord::Base
 
   named_scope :for_team_staff, lambda { |team| { 
     :joins => :user, 
-    :conditions => ["users.team_id = ? and (users.role_id = ? or users.role_id = ?)", team.id, Role[:team].id, Role[:team_staff].id] 
+    :conditions => ["users.team_id = ? and (users.role_id = ? or users.role_id = ?)", (team.type == Team ? team.id : team), Role[:team].id, Role[:team_staff].id] 
   } }
 
 

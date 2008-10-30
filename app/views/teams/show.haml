@@ -129,8 +129,9 @@
         .flashArea#flashArea
         
         - flashvars = {}
-        - flashvars[:player_type]= ( @team.active ? "SchoolPlayer" : "SchoolNotMemberPlayer" )
+        - flashvars[:playerType]= ( @team.active ? "SchoolPlayer" : "SchoolNotMemberPlayer" )
         - flashvars[:dockeys]= @team_video_picks
+        
         = render :partial => 'shared/video_player', :locals => {:target => 'flashArea', :player_name => '/players/schoolhome.swf', :fvars => flashvars, :width=>'587px', :height=>'341px' }
               
             
@@ -140,6 +141,7 @@
           Athlete Photo Gallery 
           = @team.name
       .contentBoxContent
+        -# @team_photo_picks
         =render :partial => 'video_assets/video_feature', :collection => @team_popular_videos, :locals => {:nolinks => current_user.nil? }
 
         - if @team_popular_videos.size >= 10
