@@ -176,8 +176,8 @@ class TeamsController < BaseController
   end
 
   def load_team_favorites(team_id)
-    photo_picks = Favorite.ftype('Photo').for_team_staff(team_id)
-    @team_photo_picks = photo_picks.map(){|f|Photo.find(f.favoritable_id)}
+    photo_picks = Favorite.ftype('Photo').for_team_staff(team_id).map(){|f|Photo.find(f.favoritable_id)}
+    @team_photo_picks = random_slice(photo_picks, 5)
     
     @player_title = 'Featured Videos'
     video_picks = Favorite.ftypes('VideoAsset','VideoReel','VideoClip').for_team_staff(team_id).map(){|f|eval "#{f.favoritable_type}.find(f.favoritable_id)"}
@@ -186,8 +186,15 @@ class TeamsController < BaseController
       @hide_recent_uploads = true
       video_picks = @team_videos
     end
-    @team_video_picks = video_picks.collect(&:dockey).join(",")
+    @team_video_picks = random_slice(video_picks, 6).collect(&:dockey).join(",")
   end
+
+  def random_slice(a, s)
+    l=a.length-s
+    p=(l>=0?rand(l+1):0);
+    a[p..p+s-1];
+  end
+
 
   def cache_control
     Rails.cache.delete('quickfind_states')
