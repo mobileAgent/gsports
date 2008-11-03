@@ -27,8 +27,11 @@
 
       -# restrict to 5 lines here (5em + 1em for padding)
       .summary{ :style => "height:6em;overflow:hidden" }
-        = truncate_words(post_listing.post,20)
-        = link_to "more...", user_post_path(post_listing.user,post_listing)
+        -if count_words(post_listing.post) > 20
+          = truncate_words(post_listing.post,20)
+          = link_to "more...", user_post_path(post_listing.user,post_listing)
+        -else
+          = post_listing.post
 
       .recentFriendFeed
         = "#{pluralize(post_listing.view_count,'view')}"
