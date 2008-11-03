@@ -1,0 +1,87 @@
+- show_tab ||= false 
+
+- video_type = VideoClip === video_listing ? 'video_clip' : VideoReel === video_listing ? 'video_reel' : 'video'
+
+- link = nil
+- if VideoClip === video_listing
+  - link = user_video_clip_path(video_listing.user_id,video_listing)
+- elsif VideoReel === video_listing
+  - link = user_video_reel_path(video_listing.user_id,video_listing)
+- else
+  - link = video_asset_path(video_listing)
+
+.listingBox-2cols{:id => "#{video_type}_#{video_listing.id}"}
+  - if show_tab
+    .tabWrapper
+      .listingTab
+        = "#{VideoClip === video_listing ? 'Clip' : VideoReel === video_listing ? 'Reel ' : 'Full Game'}"
+    .clearDiv
+  .frameTop
+  .col1
+    .listingBoxHeader
+      - if video_listing.title.length > 45
+        .title-2lines
+          = truncate(video_listing.title,120)
+      - else 
+        .title
+          = video_listing.title
+    .thumb
+      = "<a href='#{link}'><img src='#{@vidavee.file_thumbnail_medium(video_listing.dockey)}' title='#{h(video_listing.title).gsub(/\'/,'')}' alt='#{h(video_listing.title).gsub(/\'/,'')}'/></a>"
+    .listingBoxContent
+      - if VideoAsset === video_listing
+
+        - if video_listing.home_team_id || video_listing.visiting_team_id
+          %p{ :style => "height:4em" }
+            In this video:
+            - if video_listing.home_team_id
+              = link_to h(video_listing.home_team.title_name), team_path(video_listing.home_team_id)
+              - if video_listing.visiting_team_id
+                = ", "
+            - if video_listing.visiting_team_id
+              = link_to h(video_listing.visiting_team.title_name), team_path(video_listing.visiting_team_id)
+
+        %p{ :style => "height:3em" }
+          Uploaded by:
+          - if video_listing.league_video?
+            = link_to h(video_listing.league_name), league_path(video_listing.league_id)
+          - else
+            = link_to h(video_listing.team_name), team_path(video_listing.team_id)
+          on
+          = video_listing.created_at.strftime("%m/%d/%y")
+
+      - else
+        %p.one-liner
+          Created by:
+          = link_to h(video_listing.user.full_name), user_path(video_listing.user_id)
+          = video_listing.created_at.strftime("%m/%d/%y")
+
+        %p.summary{ :style => "height:3em" }
+          = truncate(video_listing.description,100)
+
+        %p.one-liner
+          - if VideoClip===video_listing && video_listing.video_asset_id
+            Clipped from:
+            - title = video_listing.video_asset.title
+            = link_to truncate(h(title),40),video_asset_path( video_listing.video_asset_id )
+
+    .clearDiv
+    .listingBoxFooter
+      .footerCol1
+        =render :partial => 'ratings/listing_stars', :locals => {:item => video_listing}
+      .footerCol2
+        %strong 
+          - if video_listing.video_length && !video_listing.video_length.blank? && video_listing.video_length != '0'
+            ="(#{video_listing.video_length})"
+          - else
+            (??:??)
+        %strong= " | Views:"
+        = number_with_delimiter(video_listing.view_count)
+        %strong= " | " 
+        =render :partial => 'shared/favorite_count', :locals => {:item => video_listing}
+
+  .col2      
+    .listingBoxActions
+      = render :partial => 'shared/video_actions', :locals => { :video_listing => video_listing, :listing => true }
+
+  .clearDiv
+  .frameBtm

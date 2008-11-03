@@ -1,9 +1,8 @@
 .listingBox-2cols {
   width: 390px;
+  margin: 5px 5px 5px 10px;
   background-image: url(../images/listingBoxBg.jpg);
   background-color: #C6C97C;
-  background-repeat: repeat-y;
-  margin: 5px 5px 5px 10px;
   float: left;
 }
 .listingBox-2cols .frameTop {
@@ -11,6 +10,28 @@
   width: 390px;
   background-image: url(../images/listingBoxTop.jpg);
   background-repeat: repeat-y;
+}
+.listingBox-2cols .tabWrapper {
+  background-color: white;
+  float: none;
+  display:block;
+}
+.listingBox-2cols .listingTab {
+  width: 90px;
+  padding-left: 5px;
+  padding-right: 9px;
+  height: 20px;
+  background-image: url(../images/listingBoxTab.jpg);
+  background-repeat: no-repeat;
+  color: #555555;
+  font-weight: bold;
+  font-size: 110%;  
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: center;
+  line-height: 20px;
+  vertical-align: bottom;
 }
 .listingBox-2cols .frameBtm {
   height: 10px;
@@ -20,19 +41,26 @@
   float: clear;
 }
 .listingBox-2cols .listingBoxHeader {
-  padding: 0px 10px 10px 10px;
-  display: block;
+  padding: 0px 10px 0px 10px;
   float: clear;
 }
 .listingBox-2cols .listingBoxHeader .title {
   font-weight: bold;
   color: #000000;
-  font-size: 110%;
+  font-size: 125%;
   width: 330px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  float: left;
+  height: 22px;
+  line-height: 22px;
+}
+.listingBox-2cols .listingBoxHeader .title-2lines {
+  font-weight: bold;
+  color: #000000;
+  width: 330px;
+  height: 22px;
+  line-height: 11px;
 }
 .listingBox-2cols .col1 {
   width: 350px;
@@ -44,7 +72,7 @@
    * Make sure to include the 10px each for the frameTop and frameBtm
    * for the total height 170 = 150 + 10 + 10
    * */
-  height: 150px;
+  height: 160px;
   float: left;
 }
 
@@ -64,34 +92,51 @@
 }
 
 .listingBox-2cols .col1 .listingBoxContent {
-  width: 200px;
+  width: 205px;
   height: 85px;
-  padding: 15px 10px 0px 5px;
+  padding: 15px 5px 0px 5px;
   float: left;
 }
 
 .listingBox-2cols .col1 .listingBoxFooter {
   width: 330px;
-  padding: 10px 10px 0px 5px;
+  padding: 10px 5px 0px 10px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   float: clear;
 }
-
-
+.listingBox-2cols .col1 .listingBoxFooter .footerCol1 {
+  width: 125px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  float: left;
+}
+.listingBox-2cols .col1 .listingBoxFooter .footerCol2 {
+  width: 200px;
+  padding-left: 5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  float: left;
+}
+.listingBox-2cols .col1 .listingBoxContent {
+  color: #555555;
+  overflow: hidden;
+}
 .listingBox-2cols .col1 .listingBoxContent .summary {
   margin: 10px 0px 10px 0px;
-  padding: 5px 5px 5px 5px;
+  padding: 5px 0px 5px 0px;
   width: 190px;
-  background-color: white;
+  color: #555555;
 }
 
 .listingBox-2cols .col1 .listingBoxContent .title {
   font-weight: bold;
   color: #000000;
   font-size: 110%;
-  width: 200px;
+  width: 205px;
   margin-bottom: 10px;
   white-space: nowrap;
   overflow: hidden;
@@ -99,7 +144,7 @@
 }
 
 .listingBox-2cols .col1 .one-liner {
-  width: 200px;
+  width: 205px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -117,7 +162,11 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: clip;
-  margin: 0px 6px 5px 7px;
+  margin: 2px 6px 4px 7px;
   text-align: center;
   float: left;
+}
+
+.listingBox-2cols .favorite-count {
+  font-weight: bold
 }

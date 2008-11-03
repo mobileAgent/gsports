@@ -1,11 +1,23 @@
+- show_tab ||= false
+
 .listingBox-2cols{:id => "photo_item_#{photo_listing.id}"}
+  - if show_tab
+    .tabWrapper
+      .listingTab
+        Photo 
+    .clearDiv
   .frameTop
   .col1
+    .listingBoxHeader
+      - if photo_listing.display_name.length > 45
+        .title-2lines
+          = truncate(photo_listing.display_name,120)
+      - else
+        .title
+          = photo_listing.display_name
     .thumb.thumb-tall
       = link_to image_tag( photo_listing.public_filename(:thumb)), user_photo_path(@user, photo_listing)
     .listingBoxContent
-      .title
-        = h photo_listing.display_name
       .schoolName
         = photo_listing.created_at.to_s(:readable)
       .recentFriendFeed

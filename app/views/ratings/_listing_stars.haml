@@ -1,0 +1,25 @@
+
+- rating = item.rating && item.rating > 0 ? (item.rating * 10).to_i : 0
+
+- if rating === 0...5
+  =image_tag('listing_icons/stars_0.gif')
+- elsif rating === 5..10
+  =image_tag 'listing_icons/stars_0.5.gif'
+- elsif rating === 10...15
+  =image_tag 'listing_icons/stars_1.gif'
+- elsif rating === 15..20
+  =image_tag 'listing_icons/stars_1.5.gif'
+- elsif rating === 20...25
+  =image_tag 'listing_icons/stars_2.gif'
+- elsif rating === 25..30
+  =image_tag 'listing_icons/stars_2.5.gif'
+- elsif rating === 30...35
+  =image_tag 'listing_icons/stars_3.gif'
+- elsif rating === 35..40
+  =image_tag 'listing_icons/stars_3.5.gif'
+- elsif rating === 40...45
+  =image_tag 'listing_icons/stars_4.gif'
+- elsif rating === 45..50
+  =image_tag 'listing_icons/stars_4.5.gif'
+- else
+  =image_tag 'listing_icons/stars_5.gif'

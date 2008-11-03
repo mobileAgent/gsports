@@ -1,5 +1,5 @@
 %span.favorite_count_container{:id => "favorite_count_#{item.class.to_s}_#{item.id}"}
-  %span.schoolName.favorite_count
+  %span.schoolName.favorite-count
     Favorited:
   %span.recentFriendFeed
-    = "#{pluralize(Favorite.count_for_item(item),'time')}"
+    = Favorite.count_for_item(item)

@@ -9,7 +9,7 @@
     .listingItem
       =link_to "New Reel", new_video_reel_path, {:class => 'genericButton'}
     - if @video_reels.any?
-      = render :partial => 'video_listing', :collection => @video_reels
+      = render :partial => 'shared/video_listing', :collection => @video_reels, :locals => { :show_tab => false }
       .clearDiv
         
       - if @video_reels.respond_to?('total_pages')

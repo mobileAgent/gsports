@@ -2,28 +2,35 @@
   .frameTop
   .col1
     .listingBoxHeader
-      .title{ :style => "float:right; width:60px; text-align:right;" } 
-        = "(#{video_listing.video_length})"
       .title{:style => "width: 270px"}
         = truncate(video_listing.title,40)
     .thumb
       = "<a href='#{user_video_clip_path(video_listing.user_id,video_listing)}'><img src='#{@vidavee.file_thumbnail_medium(video_listing.dockey)}' title='#{h(video_listing.title).gsub(/\'/,'')}' alt='Clip'/></a>"
     .listingBoxContent
-      %p= truncate(video_listing.description,200)
+      %p.one-liner
+        Created by:
+        = link_to h(video_listing.user.full_name), user_path(video_listing.user_id)
+        = video_listing.created_at.strftime("%m/%d/%y")
 
-      %br
-      %p
-        Views:
-        = number_with_delimiter(video_listing.view_count)
-        = render :partial => 'shared/favorite_count', :locals => {:item => video_listing}
+      %p.summary{ :style => "height:3em" }
+        = truncate(video_listing.description,200)
 
-    .clearDiv
-    .listingBoxFooter
-      - if VideoClip===video_listing && video_listing.video_asset_id
-        %div{ :style => "text-align:right; font-weight:bold" }
+      %p.one-liner
+        - if VideoClip===video_listing && video_listing.video_asset_id
           Clipped from:
           - title = video_listing.video_asset.title
           = link_to truncate(h(title),40),video_asset_path( video_listing.video_asset_id )
+
+    .clearDiv
+    .listingBoxFooter
+      .footerCol1
+        =render :partial => 'ratings/listing_stars', :locals => {:item => video_listing}
+      .footerCol2
+        %strong= "(#{video_listing.video_length})"
+        %strong= " | Views:"
+        = number_with_delimiter(video_listing.view_count)
+        %strong= " | " 
+        =render :partial => 'shared/favorite_count', :locals => {:item => video_listing}
 
   .col2      
     .listingBoxActions

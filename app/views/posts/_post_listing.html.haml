@@ -1,10 +1,20 @@
+- show_tab ||= false
+
 .listingBox-2cols{:id => "post_#{post_listing.id}"}
+  - if show_tab
+    .tabWrapper
+      .listingTab
+        Blog
+    .clearDiv
   .frameTop
   .col1
     .listingBoxHeader
-      .title
-        = post_listing.title
-      
+      - if post_listing.title.length > 45
+        .title-2lines
+          = truncate(post_listing.title,120)
+      - else 
+        .title
+          = post_listing.title
     .thumb.thumb-tall
       %a{:href=>"#{user_post_path(post_listing.user, post_listing)}", :class=>"photo", :rel=>"bookmark"}
         =image_tag((post_listing.image_thumbnail_for_post || post_listing.user.avatar_photo_url(:thumb)), :alt=>"image")

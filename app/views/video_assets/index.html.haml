@@ -10,7 +10,7 @@
         = link_to 'Upload a new video', new_video_asset_path, :class => 'genericButton'
 
       - if @video_assets.any?
-        = render :partial => '/video_assets/video_listing', :collection => @video_assets
+        = render :partial => '/shared/video_listing', :collection => @video_assets, :locals => { :show_tab => false }
         .clearDiv
  
         - if @video_assets.respond_to?('total_pages')

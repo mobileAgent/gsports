@@ -58,11 +58,11 @@
       -  for video in @videos
         - case video.class.to_s
         - when 'VideoAsset'
-          =render :partial => 'video_assets/video_listing', :locals => { :video_listing => video, :skip_controls => false }
+          =render :partial => 'shared/video_listing', :locals => { :video_listing => video, :skip_controls => false, :show_tab => true }
         - when 'VideoClip'
-          =render :partial => 'video_clips/video_listing', :locals => { :video_listing => video, :skip_controls => false }
+          =render :partial => 'shared/video_listing', :locals => { :video_listing => video, :skip_controls => false, :show_tab => true }
         - when 'VideoReel'
-          =render :partial => 'video_reels/video_listing', :locals => { :video_listing => video, :skip_controls => false }
+          =render :partial => 'shared/video_listing', :locals => { :video_listing => video, :skip_controls => false, :show_tab => true }
 
       - if @videos.respond_to?('total_pages')
         .apple_pagination
