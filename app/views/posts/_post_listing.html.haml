@@ -26,15 +26,15 @@
 
   .col2
     .listingBoxActions
-      =link_to 'Read',user_post_path(post_listing.user,post_listing), :rel => 'bookmark', :class => 'genericButton'
+      =link_to image_tag('/images/listing_icons/view.png', :mouseclick => '/images/listing_icons/sel-view.png', :border=>0, :alt => 'Read', :title => 'Read'),user_post_path(post_listing.user,post_listing), :rel => 'bookmark', :class => 'listingButton'
       - if current_user.can_request_friendship_with(post_listing.user)
-        =link_to 'Request Friendship',url_for({ :controller => 'friendships', :action => 'create', :user_id => current_user.id, :friend_id => post_listing.id}), {:method => :post, :class => 'genericButton'}
-      = render :partial => 'shared/favorite_item', :locals => { :item => post_listing }
+        =link_to image_tag('/images/listing_icons/add.png', :mouseclick => '/images/listing_icons/sel-add.png', :border=>0, :alt => 'Request Friendship', :title => 'Request Friendship'),url_for({ :controller => 'friendships', :action => 'create', :user_id => current_user.id, :friend_id => post_listing.id}), {:method => :post, :class => 'listingButton'}
+      = render :partial => 'shared/favorite_listing', :locals => { :item => post_listing }
 
       - if (current_user && (current_user.admin? || current_user.id == post_listing.user_id))
-        =link_to "Delete", user_post_path(post_listing.user, post_listing), {:method => :delete, :confirm => 'Permanently delete this post?', :class => 'genericButton'}        
+        =link_to image_tag('/images/listing_icons/delete.png', :mouseclick => '/images/listing_icons/sel-delete.png', :border=>0, :alt => 'Delete', :title => 'Delete'), user_post_path(post_listing.user, post_listing), {:method => :delete, :confirm => 'Permanently delete this post?', :class => 'listingButton'}        
       - else
-        = render :partial => 'shared/inappropriate_item', :locals => { :item => post_listing }
+        = render :partial => 'shared/inappropriate_listing', :locals => { :item => post_listing }
 
 
   .clearDiv

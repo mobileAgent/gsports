@@ -752,6 +752,142 @@ input[type='button'] {
   text-decoration: underline;
 }
 
+/* team landing mods */
+
+.orgHome {
+	padding-top:20px;
+	margin-left:20px;
+}
+
+.orgHome .logo-100 {
+	margin-right: 20px;
+}
+
+.orgText {
+	width: 50%;
+	padding-right: 20px;
+}
+
+
+.contentBox.orgPlayer, .contentBox.orgFeature, .contentBox.orgPhotos {
+	width: 587px;
+}
+
+
+.contentBoxContent.orgPlayer {
+	height: 345px;
+	overflow: inherit;
+}
+
+
+.orgPhotos .contentBoxHeader {
+	background-color: white;
+	border: 0;
+	color: black;
+	font-weight: bold;
+}
+
+.orgPhotos .contentBoxContent {
+	background-color: white;
+	border: 1px solid black;
+	border-right: 2px solid black;
+	border-bottom: 2px solid black;
+}
+
+.orgPhoto {
+	display:inline;
+	float:left;
+	height:80px;
+	line-height:normal;
+	margin-bottom:7px;
+	margin-left:7px;
+	margin-right:7px;
+	width:100px;
+	margin-top:7px;
+}
+
+.orgFeature .contentBoxContent {
+	position: relative;
+	overflow: hidden;
+	margin-top: 10px;
+}
+
+.orgFeature .featureSummary {
+	position: inline;
+	float:left;
+	border: 0;
+}
+
+/* team landin
+
+/* team landing tabs */
+
+.contentBox.tabBody{
+	margin-bottom: 0;
+}
+
+.tabBody .contentBoxContent{
+  height: 370px;
+}
+
+.orgTabs {
+	position: relative;	
+	height: 20px;
+	width: 312px;
+	background-color:white;
+	margin-left:20px;
+}
+
+.orgTab {
+	color:#FFEF0A;
+	background:#68A34E url(/gs/images/content_box_header.png) repeat-x scroll left top;
+	border-bottom:1px solid #B7BAA3;
+	font-size:110%;
+	height:18px;
+	padding-top:2px;
+	float: left;
+	padding-right:8px;
+	margin-right:1px;
+}
+
+.orgTab.open {
+	border-bottom:1px solid #68A34E;
+	color:white;
+}
+
+.orgTab.open a {
+	color:white;
+}
+
+.orgTab a {
+	color:#FFEF0A;
+	text-decoration: none;
+}
+
+
+.orgBoxTail {
+	margin-left: 20px;
+	color:#E2E4A7;
+	height: 22px;
+	background-color:#E2E4A7;
+	width:312px;
+	margin-bottom: 20px;
+}
+
+.orgBoxTail .left {
+	width: 19px;
+	height: 22px;
+	background:#E2E4A7 url(/players/images/roundedcorner.png) repeat-x scroll left top;
+}
+
+.orgBoxTail .right {
+	width: 19px;
+	height: 22px;
+	background:#E2E4A7 url(/players/images/roundedcorner_right.png) repeat-x scroll left top;
+}
+
+
+
 /* end - team league summary content */
 
 /* profile activity */

@@ -172,6 +172,27 @@ class TeamsController < BaseController
     @team_clips_reels << VideoReel.for_team(@team).find(:all, :limit => 10, :order => "video_reels.created_at DESC")
     @team_clips_reels.flatten!
     @team_clips_reels.sort! { |a,b| a.created_at <=> b.created_at }
+    load_team_favorites(team_id)
+  end
+
+  def load_team_favorites(team_id)
+    photo_picks = Favorite.ftype('Photo').for_team_staff(team_id).map(){|f|Photo.find(f.favoritable_id)}
+    @team_photo_picks = random_slice(photo_picks, 5)
+    
+    @player_title = 'Featured Videos'
+    video_picks = Favorite.ftypes('VideoAsset','VideoReel','VideoClip').for_team_staff(team_id).map(){|f|eval "#{f.favoritable_type}.find(f.favoritable_id)"}
+    if(video_picks.empty?)
+      @player_title = 'Recent Uplaods'
+      @hide_recent_uploads = true
+      video_picks = @team_videos
+    end
+    @team_video_picks = random_slice(video_picks, 6).collect(&:dockey).join(",")
+  end
+
+  def random_slice(a, s)
+    l=a.length-s
+    p=(l>=0?rand(l+1):0);
+    a[p..p+s-1];
   end
 
 

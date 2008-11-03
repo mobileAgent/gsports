@@ -14,7 +14,7 @@
         .listingItem
           .listingImage
             - if team.avatar
-              %a{:href=>team_path(team)}
+              %a{:href=>url_for({:controller => 'teams', :action => 'show_public', :id => team })}
                 %img{ :src=>team.avatar.public_filename, :title=>team.name, :alt=>team.name }
           
           .listingDescription

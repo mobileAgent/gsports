@@ -1,87 +1,159 @@
 - load_features(@team)
-- avht = @team.avatar ? @team.avatar.height : 100
+- avatar_height = @team.avatar ? @team.avatar.height : 100
 - top_row_height_px = @team_popular_videos.size >= 3 ? 255 : 130
 - second_row_height_px = [@team_clips_reels.size,@team_videos.size].max >= 3 ? 255 : 130
 
 .landingContentArea
+
+    
+  .orgHome
+    %table
+      %tr
+        %td.orgSummary
+
+          - case avatar_height
+          - when 60
+            = render :partial=>'logo', :locals=>{:avatar_height=>avatar_height}
+            = render :partial=>'contact_info', :locals=>{:avatar_height=>avatar_height}
+          - when 100
+            %table
+              %tr
+                %td
+                  = render :partial=>'logo', :locals=>{:avatar_height=>avatar_height}
+                %td
+                  = render :partial=>'contact_info', :locals=>{:avatar_height=>avatar_height}
+    
+        %td.orgText
+      
+          %p
+            %b All Athletes, All Sports
+          %br
+          %p
+            Global Sports has partnered with schools and private athletic clubs around the country to make game videos available on our site. We make it possible for schools to all their sporting events without any difficulties.
+      %tr
+        %td
+          - if current_user && @team.users.size > 0
+            %p
+              = link_to "View #{@team.nickname} Members (#{@team.users.size})", "/search/q?search[category]=10&team_id=#{@team.id}", :class=>'member-link'
+
+
   /
     col1 content
   .mainCol1
-    .contentBox.orgSummary
+    = javascript_include_tag 'tabs'
     
-      .contentBoxContent{:style => "height: #{top_row_height_px+18}px"}
-        .contentBoxHeader
-          - if current_user && (current_user.team_admin?(@team) || current_user.admin?)
-            = link_to 'Edit', edit_team_path(@team), :class=>"edit-#{avht}"
-          %h2
-            =h @team.name
+    .orgTabs
+      #tab1.orgTab.open
+        %h2.boxDescription
+          %a{ :href=>'javascript:Tabs.open(1)' }
+            School News
             
-        - case avht
-        - when 60
-          = render :partial=>'contact_info', :locals=>{:avht=>avht}
-          = render :partial=>'logo', :locals=>{:avht=>avht}
-        - when 100
-          %table
-            %tr
-              %td
-                = render :partial=>'logo', :locals=>{:avht=>avht}
-              %td
-                = render :partial=>'contact_info', :locals=>{:avht=>avht}
+      - if @team.active && !@hide_recent_uploads
+        #tab2.orgTab
+          %h2.boxDescription
+            %a{ :href=>'javascript:Tabs.open(2)' }
+              Recent Uploads
+              
+      - if @team.active && (@team_photo_picks && !@team_photo_picks.empty?)
+        #tab3.orgTab
+          %h2.boxDescription
+            %a{ :href=>'javascript:Tabs.open(3)' }
+              Clips / Reels
     
-        
-    .contentBox.tanBackground
+    -#      School News
+    #tabBody1.contentBox.tanBackground.tabBody.open
       .contentBoxHeader.yellowHeader
         %h2.boxDescription
-          RECENT CLIPS & HIGHLIGHTS
-      .contentBoxContent{:style => "height: #{second_row_height_px}px"}
-        =render :partial => 'video_assets/video_feature', :collection => @team_clips_reels, :locals => {:nolinks => current_user.nil? }
+          - if current_user && current_user.team_staff?(@team)
+            %span.moreLink
+              = link_to 'Post News Item', new_user_post_path(current_user)
+
+      .contentBoxContent
+      
+
+        - posts = team_posts( (@team.active ? @team : Team.find(1)) )
+        - posts.each() do |post|
+          .featureSummary
+            %span
+              = link_to post.title, user_post_path(post.user, post), :rel => 'bookmark', :class=>'articleLink'
+              = "| posted #{post.created_at.strftime('%m.%d.%y')}"
+              
+              
+            %br
+            = truncate_words(post.post, 24, '...' )
+            - if (current_user && (current_user.admin? || current_user.id == post.user_id))
+              %span.moreLink
+                =link_to "edit", edit_user_post_path(post.user, post)
+                |
+                =link_to "delete", user_post_path(post.user, post), {:method => :delete, :confirm => 'Permanently delete this post?'}
+            .clearDiv
+            
+    - if @team.active
+
+      -#      Recent Uploads
+      #tabBody2.contentBox.tanBackground.tabBody{ :style=>'display: none' }
+        .contentBoxHeader.yellowHeader
+          %h2.boxDescription
+        .contentBoxContent
+          =render :partial => 'video_assets/video_feature', :collection => @team_videos, :locals => {:nolinks => current_user.nil? }
+          - if @team_videos.size >= 10
+            - if current_user
+              = link_to "More Videos...", url_for(:controller => 'search', :action => 'team_video_assets', :team_id => @team.id)
+            - else
+              = "More Videos available to members!"
+        
+      -#      Clips / Reels
+      #tabBody3.contentBox.tanBackground.tabBody{ :style=>'display: none' }
+        .contentBoxHeader.yellowHeader
+          %h2.boxDescription
+        .contentBoxContent
+          =render :partial => 'video_assets/video_feature', :collection => @team_clips_reels, :locals => {:nolinks => current_user.nil? }
+
+    .orgBoxTail
+      .left
+      .middle
+      .right
+      .clearDiv
 
   /
     col2 content
   .mainCol2
-    .contentBox.tanBackground
+    .contentBox.tanBackground.orgPlayer
       .contentBoxHeader.yellowHeader
         %h2.boxDescription
-          MOST POPULAR VIDEOS
-      .contentBoxContent{:style => "height: #{top_row_height_px}px"}
-        =render :partial => 'video_assets/video_feature', :collection => @team_popular_videos, :locals => {:nolinks => current_user.nil? }
-
-        - if @team_popular_videos.size >= 10
-          - if current_user
-            = link_to "More Videos...", url_for(:controller => 'search', :action => 'team_video_assets', :team_id => @team.id)
-          - else
-            = "More Videos available to members!"
-
-    .contentBox.tanBackground
-      .contentBoxHeader.yellowHeader
-        %h2.boxDescription
-          RECENT FULL GAME UPLOADS 
-      .contentBoxContent{:style => "height: #{second_row_height_px}px"}
-        =render :partial => 'video_assets/video_feature', :collection => @team_videos, :locals => {:nolinks => current_user.nil? }
-        - if @team_videos.size >= 10
-          - if current_user
-            = link_to "More Videos...", url_for(:controller => 'search', :action => 'team_video_assets', :team_id => @team.id)
-          - else
-            = "More Videos available to members!"
-
-      
+          = @player_title
+          \- 
+          = @team.name
           
-  /
-    col3 content
-  .mainCol3  
-    .rightContentItem
-      - if current_user && current_user.team_staff?(@team)
-        %span.moreLink
-          = link_to 'Post', new_user_post_path(current_user)
-      %h2
-        = @team.nickname
-        News
-    - team_posts().each() do |post|
-      .rightContentItem
-        %span
-          = link_to post.title, user_post_path(post.user, post), :rel => 'bookmark', :class=>'articleLink'
-        %br
-        = truncate_words(post.post, 24, '...' )
+      .contentBoxContent.orgPlayer
+        .flashArea#flashArea
+        
+        - flashvars = {}
+        - flashvars[:playerType]= ( @team.active ? "SchoolPlayer" : "SchoolNotMemberPlayer" )
+        - flashvars[:dockeys]= @team_video_picks
+        
+        = render :partial => 'shared/video_player', :locals => {:target => 'flashArea', :player_name => '/players/schoolhome.swf', :fvars => flashvars, :width=>'587px', :height=>'341px' }
+    
+    - if @team_photo_picks && !@team_photo_picks.empty?
+      .contentBox.tanBackground.orgPhotos
+        .contentBoxHeader.yellowHeader
+          %h2.boxDescription
+            Athlete Photo Gallery 
+            = @team.name
+        .contentBoxContent
+          - @team_photo_picks.each do |photo|
+            .orgPhoto{:style => "text-align: center; vertical-align: middle"}
+              = link_to image_tag( photo.public_filename(:thumb)), user_photo_path(photo.user, photo), :class => 'framed'
+        
+    - elsif @team_clips_reels && !@team_clips_reels.empty?
+    
+      .contentBox.tanBackground.orgFeature
+        .contentBoxHeader.yellowHeader
+          %h2.boxDescription
+            Clips / Reels - 
+            = @team.name
+        .contentBoxContent
+          =render :partial => 'video_assets/video_feature', :collection => @team_clips_reels[0..1], :locals => {:nolinks => current_user.nil? }
 
 
                 
