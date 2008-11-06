@@ -13,7 +13,7 @@ class Role < ActiveRecord::Base
 
   def self.non_billable_role_ids
     [ Role[:admin].id, Role[:league_staff].id,
-      Role[:team_staff].id, Role[:scout_staff].id ]
+      Role[:team].id, Role[:team_staff].id, Role[:scout_staff].id ]
   end
   
 end
