@@ -406,7 +406,7 @@ class UsersController < BaseController
     else
       @billing_address ||= Address.new
       
-      if @response.message.nil? || @reponse.message.blank?
+      if @response.nil? || @response.message.nil? || @reponse.message.blank?
         flash.now[:error] = "Sorry, we are having technical difficulties contacting our payment gateway. Try again in a few minutes."
       else
         @billing_gateway_error = "#{flash.now[:warning]} (#{@response.message})"

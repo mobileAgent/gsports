@@ -43,6 +43,7 @@ class VideoAsset < ActiveRecord::Base
   define_index do
     indexes title, :sortable => true
     indexes description
+    indexes gsan
     indexes updated_at, :sortable => true
     indexes tags.name, :as => :tag_names
     indexes comments.comment, :as => :comment_comments

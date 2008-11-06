@@ -89,6 +89,7 @@ Rails::Initializer.run do |config|
   config.gem "ezcrypto", :version => "= 0.7"
   config.gem "daemons", :version => ">= 1.0.9"
   config.gem "mechanize", :version => ">= 0.7.8"
+  config.gem "curb", :version => "= 0.1.4"
   
   #resource_hacks required here to ensure routes like /:login_slug work
   config.plugins = [:engines, :community_engine, :white_list, :all]
