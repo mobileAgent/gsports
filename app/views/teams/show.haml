@@ -10,11 +10,13 @@
     %table
       %tr
         %td.orgSummary
-
+          - memlink = (current_user && @team.users.size > 0) ? link_to("View #{@team.nickname} Members (#{@team.users.size})", "/search/q?search[category]=10&team_id=#{@team.id}",:class=>'member-link') : '' 
           - case avatar_height
           - when 60
             = render :partial=>'logo', :locals=>{:avatar_height=>avatar_height}
             = render :partial=>'contact_info', :locals=>{:avatar_height=>avatar_height}
+            %br
+            = memlink
           - when 100
             %table
               %tr
@@ -22,6 +24,8 @@
                   = render :partial=>'logo', :locals=>{:avatar_height=>avatar_height}
                 %td
                   = render :partial=>'contact_info', :locals=>{:avatar_height=>avatar_height}
+                  %br
+                  = memlink
     
         %td.orgText
       
@@ -30,11 +34,6 @@
           %br
           %p
             Global Sports has partnered with schools and private athletic clubs around the country to make game videos available on our site. We make it possible for schools to all their sporting events without any difficulties.
-      %tr
-        %td
-          - if current_user && @team.users.size > 0
-            %p
-              = link_to "View #{@team.nickname} Members (#{@team.users.size})", "/search/q?search[category]=10&team_id=#{@team.id}", :class=>'member-link'
 
 
   /
@@ -44,25 +43,29 @@
     
     .orgTabs
       #tab1.orgTab.open
-        %h2.boxDescription
+        .left
+        .content
           %a{ :href=>'javascript:Tabs.open(1)' }
             School News
-            
+        .right
       - if @team.active && !@hide_recent_uploads
         #tab2.orgTab
-          %h2.boxDescription
+          .left
+          .content
             %a{ :href=>'javascript:Tabs.open(2)' }
               Recent Uploads
-              
+          .right    
       - if @team.active && (@team_photo_picks && !@team_photo_picks.empty?)
         #tab3.orgTab
-          %h2.boxDescription
+          .left
+          .content
             %a{ :href=>'javascript:Tabs.open(3)' }
               Clips / Reels
-    
+          .right
+        .clearDiv
     -#      School News
     #tabBody1.contentBox.tanBackground.tabBody.open
-      .contentBoxHeader.yellowHeader
+      .contentBoxHeader.flatblue
         %h2.boxDescription
           - if current_user && current_user.team_staff?(@team)
             %span.moreLink
@@ -92,7 +95,7 @@
 
       -#      Recent Uploads
       #tabBody2.contentBox.tanBackground.tabBody{ :style=>'display: none' }
-        .contentBoxHeader.yellowHeader
+        .contentBoxHeader.flatblue
           %h2.boxDescription
         .contentBoxContent
           =render :partial => 'video_assets/video_feature', :collection => @team_videos, :locals => {:nolinks => current_user.nil? }
@@ -104,7 +107,7 @@
         
       -#      Clips / Reels
       #tabBody3.contentBox.tanBackground.tabBody{ :style=>'display: none' }
-        .contentBoxHeader.yellowHeader
+        .contentBoxHeader.flatblue
           %h2.boxDescription
         .contentBoxContent
           =render :partial => 'video_assets/video_feature', :collection => @team_clips_reels, :locals => {:nolinks => current_user.nil? }
@@ -119,7 +122,7 @@
     col2 content
   .mainCol2
     .contentBox.tanBackground.orgPlayer
-      .contentBoxHeader.yellowHeader
+      .contentBoxHeader.darkblue
         %h2.boxDescription
           = @player_title
           \- 
@@ -129,14 +132,14 @@
         .flashArea#flashArea
         
         - flashvars = {}
-        - flashvars[:playerType]= ( @team.active ? "SchoolPlayer" : "SchoolNotMemberPlayer" )
+        - flashvars[:playerType]= ( @team.member? ? "SchoolPlayer" : "SchoolNotMemberPlayer" )
         - flashvars[:dockeys]= @team_video_picks
         
         = render :partial => 'shared/video_player', :locals => {:target => 'flashArea', :player_name => '/players/schoolhome.swf', :fvars => flashvars, :width=>'587px', :height=>'341px' }
     
     - if @team_photo_picks && !@team_photo_picks.empty?
       .contentBox.tanBackground.orgPhotos
-        .contentBoxHeader.yellowHeader
+        .contentBoxHeader.darkblue
           %h2.boxDescription
             Athlete Photo Gallery 
             = @team.name
@@ -144,18 +147,28 @@
           - @team_photo_picks.each do |photo|
             .orgPhoto{:style => "text-align: center; vertical-align: middle"}
               = link_to image_tag( photo.public_filename(:thumb)), user_photo_path(photo.user, photo), :class => 'framed'
-        
+ 
+      .orgBoxTail.wide
+        .left
+        .middle
+        .right
+        .clearDiv
+       
     - elsif @team_clips_reels && !@team_clips_reels.empty?
     
       .contentBox.tanBackground.orgFeature
-        .contentBoxHeader.yellowHeader
+        .contentBoxHeader.darkblue
           %h2.boxDescription
             Clips / Reels - 
             = @team.name
         .contentBoxContent
           =render :partial => 'video_assets/video_feature', :collection => @team_clips_reels[0..1], :locals => {:nolinks => current_user.nil? }
 
-
-                
-                
+      .orgBoxTail.wide
+        .left
+        .middle
+        .right
+        .clearDiv
+        
+          
                 

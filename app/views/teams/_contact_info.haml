@@ -8,11 +8,15 @@
     |
     - if @team.city || @team.state_id
       = h [@team.city,(@team.state_id ? @team.state.name : nil),@team.zip].compact.join(' ')
+      
+    - if current_user && (current_user.team_admin?(@team) || current_user.admin?)
+      \&nbsp;
+      = link_to 'Edit', edit_team_path(@team), :class=>"edit-#{avatar_height}"
+      
+      
   -# if (@team.phone && @team.phone.length > 0) || (@team.email && @team.email.length > 0)
     %p
       =h @team.phone
       - if @team.phone && @team.phone.length > 0 && @team.email && @team.email.length > 0
         |
         =h @team.email
-  - if current_user && (current_user.team_admin?(@team) || current_user.admin?)
-    = link_to 'Edit', edit_team_path(@team), :class=>"edit-#{avatar_height}"

@@ -141,6 +141,14 @@ class Team < ActiveRecord::Base
     return admins.empty? ? nil : admins[0]
   end
 
+  def member?
+    member = false
+    Membership.for_team(self).each() { |membership|
+      member = true if membership.active?
+    }
+    member
+  end
+
   protected
 
   def reassign_dependent_items
