@@ -33,12 +33,13 @@
         -else
           = post_listing.post
 
+    .clearDiv
     .listingBoxFooter
       .footerCol1
         &nbsp;
 
       .footerCol2
-        = link_to "Comments: #{post_listing.comments.size}", user_post_path(post_listing.user,post_listing)+'#comments'
+        = link_to (post_listing.comments.size > 0 ? "Comments: #{post_listing.comments.size}" : "Add Comment"), user_post_path(post_listing.user,post_listing)+'#comments'
         = " | "
         =render :partial => 'shared/favorite_count', :locals => {:item => post_listing}
  

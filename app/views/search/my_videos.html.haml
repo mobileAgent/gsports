@@ -73,7 +73,8 @@
           %h2.boxDescription
             Videos
       =render :partial => 'shared/video_listing', :collection => @video_assets, :locals => { :skip_controls => false, :show_tab => true }
-    
+      .clearDiv
+ 
       - if @video_assets.respond_to?('total_pages') && @video_assets.total_pages > 1
         .apple_pagination
           = will_paginate @video_assets

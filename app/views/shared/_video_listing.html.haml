@@ -52,7 +52,7 @@
       - else
         %p.one-liner
           Created by:
-          = link_to h(video_listing.user.full_name), user_path(video_listing.user_id)
+          = link_to h(video_listing.user.full_name), user_path(video_listing.user_id) if video_listing.user
           = video_listing.created_at.strftime("%m/%d/%y")
 
         %p.summary{ :style => "height:3em" }

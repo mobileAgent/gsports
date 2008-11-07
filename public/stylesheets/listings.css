@@ -154,7 +154,7 @@
   width: 38px;
 }
 .listingBox-2cols .col2 .listingBoxActions a, 
-.listingButton, .listingButton:visited {
+.listingButton {
   width: 25px;
   height: 25px;
   background-repeat: no-repeat;
@@ -162,7 +162,7 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: clip;
-  margin: 2px 6px 4px 7px;
+  margin: 3px 7px 3px 7px;
   text-align: center;
   float: left;
 }
@@ -170,3 +170,38 @@
 .listingBox-2cols .favorite-count {
   font-weight: bold
 }
+
+.listingNavTabs {
+  border-bottom: 5px solid #000000;
+  padding: 0px 10px 0px 10px;
+  margin-bottom: 10px;
+}
+.listingNavTab, .listingNavTab-sel {
+  width: 125px;
+  height: 25px;
+  margin-right: 5px;
+  padding: 0px 5px 0px 5px;
+  font-weight: bold;
+  font-size: 110%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: center;
+  line-height: 25px;
+  vertical-align: bottom;
+  float: left;
+}
+.listingNavTab, .listingNavTab a, .listingNavTab a:visited {
+  border: 1px solid #000000;
+  border-bottom: 0px;
+  background-color: #FFFFFF;
+  color: #000000;
+  text-decoration: none;
+}
+.listingNavTab-sel, .listingNavTab-sel a, .listingNavTab-sel a:visited {
+  border: 1px solid #000000;
+  background-color: #141C35;
+  color: #F4E50F;
+  font-weight: bold;
+}
+
