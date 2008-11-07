@@ -86,6 +86,13 @@ class Membership < ActiveRecord::Base
       :conditions => ['status=? and expiration_date is not null and expiration_date < ?', STATUS_ACTIVE, Time.now]
   named_scope :expires_on_date, 
       lambda { |date| { :conditions => ['status=? and date(expiration_date)=date(?)', STATUS_ACTIVE, date] } }
+      
+  named_scope :for_team, 
+      lambda { |team| 
+        u = User.team_admin(team.id).first
+        { :conditions => {:user_id => ( u ? u.id : nil)} } 
+      }
+  
   
   def active?
     status==STATUS_ACTIVE && (expiration_date.nil? || expiration_date > Time.now)

@@ -773,13 +773,34 @@ input[type='button'] {
 	width: 587px;
 }
 
+.contentBox.orgFeature, .contentBox.orgPhotos {
+	margin-bottom: 0;
+}
+
 
 .contentBoxContent.orgPlayer {
 	height: 345px;
 	overflow: inherit;
 }
 
+.contentBoxHeader.darkblue {
+	background: #141C35 url(/gs/images/content_box_header.png) repeat-x scroll left top;
+	border: 0;
+	color: white;
+	font-weight: bold;
+}
 
+
+.contentBoxHeader.flatblue {
+	background-color: #141C35;
+	background-image: none;
+	border: 0;
+	color: white;
+	font-weight: bold;
+	height: 20px;
+}
+
+/* white photo gallery
 .orgPhotos .contentBoxHeader {
 	background-color: white;
 	border: 0;
@@ -787,12 +808,15 @@ input[type='button'] {
 	font-weight: bold;
 }
 
+
 .orgPhotos .contentBoxContent {
 	background-color: white;
 	border: 1px solid black;
 	border-right: 2px solid black;
 	border-bottom: 2px solid black;
 }
+*/
+
 
 .orgPhoto {
 	display:inline;
@@ -818,9 +842,35 @@ input[type='button'] {
 	border: 0;
 }
 
-/* team landin
+
+.orgBoxTail {
+	margin-left: 20px;
+	color:#E2E4A7;
+	height: 22px;
+	background-color:#E2E4A7;
+	width:312px;
+	margin-bottom: 20px;
+}
+
+.orgBoxTail.wide {
+	width:587px;
+}
+
+.orgBoxTail .left {
+	width: 19px;
+	height: 22px;
+	background:#E2E4A7 url(/players/images/roundedcorner.png) repeat-x scroll left top;
+}
+
+.orgBoxTail .right {
+	width: 19px;
+	height: 22px;
+	background:#E2E4A7 url(/players/images/roundedcorner_right.png) repeat-x scroll left top;
+}
+
 
 /* team landing tabs */
+
 
 .contentBox.tabBody{
 	margin-bottom: 0;
@@ -840,23 +890,53 @@ input[type='button'] {
 
 .orgTab {
 	color:#FFEF0A;
-	background:#68A34E url(/gs/images/content_box_header.png) repeat-x scroll left top;
-	border-bottom:1px solid #B7BAA3;
+	xbackground:#68A34E url(/gs/images/content_box_header.png) repeat-x scroll left top;
 	font-size:110%;
-	height:18px;
-	padding-top:2px;
+	height:20px;
 	float: left;
-	padding-right:8px;
 	margin-right:1px;
 }
 
 .orgTab.open {
-	border-bottom:1px solid #68A34E;
 	color:white;
 }
 
-.orgTab.open a {
-	color:white;
+.orgTab .left {
+	float:left;
+	width: 3px;
+	height: 20px;
+	background:white url(/gs/images/tab_unselected_l.png) repeat-x scroll left top;
+}
+
+.orgTab .content {
+	float:left;
+	padding-top: 2px;
+	padding-left:8px;
+	padding-right:8px;
+	height: 20px;
+	font-weight: normal;
+	font-size: 100%;
+	white-space: nowrap;
+	background:#141C35 url(/gs/images/tab_unselected_m.png) repeat-x scroll left top;
+}
+
+.orgTab .right{
+	float:left;
+	width: 3px;
+	height: 20px;
+	background:white url(/gs/images/tab_unselected_r.png) repeat-x scroll left top;
+}
+
+.orgTab.open .left {
+	background:white url(/gs/images/tab_selected_l.png) repeat-x scroll left top;
+}
+
+.orgTab.open .content {
+	background:#141C35 url(/gs/images/tab_selected_m.png) repeat-x scroll left top;
+}
+
+.orgTab.open .right{
+	background:white url(/gs/images/tab_selected_r.png) repeat-x scroll left top;
 }
 
 .orgTab a {
@@ -864,28 +944,9 @@ input[type='button'] {
 	text-decoration: none;
 }
 
-
-.orgBoxTail {
-	margin-left: 20px;
-	color:#E2E4A7;
-	height: 22px;
-	background-color:#E2E4A7;
-	width:312px;
-	margin-bottom: 20px;
+.orgTab.open a {
+	color:white;
 }
-
-.orgBoxTail .left {
-	width: 19px;
-	height: 22px;
-	background:#E2E4A7 url(/players/images/roundedcorner.png) repeat-x scroll left top;
-}
-
-.orgBoxTail .right {
-	width: 19px;
-	height: 22px;
-	background:#E2E4A7 url(/players/images/roundedcorner_right.png) repeat-x scroll left top;
-}
-
 
 
 /* end - team league summary content */
