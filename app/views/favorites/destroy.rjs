@@ -14,6 +14,10 @@ if @favorite
 
     when 'photos'
       page.replace(fvid, :partial => (is_listing ? 'shared/favorite_listing' : 'shared/favorite_item'), :locals => {:item => @favorite.favoritable })
+      page << "if($('#{fvcountid}')) {"
+      page.replace(fvcountid, :partial => 'shared/favorite_count', :locals => {:item => @favorite.favoritable})
+      page.visual_effect(:highlight,fvcountid)
+      page << "}"
     when 'video_assets'
       page.replace(fvid, :partial => (is_listing ? 'shared/favorite_listing' : 'shared/favorite_item'), :locals => {:item => @favorite.favoritable })
       page << "if($('#{fvcountid}')) {"
@@ -35,6 +39,10 @@ if @favorite
       
     when 'posts'
       page.replace(fvid, :partial => (is_listing ? 'shared/favorite_listing' : 'shared/favorite_item'), :locals => {:item => @favorite.favoritable })
+      page << "if($('#{fvcountid}')) {"
+      page.replace(fvcountid, :partial => 'shared/favorite_count', :locals => {:item => @favorite.favoritable})
+      page.visual_effect(:highlight,fvcountid)
+      page << "}"
 
     else
       flashnow(page,'Your favorite has been removed')

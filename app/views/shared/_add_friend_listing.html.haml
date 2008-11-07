@@ -1,0 +1,3 @@
+- if user && current_user && current_user.can_request_friendship_with(user)
+  %div{ :id => "friend_request_#{user.id}" }
+    = link_to_remote image_tag('/images/listing_icons/add.png', :mouseclick => '/images/listing_icons/sel-add.png', :border=>0, :alt => 'Request Friendship', :title => 'Request Friendship'), :url => hash_for_user_friendships_url(:user_id => current_user.id, :friend_id => user.id), :method => :post, :with=>"'listing=true'", :class => 'listingButton'

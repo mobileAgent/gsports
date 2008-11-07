@@ -1,16 +1,66 @@
-.listingItem
-  .listingImage
-    - if team_listing.avatar
-      %a{:href=>team_path(team_listing)}
-        %img{ :src=>team_listing.avatar.public_filename, :title=>team_listing.name, :alt=>team_listing.name }
-  
-  .listingDescription
-    %h4.schoolName
-      = link_to "#{h(team_listing.name)} #{(team_listing.nickname)}", url_for({:controller => 'teams', :action => 'show', :id => team_listing })
-    %p
-      - if team_listing.city && team_listing.city.length > 0
-        = h "#{team_listing.city}, "
-      = h "#{team_listing.county_name}, #{team_listing.state_id ? team_listing.state.name : ''}"
-                
+
+- show_tab ||= false
+
+.listingBox-2cols{:id => "team_item_#{team_listing.id}"}
+  - if show_tab
+    .tabWrapper
+      .listingTab
+        Team
+    .clearDiv
+  .frameTop
+  .col1
+    .listingBoxHeader
+      - if team_listing.name.length > 45
+        .title-2lines
+          = truncate(team_listing.name,120)
+      - else
+        .title
+          = team_listing.name
+    .thumb.thumb-tall
+       - if team_listing.avatar
+        %a{:href=>team_path(team_listing)}
+          %img{ :src=>team_listing.avatar.public_filename, :title=>team_listing.name, :alt=>team_listing.name }
+    .listingBoxContent
+      - if team_listing.nickname && !team_listing.nickname.blank?
+        .heading
+          = team_listing.nickname
+
+      - if team_listing.address1 && !team_listing.address1.blank?
+        %div
+          = team_listing.address1
+      - if team_listing.address2 && !team_listing.address2.blank?
+        %div
+          = team_listing.address2
+      %div
+        - if team_listing.city && !team_listing.city.blank?
+          = "#{team_listing.city}, "
+        - if team_listing.state
+          = team_listing.state.name
+        - if team_listing.zip
+          = team_listing.zip
+
+      - if team_listing.phone && !team_listing.phone.blank?
+        %div
+          = team_listing.phone
+
+      - if team_listing.email && !team_listing.email.blank?
+        %div
+          = team_listing.email
+
+      %br/
+      %br/
+      = link_to "Members: #{team_listing.users.size}", "/search/q?search[category]=10&team_id=#{team_listing.id}",  
+
+
+  .col2
+    .listingBoxActions
+      = link_to image_tag('/images/listing_icons/profile.png', :mouseclick => '/images/listing_icons/sel-profile.png', :border=>0, :alt => 'User Profile', :title => 'User Profile'), team_path( team_listing.id ), :class => 'listingButton'
+      = render :partial => 'shared/favorite_listing', :locals => { :item => team_listing }
+
+      = link_to image_tag('/images/listing_icons/viewFilm.png', :mouseclick => '/images/listing_icons/sel-viewFilm.png', :border=>0, :alt => 'Videos', :title => 'Videos'), url_for({:controller => 'search', :action => 'team_video_assets', :team_id => team_listing.id})
+
+      - if current_user && (current_user.admin? || current_user.id == team_listing.id)
+        = link_to image_tag('/images/listing_icons/edit.png', :mouseclick => '/images/listing_icons/sel-edit.png', :border=>0, :alt => 'Edit', :title => 'Edit'), edit_team_path(team_listing), :class => 'listingButton'
+
   .clearDiv
-.clearDiv
+  .frameBtm

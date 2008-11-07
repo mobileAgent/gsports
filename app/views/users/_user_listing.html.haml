@@ -1,18 +1,50 @@
-.listingItem
-  .listingImage
-    = link_to image_tag( user_listing.avatar_photo_url(:thumb), :class => "polaroid" ), user_path(user_listing)
-  .listingDescription
-    %h4
-      = user_listing.full_name
-    .schoolName
-      = "#{h user_listing.team.name}"
-    = "<p class='userTags'>" + user_listing.tags[0...6].collect{|t| link_to( t.name, tag_url(t.name), :class => "tag") if t }.join(", ") + "</p>" unless user_listing.tags.empty?
-    
-    .recentFriendFeed
-      = "#{user_listing.description}"
-  %ul.listingActions
-    - if current_user.can_request_friendship_with(user_listing)
-      %li
-        = add_friend_button(user_listing)
+- show_tab ||= false
+
+.listingBox-2cols{:id => "user_item_#{user_listing.id}"}
+  - if show_tab
+    .tabWrapper
+      .listingTab
+        Member 
+    .clearDiv
+  .frameTop
+  .col1
+    .listingBoxHeader
+      - if user_listing.full_name.length > 45
+        .title-2lines
+          = truncate(user_listing.full_name,120)
+      - else
+        .title
+          = user_listing.full_name
+    .thumb.thumb-tall
+      = link_to image_tag( user_listing.avatar_photo_url(:thumb) ), user_path(user_listing)
+    .listingBoxContent
+      = link_to user_listing.team.name, team_path(user_listing.team)
+      %br/
+      - if user_listing.team.city && !user_listing.team.city.blank?
+        = "#{user_listing.team.city}, "
+      - elsif user_listing.team.county_name && !user_listing.team.county_name.blank?
+        = "#{user_listing.team.county_name}, "
+
+      - if user_listing.team.state
+        = user_listing.team.state.name
+      %br/
+      %br/
+      = link_to "Friends: #{user_listing.friendships.length}", accepted_user_friendships_path(user_listing)
+ 
+   
+  .col2
+    .listingBoxActions
+      = link_to image_tag('/images/listing_icons/profile.png', :mouseclick => '/images/listing_icons/sel-profile.png', :border=>0, :alt => 'User Profile', :title => 'User Profile'), user_path( user_listing.id ), :class => 'listingButton'
+      = render :partial => 'shared/favorite_listing', :locals => { :item => user_listing }
+      
+      = render :partial => 'shared/add_friend_listing', :locals => { :user => user_listing }
+
+      = link_to image_tag('/images/listing_icons/viewFilm.png', :mouseclick => '/images/listing_icons/sel-viewFilm.png', :border=>0, :alt => 'Videos', :title => 'Videos'), url_for({:controller => 'search', :action => 'my_videos', :user_id => user_listing.id})        
+
+      - if current_user && (current_user.admin? || current_user.id == user_listing.id)
+        = link_to image_tag('/images/listing_icons/edit.png', :mouseclick => '/images/listing_icons/sel-edit.png', :border=>0, :alt => 'Edit', :title => 'Edit'), edit_user_path(user_listing), :class => 'listingButton'
+      - elsif current_user && current_user.can_send_message_to?(user_listing)
+        = link_to image_tag('/images/listing_icons/message.png', :mouseclick => '/images/listing_icons/sel-message.png', :border=>0, :alt => 'Send Message', :title => 'Send Message'), new_message_path(:to => user_listing.id), :class => 'listingButton'
+
   .clearDiv
-.clearDiv
+  .frameBtm

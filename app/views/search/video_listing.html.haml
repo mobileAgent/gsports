@@ -64,6 +64,8 @@
         - when 'VideoReel'
           =render :partial => 'shared/video_listing', :locals => { :video_listing => video, :skip_controls => false, :show_tab => true }
 
+      .clearDiv
+
       - if @videos.respond_to?('total_pages')
         .apple_pagination
           = will_paginate @videos

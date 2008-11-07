@@ -71,9 +71,9 @@
       .footerCol2
         %strong 
           - if video_listing.video_length && !video_listing.video_length.blank? && video_listing.video_length != '0'
-            ="(#{video_listing.video_length})"
+            =video_listing.video_length
           - else
-            (??:??)
+            ??:??
         %strong= " | Views:"
         = number_with_delimiter(video_listing.view_count)
         %strong= " | " 

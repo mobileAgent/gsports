@@ -18,14 +18,31 @@
     .thumb.thumb-tall
       = link_to image_tag( photo_listing.public_filename(:thumb)), user_photo_path(@user, photo_listing)
     .listingBoxContent
-      .schoolName
+      %div
+        Owner:
+        = link_to photo_listing.user.full_name, user_path(photo_listing.user)
+      %div
+        Uploaded: 
         = photo_listing.created_at.to_s(:readable)
-      .recentFriendFeed
-        = truncate_words(h(photo_listing.description),35)
-        %br/
-        = photo_listing.tags.collect{|t| link_to( h(t.name), tag_url(t.name), :class => 'tag') }.join(", ")
+
+      -# Removed tags per Marcie's mockups
+        %div
+          = truncate_words(h(photo_listing.description),35)
+          %br/
+          = photo_listing.tags.collect{|t| link_to( h(t.name), tag_url(t.name), :class => 'tag') }.join(", ")
+
+    .listingBoxFooter
+      .footerCol1
+        &nbsp;
+
+      .footerCol2
+        = link_to "Comments: #{photo_listing.comments.size}", user_photo_path(photo_listing.user,photo_listing)+'#comments'
+        = " | "
+        =render :partial => 'shared/favorite_count', :locals => {:item => photo_listing}
+
   .col2
     .listingBoxActions
+      = link_to image_tag('/images/listing_icons/profile.png', :mouseclick => '/images/listing_icons/sel-profile.png', :border=>0, :alt => 'User Profile', :title => 'User Profile'), user_path( photo_listing.user_id ), :class => 'listingButton'
       = render :partial => 'shared/favorite_listing', :locals => { :item => photo_listing }
 
       - if (current_user && (current_user.admin? || current_user.id == photo_listing.user_id))

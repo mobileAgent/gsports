@@ -20,26 +20,33 @@
         =image_tag((post_listing.image_thumbnail_for_post || post_listing.user.avatar_photo_url(:thumb)), :alt=>"image")
 
     .listingBoxContent
-      %p.one-liner
+      .title.one-liner
+        Author:
         = link_to post_listing.user.full_name, user_path(post_listing.user)
-        wrote on
-        = post_listing.published_at.to_date
+        = post_listing.published_at.strftime("%m/%d/%y")
 
       -# restrict to 5 lines here (5em + 1em for padding)
-      .summary{ :style => "height:6em;overflow:hidden" }
+      %div{ :style => "height:6em;overflow:hidden" }
         -if count_words(post_listing.post) > 20
           = truncate_words(post_listing.post,20)
           = link_to "more...", user_post_path(post_listing.user,post_listing)
         -else
           = post_listing.post
 
-      .recentFriendFeed
-        = "#{pluralize(post_listing.view_count,'view')}"
-        = link_to "#{pluralize(post_listing.comments.size,'comment')}", user_post_path(post_listing.user,post_listing)+'#comments'
+    .listingBoxFooter
+      .footerCol1
+        &nbsp;
 
+      .footerCol2
+        = link_to "Comments: #{post_listing.comments.size}", user_post_path(post_listing.user,post_listing)+'#comments'
+        = " | "
+        =render :partial => 'shared/favorite_count', :locals => {:item => post_listing}
+ 
   .col2
     .listingBoxActions
-      =link_to image_tag('/images/listing_icons/view.png', :mouseclick => '/images/listing_icons/sel-view.png', :border=>0, :alt => 'Read', :title => 'Read'),user_post_path(post_listing.user,post_listing), :rel => 'bookmark', :class => 'listingButton'
+      -# Removed view button per Marcie's mockup 
+        =link_to image_tag('/images/listing_icons/view.png', :mouseclick => '/images/listing_icons/sel-view.png', :border=>0, :alt => 'Read', :title => 'Read'),user_post_path(post_listing.user,post_listing), :rel => 'bookmark', :class => 'listingButton'
+      = link_to image_tag('/images/listing_icons/profile.png', :mouseclick => '/images/listing_icons/sel-profile.png', :border=>0, :alt => 'User Profile', :title => 'User Profile'), user_path( post_listing.user_id ), :class => 'listingButton'
       - if current_user.can_request_friendship_with(post_listing.user)
         =link_to image_tag('/images/listing_icons/add.png', :mouseclick => '/images/listing_icons/sel-add.png', :border=>0, :alt => 'Request Friendship', :title => 'Request Friendship'),url_for({ :controller => 'friendships', :action => 'create', :user_id => current_user.id, :friend_id => post_listing.id}), {:method => :post, :class => 'listingButton'}
       = render :partial => 'shared/favorite_listing', :locals => { :item => post_listing }

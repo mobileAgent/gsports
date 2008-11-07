@@ -1,0 +1,14 @@
+if @friendship.new_record?
+  #it didn't work
+  flashnow(page,"You are already friends with #{@friendship.friend.full_name}")
+else
+  is_listing = params[:listing] || @listing || false
+  divid="friend_request_#{@friendship.friend.id}"
+  if is_listing
+    # for now, just remove the add button
+    page.visual_effect :squish, divid, :duration => 1 
+    flashnow(page,"You have requested friendship with #{@friendship.friend.full_name}")
+  else 
+    page.replace(divid, "Requested friendship with #{@friendship.friend.full_name}!" )
+  end
+end

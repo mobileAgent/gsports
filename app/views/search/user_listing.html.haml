@@ -67,6 +67,7 @@
 
     - if @users && @users.any?
       = render :partial => "users/user_listing", :collection => @users
+      .clearDiv
       .apple_pagination
         = will_paginate @users
     -else

@@ -11,8 +11,7 @@
     
     - if @teams && @teams.any?
       = render :partial => "teams/team_listing", :collection => @teams
-      
-      
+      .clearDiv 
       .apple_pagination
         = will_paginate @teams
     -else

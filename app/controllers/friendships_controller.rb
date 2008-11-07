@@ -18,13 +18,22 @@ class FriendshipsController < BaseController
           flash[:notice] = "Requested friendship with #{@friendship.friend.full_name}."
           redirect_to accepted_user_friendships_path(@user)
         }
-        format.js { render( :inline => "Requested friendship with #{@friendship.friend.full_name}." ) }        
+        format.js { render :action => "create" }
+        #
+        #  if params[:listing]
+        #    # just clear out the add-friend button
+        #    render( :inline => "" ) 
+        #  else
+        #    render( :inline => "Requested friendship with #{@friendship.friend.full_name}." ) 
+        #  end
+        #}        
       else
         logger.error("Friendship request failed #{@friendship.errors.inspect} and on the reverse #{reverse_friendship.errors.inspect}")
         flash[:error] = 'Friendship could not be created'
         # @users = User.find(:all) -- wtf?
         format.html { redirect_to accepted_user_friendships_path(@user) }
-        format.js { render( :inline => "Friendship request failed." ) }                
+        #format.js { render( :inline => "Friendship request failed." ) }                
+        format.js { render :action => "create" }
       end
     end
   end
