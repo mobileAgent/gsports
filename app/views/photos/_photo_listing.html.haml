@@ -37,7 +37,7 @@
         &nbsp;
 
       .footerCol2
-        = link_to  (photo_listing.comments.size > 0 ? "Comments: #{photo_listing.comments.size}" : "Add Comment"), user_photo_path(photo_listing.user,photo_listing)+'#comments'
+        = link_to photo_listing.comments.size > 0 ? "Comments: #{photo_listing.comments.size}" : "Add Comment", user_photo_path(photo_listing.user,photo_listing)+'#comments'
         = " | "
         =render :partial => 'shared/favorite_count', :locals => {:item => photo_listing}
 
