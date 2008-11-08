@@ -17,7 +17,7 @@
         .title
           = team_listing.name
     .thumb.thumb-tall
-       - if team_listing.avatar
+      - if team_listing.avatar
         %a{:href=>team_path(team_listing)}
           %img{ :src=>team_listing.avatar.public_filename, :title=>team_listing.name, :alt=>team_listing.name }
     .listingBoxContent
@@ -49,7 +49,7 @@
 
       %br/
       %br/
-      = link_to "Members: #{team_listing.users.size}", "/search/q?search[category]=10&team_id=#{team_listing.id}",  
+      = link_to "Members: #{team_listing.users.size}", "/search/q?search[category]=10&team_id=#{team_listing.id}"
 
 
   .col2
