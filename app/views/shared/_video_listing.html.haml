@@ -26,7 +26,7 @@
         .title
           = video_listing.title
     .thumb
-      = "<a href='#{link}'><img src='#{@vidavee.file_thumbnail_medium(video_listing.dockey)}' title='#{h(video_listing.title).gsub(/\'/,'')}' alt='#{h(video_listing.title).gsub(/\'/,'')}'/></a>"
+      = "<a href='#{link}'><img src='#{@vidavee.file_thumbnail_medium(video_listing.thumbnail_dockey || video_listing.dockey)}' title='#{h(video_listing.title).gsub(/\'/,'')}' alt='#{h(video_listing.title).gsub(/\'/,'')}'/></a>"
     .listingBoxContent
       - if VideoAsset === video_listing
 
