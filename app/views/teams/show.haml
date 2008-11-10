@@ -3,7 +3,7 @@
 - top_row_height_px = @team_popular_videos.size >= 3 ? 255 : 130
 - second_row_height_px = [@team_clips_reels.size,@team_videos.size].max >= 3 ? 255 : 130
 
-.landingContentArea
+.orgContentArea
 
     
   .orgHome
@@ -124,23 +124,28 @@
   /
     col2 content
   .mainCol2
+    - team_has_videos = @team_video_picks && !@team_video_picks.empty?
     .contentBox.tanBackground.orgPlayer
       .contentBoxHeader.darkblue
         %h2.boxDescription
           = @player_title
           \- 
           = @team.name
+        - if team_has_videos
+          .moreLink
+            =link_to 'See All Videos', {:controller => 'search', :action => 'team_video_assets', :team_id => @team.id}
           
       .contentBoxContent.orgPlayer
         .flashArea#flashArea
-        - if @team_video_picks && @team_video_picks.length > 2
+        - if team_has_videos && @team_video_picks && @team_video_picks.length > 2
           - flashvars = {}
           - flashvars[:playerType]= ( @team.member? ? "SchoolPlayer" : "SchoolNotMemberPlayer" )
           - flashvars[:dockeys]= @team_video_picks
         
           = render :partial => 'shared/video_player', :locals => {:target => 'flashArea', :player_name => '/players/schoolhome.swf', :fvars => flashvars, :width=>'587px', :height=>'341px' }
         - else
-          The team has no videos uploaded
+          .box
+            The team has no videos uploaded
     
     - if @team_photo_picks && !@team_photo_picks.empty?
       .contentBox.tanBackground.orgPhotos
@@ -150,8 +155,11 @@
             = @team.name
         .contentBoxContent
           - @team_photo_picks.each do |photo|
-            .orgPhoto{:style => "text-align: center; vertical-align: middle"}
-              = link_to image_tag( photo.public_filename(:thumb)), user_photo_path(photo.user, photo), :class => 'framed'
+            .orgPhoto
+              .orgPhotoThumb
+                = link_to image_tag( photo.public_filename(:thumb), :alt => photo.name, :title => photo.name), user_photo_path(photo.user, photo), :class => 'framed'
+              .orgPhotoTitle
+                = photo.name
  
       .orgBoxTail.wide
         .left
