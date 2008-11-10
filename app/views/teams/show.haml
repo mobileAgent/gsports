@@ -123,7 +123,8 @@
   /
     col2 content
   .mainCol2
-    .contentBox.tanBackground.orgPlayer
+    -# Add 20px top margin since no "tab" for this box
+    .contentBox.tanBackground.orgPlayer{ :style => "margin-top: 20px" }
       .contentBoxHeader.darkblue
         %h2.boxDescription
           = @player_title
@@ -139,7 +140,8 @@
         
           = render :partial => 'shared/video_player', :locals => {:target => 'flashArea', :player_name => '/players/schoolhome.swf', :fvars => flashvars, :width=>'587px', :height=>'341px' }
         - else
-          The team has no videos uploaded
+          .box
+            The team has no videos uploaded
     
     - if @team_photo_picks && !@team_photo_picks.empty?
       .contentBox.tanBackground.orgPhotos
