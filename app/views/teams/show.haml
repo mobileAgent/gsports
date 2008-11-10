@@ -48,7 +48,7 @@
           %a{ :href=>'javascript:Tabs.open(1)' }
             School News
         .right
-      - if @team.active && !@hide_recent_uploads
+      - unless @hide_recent_uploads
         #tab2.orgTab
           .left
           .content
@@ -93,7 +93,7 @@
                 =link_to "delete", user_post_path(post.user, post), {:method => :delete, :confirm => 'Permanently delete this post?'}
             .clearDiv
             
-    - if @team.active
+    - unless @hide_recent_uploads
 
       -#      Recent Uploads
       #tabBody2.contentBox.tanBackground.tabBody{ :style=>'display: none' }
