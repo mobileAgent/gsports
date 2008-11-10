@@ -55,7 +55,7 @@
             %a{ :href=>'javascript:Tabs.open(2)' }
               Recent Uploads
           .right    
-      - if @team.active && (@team_photo_picks && !@team_photo_picks.empty?)
+      - if (@team_photo_picks && !@team_photo_picks.empty?)
         #tab3.orgTab
           .left
           .content
@@ -75,7 +75,8 @@
       
 
         -# posts = team_posts( (@team.active ? @team : Team.find(1)) )
-        - posts = team_posts( @team.active )
+        - posts = team_posts( @team )
+        - posts ||= team_posts( Team.find(1) )
         - posts.each() do |post|
           .featureSummary
             %span
