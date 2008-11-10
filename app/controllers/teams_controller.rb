@@ -168,10 +168,17 @@ class TeamsController < BaseController
     @team = Team.find(team_id)
     @team_videos = VideoAsset.for_team(@team).all(:limit => 10, :order => 'updated_at DESC')
     @team_popular_videos = VideoAsset.for_team(@team).all(:limit => 10, :order => 'view_count DESC')
-    @team_clips_reels = VideoClip.for_team(@team).find(:all, :limit => 10, :order => "video_clips.created_at DESC")
-    @team_clips_reels << VideoReel.for_team(@team).find(:all, :limit => 10, :order => "video_reels.created_at DESC")
-    @team_clips_reels.flatten!
-    @team_clips_reels.sort! { |a,b| a.created_at <=> b.created_at }
+
+    show_clips_reels = false
+    if show_clips_reels
+      @team_clips_reels = VideoClip.for_team(@team).find(:all, :limit => 10, :order => "video_clips.created_at DESC")
+      @team_clips_reels << VideoReel.for_team(@team).find(:all, :limit => 10, :order => "video_reels.created_at DESC")
+      @team_clips_reels.flatten!
+      @team_clips_reels.sort! { |a,b| a.created_at <=> b.created_at }
+    else 
+      @team_clips_reels = Array.new
+    end
+
     load_team_favorites(team_id)
   end
 
