@@ -3,7 +3,8 @@
     %h2.columnDescriptor
       %span
         = @title || "My Videos"
-      = "#{@user.full_name}" unless @title
+      - if @user
+        = "#{@user.full_name}" unless @title
 
   .listings
     -#- if @is_search_result

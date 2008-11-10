@@ -155,6 +155,7 @@
             .clearDiv
 
   - if @video_assets.respond_to?('total_pages') && @video_assets.total_pages > 1
+    .clearDiv
     .apple_pagination
       = will_paginate @video_assets
       

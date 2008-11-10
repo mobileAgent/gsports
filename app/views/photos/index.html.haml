@@ -5,7 +5,7 @@
         -if @title
           = @title 
         -else 
-          =link_to _('MY PHOTOS'), user_photos_path(@user.id)
+          =link_to _('MY FILES'), user_photos_path(@user.id)
       = "#{@user.full_name}" unless @title
 
   .listings
@@ -13,11 +13,11 @@
       .listingItem
         = link_to 'New photo', new_user_photo_path(@user), :class => 'genericButton'
 
-    =render :partial => 'photo_listing', :collection => @photos
+    =render :partial => 'photo_listing', :collection => @photos, :locals => {:show_tab => true}
     .clearDiv
       
     -if !@photos.nil? && !@photos.empty?
-      .pagination
+      .pagination{ :style => 'padding: 10px 10px 10px 10px' }
         = pagination_info_for @pages
         = pagination_links_for @pages, {:link_to_current_page => true} if @pages.length > 1
 

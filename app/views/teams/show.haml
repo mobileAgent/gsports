@@ -48,14 +48,14 @@
           %a{ :href=>'javascript:Tabs.open(1)' }
             School News
         .right
-      - if @team.active && !@hide_recent_uploads
+      - unless @hide_recent_uploads
         #tab2.orgTab
           .left
           .content
             %a{ :href=>'javascript:Tabs.open(2)' }
               Recent Uploads
           .right    
-      - if @team.active && (@team_photo_picks && !@team_photo_picks.empty?)
+      - if (false && @team_photo_picks && !@team_photo_picks.empty?)
         #tab3.orgTab
           .left
           .content
@@ -74,7 +74,9 @@
       .contentBoxContent
       
 
-        - posts = team_posts( (@team.active ? @team : Team.find(1)) )
+        -# posts = team_posts( (@team.active ? @team : Team.find(1)) )
+        - posts = team_posts( @team )
+        - posts ||= team_posts( Team.find(1) )
         - posts.each() do |post|
           .featureSummary
             %span
@@ -91,7 +93,7 @@
                 =link_to "delete", user_post_path(post.user, post), {:method => :delete, :confirm => 'Permanently delete this post?'}
             .clearDiv
             
-    - if @team.active
+    - unless @hide_recent_uploads
 
       -#      Recent Uploads
       #tabBody2.contentBox.tanBackground.tabBody{ :style=>'display: none' }
@@ -106,11 +108,12 @@
               = "More Videos available to members!"
         
       -#      Clips / Reels
-      #tabBody3.contentBox.tanBackground.tabBody{ :style=>'display: none' }
-        .contentBoxHeader.flatblue
-          %h2.boxDescription
-        .contentBoxContent
-          =render :partial => 'video_assets/video_feature', :collection => @team_clips_reels, :locals => {:nolinks => current_user.nil? }
+      - if false
+        #tabBody3.contentBox.tanBackground.tabBody{ :style=>'display: none' }
+          .contentBoxHeader.flatblue
+            %h2.boxDescription
+          .contentBoxContent
+            =render :partial => 'video_assets/video_feature', :collection => @team_clips_reels, :locals => {:nolinks => current_user.nil? }
 
     .orgBoxTail
       .left
@@ -121,21 +124,28 @@
   /
     col2 content
   .mainCol2
+    - team_has_videos = @team_video_picks && !@team_video_picks.empty?
     .contentBox.tanBackground.orgPlayer
       .contentBoxHeader.darkblue
         %h2.boxDescription
           = @player_title
           \- 
           = @team.name
+        - if team_has_videos
+          .moreLink
+            =link_to 'See All Videos', {:controller => 'search', :action => 'team_video_assets', :team_id => @team.id}
           
       .contentBoxContent.orgPlayer
         .flashArea#flashArea
+        - if team_has_videos && @team_video_picks && @team_video_picks.length > 2
+          - flashvars = {}
+          - flashvars[:playerType]= ( @team.member? ? "SchoolPlayer" : "SchoolNotMemberPlayer" )
+          - flashvars[:dockeys]= @team_video_picks
         
-        - flashvars = {}
-        - flashvars[:playerType]= ( @team.member? ? "SchoolPlayer" : "SchoolNotMemberPlayer" )
-        - flashvars[:dockeys]= @team_video_picks
-        
-        = render :partial => 'shared/video_player', :locals => {:target => 'flashArea', :player_name => '/players/schoolhome.swf', :fvars => flashvars, :width=>'587px', :height=>'341px' }
+          = render :partial => 'shared/video_player', :locals => {:target => 'flashArea', :player_name => '/players/schoolhome.swf', :fvars => flashvars, :width=>'587px', :height=>'341px' }
+        - else
+          .box
+            The team has no videos uploaded
     
     - if @team_photo_picks && !@team_photo_picks.empty?
       .contentBox.tanBackground.orgPhotos
@@ -145,8 +155,11 @@
             = @team.name
         .contentBoxContent
           - @team_photo_picks.each do |photo|
-            .orgPhoto{:style => "text-align: center; vertical-align: middle"}
-              = link_to image_tag( photo.public_filename(:thumb)), user_photo_path(photo.user, photo), :class => 'framed'
+            .orgPhoto
+              .orgPhotoThumb
+                = link_to image_tag( photo.public_filename(:thumb), :alt => photo.name, :title => photo.name), user_photo_path(photo.user, photo), :class => 'framed'
+              .orgPhotoTitle
+                = photo.name
  
       .orgBoxTail.wide
         .left

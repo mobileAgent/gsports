@@ -39,7 +39,7 @@
             .listingItem
               You have no friendships
 
-  - if current_user
-    - if @friendships.length > 0
-      = render :partial => "friendships/friendship", :collection => @friendships, :locals => {:owner => @user}
-      .clearDiv        
+    - if current_user
+      - if @friendships.length > 0
+        = render :partial => "friendships/friendship", :collection => @friendships, :locals => {:owner => @user}
+        .clearDiv        

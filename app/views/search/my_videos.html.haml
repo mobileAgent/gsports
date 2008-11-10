@@ -73,13 +73,17 @@
           %h2.boxDescription
             Videos
       =render :partial => 'shared/video_listing', :collection => @video_assets, :locals => { :skip_controls => false, :show_tab => true }
-    
-      - if @video_assets.respond_to?('total_pages') && @video_assets.total_pages > 1
-        .apple_pagination
-          = will_paginate @video_assets
-      - else
-        %strong
-          = link_to "More Videos...", url_for(:controller => 'search', :action => 'my_video_assets')
+      .clearDiv
+
+
+      .moreLinkArea 
+        - if @video_assets.respond_to?('total_pages') && @video_assets.total_pages > 1
+          .apple_pagination
+            = will_paginate @video_assets
+        - else
+          %strong
+            = link_to "More Videos...", url_for(:controller => 'search', :action => 'my_video_assets')
+      %br/
 
   
     -if @video_clips && @video_clips.size > 0
@@ -88,13 +92,16 @@
           %h2.boxDescription
             Clips
       =render :partial => 'shared/video_listing', :collection => @video_clips, :locals => {:skip_controls => false, :show_tab => true }
+      .clearDiv
       
-      - if @video_clips.respond_to?('total_pages') && @video_clips.total_pages > 1
-        .apple_pagination
-          = will_paginate @video_clips
-      - else
-        %strong
-          = link_to "More Clips...", url_for(:controller => 'search', :action => 'my_video_clips')
+      .moreLinkArea 
+        - if @video_clips.respond_to?('total_pages') && @video_clips.total_pages > 1
+          .apple_pagination
+            = will_paginate @video_clips
+        - else
+          %strong
+            = link_to "More Clips...", url_for(:controller => 'search', :action => 'my_video_clips')
+      %br/
 
     - if @video_reels && @video_reels.size > 0  
       .contentBox.tanBackground
@@ -103,10 +110,11 @@
             Reels
       =render :partial => 'shared/video_listing', :collection => @video_reels, :locals => { :skip_controls => false, :show_tab => true }
       
-      - if @video_reels.respond_to?('total_pages') && @video_reels.total_pages > 1
-        .apple_pagination
-          = will_paginate @video_reels
-      - else
-        %strong
-          = link_to "More Reels...", url_for(:controller => 'search', :action => 'my_video_reels')
+      .moreLinkArea 
+        - if @video_reels.respond_to?('total_pages') && @video_reels.total_pages > 1
+          .apple_pagination
+            = will_paginate @video_reels
+        - else
+          %strong
+            = link_to "More Reels...", url_for(:controller => 'search', :action => 'my_video_reels')
 

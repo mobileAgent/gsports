@@ -52,6 +52,28 @@
       /
     .clearDiv
     /
+
+
+    -#
+      - @videos |= Array.new
+      - @users |= Array.new
+      - @teams |= Array.new
+      - @leagues |= Array.new
+      - @photos |= Array.new
+      - @posts |= Array.new
+
+      .listingNavTabs
+        .listingNavTab
+          Videos
+          = " (#{@videos.size})"
+        .listingNavTab
+          Members 
+          = " (#{@users.size + @teams.size + @leagues.size})"
+        .listingNavTab
+          Other Results 
+          = " (#{@posts.size})"
+        .clearDiv
+
     .mainCol1{:style=>"width: 265px; float: left"}
       %h2.columnDescriptor
         = link_to 'VIDEOS', url_for({:controller => 'search', :action => 'q', 'search[category]' => 1, 'search[keyword]' => params[:search][:keyword]})
