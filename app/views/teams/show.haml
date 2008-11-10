@@ -3,7 +3,7 @@
 - top_row_height_px = @team_popular_videos.size >= 3 ? 255 : 130
 - second_row_height_px = [@team_clips_reels.size,@team_videos.size].max >= 3 ? 255 : 130
 
-.landingContentArea
+.orgContentArea
 
     
   .orgHome
@@ -155,8 +155,11 @@
             = @team.name
         .contentBoxContent
           - @team_photo_picks.each do |photo|
-            .orgPhoto{:style => "text-align: center; vertical-align: middle"}
-              = link_to image_tag( photo.public_filename(:thumb)), user_photo_path(photo.user, photo), :class => 'framed'
+            .orgPhoto
+              .orgPhotoThumb
+                = link_to image_tag( photo.public_filename(:thumb), :alt => photo.name, :title => photo.name), user_photo_path(photo.user, photo), :class => 'framed'
+              .orgPhotoTitle
+                = photo.name
  
       .orgBoxTail.wide
         .left

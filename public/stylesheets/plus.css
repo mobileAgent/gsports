@@ -838,17 +838,37 @@ input[type='button'] {
 */
 
 
+.contentBoxContent.orgPhotos {
+}
 .orgPhoto {
 	display:inline;
 	float:left;
-	height:80px;
+	height:125px;
 	line-height:normal;
 	margin-bottom:7px;
 	margin-left:7px;
 	margin-right:7px;
 	width:100px;
 	margin-top:7px;
+        text-align: center;
 }
+.orgPhotoThumb {
+  width: 100px;
+  height: 100px;
+  overflow: clip;
+  display: block;
+  background-color: yellow;
+}
+.orgPhotoTitle {
+  width:100px;
+  margin-top: 5px;
+  height: 2em;
+  vertical-align: middle;
+  overflow: clip;
+  text-overflow: ellipsis;
+  display:block;
+}
+
 
 .orgFeature .contentBoxContent {
 	position: relative;
