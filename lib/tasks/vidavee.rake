@@ -64,7 +64,7 @@ namespace :vidavee do
     queued_assets = VideoAsset.find(:all, :conditions => ['video_status IN (?)',['queued','transcoding']])
     queued_assets.each do |asset|
       pre = asset.video_status
-      vidavee.update_asset_record(login,asset,{'video_status' => true})
+      vidavee.update_asset_record(login,asset,{'video_status' => true, 'video_length' => true})
       if (asset.video_status != pre)
         puts "Updating status of video #{asset.id} to #{asset.video_status} from #{pre}"
         asset.save!
