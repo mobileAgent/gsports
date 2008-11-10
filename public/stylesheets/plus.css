@@ -836,9 +836,12 @@ input[type='button'] {
 	border-bottom: 2px solid black;
 }
 */
-
-
-.contentBoxContent.orgPhotos {
+/* override absolute heights from main.css */
+.contentBox.orgPhotos {
+  height: auto;
+}
+.contentBox.orgPhotos .contentBoxContent{
+  height: auto; 
 }
 .orgPhoto {
 	display:inline;
@@ -857,7 +860,6 @@ input[type='button'] {
   height: 100px;
   overflow: clip;
   display: block;
-  background-color: yellow;
 }
 .orgPhotoTitle {
   width:100px;
