@@ -55,7 +55,7 @@
             %a{ :href=>'javascript:Tabs.open(2)' }
               Recent Uploads
           .right    
-      - if (@team_photo_picks && !@team_photo_picks.empty?)
+      - if (false && @team_photo_picks && !@team_photo_picks.empty?)
         #tab3.orgTab
           .left
           .content
@@ -108,11 +108,12 @@
               = "More Videos available to members!"
         
       -#      Clips / Reels
-      #tabBody3.contentBox.tanBackground.tabBody{ :style=>'display: none' }
-        .contentBoxHeader.flatblue
-          %h2.boxDescription
-        .contentBoxContent
-          =render :partial => 'video_assets/video_feature', :collection => @team_clips_reels, :locals => {:nolinks => current_user.nil? }
+      - if false
+        #tabBody3.contentBox.tanBackground.tabBody{ :style=>'display: none' }
+          .contentBoxHeader.flatblue
+            %h2.boxDescription
+          .contentBoxContent
+            =render :partial => 'video_assets/video_feature', :collection => @team_clips_reels, :locals => {:nolinks => current_user.nil? }
 
     .orgBoxTail
       .left

@@ -1,5 +1,6 @@
 %div{ :class=>"desc-#{avatar_height}" }
-  %h2= h @team.name
+  %h2.teamName
+    = h @team.name
   %p
     - if @team.address1 && @team.address1.length > 0
       = h @team.address1
