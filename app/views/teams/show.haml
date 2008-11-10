@@ -74,7 +74,8 @@
       .contentBoxContent
       
 
-        - posts = team_posts( (@team.active ? @team : Team.find(1)) )
+        -# posts = team_posts( (@team.active ? @team : Team.find(1)) )
+        - posts = team_posts( @team.active )
         - posts.each() do |post|
           .featureSummary
             %span
