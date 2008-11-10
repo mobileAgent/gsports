@@ -131,12 +131,14 @@
           
       .contentBoxContent.orgPlayer
         .flashArea#flashArea
+        - if @team_video_picks && @team_video_picks.length > 2
+          - flashvars = {}
+          - flashvars[:playerType]= ( @team.member? ? "SchoolPlayer" : "SchoolNotMemberPlayer" )
+          - flashvars[:dockeys]= @team_video_picks
         
-        - flashvars = {}
-        - flashvars[:playerType]= ( @team.member? ? "SchoolPlayer" : "SchoolNotMemberPlayer" )
-        - flashvars[:dockeys]= @team_video_picks
-        
-        = render :partial => 'shared/video_player', :locals => {:target => 'flashArea', :player_name => '/players/schoolhome.swf', :fvars => flashvars, :width=>'587px', :height=>'341px' }
+          = render :partial => 'shared/video_player', :locals => {:target => 'flashArea', :player_name => '/players/schoolhome.swf', :fvars => flashvars, :width=>'587px', :height=>'341px' }
+        - else
+          The team has no videos uploaded
     
     - if @team_photo_picks && !@team_photo_picks.empty?
       .contentBox.tanBackground.orgPhotos
