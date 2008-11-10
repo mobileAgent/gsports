@@ -772,15 +772,36 @@ input[type='button'] {
 .contentBox.orgPlayer, .contentBox.orgFeature, .contentBox.orgPhotos {
 	width: 587px;
 }
-
 .contentBox.orgFeature, .contentBox.orgPhotos {
 	margin-bottom: 0;
 }
 
-
+/* Uncomment this section to use the shadow version of the team player background
+.contentBox.orgPlayer {
+	height: 351px;
+        background-image: url(/images/team_player_bg.png);
+        background-color: #FFFFFF;
+}
+.contentBox.orgPlayer .contentBoxHeader.darkblue {
+  background: none;
+}
+*/
+.contentBox.orgPlayer {
+  margin-top: 20px;
+}
 .contentBoxContent.orgPlayer {
-	height: 345px;
+	height: 346px;
 	overflow: inherit;
+}
+.contentBox.orgPlayer .contentBoxHeader .boxDescription {
+  width: 387px;
+  float: left;
+}
+.contentBox.orgPlayer .contentBoxHeader .moreLink {
+  width: 150px;
+  text-align: right;
+  font-weight: normal;
+  float: right;
 }
 
 .contentBoxHeader.darkblue {
@@ -789,7 +810,6 @@ input[type='button'] {
 	color: white;
 	font-weight: bold;
 }
-
 
 .contentBoxHeader.flatblue {
 	background-color: #141C35;

@@ -123,17 +123,20 @@
   /
     col2 content
   .mainCol2
-    -# Add 20px top margin since no "tab" for this box
-    .contentBox.tanBackground.orgPlayer{ :style => "margin-top: 20px" }
+    - team_has_videos = @team_video_picks && !@team_video_picks.empty?
+    .contentBox.tanBackground.orgPlayer
       .contentBoxHeader.darkblue
         %h2.boxDescription
           = @player_title
           \- 
           = @team.name
+        - if team_has_videos
+          .moreLink
+            =link_to 'See All Videos', {:controller => 'search', :action => 'team_video_assets', :team_id => @team.id}
           
       .contentBoxContent.orgPlayer
         .flashArea#flashArea
-        - if @team_video_picks && @team_video_picks.length > 2
+        - if team_has_videos && @team_video_picks && @team_video_picks.length > 2
           - flashvars = {}
           - flashvars[:playerType]= ( @team.member? ? "SchoolPlayer" : "SchoolNotMemberPlayer" )
           - flashvars[:dockeys]= @team_video_picks
