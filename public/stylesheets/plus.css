@@ -1391,3 +1391,7 @@ ul, ol {
   font-weight: bold;
   text-transform: uppercase;
 }
+
+h2.teamName {
+  font-size: 135%;
+}
