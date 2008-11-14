@@ -115,12 +115,6 @@
           .contentBoxContent
             =render :partial => 'video_assets/video_feature', :collection => @team_clips_reels, :locals => {:nolinks => current_user.nil? }
 
-    .orgBoxTail
-      .left
-      .middle
-      .right
-      .clearDiv
-
   /
     col2 content
   .mainCol2
@@ -161,12 +155,6 @@
               .orgPhotoTitle
                 = photo.name
  
-      .orgBoxTail.wide
-        .left
-        .middle
-        .right
-        .clearDiv
-       
     - elsif @team_clips_reels && !@team_clips_reels.empty?
     
       .contentBox.tanBackground.orgFeature
@@ -177,11 +165,3 @@
         .contentBoxContent
           =render :partial => 'video_assets/video_feature', :collection => @team_clips_reels[0..1], :locals => {:nolinks => current_user.nil? }
 
-      .orgBoxTail.wide
-        .left
-        .middle
-        .right
-        .clearDiv
-        
-          
-                

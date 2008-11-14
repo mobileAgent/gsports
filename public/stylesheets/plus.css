@@ -768,34 +768,35 @@ input[type='button'] {
 	padding-right: 20px;
 }
 
-
 .contentBox.orgPlayer, .contentBox.orgFeature, .contentBox.orgPhotos {
-	width: 587px;
+  width: 590px;
+  margin-left: 10px;
+  margin-right: 0px;
+}
+
+/* these are a little wider for some reason */
+.contentBox.orgFeature, .contentBox.orgPhotos {
+  width: 600px;
 }
 .contentBox.orgFeature, .contentBox.orgPhotos {
 	margin-bottom: 0;
 }
 
-/* Uncomment this section to use the shadow version of the team player background
 .contentBox.orgPlayer {
-	height: 351px;
-        background-image: url(/images/team_player_bg.png);
-        background-color: #FFFFFF;
-}
-.contentBox.orgPlayer .contentBoxHeader.darkblue {
-  background: none;
-}
-*/
-.contentBox.orgPlayer {
+  height: 351px;
   margin-top: 20px;
-}
-.contentBox.orgPlayer .contentBoxContent {
-  height: 346px;
-  overflow: inherit;
+  background-image: url(/images/org/videoBox_bg.png);
+  background-color: #FFFFFF;
 }
 .contentBox.orgPlayer .contentBoxHeader {
   width: 585px;
 }
+.contentBox.orgPlayer .contentBoxHeader.darkblue, 
+.contentBox.orgPhotos .contentBoxHeader.darkblue, 
+.contentBox.orgFeature .contentBoxHeader.darkblue {
+  background: none;
+}
+
 .contentBox.orgPlayer .contentBoxHeader .boxDescription {
   width: 387px;
   float: left;
@@ -805,6 +806,10 @@ input[type='button'] {
   text-align: right;
   font-weight: normal;
   float: right;
+}
+.contentBox.orgPlayer .contentBoxContent {
+  height: 346px;
+  overflow: inherit;
 }
 
 .contentBoxHeader.darkblue {
@@ -845,10 +850,13 @@ input[type='button'] {
   width: 585px;
 }
 .contentBox.orgPhotos {
-  height: auto;
+  height: 170px;
+  margin-bottom: 10px;
+  background-image: url(/images/org/galleryBox_bg.png);
+  background-color: #FFFFFF;
 }
 .contentBox.orgPhotos .contentBoxContent {
-  height: auto; 
+  height: 145px; 
 }
 .orgPhoto {
 	display:inline;
@@ -921,21 +929,27 @@ input[type='button'] {
 
 /* team landing tabs */
 
-
 .contentBox.tabBody{
-	margin-bottom: 0;
+  margin-bottom: 0px;
+  margin-left: 20px;
+  width: 320px;
+  background: url(/images/org/tabbedBox_bg.png);
 }
 
 .tabBody .contentBoxContent{
-  height: 370px;
+  height: 484px;
+}
+
+.contentBox.tabBody .flatblue {
+  background: none;
 }
 
 .orgTabs {
 	position: relative;	
 	height: 20px;
-	width: 312px;
+	width: 300px;
 	background-color:white;
-	margin-left:20px;
+	margin-left: 20px;
 }
 
 .orgTab {
