@@ -189,7 +189,7 @@ class TeamsController < BaseController
     @player_title = 'Featured Videos'
     video_picks = Favorite.ftypes('VideoAsset','VideoReel','VideoClip').for_team_staff(team_id).map(){|f|eval "#{f.favoritable_type}.find(f.favoritable_id)"}
     if(video_picks.empty?)
-      @player_title = 'Recent Uplaods'
+      @player_title = 'Recent Uploads'
       @hide_recent_uploads = true
       video_picks = @team_videos
     end

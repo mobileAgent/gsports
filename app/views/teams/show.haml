@@ -62,7 +62,7 @@
             %a{ :href=>'javascript:Tabs.open(3)' }
               Clips / Reels
           .right
-        .clearDiv
+      .clearDiv
     -#      School News
     #tabBody1.contentBox.tanBackground.tabBody.open
       .contentBoxHeader.flatblue
@@ -135,7 +135,7 @@
           .moreLink
             =link_to 'See All Videos', {:controller => 'search', :action => 'team_video_assets', :team_id => @team.id}
           
-      .contentBoxContent.orgPlayer
+      .contentBoxContent
         .flashArea#flashArea
         - if team_has_videos && @team_video_picks && @team_video_picks.length > 2
           - flashvars = {}
