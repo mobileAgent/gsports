@@ -26,7 +26,9 @@ class TeamsController < BaseController
   # GET /team/1
   # GET /team/1.xml
   def show
-    load_team_and_related_videos(params[:id])
+    team_id = params[:id]
+    load_team_and_related_videos(team_id)
+    load_team_favorites(team_id)
     respond_to do |format|
       format.html # show.haml
       format.xml  { render :xml => @team }
@@ -61,7 +63,9 @@ class TeamsController < BaseController
   # Renders the show action, but without current_user
   # and hence allows no further linking into the site.
   def show_public
-    load_team_and_related_videos(params[:id])
+    team_id = params[:id]
+    load_team_and_related_videos(team_id)
+    load_team_favorites(team_id)
     respond_to do |format|
       format.html { render :action => 'show' }
       format.xml  { render :xml => @team }
@@ -166,20 +170,25 @@ class TeamsController < BaseController
 
   def load_team_and_related_videos(team_id)
     @team = Team.find(team_id)
-    @team_videos = VideoAsset.for_team(@team).all(:limit => 10, :order => 'updated_at DESC')
-    @team_popular_videos = VideoAsset.for_team(@team).all(:limit => 10, :order => 'view_count DESC')
+    if @team.member? || team_id==1
+      @team_videos = VideoAsset.for_team(@team).all(:limit => 10, :order => 'updated_at DESC')
+      @team_popular_videos = VideoAsset.for_team(@team).all(:limit => 10, :order => 'view_count DESC')
 
-    show_clips_reels = false
-    if show_clips_reels
-      @team_clips_reels = VideoClip.for_team(@team).find(:all, :limit => 10, :order => "video_clips.created_at DESC")
-      @team_clips_reels << VideoReel.for_team(@team).find(:all, :limit => 10, :order => "video_reels.created_at DESC")
-      @team_clips_reels.flatten!
-      @team_clips_reels.sort! { |a,b| b.created_at <=> a.created_at }
-    else 
-      @team_clips_reels = Array.new
+      show_clips_reels = false
+      if show_clips_reels
+        @team_clips_reels = VideoClip.for_team(@team).find(:all, :limit => 10, :order => "video_clips.created_at DESC")
+        @team_clips_reels << VideoReel.for_team(@team).find(:all, :limit => 10, :order => "video_reels.created_at DESC")
+        @team_clips_reels.flatten!
+        @team_clips_reels.sort! { |a,b| b.created_at <=> a.created_at }
+      else 
+        @team_clips_reels = Array.new
+      end
+
+      if @team_clips_reels.empty?
+        load_team_and_related_videos(1) unless team_id==1
+      end
     end
 
-    load_team_favorites(team_id)
   end
 
   def load_team_favorites(team_id)

@@ -46,7 +46,7 @@
         .left
         .content
           %a{ :href=>'javascript:Tabs.open(1)' }
-            School News
+            = @team.member? ? "School News" : "News"
         .right
       - unless @hide_recent_uploads
         #tab2.orgTab
@@ -64,7 +64,7 @@
           .right
       .clearDiv
     -#      School News
-    #tabBody1.contentBox.tanBackground.tabBody.open
+    #tabBody1.contentBox.tanBackground.tabBody.open{ :class => @team.member? ? "tall" : "short" }
       .contentBoxHeader.flatblue
         %h2.boxDescription
           - if current_user && current_user.team_staff?(@team)
@@ -72,7 +72,6 @@
               = link_to 'Post News Item', new_user_post_path(current_user)
 
       .contentBoxContent
-      
 
         -# posts = team_posts( (@team.active ? @team : Team.find(1)) )
         - posts = team_posts( @team )
@@ -140,28 +139,28 @@
         - else
           .box
             The team has no videos uploaded
-    
-    - if @team_photo_picks && !@team_photo_picks.empty?
-      .contentBox.tanBackground.orgPhotos
-        .contentBoxHeader.darkblue
-          %h2.boxDescription
-            Athlete Photo Gallery 
-            = @team.name
-        .contentBoxContent
-          - @team_photo_picks.each do |photo|
-            .orgPhoto
-              .orgPhotoThumb
-                = link_to image_tag( photo.public_filename(:thumb), :alt => photo.name, :title => photo.name), user_photo_path(photo.user, photo), :class => 'framed'
-              .orgPhotoTitle
-                = photo.name
+
+    - if @team.member? 
+      - if @team_photo_picks && !@team_photo_picks.empty?
+        .contentBox.tanBackground.orgPhotos
+          .contentBoxHeader.darkblue
+            %h2.boxDescription
+              Athlete Photo Gallery 
+              = @team.name
+          .contentBoxContent
+            - @team_photo_picks.each do |photo|
+              .orgPhoto
+                .orgPhotoThumb
+                  = link_to image_tag( photo.public_filename(:thumb), :alt => photo.name, :title => photo.name), user_photo_path(photo.user, photo), :class => 'framed'
+                .orgPhotoTitle
+                  = photo.name
  
-    - elsif @team_clips_reels && !@team_clips_reels.empty?
-    
-      .contentBox.tanBackground.orgFeature
-        .contentBoxHeader.darkblue
-          %h2.boxDescription
-            Clips / Reels - 
-            = @team.name
-        .contentBoxContent
-          =render :partial => 'video_assets/video_feature', :collection => @team_clips_reels[0..1], :locals => {:nolinks => current_user.nil? }
+      - else
+        .contentBox.tanBackground.orgFeature
+          .contentBoxHeader.darkblue
+            %h2.boxDescription
+              Clips / Reels - 
+              = @team.name
+          .contentBoxContent
+            =render :partial => 'video_assets/video_feature', :collection => @team_clips_reels[0..1], :locals => {:nolinks => current_user.nil? }
 
