@@ -94,7 +94,7 @@ class User < ActiveRecord::Base
     
     
     #indexes monikers.tags.name, :as => :moniker_content
-    has created_at, updated_at, profile_public
+    has created_at, updated_at, profile_public, enabled
     set_property :delta => true
   end
 

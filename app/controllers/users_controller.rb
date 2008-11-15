@@ -526,6 +526,7 @@ class UsersController < BaseController
   def disable
     unless @user.admin?
       @user.enabled=false
+      @user.save!
       flash[:notice] = "The user account has been disabled."
     else
       flash[:error] = "You can't disable that user."
