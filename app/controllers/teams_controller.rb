@@ -169,6 +169,10 @@ class TeamsController < BaseController
   protected
 
   def load_team_and_related_videos(team_id)
+    @team_videos = Array.new
+    @team_popular_videos = Array.new
+    @eam_clips_reels = Array.new
+
     @team = Team.find(team_id)
     if @team.member? || team_id==1
       @team_videos = VideoAsset.for_team(@team).all(:limit => 10, :order => 'updated_at DESC')
@@ -180,8 +184,6 @@ class TeamsController < BaseController
         @team_clips_reels << VideoReel.for_team(@team).find(:all, :limit => 10, :order => "video_reels.created_at DESC")
         @team_clips_reels.flatten!
         @team_clips_reels.sort! { |a,b| b.created_at <=> a.created_at }
-      else 
-        @team_clips_reels = Array.new
       end
 
       if @team_clips_reels.empty?
@@ -201,7 +203,7 @@ class TeamsController < BaseController
     if(video_favorites.empty?)
       @player_title = 'Recent Uploads'
       @hide_recent_uploads = true
-      video_picks = @team_videos.sort {|x,y| y.created_at <=> x.created_at}.first(6)
+      video_picks = video_favorites.sort {|x,y| y.created_at <=> x.created_at}.first(6)
     else
       video_favorites = video_favorites.sort {|x,y| y.created_at <=> x.created_at}.first(6)
       video_picks = video_favorites.map(){|f|eval "#{f.favoritable_type}.find(f.favoritable_id)"}
