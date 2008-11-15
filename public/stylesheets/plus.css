@@ -795,6 +795,7 @@ input[type='button'] {
 .contentBox.orgPhotos .contentBoxHeader.darkblue, 
 .contentBox.orgFeature .contentBoxHeader.darkblue {
   background: none;
+  color:#FFEF0A;
 }
 
 .contentBox.orgPlayer .contentBoxHeader .boxDescription {
@@ -939,7 +940,7 @@ input[type='button'] {
   height: 484px;
 }
 .tabBody.short .contentBoxContent {
-  height: 376px;
+  height: 354px;
 }
 
 .contentBox.tabBody .flatblue {
