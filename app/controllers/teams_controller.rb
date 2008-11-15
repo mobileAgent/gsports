@@ -171,7 +171,7 @@ class TeamsController < BaseController
   def load_team_and_related_videos(team_id)
     @team_videos = Array.new
     @team_popular_videos = Array.new
-    @eam_clips_reels = Array.new
+    @team_clips_reels = Array.new
 
     @team = Team.find(team_id)
     if @team.member? || team_id==1
