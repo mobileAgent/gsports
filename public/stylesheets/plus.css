@@ -768,31 +768,35 @@ input[type='button'] {
 	padding-right: 20px;
 }
 
-
 .contentBox.orgPlayer, .contentBox.orgFeature, .contentBox.orgPhotos {
-	width: 587px;
+  width: 590px;
+  margin-left: 10px;
+  margin-right: 0px;
+}
+
+/* these are a little wider for some reason */
+.contentBox.orgFeature, .contentBox.orgPhotos {
+  width: 600px;
 }
 .contentBox.orgFeature, .contentBox.orgPhotos {
 	margin-bottom: 0;
 }
 
-/* Uncomment this section to use the shadow version of the team player background
 .contentBox.orgPlayer {
-	height: 351px;
-        background-image: url(/images/team_player_bg.png);
-        background-color: #FFFFFF;
+  height: 351px;
+  margin-top: 20px;
+  background-image: url(/images/org/videoBox_bg.png);
+  background-color: #FFFFFF;
 }
-.contentBox.orgPlayer .contentBoxHeader.darkblue {
+.contentBox.orgPlayer .contentBoxHeader {
+  width: 585px;
+}
+.contentBox.orgPlayer .contentBoxHeader.darkblue, 
+.contentBox.orgPhotos .contentBoxHeader.darkblue, 
+.contentBox.orgFeature .contentBoxHeader.darkblue {
   background: none;
 }
-*/
-.contentBox.orgPlayer {
-  margin-top: 20px;
-}
-.contentBoxContent.orgPlayer {
-	height: 346px;
-	overflow: inherit;
-}
+
 .contentBox.orgPlayer .contentBoxHeader .boxDescription {
   width: 387px;
   float: left;
@@ -803,12 +807,17 @@ input[type='button'] {
   font-weight: normal;
   float: right;
 }
+.contentBox.orgPlayer .contentBoxContent {
+  height: 346px;
+  overflow: inherit;
+}
 
 .contentBoxHeader.darkblue {
 	background: #141C35 url(/gs/images/content_box_header.png) repeat-x scroll left top;
 	border: 0;
 	color: white;
 	font-weight: bold;
+        height: 20px;
 }
 
 .contentBoxHeader.flatblue {
@@ -837,16 +846,23 @@ input[type='button'] {
 }
 */
 /* override absolute heights from main.css */
-.contentBox.orgPhotos {
-  height: auto;
+.contentBox.orgPhotos .contentBoxHeader {
+  width: 585px;
 }
-.contentBox.orgPhotos .contentBoxContent{
-  height: auto; 
+.contentBox.orgPhotos {
+  height: 170px;
+  margin-bottom: 10px;
+  background-image: url(/images/org/galleryBox_bg.png);
+  background-color: #FFFFFF;
+}
+.contentBox.orgPhotos .contentBoxContent {
+  height: 145px; 
 }
 .orgPhoto {
 	display:inline;
 	float:left;
 	height:125px;
+        overflow: clip;
 	line-height:normal;
 	margin-bottom:7px;
 	margin-left:7px;
@@ -913,25 +929,31 @@ input[type='button'] {
 
 /* team landing tabs */
 
-
 .contentBox.tabBody{
-	margin-bottom: 0;
+  margin-bottom: 0px;
+  margin-left: 20px;
+  width: 320px;
+  background: url(/images/org/tabbedBox_bg.png);
 }
 
 .tabBody .contentBoxContent{
-  height: 370px;
+  height: 484px;
+}
+
+.contentBox.tabBody .flatblue {
+  background: none;
 }
 
 .orgTabs {
 	position: relative;	
 	height: 20px;
-	width: 312px;
+	width: 300px;
 	background-color:white;
-	margin-left:20px;
+	margin-left: 20px;
 }
 
 .orgTab {
-	color:#FFEF0A;
+	color:white;
 	xbackground:#68A34E url(/gs/images/content_box_header.png) repeat-x scroll left top;
 	font-size:110%;
 	height:20px;
@@ -939,15 +961,13 @@ input[type='button'] {
 	margin-right:1px;
 }
 
-.orgTab.open {
-	color:white;
-}
 
 .orgTab .left {
 	float:left;
 	width: 3px;
 	height: 20px;
 	background:white url(/gs/images/tab_unselected_l.png) repeat-x scroll left top;
+        border-bottom: 2px solid #141C35;
 }
 
 .orgTab .content {
@@ -959,6 +979,7 @@ input[type='button'] {
 	font-weight: normal;
 	font-size: 100%;
 	white-space: nowrap;
+        line-height: 20px;
 	background:#141C35 url(/gs/images/tab_unselected_m.png) repeat-x scroll left top;
 }
 
@@ -967,10 +988,12 @@ input[type='button'] {
 	width: 3px;
 	height: 20px;
 	background:white url(/gs/images/tab_unselected_r.png) repeat-x scroll left top;
+        border-bottom: 2px solid #141C35;
 }
 
 .orgTab.open .left {
 	background:white url(/gs/images/tab_selected_l.png) repeat-x scroll left top;
+        border-bottom: 2px solid #141C35;
 }
 
 .orgTab.open .content {
@@ -979,15 +1002,16 @@ input[type='button'] {
 
 .orgTab.open .right{
 	background:white url(/gs/images/tab_selected_r.png) repeat-x scroll left top;
+        border-bottom: 2px solid #141C35;
 }
 
 .orgTab a {
-	color:#FFEF0A;
+	color:white;
 	text-decoration: none;
 }
 
 .orgTab.open a {
-	color:white;
+	color:#FFEF0A;
 }
 
 

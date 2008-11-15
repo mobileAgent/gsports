@@ -89,8 +89,7 @@ class Membership < ActiveRecord::Base
       
   named_scope :for_team, 
       lambda { |team| 
-        u = User.team_admin(team.id).first
-        { :conditions => {:user_id => ( u ? u.id : nil)} } 
+        { :conditions => {:user_id => User.team_admin(team.id).collect {|u| u.id} } }
       }
   
   
