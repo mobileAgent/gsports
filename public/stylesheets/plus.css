@@ -937,7 +937,7 @@ input[type='button'] {
   background: url(/images/org/newsBox_bg.png);
 }
 .tabBody .contentBoxContent{
-  height: 484px;
+  height: 534px;
 }
 .tabBody.short .contentBoxContent {
   height: 354px;
