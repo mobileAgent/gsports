@@ -795,6 +795,7 @@ input[type='button'] {
 .contentBox.orgPhotos .contentBoxHeader.darkblue, 
 .contentBox.orgFeature .contentBoxHeader.darkblue {
   background: none;
+  color:#FFEF0A;
 }
 
 .contentBox.orgPlayer .contentBoxHeader .boxDescription {
@@ -846,17 +847,20 @@ input[type='button'] {
 }
 */
 /* override absolute heights from main.css */
-.contentBox.orgPhotos .contentBoxHeader {
+.contentBox.orgPhotos .contentBoxHeader, .contentBox.orgFeature .contentBoxHeader {
   width: 585px;
 }
-.contentBox.orgPhotos {
+.contentBox.orgPhotos, .contentBox.orgFeature {
+  position:relative;
   height: 170px;
   margin-bottom: 10px;
   background-image: url(/images/org/galleryBox_bg.png);
   background-color: #FFFFFF;
 }
-.contentBox.orgPhotos .contentBoxContent {
+.contentBox.orgPhotos .contentBoxContent, .contentBox.orgFeature .contentBoxContent {
+  position: relative;
   height: 145px; 
+  overflow:hidden;
 }
 .orgPhoto {
 	display:inline;
@@ -885,13 +889,6 @@ input[type='button'] {
   overflow: clip;
   text-overflow: ellipsis;
   display:block;
-}
-
-
-.orgFeature .contentBoxContent {
-	position: relative;
-	overflow: hidden;
-	margin-top: 10px;
 }
 
 .orgFeature .featureSummary {
@@ -929,15 +926,21 @@ input[type='button'] {
 
 /* team landing tabs */
 
-.contentBox.tabBody{
+.contentBox.tabBody {
+  position: relative;
   margin-bottom: 0px;
   margin-left: 20px;
   width: 320px;
   background: url(/images/org/tabbedBox_bg.png);
 }
-
+.contentBox.tabBody.short {
+  background: url(/images/org/newsBox_bg.png);
+}
 .tabBody .contentBoxContent{
   height: 484px;
+}
+.tabBody.short .contentBoxContent {
+  height: 354px;
 }
 
 .contentBox.tabBody .flatblue {
