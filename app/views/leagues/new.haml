@@ -8,7 +8,7 @@
     
       = error_messages_for :league 
       
-      - form_for (@league, :url => league_url(@league), :html => {:method => 'put', :multipart => true}) do |f|
+      - form_for(@league, :url => league_url(@league), :html => {:multipart => true}) do |f|
         = render :partial => "form", :locals => { :f => f }
         %p= f.submit "Create"
           

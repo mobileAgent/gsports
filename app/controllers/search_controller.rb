@@ -270,7 +270,7 @@ class SearchController < BaseController
   def sphinx_search_users
     logger.debug "Running user search for #{params[:search][:keyword]}"
     @users = User.search(params[:search][:keyword],
-                         :conditions => { :profile_public => 1 },
+                         :conditions => { :profile_public => 1, :enabled => 1 },
                          :per_page => 30,
                          :page => (params[:page] || 1),
                          :order => :full_name)
