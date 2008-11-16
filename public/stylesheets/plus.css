@@ -769,9 +769,11 @@ input[type='button'] {
 }
 
 .contentBox.orgPlayer, .contentBox.orgFeature, .contentBox.orgPhotos {
-  width: 590px;
+  width: 600px;
   margin-left: 10px;
   margin-right: 0px;
+  margin-bottom: 16px;
+  background: none;
 }
 
 /* these are a little wider for some reason */
@@ -779,7 +781,7 @@ input[type='button'] {
   width: 600px;
 }
 .contentBox.orgFeature, .contentBox.orgPhotos {
-	margin-bottom: 0;
+  margin-bottom: 0;
 }
 
 .tabSpacer {
@@ -788,7 +790,7 @@ input[type='button'] {
 }
 .contentBox.orgPlayer {
   height: 351px;
-  background-image: url(/images/org/videoBox_bg.png);
+  background: url(/images/org/videoBox_bg.png) no-repeat;
   background-color: #FFFFFF;
 }
 .contentBox.orgPlayer .contentBoxHeader {
@@ -801,18 +803,22 @@ input[type='button'] {
   color:#FFEF0A;
 }
 
-.contentBox.orgPlayer .contentBoxHeader .boxDescription {
+.contentBox.orgPlayer .contentBoxHeader .boxDescription,
+.contentBox.orgPhotos .contentBoxHeader .boxDescription,
+.contentBox.orgFeature .contentBoxHeader .boxDescription {
   width: 387px;
   float: left;
 }
-.contentBox.orgPlayer .contentBoxHeader .moreLink {
+.contentBox.orgPlayer .contentBoxHeader .moreLink, 
+.contentBox.orgPhotos .contentBoxHeader .moreLink,
+.contentBox.orgFeature .contentBoxHeader .moreLink {
   width: 150px;
   text-align: right;
   font-weight: normal;
   float: right;
 }
 .contentBox.orgPlayer .contentBoxContent {
-  height: 346px;
+  height: 350px;
   overflow: inherit;
 }
 
@@ -852,55 +858,69 @@ input[type='button'] {
 /* override absolute heights from main.css */
 .contentBox.orgPhotos .contentBoxHeader, .contentBox.orgFeature .contentBoxHeader {
   width: 585px;
+  height: 20px;
+  background-color: none;
 }
 .contentBox.orgPhotos, .contentBox.orgFeature {
   position:relative;
-  height: 170px;
+  height: 168px;
   margin-bottom: 10px;
-  background-image: url(/images/org/galleryBox_bg.png);
-  background-color: #FFFFFF;
+  background: url(/images/org/galleryBox_bg.png) no-repeat;
 }
 .contentBox.orgPhotos .contentBoxContent, .contentBox.orgFeature .contentBoxContent {
   position: relative;
-  height: 145px; 
+  height: 140px; 
   overflow:hidden;
+  background: none;
+  width: 575px;
+  margin: 5px 5px 5px 10px;
 }
 .orgPhoto {
-	display:inline;
-	float:left;
-	height:125px;
-        overflow: clip;
-	line-height:normal;
-	margin-bottom:7px;
-	margin-left:7px;
-	margin-right:7px;
-	width:100px;
-	margin-top:7px;
-        text-align: center;
+  float:left;
+  height: 130px;
+  overflow: hidden;
+  line-height:normal;
+  margin-right: 7px;
+  width:100px;
+  text-align: center;
 }
 .orgPhotoThumb {
   width: 100px;
   height: 100px;
-  overflow: clip;
+  overflow: hidden;
   display: block;
 }
 .orgPhotoTitle {
   width:100px;
-  margin-top: 5px;
-  height: 2em;
+  height: 2.5em;
   vertical-align: middle;
-  overflow: clip;
+  overflow: hidden;
   text-overflow: ellipsis;
   display:block;
 }
 
 .orgFeature .featureSummary {
-	position: inline;
-	float:left;
-	border: 0;
+  position: inline;
+  width: 280px;
+  float:left;
+  border: 0;
+  border-right: 1px solid white;
+  margin: 20px 5px 10px 0px;
 }
 
-
+.orgFeature .featureSummary .featureText {
+  width: 180px;
+  margin-right: 0px;
+  margin-left: 5px;
+}
+.orgFeature .featureSummary .featureText .favorite-count {
+  font-weight: bold;
+}
+.one-liner {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 .orgBoxTail {
 	margin-left: 20px;
 	color:#E2E4A7;
@@ -1023,7 +1043,9 @@ input[type='button'] {
 }
 .tabBody .contentBoxContent {
   height: 500px;
-  overflow: clip;
+  width: 305px;
+  overflow: hidden;
+  float:left;
 }
 .contentBox.tabBody.short .contentBoxContent {
   height: 320px;
@@ -1031,9 +1053,15 @@ input[type='button'] {
 .contentBox.tabBody .flatblue {
   background: none;
 }
-.tabBody .contentBoxContent .moreLink {
-  height: 40px;
-  display: block;
+.tabBody>.moreLink {
+  height: 20px;
+  width: 300px;
+  text-align: right;
+  float: left;
+}
+.tabBody .contentBoxContent .featureSummary.news {
+  height: 7em;
+  overflow: hidden;
 }
 /* end - team league summary content */
 

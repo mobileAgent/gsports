@@ -77,12 +77,11 @@
           -# posts = team_posts( (@team.active ? @team : Team.find(1)) )
           - posts = team_posts( @team )
           - posts ||= team_posts( Team.find(1) )
-          - posts.each() do |post|
-            .featureSummary
+          - posts[0...6].each() do |post|
+            .featureSummary.news
               %span
                 = link_to post.title, user_post_path(post.user, post), :rel => 'bookmark', :class=>'articleLink'
                 = "| posted #{post.created_at.strftime('%m.%d.%y')}"
-              
               
               %br
               = truncate_words(post.post, 24, '...' )
@@ -127,7 +126,7 @@
     .tabSpacer
 
     - team_has_videos = @team_video_picks && !@team_video_picks.empty?
-    .contentBox.tanBackground.orgPlayer
+    .contentBox.orgPlayer
       .contentBoxHeader.darkblue
         %h2.boxDescription
           = @player_title
@@ -137,7 +136,7 @@
           .moreLink
             =link_to 'See All Videos', {:controller => 'search', :action => 'team_video_assets', :team_id => @team.id}
           
-      .contentBoxContent
+      .contentBoxContent.tanBackground
         .flashArea#flashArea
         - if team_has_videos && @team_video_picks && @team_video_picks.length > 2
           - flashvars = {}
@@ -151,12 +150,14 @@
 
     - if @team.member? 
       - if @team_photo_picks && !@team_photo_picks.empty?
-        .contentBox.tanBackground.orgPhotos
+        .contentBox.orgPhotos
           .contentBoxHeader.darkblue
             %h2.boxDescription
               Athlete Photo Gallery -
               = @team.name
-          .contentBoxContent
+            .moreLink
+              -# See All
+          .contentBoxContent.tanBackground
             - @team_photo_picks.each do |photo|
               .orgPhoto
                 .orgPhotoThumb
@@ -165,12 +166,13 @@
                   = photo.name
  
       - else
-        .contentBox.tanBackground.orgFeature
+        .contentBox.orgFeature
           .contentBoxHeader.darkblue
             %h2.boxDescription
-              Clips / Reels
-              - if !@team_clips_reels.empty? && @team_clips_reels[0].team_id == @team.id
-                = " - #{@team.name}"
-          .contentBoxContent
+              Clips / Reels -
+              = @team.name
+            .moreLink
+              -# See All
+          .contentBoxContent.tanBackground
             =render :partial => 'video_assets/video_feature', :collection => @team_clips_reels[0..1], :locals => {:nolinks => current_user.nil? }
 
