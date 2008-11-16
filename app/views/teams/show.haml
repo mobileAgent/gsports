@@ -63,60 +63,69 @@
               Clips / Reels
           .right
       .clearDiv
-    -#      School News
-    #tabBody1.contentBox.tanBackground.tabBody.open{ :class => @team.member? ? "tall" : "short" }
-      .contentBoxHeader.flatblue
-        %h2.boxDescription
-          - if current_user && current_user.team_staff?(@team)
-            %span.moreLink
-              = link_to 'Post News Item', new_user_post_path(current_user)
-
-      .contentBoxContent
-
-        -# posts = team_posts( (@team.active ? @team : Team.find(1)) )
-        - posts = team_posts( @team )
-        - posts ||= team_posts( Team.find(1) )
-        - posts.each() do |post|
-          .featureSummary
-            %span
-              = link_to post.title, user_post_path(post.user, post), :rel => 'bookmark', :class=>'articleLink'
-              = "| posted #{post.created_at.strftime('%m.%d.%y')}"
-              
-              
-            %br
-            = truncate_words(post.post, 24, '...' )
-            - if (current_user && (current_user.admin? || current_user.id == post.user_id))
-              %span.moreLink
-                =link_to "edit", edit_user_post_path(post.user, post)
-                |
-                =link_to "delete", user_post_path(post.user, post), {:method => :delete, :confirm => 'Permanently delete this post?'}
-            .clearDiv
-            
-    - unless @hide_recent_uploads
-
-      -#      Recent Uploads
-      #tabBody2.contentBox.tanBackground.tabBody{ :style=>'display: none' }
+    .tabContent{ :class => @team.member? ? "tall" : "short" }
+      -#      School News
+      #tabBody1.contentBox.tabBody.open{ :class => @team.member? ? "tall" : "short" }
         .contentBoxHeader.flatblue
           %h2.boxDescription
-        .contentBoxContent
-          =render :partial => 'video_assets/video_feature', :collection => @team_videos, :locals => {:nolinks => current_user.nil? }
-          - if @team_videos.size >= 10
-            - if current_user
-              = link_to "More Videos...", url_for(:controller => 'search', :action => 'team_video_assets', :team_id => @team.id)
-            - else
-              = "More Videos available to members!"
-        
-      -#      Clips / Reels
-      - if false
-        #tabBody3.contentBox.tanBackground.tabBody{ :style=>'display: none' }
+            - if current_user && current_user.team_staff?(@team)
+              %span.moreLink
+                = link_to 'Post News Item', new_user_post_path(current_user)
+
+        .contentBoxContent.tanBackground
+
+          -# posts = team_posts( (@team.active ? @team : Team.find(1)) )
+          - posts = team_posts( @team )
+          - posts ||= team_posts( Team.find(1) )
+          - posts.each() do |post|
+            .featureSummary
+              %span
+                = link_to post.title, user_post_path(post.user, post), :rel => 'bookmark', :class=>'articleLink'
+                = "| posted #{post.created_at.strftime('%m.%d.%y')}"
+              
+              
+              %br
+              = truncate_words(post.post, 24, '...' )
+              - if (current_user && (current_user.admin? || current_user.id == post.user_id))
+                %span.moreLink
+                  =link_to "edit", edit_user_post_path(post.user, post)
+                  |
+                  =link_to "delete", user_post_path(post.user, post), {:method => :delete, :confirm => 'Permanently delete this post?'}
+              .clearDiv
+        .moreLink
+          -# link_to
+              
+      - unless @hide_recent_uploads
+
+        -#      Recent Uploads
+        #tabBody2.contentBox.tabBody{ :style=>'display: none' }
           .contentBoxHeader.flatblue
             %h2.boxDescription
-          .contentBoxContent
-            =render :partial => 'video_assets/video_feature', :collection => @team_clips_reels, :locals => {:nolinks => current_user.nil? }
+          .contentBoxContent.tanBackground
+            =render :partial => 'video_assets/video_feature', :collection => @team_videos, :locals => {:nolinks => current_user.nil? }
+            - if @team_videos.size >= 10
+              - if current_user
+                = link_to "More Videos...", url_for(:controller => 'search', :action => 'team_video_assets', :team_id => @team.id)
+              - else
+                = "More Videos available to members!"
+          .moreLink
+            -# link_to
+        
+        -#      Clips / Reels
+        - if false
+          #tabBody3.contentBox.tabBody{ :style=>'display: none' }
+            .contentBoxHeader.flatblue
+              %h2.boxDescription
+            .contentBoxContent.tanBackground
+              =render :partial => 'video_assets/video_feature', :collection => @team_clips_reels, :locals => {:nolinks => current_user.nil? }
+            .moreLink
+              -# link_to
 
   /
     col2 content
   .mainCol2
+    .tabSpacer
+
     - team_has_videos = @team_video_picks && !@team_video_picks.empty?
     .contentBox.tanBackground.orgPlayer
       .contentBoxHeader.darkblue

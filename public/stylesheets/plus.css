@@ -782,9 +782,12 @@ input[type='button'] {
 	margin-bottom: 0;
 }
 
+.tabSpacer {
+  height: 20px;
+  width: 585px;
+}
 .contentBox.orgPlayer {
   height: 351px;
-  margin-top: 20px;
   background-image: url(/images/org/videoBox_bg.png);
   background-color: #FFFFFF;
 }
@@ -926,27 +929,6 @@ input[type='button'] {
 
 /* team landing tabs */
 
-.contentBox.tabBody {
-  position: relative;
-  margin-bottom: 0px;
-  margin-left: 20px;
-  width: 320px;
-  background: url(/images/org/tabbedBox_bg.png);
-}
-.contentBox.tabBody.short {
-  background: url(/images/org/newsBox_bg.png);
-}
-.tabBody .contentBoxContent{
-  height: 534px;
-}
-.tabBody.short .contentBoxContent {
-  height: 354px;
-}
-
-.contentBox.tabBody .flatblue {
-  background: none;
-}
-
 .orgTabs {
 	position: relative;	
 	height: 20px;
@@ -1017,7 +999,42 @@ input[type='button'] {
 	color:#FFEF0A;
 }
 
-
+.tabContent {
+  position: relative;
+  margin-bottom: 0px;
+  margin-left: 20px;
+  width: 320px;
+  background: url(/images/org/tabbedBox_bg.png) no-repeat;
+  height: 560px;
+  display: block;
+}
+.tabContent.short {
+  background: url(/images/org/newsBox_bg.png) no-repeat;
+  height: 380px;
+}
+.tabContent .contentBox {
+  margin: 0px 10px 0px 2px;
+  width: 310px;
+  background: none;
+}
+.tabContent .contentBox .contentBoxHeader {
+  background: none;
+  height: 20px;
+}
+.tabBody .contentBoxContent {
+  height: 500px;
+  overflow: clip;
+}
+.contentBox.tabBody.short .contentBoxContent {
+  height: 320px;
+}
+.contentBox.tabBody .flatblue {
+  background: none;
+}
+.tabBody .contentBoxContent .moreLink {
+  height: 40px;
+  display: block;
+}
 /* end - team league summary content */
 
 /* profile activity */
