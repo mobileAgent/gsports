@@ -222,6 +222,7 @@ class TeamsController < BaseController
     Rails.cache.delete('quickfind_states')
     Rails.cache.delete('quickfind_counties')
     Rails.cache.delete('quickfind_cities')
+    Rails.cache.delete('quickfind_schools')
   end
   
 end

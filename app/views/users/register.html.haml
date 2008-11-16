@@ -30,7 +30,7 @@
           %label.verbalSemantic{ :for => "Ath" }
             Athletes, Students, Family and Fans
           .AccountRadio
-            %input#Ath{ :name => :role, :checked => "checked", :type => "radio", :value => "", :onclick => "updateSelectedAccount(this)" }/
+            %input#Ath{ :name => :role, :checked => "checked", :type => "radio", :value => "", :onclick => "updateSelectedAccount(this)", :style => 'border: none' }/
           .AccountIllustration
             %img{ :src => "/gs/images/account_athletes.jpg", :height => "99", :alt => "Athletes Illustration", :onclick => "return selectThisAccount('Ath')", :width => "131" }/
           .AccountDescriptionAthletes
@@ -42,7 +42,7 @@
           %label.verbalSemantic{ :for => "School" }
             Schools and Private Athletic Clubs
           .AccountRadio
-            %input#School{ :name => :role, :type => "radio", :value => Role[:team].id, :onclick => "updateSelectedAccount(this)" }/
+            %input#School{ :name => :role, :type => "radio", :value => Role[:team].id, :onclick => "updateSelectedAccount(this)", :style => 'border: none' }/
           .AccountIllustration
             %img{ :src => "/gs/images/accout_school_illu.jpg", :height => "99", :alt => "Teams Illustration", :onclick => "return selectThisAccount('School')", :width => "131" }/
           .AccountDescriptionSchools
@@ -54,7 +54,7 @@
           %label.verbalSemantic{ :for => "Leagues" }
             Leagues and Conferences
           .AccountRadio
-            %input#Leagues{ :name => :role, :type => "radio", :value => Role[:league].id, :onclick => "updateSelectedAccount(this)" }/
+            %input#Leagues{ :name => :role, :type => "radio", :value => Role[:league].id, :onclick => "updateSelectedAccount(this)", :style => 'border: none' }/
           .AccountIllustration
             %img{ :src => "/gs/images/accout_league_illu.jpg", :height => "99", :alt => "Leagues Illustration", :onclick => "return selectThisAccount('Leagues')", :width => "131" }/
           .AccountDescriptionLeagues
@@ -66,7 +66,7 @@
           %label.verbalSemantic{ :for => "Scouts" }
             Scouts and Recruiters
           .AccountRadio
-            %input#Scouts{ :name => :role, :type => "radio", :value => Role[:scout].id, :onclick => "updateSelectedAccount(this)" }/
+            %input#Scouts{ :name => :role, :type => "radio", :value => Role[:scout].id, :onclick => "updateSelectedAccount(this)", :style => 'border: none' }/
           .AccountIllustration
             %img{ :src => "/gs/images/account_scouts.jpg", :height => "99", :alt => "Recruiters Illustration", :onclick => "return selectThisAccount('Scouts')", :width => "131" }/
           .AccountDescriptionScouts
@@ -76,4 +76,4 @@
               This account type allows access to the Recruiter&rsquo;s module of the Global Sports platform.  Within this premium module, you will find scouting reports, statistical information and video coverage (full game, highlights reels and combine performances) on the nation&rsquo;s hottest recruiting prospects.
         .accountContinue
           %p
-            %input{ :name => "Continue", :type => "image", :src => "/gs/images/account_continue.png", :value => "Contine", :alt => "Continue" }/
+            %input{ :name => "Continue", :type => "image", :src => "/gs/images/account_continue.png", :value => "Continue", :alt => "Continue", :style => 'border: none' }/
