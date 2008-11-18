@@ -137,12 +137,11 @@
             =link_to 'See All Videos', {:controller => 'search', :action => 'team_video_assets', :team_id => @team.id}
           
       .contentBoxContent.tanBackground
-        .flashArea#flashArea
         - if team_has_videos && @team_video_picks && @team_video_picks.length > 2
+          .flashArea#flashArea
           - flashvars = {}
           - flashvars[:playerType]= ( @team.member? ? "SchoolPlayer" : "SchoolNotMemberPlayer" )
           - flashvars[:dockeys]= @team_video_picks
-        
           = render :partial => 'shared/video_player', :locals => {:target => 'flashArea', :player_name => '/players/schoolhome.swf', :fvars => flashvars, :width=>'587px', :height=>'341px' }
         - else
           .box
