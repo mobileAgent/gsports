@@ -101,8 +101,8 @@
           .contentBoxHeader.flatblue
             %h2.boxDescription
           .contentBoxContent.tanBackground
-            =render :partial => 'video_assets/video_feature', :collection => @team_videos, :locals => {:nolinks => current_user.nil? }
-            - if @team_videos.size >= 10
+            =render :partial => 'video_assets/video_feature', :collection => @team_videos[0...6], :locals => {:nolinks => current_user.nil? }
+            - if @team_videos.size >x= 6 
               - if current_user
                 = link_to "More Videos...", url_for(:controller => 'search', :action => 'team_video_assets', :team_id => @team.id)
               - else
