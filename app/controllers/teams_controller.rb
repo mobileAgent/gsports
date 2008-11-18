@@ -203,12 +203,12 @@ class TeamsController < BaseController
     if(video_favorites.empty?)
       @player_title = 'Recent Uploads'
       @hide_recent_uploads = true
-      video_picks = video_favorites.sort {|x,y| y.created_at <=> x.created_at}.first(6)
+      video_picks = @team_videos.first(6) if @team_videos
     else
-      video_favorites = video_favorites.sort {|x,y| y.created_at <=> x.created_at}.first(6)
+      video_favorites.sort! {|x,y| y.created_at <=> x.created_at}.first(6)
       video_picks = video_favorites.map(){|f|eval "#{f.favoritable_type}.find(f.favoritable_id)"}
     end
-    @team_video_picks = random_slice(video_picks, 6).collect(&:dockey).join(",")
+    @team_video_picks = video_picks.collect(&:dockey).join(",")
   end
 
   def random_slice(a, s)

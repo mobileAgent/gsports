@@ -776,6 +776,16 @@ input[type='button'] {
   background: none;
 }
 
+
+.contentBox.orgPlayer #flashArea {
+  margin-top: 5px;
+  margin-left: 10px;
+  float: none;
+  background:none;
+  height: 320px;
+  width: 568px;
+}
+
 /* these are a little wider for some reason */
 .contentBox.orgFeature, .contentBox.orgPhotos {
   width: 600px;
