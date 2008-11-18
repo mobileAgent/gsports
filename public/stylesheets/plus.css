@@ -1037,6 +1037,7 @@ input[type='button'] {
   background: url(/images/org/tabbedBox_bg.png) no-repeat;
   height: 560px;
   display: block;
+  overflow: hidden;
 }
 .tabContent.short {
   background: url(/images/org/newsBox_bg.png) no-repeat;
