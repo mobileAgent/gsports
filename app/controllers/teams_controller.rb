@@ -1,5 +1,7 @@
 class TeamsController < BaseController
 
+  SHOW_CLIPS_REELS = false 
+
   auto_complete_for :team, :name
   skip_before_filter :verify_authenticity_token, :only => [:auto_complete_for_team_name, :auto_complete_for_team_league_name ]
   before_filter :admin_required, :only => [:index, :new, :create, :destroy]
@@ -181,24 +183,38 @@ class TeamsController < BaseController
     @team_videos = Array.new
     @team_popular_videos = Array.new
     @team_clips_reels = Array.new
+    @recent_uploads = Array.new
 
-    if team.member? || team_id==1
-      @team_videos = VideoAsset.for_team(team).all(:limit => 10, :order => 'updated_at DESC')
-      @team_popular_videos = VideoAsset.for_team(team).all(:limit => 10, :order => 'view_count DESC')
+    @team_videos = VideoAsset.for_team(team).all(:limit => 10, :order => 'updated_at DESC')
+    @team_popular_videos = VideoAsset.for_team(team).all(:limit => 10, :order => 'view_count DESC')
+    @recent_uploads = @team_videos unless @team_videos.empty?
 
-      show_clips_reels = false 
-      if show_clips_reels
-        @team_clips_reels = VideoClip.for_team(team).find(:all, :limit => 10, :order => "video_clips.created_at DESC")
-        @team_clips_reels << VideoReel.for_team(team).find(:all, :limit => 10, :order => "video_reels.created_at DESC")
-        @team_clips_reels.flatten!
-        @team_clips_reels.sort! { |a,b| b.created_at <=> a.created_at }
-      end
+    if @team_videos.empty?
+      @team_videos << VideoAsset.references_team(team).all(:limit => 10, :order => 'updated_at DESC')
+      @team_popular_videos << VideoAsset.references_team(team).all(:limit => 10, :order => 'view_count DESC')
+    end      
 
-      if @team_clips_reels.empty?
-        load_team_and_related_videos(1) unless team_id==1
-      end
+    load_team_clips_reels(team) if SHOW_CLIPS_REELS
+  end
+
+  def load_team_clips_reels(team)
+    if Team === team
+      team_id = team.id
+    else
+      team_id = team.to_i
+      team = Team.find(team_id)
     end
 
+    @team_clips_reels = VideoClip.for_team(team).find(:all, :limit => 10, :order => "video_clips.created_at DESC")
+    @team_clips_reels << VideoReel.for_team(team).find(:all, :limit => 10, :order => "video_reels.created_at DESC")
+
+    if @team_clips_reels.empty?
+      return load_team_clips_reels(1) unless team_id==1
+    end
+
+    @team_clips_reels.flatten!
+    @team_clips_reels.sort! { |a,b| b.created_at <=> a.created_at }
+    @team_clips_reels
   end
 
   def load_team_favorites(team)
@@ -209,8 +225,11 @@ class TeamsController < BaseController
       team = Team.find(team_id)
     end
 
+    @team_photo_picks = Array.new
+    @team_video_picks = Array.new
+
     photo_picks = Favorite.ftype('Photo').for_team_staff(team_id).map(){|f|Photo.find(f.favoritable_id)}
-    @team_photo_picks = photo_picks.sort {|x,y| y.created_at <=> x.created_at}.first(5)
+    @team_photo_picks = photo_picks.sort {|x,y| y.created_at <=> x.created_at}.first(5) unless photo_picks.nil?
     #random_slice(photo_picks, 5)
     
     @player_title = 'Featured Videos'
@@ -218,12 +237,14 @@ class TeamsController < BaseController
     if(video_favorites.empty?)
       @player_title = 'Recent Uploads'
       @hide_recent_uploads = true
-      video_picks = @team_videos.first(6) if @team_videos
+      video_picks = @recent_uploads if @recent_uploads && !@recent_uploads.empty?
     else
       video_favorites.sort! {|x,y| y.created_at <=> x.created_at}.first(6)
       video_picks = video_favorites.map(){|f|eval "#{f.favoritable_type}.find(f.favoritable_id)"}
     end
-    @team_video_picks = video_picks.collect(&:dockey).join(",")
+    unless video_picks.nil? || video_picks.empty?
+      @team_video_picks = video_picks.first(6).collect(&:dockey).join(",") 
+    end
   end
 
   def random_slice(a, s)
