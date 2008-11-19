@@ -81,6 +81,7 @@ class TeamsController < BaseController
     if params[:league_id]
       @team.league= League.find(params[:league_id])
     end
+    @leagues = League.all(:order => "name asc")
     respond_to do |format|
       format.html # new.haml
       format.xml  { render :xml => @team }
@@ -95,6 +96,7 @@ class TeamsController < BaseController
       flash[:notice] = "You don't have permission to edit that record"
       access_denied and return
     end
+    @leagues = League.all(:order => "name asc")
   end
 
   # POST /team
@@ -108,6 +110,7 @@ class TeamsController < BaseController
         format.html { redirect_to(current_user.admin? ? teams_url : team_path(@team)) }
         format.xml  { render :xml => @team, :status => :created, :location => @team }
       else
+        @leagues = League.all(:order => "name asc")
         format.html { render :action => "new" }
         format.xml  { render :xml => @team.errors, :status => :unprocessable_entity }
       end
@@ -144,6 +147,7 @@ class TeamsController < BaseController
         format.html { redirect_to(current_user.admin? ? teams_url : team_path(@team)) }
         format.xml  { head :ok }
       else
+        @leagues = League.all(:order => "name asc")
         format.html { render :action => "edit" }
         format.xml  { render :xml => @team.errors, :status => :unprocessable_entity }
       end
