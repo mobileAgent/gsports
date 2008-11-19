@@ -882,17 +882,26 @@ input[type='button'] {
   height: 140px; 
   overflow:hidden;
   background: none;
-  width: 575px;
-  margin: 5px 5px 5px 10px;
+  width: 588px;
+  margin: 5px 5px 5px 3px;
 }
 .orgPhoto {
   float:left;
   height: 130px;
   overflow: hidden;
   line-height:normal;
-  margin-right: 7px;
+  margin-left: 3px;
+  margin-right: 3px;
   width:100px;
   text-align: center;
+}
+.orgPhotoArrow {
+  /* arrow is 20x35 */
+  width: 27px;
+  margin-top: 33px;
+  height: 35px;
+  text-align:center;
+  float:left;
 }
 .orgPhotoThumb {
   width: 100px;
