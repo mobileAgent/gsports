@@ -158,13 +158,20 @@
             .moreLink
               -# See All
           .contentBoxContent.tanBackground
-            - @team_photo_picks.each do |photo|
+            .orgPhotoArrow
+              - if false && @team_photo_picks.size == 5
+                =image_tag '/images/org/arrow_left.png'
+   
+            - @team_photo_picks.first(5).each do |photo|
               .orgPhoto
                 .orgPhotoThumb
                   = link_to image_tag( photo.public_filename(:thumb), :alt => photo.name, :title => photo.name), user_photo_path(photo.user, photo), :class => 'framed'
                 .orgPhotoTitle
                   = photo.name
  
+            .orgPhotoArrow{ :style => "float:right" }
+              - if false && @team_photo_picks.size == 5
+                =image_tag '/images/org/arrow_right.png'
       - else
         .contentBox.orgFeature
           .contentBoxHeader.darkblue
