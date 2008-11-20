@@ -1529,3 +1529,7 @@ ul, ol {
 h2.teamName {
   font-size: 135%;
 }
+
+a.articleLink, a.articleLink:visited, a.articleLink:hover {
+	color: #444;
+}
