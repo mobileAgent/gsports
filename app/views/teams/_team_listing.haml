@@ -49,7 +49,7 @@
 
       %br/
       %br/
-      = link_to "Members: #{team_listing.users.size}", "/search/q?search[category]=10&team_id=#{team_listing.id}"
+      = link_to "Members: #{team_listing.users.enabled.size}", "/search/q?search[category]=10&team_id=#{team_listing.id}"
 
 
   .col2

@@ -60,6 +60,9 @@ class User < ActiveRecord::Base
     delegate method, :to => :team
   end
 
+  named_scope :enabled,
+     :conditions => ['enabled = ?',true]
+
   named_scope :admin,
     :conditions => ["email = ?",ADMIN_EMAIL]
 

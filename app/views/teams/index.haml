@@ -38,7 +38,7 @@
               %td.leagueList=h team.state_id? ? team.state.name : ""
               %td.leagueList=h team.league_name
               %td.leagueList=truncate h(team.description),45
-              %td.leagueList.numeric= team.users.size
+              %td.leagueList.numeric= team.users.enabled.size
 
               - if team.id != User.admin.first.team_id
                 %td.leagueList= link_to 'Delete', team_path(team), :confirm => 'Are you sure?', :method => :delete

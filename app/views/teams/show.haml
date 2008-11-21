@@ -11,7 +11,7 @@
     %table
       %tr
         %td.orgSummary
-          - memlink = (current_user && @team.users.size > 0) ? link_to("View #{@team.nickname} Members (#{@team.users.size})", "/search/q?search[category]=10&team_id=#{@team.id}",:class=>'member-link') : '' 
+          - memlink = (current_user && @team.users.enabled.size > 0) ? link_to("View #{@team.nickname} Members (#{@team.users.enabled.size})", "/search/q?search[category]=10&team_id=#{@team.id}",:class=>'member-link') : '' 
           - case avatar_height
           - when 60
             = render :partial=>'logo', :locals=>{:avatar_height=>avatar_height}
