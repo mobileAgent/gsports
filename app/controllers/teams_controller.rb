@@ -198,6 +198,8 @@ class TeamsController < BaseController
       @team_popular_videos << VideoAsset.references_team(team).all(:limit => 10, :order => 'view_count DESC')
     end      
 
+    @team_videos.flatten!
+    @team_popular_videos.flatten!
     load_team_clips_reels(team) if SHOW_CLIPS_REELS
   end
 
@@ -211,7 +213,6 @@ class TeamsController < BaseController
 
     @team_clips_reels = VideoClip.for_team(team).find(:all, :limit => 10, :order => "video_clips.created_at DESC")
     @team_clips_reels << VideoReel.for_team(team).find(:all, :limit => 10, :order => "video_reels.created_at DESC")
-
     if @team_clips_reels.empty?
       return load_team_clips_reels(1) unless team_id==1
     end
