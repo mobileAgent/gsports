@@ -1,12 +1,13 @@
 class TeamsController < BaseController
 
   SHOW_CLIPS_REELS = false 
+  PHOTO_GALLERY_SIZE = 5
 
   auto_complete_for :team, :name
   skip_before_filter :verify_authenticity_token, :only => [:auto_complete_for_team_name, :auto_complete_for_team_league_name ]
   before_filter :admin_required, :only => [:index, :new, :create, :destroy]
   before_filter :admin_for_league_or_team, :only => [:edit, :update]
-  skip_before_filter :gs_login_required, :only => [:show_public]
+  skip_before_filter :gs_login_required, :only => [:show_public, :photo_gallery]
   after_filter :cache_control, :only => [:update, :create, :destroy]
   
   # GET /team
@@ -74,6 +75,13 @@ class TeamsController < BaseController
       format.html { render :action => 'show' }
       format.xml  { render :xml => @team }
     end
+  end
+
+  def photo_gallery
+    team_id = params[:id]
+    @team = Team.find(team_id)
+    index = (params[:photo_index] || 0).to_i
+    load_photo_gallery(@team, index)
   end
 
   # GET /team/new
@@ -233,8 +241,7 @@ class TeamsController < BaseController
     @team_photo_picks = Array.new
     @team_video_picks = Array.new
 
-    photo_picks = Favorite.ftype('Photo').for_team_staff(team_id).map(){|f|Photo.find(f.favoritable_id)}
-    @team_photo_picks = photo_picks.sort {|x,y| y.created_at <=> x.created_at}.first(5) unless photo_picks.nil?
+    load_photo_gallery(team)
     #random_slice(photo_picks, 5)
     
     @player_title = 'Featured Videos'
@@ -252,12 +259,29 @@ class TeamsController < BaseController
     end
   end
 
+  def load_photo_gallery(team, index=0)
+    if Team === team
+      team_id = team.id
+    else
+      team_id = team.to_i
+      team = Team.find(team_id)
+    end
+    
+    photo_picks = Favorite.ftype('Photo').for_team_staff(team_id).map(){|f|Photo.find(f.favoritable_id)}
+    total = photo_picks.nil? ? 0 : photo_picks.size
+    if index + PHOTO_GALLERY_SIZE > total
+      index = total < PHOTO_GALLERY_SIZE ? 0 : total - PHOTO_GALLERY_SIZE;
+    end
+    @team_photo_index = index
+    @team_photo_total = total
+    @team_photo_picks = photo_picks.sort {|x,y| y.created_at <=> x.created_at}[index,index+PHOTO_GALLERY_SIZE] unless photo_picks.nil?
+  end
+
   def random_slice(a, s)
     l=a.length-s
     p=(l>=0?rand(l+1):0);
     a[p..p+s-1];
   end
-
 
   def cache_control
     Rails.cache.delete('quickfind_states')
