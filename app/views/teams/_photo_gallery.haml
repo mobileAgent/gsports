@@ -4,7 +4,9 @@
   - if @team_photo_picks
     .orgPhotoArrow
       - if @team_photo_index > 0
-        =link_to_remote image_tag('/images/org/arrow_left.png'), :url => { :controller => 'teams', :action => 'photo_gallery', :id => @team.id, :photo_index => (@team_photo_index-1) }
+        - prev_index = @team_photo_index - TeamsController::PHOTO_GALLERY_SIZE
+        - prev_index = 0 if prev_index < 0
+        =link_to_remote image_tag('/images/org/arrow_left.png'), :url => { :controller => 'teams', :action => 'photo_gallery', :id => @team.id, :photo_index => prev_index }
 
     -curidx = @team_photo_index
     - @team_photo_picks.first(TeamsController::PHOTO_GALLERY_SIZE).each do |photo|
@@ -16,6 +18,7 @@
           = truncate(photo.name,30)
 
     .orgPhotoArrow{ :style => "float:right" }
-      - if @team_photo_total > @team_photo_index + TeamsController::PHOTO_GALLERY_SIZE
-        =link_to_remote image_tag('/images/org/arrow_right.png'), :url => { :controller => 'teams', :action => 'photo_gallery', :id => @team.id, :photo_index => (@team_photo_index+1) }
+      - next_index = @team_photo_index + TeamsController::PHOTO_GALLERY_SIZE
+      - if @team_photo_total > next_index
+        =link_to_remote image_tag('/images/org/arrow_right.png'), :url => { :controller => 'teams', :action => 'photo_gallery', :id => @team.id, :photo_index => next_index }
 

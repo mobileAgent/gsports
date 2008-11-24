@@ -269,8 +269,10 @@ class TeamsController < BaseController
     
     photo_picks = Favorite.ftype('Photo').for_team_staff(team_id).map(){|f|Photo.find(f.favoritable_id)}
     total = photo_picks.nil? ? 0 : photo_picks.size
-    if index + PHOTO_GALLERY_SIZE > total
+    if index > total
       index = total < PHOTO_GALLERY_SIZE ? 0 : total - PHOTO_GALLERY_SIZE;
+    elsif index < 0
+      index = 0
     end
     @team_photo_index = index
     @team_photo_total = total
