@@ -30,7 +30,8 @@ class PurchaseOrdersController < UsersController
   end
   
   def create
-    @user = current_user || reg_user_from_cookie 
+    @po = PurchaseOrder.new(params[:purchase_order])
+    @user = current_user || reg_user_from_cookie
 
     unless session[:promo_id].nil?
       @promotion = Promotion.find(session[:promo_id].to_i)
@@ -41,7 +42,7 @@ class PurchaseOrdersController < UsersController
     if @promotion && (@promotion.period_days.nil? || @promotion.period_days == 0)
       @cost = @promotion.cost
     else
-      @cost = @po.user.role.plan.cost
+      @cost = @user.role.plan.cost
     end
     
     # Catch the case when the user clicks the Print button multiple times
