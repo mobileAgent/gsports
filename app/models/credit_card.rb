@@ -35,7 +35,7 @@ class CreditCard < ActiveRecord::Base
         :month => ccinfo.month,
         :year => ccinfo.year,
         :verification_value => ccinfo.verification_value,
-        :displayable_number => ccinfo.number[(ccinfo.number.length - 4)..ccinfo.number.length])
+        :displayable_number => ccinfo.number[-4..-1])
   end
   
   def to_active_merchant_cc
@@ -50,11 +50,12 @@ class CreditCard < ActiveRecord::Base
   end
   
   def equals?(other)
-    (other != nil && other.first_name==first_name &&
-        other.last_name==last_name
-        other.number==number
-        other.verification_value==verification_value
-        other.month==month
+    (other &&
+        other.first_name==first_name &&
+        other.last_name==last_name &&
+        other.number==number &&
+        other.verification_value==verification_value &&
+        other.month==month &&
         other.year==year)
   end
 end

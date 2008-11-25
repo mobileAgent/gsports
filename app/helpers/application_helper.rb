@@ -53,7 +53,7 @@ include UsersHelper
     arr = Array.new
     for i in (Time.now.year .. Time.now.year+12) do
       p = Pair.new
-      p.name = i
+      p.name = "#{i}"
       p.number = i
       arr << p
     end
