@@ -37,14 +37,14 @@
           %fieldset.inline
             %label{"for"=>"expiration_date"}
               * Expiration Date:
-              = "#{@credit_card.year.class} / #{@credit_card.month}"
+              = "#{@credit_card.year} / #{@credit_card.month}"
               %br/
               %table
                 %tr
                   %td
-                    =collection_select :credit_card, :year, cc_years, :number, :name, { :prompt => '-Year-', :selected => @credit_card.year }
+                    =collection_select :credit_card, :year, cc_years, :number, :name, { :prompt => '-Year-', :selected => @credit_card.year.to_i }
                   %td
-                    =collection_select :credit_card, :month, cc_months, :number, :name, { :prompt => '-Month-', :selected => @credit_card.month }
+                    =collection_select :credit_card, :month, cc_months, :number, :name, { :prompt => '-Month-', :selected => @credit_card.month.to_i }
                     
           %label{"for"=>"number"}
             * Card Number
