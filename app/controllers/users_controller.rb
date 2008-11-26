@@ -312,11 +312,14 @@ class UsersController < BaseController
 
   # registration step 3
   def billing
-    # REG_NO_SAVE
-    #id = params[:userid] || params[:id] || current_user.id
-    #@user = User.find(id)
     #@user = session[:reg_user]
     @user = reg_user_from_cookie
+    if @user.nil?
+      id = params[:userid] || params[:id] || current_user.id
+      if id
+        @user = User.find(id)
+      end
+    end
 
     unless session[:promo_id].nil?
       @promotion = Promotion.find(session[:promo_id].to_i)
@@ -346,11 +349,14 @@ class UsersController < BaseController
   # Capture payment
   #
   def submit_billing
-    # REG_NO_SAVE
-    #id = params[:userid] || params[:id] || current_user.id
-    #@user = User.find(id)
     #@user = session[:reg_user]
     @user = reg_user_from_cookie
+    if @user.nil?
+      id = params[:userid] || params[:id] || current_user.id
+      if id
+        @user = User.find(id)
+      end
+    end
 
     unless session[:promo_id].nil?
       @promotion = Promotion.find(session[:promo_id].to_i)
@@ -438,7 +444,7 @@ class UsersController < BaseController
     @user.team = User.admin.first.team if @user.team.nil?
     
     @user.enabled = true
-    @user.activated_at = Time.now
+    @user.activated_at = Time.now if @user.activated_at.nil?
 
     logger.debug "* Saving user record"
     @user.save!

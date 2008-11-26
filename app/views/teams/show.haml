@@ -67,7 +67,7 @@
     .tabContent{ :class => is_member ? "tall" : "short" }
       -#      School News
       #tabBody1.contentBox.tabBody.open{ :class => is_member ? "tall" : "short" }
-        .contentBoxHeader.flatblue
+        .contentBoxHeader.flatblue{ :style => "padding-top:0px" }
           %h2.boxDescription
             - if current_user && current_user.team_staff?(@team)
               %span.moreLink

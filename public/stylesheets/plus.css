@@ -1533,3 +1533,6 @@ h2.teamName {
 a.articleLink, a.articleLink:visited, a.articleLink:hover {
 	color: #444;
 }
+.tanBackground .moreLink a, .tanBackground .moreLink a:visited {
+  color: #666666;
+}
