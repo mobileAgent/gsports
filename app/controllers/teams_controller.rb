@@ -204,6 +204,9 @@ class TeamsController < BaseController
     if @team_videos.empty?
       @team_videos << VideoAsset.references_team(team).all(:limit => 10, :order => 'updated_at DESC')
       @team_popular_videos << VideoAsset.references_team(team).all(:limit => 10, :order => 'view_count DESC')
+      if !@team_videos.empty?
+        @player_title = 'Games played with #{@team.name}'
+      end
     end      
 
     @team_videos.flatten!
