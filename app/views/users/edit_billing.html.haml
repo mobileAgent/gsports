@@ -36,14 +36,15 @@
 
           %fieldset.inline
             %label{"for"=>"expiration_date"}
-              * Expiration Date:                
+              * Expiration Date:
+              = "#{@credit_card.year} / #{@credit_card.month}"
               %br/
               %table
                 %tr
                   %td
-                    =collection_select :credit_card, :year, cc_years,"number","name",{:prompt => '-Year-'}, {:selected => @credit_card.year }
+                    =collection_select :credit_card, :year, cc_years, :number, :name, { :prompt => '-Year-', :selected => @credit_card.year.to_i }
                   %td
-                    =collection_select :credit_card, :month, cc_months,"number","name",{:prompt => '-Month-'}, {:selected => @credit_card.month }
+                    =collection_select :credit_card, :month, cc_months, :number, :name, { :prompt => '-Month-', :selected => @credit_card.month.to_i }
                     
           %label{"for"=>"number"}
             * Card Number
@@ -89,9 +90,8 @@
             %br
             %label{:for => 'state'}
               State
-              = @billing_address.state
               %br/
-              =collection_select(:billing_address ,:state , State.all(:order => "name asc"),"name","name", { :prompt => 'State', :selected => ( (!@billing_address.nil? && @billing_address.state?) ? @billing_address.state : '') })
+              =collection_select(:billing_address ,:state , State.all(:order => "name asc"),"name","name", { :prompt => 'State', :selected => ( (@billing_address && @billing_address.state?) ? @billing_address.state : '') })
 
             %br
             %label{:for=>'zip'}

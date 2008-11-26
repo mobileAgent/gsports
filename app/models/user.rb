@@ -60,6 +60,9 @@ class User < ActiveRecord::Base
     delegate method, :to => :team
   end
 
+  named_scope :enabled,
+     :conditions => ['enabled = ?',true]
+
   named_scope :admin,
     :conditions => ["email = ?",ADMIN_EMAIL]
 
@@ -94,7 +97,7 @@ class User < ActiveRecord::Base
     
     
     #indexes monikers.tags.name, :as => :moniker_content
-    has created_at, updated_at, profile_public
+    has created_at, updated_at, profile_public, enabled
     set_property :delta => true
   end
 

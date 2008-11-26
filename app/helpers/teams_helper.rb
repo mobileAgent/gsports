@@ -16,5 +16,16 @@ module TeamsHelper
     posts ||= []
   end
   
-  
+  def most_recent_league_post(team=nil, opts={})
+    team ||= @team
+
+    options = {
+      :conditions=>["league_id = ?", team.league_id],
+      :limit=>1,
+      :order=>'published_at DESC'
+    }.merge opts
+
+    Post.first(options)
+
+  end 
 end

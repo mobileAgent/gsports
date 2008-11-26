@@ -53,8 +53,8 @@ include UsersHelper
     arr = Array.new
     for i in (Time.now.year .. Time.now.year+12) do
       p = Pair.new
-      p.name = i
-      p.number = i
+      p.name = "#{i}"
+      p.number = "#{i}"
       arr << p
     end
     arr
@@ -67,7 +67,7 @@ include UsersHelper
     for i in (0..11) do
       p = Pair.new
       p.name="#{names[i]} (#{i+1})"
-      p.number=(i+1)
+      p.number="#{(i+1)}"
       arr << p
     end
     arr

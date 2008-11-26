@@ -768,40 +768,68 @@ input[type='button'] {
 	padding-right: 20px;
 }
 
-
 .contentBox.orgPlayer, .contentBox.orgFeature, .contentBox.orgPhotos {
-	width: 587px;
-}
-.contentBox.orgFeature, .contentBox.orgPhotos {
-	margin-bottom: 0;
-}
-
-/* Uncomment this section to use the shadow version of the team player background
-.contentBox.orgPlayer {
-	height: 351px;
-        background-image: url(/images/team_player_bg.png);
-        background-color: #FFFFFF;
-}
-.contentBox.orgPlayer .contentBoxHeader.darkblue {
+  width: 600px;
+  margin-left: 10px;
+  margin-right: 0px;
+  margin-bottom: 16px;
   background: none;
 }
-*/
+
+
+.contentBox.orgPlayer #flashArea {
+  margin-top: 5px;
+  margin-left: 10px;
+  float: none;
+  background:none;
+  height: 320px;
+  width: 568px;
+}
+
+/* these are a little wider for some reason */
+.contentBox.orgFeature, .contentBox.orgPhotos {
+  width: 600px;
+}
+.contentBox.orgFeature, .contentBox.orgPhotos {
+  margin-bottom: 0;
+}
+
+.tabSpacer {
+  height: 20px;
+  width: 585px;
+}
 .contentBox.orgPlayer {
-  margin-top: 20px;
+  height: 351px;
+  background: url(/images/org/videoBox_bg.png) no-repeat;
+  background-color: #FFFFFF;
 }
-.contentBoxContent.orgPlayer {
-	height: 346px;
-	overflow: inherit;
+.contentBox.orgPlayer .contentBoxHeader {
+  width: 585px;
 }
-.contentBox.orgPlayer .contentBoxHeader .boxDescription {
+.contentBox.orgPlayer .contentBoxHeader.darkblue, 
+.contentBox.orgPhotos .contentBoxHeader.darkblue, 
+.contentBox.orgFeature .contentBoxHeader.darkblue {
+  background: none;
+  color:#FFEF0A;
+}
+
+.contentBox.orgPlayer .contentBoxHeader .boxDescription,
+.contentBox.orgPhotos .contentBoxHeader .boxDescription,
+.contentBox.orgFeature .contentBoxHeader .boxDescription {
   width: 387px;
   float: left;
 }
-.contentBox.orgPlayer .contentBoxHeader .moreLink {
+.contentBox.orgPlayer .contentBoxHeader .moreLink, 
+.contentBox.orgPhotos .contentBoxHeader .moreLink,
+.contentBox.orgFeature .contentBoxHeader .moreLink {
   width: 150px;
   text-align: right;
   font-weight: normal;
   float: right;
+}
+.contentBox.orgPlayer .contentBoxContent {
+  height: 350px;
+  overflow: inherit;
 }
 
 .contentBoxHeader.darkblue {
@@ -809,6 +837,7 @@ input[type='button'] {
 	border: 0;
 	color: white;
 	font-weight: bold;
+        height: 20px;
 }
 
 .contentBoxHeader.flatblue {
@@ -837,54 +866,80 @@ input[type='button'] {
 }
 */
 /* override absolute heights from main.css */
-.contentBox.orgPhotos {
-  height: auto;
+.contentBox.orgPhotos .contentBoxHeader, .contentBox.orgFeature .contentBoxHeader {
+  width: 585px;
+  height: 20px;
+  background-color: none;
 }
-.contentBox.orgPhotos .contentBoxContent{
-  height: auto; 
+.contentBox.orgPhotos, .contentBox.orgFeature {
+  position:relative;
+  height: 168px;
+  margin-bottom: 10px;
+  background: url(/images/org/galleryBox_bg.png) no-repeat;
+}
+.contentBox.orgPhotos .contentBoxContent, .contentBox.orgFeature .contentBoxContent {
+  position: relative;
+  height: 140px; 
+  overflow:hidden;
+  background: none;
+  width: 588px;
+  margin: 5px 5px 5px 3px;
 }
 .orgPhoto {
-	display:inline;
-	float:left;
-	height:125px;
-	line-height:normal;
-	margin-bottom:7px;
-	margin-left:7px;
-	margin-right:7px;
-	width:100px;
-	margin-top:7px;
-        text-align: center;
+  float:left;
+  height: 130px;
+  overflow: hidden;
+  line-height:normal;
+  margin-left: 3px;
+  margin-right: 3px;
+  width:100px;
+  text-align: center;
+}
+.orgPhotoArrow {
+  /* arrow is 20x35 */
+  width: 27px;
+  margin-top: 33px;
+  height: 35px;
+  text-align:center;
+  float:left;
 }
 .orgPhotoThumb {
   width: 100px;
   height: 100px;
-  overflow: clip;
+  overflow: hidden;
   display: block;
 }
 .orgPhotoTitle {
   width:100px;
-  margin-top: 5px;
-  height: 2em;
+  height: 2.5em;
   vertical-align: middle;
-  overflow: clip;
+  overflow: hidden;
   text-overflow: ellipsis;
   display:block;
 }
 
-
-.orgFeature .contentBoxContent {
-	position: relative;
-	overflow: hidden;
-	margin-top: 10px;
-}
-
 .orgFeature .featureSummary {
-	position: inline;
-	float:left;
-	border: 0;
+  position: inline;
+  width: 280px;
+  float:left;
+  border: 0;
+  border-right: 1px solid white;
+  margin: 20px 5px 10px 0px;
 }
 
-
+.orgFeature .featureSummary .featureText {
+  width: 180px;
+  margin-right: 0px;
+  margin-left: 5px;
+}
+.orgFeature .featureSummary .featureText .favorite-count {
+  font-weight: bold;
+}
+.one-liner {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 .orgBoxTail {
 	margin-left: 20px;
 	color:#E2E4A7;
@@ -913,25 +968,16 @@ input[type='button'] {
 
 /* team landing tabs */
 
-
-.contentBox.tabBody{
-	margin-bottom: 0;
-}
-
-.tabBody .contentBoxContent{
-  height: 370px;
-}
-
 .orgTabs {
 	position: relative;	
 	height: 20px;
-	width: 312px;
+	width: 300px;
 	background-color:white;
-	margin-left:20px;
+	margin-left: 20px;
 }
 
 .orgTab {
-	color:#FFEF0A;
+	color:white;
 	xbackground:#68A34E url(/gs/images/content_box_header.png) repeat-x scroll left top;
 	font-size:110%;
 	height:20px;
@@ -939,15 +985,13 @@ input[type='button'] {
 	margin-right:1px;
 }
 
-.orgTab.open {
-	color:white;
-}
 
 .orgTab .left {
 	float:left;
 	width: 3px;
 	height: 20px;
 	background:white url(/gs/images/tab_unselected_l.png) repeat-x scroll left top;
+        border-bottom: 2px solid #141C35;
 }
 
 .orgTab .content {
@@ -959,6 +1003,7 @@ input[type='button'] {
 	font-weight: normal;
 	font-size: 100%;
 	white-space: nowrap;
+        line-height: 20px;
 	background:#141C35 url(/gs/images/tab_unselected_m.png) repeat-x scroll left top;
 }
 
@@ -967,10 +1012,12 @@ input[type='button'] {
 	width: 3px;
 	height: 20px;
 	background:white url(/gs/images/tab_unselected_r.png) repeat-x scroll left top;
+        border-bottom: 2px solid #141C35;
 }
 
 .orgTab.open .left {
 	background:white url(/gs/images/tab_selected_l.png) repeat-x scroll left top;
+        border-bottom: 2px solid #141C35;
 }
 
 .orgTab.open .content {
@@ -979,18 +1026,63 @@ input[type='button'] {
 
 .orgTab.open .right{
 	background:white url(/gs/images/tab_selected_r.png) repeat-x scroll left top;
+        border-bottom: 2px solid #141C35;
 }
 
 .orgTab a {
-	color:#FFEF0A;
+	color:white;
 	text-decoration: none;
 }
 
 .orgTab.open a {
-	color:white;
+	color:#FFEF0A;
 }
 
-
+.tabContent {
+  position: relative;
+  margin-bottom: 0px;
+  margin-left: 20px;
+  width: 320px;
+  background: url(/images/org/tabbedBox_bg.png) no-repeat;
+  height: 560px;
+  display: block;
+  overflow: hidden;
+}
+.tabContent.short {
+  background: url(/images/org/newsBox_bg.png) no-repeat;
+  height: 380px;
+}
+.tabContent .contentBox {
+  margin: 0px 10px 0px 2px;
+  width: 310px;
+  background: none;
+}
+.tabContent .contentBox .contentBoxHeader {
+  background: none;
+  height: 20px;
+}
+.tabBody .contentBoxContent {
+  height: 500px;
+  width: 305px;
+  overflow: hidden;
+  float:left;
+}
+.contentBox.tabBody.short .contentBoxContent {
+  height: 320px;
+}
+.contentBox.tabBody .flatblue {
+  background: none;
+}
+.tabBody>.moreLink {
+  height: 20px;
+  width: 300px;
+  text-align: right;
+  float: left;
+}
+.tabBody .contentBoxContent .featureSummary.news {
+  height: 7em;
+  overflow: hidden;
+}
 /* end - team league summary content */
 
 /* profile activity */
@@ -1436,4 +1528,11 @@ ul, ol {
 
 h2.teamName {
   font-size: 135%;
+}
+
+a.articleLink, a.articleLink:visited, a.articleLink:hover {
+	color: #444;
+}
+.tanBackground .moreLink a, .tanBackground .moreLink a:visited {
+  color: #666666;
 }

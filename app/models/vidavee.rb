@@ -354,13 +354,13 @@ class Vidavee < ActiveRecord::Base
     url = query_url(url,params)
     
     # Send in any extra parameters the upload form requires
-    asis=file_path.downcase.end_with? '.flv'
+    #asis=file_path.downcase.end_with? '.flv'
     upload_params = [
                      Curl::PostField.content('title',video_asset.title),
                      Curl::PostField.content('description',video_asset.description),
                      Curl::PostField.content('transcoderVersion','3'),
                      Curl::PostField.content('type','video'),
-                     Curl::PostField.content('asisFlv',asis.to_s),
+                     Curl::PostField.content('asisFlv','false'),
                      Curl::PostField.file('Asset',file_path)
                      ]
     # Send the post

@@ -1248,6 +1248,12 @@ body * {
 	margin: 0;
 	padding: 0;
 }
+form input {
+   border: 1px solid black;
+}
+form input.button {
+   border: none;
+}
 body{
 	font-size: 10px; /*** all other font sizes should be specified as percentages of 10px ***/
 	font-family: "Lucida Grande", verdana, arial, helvetica, sans-serif;	

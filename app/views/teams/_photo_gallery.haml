@@ -1,0 +1,24 @@
+- @team_photo_index |= 0
+- @team_photo_total |= 0
+#orgPhotoGallery
+  - if @team_photo_picks
+    .orgPhotoArrow
+      - if @team_photo_index > 0
+        - prev_index = @team_photo_index - TeamsController::PHOTO_GALLERY_SIZE
+        - prev_index = 0 if prev_index < 0
+        =link_to_remote image_tag('/images/org/arrow_left.png'), :url => { :controller => 'teams', :action => 'photo_gallery', :id => @team.id, :photo_index => prev_index }
+
+    -curidx = @team_photo_index
+    - @team_photo_picks.first(TeamsController::PHOTO_GALLERY_SIZE).each do |photo|
+      -curidx += 1
+      .orgPhoto{:id => "gallery_photo_#{curidx}"}
+        .orgPhotoThumb
+          = link_to image_tag( photo.public_filename(:thumb), :alt => photo.name, :title => photo.name), user_photo_path(photo.user, photo), :class => 'framed'
+        .orgPhotoTitle
+          = truncate(photo.name,30)
+
+    .orgPhotoArrow{ :style => "float:right" }
+      - next_index = @team_photo_index + TeamsController::PHOTO_GALLERY_SIZE
+      - if @team_photo_total > next_index
+        =link_to_remote image_tag('/images/org/arrow_right.png'), :url => { :controller => 'teams', :action => 'photo_gallery', :id => @team.id, :photo_index => next_index }
+

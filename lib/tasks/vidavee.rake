@@ -4,6 +4,21 @@ namespace :vidavee do
   task :load_video_assets => :environment do
     Vidavee.load_backend_video
   end
+
+  desc "Update length on all videos without a valid length"
+  task :update_video_length => :environment do
+    vidavee = Vidavee.find(:first)
+    login = vidavee.login
+    if login.nil?
+      puts "Cannot log into vidavee back end"
+      return
+    end
+    assets = VideoAsset.find(:all, :conditions => ["video_length IS NULL OR video_length = ''"])
+    assets.each do |asset|
+      vidavee.update_asset_record(login,asset,{'video_length' => true})
+      asset.save!
+    end
+  end
   
   desc "Load or update all video clips (vtags) from the vidavee backend"
   task :load_video_clips => :environment do
@@ -49,7 +64,7 @@ namespace :vidavee do
     queued_assets = VideoAsset.find(:all, :conditions => ['video_status IN (?)',['queued','transcoding']])
     queued_assets.each do |asset|
       pre = asset.video_status
-      vidavee.update_asset_record(login,asset,{'video_status' => true})
+      vidavee.update_asset_record(login,asset,{'video_status' => true, 'video_length' => true})
       if (asset.video_status != pre)
         puts "Updating status of video #{asset.id} to #{asset.video_status} from #{pre}"
         asset.save!

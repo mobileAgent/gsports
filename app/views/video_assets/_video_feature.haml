@@ -11,10 +11,24 @@
   .featureText
     %h3.featureTitle
       = link_to h(video_feature.title), path
-    %span.sportName
-      = h line2
-    %br/
-    %span.date
-      = line3
-    %br/
+    -#
+      %span.sportName
+        = h line2
+      %br/
+      %span.date
+        = line3
+
+    .one-liner
+      %strong
+        - if video_feature.video_length && !video_feature.video_length.blank? && video_feature.video_length != '0'
+          =video_feature.video_length
+        - else
+          ??:??
+      %strong= " | Views:"
+      = number_with_delimiter(video_feature.view_count)
+      %strong= " | "
+      =render :partial => 'shared/favorite_count', :locals => {:item => video_feature}
+
+    %div{ :style => "margin-top: 3px" }
+      =render :partial => 'ratings/listing_stars', :locals => {:item => video_feature}
   .clearDiv

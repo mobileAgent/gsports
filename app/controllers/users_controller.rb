@@ -312,11 +312,14 @@ class UsersController < BaseController
 
   # registration step 3
   def billing
-    # REG_NO_SAVE
-    #id = params[:userid] || params[:id] || current_user.id
-    #@user = User.find(id)
     #@user = session[:reg_user]
     @user = reg_user_from_cookie
+    if @user.nil?
+      id = params[:userid] || params[:id] || current_user.id
+      if id
+        @user = User.find(id)
+      end
+    end
 
     unless session[:promo_id].nil?
       @promotion = Promotion.find(session[:promo_id].to_i)
@@ -346,11 +349,14 @@ class UsersController < BaseController
   # Capture payment
   #
   def submit_billing
-    # REG_NO_SAVE
-    #id = params[:userid] || params[:id] || current_user.id
-    #@user = User.find(id)
     #@user = session[:reg_user]
     @user = reg_user_from_cookie
+    if @user.nil?
+      id = params[:userid] || params[:id] || current_user.id
+      if id
+        @user = User.find(id)
+      end
+    end
 
     unless session[:promo_id].nil?
       @promotion = Promotion.find(session[:promo_id].to_i)
@@ -438,7 +444,7 @@ class UsersController < BaseController
     @user.team = User.admin.first.team if @user.team.nil?
     
     @user.enabled = true
-    @user.activated_at = Time.now
+    @user.activated_at = Time.now if @user.activated_at.nil?
 
     logger.debug "* Saving user record"
     @user.save!
@@ -526,6 +532,7 @@ class UsersController < BaseController
   def disable
     unless @user.admin?
       @user.enabled=false
+      @user.save!
       flash[:notice] = "The user account has been disabled."
     else
       flash[:error] = "You can't disable that user."
@@ -757,18 +764,19 @@ class UsersController < BaseController
     @membership = @user.current_membership
 
     # This will save the credit card record if the CC has changed
-    if @existing_credit_card == nil || !@credit_card.equals?(@existing_credit_card)
+    if @existing_credit_card.nil? || !@credit_card.equals?(@existing_credit_card)
       logger.debug "Saving changes to credit card..."
       @credit_card.save!
       
-      if !@membership.nil?
+      if @membership
         @membership.credit_card = @credit_card
       end
     end
 
-    if !@membership.nil?
+    if @membership
       logger.debug "Saving membership(s)..."
       @membership.address = @billing_address
+      @membership.save!
     end
 
     # We may need to execute a billing transaction right now
@@ -812,7 +820,7 @@ class UsersController < BaseController
         flash.now[:error] = "Sorry, we are having technical difficulties contacting our payment gateway. Try again in a few minutes."
         @billing_gateway_error = "#{flash.now[:warning]} (#{@response.message})"
         render :action => 'edit_billing', :userid => @user.id
-        return false;
+        return false
       end    
     end
     # end of billing execution

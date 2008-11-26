@@ -1,10 +1,13 @@
 class TeamsController < BaseController
 
+  SHOW_CLIPS_REELS = false 
+  PHOTO_GALLERY_SIZE = 5
+
   auto_complete_for :team, :name
   skip_before_filter :verify_authenticity_token, :only => [:auto_complete_for_team_name, :auto_complete_for_team_league_name ]
   before_filter :admin_required, :only => [:index, :new, :create, :destroy]
   before_filter :admin_for_league_or_team, :only => [:edit, :update]
-  skip_before_filter :gs_login_required, :only => [:show_public]
+  skip_before_filter :gs_login_required, :only => [:show_public, :photo_gallery]
   after_filter :cache_control, :only => [:update, :create, :destroy]
   
   # GET /team
@@ -26,7 +29,10 @@ class TeamsController < BaseController
   # GET /team/1
   # GET /team/1.xml
   def show
-    load_team_and_related_videos(params[:id])
+    team_id = params[:id]
+    @team = Team.find(team_id)
+    load_team_and_related_videos(@team)
+    load_team_favorites(@team)
     respond_to do |format|
       format.html # show.haml
       format.xml  { render :xml => @team }
@@ -61,11 +67,21 @@ class TeamsController < BaseController
   # Renders the show action, but without current_user
   # and hence allows no further linking into the site.
   def show_public
-    load_team_and_related_videos(params[:id])
+    team_id = params[:id]
+    @team = Team.find(team_id)
+    load_team_and_related_videos(@team)
+    load_team_favorites(@team)
     respond_to do |format|
       format.html { render :action => 'show' }
       format.xml  { render :xml => @team }
     end
+  end
+
+  def photo_gallery
+    team_id = params[:id]
+    @team = Team.find(team_id)
+    index = (params[:photo_index] || 0).to_i
+    load_photo_gallery(@team, index)
   end
 
   # GET /team/new
@@ -75,6 +91,7 @@ class TeamsController < BaseController
     if params[:league_id]
       @team.league= League.find(params[:league_id])
     end
+    @leagues = League.all(:order => "name asc")
     respond_to do |format|
       format.html # new.haml
       format.xml  { render :xml => @team }
@@ -89,6 +106,7 @@ class TeamsController < BaseController
       flash[:notice] = "You don't have permission to edit that record"
       access_denied and return
     end
+    @leagues = League.all(:order => "name asc")
   end
 
   # POST /team
@@ -102,6 +120,7 @@ class TeamsController < BaseController
         format.html { redirect_to(current_user.admin? ? teams_url : team_path(@team)) }
         format.xml  { render :xml => @team, :status => :created, :location => @team }
       else
+        @leagues = League.all(:order => "name asc")
         format.html { render :action => "new" }
         format.xml  { render :xml => @team.errors, :status => :unprocessable_entity }
       end
@@ -138,6 +157,7 @@ class TeamsController < BaseController
         format.html { redirect_to(current_user.admin? ? teams_url : team_path(@team)) }
         format.xml  { head :ok }
       else
+        @leagues = League.all(:order => "name asc")
         format.html { render :action => "edit" }
         format.xml  { render :xml => @team.errors, :status => :unprocessable_entity }
       end
@@ -164,36 +184,102 @@ class TeamsController < BaseController
 
   protected
 
-  def load_team_and_related_videos(team_id)
-    @team = Team.find(team_id)
-    @team_videos = VideoAsset.for_team(@team).all(:limit => 10, :order => 'updated_at DESC')
-    @team_popular_videos = VideoAsset.for_team(@team).all(:limit => 10, :order => 'view_count DESC')
-
-    show_clips_reels = false
-    if show_clips_reels
-      @team_clips_reels = VideoClip.for_team(@team).find(:all, :limit => 10, :order => "video_clips.created_at DESC")
-      @team_clips_reels << VideoReel.for_team(@team).find(:all, :limit => 10, :order => "video_reels.created_at DESC")
-      @team_clips_reels.flatten!
-      @team_clips_reels.sort! { |a,b| a.created_at <=> b.created_at }
-    else 
-      @team_clips_reels = Array.new
+  def load_team_and_related_videos(team)
+    if Team === team
+      team_id = team.id
+    else
+      team_id = team.to_i
+      team = Team.find(team_id)
     end
 
-    load_team_favorites(team_id)
+    @team_videos = Array.new
+    @team_popular_videos = Array.new
+    @team_clips_reels = Array.new
+    @recent_uploads = Array.new
+
+    @team_videos = VideoAsset.for_team(team).all(:limit => 10, :order => 'updated_at DESC')
+    @team_popular_videos = VideoAsset.for_team(team).all(:limit => 10, :order => 'view_count DESC')
+    @recent_uploads = @team_videos unless @team_videos.empty?
+
+    if @team_videos.empty?
+      @team_videos << VideoAsset.references_team(team).all(:limit => 10, :order => 'updated_at DESC')
+      @team_popular_videos << VideoAsset.references_team(team).all(:limit => 10, :order => 'view_count DESC')
+      if !@team_videos.empty?
+        @player_title = 'Games played with #{@team.name}'
+      end
+    end      
+
+    @team_videos.flatten!
+    @team_popular_videos.flatten!
+    load_team_clips_reels(team) if SHOW_CLIPS_REELS
   end
 
-  def load_team_favorites(team_id)
-    photo_picks = Favorite.ftype('Photo').for_team_staff(team_id).map(){|f|Photo.find(f.favoritable_id)}
-    @team_photo_picks = random_slice(photo_picks, 5)
+  def load_team_clips_reels(team)
+    if Team === team
+      team_id = team.id
+    else
+      team_id = team.to_i
+      team = Team.find(team_id)
+    end
+
+    @team_clips_reels = VideoClip.for_team(team).find(:all, :limit => 10, :order => "video_clips.created_at DESC")
+    @team_clips_reels << VideoReel.for_team(team).find(:all, :limit => 10, :order => "video_reels.created_at DESC")
+    if @team_clips_reels.empty?
+      return load_team_clips_reels(1) unless team_id==1
+    end
+
+    @team_clips_reels.flatten!
+    @team_clips_reels.sort! { |a,b| b.created_at <=> a.created_at }
+    @team_clips_reels
+  end
+
+  def load_team_favorites(team)
+    if Team === team
+      team_id = team.id
+    else
+      team_id = team.to_i
+      team = Team.find(team_id)
+    end
+
+    @team_photo_picks = Array.new
+    @team_video_picks = Array.new
+
+    load_photo_gallery(team)
+    #random_slice(photo_picks, 5)
     
     @player_title = 'Featured Videos'
-    video_picks = Favorite.ftypes('VideoAsset','VideoReel','VideoClip').for_team_staff(team_id).map(){|f|eval "#{f.favoritable_type}.find(f.favoritable_id)"}
-    if(video_picks.empty?)
-      @player_title = 'Recent Uplaods'
+    video_favorites = Favorite.ftypes('VideoAsset','VideoReel','VideoClip').for_team_staff(team_id)
+    if(video_favorites.empty?)
+      @player_title = 'Recent Uploads'
       @hide_recent_uploads = true
-      video_picks = @team_videos
+      video_picks = @recent_uploads if @recent_uploads && !@recent_uploads.empty?
+    else
+      video_favorites.sort! {|x,y| y.created_at <=> x.created_at}.first(6)
+      video_picks = video_favorites.map(){|f|eval "#{f.favoritable_type}.find(f.favoritable_id)"}
     end
-    @team_video_picks = random_slice(video_picks, 6).collect(&:dockey).join(",")
+    unless video_picks.nil? || video_picks.empty?
+      @team_video_picks = video_picks.first(6).collect(&:dockey).join(",") 
+    end
+  end
+
+  def load_photo_gallery(team, index=0)
+    if Team === team
+      team_id = team.id
+    else
+      team_id = team.to_i
+      team = Team.find(team_id)
+    end
+    
+    photo_picks = Favorite.ftype('Photo').for_team_staff(team_id).map(){|f|Photo.find(f.favoritable_id)}
+    total = photo_picks.nil? ? 0 : photo_picks.size
+    if index > total
+      index = total < PHOTO_GALLERY_SIZE ? 0 : total - PHOTO_GALLERY_SIZE;
+    elsif index < 0
+      index = 0
+    end
+    @team_photo_index = index
+    @team_photo_total = total
+    @team_photo_picks = photo_picks.sort {|x,y| y.created_at <=> x.created_at}[index,index+PHOTO_GALLERY_SIZE] unless photo_picks.nil?
   end
 
   def random_slice(a, s)
@@ -202,11 +288,11 @@ class TeamsController < BaseController
     a[p..p+s-1];
   end
 
-
   def cache_control
     Rails.cache.delete('quickfind_states')
     Rails.cache.delete('quickfind_counties')
     Rails.cache.delete('quickfind_cities')
+    Rails.cache.delete('quickfind_schools')
   end
   
 end
