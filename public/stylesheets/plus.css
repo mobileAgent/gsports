@@ -308,7 +308,7 @@ object#homeFlash {
 }
 
 .playerContentArea {
-  background: #888d99;/*#292e43;*/
+  background: #0C1329; /*#888d99;*//*#292e43;*/
   width: 816px;
   margin-left: 10px;
   margin-top: 10px;
@@ -1451,7 +1451,7 @@ ul, ol {
 .star-rating a:active,
 .star-rating a:focus,
 .star-rating .current-rating{
-	background: url(/images/star.gif) left -1000px repeat-x;
+	background: url(/images/star2.gif) left -1000px repeat-x;
 }
 .star-rating{
 	position:relative;
