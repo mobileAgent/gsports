@@ -452,7 +452,11 @@ class UsersController < BaseController
     logger.info "* Saving USER Membership"
     @user.make_member_by_credit_card(@cost,@billing_address,credit_card_for_db,@response,@promotion)
 
-    self.current_user = @user # Log them in right now!
+    if self.current_user.nil?
+      logger.debug "* Logging the user in..."
+      self.current_user = User.find(@user.id) # Log them in right now!
+    end
+
     UserNotifier.deliver_welcome(@user)
     redirect_to signup_completed_user_path(@user)
   end
