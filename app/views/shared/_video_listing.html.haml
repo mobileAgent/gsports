@@ -21,10 +21,10 @@
     .listingBoxHeader
       - if video_listing.title.length > 45
         .title-2lines
-          = truncate(video_listing.title,120)
+          = truncate(h(video_listing.title),120)
       - else 
         .title
-          = video_listing.title
+          = h video_listing.title
     .thumb
       = "<a href='#{link}'><img src='#{@vidavee.file_thumbnail_medium(video_listing.thumbnail_dockey || video_listing.dockey)}' title='#{h(video_listing.title).gsub(/\'/,'')}' alt='#{h(video_listing.title).gsub(/\'/,'')}'/></a>"
     .listingBoxContent
@@ -56,7 +56,7 @@
           = video_listing.created_at.strftime("%m/%d/%y")
 
         %p.summary{ :style => "height:3em" }
-          = truncate(video_listing.description,100)
+          = truncate(h(video_listing.description),100)
 
         %p.one-liner
           - if VideoClip===video_listing && video_listing.video_asset_id
