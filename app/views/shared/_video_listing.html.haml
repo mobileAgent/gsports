@@ -56,7 +56,7 @@
           = video_listing.created_at.strftime("%m/%d/%y")
 
         %p.summary{ :style => "height:3em" }
-          = truncate(video_listing.description,100)
+          = truncate(h(video_listing.description),100)
 
         %p.one-liner
           - if VideoClip===video_listing && video_listing.video_asset_id
