@@ -29,17 +29,21 @@ function generate_video_title()
     var vt = $F('video_asset_visiting_team_name')
     htn = ht
     vtn = vt
+    ajaxRespCount = 0
     if (ht && ht.length > 0)
     {
         var url = '/teamname/' + escape(ht).replace(/\./g,"%2e")
         var htajax = new Ajax.Request(url, {method: 'get',
             parameters: 'nick=true',
             onSuccess:  function (transport) {
-                //alert (' in ht rsp ' + transport.responseText + ' >> ' + htn)
-                htn = transport.responseText
+                if (transport.responseText.startsWith('<'))
+                   htn = ht
+                else
+                   htn = transport.responseText
                 ajaxRespCount++
             },
             onError: function(transport) {
+                htn=ht
                 ajaxRespCount++
             }})
     }
@@ -53,11 +57,14 @@ function generate_video_title()
         var vtajax = new Ajax.Request(url, {method: 'get',
             parameters: 'nick=true',
             onSuccess:  function (transport) {
-                //alert (' in vt rsp ' + transport.responseText + ' >> ' + vtn );
-                vtn = transport.responseText
-                ajaxRespCount++
+               if (transport.responseText.startsWith('<'))
+                  vtn = vt
+               else
+                 vtn = transport.responseText
+               ajaxRespCount++
             },
             onError: function(transport) {
+                vtn=vt
                 ajaxRespCount++
             }})
     }
