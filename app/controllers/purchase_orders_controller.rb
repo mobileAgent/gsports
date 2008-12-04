@@ -74,14 +74,14 @@ class PurchaseOrdersController < UsersController
            logger.info "* Saving TEAM"
             @team = reg_team_from_cookie
             @team.save!
-            @user.team = @team;
-            @user.league = @team.league;
+            @user.team = @team
+            @user.league = @team.league
           end
           if reg_league_from_cookie
             logger.info "* Saving LEAGUE"
             @league = reg_league_from_cookie
             @league.save!
-            @user.league = @league;
+            @user.league = @league
           end
         
           # fallback league and team settings

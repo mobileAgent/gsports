@@ -13,8 +13,8 @@ class Membership < ActiveRecord::Base
   INVOICE_BILLING_METHOD = "invoice"
   FREE_BILLING_METHOD = "na"
   
-  STATUS_CANCELED = "c";
-  STATUS_RENEWED = "r";
+  STATUS_CANCELED = "c"
+  STATUS_RENEWED = "r"
   STATUS_ACTIVE = "a"
 
   STATES = {

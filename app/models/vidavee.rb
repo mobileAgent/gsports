@@ -34,7 +34,7 @@ class Vidavee < ActiveRecord::Base
     response = vrequest('session/Login')
     if response
       logger.debug "Logging into the Vidavee backend"
-      extract(response,'//newToken').text;
+      extract(response,'//newToken').text
     else
       nil
     end
