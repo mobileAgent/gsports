@@ -59,7 +59,7 @@ class RecurringBilling
     mships = Membership.active.find(:all, :conditions => ['billing_method = ? and cost > 0', Membership::CREDIT_CARD_BILLING_METHOD])
     @billing_logger.info "Found #{mships.length} memberships to process"
     mships.each {|m|
-      due << m if (m.last_billed.nil? || (time_diff_in_days(m.last_billed) >= PAYMENT_DUE_CYCLE))
+      due << m if (m.user.enabled && (m.last_billed.nil? || (time_diff_in_days(m.last_billed) >= PAYMENT_DUE_CYCLE)))
     }
     due
   end
@@ -81,7 +81,7 @@ class RecurringBilling
         puts "* Excluding promotion GS7DAYSFREE from auto-renewal"
         @billing_logger.info "Auto-cancelling #{mexpired.user.id} #{mexpired.name} for promo #{mexpired.promotion.promo_code}"
         mexpired.cancel! 'Auto-cancelling GS7DAYSFREE promotion'
-      else
+      elsif mexpired.user.enabled
         @billing_logger.info "Need to renew #{mexpired.user.id} #{mexpired.name}"
         # Bill the member 
         new_membership = mexpired.renew
