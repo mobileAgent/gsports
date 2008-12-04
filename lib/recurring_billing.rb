@@ -81,7 +81,7 @@ class RecurringBilling
         puts "* Excluding promotion GS7DAYSFREE from auto-renewal"
         @billing_logger.info "Auto-cancelling #{mexpired.user.id} #{mexpired.name} for promo #{mexpired.promotion.promo_code}"
         mexpired.cancel! 'Auto-cancelling GS7DAYSFREE promotion'
-      elsif mexpired.user.enabled
+      elsif mexpired.user && mexpired.user.enabled
         @billing_logger.info "Need to renew #{mexpired.user.id} #{mexpired.name}"
         # Bill the member 
         new_membership = mexpired.renew
