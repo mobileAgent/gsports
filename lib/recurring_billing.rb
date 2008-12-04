@@ -37,13 +37,13 @@ class RecurringBilling
         MembershipNotifier.deliver_billing_success(mdue.address.email,mdue) if !mdue.address.nil?
       else
         billed_error += 1
-        billing_message << "Unable to bill #{mdue.user.id} #{mdue.name}:#{billing_result.message}. #{membership_user_details(mdue)}"
+        billing_message << "Unable to bill #{mdue.user.id} #{mdue.name}: #{billing_result.message}. #{membership_user_details(mdue)}"
         @billing_logger.info "Unable to bill #{mdue.user.id} #{mdue.name} reason: #{billing_result.message}" 
           MembershipNotifier.deliver_billing_failure(mdue.address.email,mdue, billing_result.message) if !mdue.address.nil?
       end
     }
     # Send an email
-    UserNotifier.deliver_generic(ADMIN_EMAIL, "Nightly Billing for #{Time.now}", "Recurring billing completed.\n #{billed_success} billed successfully,\n #{billed_error} billing failed.\n Details: #{billing_message.join('\n')}") 
+    UserNotifier.deliver_generic(ADMIN_EMAIL, "Nightly Billing for #{Time.now}", "Recurring billing completed.\n #{billed_success} billed successfully,\n #{billed_error} billing failed.\n Details:\n   #{billing_message.join("\r\n   ")}") 
   end 
 
   #
@@ -98,7 +98,7 @@ class RecurringBilling
       end
     }
     # Send an email
-    UserNotifier.deliver_generic(ADMIN_EMAIL, "Nightly Renewals for #{Time.now}", "Automatic renewals completed.\n #{renewal_success} renewed successfully,\n #{renewal_error} renewd failed.\n Details: #{renewal_message.join('\n')}") 
+    UserNotifier.deliver_generic(ADMIN_EMAIL, "Nightly Renewals for #{Time.now}", "Automatic renewals completed.\n #{renewal_success} renewed successfully,\n #{renewal_error} renewed failed.\n Details:\n   #{renewal_message.join("\r\n   ")}") 
   end 
 
   #
