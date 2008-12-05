@@ -21,7 +21,7 @@ class PushVideoFilesProcessor < ApplicationProcessor
       logger.info "Video push failed for #{fullpath}"
       [User.find_by_email(ADMIN_EMAIL),video_asset.user_id].uniq.each do |u|
         m = Message.create(:title => "Video upload failed for #{fn}",
-                           :body => "Video file #{fn} could not be pushed to the backend video engine.",
+                           :body => "Video file #{fn} could not be pushed to the backend video engine. /video_assets/#{video_asset.id}",
                            :from_id => User.find_by_email(ADMIN_EMAIL).id,
                            :to_id => u )
       end
