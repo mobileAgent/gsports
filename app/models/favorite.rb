@@ -35,6 +35,10 @@ class Favorite < ActiveRecord::Base
     :conditions => ["users.team_id = ? and (users.role_id = ? or users.role_id = ?)", (team.type == Team ? team.id : team), Role[:team].id, Role[:team_staff].id] 
   } }
 
+  named_scope :for_league_staff, lambda { |league| { 
+    :joins => :user, 
+    :conditions => ["users.league_id = ? and (users.role_id = ? or users.role_id = ?)", (league === League ? league.id : league), Role[:league].id, Role[:league_staff].id] 
+  } }
 
   def self.favorite? (user, item)
     Favorite.user(user).item(item).count > 0

@@ -91,7 +91,13 @@ class Membership < ActiveRecord::Base
       lambda { |team| 
         { :conditions => {:user_id => User.team_admin(team.id).collect {|u| u.id} } }
       }
-  
+
+  named_scope :for_league, 
+      lambda { |league| 
+        { :conditions => {:user_id => User.league_admin(league.id).collect {|u| u.id} } }
+      }
+
+
   
   def active?
     status==STATUS_ACTIVE && (expiration_date.nil? || expiration_date > Time.now)

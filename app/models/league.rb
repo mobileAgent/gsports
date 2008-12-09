@@ -60,6 +60,14 @@ class League < ActiveRecord::Base
     logger.debug "League has #{admins.size} admin users"
     return admins.empty? ? nil : admins[0]
   end
+  
+  def member?
+    member = false
+    Membership.for_league(self).each() { |membership|
+      member = true if membership.active?
+    }
+    member
+  end
 
   protected
 

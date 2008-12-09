@@ -1,4 +1,4 @@
 
-%a{ :href=>league_path(@league), :class=>"logo-#{avht}" }
+%a{ :href=>league_path(@league), :class=>"logo-#{avatar_height}" }
   - if @league.avatar
     %img{ :src=>@league.avatar.public_filename, :title=>@league.name, :alt=>@league.name }

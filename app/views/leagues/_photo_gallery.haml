@@ -1,0 +1,24 @@
+- @league_photo_index |= 0
+- @league_photo_total |= 0
+#orgPhotoGallery
+  - if @league_photo_picks
+    .orgPhotoArrow
+      - if @league_photo_index > 0
+        - prev_index = @league_photo_index - LeaguesController::PHOTO_GALLERY_SIZE
+        - prev_index = 0 if prev_index < 0
+        =link_to_remote image_tag('/images/org/arrow_left.png'), :url => { :controller => 'leagues', :action => 'photo_gallery', :id => @league.id, :photo_index => prev_index }
+
+    -curidx = @league_photo_index
+    - @league_photo_picks.first(LeaguesController::PHOTO_GALLERY_SIZE).each do |photo|
+      -curidx += 1
+      .orgPhoto{:id => "gallery_photo_#{curidx}"}
+        .orgPhotoThumb
+          = link_to image_tag( photo.public_filename(:thumb), :alt => photo.name, :title => photo.name), user_photo_path(photo.user, photo), :class => 'framed'
+        .orgPhotoTitle
+          = truncate(photo.name,30)
+
+    .orgPhotoArrow{ :style => "float:right" }
+      - next_index = @league_photo_index + LeaguesController::PHOTO_GALLERY_SIZE
+      - if @league_photo_total > next_index
+        =link_to_remote image_tag('/images/org/arrow_right.png'), :url => { :controller => 'leagues', :action => 'photo_gallery', :id => @league.id, :photo_index => next_index }
+

@@ -1,4 +1,4 @@
-%div{ :class=>"desc-#{avht}" }
+%div{ :class=>"desc-#{avatar_height}" }
   %p
     - if @league.address1 && @league.address1.length > 0
       =h @league.address1
@@ -14,4 +14,6 @@
         =h @league.email
   - if current_user
     %p
-      = link_to 'League Members', "/search/q?search[category]=11&league_id=#{@league.id}", :class=>'member-link'
+      -#= link_to 'League Members', "/search/q?search[category]=11&league_id=#{@league.id}", :class=>'member-link'
+      = (current_user && @league.users.enabled.size > 0) ? link_to("View #{@league.name} Members (#{@league.users.enabled.size})", "/search/q?search[category]=10&league_id=#{@league.id}",:class=>'member-link') : '' 
+      

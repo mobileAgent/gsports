@@ -16,11 +16,23 @@ module TeamsHelper
     posts ||= []
   end
   
+  # param :team may also be a League
+  
   def most_recent_league_post(team=nil, opts={})
     team ||= @team
+    league_id = nil
+    
+    case team
+    when Team
+      league_id = team.league_id
+    when League
+      league_id = team.id
+    else
+      raise "Type not supported: #{team.class}"
+    end
 
     options = {
-      :conditions=>["league_id = ?", team.league_id],
+      :conditions=>["league_id = ?", league_id],
       :limit=>1,
       :order=>'published_at DESC'
     }.merge opts
