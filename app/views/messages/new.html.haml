@@ -79,3 +79,7 @@
 
           %p
             = submit_tag "Send"
+            -if @shared_access
+              &nbsp;(Note: the recipient will see your email address '
+              = current_user.email
+              ')

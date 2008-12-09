@@ -104,13 +104,20 @@ class UserNotifier < ActionMailer::Base
     @subject    += "#{AppConfig.community_name} User information"
   end
 
-  def generic(email, subject, message, html=false)
+  def generic(email, subject, message, options={})
+    o_html = options[:html]
+    o_from = options[:from]
+    
     setup_sender_info
-    content_type html ? "text/html" : "text/plain"
+    content_type (o_html ? "text/html" : "text/plain")
     @recipients  = "#{email}"
     @subject     = "#{subject}"
     @sent_on     = Time.now
     @body[:message] = message
+
+    if o_from
+      from o_from
+    end
   end
 
   def generic_html(email, subject, message)

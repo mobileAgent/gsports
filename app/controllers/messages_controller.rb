@@ -162,7 +162,7 @@ class MessagesController < BaseController
         @message.shared_access_id= @shared_access.id if @shared_access
         # don't clutter the messages table with these...
         #@message.save!
-        UserNotifier.deliver_generic(email, @message.title, @body, is_html)
+        UserNotifier.deliver_generic(email, @message.title, @body, :html => is_html, :from => current_user.email )
       end
     end
    
