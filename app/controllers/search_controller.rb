@@ -136,7 +136,7 @@ class SearchController < BaseController
     sakey = params[:sakey]
     unless dockey.nil?
       unless sakey.nil?
-        shared_access = SharedAccess.find_by_key(sakey);
+        shared_access = SharedAccess.find_by_key(sakey)
         if shared_access
           case shared_access.item_type
           when SharedAccess::TYPE_VIDEO

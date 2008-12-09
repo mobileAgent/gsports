@@ -273,7 +273,7 @@ class TeamsController < BaseController
     photo_picks = Favorite.ftype('Photo').for_team_staff(team_id).map(){|f|Photo.find(f.favoritable_id)}
     total = photo_picks.nil? ? 0 : photo_picks.size
     if index > total
-      index = total < PHOTO_GALLERY_SIZE ? 0 : total - PHOTO_GALLERY_SIZE;
+      index = total < PHOTO_GALLERY_SIZE ? 0 : total - PHOTO_GALLERY_SIZE
     elsif index < 0
       index = 0
     end
@@ -284,8 +284,8 @@ class TeamsController < BaseController
 
   def random_slice(a, s)
     l=a.length-s
-    p=(l>=0?rand(l+1):0);
-    a[p..p+s-1];
+    p=(l>=0?rand(l+1):0)
+    a[p..p+s-1]
   end
 
   def cache_control

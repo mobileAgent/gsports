@@ -412,14 +412,14 @@ class UsersController < BaseController
     else
       @billing_address ||= Address.new
       
-      if @response.nil? || @response.message.nil? || @reponse.message.blank?
+      if @response.nil? || @response.message.nil? || @response.message.blank?
         flash.now[:error] = "Sorry, we are having technical difficulties contacting our payment gateway. Try again in a few minutes."
       else
         @billing_gateway_error = "#{flash.now[:warning]} (#{@response.message})"
       end
       
       render :action => 'billing', :userid => @user.id
-      return false;
+      return false
     end      
 
     # Are the team updates stashed in a cookie?
@@ -427,7 +427,7 @@ class UsersController < BaseController
     if @team
       logger.info "* Saving TEAM"
       @team.save!
-      @user.team = @team;
+      @user.team = @team
       @user.league = @team.league || User.admin.first.league
     end
     # Are the league updates stashed in a cookie?
@@ -435,8 +435,8 @@ class UsersController < BaseController
     if @league
       logger.info "* Saving LEAGUE"
       @league.save!
-      @user.league = @league;
-      @user.team |= User.admin.first.team;
+      @user.league = @league
+      @user.team |= User.admin.first.team
     end
     
     # fallback league and team settings
@@ -481,10 +481,10 @@ class UsersController < BaseController
     end
     
     # Get the user's best/most-recent membership
-    @membership = @user.current_membership;
+    @membership = @user.current_membership
     
     # Pre-fill from the most recent membership, if available
-    @billing_address = @membership ? @membership.address : Address.new;
+    @billing_address = @membership ? @membership.address : Address.new
     
     # Pre-fill credit card from the most recent
     @credit_card = @membership && @membership.credit_card ? 
@@ -794,7 +794,7 @@ class UsersController < BaseController
      
       # cost fall back to plan amount if nil
       if @cost == nil
-        @cost = @user.role.plan.cost;
+        @cost = @user.role.plan.cost
       end
       
       # no decimals posted to gateway
@@ -1043,7 +1043,7 @@ class UsersController < BaseController
                         :body => email_body)
         m.save!
       rescue
-        logger.warn ("Unable to send admin email: #{email_body}");
+        logger.warn ("Unable to send admin email: #{email_body}")
       end
       
       return false

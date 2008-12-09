@@ -34,7 +34,7 @@ class Vidavee < ActiveRecord::Base
     response = vrequest('session/Login')
     if response
       logger.debug "Logging into the Vidavee backend"
-      extract(response,'//newToken').text;
+      extract(response,'//newToken').text
     else
       nil
     end
@@ -366,22 +366,23 @@ class Vidavee < ActiveRecord::Base
     # Send the post
     begin
       response = do_upload(url,*upload_params)
+      dockey_elem = extract(response,'//dockey')
     rescue 
+      response = "Could not contact Vidavee backend: #{$!}"
       logger.error "Could not contact Vidavee backend: #{$!}"
-      response = "Error"
     end
-    dockey_elem = extract(response,'//dockey')
 
     # update attributes in the asset
     if dockey_elem
       video_asset.dockey= dockey_elem.text
-      video_asset.video_status= asis ? 'ready' : 'queued'
+      video_asset.video_status= 'queued'
       video_asset.save!
       dockey_elem.text
     else
       video_asset.video_status= 'upload failed'
+      video_asset.internal_notes= response
       video_asset.save!
-      logger.debug "Video push failed: #{response}"
+      logger.error "Video push failed: #{response}"
       nil
     end
   end

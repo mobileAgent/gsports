@@ -125,11 +125,11 @@ class MessagesController < BaseController
     # Now we have all the ids, send the message to each one
 
     @body = @message.body
-    is_html = false;
+    is_html = false
 
     if @shared_access
       @shared_item = @shared_access.item
-      is_html = true;
+      is_html = true
       @body = render_to_string :partial => "messages/shared_item", :locals => { :body => @message.body }
     end
 
