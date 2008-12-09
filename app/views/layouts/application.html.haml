@@ -1,4 +1,4 @@
-- excluded_sidebar_pages = [ {:controller => 'pages', :action => 'show'}, {:controller => 'teams', :action => 'show'}, {:controller => 'users', :action => 'dashboard'}, {:controller => 'video_reels', :action => 'new'} ]
+- excluded_sidebar_pages = [ {:controller => 'pages', :action => 'show'}, {:controller => 'teams', :action => 'show'}, {:controller => 'leagues', :action => 'show'}, {:controller => 'users', :action => 'dashboard'}, {:controller => 'video_reels', :action => 'new'} ]
 
 !!! Strict
 %html{:xmlns=>"http://www.w3.org/1999/xhtml", 'xml:lang'=>"en", :lang=>"en"}
@@ -22,14 +22,6 @@
     
     -# if @rss_title && @rss_url
       = auto_discovery_link_tag(:rss, @rss_url, {:title => @rss_title})
-    
-    %script{ :type=>"text/javascript" }
-      var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-      document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-    
-    %script{ :type=>"text/javascript" }
-      var pageTracker = _gat._getTracker("UA-5886209-1");
-      pageTracker._trackPageview();
     
   %body
     %div{:class => logged_in? ? "backgroundContainer bg_#{(rand(27)+1)}" : 'backgroundContainerHome'}
@@ -61,4 +53,6 @@
 
       .clearDiv/
       = render :partial => "shared/block_footer"
-      = render :partial => "shared/block_legal"      
+      = render :partial => "shared/block_legal"     
+      
+    = render :partial => "shared/google_analytics" 
