@@ -303,7 +303,9 @@ class VideoAssetsController < BaseController
       video_asset.user_id = admin[0].id if (admin && admin.any?)
       admin_set_team = true
     else
-      video_asset.team= current_user.team
+      #this is now a league video
+      video_asset.team= nil
+      #video_asset.team= current_user.team
     end
     
     # Set up league (should only come from admin form)
