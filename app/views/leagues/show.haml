@@ -29,18 +29,19 @@
                   -#= memlink
     
         %td.orgText
-          - league_news_item = most_recent_league_post @league 
-          - league_news_item = most_recent_league_post(League.find(1)) if league_news_item.nil?
-          - if league_news_item 
-            %p
-              %b= league_news_item.title
-            %br
-            %p
-              - if count_words(league_news_item.post) > 40
-                = truncate_words(league_news_item.post,40)
-                =link_to 'more', user_post_path(league_news_item.user,league_news_item)
-              - else
-                = league_news_item.post
+          -#
+            - league_news_item = most_recent_league_post @league 
+            - league_news_item = most_recent_league_post(League.find(1)) if league_news_item.nil?
+            - if league_news_item 
+              %p
+                %b= league_news_item.title
+              %br
+              %p
+                - if count_words(league_news_item.post) > 40
+                  = truncate_words(league_news_item.post,40)
+                  =link_to 'more', user_post_path(league_news_item.user,league_news_item)
+                - else
+                  = league_news_item.post
 
   /
     col1 content
