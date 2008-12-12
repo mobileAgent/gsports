@@ -436,7 +436,7 @@ class UsersController < BaseController
       logger.info "* Saving LEAGUE"
       @league.save!
       @user.league = @league
-      @user.team |= User.admin.first.team
+      @user.team = User.admin.first.team
     end
     
     # fallback league and team settings
