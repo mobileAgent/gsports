@@ -12,8 +12,12 @@
       - if @league.phone && @league.phone.length > 0 && @league.email && @league.email.length > 0
         |
         =h @league.email
+
+  - if current_user && (current_user.league_admin?(@team) || current_user.admin?)
+    %p
+      = link_to 'Edit', edit_league_path(@league), :class=>"edit-#{avatar_height}"
+    
   - if current_user
     %p
       -#= link_to 'League Members', "/search/q?search[category]=11&league_id=#{@league.id}", :class=>'member-link'
-      = (current_user && @league.users.enabled.size > 0) ? link_to("View #{@league.name} Members (#{@league.users.enabled.size})", "/search/q?search[category]=10&league_id=#{@league.id}",:class=>'member-link') : '' 
-      
+      = (current_user && @league.users.enabled.size > 0) ? link_to("View #{@league.name} Members (#{@league.users.enabled.size})", "/search/q?search[category]=10&league_id=#{@league.id}",:class=>'member-link') : ''       

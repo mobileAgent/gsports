@@ -11,7 +11,7 @@
     %table
       %tr
         %td.orgSummary
-          - memlink = (current_user && @league.users.enabled.size > 0) ? link_to("View #{@league.name} Members (#{@league.users.enabled.size})", "/search/q?search[category]=10&league_id=#{@league.id}",:class=>'member-link') : '' 
+          -# memlink = (current_user && @league.users.enabled.size > 0) ? link_to("View #{@league.name} Members (#{@league.users.enabled.size})", "/search/q?search[category]=10&league_id=#{@league.id}",:class=>'member-link') : '' 
           - case avatar_height
           - when 60
             = render :partial=>'logo', :locals=>{:avatar_height=>avatar_height}
@@ -70,7 +70,7 @@
           .right
       .clearDiv
     .tabContent{ :class => is_member ? "tall" : "short" }
-      -#      School News
+      -#      League News
       #tabBody1.contentBox.tabBody.open{ :class => is_member ? "tall" : "short" }
         .contentBoxHeader.flatblue{ :style => "padding-top:0px" }
           %h2.boxDescription
