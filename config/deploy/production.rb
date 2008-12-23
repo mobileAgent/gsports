@@ -14,3 +14,5 @@ set :migrate_env, "production"
 
 set :branch, "prod_branch"
 set :repository_cache, "git_prod_branch"
+
+ssh_options[:port] = 40782
