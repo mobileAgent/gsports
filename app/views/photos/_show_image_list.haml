@@ -15,8 +15,9 @@
           %a{:href=>'#', :onclick=>"$(this).up('li').removeClassName('selected');return false;", :style => 'float:right; font-size: .4em;'}
             cancel
         %a{:href=>'#', :onclick=>"select_image(this);return false;"}
-          = image_tag( p.public_filename(:thumb), :alt => p.display_name )
-
+          -# cant use asset server here 
+          -#= image_tag( p.public_filename(:thumb), :alt => p.display_name )
+          %img{ :src => p.public_filename(:thumb), :alt => p.display_name }
 
 - else
   No Images Uploaded Yet.

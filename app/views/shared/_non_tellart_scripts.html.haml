@@ -36,7 +36,9 @@
 = javascript_include_tag 'lightbox', :plugin => "community_engine"
 = stylesheet_link_tag 'lightbox', :plugin => "community_engine"
 
-= javascript_include_tiny_mce_if_used
+-# avoid asset server for tinymce
+-#= javascript_include_tiny_mce_if_used
+%script{ :src=>"/plugin_assets/community_engine/javascripts/#{RAILS_ENV == 'development' ? "tiny_mce/tiny_mce_src" : "tiny_mce/tiny_mce"}.js" }
 = tiny_mce if using_tiny_mce?
 
 - if forum_page?
