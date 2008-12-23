@@ -6,7 +6,7 @@ class TeamsController < BaseController
   auto_complete_for :team, :name
   skip_before_filter :verify_authenticity_token, :only => [:auto_complete_for_team_name, :auto_complete_for_team_league_name ]
   before_filter :admin_required, :only => [:index, :new, :create, :destroy]
-  before_filter :admin_for_league_or_team, :only => [:edit, :update]
+  #before_filter :admin_for_league_or_team, :only => [:edit, :update]
   skip_before_filter :gs_login_required, :only => [:show_public, :photo_gallery]
   after_filter :cache_control, :only => [:update, :create, :destroy]
   
