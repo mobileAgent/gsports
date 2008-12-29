@@ -26,11 +26,14 @@
           Part 1: Account Type
         %h2
           ACCOUNT TYPE
-        .SelectedAccount
+        
+        - select_me = @register_as == 0
+        %div{ :class => ( select_me ? 'SelectedAccount' : 'UnSelectedAccount' ) }
+          
           %label.verbalSemantic{ :for => "Ath" }
             Athletes, Students, Family and Fans
           .AccountRadio
-            %input#Ath{ :name => :role, :checked => "checked", :type => "radio", :value => "", :onclick => "updateSelectedAccount(this)", :style => 'border: none' }/
+            %input#Ath{ :name => :role, :checked => select_me, :type => "radio", :value => "", :onclick => "updateSelectedAccount(this)", :style => 'border: none' }/
           .AccountIllustration
             %img{ :src => "/gs/images/account_athletes.jpg", :height => "99", :alt => "Athletes Illustration", :onclick => "return selectThisAccount('Ath')", :width => "131" }/
           .AccountDescriptionAthletes
@@ -38,11 +41,14 @@
               Athletes, Students, Family and Fans.
             %p
               Subscribers of this account have full access to all game video, editing features and social networking on the Global Sports platform. Users are able to create a personal profile page which includes photos, friends, forums, favorites (such as video clips) and share them with family and friends, for $9.99 per month.
-        .UnSelectedAccount
+    
+        - select_me = @register_as == Role[:team].id
+        %div{ :class => ( select_me ? 'SelectedAccount' : 'UnSelectedAccount' ) }
+
           %label.verbalSemantic{ :for => "School" }
             Schools and Private Athletic Clubs
           .AccountRadio
-            %input#School{ :name => :role, :type => "radio", :value => Role[:team].id, :onclick => "updateSelectedAccount(this)", :style => 'border: none' }/
+            %input#School{ :name => :role, :checked => select_me, :type => "radio", :value => Role[:team].id, :onclick => "updateSelectedAccount(this)", :style => 'border: none' }/
           .AccountIllustration
             %img{ :src => "/gs/images/accout_school_illu.jpg", :height => "99", :alt => "Teams Illustration", :onclick => "return selectThisAccount('School')", :width => "131" }/
           .AccountDescriptionSchools
@@ -50,11 +56,13 @@
               Schools and Private Athletic Clubs
             %p
               Select this account type if you represent a school or private club and want your video of sporting events on Global Sports&rsquo; platform. You will upload game video and be provided with a branded Homepage with customizable sections for news, events and Game and Players of the Week.  
-        .UnSelectedAccount
+        
+        - select_me = @register_as == Role[:league].id
+        %div{ :class => ( select_me ? 'SelectedAccount' : 'UnSelectedAccount' ) }
           %label.verbalSemantic{ :for => "Leagues" }
             Leagues and Conferences
           .AccountRadio
-            %input#Leagues{ :name => :role, :type => "radio", :value => Role[:league].id, :onclick => "updateSelectedAccount(this)", :style => 'border: none' }/
+            %input#Leagues{ :name => :role, :checked => select_me, :type => "radio", :value => Role[:league].id, :onclick => "updateSelectedAccount(this)", :style => 'border: none' }/
           .AccountIllustration
             %img{ :src => "/gs/images/accout_league_illu.jpg", :height => "99", :alt => "Leagues Illustration", :onclick => "return selectThisAccount('Leagues')", :width => "131" }/
           .AccountDescriptionLeagues
@@ -62,11 +70,13 @@
               Leagues and Conferences
             %p
               Select this account type if you represent a league or conference and want your video of tournaments and playoff games that you sponsor to be part of the Global Sports platform.  You will be provided with a branded Homepage with customizable sections for news, events, and Game and Players of the Week.
-        .UnSelectedAccount
+        
+        - select_me = @register_as == Role[:scout].id
+        %div{ :class => ( select_me ? 'SelectedAccount' : 'UnSelectedAccount' ) }
           %label.verbalSemantic{ :for => "Scouts" }
             Scouts and Recruiters
           .AccountRadio
-            %input#Scouts{ :name => :role, :type => "radio", :value => Role[:scout].id, :onclick => "updateSelectedAccount(this)", :style => 'border: none' }/
+            %input#Scouts{ :name => :role, :checked => select_me, :type => "radio", :value => Role[:scout].id, :onclick => "updateSelectedAccount(this)", :style => 'border: none' }/
           .AccountIllustration
             %img{ :src => "/gs/images/account_scouts.jpg", :height => "99", :alt => "Recruiters Illustration", :onclick => "return selectThisAccount('Scouts')", :width => "131" }/
           .AccountDescriptionScouts

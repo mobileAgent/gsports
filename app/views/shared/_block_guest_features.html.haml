@@ -13,16 +13,16 @@
   .homeFeatureMiddle2
     %h3
       Become a Member
-    %a{ :href => "/info/membership" }
+    %a{ :href => "/register" }
       %img{ :src => "/gs/images/Home_Athletes_Coaches_Family.png", :height => "28", :alt => "Athletes, Coaches, Family & Fans", :width => "288" }/
     %br/
-    %a{ :href => "/info/membership#leagues" }
-      %img{ :src => "/gs/images/Home_Leagues_Conferences.png", :height => "28", :alt => "Leagues and Conferences", :width => "288" }/
-    %br/
-    %a{ :href => "/info/membership#teams" }
+    %a{ :href => "/register?as=#{Role[:team].id}" }
       %img{ :src => "/gs/images/Home_Schools_Clubs.png", :height => "28", :alt => "Schools & Clubs", :width => "288" }/
     %br/
-    %a{ :href => "/info/membership#scouts" }
+    %a{ :href => "/register?as=#{Role[:league].id}" }
+      %img{ :src => "/gs/images/Home_Leagues_Conferences.png", :height => "28", :alt => "Leagues and Conferences", :width => "288" }/
+    %br/
+    %a{ :href => "/register?as=#{Role[:scout].id}" }
       %img{ :src => "/gs/images/Home_recruiters_scouts.png", :height => "28", :alt => "Recruiters and Scouts", :width => "288" }/
   /
     end middle col

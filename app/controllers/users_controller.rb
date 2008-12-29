@@ -83,6 +83,8 @@ class UsersController < BaseController
     @inviter_id = session[:inviter_id] || params[:inviter_id]
     @inviter_code = session[:inviter_code] || params[:inviter_code]
 
+    @register_as = params[:as].to_i
+
     _cleanup_session_for_signup
   end
 
