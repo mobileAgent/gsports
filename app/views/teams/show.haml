@@ -17,7 +17,7 @@
             = render :partial=>'logo', :locals=>{:avatar_height=>avatar_height}
             = render :partial=>'contact_info', :locals=>{:avatar_height=>avatar_height}
             %br
-            = memlink
+            -#= memlink
           - when 100
             %table
               %tr
@@ -26,7 +26,7 @@
                 %td
                   = render :partial=>'contact_info', :locals=>{:avatar_height=>avatar_height}
                   %br
-                  = memlink
+                  -#= memlink
     
         %td.orgText
           - league_news_item = most_recent_league_post @team 
