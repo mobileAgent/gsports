@@ -145,7 +145,7 @@ class Message < ActiveRecord::Base
     emails = email_str.split(',')
     emails.each do |email|
       # validate the email
-
+      email.strip!
       unless /^([^@\s]+)@((?:[-a-z0-9A-Z]+\.)+[a-zA-Z]{2,})$/.match(email)
         logger.error "Invalid email address #{email}"
       else
