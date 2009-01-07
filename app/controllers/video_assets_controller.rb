@@ -89,6 +89,7 @@ class VideoAssetsController < BaseController
     # Set default team name in the home team slot to help them figure it out
     unless (current_user.admin? || current_user.league_staff?)
       @video_asset.home_team_name = current_user.team.name
+        @video_asset.home_team_name = current_user.team.name
     end
 
     respond_to do |format|
@@ -292,7 +293,8 @@ class VideoAssetsController < BaseController
     "<%= content_tag(:ul, @teams.map { |t| content_tag(:li, h(t.name)) }) %>"    
   end
 
-  def add_team_and_league_relations(video_asset,params)
+
+  def old_add_team_and_league_relations_for_reference(video_asset,params)
     
     # Set up team (should only come from admin form)
     admin_set_team = false
@@ -322,6 +324,55 @@ class VideoAssetsController < BaseController
     end
     video_asset
   end
+  
+  def add_team_and_league_relations(video_asset,params)
+    
+    # Set up team (should only come from admin form)
+    admin_set_team = false
+    
+    
+    if(current_user.admin?)
+      # Set up league (should only come from admin form)
+      
+      if(!params[:video_asset][:league_name].blank?)
+        video_asset.league_name= params[:video_asset][:league_name]
+        # Transfer ownership to the admin
+        admin = User.league_admin(video_asset.league_id)
+        video_asset.user_id = admin[0].id if (admin && admin.any?)
+        if (video_asset.team_id? && admin_set_team)
+          video_asset.team.league_id= video_asset.league_id
+        end
+      else
+        #video_asset.league = nil
+      end
+      
+      if(!params[:video_asset][:team_name].blank?)
+        video_asset.team_name= params[:video_asset][:team_name]
+        # Transfer ownership to the admin
+        admin = User.team_admin(video_asset.team_id)
+        video_asset.user_id = admin[0].id if (admin && admin.any?)
+        admin_set_team = true
+      else
+        video_asset.team = nil
+      end
+      
+    else
+      # is not an admin
+      video_asset.league_id= current_user.league_id
+
+      if current_user.league_staff?
+        #this is now a league video
+        video_asset.team= nil
+      else
+        video_asset.team= current_user.team
+      end
+  
+    end
+      
+      
+    video_asset
+  end
+  
 
   protected
 
