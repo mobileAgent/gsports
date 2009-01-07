@@ -55,7 +55,12 @@ development:
     # adapter: reliable_msg
     ## properties below are all defaults for this adapter
     # poll_interval: 1
-    # reliable: true    
+    # reliable: true   
+
+aaron:
+    adapter: stomp
+    host: localhost
+    port: 61613 
 
 test:
     adapter: test
