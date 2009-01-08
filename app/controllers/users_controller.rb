@@ -110,6 +110,17 @@ class UsersController < BaseController
     @inviter_id = params[:id]
     @inviter_code = params[:code]
     
+    # pass through promotion codes
+    @promo = params[:promo]
+    
+    # team override
+    team_id = params[:team_id]
+    if team_id
+      @team = Team.find(team_id)
+      @teams = _get_teams_by_state @team.state_id
+    end
+
+    
     #render :action => 'new', :layout => 'beta' and return if AppConfig.closed_beta_mode
   end
 
