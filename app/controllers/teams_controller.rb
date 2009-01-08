@@ -248,18 +248,26 @@ class TeamsController < BaseController
     #random_slice(photo_picks, 5)
     
     @player_title = 'Featured Videos'
-    video_favorites = Favorite.ftypes('VideoAsset','VideoReel','VideoClip').for_team_staff(team_id)
-    if(video_favorites.empty?)
-      @player_title = 'Recent Uploads'
-      @hide_recent_uploads = true
-      video_picks = @recent_uploads if @recent_uploads && !@recent_uploads.empty?
+    if(team.member?)
+      # member picks
+      video_favorites = Favorite.ftypes('VideoAsset','VideoReel','VideoClip').for_team_staff(team_id)
+      if(video_favorites.empty?)
+        @player_title = 'Recent Uploads'
+        @hide_recent_uploads = true
+        video_picks = @recent_uploads if @recent_uploads && !@recent_uploads.empty?
+      else
+        video_favorites.sort! {|x,y| y.created_at <=> x.created_at}.first(6)
+        video_picks = video_favorites.map(){|f|eval "#{f.favoritable_type}.find(f.favoritable_id)"}
+      end
+      unless video_picks.nil? || video_picks.empty?
+        @team_video_picks = video_picks.first(6).collect(&:dockey).join(",") 
+      end
     else
-      video_favorites.sort! {|x,y| y.created_at <=> x.created_at}.first(6)
-      video_picks = video_favorites.map(){|f|eval "#{f.favoritable_type}.find(f.favoritable_id)"}
+      # non-member picks
+      @hide_recent_uploads = true
+      @team_video_picks = VideoAsset.references_team(team).all(:limit => 6, :order => 'view_count DESC').collect(&:dockey).join(",") 
     end
-    unless video_picks.nil? || video_picks.empty?
-      @team_video_picks = video_picks.first(6).collect(&:dockey).join(",") 
-    end
+    
   end
 
   def load_photo_gallery(team, index=0)

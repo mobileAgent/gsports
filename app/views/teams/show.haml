@@ -143,7 +143,7 @@
             =link_to 'See All Videos', {:controller => 'search', :action => 'team_video_assets', :team_id => @team.id}
           
       .contentBoxContent.tanBackground
-        - if team_has_videos && @team_video_picks && @team_video_picks.length > 2
+        - if team_has_videos #&& @team_video_picks && @team_video_picks.length > 2
           .flashArea#flashArea
           - flashvars = {}
           - flashvars[:playerType]= ( is_member ? "SchoolPlayer" : "SchoolNotMemberPlayer" )
