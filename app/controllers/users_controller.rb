@@ -680,6 +680,10 @@ class UsersController < BaseController
   end
   
   def dashboard
+    redirect_to team_path(current_user)
+  end
+  
+  def old_dashboard  
     @user = current_user
     @network_activity = @user.network_activity
     @recommended_posts = @user.recommended_posts

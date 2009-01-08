@@ -3,7 +3,7 @@
     #sidebar
       .menutitle
         = _('My Tools')
-      .menuitem
+      -#.menuitem
         =link_to _('Dashboard'), dashboard_user_path(current_user)
       .menuitem
         =link_to _('Profile'), user_path(current_user.id)  
