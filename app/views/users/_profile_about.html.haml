@@ -15,7 +15,8 @@
         ="#{@user.birthday.to_s(:readable)}"
         %br/
         - if @user.description
-          = truncate_words(@user.description,25)
+          -#= truncate_words(@user.description,25)
+          = @user.description
         %br/
         %br/
         %h2.profileHeading Blog:
