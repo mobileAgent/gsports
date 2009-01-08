@@ -1536,3 +1536,28 @@ a.articleLink, a.articleLink:visited, a.articleLink:hover {
 .tanBackground .moreLink a, .tanBackground .moreLink a:visited {
   color: #666666;
 }
+
+
+
+.tutorialButton, .tutorialButton:visited, .tutorialButton:active  {
+  display: block;
+	text-decoration: none;
+
+	background-image: url('/images/tutorialButton.png');
+	background-position: left top;
+	background-repeat: no-repeat;
+ 
+	width: 117px;
+	height: 41px;
+	margin-left: 4px;
+	margin-top: 8px;
+	
+	color: white;
+	text-align: center;
+}
+
+.tutorialButton h3 {
+	padding-top: 6px;
+	color: yellow;
+}
+
