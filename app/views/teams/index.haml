@@ -14,21 +14,22 @@
         = link_to 'New school', url_for({:controller=>'teams',:action=>'new'}), :class => 'genericButton'
 
       %br/
-
+      
       %table{:border => 0, :cellspacing => 0, :cellpadding => 0, :width => '100%'}
         %thead
           %tr.yellowHeader
-            %td.padded.contentBoxHeader Name
-            %td.padded.contentBoxHeader Nickname
-            %td.padded.contentBoxHeader City
-            %td.padded.contentBoxHeader County
-            %td.padded.contentBoxHeader State
-            %td.padded.contentBoxHeader League
-            %td.padded.contentBoxHeader Admin
-            %td.padded.contentBoxHeader Videos
-            %td.padded.contentBoxHeader Logo
-            %td.padded.contentBoxHeader.numeric Users
-            %td.padded.contentBoxHeader/ 
+            = sortable_table_header :class=>"padded sortableContentHeader", :name => "Name",     :sort => "name"
+            = sortable_table_header :class=>"padded sortableContentHeader", :name => "Nickname", :sort => "nickname"
+            = sortable_table_header :class=>"padded sortableContentHeader", :name => "City",     :sort => "city"
+            = sortable_table_header :class=>"padded sortableContentHeader", :name => "County",   :sort => "county_name"
+            = sortable_table_header :class=>"padded sortableContentHeader", :name => "State",    :sort => "state_name"
+            = sortable_table_header :class=>"padded sortableContentHeader", :name => "League",   :sort => "league_id"
+            %th.padded.contentBoxHeader Admin
+            %th.padded.contentBoxHeader Videos
+            = sortable_table_header :class=>"padded sortableContentHeader", :name => "Logo",     :sort => "avatar_id"
+            %th.padded.contentBoxHeader Users
+            -#%td.padded.contentBoxHeader Admin
+            %th.padded.contentBoxHeader/ 
     
         %tbody
           - for team in @teams
@@ -49,7 +50,8 @@
                 - if count > 0
                   = link_to(count, "/search/quickfind?team=#{team.id}")
                   
-              %td.leagueList= (team.avatar_id ? 'Y' : 'N')
+              %td.leagueList
+                = (team.avatar_id ? 'Y' : 'N')
                   
               %td.leagueList.numeric
                 - count = team.users.enabled.size
@@ -61,5 +63,6 @@
               - else
                 %td.leagueList &nbsp;
               
-
+      .apple_pagination
+        = will_paginate @teams
         

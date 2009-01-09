@@ -1561,3 +1561,14 @@ a.articleLink, a.articleLink:visited, a.articleLink:hover {
 	color: yellow;
 }
 
+.sortableContentHeader {
+	background:#68A34E url(/gs/images/content_box_header.png) repeat-x scroll left top;
+	border-bottom:2px solid #B7BAA3;
+	font-size:110%;
+	height:18px;
+	padding-top:2px;
+}
+
+.sortableContentHeader a, .sortableContentHeader a:visited {
+	color: #FFEF0A;
+}
