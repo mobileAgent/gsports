@@ -114,7 +114,7 @@ class UsersController < BaseController
     @promo = params[:promo]
     
     # team override
-    team_id = params[:team_id]
+    team_id = params[:teamid]
     if team_id
       @team = Team.find(team_id)
       @teams = _get_teams_by_state @team.state_id
