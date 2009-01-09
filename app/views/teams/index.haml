@@ -24,7 +24,9 @@
             %td.padded.contentBoxHeader County
             %td.padded.contentBoxHeader State
             %td.padded.contentBoxHeader League
-            %td.padded.contentBoxHeader Description
+            %td.padded.contentBoxHeader Admin
+            %td.padded.contentBoxHeader Videos
+            %td.padded.contentBoxHeader Logo
             %td.padded.contentBoxHeader.numeric Users
             %td.padded.contentBoxHeader/ 
     
@@ -36,9 +38,23 @@
               %td.leagueList=h team.city
               %td.leagueList=h team.county_name
               %td.leagueList=h team.state_id? ? team.state.name : ""
-              %td.leagueList=h team.league_name
-              %td.leagueList=truncate h(team.description),45
-              %td.leagueList.numeric= team.users.enabled.size
+              %td.leagueList= link_to team.league_name, team_path(team)
+              %td.leagueList
+                - admin = team.admin_user
+                - if admin
+                  = link_to admin.full_name, user_path(admin)
+                  
+              %td.leagueList
+                - count = team.video_assets.size
+                - if count > 0
+                  = link_to(count, "/search/quickfind?team=#{team.id}")
+                  
+              %td.leagueList= (team.avatar_id ? 'Y' : 'N')
+                  
+              %td.leagueList.numeric
+                - count = team.users.enabled.size
+                - if count > 0
+                  = link_to(count, "/search/q?search[category]=10&team_id=#{team.id}",:class=>'member-link')
 
               - if team.id != User.admin.first.team_id
                 %td.leagueList= link_to 'Delete', team_path(team), :confirm => 'Are you sure?', :method => :delete
