@@ -15,6 +15,10 @@ class ApplicationController < ActionController::Base
   # The Community Engine overridden layout needs this
   include AuthenticatedSystem
 
+  # Sortable HTML Tables
+  include SortableTable::App::Controllers::ApplicationController
+  
+
   # See ActionController::RequestForgeryProtection for details
   # Uncomment the :secret if you're not using the cookie session store
   protect_from_forgery # :secret => '1445b9bcd1509d30d78d2652022f83b8'
