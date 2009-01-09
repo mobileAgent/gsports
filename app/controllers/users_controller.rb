@@ -680,7 +680,7 @@ class UsersController < BaseController
   end
   
   def dashboard
-    redirect_to team_path(current_user)
+    redirect_to team_path(current_user.team)
   end
   
   def old_dashboard  
