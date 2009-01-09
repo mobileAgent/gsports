@@ -167,7 +167,7 @@ class Membership < ActiveRecord::Base
     new_membership.updated_at = nil
     
     # use the current price for the subscription plan
-    new_membership.cost = @user.role.plan.cost
+    new_membership.cost = self.user.role.plan.cost
     if @billing_method.nil? || @billing_method == FREE_BILLING_METHOD
       new_membership.billing_method = CREDIT_CARD_BILLING_METHOD
     else
@@ -186,14 +186,19 @@ class Membership < ActiveRecord::Base
       # return the new membership
       return new_membership
     else 
-      logger.error "Unable to renew membership for user #{@user.id} #{@user.full_name}"
+      logger.error "Unable to renew membership for user #{self.user.id} #{self.user.full_name}"
       return nil
     end
   end
 
   def cancel!(reason=nil)
     if !canceled?
-      logger.info "Cancelling membership for #{@user.id}: #{@user.email}"
+      if self.user
+        logger.info "Cancelling membership for #{self.user.id}: #{self.user.email}"
+      else
+        logger.error "NO USER??!!!"
+        return false
+      end
 
       cancellation= MembershipCancellation.new
       cancellation.reason= reason

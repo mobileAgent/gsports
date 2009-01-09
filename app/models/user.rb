@@ -413,14 +413,19 @@ class User < ActiveRecord::Base
     if !memberships.last.active?
       # look for the first active membership
       memberships.reverse.each do |m|
-        logger.debug "testing membership ID #{m.id}, status #{m.status}"
-        if m.active?
+        logger.debug "testing membership ID #{m.id}, status #{m.status}, user #{m.user_id}"
+        if m.active? || (m.status && m.status == Membership::STATUS_ACTIVE)
+          logger.debug "returning membership ID #{m.id}"
           return m
         end
       end
     end
 
-    memberships.last
+    m = memberships.last
+    if m
+      logger.debug "returning last membership ID #{m.id}, status #{m.status}, user #{m.user_id}"
+    end
+    return m
   end
 
   def billing_needed?
