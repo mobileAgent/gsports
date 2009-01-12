@@ -11,7 +11,7 @@ tmp/*.pid
 videos
 public/photos
 public/assets
-art
+prep
 .loadpath
 .project
 config/environments/aaron.rb
