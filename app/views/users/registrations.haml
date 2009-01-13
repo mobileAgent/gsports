@@ -1,0 +1,61 @@
+.profileContentArea.listingPage
+  .profilePageHeader
+    %h2.columnDescriptor
+      %span
+        User Registrations
+  .listings
+    .padded
+      %table{:border => 0, :cellspacing => 0, :cellpadding => 0, :width => '100%'}
+        %thead
+          %tr.yellowHeader
+            = sortable_table_header :class=>"padded sortableContentHeader", :name => "ID",         :sort => "id"
+            = sortable_table_header :class=>"padded sortableContentHeader", :name => "First",      :sort => "firstname"
+            = sortable_table_header :class=>"padded sortableContentHeader", :name => "Last Name",  :sort => "lastname"
+            = sortable_table_header :class=>"padded sortableContentHeader", :name => "Billing",    :sort => 'memberships.billing_method'
+            %th.padded.contentBoxHeader History
+            %th.padded.contentBoxHeader Join Date
+            %th.padded.contentBoxHeader Promotion
+            %th.padded.contentBoxHeader Promo Code Expiry
+            %th.padded.contentBoxHeader Last billed date
+            %th.padded.contentBoxHeader Next billed date
+    
+        %tbody
+          - for user in @users
+            %tr.leagueList
+              %td.leagueList= link_to user.id, user_path(user.id)
+              
+              %td.leagueList{ :colspan=>2 }
+                - if user.team_admin?
+                  = user.team && user.team.name
+                  %br
+                - elsif user.league_admin?
+                  = user.league && user.league.name
+                  %br
+                = h user.full_name
+                
+              - mem = user.current_membership
+              - if mem
+                
+                %td.leagueList
+                  - if mem.billing_method == Membership::CREDIT_CARD_BILLING_METHOD
+                    =link_to 'CC',:controller => :membership, :action => :member_billing_method_info ,:id => mem.id
+                  - elsif mem.purchase_order
+                    =link_to 'PO',:controller => :purchase_orders, :action => :show, :id => mem.purchase_order.id
+                  - else
+                    = mem.billing_method
+                
+                %td.leagueList= link_to 'History', :controller => :membership, :action => "member_billing_history", :id => mem.id
+                %td.leagueList= h user.created_at.to_date
+                - promo = mem.promotion
+                - if promo
+                  %td.leagueList= link_to mem.promotion.promo_code, promotion_path(mem.promotion.id)
+                  %td.leagueList= 'promo ex'
+                -else
+                  %td.leagueList
+                  %td.leagueList
+                  
+                %td.leagueList= 'last'
+                %td.leagueList= 'next'
+              
+      .apple_pagination
+        = will_paginate @users

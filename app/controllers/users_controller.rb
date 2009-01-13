@@ -14,7 +14,7 @@ class UsersController < BaseController
                                                   :account_expired, :membership_canceled, :renew, :cancel_membership, 
                                                   :auto_complete_for_team_name, :auto_complete_for_league_name]
   
-  before_filter :admin_required, :only => [:assume, :destroy, :featured, :toggle_featured, :toggle_moderator, :disable]
+  before_filter :admin_required, :only => [:assume, :destroy, :featured, :toggle_featured, :toggle_moderator, :disable, :registrations ]
   before_filter :find_user, :only => [:edit, :edit_pro_details, :show, :update, :destroy, :statistics, :disable ]
   
   uses_tiny_mce(:options => AppConfig.gsdefault_mce_options.merge({:editor_selector => "rich_text_editor"}), 
@@ -24,6 +24,9 @@ class UsersController < BaseController
                 :only => [:show])
   
   VERIFICATION_COST = 9.99
+  
+  sortable_attributes :id, :firstname, :lastname, :team_id, :league_id, 'memberships.billing_method'
+  
   
   def show
     # The current user can see @user's profile only if
@@ -1015,6 +1018,12 @@ class UsersController < BaseController
     end
   end
 
+  def registrations
+    @users = User.paginate :all, :order=>sort_order, :include => [ :memberships ], :page => params[:page]
+  end
+  
+  
+
   protected
   
   def _get_teams_by_state(state_id)
@@ -1108,5 +1117,6 @@ class UsersController < BaseController
       cookies[:reg_user_xml] = c
     end
   end
+  
 
 end
