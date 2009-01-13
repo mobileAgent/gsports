@@ -15,6 +15,12 @@
 
       %br/
       
+      = h @mappings.inspect
+      %hr
+      = h @acceptable_columns.inspect
+      %hr
+      = h @sort_order.inspect
+      
       %table{:border => 0, :cellspacing => 0, :cellpadding => 0, :width => '100%'}
         %thead
           %tr.yellowHeader
@@ -22,7 +28,7 @@
             = sortable_table_header :class=>"padded sortableContentHeader", :name => "Nickname", :sort => "nickname"
             = sortable_table_header :class=>"padded sortableContentHeader", :name => "City",     :sort => "city"
             = sortable_table_header :class=>"padded sortableContentHeader", :name => "County",   :sort => "county_name"
-            = sortable_table_header :class=>"padded sortableContentHeader", :name => "State",    :sort => "state_name"
+            = sortable_table_header :class=>"padded sortableContentHeader", :name => "State",    :sort => 'states.name'
             = sortable_table_header :class=>"padded sortableContentHeader", :name => "League",   :sort => "league_id"
             %th.padded.contentBoxHeader Admin
             %th.padded.contentBoxHeader Videos
