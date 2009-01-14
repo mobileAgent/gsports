@@ -70,6 +70,17 @@
         = f.text_field :email, :size => 32
       
       
+      %div
+        %b Default Tab
+        %br/
+        %label
+          = f.radio_button :tab_id, '1'
+          News
+        %br/
+        %label
+          = f.radio_button :tab_id, '2'
+          Recent Uploads
+      
       
       -if current_user.admin?
         %fieldset.emphasized

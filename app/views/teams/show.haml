@@ -3,6 +3,8 @@
 - top_row_height_px = @team_popular_videos.size >= 3 ? 255 : 130
 - second_row_height_px = [@team_clips_reels.size,@team_videos.size].max >= 3 ? 255 : 130
 - is_member = @team.member?
+- tab_id = (@team.tab_id.to_i > 0 ? @team.tab_id : 1)
+- tab_id = 1 if @hide_recent_uploads and (tab_id == 2)
 
 .landingContentArea
 
@@ -48,30 +50,39 @@
     = javascript_include_tag 'tabs'
     
     .orgTabs
-      #tab1.orgTab.open
+      #tab1.orgTab{ :class=>((tab_id == 1) ? 'open' : 'closed') }
         .left
         .content
           %a{ :href=>'javascript:Tabs.open(1)' }
             News
         .right
       - unless @hide_recent_uploads
-        #tab2.orgTab
+        #tab2.orgTab{ :class=>((tab_id == 2) ? 'open' : 'closed') }
           .left
           .content
             %a{ :href=>'javascript:Tabs.open(2)' }
               Recent Uploads
           .right    
       - if (false && @team_photo_picks && !@team_photo_picks.empty?)
-        #tab3.orgTab
+        #tab3.orgTab{ :class=>((tab_id == 3) ? 'open' : 'closed') }
           .left
           .content
             %a{ :href=>'javascript:Tabs.open(3)' }
               Clips / Reels
           .right
       .clearDiv
+      
     .tabContent{ :class => is_member ? "tall" : "short" }
+    
       -#      School News
-      #tabBody1.contentBox.tabBody.open{ :class => is_member ? "tall" : "short" }
+      - class_member = is_member ? "tall" : "short"
+      - if tab_id == 1
+        - tab_state_class = 'open'
+        - tab_state_style = ''
+      -else
+        - tab_state_class = 'closed'
+        - tab_state_style = 'display: none'
+      #tabBody1.contentBox.tabBody{ :class => "#{class_member} #{tab_state_class}", :style=>tab_state_style }
         .contentBoxHeader.flatblue{ :style => "padding-top:0px" }
           %h2.boxDescription
             - if current_user && current_user.team_staff?(@team)
@@ -103,7 +114,13 @@
       - unless @hide_recent_uploads
 
         -#      Recent Uploads
-        #tabBody2.contentBox.tabBody{ :style=>'display: none' }
+        - if tab_id == 2
+          - tab_state_class = 'open'
+          - tab_state_style = ''
+        -else
+          - tab_state_class = 'closed'
+          - tab_state_style = 'display: none'
+        #tabBody2.contentBox.tabBody{ :style=>tab_state_style, :class=>tab_state_class }
           .contentBoxHeader.flatblue
             %h2.boxDescription
           .contentBoxContent.tanBackground
