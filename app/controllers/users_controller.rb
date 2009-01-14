@@ -113,13 +113,14 @@ class UsersController < BaseController
     @inviter_id = params[:id]
     @inviter_code = params[:code]
     
-    # pass through promotion codes
-    @promo = params[:promo]
     
+    # pass promo code
+    @promocode ||= cookies[:promocode]
+    @promoteam ||= cookies[:promoteam]
+        
     # team override
-    team_id = params[:teamid]
-    if team_id
-      @team = Team.find(team_id)
+    if @promoteam
+      @team = Team.find(@promoteam)
       @teams = _get_teams_by_state @team.state_id
     end
 

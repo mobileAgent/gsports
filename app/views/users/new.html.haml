@@ -207,7 +207,8 @@
                 %label{"for"=>"promo_code"}
                   If you have a promotion code, enter it in the box below.
                 %br
-                = text_field_tag :promo_code, ( params[:promo] || params[:promo_code] ) , :size => 24
+                -#= text_field_tag :promo_code, ( params[:promo] || params[:promo_code] ) , :size => 24
+                = text_field_tag :promo_code, @promocode , :size => 24
           
           %br
           %br

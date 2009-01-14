@@ -5,6 +5,7 @@ class BaseController < ApplicationController
   before_filter :gs_login_required, :except => [:site_index, :beta]
   before_filter :billing_required, :except => [:site_index, :beta]
   before_filter :quickfind_setup
+  before_filter :detect_promo
 
   # Show the lockout page
   def beta
@@ -146,6 +147,18 @@ class BaseController < ApplicationController
     @quickfind_counties = Rails.cache.fetch('quickfind_counties') { Team.counties }
     @quickfind_sports = Rails.cache.fetch('quickfind_sports') { VideoAsset.sports }
     @quickfind_cities = Rails.cache.fetch('quickfind_cities') { Team.cities }
+  end
+  
+  # store promo codes from affiliates
+  def detect_promo
+    if params[:promocode]
+      @promocode = params[:promocode]
+      cookies[:promocode] = { :value => @promocode, :expires => 30.days.from_now }
+      if params[:promoteam]
+        @promoteam = params[:promoteam]
+        cookies[:promoteam] = { :value => @promoteam, :expires => 30.days.from_now } 
+      end
+    end
   end
 
 end
