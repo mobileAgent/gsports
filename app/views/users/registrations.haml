@@ -8,9 +8,10 @@
       %table{:border => 0, :cellspacing => 0, :cellpadding => 0, :width => '100%'}
         %thead
           %tr.yellowHeader
-            = sortable_table_header :class=>"padded sortableContentHeader", :name => "ID",         :sort => "id"
             = sortable_table_header :class=>"padded sortableContentHeader", :name => "First",      :sort => "firstname"
             = sortable_table_header :class=>"padded sortableContentHeader", :name => "Last Name",  :sort => "lastname"
+            = sortable_table_header :class=>"padded sortableContentHeader", :name => "(ID)",         :sort => "id"
+            
             = sortable_table_header :class=>"padded sortableContentHeader", :name => "Billing",    :sort => 'memberships.billing_method'
             %th.padded.contentBoxHeader History
             %th.padded.contentBoxHeader Join Date
@@ -22,16 +23,17 @@
         %tbody
           - for user in @users
             %tr.leagueList
-              %td.leagueList= link_to user.id, user_path(user.id)
               
-              %td.leagueList{ :colspan=>2 }
+              %td.leagueList{ :colspan=>3 }
                 - if user.team_admin?
-                  = user.team && user.team.name
+                  - team_name = user.team.name rescue NoMethodError rescue RecordNotFound
+                  = link_to "#{team_name} (#{user.team_id})", team_path(user.team_id), :class=>'admin-userreg-link-org'
                   %br
                 - elsif user.league_admin?
-                  = user.league && user.league.name
+                  - league_name = user.league.name rescue RecordNotFound rescue NoMethodError 
+                  = link_to "#{league_name} (#{user.league_id})", league_path(user.league_id), :class=>'admin-userreg-link-org'
                   %br
-                = h user.full_name
+                = link_to "#{h user.full_name} (#{user.id})", user_path(user.id), :class=>'admin-userreg-link-user'
                 
               - mem = user.current_membership
               - if mem

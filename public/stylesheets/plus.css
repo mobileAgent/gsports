@@ -1572,3 +1572,16 @@ a.articleLink, a.articleLink:visited, a.articleLink:hover {
 .sortableContentHeader a, .sortableContentHeader a:visited {
 	color: #FFEF0A;
 }
+
+
+a.admin-userreg-link-org{
+  font-weight: bold;
+  text-decoration: none;
+}
+
+a.admin-userreg-link-user{
+  text-decoration: none;
+}
+
+
+
