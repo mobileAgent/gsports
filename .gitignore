@@ -12,6 +12,8 @@ videos
 public/photos
 public/assets
 prep
+public/players/current_production/
+public/players/current_qa/
 .loadpath
 .project
 config/environments/aaron.rb
