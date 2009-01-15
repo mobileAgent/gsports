@@ -363,7 +363,10 @@ class SearchController < BaseController
     when VideoAsset
       logger.debug "Video Asset to xml..."
       if deep
-        xml_options[:except] = [:game_date, :game_date_str, :created_at, :updated_at, :uploaded_file_path, :league_id, :team_id, :user_id, :delta, :video_type, :visiting_team_id, :home_team_id, :ignore_game_day, :ignore_game_month, :gsan, :internal_notes, :announcer, :announcer_name, :filmed_by, :filmed_by_name, :shared_access_id]
+        xml_options[:except] = [:game_date, :game_date_str, :created_at, :updated_at, :uploaded_file_path, 
+                                :league_id, :team_id, :user_id, :delta, :video_type, :visiting_team_id, :home_team_id, :ignore_game_day, :ignore_game_month, 
+                                :gsan, :internal_notes, :announcer, :filmed_by, 
+                                :shared_access_id]
       else
         xml_options[:only] = [:description, :title, :video_length, :view_count]
       end
