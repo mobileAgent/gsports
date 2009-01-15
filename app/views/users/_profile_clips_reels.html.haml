@@ -9,15 +9,24 @@
     .profileFeature
       - for v in @profile_clips_and_reels
         .featureItem.clipItem
-          .profileClipFIT
-            - if v.class.to_s == "VideoClip"
-              = "<a href='#{user_video_clip_path(v.user_id,v)}'><img src='#{@vidavee.file_thumbnail_medium(v.dockey)}' title='#{h(v.title).gsub(/\'/,'')}' alt='Clip'/></a>"
-            - else
-              = "<a href='#{user_video_reel_path(v.user_id,v)}'><img src='#{@vidavee.file_thumbnail_medium(v.thumbnail_dockey)}' title='#{h(v.title).gsub(/\'/,'')}' alt='Reel'/></a>"
-          %h3
-            = link_to truncate(h(v.title),20),user_video_clip_path(v.user_id,v)
-          %span.date="#{v.created_at.to_s(:readable)}"
-
+        
+          - if v.class.to_s == "VideoClip"
+            - url = user_video_clip_path(v.user_id,v)
+            .profileClipFIT
+              -#= "<a href='#{url}'><img src='#{@vidavee.file_thumbnail_medium(v.dockey)}' title='#{h(v.title).gsub(/\'/,'')}' alt='Clip'/></a>"
+              %a{ :href=>url }
+                %img{ :src=>@vidavee.file_thumbnail_medium(v.dockey), :title=>h(v.title).gsub(/\'/,''), :alt=>'Clip' }
+            %h3
+              = link_to truncate(h(v.title),20),url
+          - else
+            - url = user_video_reel_path(v.user_id,v)
+            .profileClipFIT
+              -#= "<a href='#{url}'><img src='#{@vidavee.file_thumbnail_medium(v.thumbnail_dockey)}' title='#{h(v.title).gsub(/\'/,'')}' alt='Reel'/></a>"
+              %a{ :href=>url }
+                %img{ :src=>@vidavee.file_thumbnail_medium(v.thumbnail_dockey), :title=>h(v.title).gsub(/\'/,''), :alt=>'Reel' }
+            %h3
+              = link_to truncate(h(v.title),20),url
+        
   .profileFeature.moreLinkArea
     %span.moreLink
       - unless @profile_clips_and_reels.empty?
