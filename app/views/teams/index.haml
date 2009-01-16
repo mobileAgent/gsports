@@ -8,25 +8,29 @@
   .listings
     .padded
 
-      - if @league
-        = link_to 'New school', url_for({:controller=>'teams',:action=>'new',:league_id=>@league.id}), :class => 'genericButton'
-      - else
-        = link_to 'New school', url_for({:controller=>'teams',:action=>'new'}), :class => 'genericButton'
-
+      %table
+        %tr
+          %td
+            - if @league
+              = link_to 'New school', url_for({:controller=>'teams',:action=>'new',:league_id=>@league.id}), :class => 'genericButton'
+            - else
+              = link_to 'New school', url_for({:controller=>'teams',:action=>'new'}), :class => 'genericButton'
+          %td
+            
       %br/
       
       %table{:border => 0, :cellspacing => 0, :cellpadding => 0, :width => '100%'}
         %thead
           %tr.yellowHeader
-            = sortable_table_header :class=>"padded sortableContentHeader", :name => "Name",     :sort => "name"
-            = sortable_table_header :class=>"padded sortableContentHeader", :name => "Nickname", :sort => "nickname"
-            = sortable_table_header :class=>"padded sortableContentHeader", :name => "City",     :sort => "city"
-            = sortable_table_header :class=>"padded sortableContentHeader", :name => "County",   :sort => "county_name"
+            = sortable_table_header :class=>"padded sortableContentHeader", :name => "Name",     :sort => "teams.name"
+            = sortable_table_header :class=>"padded sortableContentHeader", :name => "Nickname", :sort => "teams.nickname"
+            = sortable_table_header :class=>"padded sortableContentHeader", :name => "City",     :sort => "teams.city"
+            = sortable_table_header :class=>"padded sortableContentHeader", :name => "County",   :sort => "teams.county_name"
             = sortable_table_header :class=>"padded sortableContentHeader", :name => "State",    :sort => 'states.name'
-            = sortable_table_header :class=>"padded sortableContentHeader", :name => "League",   :sort => "league_id"
-            %th.padded.contentBoxHeader Admin
+            = sortable_table_header :class=>"padded sortableContentHeader", :name => "League",   :sort => "teams.league_id"
+            = sortable_table_header :class=>"padded sortableContentHeader", :name => "Admin",   :sort => 'users.role_id'
             %th.padded.contentBoxHeader Videos
-            = sortable_table_header :class=>"padded sortableContentHeader", :name => "Logo",     :sort => "avatar_id"
+            = sortable_table_header :class=>"padded sortableContentHeader", :name => "Logo",     :sort => "teams.avatar_id"
             %th.padded.contentBoxHeader Users
             -#%td.padded.contentBoxHeader Admin
             %th.padded.contentBoxHeader/ 
@@ -39,7 +43,7 @@
               %td.leagueList=h team.city
               %td.leagueList=h team.county_name
               %td.leagueList=h team.state_id? ? team.state.name : ""
-              %td.leagueList= link_to team.league_name, team_path(team)
+              %td.leagueList= link_to team.league_name, league_path(team.league_id)
               %td.leagueList
                 - admin = team.admin_user
                 - if admin

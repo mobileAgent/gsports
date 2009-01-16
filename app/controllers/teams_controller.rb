@@ -10,19 +10,34 @@ class TeamsController < BaseController
   skip_before_filter :gs_login_required, :only => [:show_public, :photo_gallery]
   after_filter :cache_control, :only => [:update, :create, :destroy]
   
-  sortable_attributes :name, :nickname, :city, :county_name, :avatar_id, :league_id, 'states.name'
+  sortable_attributes 'teams.name', 'teams.nickname', 'teams.city', 'teams.county_name', 'teams.avatar_id', 'teams.league_id', 'states.name', 'users.role_id'
   
   
   # GET /team
   # GET /team.xml
   def index
+    conditions = []
+    
     if params[:league_id]
-      @league = League.find(params[:league_id], :order => :name, :include => [:state])
-      @teams = @league.teams(:include => [:state])
-    else
-      #@teams = Team.find(:all, :order => :name, :include => [:state, :league])
-      @teams = Team.paginate(:all, :order => sort_order, :include => [:state, :league], :page => params[:page])
+      league_id = params[:league_id].to_i
+      @league = League.find(league_id, :order => :name, :include => [:state])
+      #@league = League.find(params[:league_id], :order => :name, :include => [:state])
+      #@teams = @league.teams(:include => [:state])
+      conditions << "league_id = #{league_id}"
+      
     end
+    
+    if params[:members_only] == 'y'
+      conditions << "users.role_id = 8"
+    end
+    
+    #else
+      #@teams = Team.find(:all, :order => :name, :include => [:state, :league])
+      @teams = Team.paginate(:all, :order => sort_order, 
+        :include => [:state, :league, :users], 
+        :conditions => conditions.join(' AND '),
+        :page => params[:page])
+    #end
     
     respond_to do |format|
       format.html # index.haml
