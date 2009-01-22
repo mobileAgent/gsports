@@ -61,20 +61,20 @@ namespace :vidavee do
       puts "Cannot log into vidavee back end"
       return
     end
-    queued_assets = VideoAsset.find(:all, :conditions => ['video_status IN (?)',['queued','transcoding']])
+    queued_assets = VideoAsset.find(:all, :conditions => ['video_status IN (?)',[Vidavee.QUEUED,Vidavee.TRANSCODING,Vidavee.UPLOAD_FAILED]])
     queued_assets.each do |asset|
       pre = asset.video_status
       vidavee.update_asset_record(login,asset,{'video_status' => true, 'video_length' => true})
       if (asset.video_status != pre)
-        puts "Updating status of video #{asset.id} to #{asset.video_status} from #{pre}"
+        puts "Updating status of video #{asset.id} from #{pre} to #{asset.video_status} #{Time.now}"
         asset.save!
 
         # If it's ready now and it wasn't ready before
         # we can remove the uploaded file if it exists
-        if (asset.video_status == 'ready' && asset.uploaded_file_path)
+        if (asset.video_status == Vidavee.READY && asset.uploaded_file_path)
           FileUtils.rm_f asset.uploaded_file_path
 
-        elsif (asset.video_status == 'blocked' || asset.video_status == 'failed')
+        elsif (asset.video_status == Vidavee.BLOCKED || asset.video_status == Vidavee.FAILED)
           # Vidavee had a problem with it, notify the admin and the owner
           fn = fullpath[File.dirname(asset.uploaded_file_path).length+1..-1]
           [User.find_by_email(ADMIN_EMAIL),video_asset.user_id].uniq.each do |u|
