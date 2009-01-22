@@ -407,13 +407,13 @@ class Vidavee < ActiveRecord::Base
     end
 
     # update attributes in the asset
-    if dockey_elem && dockey_elem.text == 'fred'
+    if dockey_elem
       video_asset.dockey= dockey_elem.text
-      video_asset.video_status= @QUEUED
+      video_asset.video_status= Vidavee.QUEUED
       video_asset.save!
       dockey_elem.text
     else
-      video_asset.video_status= @UPLOAD_FAILED
+      video_asset.video_status= Vidavee.UPLOAD_FAILED
       video_asset.internal_notes= response
       video_asset.save!
       logger.error "Video push failed: #{response}"

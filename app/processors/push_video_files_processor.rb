@@ -12,9 +12,6 @@ class PushVideoFilesProcessor < ApplicationProcessor
     dockey = vidavee.push_video session_token,video_asset,video_asset.uploaded_file_path
     if dockey
       logger.info "Video push #{video_asset.uploaded_file_path} => #{dockey}"
-      #if (video_asset.video_status == 'queued')
-      #  publish(:update_video_status,"#{video_asset.id}")
-      #end
     else
       fullpath = video_asset.uploaded_file_path
       fn = fullpath[File.dirname(fullpath).length+1..-1]
