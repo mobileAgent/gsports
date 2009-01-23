@@ -12,6 +12,16 @@ class Vidavee < ActiveRecord::Base
   DOCKEY_PARAM = 'dockey'
   PAGE_PARAM = 'AF_page'
   UPLOAD_ID_PARAM = 'AF_uploadId'
+
+  # Video status values
+  @QUEUED = 'queued'
+  @UPLOAD_FAILED = 'upload failed'
+  @READY = 'ready'
+  @TRANSCODING = 'transcoding'
+  @BLOCKED = 'blocked'
+  @FAILED = 'failed'
+
+  class << self;   attr_reader :QUEUED, :UPLOAD_FAILED, :READY, :TRANSCODING, :BLOCKED, :FAILED end
   
   # These are for upload control
   def self.legal_file_extensions
@@ -125,6 +135,18 @@ class Vidavee < ActiveRecord::Base
     response = vrequest('playlist/GetGalleryPlaylists',sessionid,extra_params)
     extract(response,'//asset')
   end
+
+  # Find a video by keyword (using tag value "gsid{id}{RAILS_ENV}") to find
+  # videos that we didn't get a valid dockey for
+  def repair_missing_dockey(sessionid, video_asset)
+    tagval=make_tag(video_asset)
+    assets = gallery_assets(sessionid,'videoAsset',{'keyword'=>tagval})
+    if (assets && assets.length > 0)
+      update_asset_record_from_xml(video_asset,assets[0],{'dockey' => true})
+    end
+    video_asset.dockey
+  end
+    
 
   # List items in gallery, result is paginated, see currentPage, totalPages
   # Use rowsPerPage to change the default of 15, set to 0 for all
@@ -246,6 +268,16 @@ class Vidavee < ActiveRecord::Base
   end
   
   def update_asset_record(sessionid,video_asset,only={})
+    if video_asset.dockey.nil? || video_asset.dockey.empty?
+      repair_missing_dockey(sessionid,video_asset)
+      if video_asset.dockey.nil? || video_asset.dockey.empty?
+        logger.debug "Missing dockey on video #{video_asset.id} not repairable"
+        return video_asset
+      else
+        logger.debug "Missing dockey on video #{video_asset.id} repaired #{video_asset.dockey}"
+      end
+    end
+    
     response = vrequest('assets/GetDetailsAssetContent',sessionid, { DOCKEY_PARAM => video_asset.dockey })
     if response
       body = extract(response,"//content")
@@ -357,11 +389,13 @@ class Vidavee < ActiveRecord::Base
     #asis=file_path.downcase.end_with? '.flv'
     upload_params = [
                      Curl::PostField.content('title',video_asset.title),
+                     Curl::PostField.content('tag:1:',make_tag(video_asset)),
                      Curl::PostField.content('description',video_asset.description),
                      Curl::PostField.content('transcoderVersion','3'),
                      Curl::PostField.content('type','video'),
                      Curl::PostField.content('asisFlv','false'),
                      Curl::PostField.file('Asset',file_path)
+
                      ]
     # Send the post
     begin
@@ -375,11 +409,11 @@ class Vidavee < ActiveRecord::Base
     # update attributes in the asset
     if dockey_elem
       video_asset.dockey= dockey_elem.text
-      video_asset.video_status= 'queued'
+      video_asset.video_status= Vidavee.QUEUED
       video_asset.save!
       dockey_elem.text
     else
-      video_asset.video_status= 'upload failed'
+      video_asset.video_status= Vidavee.UPLOAD_FAILED
       video_asset.internal_notes= response
       video_asset.save!
       logger.error "Video push failed: #{response}"
@@ -464,6 +498,11 @@ class Vidavee < ActiveRecord::Base
 
   #### Internal methods follow here
   protected
+
+  # make the vidavee tag value for a video_asset
+  def make_tag(video_asset)
+    "gsid#{video_asset.id}#{RAILS_ENV}"
+  end
 
   # Build a query url from the base url given plus the query parameters
   def query_url(url, params)
