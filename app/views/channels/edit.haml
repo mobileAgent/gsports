@@ -1,0 +1,37 @@
+.profileContentArea.listingPage
+  .profilePageHeader
+    %h2.columnDescriptor
+      %span
+        Edit Channel
+      = @channel.name
+  .listings
+    .listingItem
+    
+      %table
+        %tr
+          %td
+    
+            %h1 Editing Channel
+      
+            = error_messages_for :channel
+      
+            - form_for(@channel, :url => channel_url(@channel), :html => {:multipart => true}) do |f|
+              = render :partial => "form", :locals => { :f => f }
+              %p= f.submit "Update"
+          
+            -#= link_to 'Show', channel_path(@channel) |
+            = link_to 'All Channels', channels_path
+      
+      
+          %td{ :align=>'center' }
+          
+            %p
+            %br
+            %br
+              - url = channel_path(@channel)
+              = h "<embed-iframe>#{url}</embed-iframe>"
+              %br
+              %br
+              = link_to 'Show', '', :onclick=>"javascript:window.open('#{url}','show-channel','width=500,height=500,toolbar=1,resizable=0');return false;"
+    
+          

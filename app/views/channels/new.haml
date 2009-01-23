@@ -1,0 +1,15 @@
+.profileContentArea.listingPage
+  .profilePageHeader
+    %h2.columnDescriptor
+      %span
+        New Channel
+  .listings
+    .listingItem
+
+      = error_messages_for :channel 
+      
+      - form_for(@channel, :url => channel_url(@channel), :html => {:multipart => true}) do |f|
+        = render :partial => "form", :locals => { :f => f }
+        %p= f.submit "Create"
+          
+      = link_to 'Back', channels_path 

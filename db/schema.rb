@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090114180629) do
+ActiveRecord::Schema.define(:version => 20090121172555) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id",    :limit => 10
@@ -80,6 +80,19 @@ ActiveRecord::Schema.define(:version => 20090114180629) do
     t.text   "tips"
     t.string "new_post_text"
     t.string "nav_text"
+  end
+
+  create_table "channel_videos", :force => true do |t|
+    t.string  "video_type"
+    t.integer "video_id",   :limit => 11
+    t.integer "channel_id", :limit => 11
+  end
+
+  create_table "channels", :force => true do |t|
+    t.string  "name",      :limit => 30
+    t.integer "layout",    :limit => 3
+    t.integer "team_id",   :limit => 11
+    t.integer "league_id", :limit => 11
   end
 
   create_table "choices", :force => true do |t|

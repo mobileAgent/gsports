@@ -1,0 +1,30 @@
+.profileContentArea.listingPage
+  .profilePageHeader
+    %h2.columnDescriptor
+      %span
+        Video Channels
+  .listings
+    .padded
+
+      %table
+        %tr
+          %td
+            = link_to 'New Channel', url_for({:controller=>'channels',:action=>'new'}), :class => 'genericButton'
+          %td
+            
+      %br/
+      
+      %table{:border => 0, :cellspacing => 0, :cellpadding => 0, :width => '100%'}
+        %thead
+          %tr.yellowHeader
+            %th.padded.contentBoxHeader Name
+            %th.padded.contentBoxHeader Videos
+    
+        %tbody
+          - for chan in @channels
+            %tr.leagueList
+              %td.leagueList= link_to chan.name, edit_channel_path(chan), {:title => "edit"}
+              %td.leagueList=h chan.videos.count
+              
+      .apple_pagination
+        = will_paginate @channels
