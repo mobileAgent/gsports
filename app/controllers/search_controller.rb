@@ -368,7 +368,7 @@ class SearchController < BaseController
                                 :gsan, :internal_notes, :announcer, :filmed_by, 
                                 :shared_access_id]
       else
-        xml_options[:only] = [:description, :title, :video_length, :view_count]
+        xml_options[:only] = [:description, :title, :video_length, :view_count, :id]
       end
       xstr = video.to_xml(xml_options) do |xml|
         xml.type 'VideoAsset'
