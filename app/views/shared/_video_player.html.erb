@@ -2,10 +2,8 @@
 <%- width ||= '100%' %>
 <%- player_name ||= '/players/clipmaker.swf' %>
 <%- fvars ||= { :p1 => @vidavee.file_flv_const(session[:vidavee],dockey) } %>
-<%- fvars[:allowFS]="true" %>
 <%- flashVars = fvars.inject([]) { |s,(k,v)| s << "#{k}: encodeURIComponent('#{v}')"}.join(",") %>
 <%- params ||= {} %>
-<%- params[:allowFullScreen]="true" %>
 <%- paramsLine = params.inject([]) { |s,(k,v)| s << "#{k}: encodeURIComponent('#{v}')"}.join(",") %>
 <script type="text/javascript">
   var flashvars = { <%= flashVars %> };
