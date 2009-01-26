@@ -37,23 +37,23 @@
               %form
                 Embed video player with the following URL:
                 %textarea{ :onFocus=>'javascript:this.select()', :readonly=>true, :rows=>4, :cols=>47 } 
-                  = h %Q~<iframe src="#{APP_URL}/#{url}" width="#{@channel.width||101}px" height="#{@channel.height||101}px"></iframe>~
+                  = h %Q~<iframe src="#{APP_URL}#{url}" width="#{@channel.width||101}px" height="#{@channel.height||101}px" scrolling=no></iframe>~
               %br
     
             .channel_videos
               - @channel.videos.each do |v|
                 - video = v.video
                 .channel_video{ :id=>"channel_video_#{v.id}" }
-                %table
-                  %tr
-                    %td{ :width=>'280px' }
-                      = video.title
-                      %br
-                      &nbsp;
-                      = video.dockey
-                    %td
-                      = link_to_remote 'Remove', {:url => {:controller=>:channels, :action=>:remove, :id => v.id}, :confirm => 'Are you sure?', :method => :delete}, :class=>'genericButton'
-                %br
+                  %table
+                    %tr
+                      %td{ :width=>'280px' }
+                        = video.title
+                        %br
+                        &nbsp;
+                        = video.dockey
+                      %td
+                        = link_to_remote 'Remove', {:url => {:controller=>:channels, :action=>:remove, :id => v.id}, :confirm => 'Are you sure?', :method => :delete}, :class=>'genericButton', :complete => evaluate_remote_response
+                  %br
                 
               
                 

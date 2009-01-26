@@ -12,6 +12,11 @@ class ChannelsController < BaseController
   end
 
   def new
+    @team = current_user.team
+    if !current_user.team_staff?(@team)
+      access_denied
+      return
+    end
     @channel = Channel.new
     @channel.team_id = current_user.team.id
   end
@@ -56,6 +61,11 @@ class ChannelsController < BaseController
   end
 
   def add
+    if !current_user.team_staff?(current_user.team)
+      access_denied
+      return
+    end
+    
     @channel_video = ChannelVideo.new(params[:channel_video])
     
     if @channel_video.channel_id && @channel_video.save
@@ -67,12 +77,22 @@ class ChannelsController < BaseController
   end
 
   def remove
+    if !current_user.team_staff?(current_user.team)
+      access_denied
+      return
+    end
+    
     @channel_video = ChannelVideo.find(params[:id])
     @channel_video.destroy if @channel_video
     
-    respond_to do |format|
-      format.js { render :action => "remove" }
-    end    
+    render :update do |page|
+      target = "channel_video_#{@channel_video.id}"
+      page.replace_html target, :text => ''      
+    end
+    
+    #respond_to do |format|
+      #format.js { render :action => "remove" }
+    #end    
   end
 
 
