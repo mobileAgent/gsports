@@ -23,13 +23,14 @@
             = link_to 'All Channels', channels_path
       
       
+          %td{ :width=>'100px' }
           %td{ :align=>'center' }
           
             %p
             %br
             %br
               - url = channel_path(@channel)
-              = h "<embed-iframe>#{url}</embed-iframe>"
+              = h %Q~<iframe src="#{APP_URL}/#{url}" width="#{@channel.width||101}px" height="#{@channel.height||101}px"></iframe>~
               %br
               %br
               = link_to 'Show', '', :onclick=>"javascript:window.open('#{url}','show-channel','width=500,height=500,toolbar=1,resizable=0');return false;"

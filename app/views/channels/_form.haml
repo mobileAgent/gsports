@@ -1,5 +1,49 @@
 
+%br
+%p
 %div
   %b Name
   %br/
   = f.text_field :name
+
+%br
+%p
+%b Player
+%table
+  %tr
+    %td.field-block
+      %div
+        %b Width
+        %br/
+        = f.text_field :width, :size=>5
+  
+    %td.field-block
+      %div
+        %b Height
+        %br/
+        = f.text_field :height, :size=>5
+
+%br
+%p
+%b Thumbnail
+%table
+  %tr
+    %td.field-block
+      %div
+        %b Width
+        %br/
+        = f.text_field :thumb_width, :size=>5
+
+    %td.field-block
+      %div
+        %b Height
+        %br/
+        = f.text_field :thumb_height, :size=>5
+
+    %td.field-block
+      %div
+        %b Count
+        %br/
+        = f.text_field :thumb_count, :size=>5
+
+%br

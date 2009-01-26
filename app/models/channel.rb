@@ -11,4 +11,9 @@ class Channel < ActiveRecord::Base
     channel_videos
   end
   
+  def dockeys()
+    channel_videos.collect{|cv| cv.video.dockey}.join(',')
+  end
+  
+  
 end

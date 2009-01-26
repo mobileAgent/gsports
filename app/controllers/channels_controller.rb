@@ -57,7 +57,38 @@ class ChannelsController < BaseController
 
   def show
     @channel = Channel.find(params[:id])
-    render :layout=>false
+    
+    respond_to do |format|
+      format.html {
+        render :layout=>'iframe'
+      }
+      format.xml {
+        render :xml=>channel_flash_xml() #@channel.to_flash_xml
+      }
+    end
+    
   end
+  
+  
+  
+  private
+  
+  def channel_flash_xml(options = {})
+    options[:indent] ||= 2
+    xml = options[:builder] ||= Builder::XmlMarkup.new(:indent => options[:indent])
+    xml.instruct! unless options[:skip_instruct]
+    xml.vars {
+      xml.playerW(@channel.width)
+      xml.playerH(@channel.height)
+      xml.thumbW(@channel.thumb_width)
+      xml.thumbH(@channel.thumb_width)
+      xml.position(@channel.layout)
+      xml.numColumnsOrRows(@channel.thumb_count)
+      xml.dockeys(@channel.dockeys())
+      xml.homepageLink("#{APP_URL}/#{team_path(@channel.team_id)}") if @channel.team_id
+    }
+  end
+
+
 
 end
