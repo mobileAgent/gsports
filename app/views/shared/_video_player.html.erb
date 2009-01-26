@@ -2,10 +2,23 @@
 <%- width ||= '100%' %>
 <%- player_name ||= '/players/clipmaker.swf' %>
 <%- fvars ||= { :p1 => @vidavee.file_flv_const(session[:vidavee],dockey) } %>
+<%- fvars[:allowFS]="true" %>
 <%- flashVars = fvars.inject([]) { |s,(k,v)| s << "#{k}: encodeURIComponent('#{v}')"}.join(",") %>
+<%- params ||= {} %>
+<%- params[:allowFullScreen]="true" %>
+<%- paramsLine = params.inject([]) { |s,(k,v)| s << "#{k}: encodeURIComponent('#{v}')"}.join(",") %>
 <script type="text/javascript">
   var flashvars = { <%= flashVars %> };
-  var params = {};
+  var params = { <%= paramsLine %>};
   var attributes = {};
   swfobject.embedSWF('<%=player_name-%>','<%=target-%>','<%=width-%>','<%=height%>',"9.0.28","/gs/scripts/swfobject/expressInstall.swf", flashvars, params, attributes);
 </script>
+
+
+<script type="text/javascript">
+                var flashvars = { dockey: encodeURIComponent('85EE4A7D31A435668165C19FF19AEBB5') };
+                var params = {};
+                var attributes = {};
+                swfobject.embedSWF('/players/clipmaker.swf','flashArea','800','685',"9.0.28","/gs/scripts/swfobject/expressInstall.swf", flashvars, params, attributes);
+              </script>
+
