@@ -1,0 +1,1 @@
+page.hide "channel_video_#{@channel_video.id}"

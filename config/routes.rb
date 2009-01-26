@@ -18,7 +18,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :purchase_orders
   map.resources :ratings
   map.resources :shared_access  
-  map.resources :channels
+  map.resources :channels, :collection => { :add => :any }
 
   map.register         'register',        :controller => 'users', :action => 'register'
   map.forgot_password  'forgot_password', :controller => 'users', :action => 'forgot_password'

@@ -1,12 +1,7 @@
 %html
 %body
-  %div
-    %p
-      = @channel.name
-    %p
-      = @channel.layout
-  .flashArea#flashArea
+  #flashAreaIFrame
     - flashvars = {}
     - flashvars[:dockeys]= @team_video_picks
-    = render :partial => 'shared/video_player', :locals => {:target => 'flashArea', :player_name => '/players/embeddedplayer.swf', :fvars => flashvars, :width=>'587px', :height=>'341px' }
+    = render :partial => 'shared/video_player', :locals => {:target => 'flashAreaIFrame', :player_name => '/players/embeddedplayer.swf', :fvars => flashvars, :width=>'587px', :height=>'341px' }
   

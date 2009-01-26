@@ -78,6 +78,12 @@
         = number_with_delimiter(video_listing.view_count)
         %strong= " | " 
         =render :partial => 'shared/favorite_count', :locals => {:item => video_listing}
+        
+        - if current_user.team_staff? 
+          |
+          = link_to 'Publish', channel_publish_video_path(video_listing)
+
+
 
   .col2      
     .listingBoxActions

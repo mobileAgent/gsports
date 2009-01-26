@@ -55,6 +55,27 @@ class ChannelsController < BaseController
     
   end
 
+  def add
+    @channel_video = ChannelVideo.new(params[:channel_video])
+    
+    if @channel_video.channel_id && @channel_video.save
+      redirect_to :action => "edit", :id=>@channel_video.channel_id
+    else
+      @channels = Channel.find(:all, :conditions => {:team_id => @current_user.team_id})
+    end
+    
+  end
+
+  def remove
+    @channel_video = ChannelVideo.find(params[:id])
+    @channel_video.destroy if @channel_video
+    
+    respond_to do |format|
+      format.js { render :action => "remove" }
+    end    
+  end
+
+
   def show
     @channel = Channel.find(params[:id])
     

@@ -22,5 +22,4 @@
       = auto_discovery_link_tag(:rss, @rss_url, {:title => @rss_title})
     
   %body
-    %div{:class => logged_in? ? "backgroundContainer bg_#{(rand(27)+1)}" : 'backgroundContainerHome'}
-      = @content_for_layout
+    = @content_for_layout
