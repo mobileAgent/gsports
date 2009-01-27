@@ -104,31 +104,37 @@ class ChannelsController < BaseController
         render :layout=>'iframe'
       }
       format.xml {
-        render :xml=>channel_flash_xml() #@channel.to_flash_xml
+        render :xml=>channel_flash_xml(@channel) #@channel.to_flash_xml
       }
     end
     
   end
   
+  def playerVars
+    @channel = Channel.find(1)
+    render :xml=>channel_flash_xml(@channel) #@channel.to_flash_xml
+  end
   
   
   private
   
-  def channel_flash_xml(options = {})
+  def channel_flash_xml(channel, options = {})
     options[:indent] ||= 2
     xml = options[:builder] ||= Builder::XmlMarkup.new(:indent => options[:indent])
     xml.instruct! unless options[:skip_instruct]
     xml.vars {
-      xml.playerW(@channel.width)
-      xml.playerH(@channel.height)
-      xml.thumbW(@channel.thumb_width)
-      xml.thumbH(@channel.thumb_width)
-      xml.position(@channel.layout)
-      xml.numColumnsOrRows(@channel.thumb_count)
-      xml.dockeys(@channel.dockeys())
-      xml.homepageLink("#{APP_URL}/#{team_path(@channel.team_id)}") if @channel.team_id
+      xml.playerW(channel.width || 401)
+      xml.playerH(channel.height || 401)
+      xml.thumbW(channel.thumb_width || 101)
+      xml.thumbH(channel.thumb_height || 101)
+      xml.position(channel.layout)
+      xml.numColumnsOrRows(channel.thumb_count || 2)
+      xml.dockeys(channel.dockeys())
+      xml.homepageLink("#{APP_URL}/#{team_path(channel.team_id)}") if channel.team_id
     }
   end
+  
+  
 
 
 
