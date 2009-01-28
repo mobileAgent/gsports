@@ -10,7 +10,7 @@
 
     
   .orgHome
-    %table
+    %table{ :width=>'100%' }
       %tr
         %td.orgSummary
           - memlink = (current_user && @team.users.enabled.size > 0) ? link_to("View #{@team.nickname} Members (#{@team.users.enabled.size})", "/search/q?search[category]=10&team_id=#{@team.id}",:class=>'member-link') : '' 
@@ -31,18 +31,16 @@
                   -#= memlink
     
         %td.orgText
-          - league_news_item = most_recent_league_post @team 
-          - league_news_item = most_recent_league_post(Team.find(1)) if league_news_item.nil?
-          - if league_news_item 
+          - if @header_post 
             %p
-              %b= league_news_item.title
+              %b= @header_post.title
             %br
             %p
-              - if count_words(league_news_item.post) > 40
-                = truncate_words(league_news_item.post,40)
-                =link_to 'more', user_post_path(league_news_item.user,league_news_item)
+              - if count_words(@header_post.post) > 40
+                = truncate_words(@header_post.post,40)
+                =link_to 'more', user_post_path(@header_post.user,@header_post)
               - else
-                = league_news_item.post
+                = @header_post.post
 
   /
     col1 content
@@ -124,8 +122,9 @@
           .contentBoxHeader.flatblue
             %h2.boxDescription
           .contentBoxContent.tanBackground{ :style=>'overflow: auto' }
+            -@team_videos = @team_videos + @team_videos + @team_videos + @team_videos
             =render :partial => 'video_assets/video_feature', :collection => @team_videos[0...6], :locals => {:nolinks => current_user.nil? }
-            - if @team_videos.size >x= 6 
+            - if @team_videos.size >= 6 
               - if current_user
                 = link_to "More Videos...", url_for(:controller => 'search', :action => 'team_video_assets', :team_id => @team.id)
               - else
