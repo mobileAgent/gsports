@@ -89,7 +89,7 @@
               %span.moreLink
                 = link_to 'Post News Item', new_user_post_path(current_user)
 
-        .contentBoxContent.tanBackground
+        .contentBoxContent.tanBackground{ :style=>'overflow: auto' }
 
           - posts = team_posts( @team )
           - posts = team_posts( Team.find(1) ) if posts.empty?
@@ -123,7 +123,7 @@
         #tabBody2.contentBox.tabBody{ :style=>tab_state_style, :class=>tab_state_class }
           .contentBoxHeader.flatblue
             %h2.boxDescription
-          .contentBoxContent.tanBackground
+          .contentBoxContent.tanBackground{ :style=>'overflow: auto' }
             =render :partial => 'video_assets/video_feature', :collection => @team_videos[0...6], :locals => {:nolinks => current_user.nil? }
             - if @team_videos.size >x= 6 
               - if current_user
