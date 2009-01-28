@@ -122,7 +122,6 @@
           .contentBoxHeader.flatblue
             %h2.boxDescription
           .contentBoxContent.tanBackground{ :style=>'overflow: auto' }
-            -@team_videos = @team_videos + @team_videos + @team_videos + @team_videos
             =render :partial => 'video_assets/video_feature', :collection => @team_videos[0...6], :locals => {:nolinks => current_user.nil? }
             - if @team_videos.size >= 6 
               - if current_user
