@@ -1,6 +1,6 @@
 class ChannelsController < BaseController
     
-  #TODO: tighter authorization
+  skip_before_filter :gs_login_required, :only => [:show]
   
   def index
     @team = current_user.team
