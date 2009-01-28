@@ -417,9 +417,9 @@ div.thumbFIT {
    color: #536338;
 }
 
-.featureText {
+/*.featureText {
   margin-right: 5px !important;
-}
+}*/
 
 .featureText h3.featureTitle a, .featureText h3.featureTitle a:visited {
    text-decoration: none;

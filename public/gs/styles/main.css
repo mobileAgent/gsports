@@ -1740,8 +1740,8 @@ h2.yellowHeader, .contentBoxHeader yellowwHeader {
 }
 /* used in weekly summaries as well */
 .featureText{
-	margin-left: 10px;
-	margin-right: 10px;
+	margin-left: 7px;
+	margin-right: 3px;
 	float:left;
 	display:inline;
 }
