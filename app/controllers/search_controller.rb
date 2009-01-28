@@ -410,9 +410,9 @@ class SearchController < BaseController
     when VideoClip
       logger.debug "Video Clip to xml..."
       if deep
-        xml_options[:except] = [:created_at, :updated_at, :user_id, :delta, :video_asset_id, :shared_access_id]
+        xml_options[:except] = [:created_at, :updated_at, :delta, :video_asset_id, :shared_access_id]
       else
-        xml_options[:only] = [:description, :title, :video_length, :view_count]
+        xml_options[:only] = [:description, :title, :video_length, :view_count, :user_id]
       end
       xstr = video.to_xml(xml_options) do |xml|
         xml.type 'VideoClip'
@@ -446,9 +446,9 @@ class SearchController < BaseController
     when VideoReel
       logger.debug "Video Reel to xml..."
       if deep
-        xml_options[:except] = [:created_at, :updated_at, :user_id, :delta, :shared_access_id]
+        xml_options[:except] = [:created_at, :updated_at, :delta, :shared_access_id]
       else
-        xml_options[:only] = [:description, :title, :video_length, :view_count]
+        xml_options[:only] = [:description, :title, :video_length, :view_count, :user_id]
       end
       xstr = video.to_xml(xml_options) do |xml|
         xml.type 'VideoReel'
