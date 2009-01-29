@@ -38,7 +38,7 @@ ActionController::Base.asset_host = Proc.new { |source, request|
 APP_URL = "http://globalsports.net"
 
 # Category for head post on team and league pages
-ADMIN_TEAM_HEADER_CATEGORY = 1
+ADMIN_TEAM_HEADER_CATEGORY = 7
 
 # Caching, memcache on localhost for production
 config.cache_store = :mem_cache_store
