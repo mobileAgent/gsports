@@ -1,0 +1,28 @@
+.profileContentArea.listingPage
+  .profilePageHeader
+    %h3 Categories
+  .listings
+    .padded
+
+      = link_to 'New category', new_category_path, :class => 'genericButton'
+      %br
+              
+      %table{:border => 0, :cellspacing => 0, :cellpadding => 0, :width => '100%'}
+        %thead
+          %tr.yellowHeader
+            %th.padded.contentBoxHeader Name
+            %th.padded.contentBoxHeader # Posts	
+            %th.padded.contentBoxHeader Actions
+
+        %tbody
+          - for category in @categories
+            %tr.leagueList
+              %td.leagueList= category.name
+              %td.leagueList= category.posts.size	
+              %td.leagueList
+                = link_to 'Show', category_path(category)
+                | 
+                = link_to 'Edit', edit_category_path(category)
+                |
+                = link_to 'Destroy', category_path(category), :confirm => 'Are you sure?', :method => :delete
+
