@@ -25,7 +25,7 @@
 
 %br
 %p
-%b Thumbnail
+%b Thumbnails
 %table
   %tr
     %td.field-block
@@ -46,4 +46,15 @@
         %br/
         = f.text_field :thumb_count, :size=>5
 
+    %td.field-block
+      %div
+        %b Position
+        %br/
+        = f.select( :layout, Channel.layout_map)
+
+
 %br
+
+
+
+
