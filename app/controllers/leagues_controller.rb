@@ -26,6 +26,7 @@ class LeaguesController < BaseController
     
     load_related_videos(@league)
     load_favorites(@league)
+    @header_post = Post.admin_team_headers.first
 
     respond_to do |format|
       format.html # show.haml
