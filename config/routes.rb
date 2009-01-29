@@ -19,6 +19,9 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :ratings
   map.resources :shared_access  
   map.resources :channels, :collection => { :add => :any, :playerVars => :any }
+  
+  map.resources :sessions, :collection => { :pop_login_box => :any }
+  
 
   map.register         'register',        :controller => 'users', :action => 'register'
   map.forgot_password  'forgot_password', :controller => 'users', :action => 'forgot_password'

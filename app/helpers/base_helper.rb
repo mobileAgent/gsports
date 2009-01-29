@@ -126,5 +126,14 @@ module BaseHelper
       text
     end
   end
-    
+  
+  def protected_link_to name, url
+    if current_user
+      link_to name, url
+    else
+      session[:return_to] = url
+      link_to_remote name, {:url => {:controller=>:sessions, :action=>:pop_login_box}}, :complete => evaluate_remote_response
+    end
+  end
+
 end

@@ -1611,4 +1611,9 @@ a.admin-userreg-link-user{
 	width: 90%;
 }
 
-
+.dialogbox{
+	border: 2px solid red;
+	position: absolute;
+	width: 100%;
+	height: 100%;
+}

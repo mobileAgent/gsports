@@ -1,6 +1,6 @@
 class SessionsController < BaseController
   skip_before_filter :verify_authenticity_token, :only => [:new, :create]
-  skip_before_filter :gs_login_required, :only => [:new, :create, :destroy]
+  skip_before_filter :gs_login_required, :only => [:new, :create, :destroy, :pop_login_box]
   skip_before_filter :billing_required, :only => [:new, :create, :destroy]
   
   def index
@@ -20,7 +20,7 @@ class SessionsController < BaseController
         self.current_user.remember_me
         cookies[:auth_token] = { :value => self.current_user.remember_token , :expires => self.current_user.remember_token_expires_at }
       end
-
+      #session[:return_to] = params[:session_return_to]
       redirect_back_or_default(dashboard_user_path(current_user.id))
       flash[:notice] = "Thanks! You're now logged in."
       current_user.track_activity(:logged_in)
@@ -50,4 +50,20 @@ class SessionsController < BaseController
     flash[:notice] = "You've been logged out. Hope you come back soon!"
     redirect_to :controller => 'base', :action => 'site_index'
   end
+  
+  def pop_login_box 
+    #TODO, if they've already logged in, maybe by another window, let them pass
+    
+    
+    
+    
+    render :update do |page|
+      page.insert_html :bottom, 'login', render(:partial => 'shared/dialog', :locals=>{:partial=>'shared/register'})
+    end
+    
+  end
+  
 end
+
+
+
