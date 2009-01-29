@@ -58,7 +58,7 @@ class SessionsController < BaseController
     
     
     render :update do |page|
-      page.insert_html :bottom, 'login', render(:partial => 'shared/dialog', :locals=>{:partial=>'shared/register'})
+      page.replace_html 'dialog', :partial => 'shared/register'
     end
     
   end
