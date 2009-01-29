@@ -24,7 +24,7 @@ class Channel < ActiveRecord::Base
   end
   
   def position()
-    Channel.layout_array()[layout]
+    Channel.layout_array()[layout||0]
   end
   
 end
