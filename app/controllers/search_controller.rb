@@ -412,7 +412,7 @@ class SearchController < BaseController
       if deep
         xml_options[:except] = [:created_at, :updated_at, :delta, :video_asset_id, :shared_access_id]
       else
-        xml_options[:only] = [:description, :title, :video_length, :view_count, :user_id]
+        xml_options[:only] = [:description, :title, :video_length, :view_count, :user_id, :id]
       end
       xstr = video.to_xml(xml_options) do |xml|
         xml.type 'VideoClip'
@@ -448,7 +448,7 @@ class SearchController < BaseController
       if deep
         xml_options[:except] = [:created_at, :updated_at, :delta, :shared_access_id]
       else
-        xml_options[:only] = [:description, :title, :video_length, :view_count, :user_id]
+        xml_options[:only] = [:description, :title, :video_length, :view_count, :user_id, :id]
       end
       xstr = video.to_xml(xml_options) do |xml|
         xml.type 'VideoReel'
