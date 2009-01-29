@@ -1583,5 +1583,32 @@ a.admin-userreg-link-user{
   text-decoration: none;
 }
 
+.registerPopup{
+	background-color: #151C36;
+	color: white;
+	text-align: left;
+	width: 350px;
+	font-size: 116%;
+	padding: 15px;
+}
+
+.registerPopup h2{
+	font-size: 161.6%;
+}		
+
+.registerPopup a, .registerPopup a:visited{
+  color: white;
+}
+
+
+.registerPopup input[type="text"], .registerPopup input[type="password"]{
+	border: 1px solid #ccc;
+	padding: 2px;
+	font-size: 116%;
+	font-weight: bold;
+	width: 250px;
+	background: #ccc;
+	width: 90%;
+}
 
 
