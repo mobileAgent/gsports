@@ -5,8 +5,8 @@ class Post < ActiveRecord::Base
   belongs_to :team
   belongs_to :league
   
-  named_scope :by_admin, 
-        :conditions=>['users.role_id = ?', Role[:admin].id], :include=>:user, :order=>'posts.created_at desc'
+  named_scope :admin_team_headers, 
+        :conditions=>['users.role_id = ? and category_id = ?', Role[:admin].id, ADMIN_TEAM_HEADER_CATEGORY], :include=>:user, :order=>'posts.created_at desc'
   
   # set indexes for sphinx
   define_index do

@@ -24,6 +24,9 @@ config.action_mailer.delivery_method = :test
 # Configuration for community engine
 APP_URL = "http://localhost:3000"
 
+# Category for head post on team and league pages
+ADMIN_TEAM_HEADER_CATEGORY = 1
+
 # Caching, use memory for dev/test
 config.cache_store = :memory_store
 

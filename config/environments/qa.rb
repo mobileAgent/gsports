@@ -25,6 +25,9 @@ config.action_view.cache_template_loading            = true
 # Configuration for community engine
 APP_URL = "http://gsports.integratedcc.com"
 
+# Category for head post on team and league pages
+ADMIN_TEAM_HEADER_CATEGORY = 1
+
 # Caching, memcache on localhost for production
 config.cache_store = :mem_cache_store
 #ActionController::Base.cache_store = :mem_cache_store, "localhost"
