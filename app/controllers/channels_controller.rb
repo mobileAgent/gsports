@@ -88,11 +88,7 @@ class ChannelsController < BaseController
     render :update do |page|
       target = "channel_video_#{@channel_video.id}"
       page.replace_html target, :text => ''      
-    end
-    
-    #respond_to do |format|
-      #format.js { render :action => "remove" }
-    #end    
+    end  
   end
 
 
