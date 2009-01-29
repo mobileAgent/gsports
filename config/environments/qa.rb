@@ -26,7 +26,7 @@ config.action_view.cache_template_loading            = true
 APP_URL = "http://gsports.integratedcc.com"
 
 # Category for head post on team and league pages
-ADMIN_TEAM_HEADER_CATEGORY = 1
+ADMIN_TEAM_HEADER_CATEGORY = 7
 
 # Caching, memcache on localhost for production
 config.cache_store = :mem_cache_store
