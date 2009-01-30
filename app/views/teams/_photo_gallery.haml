@@ -13,7 +13,7 @@
       -curidx += 1
       .orgPhoto{:id => "gallery_photo_#{curidx}"}
         .orgPhotoThumb
-          = link_to image_tag( photo.public_filename(:thumb), :alt => photo.name, :title => photo.name), user_photo_path(photo.user, photo), :class => 'framed'
+          = protected_link_to image_tag( photo.public_filename(:thumb), :alt => photo.name, :title => photo.name), user_photo_path(photo.user, photo), :class => 'framed'
         .orgPhotoTitle
           = truncate(photo.name,30)
 

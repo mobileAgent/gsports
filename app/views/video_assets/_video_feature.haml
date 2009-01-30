@@ -7,10 +7,10 @@
     - if nolinks
       %img{:src=>"#{@vidavee.file_thumbnail_medium(video_feature.thumbnail_dockey)}", :title=>"#{h(video_feature.title).gsub(/\'/,'')}", :alt=>'Video'}
     - else
-      = link_to "<img src='#{@vidavee.file_thumbnail_medium(video_feature.thumbnail_dockey)}' title='#{h(video_feature.title).gsub(/\'/,'')}' alt='Video'/>", path
+      = protected_link_to "<img src='#{@vidavee.file_thumbnail_medium(video_feature.thumbnail_dockey)}' title='#{h(video_feature.title).gsub(/\'/,'')}' alt='Video'/>", path
   .featureText
     %h3.featureTitle
-      = link_to h(video_feature.title), path
+      = protected_link_to h(video_feature.title), path
     -#
       %span.sportName
         = h line2

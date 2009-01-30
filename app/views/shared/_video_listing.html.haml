@@ -79,7 +79,7 @@
         %strong= " | " 
         =render :partial => 'shared/favorite_count', :locals => {:item => video_listing}
         
-        -# if current_user.team_staff? 
+        - if current_user.can_publish?
           |
           = link_to 'Publish', channel_publish_video_path(video_listing)
 

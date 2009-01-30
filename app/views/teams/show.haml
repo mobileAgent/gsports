@@ -38,7 +38,7 @@
             %p
               - if count_words(@header_post.post) > 40
                 = truncate_words(@header_post.post,40)
-                =link_to 'more', user_post_path(@header_post.user,@header_post)
+                =protected_link_to 'more', user_post_path(@header_post.user,@header_post)
               - else
                 = @header_post.post
 
@@ -95,7 +95,7 @@
           - posts.each() do |post|
             .featureSummary.news
               %span
-                = link_to post.title, user_post_path(post.user, post), :rel => 'bookmark', :class=>'articleLink'
+                = protected_link_to post.title, user_post_path(post.user, post), :rel => 'bookmark', :class=>'articleLink'
                 = "| posted #{post.created_at.strftime('%m.%d.%y')}"
               
               %br
@@ -125,7 +125,7 @@
             =render :partial => 'video_assets/video_feature', :collection => @team_videos[0...6], :locals => {:nolinks => current_user.nil? }
             - if @team_videos.size >= 6 
               - if current_user
-                = link_to "More Videos...", url_for(:controller => 'search', :action => 'team_video_assets', :team_id => @team.id)
+                = protected_link_to "More Videos...", url_for(:controller => 'search', :action => 'team_video_assets', :team_id => @team.id)
               - else
                 = "More Videos available to members!"
           .moreLink
@@ -155,7 +155,7 @@
           = @team.name
         - if team_has_videos
           .moreLink
-            =link_to 'See All Videos', {:controller => 'search', :action => 'team_video_assets', :team_id => @team.id}
+            =protected_link_to 'See All Videos', {:controller => 'search', :action => 'team_video_assets', :team_id => @team.id}
           
       .contentBoxContent.tanBackground
         - if team_has_videos #&& @team_video_picks && @team_video_picks.length > 2
