@@ -148,6 +148,10 @@ class Team < ActiveRecord::Base
     }
     member
   end
+  
+  def can_publish?
+    can_publish == 1
+  end
 
   protected
 

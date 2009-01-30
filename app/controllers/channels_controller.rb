@@ -1,22 +1,15 @@
 class ChannelsController < BaseController
     
   skip_before_filter :gs_login_required, :only => [:show]
+  before_filter :publishing_allowed, :except => [:show]
   
   def index
     @team = current_user.team
-    if !current_user.team_staff?(@team)
-      access_denied
-      return
-    end
     @channels = Channel.paginate(:all, :conditions => {:team_id => @team.id}, :page=>params[:page])
   end
 
   def new
     @team = current_user.team
-    if !current_user.team_staff?(@team)
-      access_denied
-      return
-    end
     @channel = Channel.new
     @channel.team_id = current_user.team.id
   end
@@ -24,11 +17,6 @@ class ChannelsController < BaseController
   def create
     @channel = Channel.new(params[:channel])
     @channel.team_id = current_user.team.id
-    
-    unless current_user.team_staff?(@channel.team)
-      flash[:notice] = "You don't have permission to edit that record"
-      access_denied
-    end
     
     if @channel.save
       redirect_to channels_path()
@@ -44,13 +32,7 @@ class ChannelsController < BaseController
   def update
     @channel = Channel.find(params[:id])
     
-    unless current_user.team_staff?(@channel.team)
-      flash[:notice] = "You don't have permission to edit that record"
-      access_denied
-      return
-    else
-      status = @channel.update_attributes(params[:channel])
-    end
+    status = @channel.update_attributes(params[:channel])
 
     if status
       redirect_to channels_path()
@@ -61,11 +43,6 @@ class ChannelsController < BaseController
   end
 
   def add
-    if !current_user.team_staff?(current_user.team)
-      access_denied
-      return
-    end
-    
     @channel_video = ChannelVideo.new(params[:channel_video])
     
     if @channel_video.channel_id && @channel_video.save
@@ -77,11 +54,6 @@ class ChannelsController < BaseController
   end
 
   def remove
-    if !current_user.team_staff?(current_user.team)
-      access_denied
-      return
-    end
-    
     @channel_video = ChannelVideo.find(params[:id])
     @channel_video.destroy if @channel_video
     
@@ -133,7 +105,9 @@ class ChannelsController < BaseController
     }
   end
   
-  
+  def publishing_allowed
+    current_user.can_publish? ? true : access_denied
+  end
 
 
 

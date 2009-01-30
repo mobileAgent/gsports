@@ -10,7 +10,7 @@ class TeamsController < BaseController
   skip_before_filter :gs_login_required, :only => [:show_public, :photo_gallery]
   after_filter :cache_control, :only => [:update, :create, :destroy]
   
-  sortable_attributes 'teams.name', 'teams.nickname', 'teams.city', 'teams.county_name', 'teams.avatar_id', 'teams.league_id', 'states.name', 'users.role_id'
+  sortable_attributes 'teams.name', 'teams.nickname', 'teams.city', 'teams.county_name', 'teams.avatar_id', 'teams.league_id', 'states.name', 'users.role_id', 'teams.can_publish'
   
   
   # GET /team

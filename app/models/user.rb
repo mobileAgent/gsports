@@ -145,6 +145,9 @@ class User < ActiveRecord::Base
     admin? || team_staff? || league_staff?
   end
   
+  def can_publish?
+    team_staff? && team.can_publish?
+  end
   
   
   def get_managed_user_ids

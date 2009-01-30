@@ -28,12 +28,13 @@
             = sortable_table_header :class=>"padded sortableContentHeader", :name => "County",   :sort => "teams.county_name"
             = sortable_table_header :class=>"padded sortableContentHeader", :name => "State",    :sort => 'states.name'
             = sortable_table_header :class=>"padded sortableContentHeader", :name => "League",   :sort => "teams.league_id"
-            = sortable_table_header :class=>"padded sortableContentHeader", :name => "Admin",   :sort => 'users.role_id'
+            = sortable_table_header :class=>"padded sortableContentHeader", :name => "Admin",    :sort => 'users.role_id'
             %th.padded.contentBoxHeader Videos
             = sortable_table_header :class=>"padded sortableContentHeader", :name => "Logo",     :sort => "teams.avatar_id"
             %th.padded.contentBoxHeader Users
             -#%td.padded.contentBoxHeader Admin
-            %th.padded.contentBoxHeader/ 
+            = sortable_table_header :class=>"padded sortableContentHeader", :name => "Publish",  :sort => "teams.can_publish"
+            -#%th.padded.contentBoxHeader/
     
         %tbody
           - for team in @teams
@@ -61,11 +62,16 @@
                 - count = team.users.enabled.size
                 - if count > 0
                   = link_to(count, "/search/q?search[category]=10&team_id=#{team.id}",:class=>'member-link')
+                  
+              %td.leagueList{ :align=>'center' }
+                = team.can_publish? ? 'Y' : ''
 
-              - if team.id != User.admin.first.team_id
+              -# if team.id != User.admin.first.team_id
                 %td.leagueList= link_to 'Delete', team_path(team), :confirm => 'Are you sure?', :method => :delete
-              - else
+              -# else
                 %td.leagueList &nbsp;
+              
+              
               
       .apple_pagination
         = will_paginate @teams
