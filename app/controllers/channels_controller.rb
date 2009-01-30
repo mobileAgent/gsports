@@ -119,6 +119,8 @@ class ChannelsController < BaseController
     xml = options[:builder] ||= Builder::XmlMarkup.new(:indent => options[:indent])
     xml.instruct! unless options[:skip_instruct]
     xml.vars {
+      xml.frameW(channel.frame_width || 201)
+      xml.frameH(channel.frame_height || 201)
       xml.playerW(channel.width || 401)
       xml.playerH(channel.height || 401)
       xml.thumbW(channel.thumb_width || 101)
