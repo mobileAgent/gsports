@@ -37,7 +37,7 @@
               %form
                 Embed video player with the following URL:
                 %textarea{ :onFocus=>'javascript:this.select()', :readonly=>true, :rows=>4, :cols=>47 } 
-                  = h %Q~<iframe src="#{APP_URL}#{url}" width="#{@channel.frame_width||201}px" height="#{@channel.frame_height||201}px" scrolling=no></iframe>~
+                  = h %Q~<iframe src="#{APP_URL}#{url}" width="#{@channel.frame_width||201}px" height="#{@channel.frame_height||201}px" scrolling=no frameborder='0' ></iframe>~
               %br
     
             .channel_videos

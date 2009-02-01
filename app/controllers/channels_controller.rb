@@ -99,7 +99,8 @@ class ChannelsController < BaseController
       xml.thumbH(channel.thumb_height || 101)
       xml.numColumnsOrRows(channel.thumb_count || 2)
       xml.dockeys(channel.dockeys())
-      xml.homepageLink("#{APP_URL}/#{team_path(channel.team_id)}") if channel.team_id
+      #xml.homepageLink("#{APP_URL}/#{team_path(channel.team_id)}") if channel.team_id
+      xml.homepageLink("#{APP_URL}/teams/show_public/#{channel.team_id}") if channel.team_id
       
       xml.position(channel.position)
     }
