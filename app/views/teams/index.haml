@@ -64,8 +64,11 @@
                   = link_to(count, "/search/q?search[category]=10&team_id=#{team.id}",:class=>'member-link')
                   
               %td.leagueList{ :align=>'center' }
-                = team.can_publish? ? 'Y' : ''
-
+                -#= team.can_publish? ? 'Y' : ''
+                - if team.can_publish?
+                  = "#{team.can_publish_assets ? 'A' : ''}#{team.can_publish_clips ? 'C' : ''}#{team.can_publish_reels ? 'R' : ''}"
+                
+                
               -# if team.id != User.admin.first.team_id
                 %td.leagueList= link_to 'Delete', team_path(team), :confirm => 'Are you sure?', :method => :delete
               -# else

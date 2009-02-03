@@ -45,6 +45,10 @@
         .menuitem
           = link_to 'Edit Team Info', edit_team_path(current_user.team)
         
+      -if current_user.can_publish?
+        .menuitem
+          = link_to 'Channels', channels_path()
+        
       -if current_user.league_staff?
         .menuitem
           = link_to 'League Page', league_path(current_user.league)

@@ -100,6 +100,17 @@
             %b Allow Channel Publication
             %br/
             %label
-              = f.check_box :can_publish, {}, '1', nil
-    
+              = f.check_box :can_publish_assets, {}, 1, nil
+              Full Games
+            %label
+              = f.check_box :can_publish_clips, {}, 1, nil
+              Clips
+            %label
+              = f.check_box :can_publish_reels, {}, 1, nil
+              Reels
+
+
+
+
+
     

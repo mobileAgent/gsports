@@ -145,8 +145,8 @@ class User < ActiveRecord::Base
     admin? || team_staff? || league_staff?
   end
   
-  def can_publish?
-    team_staff? && team.can_publish?
+  def can_publish?(item=nil)
+    team_staff? && team.can_publish?(item)
   end
   
   
