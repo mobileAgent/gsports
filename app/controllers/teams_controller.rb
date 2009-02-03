@@ -92,6 +92,7 @@ class TeamsController < BaseController
     @team = Team.find(team_id)
     load_team_and_related_videos(@team)
     load_team_favorites(@team)
+    @header_post = Post.admin_team_headers.first
     respond_to do |format|
       format.html { render :action => 'show' }
       format.xml  { render :xml => @team }
