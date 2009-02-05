@@ -9,7 +9,7 @@
       = error_messages_for :channel 
       
       - form_for(@channel, :url => channel_url(@channel), :html => {:multipart => true}) do |f|
-        = render :partial => "form", :locals => { :f => f }
+        = render :partial => "form", :locals => { :f => f, :channel => @channel }
         %p= f.submit "Create"
           
       = link_to 'Back', channels_path 

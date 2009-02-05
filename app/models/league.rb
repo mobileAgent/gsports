@@ -12,6 +12,22 @@ class League < ActiveRecord::Base
   validates_presence_of :name
   validates_presence_of :state_id
 
+  
+  include Organization
+  
+  def get_org_id_from_object(o)
+    case o
+    when NilClass
+      nil
+    else
+      o.league_id
+    end
+  end
+  
+  def get_self()
+    self
+  end
+  
 
   # set indexes for sphinx
   define_index do

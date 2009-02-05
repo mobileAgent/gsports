@@ -7,6 +7,30 @@ class Channel < ActiveRecord::Base
   
   has_many :channel_videos
   
+  FIELD_NAME_OVERRIDES = {  
+      :thumb_count => '',  
+      :thumb_span => ''
+    }
+
+   
+  def self.human_attribute_name(attr)  
+     
+    FIELD_NAME_OVERRIDES[attr.to_sym] || super  
+  end
+
+  
+  def validate
+    limit = publish_limit()
+    target = thumb_count.to_i * thumb_span.to_i
+    if limit and (target > limit)
+      errors.add(:thumb_span, "Rows x Columns must be less than #{limit}.")
+      errors.add(:thumb_count, "You are allowed to publish a maximum of #{limit} videos to this channel.")
+    end
+    
+  end
+  
+  
+  
   def videos()
     channel_videos
   end
@@ -25,6 +49,13 @@ class Channel < ActiveRecord::Base
   
   def position()
     Channel.layout_array()[layout||0]
+  end
+  
+  def publish_limit
+    limit = nil
+    limit = team.publish_limit if team_id
+    limit = league.publish_limit if league_id
+    limit
   end
   
 end

@@ -1,5 +1,6 @@
 class Team < ActiveRecord::Base
 
+
   has_many :video_assets
   belongs_to :league
   has_many :users
@@ -11,6 +12,25 @@ class Team < ActiveRecord::Base
   # Every team needs a name and a league
   validates_presence_of :name
   validates_presence_of :league_id
+
+
+
+  include Organization
+  
+  def get_org_id_from_object(o)
+    case o
+    when NilClass
+      nil
+    else
+      o.team_id
+    end
+  end
+  
+  def get_self()
+    self
+  end
+
+
 
   # Every team should have a state
   # validates_presence_of :state_id
@@ -149,66 +169,8 @@ class Team < ActiveRecord::Base
     member
   end
   
-  PUBLISH_ASSETS = 1
-  PUBLISH_CLIPS = 2
-  PUBLISH_REELS = 4
-  PUBLISH_MASK = PUBLISH_ASSETS | PUBLISH_CLIPS | PUBLISH_REELS
-  
-  def can_publish?(item=nil)
-    can = false
-    if can_publish.to_i > 0
-      case item
-      when NilClass
-        can = true
-      when VideoAsset
-        can = get_publish_feature(PUBLISH_ASSETS) && item.team_id == id;
-      when VideoClip
-        can = get_publish_feature(PUBLISH_CLIPS)
-      when VideoReel
-        can = get_publish_feature(PUBLISH_REELS)
-      else
-        can = false
-      end
-    end
-    can
-  end
-  
-  def can_publish_assets
-    get_publish_feature PUBLISH_ASSETS
-  end
-
-  def can_publish_assets=(bool)
-    set_publish_feature(bool, PUBLISH_ASSETS)
-  end
-  
-  def can_publish_clips
-    get_publish_feature PUBLISH_CLIPS
-  end
-
-  def can_publish_clips=(bool)
-    set_publish_feature(bool, PUBLISH_CLIPS)
-  end
-  
-  def can_publish_reels
-    get_publish_feature PUBLISH_REELS
-  end
-
-  def can_publish_reels=(bool)
-    set_publish_feature(bool, PUBLISH_REELS)
-  end
-  
 
   protected
-  
-  
-  def get_publish_feature(feature)
-    (can_publish.to_i & feature) != 0
-  end
-  
-  def set_publish_feature(bool, feature)
-    bool = false if bool.is_a?(String) and bool.empty?
-    self.can_publish = bool ? (can_publish.to_i | feature) : (can_publish.to_i & (PUBLISH_MASK - feature))
-  end
   
   
   def reassign_dependent_items

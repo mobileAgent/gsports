@@ -5,6 +5,13 @@
   %b Name
   %br/
   = f.text_field :name
+  
+%br
+%p
+%div
+  %b Target Site URL
+  %br/
+  = f.text_field :allow_url
 
 %br
 %p
@@ -59,21 +66,26 @@
 
     %td.field-block
       %div
-        %b Count
+        %b Position
+        %br/
+        = f.select( :layout, Channel.layout_map, {}, {:onchange =>"javascript:channelsUpdateRowCol(this)"} )
+
+    - rowcol = (@channel && (@channel.layout.to_i < 2)) ? 'Row' : 'Col'
+    =@channel.layout.to_i
+
+    %td.field-block
+      %div
+        %b
+          %span{ :id=>'ThumbCount' }= "#{rowcol}s"
         %br/
         = f.text_field :thumb_count, :size=>4
 
     %td.field-block
       %div
-        %b Length
+        %b
+          %span{ :id=>'ThumbSpan' }= "Per #{rowcol}"
         %br/
         = f.text_field :thumb_span, :size=>4
-
-    %td.field-block
-      %div
-        %b Position
-        %br/
-        = f.select( :layout, Channel.layout_map)
 
 
 %br

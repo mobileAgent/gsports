@@ -12,7 +12,10 @@
           %td{ :valign=>'top' }
     
             %h1 Editing Channel
-      
+            
+            -if @channel.publish_limit
+              ="You are allowed to publish a maximum of #{@channel.publish_limit} videos to this channel."
+              
             = error_messages_for :channel
       
             - form_for(@channel, :url => channel_url(@channel), :html => {:multipart => true}) do |f|

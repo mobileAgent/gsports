@@ -45,12 +45,17 @@ class ChannelsController < BaseController
   def add
     @channel_video = ChannelVideo.new(params[:channel_video])
     
-    if @channel_video.channel_id && @channel_video.save
-      redirect_to :action => "edit", :id=>@channel_video.channel_id
-    else
-      @channels = Channel.find(:all, :conditions => {:team_id => @current_user.team_id})
+    if @channel_video.channel_id
+      # publish to channel      
+      if @channel_video.save
+        @channel_video.video.share!
+        redirect_to :action => "edit", :id=>@channel_video.channel_id
+      end
     end
     
+    #else select channel on which to publish video
+    @channels = Channel.find(:all, :conditions => {:team_id => @current_user.team_id})
+        
   end
 
   def remove
@@ -101,7 +106,10 @@ class ChannelsController < BaseController
       xml.numPerColumnOrRow(channel.thumb_span || 2)
       xml.dockeys(channel.dockeys())
       #xml.homepageLink("#{APP_URL}/#{team_path(channel.team_id)}") if channel.team_id
-      xml.homepageLink("#{APP_URL}/teams/show_public/#{channel.team_id}") if channel.team_id
+      #xml.homepageLink("#{APP_URL}/teams/show_public/#{channel.team_id}") if channel.team_id
+      
+      xml.homepageLink(channel.allow_url)
+      
       
       xml.position(channel.position)
     }

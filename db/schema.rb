@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090201152514) do
+ActiveRecord::Schema.define(:version => 20090205165822) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id",    :limit => 10
@@ -101,6 +101,7 @@ ActiveRecord::Schema.define(:version => 20090201152514) do
     t.integer "frame_height", :limit => 11
     t.integer "frame_width",  :limit => 11
     t.integer "thumb_span",   :limit => 11
+    t.string  "allow_url"
   end
 
   create_table "choices", :force => true do |t|
@@ -252,14 +253,16 @@ ActiveRecord::Schema.define(:version => 20090201152514) do
     t.boolean  "active"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "state_id",    :limit => 11
-    t.integer  "avatar_id",   :limit => 11
+    t.integer  "state_id",      :limit => 11
+    t.integer  "avatar_id",     :limit => 11
     t.string   "address1"
     t.string   "address2"
     t.string   "phone"
     t.string   "zip"
     t.string   "email"
-    t.boolean  "delta",                     :default => false
+    t.boolean  "delta",                       :default => false
+    t.integer  "can_publish",   :limit => 1
+    t.integer  "publish_limit", :limit => 11
   end
 
   create_table "membership_billing_histories", :force => true do |t|
@@ -546,22 +549,23 @@ ActiveRecord::Schema.define(:version => 20090201152514) do
     t.string   "city"
     t.string   "description"
     t.boolean  "active"
-    t.integer  "league_id",   :limit => 11
+    t.integer  "league_id",     :limit => 11
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "avatar_id",   :limit => 11
+    t.integer  "avatar_id",     :limit => 11
     t.string   "county_name"
-    t.integer  "state_id",    :limit => 11
-    t.integer  "ad_zone",     :limit => 11, :default => 1
+    t.integer  "state_id",      :limit => 11
+    t.integer  "ad_zone",       :limit => 11, :default => 1
     t.string   "nickname"
     t.string   "address1"
     t.string   "address2"
     t.string   "phone"
     t.string   "zip"
     t.string   "email"
-    t.boolean  "delta",                     :default => false
-    t.integer  "tab_id",      :limit => 11
-    t.integer  "can_publish", :limit => 1
+    t.boolean  "delta",                       :default => false
+    t.integer  "tab_id",        :limit => 11
+    t.integer  "can_publish",   :limit => 1
+    t.integer  "publish_limit", :limit => 11
   end
 
   create_table "topics", :force => true do |t|
