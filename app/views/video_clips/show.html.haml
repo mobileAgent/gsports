@@ -13,7 +13,7 @@
 
     .flashArea#flashArea
     - if @vidavee && session[:vidavee] && @video_clip.dockey
-      = render(:partial => 'shared/video_player', :locals => { :fvars => {:dockey => @video_clip.dockey}, :target => 'flashArea', :height => 635, :width => 800 })
+      = render(:partial => 'shared/video_player', :locals => { :fvars => {:dockey => @video_clip.dockey, :allowFS => "true"}, :params => {:allowFullScreen=>"true"}, :target => 'flashArea', :height => 635, :width => 800 })
       
     .clearDiv
     
