@@ -106,10 +106,8 @@ class ChannelsController < BaseController
       xml.numPerColumnOrRow(channel.thumb_span || 2)
       xml.dockeys(channel.dockeys())
       #xml.homepageLink("#{APP_URL}/#{team_path(channel.team_id)}") if channel.team_id
-      #xml.homepageLink("#{APP_URL}/teams/show_public/#{channel.team_id}") if channel.team_id
-      
-      xml.homepageLink(channel.allow_url)
-      
+      xml.homepageLink("#{APP_URL}/teams/show_public/#{channel.team_id}") if channel.team_id
+      xml.validationUrl(channel.allow_url)
       
       xml.position(channel.position)
     }
