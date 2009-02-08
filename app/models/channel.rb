@@ -19,7 +19,8 @@ class Channel < ActiveRecord::Base
   end
 
   
-  def validate
+  def x_validate
+    
     limit = publish_limit()
     target = thumb_count.to_i * thumb_span.to_i
     if limit and (target > limit)
