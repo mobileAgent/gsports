@@ -14,7 +14,7 @@ class ChannelVideo < ActiveRecord::Base
   def validate
     channel = Channel.find(channel_id)
     limit = channel.publish_limit
-    if limit and (channel.videos.size > limit)
+    if limit and (channel.videos.size+1 > limit)
       errors.add_to_base("You've already published the maximum of #{limit} videos allowed for this channel. You must remove one or more videos before you can add more.")
     end
   end
