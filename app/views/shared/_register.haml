@@ -2,8 +2,9 @@
   - close = true if close.nil?
   - if close
     .closer
-      %href{ :onclick=>"$('dialog').update('')" } 
+      %a{ :onclick=>"Element.update('dialog', '');" } 
         close[x]
+        -#
       
   %h2
     Register Today!
