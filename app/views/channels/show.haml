@@ -4,5 +4,7 @@
     - flashvars = {}
     - flashvars[:dockeys]= @team_video_picks
     - flashvars[:playerVars]= "#{APP_URL}/channels/#{@channel.id}.xml"
-    = render :partial => 'shared/video_player', :locals => {:target => 'flashAreaIFrame', :player_name => '/players/embeddedplayer.swf', :fvars => flashvars, :width=>"#{@channel.frame_width||201}px", :height=>"#{@channel.frame_height||201}px" }
+    - params = {}
+    - params[:allowScriptAccess]='always'
+    = render :partial => 'shared/video_player', :locals => {:target => 'flashAreaIFrame', :player_name => '/players/embeddedplayer.swf', :fvars => flashvars, :width=>"#{@channel.frame_width||201}px", :height=>"#{@channel.frame_height||201}px", :params=>params }
   
