@@ -2,7 +2,7 @@
   .yui-b.main_column
     .box{:align=>'center', :width=>'100%'}
       %br
-      =render :partial => 'shared/register'
+      =render :partial => 'shared/register', :locals => { :close => false }
     
       -#
         %h3

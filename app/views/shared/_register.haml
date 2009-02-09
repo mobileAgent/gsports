@@ -1,7 +1,9 @@
 .registerPopup
-  .closer
-    %href{ :onclick=>"$('dialog').update('')" } 
-      close[x]
+  - close = true if close.nil?
+  - if close
+    .closer
+      %href{ :onclick=>"$('dialog').update('')" } 
+        close[x]
       
   %h2
     Register Today!
