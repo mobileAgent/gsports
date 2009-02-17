@@ -383,6 +383,7 @@ class VideoAssetsController < BaseController
   def cache_control
     Rails.cache.delete('quickfind_sports')
     Rails.cache.delete('quickfind_seasons')
+    VideoAsset.seasons_cache_delete
     Rails.cache.delete('quickfind_schools')
   end
 
