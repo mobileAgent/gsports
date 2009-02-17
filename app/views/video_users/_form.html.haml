@@ -1,0 +1,78 @@
+= f.error_messages
+
+- autofill_title = @video_user.nil? || @video_user.title.nil? || @video_user.title.blank?
+%script
+  function autofill_video_title() {
+  if (document.getElementById('autofill').checked)
+  return generate_video_title();
+  }
+
+%p
+  = f.label :sport
+  %br/
+  = text_field_with_auto_complete :video_user, :sport, :autocomplete => "off", :onchange => "javascript:autofill_video_title(); return true;"
+%p
+  = f.label "Game Date"
+  %br/
+  %em= "Formats: (yyyy-mm-dd, yyyy-mm, yyyy, yyyy-yyyy)"
+  %br/
+  = text_field :video_user, :game_date, :value => @video_user.game_date_string, :onchange => "javascript:autofill_video_title(); return true;"
+
+%p
+  %br/
+  =f.check_box :public_video
+  =f.label(:public_video,  'Public Video')
+  = "&nbsp; | &nbsp;"
+  =f.check_box :missing_audio
+  =f.label(:missing_audio, "This video has <strong>no</strong> audio")
+  %br/
+  %br/
+  
+%p
+  = f.label :title
+  %br/
+  = f.text_field :title, :size => 85, :onkeydown => 'disable_autofill_video_title();return true'
+
+%p
+  = f.label :description
+  %br/
+  = f.text_area :description, :rows => 3, :cols => 75
+
+%p  
+  =f.label :tags
+  %br/
+  = text_field_tag 'tag_list', @video_user.tags.collect{|t| t.name}.join(", "), {:autocomplete => "off", :size => 35}
+  #tag_list_auto_complete.auto_complete
+  = auto_complete_field 'tag_list', {:url => { :controller => "tags", :action => 'auto_complete_for_tag_name'}, :tokens => [',']  }
+
+- if current_user.admin?
+  %fieldset.emphasized
+    %legend="Advanced Fields (Admin Only)"
+    %p
+      %label{:for=>"video_user[gsan]"} GSAN
+      %br/
+      = f.text_field :gsan
+    %p
+      %label{:for=>"video_user[internal_notes]"} Internal Use Only
+      %br/
+      = f.text_area :internal_notes, :rows => 3, :cols => 65
+      
+
+  %fieldset.emphasized
+    %legend="Very Advanced Fields (Vidavee Coordination, Admin Only)"
+    %p
+      = f.label :dockey
+      %br/
+      = f.text_field :dockey, :size => 32
+    %p
+      = f.label :video_length
+      %br/
+      = f.text_field :video_length
+    %p
+      = f.label :video_type
+      %br/
+      = f.text_field :video_type
+    %p
+      = f.label :video_status
+      %br/
+      = f.text_field :video_status

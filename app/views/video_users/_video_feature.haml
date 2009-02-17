@@ -1,0 +1,34 @@
+- path = video_feature.class == VideoAsset ? video_asset_path(video_feature) : (video_feature.class == VideoClip ? video_clip_path(video_feature) : video_reel_path(video_feature))
+- line2 = video_feature.class == VideoAsset ? (video_feature.league_video? ? video_feature.league_name : video_feature.team.title_name) : video_feature.user.full_name
+- line3 = video_feature.class == VideoAsset ? video_feature.human_game_date_string : video_feature.created_at.to_s(:readable)
+.featureSummary
+  .featureSummaryThumb.favFIT
+    - nolinks ||= nil
+    - if nolinks
+      %img{:src=>"#{@vidavee.file_thumbnail_medium(video_feature.thumbnail_dockey)}", :title=>"#{h(video_feature.title).gsub(/\'/,'')}", :alt=>'Video'}
+    - else
+      = protected_link_to "<img src='#{@vidavee.file_thumbnail_medium(video_feature.thumbnail_dockey)}' title='#{h(video_feature.title).gsub(/\'/,'')}' alt='Video'/>", path
+  .featureText
+    %h3.featureTitle
+      = protected_link_to h(video_feature.title), path
+    -#
+      %span.sportName
+        = h line2
+      %br/
+      %span.date
+        = line3
+
+    .one-liner
+      %strong
+        - if video_feature.video_length && !video_feature.video_length.blank? && video_feature.video_length != '0'
+          =video_feature.video_length
+        - else
+          ??:??
+      %strong= " | Views:"
+      = number_with_delimiter(video_feature.view_count)
+      %strong= " | "
+      =render :partial => 'shared/favorite_count', :locals => {:item => video_feature}
+
+    %div{ :style => "margin-top: 3px" }
+      =render :partial => 'ratings/listing_stars', :locals => {:item => video_feature}
+  .clearDiv

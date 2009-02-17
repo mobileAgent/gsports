@@ -1,0 +1,24 @@
+.profileContentArea.listingPage
+  .profilePageHeader
+    %h2.columnDescriptor
+      %span
+        = link_to _('MY VIDEOS'), url_for({:controller => 'search', :action => 'my_videos', :user_id => @user.id})        
+      = current_user.full_name
+  .listings
+    .contentBox.tanBackground
+      .contentBoxHeader.yellowHeader
+        %h2.boxDescription
+          = "Editing details for \"#{@video_user.title}\""
+      .contentBoxContent
+        .featureSummary
+          #video_thumbnail
+            = "<img src='#{@vidavee.file_thumbnail_medium(@video_user.dockey)}' title='#{h @video_user.title}'>"
+          %br/
+          - form_for @video_user do |f|
+            = render :partial => "form", :locals => { :f => f }
+            %p
+              = f.submit "Submit"
+
+          = link_to 'Show', @video_user
+          |
+          = link_to 'Back', video_users_path

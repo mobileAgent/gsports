@@ -7,7 +7,6 @@ class CreateVideoUsers < ActiveRecord::Migration
       t.string    :title
       t.string    :description
       t.timestamp :video_date
-      t.string    :dockey
       
       t.integer   :view_count, :limit => 11, :default => 0
       t.boolean   :public_video, :default => true
@@ -15,17 +14,10 @@ class CreateVideoUsers < ActiveRecord::Migration
       t.boolean   :delta, :default => false
       t.integer   :shared_access_id, :limit => 11
               
-      t.string :video_length
-      t.string :frame_rate
-      
-      t.string :video_type
-      t.string :video_status
-      
-      t.string :thumbnail
-      t.string :thumbnail_low
-      t.string :thumbnail_medium
-      
-      
+      t.string    :dockey
+      t.string    :video_length
+      t.string    :video_type
+      t.string    :video_status
       
       t.timestamps
     end

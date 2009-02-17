@@ -1,0 +1,30 @@
+.profileContentArea.listingPage
+  .profilePageHeader
+    %h2.columnDescriptor
+      %span
+        = link_to _('MY VIDEOS'), url_for({:controller => 'search', :action => 'my_videos', :user_id => @user.id})        
+      Player
+  .playerContentArea
+    .leftNavColPlayer
+      .leftNavPlayer
+        = render :partial => 'ratings/stars', :locals => { :item => @video_user }
+        = render :partial => 'shared/video_actions', :locals => { :video_listing => @video_user }
+        
+    .flashArea#flashArea
+    - if @vidavee && session[:vidavee] && @video_user.dockey
+      = render(:partial => 'shared/video_player', :locals => { :fvars => {:dockey => @video_user.dockey, :allowFS => "true"}, :params => {:allowFullScreen=>"true"}, :target => 'flashArea', :height => 685, :width => 800 })
+      
+    .clearDiv
+  
+    .commentContainer
+      %br
+      .commentArea
+        .forumContentBox
+          .commentForm
+            =render :partial => 'comments/comment_form', :locals => { :commentable => @video_user }
+          .comments#comments
+            #newest_comment
+            =render :partial => 'comments/comment', :collection => @video_user.comments
+          %span#more_comments_links= more_comments_links(@video_user)
+
+    

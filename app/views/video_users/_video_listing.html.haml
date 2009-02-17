@@ -1,0 +1,49 @@
+.listingBox-2cols{:id => "video_asset_#{video_listing.id}"}
+  .frameTop
+  .col1
+    .listingBoxHeader
+      - if video_listing.video_length
+        .title{ :style => "float:right; width:60px; text-align:right;" }
+          = "(#{video_listing.video_length})"
+      .title{:style => "width: 270px"}
+        = truncate(video_listing.title,40)
+    .thumb
+      = link_to "<img src='#{@vidavee.file_thumbnail_medium(video_listing.dockey)}' title='#{h(video_listing.title).gsub(/\'/,'')}' alt='Video'/>", video_asset_path(video_listing)
+    .listingBoxContent
+      %p= truncate(video_listing.description,200)
+      %br
+
+      - if video_listing.home_team_id || video_listing.visiting_team_id
+        %p
+          In this video:
+          %span.recentFriendFeed
+            - if video_listing.home_team_id
+              = link_to h(video_listing.home_team.title_name), team_path(video_listing.home_team_id)
+              - if video_listing.visiting_team_id
+                = ", "
+            - if video_listing.visiting_team_id
+              = link_to h(video_listing.visiting_team.title_name), team_path(video_listing.visiting_team_id)
+
+      %br
+      %p
+        Views:
+        = number_with_delimiter(video_listing.view_count)
+        = render :partial => 'shared/favorite_count', :locals => {:item => video_listing}
+
+    .clearDiv
+    .listingBoxFooter
+      Uploaded by:
+      %span.recentFriendFeed
+      - if video_listing.league_video?
+        = link_to h(video_listing.league_name), league_path(video_listing.league_id)
+      - else
+        = link_to h(video_listing.team_name), team_path(video_listing.team_id)
+      on
+      = video_listing.created_at.strftime("%B %d, %Y")
+
+  .col2
+    .listingBoxActions
+      = render :partial => 'shared/video_actions', :locals => { :video_listing => video_listing, :listing => true }
+
+  .clearDiv
+  .frameBtm

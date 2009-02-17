@@ -1,0 +1,1 @@
+page.hide "video_user_#{@video_user.id}"

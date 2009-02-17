@@ -1,0 +1,23 @@
+.profileFeature{:id => "video_asset_#{video_asset.id}"}
+  .featureSummaryThumbx
+    = link_to "<img src='#{@vidavee.file_thumbnail_medium(video_asset.dockey)}' title='#{h(video_asset.title).gsub(/\'/,'')}' alt='Video'/>", video_asset_path(video_asset)
+  .featureText
+    %span.profileSubHeading
+      = h video_asset.title
+    %span.featureSummaryText
+    = "#{h video_asset.description} - #{h video_asset.video_length}"
+    %br
+    = "#{h video_asset.league.name if video_asset.league}, #{h video_asset.team.name if video_asset.team}, #{h video_asset.sport}, #{video_asset.human_game_date_string}"
+  
+    - skip_controls ||= false
+    - unless skip_controls
+      - if current_user && current_user.can_edit?(video_asset)
+        %br
+        - if (video_asset.video_status != 'ready')
+          = "Video Status is #{video_asset.video_status}"
+        %br
+        = link_to 'Edit', edit_video_asset_path(video_asset)
+        |
+        = link_to_remote 'Destroy', {:url => url_for(video_asset), :confirm => 'Are you sure?', :method => :delete}
+        |
+        = render :partial => 'shared/favorite_item', :locals => { :item => video_asset }
