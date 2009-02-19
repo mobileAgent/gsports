@@ -53,7 +53,7 @@
                   %td.leagueList= link_to mem.promotion.promo_code, "/users/edit_promotion/#{user.id}" #promotion_path(mem.promotion.id)
                   %td.leagueList= 'promo ex'
                 -else
-                  %td.leagueList
+                  %td.leagueList= link_to 'add', "/users/edit_promotion/#{user.id}"
                   %td.leagueList
                   
                 %td.leagueList= 'last'
