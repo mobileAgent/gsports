@@ -26,20 +26,35 @@ class RecurringBilling
     billed_success = 0
     billed_error = 0
     members_due.each {|mdue| 
-      @billing_logger.info "Need to bill #{mdue.user.id} #{mdue.name}"
-      # Bill the member 
-      billing_result = mdue.bill_recurring
+      begin
+        @billing_logger.info "Need to bill #{mdue.user.id} #{mdue.name} $#{mdue.cost}"
+        # Bill the member 
+        billing_result = mdue.bill_recurring
 
-      if billing_result.success?
-        billed_success += 1
-        billing_message << "Successfully billed #{mdue.user.id} #{mdue.name} #{membership_user_details(mdue)}"
-        @billing_logger.info "Successfully billed #{mdue.user.id} #{mdue.name}"
-        MembershipNotifier.deliver_billing_success(mdue.address.email,mdue) if !mdue.address.nil?
-      else
-        billed_error += 1
-        billing_message << "Unable to bill #{mdue.user.id} #{mdue.name}: #{billing_result.message}. #{membership_user_details(mdue)}"
-        @billing_logger.info "Unable to bill #{mdue.user.id} #{mdue.name} reason: #{billing_result.message}" 
-          MembershipNotifier.deliver_billing_failure(mdue.address.email,mdue, billing_result.message) if !mdue.address.nil?
+        if billing_result.success?
+          billed_success += 1
+          begin
+            billing_message << "Successfully billed #{mdue.user.id} #{mdue.name} #{membership_user_details(mdue)}"
+            @billing_logger.info "Successfully billed #{mdue.user.id} #{mdue.name}"
+            MembershipNotifier.deliver_billing_success(mdue.address.email,mdue) if !mdue.address.nil?
+          rescue
+            # be defensive about sending emails...
+            @billing_logger.error "Error sending notification email to user #{mdue.user.id}: #{$!}"
+          end
+        else
+          billed_error += 1
+          begin
+            billing_message << "Unable to bill #{mdue.user.id} #{mdue.name}: #{billing_result.message}. #{membership_user_details(mdue)}"
+            @billing_logger.info "Unable to bill #{mdue.user.id} #{mdue.name} reason: #{billing_result.message}"
+            MembershipNotifier.deliver_billing_failure(mdue.address.email,mdue, billing_result.message) if !mdue.address.nil?
+          rescue
+            # be defensive about sending emails...
+            @billing_logger.error "Error sending notification email to user #{mdue.user.id}: #{$!}"
+          end
+        end
+      rescue
+        @billing_logger.error "* ERROR while billing membership ID #{mdue.id}: #{$!}"
+        billing_message << "* ERROR billing membership ID #{mdue.id}: #{$!}"
       end
     }
     # Send an email
