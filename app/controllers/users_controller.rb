@@ -1034,14 +1034,31 @@ class UsersController < BaseController
   def update_promotion
 
     @user = User.find(params[:id])
-    @membership = @user.current_membership
+    @membership = @user.current_membership.renew
+    
+    
+    logger.debug "%%% mem #{@membership.inspect}"
+    
+    
     @promotion = Promotion.find(params['promotion']['id'])
     
-    @membership.promotion = @promotion
+    logger.debug "%%% prmo #{@promotion.inspect}"
+    
+    if @membership
+       
+      @membership.apply_promotion(@promotion)
      
-    if @membership.save!
+      logger.debug "%%% mem #{@membership.inspect}"
+     else
+       logger.debug "%%% gah!"
+      end
+     
+     
+     
+    if @membership && @membership.save
       redirect_to '/users/registrations'
     else
+      @promotion.errors.add('','Could not renew membership') if @membership.nil?
       @promotions = Promotion.find(:all, :conditions=>'enabled = 1')
       render :action => :edit_promotion
     end

@@ -190,6 +190,17 @@ class Membership < ActiveRecord::Base
       return nil
     end
   end
+  
+  def apply_promotion(promo)
+    self.promotion = promo
+  logger.debug "%%% me #{self.inspect}"
+    if !promotion.period_days.nil? && promotion.period_days > 0
+      self.expiration_date = ( expiration_date.nil? ? Time.now : expiration_date ) + promotion.period_days.days       
+      logger.debug "Promotion expiration is #{expiration_date}"
+    end  
+    logger.debug "%%% me #{self.inspect}"
+
+  end
 
   def cancel!(reason=nil)
     if !canceled?

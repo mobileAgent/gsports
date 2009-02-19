@@ -217,6 +217,7 @@ class User < ActiveRecord::Base
     logger.debug "Invoice Expiration is #{mem.expiration_date}"
     
     if promotion
+      # consider membership.apply_promotion()
       mem.promotion = promotion
       if !promotion.period_days.nil? && promotion.period_days > 0
         mem.expiration_date += promotion.period_days.days       
@@ -243,6 +244,7 @@ class User < ActiveRecord::Base
     end
     
     if promotion
+      # consider membership.apply_promotion()
       mem.promotion = promotion
       if !promotion.period_days.nil? && promotion.period_days > 0
         mem.expiration_date = Time.now + promotion.period_days.days       
