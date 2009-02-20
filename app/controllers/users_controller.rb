@@ -1035,26 +1035,11 @@ class UsersController < BaseController
 
     @user = User.find(params[:id])
     @membership = @user.current_membership.renew
-    
-    
-    logger.debug "%%% mem #{@membership.inspect}"
-    
-    
+        
     @promotion = Promotion.find(params['promotion']['id'])
     
-    logger.debug "%%% prmo #{@promotion.inspect}"
-    
-    if @membership
-       
-      @membership.apply_promotion(@promotion)
-     
-      logger.debug "%%% mem #{@membership.inspect}"
-     else
-       logger.debug "%%% gah!"
-      end
-     
-     
-     
+    @membership.apply_promotion(@promotion) if @membership
+
     if @membership && @membership.save
       redirect_to '/users/registrations'
     else
