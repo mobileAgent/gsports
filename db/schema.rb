@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090205165822) do
+ActiveRecord::Schema.define(:version => 20090211163648) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id",    :limit => 10
@@ -721,6 +721,23 @@ ActiveRecord::Schema.define(:version => 20090205165822) do
     t.boolean  "public_video",                   :default => true
     t.boolean  "delta",                          :default => false
     t.integer  "shared_access_id", :limit => 11
+  end
+
+  create_table "video_users", :force => true do |t|
+    t.integer  "user_id",          :limit => 11
+    t.string   "title"
+    t.string   "description"
+    t.datetime "video_date"
+    t.integer  "view_count",       :limit => 11, :default => 0
+    t.boolean  "public_video",                   :default => true
+    t.boolean  "delta",                          :default => false
+    t.integer  "shared_access_id", :limit => 11
+    t.string   "dockey"
+    t.string   "video_length"
+    t.string   "video_type"
+    t.string   "video_status"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "votes", :force => true do |t|
