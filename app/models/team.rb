@@ -85,7 +85,20 @@ class Team < ActiveRecord::Base
     end
   end
   
-  def self.cities(county_name=nil,state_id=nil)
+  def self.cities(state_id=nil)
+    if state_id && state_id > 0
+      cond = ["state_id = ? AND city IS NOT NULL",state_id]
+    else
+      cond = ["city IS NOT NULL and length(city) > 0"]
+    end
+
+    Team.having_videos.find(:all, 
+              :select => "DISTINCT city", 
+              :conditions => cond,
+              :order => 'city ASC')
+  end
+    
+  def self.oldcities(county_name=nil,state_id=nil)
     if county_name
       if state_id && state_id > 0
         cond = ["county_name = ? AND state_id = ? AND city IS NOT NULL",county_name,state_id]
