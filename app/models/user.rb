@@ -409,15 +409,17 @@ class User < ActiveRecord::Base
   end
   
   def current_membership
-    return nil if (memberships.nil? or memberships.empty?)    
+    mships = memberships.find(:all, :order=>:created_at)
+    
+    return nil if (mships.nil? or mships.empty?)    
     
     # The last membership should be the most recent.
     # If it is not active, then double check the rest
     # of the memberships to be sure that they are not
     # out of order and return an active one if found
-    if !memberships.last.active?
+    if !mships.last.active?
       # look for the first active membership
-      memberships.reverse.each do |m|
+      mships.reverse.each do |m|
         logger.debug "testing membership ID #{m.id}, status #{m.status}, user #{m.user_id}"
         if m.active? || (m.status && m.status == Membership::STATUS_ACTIVE)
           logger.debug "returning membership ID #{m.id}"
@@ -426,7 +428,7 @@ class User < ActiveRecord::Base
       end
     end
 
-    m = memberships.last
+    m = mships.last
     if m
       logger.debug "returning last membership ID #{m.id}, status #{m.status}, user #{m.user_id}"
     end

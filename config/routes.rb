@@ -14,6 +14,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :billing
   map.resources :monikers
   map.resources :subscription_plans
+  map.resources :membership
   map.resources :staffs
   map.resources :purchase_orders
   map.resources :ratings
