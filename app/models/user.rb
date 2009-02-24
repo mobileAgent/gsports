@@ -22,11 +22,17 @@ class User < ActiveRecord::Base
     # limit staff accounts
     if enabled 
       members = nil
-      members = Staff.league_staff(league_id) if league_staff?
-      members = Staff.team_staff(team_id) if team_staff?
+      limit = 3
+      if league_staff?
+        members = Staff.league_staff(league_id)
+        limit = league.staff_limit || limit
+      elsif team_staff?
+        members = Staff.team_staff(team_id)
+        limit = team.staff_limit || limit
+      end
       if members
         count = members.delete_if{|u|u.id==id}.collect(&:enabled).delete_if{|e|!e}.size
-        errors.add_to_base("You can only have 3 enabled staff members. You have #{count}") if(count >= 3)
+        errors.add_to_base("You can only have #{limit} enabled staff members. You have #{count}") if(count >= limit)
       end
     end
   end
@@ -441,11 +447,11 @@ class User < ActiveRecord::Base
     mem = current_membership
     return false if mem.nil? || !mem.active?
     
-    if mem.cost > 0 && 
-          mem.billing_method == Membership::CREDIT_CARD_BILLING_METHOD &&
-          mem.last_billed < (Time.now - (PAYMENT_DUE_CYCLE+5).days)
-      logger.info "NEED PAYMENT: #{mem.cost} last billed #{mem.last_billed}"
-      return true
+    if mem.cost > 0 && mem.billing_method == Membership::CREDIT_CARD_BILLING_METHOD
+      if mem.last_billed.nil? || mem.last_billed < (Time.now - (PAYMENT_DUE_CYCLE+5).days)
+        logger.info "NEED PAYMENT: #{mem.cost} last billed #{mem.last_billed}"
+        return true
+      end
     end
     false
   end

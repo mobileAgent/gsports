@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090220180528) do
+ActiveRecord::Schema.define(:version => 20090224195238) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id",    :limit => 10
@@ -263,6 +263,7 @@ ActiveRecord::Schema.define(:version => 20090220180528) do
     t.boolean  "delta",                       :default => false
     t.integer  "can_publish",   :limit => 1
     t.integer  "publish_limit", :limit => 11
+    t.integer  "staff_limit",   :limit => 11
   end
 
   create_table "membership_billing_histories", :force => true do |t|
@@ -567,6 +568,7 @@ ActiveRecord::Schema.define(:version => 20090220180528) do
     t.integer  "tab_id",        :limit => 11
     t.integer  "can_publish",   :limit => 1
     t.integer  "publish_limit", :limit => 11
+    t.integer  "staff_limit",   :limit => 11
   end
 
   create_table "topics", :force => true do |t|
