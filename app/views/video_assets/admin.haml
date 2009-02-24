@@ -1,0 +1,42 @@
+.profileContentArea
+  .profilePageHeader
+    %h2.columnDescriptor
+      %span
+        VideoAssets
+
+  .forumContainer      
+    .forumContentBox
+      
+      %table{:border => 0, :cellspacing => 0, :cellpadding => 0, :width => '100%'}
+        %thead
+          %tr.yellowHeader
+          
+            = sortable_table_header :class=>"padded sortableContentHeader", :name => "ID",     :sort => "id"
+            = sortable_table_header :class=>"padded sortableContentHeader", :name => "DocKey", :sort => "dockey"
+            = sortable_table_header :class=>"padded sortableContentHeader", :name => "Title",  :sort => "title"
+            = sortable_table_header :class=>"padded sortableContentHeader", :name => "Team",   :sort => "teams.name"
+            = sortable_table_header :class=>"padded sortableContentHeader", :name => "League", :sort => 'leagues.name'
+            = sortable_table_header :class=>"padded sortableContentHeader", :name => "User",   :sort => "users.lastname"
+            = sortable_table_header :class=>"padded sortableContentHeader", :name => "Status", :sort => 'video_status'
+        %tbody
+          - for video in @video_assets
+            %tr.forumList
+              %td.forumList
+                = link_to video.id, video_asset_path(video)
+              %td.forumList
+                = video.dockey
+              %td.forumList
+                = h video.title
+              %td.forumList
+                - if !video.league_video?
+                  = link_to h(video.team_name), team_path(video.team_id)
+              %td.forumList
+                - if video.league_video?
+                  = link_to h(video.league_name), league_path(video.league_id)
+              %td.forumList
+                = link_to video.user.full_name, user_path(video.user)
+              %td.forumList
+                = h video.video_status
+              
+      .apple_pagination
+        = will_paginate @video_assets

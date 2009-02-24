@@ -7,7 +7,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :teams
   map.resources :leagues
   map.resources :vidavees
-  map.resources :video_assets, :new => { :save_video => :post, :swfupload => :post }
+  map.resources :video_assets, :new => { :save_video => :post, :swfupload => :post }, :collection => { :admin => :any }
   map.resources :video_clips
   map.resources :video_reels
   map.resources :messages
