@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090205165822) do
+ActiveRecord::Schema.define(:version => 20090220180528) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id",    :limit => 10
@@ -300,6 +300,7 @@ ActiveRecord::Schema.define(:version => 20090205165822) do
 
   add_index "memberships", ["status"], :name => "index_memberships_on_status"
   add_index "memberships", ["user_id"], :name => "index_memberships_on_user_id"
+  add_index "memberships", ["created_at"], :name => "index_memberships_on_created_at"
 
   create_table "messages", :force => true do |t|
     t.datetime "created_at"
@@ -721,6 +722,23 @@ ActiveRecord::Schema.define(:version => 20090205165822) do
     t.boolean  "public_video",                   :default => true
     t.boolean  "delta",                          :default => false
     t.integer  "shared_access_id", :limit => 11
+  end
+
+  create_table "video_users", :force => true do |t|
+    t.integer  "user_id",          :limit => 11
+    t.string   "title"
+    t.string   "description"
+    t.datetime "video_date"
+    t.integer  "view_count",       :limit => 11, :default => 0
+    t.boolean  "public_video",                   :default => true
+    t.boolean  "delta",                          :default => false
+    t.integer  "shared_access_id", :limit => 11
+    t.string   "dockey"
+    t.string   "video_length"
+    t.string   "video_type"
+    t.string   "video_status"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "votes", :force => true do |t|
