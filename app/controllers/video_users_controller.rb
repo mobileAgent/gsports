@@ -38,7 +38,7 @@ class VideoUsersController < BaseController
 
 
   def show
-    @video_users = VideoUser.find(params[:id])
+    @video_user = VideoUser.find(params[:id])
     update_view_count(@video_users)
     respond_to do |format|
       format.html # show.html.erb
@@ -51,17 +51,19 @@ class VideoUsersController < BaseController
 
 
   def new
-    @video_users = VideoUser.new
+    @video_user = VideoUser.new
+    
+    @user = params[:user_id] ? User.find(params[:user_id]) : current_user
 
     respond_to do |format|
       format.html # new.html.haml
-      format.xml  { render :xml => @video_asset }
+      format.xml  { render :xml => @video_user }
     end
   end
 
 
   def edit
-    @video_users = VideoUser.find(params[:id])
+    @video_user = VideoUser.find(params[:id])
     unless (@video_users.user_id == current_user)
       @video_asset = nil
       flash[:notice] = "You don't have permission edit that video"

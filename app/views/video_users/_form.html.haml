@@ -8,10 +8,6 @@
   }
 
 %p
-  = f.label :sport
-  %br/
-  = text_field_with_auto_complete :video_user, :sport, :autocomplete => "off", :onchange => "javascript:autofill_video_title(); return true;"
-%p
   = f.label "Game Date"
   %br/
   %em= "Formats: (yyyy-mm-dd, yyyy-mm, yyyy, yyyy-yyyy)"

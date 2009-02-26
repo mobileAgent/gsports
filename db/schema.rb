@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090211163648) do
+ActiveRecord::Schema.define(:version => 20090226172932) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id",    :limit => 10
@@ -263,6 +263,7 @@ ActiveRecord::Schema.define(:version => 20090211163648) do
     t.boolean  "delta",                       :default => false
     t.integer  "can_publish",   :limit => 1
     t.integer  "publish_limit", :limit => 11
+    t.integer  "staff_limit",   :limit => 11
   end
 
   create_table "membership_billing_histories", :force => true do |t|
@@ -300,6 +301,7 @@ ActiveRecord::Schema.define(:version => 20090211163648) do
 
   add_index "memberships", ["status"], :name => "index_memberships_on_status"
   add_index "memberships", ["user_id"], :name => "index_memberships_on_user_id"
+  add_index "memberships", ["created_at"], :name => "index_memberships_on_created_at"
 
   create_table "messages", :force => true do |t|
     t.datetime "created_at"
@@ -566,6 +568,7 @@ ActiveRecord::Schema.define(:version => 20090211163648) do
     t.integer  "tab_id",        :limit => 11
     t.integer  "can_publish",   :limit => 1
     t.integer  "publish_limit", :limit => 11
+    t.integer  "staff_limit",   :limit => 11
   end
 
   create_table "topics", :force => true do |t|
@@ -724,20 +727,26 @@ ActiveRecord::Schema.define(:version => 20090211163648) do
   end
 
   create_table "video_users", :force => true do |t|
-    t.integer  "user_id",          :limit => 11
+    t.integer  "user_id",           :limit => 11
     t.string   "title"
     t.string   "description"
-    t.datetime "video_date"
-    t.integer  "view_count",       :limit => 11, :default => 0
-    t.boolean  "public_video",                   :default => true
-    t.boolean  "delta",                          :default => false
-    t.integer  "shared_access_id", :limit => 11
+    t.integer  "view_count",        :limit => 11, :default => 0
+    t.boolean  "public_video",                    :default => true
+    t.boolean  "delta",                           :default => false
+    t.integer  "shared_access_id",  :limit => 11
     t.string   "dockey"
     t.string   "video_length"
     t.string   "video_type"
     t.string   "video_status"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "ignore_game_day",                 :default => false
+    t.boolean  "ignore_game_month",               :default => false
+    t.string   "game_date_str"
+    t.datetime "game_date"
+    t.boolean  "missing_audio",                   :default => false
+    t.string   "gsan"
+    t.text     "internal_notes"
   end
 
   create_table "votes", :force => true do |t|
