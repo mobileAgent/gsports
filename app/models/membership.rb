@@ -168,10 +168,10 @@ class Membership < ActiveRecord::Base
     
     # use the current price for the subscription plan
     new_membership.cost = self.user.role.plan.cost
-    if @billing_method.nil? || @billing_method == FREE_BILLING_METHOD
+    if self.billing_method.nil? || self.billing_method == FREE_BILLING_METHOD
       new_membership.billing_method = CREDIT_CARD_BILLING_METHOD
     else
-      new_membership.billing_method = @billing_method
+      new_membership.billing_method = self.billing_method
     end
     
     if new_membership.save
