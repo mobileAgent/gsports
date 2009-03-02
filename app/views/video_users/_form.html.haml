@@ -1,18 +1,12 @@
 = f.error_messages
 
-- autofill_title = @video_user.nil? || @video_user.title.nil? || @video_user.title.blank?
-%script
-  function autofill_video_title() {
-  if (document.getElementById('autofill').checked)
-  return generate_video_title();
-  }
 
 %p
   = f.label "Game Date"
   %br/
   %em= "Formats: (yyyy-mm-dd, yyyy-mm, yyyy, yyyy-yyyy)"
   %br/
-  = text_field :video_user, :game_date, :value => @video_user.game_date_string, :onchange => "javascript:autofill_video_title(); return true;"
+  = text_field :video_user, :game_date, :value => @video_user.game_date_string
 
 %p
   %br/
@@ -27,7 +21,7 @@
 %p
   = f.label :title
   %br/
-  = f.text_field :title, :size => 85, :onkeydown => 'disable_autofill_video_title();return true'
+  = f.text_field :title, :size => 85
 
 %p
   = f.label :description

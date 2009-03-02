@@ -11,6 +11,8 @@ class AddDateOptionsToVideoUsers < ActiveRecord::Migration
     add_column :video_users, :missing_audio, :boolean, :default => false
     add_column :video_users, :gsan, :string
     add_column :video_users, :internal_notes, :text
+    
+    add_column :video_users, :uploaded_file_path, :string
   end
 
   def self.down
@@ -24,5 +26,7 @@ class AddDateOptionsToVideoUsers < ActiveRecord::Migration
     remove_column :video_users, :missing_audio
     remove_column :video_users, :gsan
     remove_column :video_users, :internal_notes
+    
+    remove_column :video_users, :uploaded_file_path
   end  
 end

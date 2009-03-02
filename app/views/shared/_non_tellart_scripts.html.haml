@@ -14,7 +14,7 @@
   = javascript_include_tag 'swfupload', :plugin => "community_engine"
   = javascript_include_tag 'uploader', :plugin => "community_engine"
   
-- if current_page?({:controller => 'video_assets', :action => 'new'}) || current_page?({:controller => 'video_assets', :action => 'edit'})
+- if current_page?({:controller => 'video_assets', :action => 'new'}) || current_page?({:controller => 'video_assets', :action => 'edit'}) || current_page?({:controller => 'video_users', :action => 'new'}) || current_page?({:controller => 'video_users', :action => 'edit'})
   = javascript_include_tag 'video_form_helper'
   = javascript_include_tag 'swfupload', :plugin => "community_engine"
   = javascript_include_tag 'video_uploader'

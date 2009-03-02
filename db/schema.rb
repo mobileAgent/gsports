@@ -727,26 +727,27 @@ ActiveRecord::Schema.define(:version => 20090226172932) do
   end
 
   create_table "video_users", :force => true do |t|
-    t.integer  "user_id",           :limit => 11
+    t.integer  "user_id",            :limit => 11
     t.string   "title"
     t.string   "description"
-    t.integer  "view_count",        :limit => 11, :default => 0
-    t.boolean  "public_video",                    :default => true
-    t.boolean  "delta",                           :default => false
-    t.integer  "shared_access_id",  :limit => 11
+    t.integer  "view_count",         :limit => 11, :default => 0
+    t.boolean  "public_video",                     :default => true
+    t.boolean  "delta",                            :default => false
+    t.integer  "shared_access_id",   :limit => 11
     t.string   "dockey"
     t.string   "video_length"
     t.string   "video_type"
     t.string   "video_status"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "ignore_game_day",                 :default => false
-    t.boolean  "ignore_game_month",               :default => false
+    t.boolean  "ignore_game_day",                  :default => false
+    t.boolean  "ignore_game_month",                :default => false
     t.string   "game_date_str"
     t.datetime "game_date"
-    t.boolean  "missing_audio",                   :default => false
+    t.boolean  "missing_audio",                    :default => false
     t.string   "gsan"
     t.text     "internal_notes"
+    t.string   "uploaded_file_path"
   end
 
   create_table "votes", :force => true do |t|

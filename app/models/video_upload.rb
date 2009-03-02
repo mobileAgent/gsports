@@ -26,6 +26,10 @@ module VideoUpload
       game_date.to_s(:readable)
     end
   end
+  
+  
+  
+  
 
 
 end
