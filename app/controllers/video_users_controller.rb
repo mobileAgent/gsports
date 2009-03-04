@@ -7,7 +7,7 @@ class VideoUsersController < BaseController
   session :cookie_only => false, :only => [:swfupload]
   protect_from_forgery :except => [:swfupload ]
   verify :method => :post, :only => [ :save_video, :swfupload ]
-  after_filter :cache_control, :only => [:create, :update, :destroy]
+  #after_filter :cache_control, :only => [:create, :update, :destroy]
   #before_filter :find_user, :only => [:index, :show, :new, :edit ]
   #uses_tiny_mce(:options => AppConfig.narrow_mce_options.merge({:width => 530}), :only => [:show])
 
@@ -63,8 +63,10 @@ class VideoUsersController < BaseController
 
 
   def edit
+    @user = params[:user_id] ? User.find(params[:user_id]) : current_user
+  
     @video_user = VideoUser.find(params[:id])
-    unless (@video_users.user_id == current_user)
+    unless ( @video_user.user_id == current_user || current_user.can_edit?(@video_user) )
       @video_user = nil
       flash[:notice] = "You don't have permission edit that video"
       redirect_to url_for({ :controller => "search", :action => "my_videos" }) and return

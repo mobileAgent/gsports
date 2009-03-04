@@ -82,7 +82,7 @@
             = will_paginate @video_assets
         - else
           %strong
-            = link_to "More Videos...", url_for(:controller => 'search', :action => 'my_video_assets')
+            = link_to "More Videos...", url_for(:controller => 'search', :action => 'my_video_assets', :user_id=>@user.id)
       %br/
 
     -if @video_users && @video_users.size > 0
@@ -99,7 +99,7 @@
             = will_paginate @video_users
         - else
           %strong
-            = link_to "More Clips...", url_for(:controller => 'search', :action => 'my_video_users')
+            = link_to "More Clips...", url_for(:controller => 'search', :action => 'my_video_users', :user_id=>@user.id)
       %br/
   
     -if @video_clips && @video_clips.size > 0
@@ -116,7 +116,7 @@
             = will_paginate @video_clips
         - else
           %strong
-            = link_to "More Clips...", url_for(:controller => 'search', :action => 'my_video_clips')
+            = link_to "More Clips...", url_for(:controller => 'search', :action => 'my_video_clips', :user_id=>@user.id)
       %br/
 
     - if @video_reels && @video_reels.size > 0  
@@ -132,5 +132,5 @@
             = will_paginate @video_reels
         - else
           %strong
-            = link_to "More Reels...", url_for(:controller => 'search', :action => 'my_video_reels')
+            = link_to "More Reels...", url_for(:controller => 'search', :action => 'my_video_reels', :user_id=>@user.id)
 

@@ -203,6 +203,13 @@ class SearchController < BaseController
     protect_private_videos(@video_assets)
     render :action => "my_videos"
   end
+
+  def my_video_users
+    @user = params[:user_id] ? User.find(params[:user_id]) : current_user
+    @video_users = VideoUser.for_user(@user).paginate(:page => params[:page], :order => 'updated_at DESC')
+    protect_private_videos(@video_users)
+    render :action => "my_videos"
+  end
   
   def my_video_clips
     @user = params[:user_id] ? User.find(params[:user_id]) : current_user

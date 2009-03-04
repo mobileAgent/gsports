@@ -14,6 +14,8 @@ class SharedAccessController < BaseController
         redirect_to user_video_reel_path(@shared_item.user_id, @shared_access.item_id)
       when SharedAccess::TYPE_VIDEO
         redirect_to user_video_asset_path(@shared_item.user_id, @shared_access.item_id)
+      when SharedAccess::TYPE_USERVIDEO
+        redirect_to user_video_user_path(@shared_item.user_id, @shared_access.item_id)
       end
     end
 

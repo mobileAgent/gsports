@@ -4,6 +4,7 @@ class SharedAccess < ActiveRecord::Base
   has_one :video_reel
   has_one :video_clip
   has_one :video_asset
+  has_one :video_user
 
   attr_protected :item_type, :key
 
@@ -25,6 +26,8 @@ class SharedAccess < ActiveRecord::Base
         self.video_clip= item
       when VideoAsset
         self.video_asset= item
+      when VideoUser
+        self.video_user= item
       end
     end
   end
@@ -36,7 +39,7 @@ class SharedAccess < ActiveRecord::Base
 
   def video?
     case item_type
-    when TYPE_REEL, TYPE_CLIP, TYPE_VIDEO
+    when TYPE_REEL, TYPE_CLIP, TYPE_VIDEO, TYPE_USERVIDEO
       true
     else
       false
@@ -70,6 +73,15 @@ class SharedAccess < ActiveRecord::Base
     end
   end
 
+  def video_user=(video)
+    logger.debug "Sharing video-user #{video.id}"
+    unless video.nil?
+      self.item_type= TYPE_USERVIDEO
+      self.item_id= video.id
+      @item= video
+    end
+  end
+
   protected
 
   def lookup_item
@@ -81,6 +93,8 @@ class SharedAccess < ActiveRecord::Base
         @item= VideoClip.find item_id.to_i
       when TYPE_REEL
         @item= VideoReel.find item_id.to_i
+      when TYPE_USERVIDEO
+        @item= VideoUser.find item_id.to_i
       end
       @item
     end

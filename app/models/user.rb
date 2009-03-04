@@ -193,6 +193,8 @@ class User < ActiveRecord::Base
       return true if v.user_id == self.id
     when 'VideoReel'
       return true if v.user_id == self.id
+    when 'VideoUser'
+      return true if v.user_id == self.id
     end
     return false
   end

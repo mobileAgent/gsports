@@ -5,6 +5,8 @@
     = render :partial => "shared/video_listing", :locals => {:video_listing => favorite.favoritable, :skip_controls => true, :show_tab => true }
   - when 'video_reels'
     = render :partial => "shared/video_listing", :locals => {:video_listing => favorite.favoritable, :skip_controls => true, :show_tab => true }
+  - when 'video_users'
+    = render :partial => "shared/video_listing", :locals => {:video_listing => favorite.favoritable, :skip_controls => true, :show_tab => true }
   - when 'photos'
     = render :partial => "photos/photo_listing", :locals => {:photo_listing => favorite.favoritable, :photo_type => :thumb, :show_tab => true}
   - when 'posts'

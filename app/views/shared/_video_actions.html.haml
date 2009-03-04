@@ -1,11 +1,11 @@
 - listing ||= false
 
 - if listing
-  - link = VideoClip === video_listing ? user_video_clip_path(video_listing.user_id,video_listing) : VideoReel === video_listing ? user_video_reel_path(video_listing.user_id,video_listing) : video_asset_path(video_listing)
+  - link = video_path(video_listing) #VideoClip === video_listing ? user_video_clip_path(video_listing.user_id,video_listing) : VideoReel === video_listing ? user_video_reel_path(video_listing.user_id,video_listing) : video_asset_path(video_listing)
   %div
     = link_to image_tag('/images/listing_icons/play.png', :mouseclick => '/images/listing_icons/sel-play.png', :border=>0, :alt => 'Watch Video', :title => 'Watch Video'), link, :class => 'listingButton'
 
-- controller = VideoClip === video_listing ? 'video_clips' : VideoReel === video_listing ? 'video_reels' : 'video_assets'
+- controller = video_controller(video_listing) #VideoClip === video_listing ? 'video_clips' : VideoReel === video_listing ? 'video_reels' : 'video_assets'
 %div
   = link_to image_tag('/images/listing_icons/share.png', :mouseclick => '/images/listing_icons/sel-share.png', :border=>0, :alt => 'Share', :title => 'Share'), {:controller => controller, :action => 'share', :id => video_listing.id, :userid => video_listing.user_id}, :class => 'listingButton'
 
@@ -29,7 +29,7 @@
       = link_to image_tag('/images/listing_icons/message.png', :mouseclick => '/images/listing_icons/sel-message.png', :border=>0, :alt => 'Send Message', :title => 'Send Message'), new_message_path(:to => video_listing.user.id, :title => "Your reel '#{video_listing.title}'"), :class => 'listingButton'
 
 - if current_user && current_user.can_edit?(video_listing)
-  - link = VideoClip === video_listing ? edit_user_video_clip_path(video_listing.user_id,video_listing) : VideoReel === video_listing ? edit_user_video_reel_path(video_listing.user_id,video_listing) : edit_video_asset_path(video_listing)
+  - link = edit_video_path(video_listing) #VideoClip === video_listing ? edit_user_video_clip_path(video_listing.user_id,video_listing) : VideoReel === video_listing ? edit_user_video_reel_path(video_listing.user_id,video_listing) : edit_video_asset_path(video_listing)
   %div
     = link_to image_tag('/images/listing_icons/edit.png', :mouseclick => '/images/listing_icons/sel-edit.png', :border=>0, :alt => 'Edit', :title => 'Edit'), link, :class => 'listingButton'
   %div

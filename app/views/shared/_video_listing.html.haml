@@ -16,7 +16,7 @@
   - if show_tab
     .tabWrapper
       .listingTab
-        = "#{VideoClip === video_listing ? 'Clip' : VideoReel === video_listing ? 'Reel ' : 'Full Game'}"
+        = video_tab_name(video_listing) #"#{VideoClip === video_listing ? 'Clip' : VideoReel === video_listing ? 'Reel ' : 'Full Game'}"
     .clearDiv
   .frameTop
   .col1    
