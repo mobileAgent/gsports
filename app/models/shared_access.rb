@@ -13,6 +13,7 @@ class SharedAccess < ActiveRecord::Base
   TYPE_REEL= 'vidr'
   TYPE_CLIP= 'vidc'
   TYPE_VIDEO= 'vida'
+  TYPE_USERVIDEO= 'vidu'
 
   def item=(item)
     @item= item

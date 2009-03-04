@@ -145,6 +145,8 @@ class SearchController < BaseController
             @video = VideoClip.first :conditions => { :id => shared_access.item_id.to_i, :dockey => dockey }
           when SharedAccess::TYPE_REEL
             @video = VideoReel.first :conditions => { :id => shared_access.item_id.to_i, :dockey => dockey }
+          when SharedAccess::TYPE_USERVIDEO
+            @video = VideoUser.first :conditions => { :id => shared_access.item_id.to_i, :dockey => dockey }
           end
         end
       end
@@ -153,7 +155,7 @@ class SearchController < BaseController
         # get full metadata xml for shared_access videos 
         xstr = video_metadata_xml @video, true
       else
-        @video = VideoAsset.find_by_dockey(dockey) || VideoClip.find_by_dockey(dockey) || VideoReel.find_by_dockey(dockey)
+        @video = VideoAsset.find_by_dockey(dockey) || VideoClip.find_by_dockey(dockey) || VideoReel.find_by_dockey(dockey) || VideoUser.find_by_dockey(dockey)
         if @video
           # for public-access, get scaled-down metadata xml
           xstr = video_metadata_xml @video, false
@@ -171,7 +173,7 @@ class SearchController < BaseController
   # any video object by dockey
   def d
     dockey = params[:dockey]
-    @video = VideoAsset.find_by_dockey(dockey) || VideoClip.find_by_dockey(dockey) || VideoReel.find_by_dockey(dockey)
+    @video = VideoAsset.find_by_dockey(dockey) || VideoClip.find_by_dockey(dockey) || VideoReel.find_by_dockey(dockey) || VideoUser.find_by_dockey(dockey)
     if @video
       xstr = video_metadata_xml @video
       render :xml => xstr and return if xstr
@@ -183,12 +185,14 @@ class SearchController < BaseController
   def my_videos
     @user = params[:user_id] ? User.find(params[:user_id]) : current_user
     
-    @video_assets = VideoAsset.for_user(@user).all(:limit => 10, :order => 'updated_at DESC')
+    #@video_assets = VideoAsset.for_user(@user).all(:limit => 10, :order => 'updated_at DESC')
     @video_clips = VideoClip.for_user(@user).all(:limit => 10, :order => 'updated_at DESC')
     @video_reels = VideoReel.for_user(@user).all(:limit => 10, :order => 'updated_at DESC')
-    protect_private_videos(@video_assets)
+    @video_users = VideoUser.for_user(@user).all(:limit => 10, :order => 'updated_at DESC')
+    #protect_private_videos(@video_assets)
     protect_private_videos(@video_clips)
     protect_private_videos(@video_reels)
+    protect_private_videos(@video_users)
   end
   
   # This is not as straight-forward as video assets where the user_id is the
@@ -403,6 +407,37 @@ class SearchController < BaseController
           if video.home_team_id
             xml.home_team_name video.home_team.title_name
             xml.home_team_url team_path(video.home_team)
+          end
+          xml.tags video.tags.collect(&:name).join(', ')
+        end
+      end
+    when VideoUser
+      logger.debug "VideoUser to xml..."
+      if deep
+        xml_options[:except] = [:game_date, :game_date_str, :created_at, :updated_at, :uploaded_file_path, 
+                                :user_id, :delta, :video_type, :ignore_game_day, :ignore_game_month, 
+                                :gsan, :internal_notes, 
+                                :shared_access_id]
+      else
+        xml_options[:only] = [:description, :title, :video_length, :view_count, :id]
+      end
+      xstr = video.to_xml(xml_options) do |xml|
+        xml.type 'VideoUser'
+        xml.created_at video.created_at.to_s(:readable)
+        xml.updated_at video.updated_at.to_s(:readable)
+        xml.favorite_count video.favorites.size
+        xml.thumbnail_url @vidavee.file_thumbnail_medium(video.dockey)
+
+        if deep
+          xml.game_date video.human_game_date_string
+          
+          xml.owner_name video.user.full_name
+          xml.owner_name_url user_path(video.user_id)
+          
+          if video.user_id
+            xml.user_name video.user.full_name
+          else
+            xml.user_name 'system'
           end
           xml.tags video.tags.collect(&:name).join(', ')
         end

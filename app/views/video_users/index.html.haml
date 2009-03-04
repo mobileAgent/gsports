@@ -5,9 +5,9 @@
         = link_to _('MY VIDEOS'), url_for({:controller => 'search', :action => 'my_videos', :user_id => @user.id})        
       = @user.full_name
   .listings
-    - if current_user.can_upload?
-      .box
-        = link_to 'Upload a new video', new_video_user_path, :class => 'genericButton'
+    -# if current_user.can_upload?
+    .box
+      = link_to 'Upload a new video', new_video_user_path, :class => 'genericButton'
 
       - if @video_users.any?
         = render :partial => '/shared/video_listing', :collection => @video_users, :locals => { :show_tab => false }

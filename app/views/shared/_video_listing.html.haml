@@ -7,6 +7,8 @@
   - link = user_video_clip_path(video_listing.user_id,video_listing)
 - elsif VideoReel === video_listing
   - link = user_video_reel_path(video_listing.user_id,video_listing)
+- elsif VideoUser === video_listing
+  - link = video_user_path(video_listing)
 - else
   - link = video_asset_path(video_listing)
 
@@ -17,7 +19,7 @@
         = "#{VideoClip === video_listing ? 'Clip' : VideoReel === video_listing ? 'Reel ' : 'Full Game'}"
     .clearDiv
   .frameTop
-  .col1
+  .col1    
     .listingBoxHeader
       - if video_listing.title.length > 45
         .title-2lines

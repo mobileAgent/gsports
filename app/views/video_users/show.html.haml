@@ -2,7 +2,7 @@
   .profilePageHeader
     %h2.columnDescriptor
       %span
-        = link_to _('MY VIDEOS'), url_for({:controller => 'search', :action => 'my_videos', :user_id => @user.id})        
+        = link_to _('MY VIDEOS'), url_for({:controller => 'search', :action => 'my_videos', :user_id => current_user})        
       Player
   .playerContentArea
     .leftNavColPlayer

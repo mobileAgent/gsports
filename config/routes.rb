@@ -44,6 +44,7 @@ ActionController::Routing::Routes.draw do |map|
     user.resources :video_assets
     user.resources :video_clips
     user.resources :video_reels
+    user.resources :video_users
     user.resources :photos, :collection => {:swfupload => :post, :slideshow => :get}
   end
 

@@ -2,7 +2,7 @@ class VideoUsersController < BaseController
   
   include Viewable
   include ActiveMessaging::MessageSender
-  publishes_to :push_video_files
+  publishes_to :push_user_video_files
 
   session :cookie_only => false, :only => [:swfupload]
   protect_from_forgery :except => [:swfupload ]
@@ -32,17 +32,17 @@ class VideoUsersController < BaseController
 
     respond_to do |format|
       format.html # index.html.erb
-      format.xml  { render :xml => @video_assets }
+      format.xml  { render :xml => @video_users }
     end
   end
 
 
   def show
     @video_user = VideoUser.find(params[:id])
-    update_view_count(@video_users)
+    update_view_count(@video_user)
     respond_to do |format|
       format.html # show.html.erb
-      format.xml  { render :xml => @video_users }
+      format.xml  { render :xml => @video_user }
     end
   rescue ActiveRecord::RecordNotFound
     flash[:notice] = 'That video could not be found.'
@@ -65,7 +65,7 @@ class VideoUsersController < BaseController
   def edit
     @video_user = VideoUser.find(params[:id])
     unless (@video_users.user_id == current_user)
-      @video_asset = nil
+      @video_user = nil
       flash[:notice] = "You don't have permission edit that video"
       redirect_to url_for({ :controller => "search", :action => "my_videos" }) and return
     end
@@ -99,8 +99,8 @@ class VideoUsersController < BaseController
 
   def update
     @video_user = VideoUser.find(params[:id])
-    unless (current_user.can_edit?(@video_asset))
-      @video_asset = nil
+    unless (current_user.can_edit?(@video_user))
+      @video_user = nil
       flash[:notice] = "You don't have permission edit that video"
       redirect_to url_for({ :controller => "search", :action => "my_videos" }) and return
     end
@@ -194,9 +194,9 @@ logger.warn "???????? MEOW ????????"
       else
         @video_user = VideoUser.find(params[:hidFileID])
       end
-      @video_user.attributes= params[:video_asset]
+      @video_user.attributes= params[:video_user]
     else
-      @video_user = VideoUser.new params[:video_asset]
+      @video_user = VideoUser.new params[:video_user]
       # TODO: check for a fallback non-swf file upload and add it here
     end
 
@@ -207,7 +207,7 @@ logger.warn "???????? MEOW ????????"
     @video_user.tag_with(params[:tag_list] || '') 
 
     if @video_user.save!
-      publish(:push_video_files,"#{@video_user.id}")
+      publish(:push_user_video_files,"#{@video_user.id}")
       flash[:notice] = "Your video is being procesed. It may be several minutes before it appears in your gallery"
       render :action=>:upload_success
     else

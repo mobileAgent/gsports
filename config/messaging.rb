@@ -8,6 +8,8 @@ ActiveMessaging::Gateway.define do |s|
   #s.processor_group :group1, :order_processor
   
   s.destination :push_video_files, '/queue/PushVideoFiles'
+  
+  s.destination :push_user_video_files, '/queue/PushUserVideoFiles'
 
   s.destination :update_video_status, '/queue/UpdateVideoStatus'
   

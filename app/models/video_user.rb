@@ -49,7 +49,7 @@ class VideoUser < ActiveRecord::Base
 
 
   named_scope :for_user,
-    lambda { |user| { :conditions => ["(team_id IN (?) || league_id IN (?)) and video_status = 'ready' and (public_video = ? || user_id = ?)",(user.league_staff? ? user.league.team_ids : [ user.team_id ]), [ user.league_id ], true, user.id ] } }
+    lambda { |user| { :conditions => ["video_status = 'ready' and (public_video = ? || user_id = ?)", true, user.id ] } }
 
   named_scope :ready,
     :conditions => ["video_status = 'ready' and dockey IS NOT NULL"]

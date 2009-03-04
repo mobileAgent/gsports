@@ -61,7 +61,12 @@ namespace :vidavee do
       puts "Cannot log into vidavee back end"
       return
     end
-    queued_assets = VideoAsset.find(:all, :conditions => ['video_status IN (?)',[Vidavee.QUEUED,Vidavee.TRANSCODING,Vidavee.UPLOAD_FAILED]])
+    
+    conditions = ['video_status IN (?)',[Vidavee.QUEUED,Vidavee.TRANSCODING,Vidavee.UPLOAD_FAILED]]
+    
+    queued_assets = VideoAsset.find(:all, :conditions => conditions)
+    queued_assets += VideoUser.find(:all, :conditions => conditions)
+    
     queued_assets.each do |asset|
       pre = asset.video_status
       vidavee.update_asset_record(login,asset,{'video_status' => true, 'video_length' => true})
@@ -86,6 +91,8 @@ namespace :vidavee do
         end
       end
     end
+    
+    
   end
 
   desc "Re-try to push the specified video_asset.id to the vidavee backend"
