@@ -47,6 +47,7 @@ class User < ActiveRecord::Base
   has_many :video_assets
   has_many :video_clips
   has_many :video_reels
+  has_many :video_users
   has_many :applied_monikers
   has_many :monikers, :through => :applied_monikers
   has_many :messages, :foreign_key => 'to_id'

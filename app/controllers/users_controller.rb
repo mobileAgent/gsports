@@ -68,6 +68,8 @@ class UsersController < BaseController
       @profile_clips_and_reels << @clips.shift if @clips.size > 0
       @profile_clips_and_reels << @reels.shift if @reels.size > 0
     end
+    @profile_videos = @user.video_users.find(:all, :limit => 2, :order => "created_at DESC")
+    
     update_view_count(@user) unless current_user && current_user.eql?(@user)
   end
 
