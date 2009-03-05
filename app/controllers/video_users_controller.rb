@@ -3,14 +3,16 @@ class VideoUsersController < BaseController
   include Viewable
   include ActiveMessaging::MessageSender
   publishes_to :push_user_video_files
-
+  
+  before_filter :admin_required, :only => [:admin ]
+  
   session :cookie_only => false, :only => [:swfupload]
   protect_from_forgery :except => [:swfupload ]
   verify :method => :post, :only => [ :save_video, :swfupload ]
   #after_filter :cache_control, :only => [:create, :update, :destroy]
   #before_filter :find_user, :only => [:index, :show, :new, :edit ]
   #uses_tiny_mce(:options => AppConfig.narrow_mce_options.merge({:width => 530}), :only => [:show])
-
+  
   def images
     redirect_to "/players/images/#{params[:id]}.#{params[:format]}" and return
   end
@@ -35,7 +37,13 @@ class VideoUsersController < BaseController
       format.xml  { render :xml => @video_users }
     end
   end
-
+  
+  
+  sortable_attributes :id, :dockey, :title, 'users.lastname', :video_status
+  
+  def admin
+    @video_users = VideoUser.paginate :all, :order=>sort_order, :include => [ :user ], :page => params[:page]
+  end
 
   def show
     @video_user = VideoUser.find(params[:id])
@@ -162,17 +170,12 @@ class VideoUsersController < BaseController
 
   # POST /video_assets/swfupload comes from the video_uploader.js 
   def swfupload
-logger.warn "!!!!!!!! MEOW !!!!!!!!!!!"
     f = params[:Filedata] # the tmp file
-logger.warn "! #{f}"
     fpath = VideoUser.move_upload_to_repository(f,params[:Filename])
-logger.warn "! #{fpath}"
     @video = VideoUser.new :uploaded_file_path => fpath, :title => 'Upload in Progress', :user_id => current_user.id
-logger.warn "! #{@video.inspect}"
     @video.save!
     render :text => @video.id
   rescue => e
-logger.warn "???????? MEOW ????????"
     logger.warn e.inspect
     render :text => "Error saving file"
   end
