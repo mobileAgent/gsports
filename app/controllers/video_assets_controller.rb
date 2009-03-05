@@ -9,6 +9,8 @@ class VideoAssetsController < BaseController
                                                            :auto_complete_for_video_asset_league_name,
                                                            :auto_complete_for_video_asset_sport ]
   
+  before_filter :admin_required, :only => [:admin ]
+  
   session :cookie_only => false, :only => [:swfupload]
   protect_from_forgery :except => [:swfupload ]
   verify :method => :post, :only => [ :save_video, :swfupload ]
@@ -60,6 +62,13 @@ class VideoAssetsController < BaseController
       format.html # index.html.erb
       format.xml  { render :xml => @video_assets }
     end
+  end
+  
+  
+  sortable_attributes :id, :dockey, :title, :status, 'teams.name', 'leagues.name', 'users.lastname', :video_status
+  
+  def admin
+    @video_assets = VideoAsset.paginate :all, :order=>sort_order, :include => [ :team, :league, :user ], :page => params[:page]
   end
 
   # GET /video_assets/1
@@ -161,6 +170,7 @@ class VideoAssetsController < BaseController
         params[:video_asset][:game_date] += "-01"
         params[:video_asset][:ignore_game_month] = true
       end
+      gd = params[:video_asset][:game_date]
       if (gd && gd.length > 0 && gd.length == 7) # yyyy-mm
         params[:video_asset][:game_date] += '-01'
         params[:video_asset][:ignore_game_day] = true
@@ -383,6 +393,7 @@ class VideoAssetsController < BaseController
   def cache_control
     Rails.cache.delete('quickfind_sports')
     Rails.cache.delete('quickfind_seasons')
+    VideoAsset.seasons_cache_delete
     Rails.cache.delete('quickfind_schools')
   end
 

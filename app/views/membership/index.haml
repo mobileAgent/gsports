@@ -1,0 +1,64 @@
+.profileContentArea.listingPage
+  .profilePageHeader
+    %h2.columnDescriptor
+      %span
+        =link_to 'Memberships', '/membership'
+      -if @user
+        = @user.full_name
+  .listings
+    .padded
+      %table{:border => 0, :cellspacing => 0, :cellpadding => 0, :width => '100%'}
+        %thead
+          %tr.yellowHeader
+            = sortable_table_header :class=>"padded sortableContentHeader", :name => "ID",         :sort => "id"
+            -if !@user
+              = sortable_table_header :class=>"padded sortableContentHeader", :name => "User",  :sort => "user_id"
+            = sortable_table_header :class=>"padded sortableContentHeader", :name => "Name",      :sort => "name"
+            = sortable_table_header :class=>"padded sortableContentHeader", :name => "Billing Method",  :sort => "billing_method"
+            = sortable_table_header :class=>"padded sortableContentHeader", :name => "Cost",  :sort => "cost"
+            = sortable_table_header :class=>"padded sortableContentHeader", :name => "created_at",  :sort => "created_at"
+            = sortable_table_header :class=>"padded sortableContentHeader", :name => "Promotion",  :sort => "promotions.promo_code"
+            = sortable_table_header :class=>"padded sortableContentHeader", :name => "Status",  :sort => "status"
+            = sortable_table_header :class=>"padded sortableContentHeader", :name => "Expiration",  :sort => "expiration_date"
+    
+        %tbody
+          - for mem in @memberships
+            %tr.leagueList
+              
+              %td.leagueList
+                =mem.id
+              
+              -if !@user
+                %td.leagueList
+                  -#= link_to "#{h mem.user.full_name} (#{mem.user.id})", user_path(mem.user.id), :class=>'admin-userreg-link-user'
+                  = link_to "#{h mem.user.full_name} (#{mem.user.id})", "?user_id=#{mem.user.id}"
+                
+              %td.leagueList
+                =mem.name
+                
+              %td.leagueList
+                - if mem.billing_method == Membership::CREDIT_CARD_BILLING_METHOD
+                  =link_to 'CC',:controller => :membership, :action => :member_billing_method_info ,:id => mem.id
+                - elsif mem.purchase_order
+                  =link_to 'PO',:controller => :purchase_orders, :action => :show, :id => mem.purchase_order.id
+                - else
+                  = mem.billing_method
+                  
+              %td.leagueList
+                =mem.cost
+              %td.leagueList
+                =mem.created_at.to_date
+                
+              %td.leagueList
+                - if mem.promotion
+                  = link_to mem.promotion.promo_code, promotion_path(mem.promotion.id)  
+          
+              %td.leagueList
+                =mem.status
+                
+              %td.leagueList
+                =mem.expiration_date
+                
+                
+      .apple_pagination
+        = will_paginate @memberships

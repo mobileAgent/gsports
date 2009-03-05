@@ -155,6 +155,19 @@ class VideoAsset < ActiveRecord::Base
                             :order => "season ASC").map(&:season)
     years.inject([]) { |v,y| v << VideoAsset.new(:game_date => "#{y}-01-01") }
   end
+  
+  # this is a temporary fix while memcached is horking dates (actually it's probably activerecord)
+  def self.seasons_cache
+    cache = @@cache_seasons rescue nil
+    if cache.nil?
+      cache = @@cache_seasons = self.seasons
+    end
+    cache
+  end
+  
+  def self.seasons_cache_delete
+    @@cache_seasons = nil
+  end
 
   # To be called externally to update status of queued videos
   def self.update_queued_assets
@@ -291,5 +304,6 @@ class VideoAsset < ActiveRecord::Base
     vd.deleted_at = Time.now
     vd.save!
   end
+  
   
 end

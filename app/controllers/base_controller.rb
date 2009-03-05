@@ -141,7 +141,8 @@ class BaseController < ApplicationController
   # Set up information we need to drive the quickfind dropdowns
   # mostly memcached when running with memcached turned on
   def quickfind_setup
-    @quickfind_seasons = Rails.cache.fetch('quickfind_seasons') { VideoAsset.seasons }
+    #@quickfind_seasons = Rails.cache.fetch('quickfind_seasons') { VideoAsset.seasons }
+    @quickfind_seasons = VideoAsset.seasons_cache
     @quickfind_schools = Rails.cache.fetch('quickfind_schools') { Team.having_videos.find(:all, :order => "name ASC") }
     @quickfind_states = Rails.cache.fetch('quickfind_states') { Team.states }
     @quickfind_counties = Rails.cache.fetch('quickfind_counties') { Team.counties }

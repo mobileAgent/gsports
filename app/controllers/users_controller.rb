@@ -14,7 +14,7 @@ class UsersController < BaseController
                                                   :account_expired, :membership_canceled, :renew, :cancel_membership, 
                                                   :auto_complete_for_team_name, :auto_complete_for_league_name]
   
-  before_filter :admin_required, :only => [:assume, :destroy, :featured, :toggle_featured, :toggle_moderator, :disable, :registrations ]
+  before_filter :admin_required, :only => [:assume, :destroy, :featured, :toggle_featured, :toggle_moderator, :disable, :registrations, :edit_promotion, :update_promotion ]
   before_filter :find_user, :only => [:edit, :edit_pro_details, :show, :update, :destroy, :statistics, :disable ]
   
   uses_tiny_mce(:options => AppConfig.gsdefault_mce_options.merge({:editor_selector => "rich_text_editor"}), 
@@ -1022,8 +1022,36 @@ class UsersController < BaseController
   def registrations
     @users = User.paginate :all, :order=>sort_order, :include => [ :memberships ], :page => params[:page]
   end
+
+  def edit_promotion
+    @user = User.find(params[:id])
+    @membership = @user.current_membership
+    @promotion = @membership.promotion
+    @promotions = Promotion.find(:all, :conditions=>'enabled = 1')
+  end
+
   
-  
+  def update_promotion
+
+    @user = User.find(params[:id])
+    @membership = @user.current_membership.renew
+        
+    @promotion = Promotion.find(params['promotion']['id'])
+    
+    @membership.apply_promotion(@promotion) if @membership
+
+    if @membership && @membership.save
+      redirect_to '/users/registrations'
+    else
+      @promotion.errors.add('','Could not renew membership') if @membership.nil?
+      @promotions = Promotion.find(:all, :conditions=>'enabled = 1')
+      render :action => :edit_promotion
+    end
+    
+  end
+
+
+
 
   protected
   

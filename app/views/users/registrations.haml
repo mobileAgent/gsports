@@ -17,8 +17,7 @@
             %th.padded.contentBoxHeader Join Date
             %th.padded.contentBoxHeader Promotion
             %th.padded.contentBoxHeader Promo Code Expiry
-            %th.padded.contentBoxHeader Last billed date
-            %th.padded.contentBoxHeader Next billed date
+            %th.padded.contentBoxHeader 
     
         %tbody
           - for user in @users
@@ -50,14 +49,13 @@
                 %td.leagueList= h user.created_at.to_date
                 - promo = mem.promotion
                 - if promo
-                  %td.leagueList= link_to mem.promotion.promo_code, promotion_path(mem.promotion.id)
-                  %td.leagueList= 'promo ex'
+                  %td.leagueList= link_to mem.promotion.promo_code, "/users/edit_promotion/#{user.id}" #promotion_path(mem.promotion.id)
+                  %td.leagueList= mem.expiration_date
                 -else
-                  %td.leagueList
+                  %td.leagueList= link_to 'add', "/users/edit_promotion/#{user.id}"
                   %td.leagueList
                   
-                %td.leagueList= 'last'
-                %td.leagueList= 'next'
+                %td.leagueList= link_to 'detail', "/membership/?user_id=#{user.id}"
               
       .apple_pagination
         = will_paginate @users

@@ -96,24 +96,32 @@
             %br/
             = f.text_field :ad_zone, :size => 5
       
+          %table
+            %tr
+              %td
+                %div
+                  %b Allow Channel Publication
+                  %br/
+                  %label
+                    = f.check_box :can_publish_assets, {}, 1, nil
+                    Full Games
+                  %label
+                    = f.check_box :can_publish_clips, {}, 1, nil
+                    Clips
+                  %label
+                    = f.check_box :can_publish_reels, {}, 1, nil
+                    Reels
+              %td
+                %div
+                  %b Limit
+                  %br/
+                  = f.text_field :publish_limit, :size => 3
+
+          
           %div
-            %b Allow Channel Publication
+            %b Staff Limit
             %br/
-            %label
-              = f.check_box :can_publish_assets, {}, 1, nil
-              Full Games
-            %label
-              = f.check_box :can_publish_clips, {}, 1, nil
-              Clips
-            %label
-              = f.check_box :can_publish_reels, {}, 1, nil
-              Reels
-            %div
-              %b Channel Video Limit
-              %br/
-              = f.text_field :publish_limit, :size => 3
-
-
+            = f.text_field :staff_limit, :size => 3
 
 
 

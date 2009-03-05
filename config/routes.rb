@@ -7,7 +7,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :teams
   map.resources :leagues
   map.resources :vidavees
-  map.resources :video_assets, :new => { :save_video => :post, :swfupload => :post }
+  map.resources :video_assets, :new => { :save_video => :post, :swfupload => :post }, :collection => { :admin => :any }
   map.resources :video_clips
   map.resources :video_reels
   map.resources :video_users, :new => { :save_video => :post, :swfupload => :post }
@@ -15,6 +15,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :billing
   map.resources :monikers
   map.resources :subscription_plans
+  map.resources :membership
   map.resources :staffs
   map.resources :purchase_orders
   map.resources :ratings

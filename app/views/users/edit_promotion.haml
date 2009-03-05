@@ -1,0 +1,60 @@
+- title = "PROMOTION for #{@user.full_name}"
+- @page_title = _(title)
+
+.forumContentArea
+  .listingPage
+    .profilePageHeader
+      %h2.columnDescriptor
+        %span
+          =link_to 'PROMOTION', promotions_path
+        = @user.full_name   
+  .listings
+    .contentBox.tanBackground
+      .contentBoxHeader.yellowHeader
+        .boxDescription
+          = _('Promotion Details')
+      .contentBoxContent
+        %div{ :style => "padding: 10px 10px 10px 10px" }
+        
+          = error_messages_for :membership
+            
+          %strong Current Promotion
+          
+          - if @promotion
+            %br
+            %br
+            %strong Code:
+            = link_to @promotion.promo_code, promotion_path(@promotion.id)
+          
+            %br
+            %strong Cost:
+            = number_to_currency @promotion.cost
+          
+            %br
+            %strong Period:
+            - if !@promotion.period_days.nil?
+              = @promotion.period_days
+              = @promotion.period_days > 1 ? 'Day'.pluralize : 'Day'
+          - else
+            none
+          
+          %br
+          %strong Expiration Date:
+          = @membership.expiration_date
+          
+          
+          %p
+          %br
+          %br
+          %b New Promotion
+          
+          - form_for :promotion, @promotion, :url => { :controller => :users, :action => :update_promotion, :id => @user.id } do |f|
+
+            -# f.hidden_field :video_type
+
+            Code: 
+            = f.collection_select :id, @promotions, :id, :promo_code, {:prompt => "-Select-"}
+
+            %p
+              = f.submit 'Apply'
+

@@ -168,10 +168,10 @@ class Membership < ActiveRecord::Base
     
     # use the current price for the subscription plan
     new_membership.cost = self.user.role.plan.cost
-    if @billing_method.nil? || @billing_method == FREE_BILLING_METHOD
+    if self.billing_method.nil? || self.billing_method == FREE_BILLING_METHOD
       new_membership.billing_method = CREDIT_CARD_BILLING_METHOD
     else
-      new_membership.billing_method = @billing_method
+      new_membership.billing_method = self.billing_method
     end
     
     if new_membership.save
@@ -189,6 +189,15 @@ class Membership < ActiveRecord::Base
       logger.error "Unable to renew membership for user #{self.user.id} #{self.user.full_name}"
       return nil
     end
+  end
+  
+  def apply_promotion(promo)
+    self.promotion = promo
+    self.cost = promotion.cost
+    if !promotion.period_days.nil? && promotion.period_days > 0
+      self.expiration_date = ( expiration_date.nil? ? Time.now : expiration_date ) + promotion.period_days.days       
+      logger.debug "Promotion expiration is #{expiration_date}"
+    end  
   end
 
   def cancel!(reason=nil)

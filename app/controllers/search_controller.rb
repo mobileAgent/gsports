@@ -267,9 +267,10 @@ class SearchController < BaseController
   
   def update_teamfind_cities
     @state = (params[:state] || 0).to_i
-    @county = (params[:county] || "")
+    #@county = (params[:county] || "")
     
-    teamfind_cities = !@county.empty?  ? Team.cities(@county,@state) : @quickfind_cities
+    #teamfind_cities = !@county.empty?  ? Team.cities(@county,@state) : @quickfind_cities
+    teamfind_cities = @state > 0  ? Team.cities(@state) : @quickfind_cities
 
     render :update do |page|
       page.replace_html 'teamfind_cities',   :partial => 'teamfind_cities',   :object => teamfind_cities

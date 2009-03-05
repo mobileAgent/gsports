@@ -22,11 +22,17 @@ class User < ActiveRecord::Base
     # limit staff accounts
     if enabled 
       members = nil
-      members = Staff.league_staff(league_id) if league_staff?
-      members = Staff.team_staff(team_id) if team_staff?
+      limit = 3
+      if league_staff?
+        members = Staff.league_staff(league_id)
+        limit = league.staff_limit || limit
+      elsif team_staff?
+        members = Staff.team_staff(team_id)
+        limit = team.staff_limit || limit
+      end
       if members
         count = members.delete_if{|u|u.id==id}.collect(&:enabled).delete_if{|e|!e}.size
-        errors.add_to_base("You can only have 3 enabled staff members. You have #{count}") if(count >= 3)
+        errors.add_to_base("You can only have #{limit} enabled staff members. You have #{count}") if(count >= limit)
       end
     end
   end
@@ -220,6 +226,7 @@ class User < ActiveRecord::Base
     logger.debug "Invoice Expiration is #{mem.expiration_date}"
     
     if promotion
+      # consider membership.apply_promotion()
       mem.promotion = promotion
       if !promotion.period_days.nil? && promotion.period_days > 0
         mem.expiration_date += promotion.period_days.days       
@@ -246,6 +253,7 @@ class User < ActiveRecord::Base
     end
     
     if promotion
+      # consider membership.apply_promotion()
       mem.promotion = promotion
       if !promotion.period_days.nil? && promotion.period_days > 0
         mem.expiration_date = Time.now + promotion.period_days.days       
@@ -410,15 +418,17 @@ class User < ActiveRecord::Base
   end
   
   def current_membership
-    return nil if (memberships.nil? or memberships.empty?)    
+    mships = memberships.find(:all, :order=>:created_at)
+    
+    return nil if (mships.nil? or mships.empty?)    
     
     # The last membership should be the most recent.
     # If it is not active, then double check the rest
     # of the memberships to be sure that they are not
     # out of order and return an active one if found
-    if !memberships.last.active?
+    if !mships.last.active?
       # look for the first active membership
-      memberships.reverse.each do |m|
+      mships.reverse.each do |m|
         logger.debug "testing membership ID #{m.id}, status #{m.status}, user #{m.user_id}"
         if m.active? || (m.status && m.status == Membership::STATUS_ACTIVE)
           logger.debug "returning membership ID #{m.id}"
@@ -427,7 +437,7 @@ class User < ActiveRecord::Base
       end
     end
 
-    m = memberships.last
+    m = mships.last
     if m
       logger.debug "returning last membership ID #{m.id}, status #{m.status}, user #{m.user_id}"
     end
@@ -440,11 +450,11 @@ class User < ActiveRecord::Base
     mem = current_membership
     return false if mem.nil? || !mem.active?
     
-    if mem.cost > 0 && 
-          mem.billing_method == Membership::CREDIT_CARD_BILLING_METHOD &&
-          mem.last_billed < (Time.now - (PAYMENT_DUE_CYCLE+5).days)
-      logger.info "NEED PAYMENT: #{mem.cost} last billed #{mem.last_billed}"
-      return true
+    if mem.cost > 0 && mem.billing_method == Membership::CREDIT_CARD_BILLING_METHOD
+      if mem.last_billed.nil? || mem.last_billed < (Time.now - (PAYMENT_DUE_CYCLE+5).days)
+        logger.info "NEED PAYMENT: #{mem.cost} last billed #{mem.last_billed}"
+        return true
+      end
     end
     false
   end
