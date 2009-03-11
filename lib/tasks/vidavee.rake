@@ -30,6 +30,29 @@ namespace :vidavee do
     Vidavee.load_backend_reels
   end
 
+  desc "Update the status of the specified user video from the vidavee backend"
+  task :update_video_user_status => :environment do
+    id = ARGV[1]
+    if id.nil?
+      puts "Specify ID on the command line"
+      return
+    end
+    video_asset = VideoUser.find(id)
+    if video_asset.nil?
+      puts "No video for id #{id}"
+      return
+    end
+    vidavee = Vidavee.find(:first)
+    login = vidavee.login
+    if login.nil?
+      puts "Cannot log into vidavee back end"
+      return
+    end
+    vidavee.update_asset_record(login,video_asset)
+    video_asset.save!
+    puts "Status is #{video_asset.video_status}"
+  end
+
   desc "Update the status of the specified video asset from the vidavee backend"
   task :update_video_asset_status => :environment do
     id = ARGV[1]
