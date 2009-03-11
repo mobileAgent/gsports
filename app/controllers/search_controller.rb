@@ -185,11 +185,11 @@ class SearchController < BaseController
   def my_videos
     @user = params[:user_id] ? User.find(params[:user_id]) : current_user
     
-    #@video_assets = VideoAsset.for_user(@user).all(:limit => 10, :order => 'updated_at DESC')
+    @video_assets = VideoAsset.for_user(@user).all(:limit => 10, :order => 'updated_at DESC')
     @video_clips = VideoClip.for_user(@user).all(:limit => 10, :order => 'updated_at DESC')
     @video_reels = VideoReel.for_user(@user).all(:limit => 10, :order => 'updated_at DESC')
     @video_users = VideoUser.for_user(@user).all(:limit => 10, :order => 'updated_at DESC')
-    #protect_private_videos(@video_assets)
+    protect_private_videos(@video_assets)
     protect_private_videos(@video_clips)
     protect_private_videos(@video_reels)
     protect_private_videos(@video_users)
@@ -323,7 +323,7 @@ class SearchController < BaseController
     @videos = ThinkingSphinx::Search.search(params[:search][:keyword],
                                             :per_page => 30,
                                             :page => (params[:page] || 1),
-                                            :classes => [VideoAsset, VideoReel, VideoClip],
+                                            :classes => [VideoAsset, VideoReel, VideoClip, VideoUser],
                                             # :conditions => { :public_video => 1 },
                                             :order => 'updated_at DESC')
   end

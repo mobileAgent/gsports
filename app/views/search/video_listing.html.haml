@@ -64,6 +64,8 @@
           =render :partial => 'shared/video_listing', :locals => { :video_listing => video, :skip_controls => false, :show_tab => true }
         - when 'VideoReel'
           =render :partial => 'shared/video_listing', :locals => { :video_listing => video, :skip_controls => false, :show_tab => true }
+        - when 'VideoUser'
+          =render :partial => 'shared/video_listing', :locals => { :video_listing => video, :skip_controls => false, :show_tab => true }
 
       .clearDiv
 
