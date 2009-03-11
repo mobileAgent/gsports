@@ -1,7 +1,7 @@
 class MembershipController < BaseController
 
-  before_filter :require_current_user, :only => [:member_billing_method_info, :member_billing_history ]
-  
+  #before_filter :require_current_user, :only => [:member_billing_method_info, :member_billing_history ]
+  before_filter :gs_login_required, :only => [:member_billing_method_info, :member_billing_history ]
   before_filter :admin_required, :only => [:index ]
   
   
