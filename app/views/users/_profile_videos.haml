@@ -1,28 +1,29 @@
-.contentBox.tanBackground
-  .contentBoxHeader.yellowHeader
-    %span.moreLink
-      %a{ :href => "#", :onclick => "return profile_minimize(this)" }
-        minimize -
-    %h2.boxDescription
-      My Videos
-  .contentBoxContent
-    .profileFeature
-      - for v in @profile_videos
-        .featureItem.clipItem
+- if @profile_videos && !@profile_videos.empty?
+  .contentBox.tanBackground
+    .contentBoxHeader.yellowHeader
+      %span.moreLink
+        %a{ :href => "#", :onclick => "return profile_minimize(this)" }
+          minimize -
+      %h2.boxDescription
+        My Videos
+    .contentBoxContent
+      .profileFeature
+        - for v in @profile_videos
+          .featureItem.clipItem
         
-          - url = user_video_user_path(v.user_id,v)
-          .profileClipFIT
-            %a{ :href=>url }
-              %img{ :src=>@vidavee.file_thumbnail_medium(v.thumbnail_dockey), :title=>h(v.title).gsub(/\'/,''), :alt=>'Video' }
-          %h3
-            = link_to truncate(h(v.title),20),url
+            - url = user_video_user_path(v.user_id,v)
+            .profileClipFIT
+              %a{ :href=>url }
+                %img{ :src=>@vidavee.file_thumbnail_medium(v.thumbnail_dockey), :title=>h(v.title).gsub(/\'/,''), :alt=>'Video' }
+            %h3
+              = link_to truncate(h(v.title),20),url
       
-  .profileFeature.moreLinkArea
-    %span.moreLink
-      - unless @profile_videos.empty?
-        = link_to _('more'), url_for({:controller => 'search', :action => 'my_videos', :user_id => @user.id})
-      - if @is_current_user
+    .profileFeature.moreLinkArea
+      %span.moreLink
         - unless @profile_videos.empty?
-          |
-        = link_to _('edit'), url_for({:controller => 'search', :action => 'my_videos', :user_id => @user.id})
+          = link_to _('more'), url_for({:controller => 'search', :action => 'my_videos', :user_id => @user.id})
+        - if @is_current_user
+          - unless @profile_videos.empty?
+            |
+          = link_to _('edit'), url_for({:controller => 'search', :action => 'my_videos', :user_id => @user.id})
           
