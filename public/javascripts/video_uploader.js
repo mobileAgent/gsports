@@ -3,29 +3,31 @@ var GSports = {
 
 GSports.SwfUpload = Class.create({
     initialize: function(upload_url,file_types,file_size_limit,file_types_description,file_upload_limit){
-	this.swfu = new SWFUpload({
-	    upload_url : upload_url,
-	    flash_url: '/plugin_assets/community_engine/images/swf/swfupload_f9.swf',
-	    file_size_limit : file_size_limit || '350000000',
-	    file_types : file_types || '*.wmv; *.qt',
-	    file_types_description : file_types_description || 'Video Files',
-	    file_upload_limit : '0 ', // means they can try again if it fails
-            file_queue_limit : '1',
-            file_queued_handler : this.fileQueued.bind(this),
-	    file_queue_error_handler : this.fileQueueError.bind(this),
-	    file_dialog_complete_handler : this.fileDialogComplete.bind(this),
-  	    file_dialog_start_handler: this.fileDialogStart.bind(this),
-	    upload_progress_handler : this.uploadProgress.bind(this),
-	    upload_error_handler : this.uploadError.bind(this),
-	    upload_success_handler : this.uploadSuccess.bind(this),
-	    upload_complete_handler : this.uploadComplete.bind(this),
+		this.swfu = new SWFUpload({
+		    upload_url : upload_url,
+		    //flash_url: '/plugin_assets/community_engine/images/swf/swfupload_f9.swf',
+			flash_url: '/swfupload.swf',
+		    file_size_limit : file_size_limit || '350000000',
+		    file_types : file_types || '*.wmv; *.qt',
+		    file_types_description : file_types_description || 'Video Files',
+		    file_upload_limit : '0 ', // means they can try again if it fails
+	        file_queue_limit : '1',
+	        file_queued_handler : this.fileQueued.bind(this),
+		    file_queue_error_handler : this.fileQueueError.bind(this),
+		    file_dialog_complete_handler : this.fileDialogComplete.bind(this),
+	  	    file_dialog_start_handler: this.fileDialogStart.bind(this),
+		    upload_progress_handler : this.uploadProgress.bind(this),
+		    upload_error_handler : this.uploadError.bind(this),
+		    upload_success_handler : this.uploadSuccess.bind(this),
+		    upload_complete_handler : this.uploadComplete.bind(this),
             //file_browse_handler : this.fileBrowse.bind(this),
-	    custom_settings : { 
-		progress_target : 'uploadProgressContainer',
-                upload_successful : false
-	    }, 
-	    debug: false
-	});
+			button_placeholder_id: "swfuploadContainer",
+		    custom_settings : { 
+				progress_target : 'uploadProgressContainer',
+	            upload_successful : false
+		    }, 
+		    debug: false
+		});
     },
     
     uploadErrors: [],
