@@ -211,13 +211,14 @@ class VideoUsersController < BaseController
     
     @video_user.tag_with(params[:tag_list] || '') 
 
-    if @video_user.save!
+    if @video_user.save
       publish(:push_user_video_files,"#{@video_user.id}")
       flash[:notice] = "Your video is being procesed. It may be several minutes before it appears in your gallery"
       render :action=>:upload_success
     else
       flash[:notice] = "There was a problem with the video"
-      render :action=>:upload
+      @user = params[:user_id] ? User.find(params[:user_id]) : current_user
+      render :action=>:new
     end
   end
 

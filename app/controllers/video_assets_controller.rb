@@ -254,13 +254,13 @@ class VideoAssetsController < BaseController
     
     @video_asset.tag_with(params[:tag_list] || '') 
 
-    if @video_asset.save!
+    if @video_asset.save
       publish(:push_video_files,"#{@video_asset.id}")
       flash[:notice] = "Your video is being procesed. It may be several minutes before it appears in your gallery"
       render :action=>:upload_success
     else
       flash[:notice] = "There was a problem with the video"
-      render :action=>:upload
+      render :action=>:new
     end
   end
 
