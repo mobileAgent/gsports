@@ -161,7 +161,7 @@ GSports.SwfUpload = Class.create({
     uploadComplete : function(file) {
 	try {
 	    if (this.swfu.customSettings.upload_successful) {
-		document.getElementById("btnBrowse").disabled = "true";
+		//document.getElementById("btnBrowse").disabled = "true";
 		this.uploadDone();
 	    } else {
 		file.id = "singlefile";	// This makes it so FileProgress only makes a single UI element, instead of one for each file
