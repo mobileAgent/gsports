@@ -81,15 +81,17 @@
               %div
                 %form.MainForm
                   %p
-                    %button{:id=>"btnBrowse", :type=>"button", :style=>"padding: 5px;", :onclick=>"uploader.swfu.selectFiles(); this.blur();"}
+                    -#%button{:id=>"btnBrowse", :type=>"button", :style=>"padding: 5px;", :onclick=>"uploader.swfu.selectFiles(); this.blur();"}
                       =image_tag '/icons/add.png', :plugin => 'community_engine'
                       Select Images to Upload
+                    #swfuploadContainer 
+                    %br
                   %label
                     %em
                       You can select up to 5 files at a time.
                       %br
                       = (AppConfig.photo['attachment_fu_options']['max_size'])
                       megabyte upload limit per file.          
-              #swfuploadContainer      
+                   
               #divFileProgressContainer{:style=>"height: 75px;"}
               #thumbnails

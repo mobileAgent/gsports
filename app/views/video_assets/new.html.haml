@@ -36,16 +36,18 @@
         %div{:style=>"margin: 0px 10px;", :id => "flashUI"}
           %div
             %p
-              %button{:id=>"btnBrowse", :type=>"button", :style=>"padding: 5px;", :onclick=>"uploader.swfu.selectFile(); this.blur();"}
+              -#%button{:id=>"btnBrowse", :type=>"button", :style=>"padding: 5px;", :onclick=>"uploader.swfu.selectFile(); this.blur();"}
                 =image_tag '/icons/add.png', :plugin => 'community_engine'
                 Browse Video Files
+              #swfuploadContainer
+              %br
             %label
               %em
                 You can select only one file
                 %br
                 = (AppConfig.video_asset['attachment_fu_options']['max_size'])
                 megabyte upload limit per file.                          
-          #swfuploadContainer
+          
           #uploadProgressContainer
 
         %p

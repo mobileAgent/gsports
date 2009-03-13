@@ -16,12 +16,27 @@ GSports.SwfUpload = Class.create({
 		    file_queue_error_handler : this.fileQueueError.bind(this),
 		    file_dialog_complete_handler : this.fileDialogComplete.bind(this),
 	  	    file_dialog_start_handler: this.fileDialogStart.bind(this),
+	
 		    upload_progress_handler : this.uploadProgress.bind(this),
 		    upload_error_handler : this.uploadError.bind(this),
 		    upload_success_handler : this.uploadSuccess.bind(this),
 		    upload_complete_handler : this.uploadComplete.bind(this),
             //file_browse_handler : this.fileBrowse.bind(this),
+
+			// Button settings
 			button_placeholder_id: "swfuploadContainer",
+			button_image_url: "/plugin_assets/community_engine/images/icons/add.png",	// Relative to the Flash file
+			button_width: "165",
+			button_height: "29",
+			button_text: '<span>Browse Video Files</span>',
+			button_text_style: ".theFont { font-size: 22; }",
+			button_text_left_padding: 22,
+			button_text_top_padding: 7,			
+			//button_action : SWFUpload.BUTTON_ACTION.SELECT_FILES, 
+			//button_disabled : false, 
+			//button_cursor : SWFUpload.CURSOR.HAND, 
+			//button_window_mode : SWFUpload.WINDOW_MODE.TRANSPARENT, 
+			
 		    custom_settings : { 
 				progress_target : 'uploadProgressContainer',
 	            upload_successful : false
