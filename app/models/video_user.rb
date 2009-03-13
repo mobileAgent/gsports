@@ -48,8 +48,8 @@ class VideoUser < ActiveRecord::Base
   end
 
 
-  named_scope :for_user,
-    lambda { |user| { :conditions => ["video_status = 'ready' and (public_video = ? || user_id = ?)", true, user.id ] } }
+  named_scope :for_user, lambda { |user| { :conditions => ["video_status = 'ready' and user_id = ?", user.id ] } }
+    #lambda { |user| { :conditions => ["video_status = 'ready' and (public_video = ? || user_id = ?)", true, user.id ] } }
 
   named_scope :ready,
     :conditions => ["video_status = 'ready' and dockey IS NOT NULL"]

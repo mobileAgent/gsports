@@ -66,22 +66,6 @@
               %br/
         -#.clearDiv.moreLinkArea
           %span.moreLink
-
-    -if @video_users && @video_users.size > 0
-      .contentBox.tanBackground
-        .contentBoxHeader.yellowHeader
-          %h2.boxDescription
-            User Videos
-      =render :partial => 'shared/video_listing', :collection => @video_users, :locals => {:skip_controls => false, :show_tab => true }
-      .clearDiv
-      .moreLinkArea 
-        - if @video_users.respond_to?('total_pages') && @video_users.total_pages > 1
-          .apple_pagination
-            = will_paginate @video_users
-        - else
-          %strong
-            = link_to "More Videos...", url_for(:controller => 'search', :action => 'my_video_users', :user_id=>@user.id)
-      %br/
   
     -if @video_clips && @video_clips.size > 0
       .contentBox.tanBackground
@@ -115,11 +99,27 @@
             = link_to "More Reels...", url_for(:controller => 'search', :action => 'my_video_reels', :user_id=>@user.id)
       %br/
 
+    -if @video_users && @video_users.size > 0
+      .contentBox.tanBackground
+        .contentBoxHeader.yellowHeader
+          %h2.boxDescription
+            Video's I've Uploaded
+      =render :partial => 'shared/video_listing', :collection => @video_users, :locals => {:skip_controls => false, :show_tab => true }
+      .clearDiv
+      .moreLinkArea 
+        - if @video_users.respond_to?('total_pages') && @video_users.total_pages > 1
+          .apple_pagination
+            = will_paginate @video_users
+        - else
+          %strong
+            = link_to "More Videos...", url_for(:controller => 'search', :action => 'my_video_users', :user_id=>@user.id)
+      %br/
+
     -if @video_assets && @video_assets.size > 0
       .contentBox.tanBackground
         .contentBoxHeader.yellowHeader
           %h2.boxDescription
-            Videos
+            Full Game Videos
       =render :partial => 'shared/video_listing', :collection => @video_assets, :locals => { :skip_controls => false, :show_tab => true }
       .clearDiv
       .moreLinkArea 
