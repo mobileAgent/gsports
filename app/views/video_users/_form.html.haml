@@ -2,9 +2,9 @@
 
 
 %p
-  = f.label "Game Date"
-  %br/
-  %em= "Formats: (yyyy-mm-dd, yyyy-mm, yyyy, yyyy-yyyy)"
+  = f.label "Date:"
+  -#%br/
+  -#%em= "Formats: (yyyy-mm-dd, yyyy-mm, yyyy, yyyy-yyyy)"
   %br/
   = text_field :video_user, :game_date, :value => @video_user.game_date_string
 
@@ -12,9 +12,9 @@
   %br/
   =f.check_box :public_video
   =f.label(:public_video,  'Public Video')
-  = "&nbsp; | &nbsp;"
-  =f.check_box :missing_audio
-  =f.label(:missing_audio, "This video has <strong>no</strong> audio")
+  -#= "&nbsp; | &nbsp;"
+  -#=f.check_box :missing_audio
+  -#=f.label(:missing_audio, "This video has <strong>no</strong> audio")
   %br/
   %br/
   

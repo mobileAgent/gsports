@@ -34,6 +34,9 @@
       - if current_user && current_user.can_upload?
         .menuitem
           = link_to 'Upload Video', user_video_assets_path(current_user)
+      - else 
+        .menuitem
+          = link_to 'Upload Video', user_video_users_path(current_user)
         
       -if current_user.team_staff? || current_user.league_staff?
         .menuitem
