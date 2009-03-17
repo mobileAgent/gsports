@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090226172932) do
+ActiveRecord::Schema.define(:version => 20090317191804) do
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id",    :limit => 10
@@ -102,6 +102,7 @@ ActiveRecord::Schema.define(:version => 20090226172932) do
     t.integer "frame_width",  :limit => 11
     t.integer "thumb_span",   :limit => 11
     t.string  "allow_url"
+    t.boolean "autoplay"
   end
 
   create_table "choices", :force => true do |t|
