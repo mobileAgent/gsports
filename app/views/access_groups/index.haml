@@ -1,0 +1,45 @@
+.profileContentArea.listingPage
+  .profilePageHeader
+    %h2.columnDescriptor
+      %span
+        Access Groups
+  .listings
+    .padded
+
+      - if current_user.admin?
+        %table
+          %tr
+            %td
+              = link_to 'New Access Group', url_for({:controller=>'access_groups',:action=>'new'}), :class => 'genericButton'
+            %td
+            
+        %br/
+      
+      %table{:border => 0, :cellspacing => 0, :cellpadding => 0, :width => '100%'}
+        %thead
+          %tr.yellowHeader
+            - if current_user.admin?
+              = sortable_table_header :class=>"padded sortableContentHeader", :name => "ID", :sort => "access_groups.id"
+              = sortable_table_header :class=>"padded sortableContentHeader", :name => "Team", :sort => "access_groups.name"
+              = sortable_table_header :class=>"padded sortableContentHeader", :name => "Name", :sort => "access_groups.description"
+              = sortable_table_header :class=>"padded sortableContentHeader", :name => "Description", :sort => "access_groups.enabled"
+              = sortable_table_header :class=>"padded sortableContentHeader", :name => "Enabled", :sort => "teams.name"
+            - else  
+              = sortable_table_header :class=>"padded sortableContentHeader", :name => "Name", :sort => "access_groups.description"
+              = sortable_table_header :class=>"padded sortableContentHeader", :name => "Description", :sort => "access_groups.enabled"
+              
+        %tbody
+          - for grp in @access_groups
+            %tr.leagueList
+            - if current_user.admin?
+              %td.leagueList= grp.id
+              %td.leagueList= h grp.team.name
+              %td.leagueList= link_to grp.name, edit_access_group_path(grp), {:title => "edit"}
+              %td.leagueList= h grp.description
+              %td.leagueList= h grp.enabled
+            -else
+              %td.leagueList= link_to grp.name, edit_access_group_path(grp), {:title => "edit"}
+              %td.leagueList= h grp.description
+              
+      .apple_pagination
+        = will_paginate @access_groups

@@ -9,7 +9,25 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090226172932) do
+ActiveRecord::Schema.define(:version => 20090317191804) do
+
+  create_table "access_groups", :force => true do |t|
+    t.string  "name",        :limit => 30
+    t.string  "description", :limit => 30
+    t.integer "team_id",     :limit => 11
+    t.boolean "enabled"
+  end
+
+  create_table "access_items", :force => true do |t|
+    t.integer "access_group_id", :limit => 11
+    t.string  "item_type"
+    t.integer "item_id",         :limit => 11
+  end
+
+  create_table "access_users", :force => true do |t|
+    t.integer "access_group_id", :limit => 11
+    t.integer "user_id",         :limit => 11
+  end
 
   create_table "activities", :force => true do |t|
     t.integer  "user_id",    :limit => 10
@@ -102,6 +120,7 @@ ActiveRecord::Schema.define(:version => 20090226172932) do
     t.integer "frame_width",  :limit => 11
     t.integer "thumb_span",   :limit => 11
     t.string  "allow_url"
+    t.boolean "autoplay"
   end
 
   create_table "choices", :force => true do |t|

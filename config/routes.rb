@@ -21,6 +21,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :ratings
   map.resources :shared_access  
   map.resources :channels, :collection => { :add => :any, :playerVars => :any }
+  map.resources :access_groups, :collection => { :users => :any, :items => :any }
   
   map.resources :sessions, :collection => { :pop_login_box => :any }
   

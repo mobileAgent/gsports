@@ -1,0 +1,15 @@
+.profileContentArea.listingPage
+  .profilePageHeader
+    %h2.columnDescriptor
+      %span
+        New Access Group
+  .listings
+    .listingItem
+
+      = error_messages_for :access_group 
+      
+      - form_for(@access_group, :url => access_group_url(@access_group), :html => {:multipart => true}) do |f|
+        = render :partial => "form", :locals => { :f => f, :access_group => @access_group }
+        %p= f.submit "Create"
+          
+      = link_to 'Back', channels_path 

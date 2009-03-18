@@ -3,8 +3,10 @@ class CreateAccessGroups < ActiveRecord::Migration
   def self.up
     
     create_table :access_groups do |t|
-      t.string   :name,       :limit => 30
-      t.integer  :team_id,   :limit => 11
+      t.string   :name,         :limit => 30
+      t.string   :description,  :limit => 30
+      t.integer  :team_id,      :limit => 11
+      t.boolean  :enabled
     end
 
     create_table :access_users do |t|

@@ -1,0 +1,21 @@
+.profileContentArea.listingPage
+  .profilePageHeader
+    %h2.columnDescriptor
+      %span
+        Video Channels
+  .listings
+    .padded
+    
+      = error_messages_for :channel_video
+
+      - form_for :channel_video, @channel_video, :url => { :controller => :channels, :action => :add } do |f|
+      
+        = f.hidden_field :video_type
+        = f.hidden_field :video_id
+      
+        Publish to: 
+        = f.collection_select :channel_id, @channels, :id, :name, {:prompt => "-Select-"}
+        
+        %p
+          = f.submit 'Publish'
+  

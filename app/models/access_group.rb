@@ -7,6 +7,10 @@ class AccessGroup < ActiveRecord::Base
   has_many :access_items
   has_many :access_users
   
+  validates_presence_of :name
+  validates_presence_of :team_id
+  
+  
   def items()
     access_items
   end
