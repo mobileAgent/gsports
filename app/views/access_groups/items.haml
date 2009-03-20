@@ -1,0 +1,14 @@
+.profileContentArea.listingPage
+  .profilePageHeader
+    %h2.columnDescriptor
+      %span
+        Access Groups
+      = @access_group.name
+      Videos
+  .listings
+    .padded
+
+      - for user in @access_group.users
+        %tr.leagueList
+        %td.leagueList= h user.full_name
+

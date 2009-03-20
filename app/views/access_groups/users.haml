@@ -1,0 +1,24 @@
+.profileContentArea.listingPage
+  .profilePageHeader
+    %h2.columnDescriptor
+      %span
+        Access Groups
+      = @access_group.name
+      Users
+  .listings
+    .padded
+
+      %table{:border => 0, :cellspacing => 0, :cellpadding => 0, :width => '100%'}
+        %thead
+          %tr.yellowHeader
+            = sortable_table_header :class=>"padded sortableContentHeader", :name => "Name", :sort => "users.lastname"
+            = sortable_table_header :class=>"padded sortableContentHeader", :name => "", :sort => ""
+            
+        %tbody
+          - for user in @access_group.users
+            %tr.leagueList
+            %td.leagueList= h user.full_name
+
+
+      -#.apple_pagination
+        = will_paginate @access_groups

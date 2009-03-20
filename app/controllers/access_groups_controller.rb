@@ -1,7 +1,7 @@
 class AccessGroupsController < BaseController
     
   before_filter :team_staff_or_admin
-  before_filter :admin_required, :except=>[:index]
+  before_filter :admin_required, :except=>[:index, :users, :items]
   
   sortable_attributes 'access_groups.id', 'access_groups.name', 'access_groups.description', 'access_groups.enabled', 'teams.name'
   
@@ -40,6 +40,14 @@ class AccessGroupsController < BaseController
       render :action => "edit"
     end
     
+  end
+
+  def users
+    @access_group = AccessGroup.find(params[:id])
+  end
+  
+  def items
+    @access_group = AccessGroup.find(params[:id])
   end
 
   def add
