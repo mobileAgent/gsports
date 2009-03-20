@@ -1,14 +1,16 @@
 class AccessGroupsController < BaseController
     
   before_filter :team_staff_or_admin
-  before_filter :admin_required, :except=>[:index, :users, :items]
+  before_filter :admin_required, :only=>[:new, :create, :update, :remove]
   
   sortable_attributes 'access_groups.id', 'access_groups.name', 'access_groups.description', 'access_groups.enabled', 'teams.name'
   
   def index
-    conditions = nil
-    conditions = {:team_id=>current_user.team_id, :enabled=>true} if !current_user.admin?
-    @access_groups = AccessGroup.paginate(:all, :order => sort_order, :conditions => conditions, :include => [:team], :page=>params[:page])    
+    if !current_user.admin?
+      @access_groups = AccessGroup.for_team(current_user.team).paginate(:all, :order => sort_order, :page=>params[:page])  
+    else
+      @access_groups = AccessGroup.paginate(:all, :order => sort_order, :include => [:team], :page=>params[:page])    
+    end
   end
 
   def new
@@ -50,25 +52,35 @@ class AccessGroupsController < BaseController
     @access_group = AccessGroup.find(params[:id])
   end
 
-  def add
-    @channel_video = AccessItem.new(params[:channel_video])
-    
-    if @channel_video.channel_id
-      # publish to channel      
-      if @channel_video.save
-        @channel_video.video.share!
-        redirect_to :action => "edit", :id=>@channel_video.channel_id
+  def add_user
+    @access_user = AccessUser.new(params[:access_item])
+
+    if @access_user.access_group_id
+      if @access_user.save
+        redirect_to :action => "users", :id=>@access_user.access_group_id
       end
     end
     
-    #else select channel on which to publish video
-    @channels = AccessGroup.find(:all, :conditions => {:team_id => @current_user.team_id})
-        
+    @access_groups = AccessGroup.for_team(current_user.team)
   end
 
-  def remove
-    @channel_video = AccessItem.find(params[:id])
-    @channel_video.destroy if @channel_video
+  def add_video    
+    @access_item = AccessItem.new(params[:access_item])
+    
+    if @access_item.access_group_id
+      if @access_item.save
+        redirect_to :action => "items", :id=>@access_item.access_group_id
+      end
+    end
+    
+    @access_groups = AccessGroup.for_team(current_user.team)
+  end
+
+  def remove_video
+    @access_item = AccessItem.find(params[:id])
+    @access_item.destroy if @access_item
+    
+    #TODO access check?
     
     render :update do |page|
       target = "channel_video_#{@channel_video.id}"
@@ -78,16 +90,6 @@ class AccessGroupsController < BaseController
 
 
   def show
-    @channel = AccessGroup.find(params[:id])
-    
-    respond_to do |format|
-      format.html {
-        render :layout=>'iframe'
-      }
-      format.xml {
-        render :xml=>channel_flash_xml(@channel) #@channel.to_flash_xml
-      }
-    end
     
   end
   

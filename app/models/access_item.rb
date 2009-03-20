@@ -6,10 +6,16 @@ class AccessItem < ActiveRecord::Base
 
   validates_presence_of :item_type
   validates_presence_of :item_id
-  validates_presence_of :acess_group_id
+  validates_presence_of :access_group_id
   
-  validates_uniqueness_of :item_id, :scope => [:item_type,:acess_group_id], :message => 'has already been added to this group.'
+  validates_uniqueness_of :item_id, :scope => [:item_type,:access_group_id], :message => 'has already been added to this group.'
   validates_uniqueness_of :item_id, :scope => [:item_type], :message => 'has already been added to a group.'
 
+  def validate
+    #This is VideoAsset specific
+    unless item.team_id == access_group.team_id
+      errors.add(:thumb_span, "User is not a member of the team that owns this Access Group.")
+    end
+  end
 
 end

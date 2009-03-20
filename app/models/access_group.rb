@@ -11,6 +11,10 @@ class AccessGroup < ActiveRecord::Base
   validates_presence_of :team_id
   
   
+  named_scope :for_team,
+    lambda { |team| {:conditions => {:team_id=>team.id, :enabled=>true}, :include => [:team] } }
+
+  
   def items()
     access_items
   end

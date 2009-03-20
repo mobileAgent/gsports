@@ -1,0 +1,20 @@
+.profileContentArea.listingPage
+  .profilePageHeader
+    %h2.columnDescriptor
+      %span
+        Access Groups
+      Add User
+  .listings
+    .padded
+    
+      = error_messages_for :access_user
+
+      - form_for :access_user, @access_user, :url => { :controller => :access_groups, :action => :add_user } do |f|
+      
+        = f.hidden_field :user_id
+      
+        Grant access to: 
+        = f.collection_select :access_group_id, @access_groups, :id, :name, {:prompt => "-Select-"}
+        
+        %p
+          = f.submit 'Grant'

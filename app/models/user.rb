@@ -156,6 +156,10 @@ class User < ActiveRecord::Base
   def can_publish?(item=nil)
     team_staff? && team.can_publish?(item)
   end
+
+  def can_restrict?(item)
+    team_staff? && item.type == VideoAsset && item.team_id == team_id && (AccessGroup.for_team(team).size > 0)
+  end
   
   
   def get_managed_user_ids

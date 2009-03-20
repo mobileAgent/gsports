@@ -81,10 +81,14 @@
         %strong= " | " 
         =render :partial => 'shared/favorite_count', :locals => {:item => video_listing}
         
+        %br
         - if current_user.can_publish?(video_listing)
-          %br
+          &nbsp;
           = link_to 'Publish', channel_publish_video_path(video_listing)
-
+        - if current_user.can_restrict?(video_listing)
+          &nbsp;
+          = link_to 'Restrict', add_video_to_access_group_path(video_listing)
+        
 
 
   .col2      

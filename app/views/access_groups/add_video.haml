@@ -1,0 +1,21 @@
+.profileContentArea.listingPage
+  .profilePageHeader
+    %h2.columnDescriptor
+      %span
+        Access Groups
+      Add Video
+  .listings
+    .padded
+    
+      = error_messages_for :access_item
+
+      - form_for :access_item, @access_item, :url => { :controller => :access_groups, :action => :add_video } do |f|
+      
+        = f.hidden_field :item_type
+        = f.hidden_field :item_id
+      
+        Restrict access to: 
+        = f.collection_select :access_group_id, @access_groups, :id, :name, {:prompt => "-Select-"}
+        
+        %p
+          = f.submit 'Restrict'

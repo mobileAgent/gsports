@@ -23,15 +23,15 @@
               = sortable_table_header :class=>"padded sortableContentHeader", :name => "Team", :sort => "teams.name"
               = sortable_table_header :class=>"padded sortableContentHeader", :name => "Name", :sort => "access_groups.name"
               -#= sortable_table_header :class=>"padded sortableContentHeader", :name => "Description", :sort => "access_groups.description"
-              = sortable_table_header :class=>"padded sortableContentHeader", :name => "Users", :sort => ""
-              = sortable_table_header :class=>"padded sortableContentHeader", :name => "Videos", :sort => ""
+              %th.padded.sortableContentHeader= "Users"
+              %th.padded.sortableContentHeader= "Videos"
               = sortable_table_header :class=>"padded sortableContentHeader", :name => "Enabled", :sort => "access_groups.enabled"
             - else  
               = sortable_table_header :class=>"padded sortableContentHeader", :name => "Name", :sort => "access_groups.name"
               -#= sortable_table_header :class=>"padded sortableContentHeader", :name => "Description", :sort => "access_groups.description"
               
-              = sortable_table_header :class=>"padded sortableContentHeader", :name => "Users", :sort => ""
-              = sortable_table_header :class=>"padded sortableContentHeader", :name => "Videos", :sort => ""
+              %th.padded.sortableContentHeader= "Users"
+              %th.padded.sortableContentHeader= "Videos"
               
         %tbody
           - for grp in @access_groups
