@@ -1,3 +1,4 @@
+- allowed = current_user.has_access?(@video_asset)
 .profileContentArea.listingPage
   .profilePageHeader
     %h2.columnDescriptor
@@ -12,7 +13,8 @@
         
     .flashArea#flashArea
     - if @vidavee && session[:vidavee] && @video_asset.dockey
-      = render(:partial => 'shared/video_player', :locals => { :fvars => {:dockey => @video_asset.dockey, :allowFS => "true"}, :params => {:allowFullScreen=>"true"}, :target => 'flashArea', :height => 685, :width => 800 })
+      -if allowed
+        = render(:partial => 'shared/video_player', :locals => { :fvars => {:dockey => @video_asset.dockey, :allowFS => "true"}, :params => {:allowFullScreen=>"true"}, :target => 'flashArea', :height => 685, :width => 800 })
       
     .clearDiv
   
@@ -20,11 +22,13 @@
       %br
       .commentArea
         .forumContentBox
-          .commentForm
-            =render :partial => 'comments/comment_form', :locals => { :commentable => @video_asset }
-          .comments#comments
-            #newest_comment
-            =render :partial => 'comments/comment', :collection => @video_asset.comments
-          %span#more_comments_links= more_comments_links(@video_asset)
-
+          -if allowed
+            .commentForm
+              =render :partial => 'comments/comment_form', :locals => { :commentable => @video_asset }
+            .comments#comments
+              #newest_comment
+              =render :partial => 'comments/comment', :collection => @video_asset.comments
+            %span#more_comments_links= more_comments_links(@video_asset)
+          -else
+            We're sorry, but this video is currently restricted.
     

@@ -2,29 +2,30 @@
   .profilePageHeader
     %h2.columnDescriptor
       %span
-        Access Groups
+        %a{ :href=>access_groups_path() }
+          Access Groups
+      Videos for 
       = @access_group.name
-      Videos
   .listings
     .padded
 
       %table{:border => 0, :cellspacing => 0, :cellpadding => 0, :width => '100%'}
-        %thead
+        -#%thead
           %tr.yellowHeader
             %th.padded.contentHeader
             %th.padded.contentHeader
             %th.padded.contentHeader
         %tbody
-          - for item in @access_group.items
+          - for item in @access_group.access_items
             -video=item.item
-            %tr.leagueList
+            %tr.leagueList{ :id=>"access_item_#{item.id}" }
               %td.leagueList
                 %a{ :href=>video_asset_path(video) }
                   %img{ :src=>@vidavee.file_thumbnail_medium(video.thumbnail_dockey || video.dockey) }
               %td.leagueList  
                 = h video.title
               %td.leagueList
-                Remove
+                = link_to_remote 'Remove', {:url => {:controller=>:access_groups, :action=>:remove_video, :id=>item.id}, :confirm => 'Are you sure?', :method=>:delete}, :class=>'genericButton', :complete => evaluate_remote_response
         
         
         

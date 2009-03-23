@@ -53,7 +53,7 @@ class AccessGroupsController < BaseController
   end
 
   def add_user
-    @access_user = AccessUser.new(params[:access_item])
+    @access_user = AccessUser.new(params[:access_user])
 
     if @access_user.access_group_id
       if @access_user.save
@@ -83,7 +83,17 @@ class AccessGroupsController < BaseController
     #TODO access check?
     
     render :update do |page|
-      target = "channel_video_#{@channel_video.id}"
+      target = "access_item_#{@access_item.id}"
+      page.replace_html target, :text => ''      
+    end  
+  end
+
+  def remove_user
+    @access_user = AccessUser.find(params[:id])
+    @access_user.destroy if @access_user
+
+    render :update do |page|
+      target = "access_user_#{@access_user.id}"
       page.replace_html target, :text => ''      
     end  
   end

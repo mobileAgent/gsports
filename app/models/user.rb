@@ -158,7 +158,24 @@ class User < ActiveRecord::Base
   end
 
   def can_restrict?(item)
-    team_staff? && item.type == VideoAsset && item.team_id == team_id && (AccessGroup.for_team(team).size > 0)
+    team_staff? && item.class == VideoAsset && item.team_id == team_id && (AccessGroup.for_team(team).size > 0)
+    #team_staff? && item.public_methods.include?('team') && item.team_id == team_id && (AccessGroup.for_team(team).size > 0)
+  end
+
+  def has_access?(item)
+    (AccessItem.for_item(item) || []).each{ |access_item|
+      return false if (access_item.access_group.enabled && !access_item.access_group.allow?(self) )
+    }
+    true
+  end
+
+  def can_grant_access?(user=nil)
+    in_general = team_staff? && (AccessGroup.for_team(team).size > 0)
+    if user
+      user.class == User && in_general
+    else
+      in_general
+    end
   end
   
   

@@ -13,7 +13,9 @@
       
         = f.hidden_field :user_id
       
-        Grant access to: 
+        Grant access for 
+        = @access_user.user.full_name
+        to: 
         = f.collection_select :access_group_id, @access_groups, :id, :name, {:prompt => "-Select-"}
         
         %p

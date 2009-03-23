@@ -2,23 +2,30 @@
   .profilePageHeader
     %h2.columnDescriptor
       %span
-        Access Groups
+        %a{ :href=>access_groups_path() }
+          Access Groups
+      Users for 
       = @access_group.name
-      Users
   .listings
     .padded
 
       %table{:border => 0, :cellspacing => 0, :cellpadding => 0, :width => '100%'}
         %thead
           %tr.yellowHeader
-            = sortable_table_header :class=>"padded sortableContentHeader", :name => "Name", :sort => "users.lastname"
-            = sortable_table_header :class=>"padded sortableContentHeader", :name => "", :sort => ""
-            
+            %th.padded.contentBoxHeader
+              User
+            %th.padded.contentBoxHeader
+              Team
+            %th.padded.contentBoxHeader
         %tbody
-          - for user in @access_group.users
-            %tr.leagueList
-            %td.leagueList= h user.full_name
-
-
-      -#.apple_pagination
-        = will_paginate @access_groups
+          - for access in @access_group.access_users
+            - user = access.user
+            %tr.leagueList{ :id=>"access_user_#{access.id}" }
+              %td.leagueList
+                = link_to user.full_name, user_path(user)
+              %td.leagueList  
+                = link_to user.team.name, team_path(user.team_id)
+              %td.leagueList
+                = link_to_remote 'Remove', {:url => {:controller=>:access_groups, :action=>:remove_user, :id=>access.id}, :confirm => 'Are you sure?', :method=>:delete}, :class=>'genericButton', :complete => evaluate_remote_response
+                
+                

@@ -11,6 +11,10 @@ class AccessItem < ActiveRecord::Base
   validates_uniqueness_of :item_id, :scope => [:item_type,:access_group_id], :message => 'has already been added to this group.'
   validates_uniqueness_of :item_id, :scope => [:item_type], :message => 'has already been added to a group.'
 
+  named_scope :for_item,
+    lambda { |item| {:conditions => {:item_id=>item.id, :item_type=>item.class.name} } }
+
+
   def validate
     #This is VideoAsset specific
     unless item.team_id == access_group.team_id

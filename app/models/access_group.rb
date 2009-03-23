@@ -16,11 +16,15 @@ class AccessGroup < ActiveRecord::Base
 
   
   def items()
-    access_items
+    access_items.collect(&:item)
   end
   
   def users()
-    access_users
+    access_users.collect(&:user)
+  end
+  
+  def allow?(user)
+    access_users.collect(&:user_id).include? user.id
   end
   
 end
