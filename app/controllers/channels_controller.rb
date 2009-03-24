@@ -109,6 +109,8 @@ class ChannelsController < BaseController
       xml.homepageLink("#{APP_URL}/teams/show_public/#{channel.team_id}") if channel.team_id
       xml.validationUrl(channel.allow_url)
       
+      xml.autoPlay(channel.autoplay)
+      
       xml.position(channel.position)
     }
   end
