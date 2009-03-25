@@ -21,5 +21,12 @@ class AccessItem < ActiveRecord::Base
       errors.add(:thumb_span, "User is not a member of the team that owns this Access Group.")
     end
   end
+  
+  def self.restriction_for item
+    restrict = nil
+    ai = AccessItem.for_item(item).first
+    restrict = ai.access_group if ai
+    restrict
+  end
 
 end

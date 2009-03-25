@@ -20,6 +20,8 @@ class CreateAccessGroups < ActiveRecord::Migration
       t.integer  :item_id, :limit => 11
     end
     
+    add_index(:access_items, [ :item_type, :item_id ])
+    
   end
 
   def self.down

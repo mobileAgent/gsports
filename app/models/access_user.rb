@@ -8,5 +8,14 @@ class AccessUser < ActiveRecord::Base
       errors.add(:thumb_span, "User is not a member of the team that owns this Access Group.")
     end
   end  
-    
+   
+   
+
+  def self.access_for user
+    access = nil
+    au = AccessUser.find :first, :conditions=>{ :user_id => user.id }
+    access = au.access_group if au
+    access
+  end
+ 
 end

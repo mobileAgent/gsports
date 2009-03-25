@@ -24,6 +24,8 @@ ActiveRecord::Schema.define(:version => 20090317191804) do
     t.integer "item_id",         :limit => 11
   end
 
+  add_index "access_items", ["item_type", "item_id"], :name => "index_access_items_on_item_type_and_item_id"
+
   create_table "access_users", :force => true do |t|
     t.integer "access_group_id", :limit => 11
     t.integer "user_id",         :limit => 11

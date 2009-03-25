@@ -203,7 +203,7 @@ class TeamsController < BaseController
     choices = "<%= content_tag(:ul, @leagues.map { |l| content_tag(:li, h(l.name)) }) %>"    
     render :inline => choices
   end
-
+  
   protected
 
   def load_team_and_related_videos(team)

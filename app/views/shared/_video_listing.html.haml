@@ -10,6 +10,7 @@
 - elsif VideoUser === video_listing
   - link = video_user_path(video_listing)
 - else
+  - @restrict = get_restriction(video_listing)
   - link = video_asset_path(video_listing)
 
 .listingBox-2cols{:id => "#{video_type}_#{video_listing.id}"}
@@ -87,7 +88,10 @@
           = link_to 'Publish', channel_publish_video_path(video_listing)
         - if current_user.can_restrict?(video_listing)
           &nbsp;
-          = link_to 'Restrict', add_video_to_access_group_path(video_listing)
+          - if @restrict
+            = link_to 'Restricted', items_access_group_path(@restrict)
+          - else
+            = link_to 'Restrict', add_video_to_access_group_path(video_listing)
         
 
 

@@ -136,5 +136,6 @@ module BaseHelper
       link_to_remote name, {:url => {:controller=>:sessions, :action=>:pop_login_box}}, options
     end
   end
+  
 
 end

@@ -15,11 +15,18 @@
   
 %br
 %p
-%div
+-#%div
   %b Team ID
   %br/
   = f.text_field :team_id, :size=>6
   
+%br
+%p
+%div
+  %b Team Name  
+  %br/
+  = text_field_with_auto_complete :access_group, :team, :autocomplete => "off"
+
 %br
 %p
 %div

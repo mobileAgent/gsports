@@ -32,8 +32,13 @@
           = link_to('Admin Panel', url_for({:controller => 'admin', :action => 'dashboard'}))
                 
       - if @user && current_user.can_grant_access?(@user)
-        .menuitem
-          = link_to 'Grant Access', add_user_to_access_group_path(@user)
+        - access = get_access(@user)
+        - if access
+          .menuitem
+            = link_to 'Granted Access', users_access_group_path(access)
+        - else
+          .menuitem
+            = link_to 'Grant Access', add_user_to_access_group_path(@user)
           
       - if current_user.can_grant_access?()
         .menuitem

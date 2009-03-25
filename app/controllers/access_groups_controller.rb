@@ -1,7 +1,13 @@
 class AccessGroupsController < BaseController
     
-  before_filter :team_staff_or_admin
+  auto_complete_for :access_group, :team
+  skip_before_filter :verify_authenticity_token, :only => [:auto_complete_for_access_group_team ]
+  before_filter :team_staff_or_admin, :except => [:auto_complete_for_access_group_team ]
   before_filter :admin_required, :only=>[:new, :create, :update, :remove]
+  
+  before_filter :instantiate_team_param, :only=>[:create, :update]
+  after_filter :serialize_team_param, :only=>[:create, :update]
+  
   
   sortable_attributes 'access_groups.id', 'access_groups.name', 'access_groups.description', 'access_groups.enabled', 'teams.name'
   
@@ -43,7 +49,7 @@ class AccessGroupsController < BaseController
     end
     
   end
-
+  
   def users
     @access_group = AccessGroup.find(params[:id])
   end
@@ -103,10 +109,44 @@ class AccessGroupsController < BaseController
     
   end
   
+  
+  def auto_complete_for_access_group_team
+    @teams = []
+    if params[:access_group] && params[:access_group][:team]
+      conditions = ["LOWER(name) like ?", params[:access_group][:team].downcase + '%' ]
+      @teams = Team.find(:all, :conditions => conditions, :order => "name ASC", :limit => 10)
+    end
+    choices = "<%= content_tag(:ul, @teams.map { |t| content_tag(:li, h(t.name)) }) %>"    
+    render :inline => choices
+  end
+  
+  
+  
+  
+  
   private
   
   def team_staff_or_admin
     ( current_user.admin? || current_user.team_staff? ) ? true : access_denied
+  end
+  
+  
+  def instantiate_team_param
+    if params[:access_group]
+      team_name = params[:access_group][:team]
+      if team_name
+        team = Team.find(:first, :conditions=>{ :name=>team_name }) 
+        params[:access_group][:team] = team
+      end
+      if team.nil?
+        params[:access_group][:team] = nil
+      end
+    end
+  end
+  
+  def serialize_team_param
+    team = params[:access_group][:team]
+    params[:access_group][:team] = team ? team.name : ''
   end
   
   
