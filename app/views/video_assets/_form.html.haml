@@ -1,5 +1,6 @@
 = f.error_messages
-
+= error_messages_for :access_item
+  
 - autofill_title = @video_asset.nil? || @video_asset.title.nil? || @video_asset.title.blank?
 %script
   function autofill_video_title() {
@@ -69,6 +70,17 @@
           = collection_select("video_asset","game_type",@video_asset.game_type_choices, "to_s","to_s", {},{:style => "width: 115px", :onchange => "javascript:autofill_video_title(); return true;"})
           %script
             var z=dhtmlXComboFromSelect("video_asset_game_type");
+      
+      -# access_groups = AccessGroup.for_team(current_user.team)
+      -# if access_groups.size > 0
+        %td &nbsp;
+        %td
+          %p
+            %label{:for=>"access_item[id]"} Access Group
+            %br/
+            = collection_select :access_item, :access_group_id, access_groups, :id, :name, {:prompt => "-Select-"}
+         
+            
 
 %p
   %br/
