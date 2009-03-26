@@ -24,8 +24,9 @@
 %p
 %div
   %b Team Name  
+  = @access_group.team_id
   %br/
-  = text_field_with_auto_complete :access_group, :team, :autocomplete => "off"
+  = text_field_with_auto_complete :access_group, :team_name, :autocomplete => "off"
 
 %br
 %p

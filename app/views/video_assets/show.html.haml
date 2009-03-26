@@ -1,4 +1,4 @@
-- allowed = current_user.has_access?(@video_asset)
+- allowed = current_user.has_access?(@video_asset) || current_user.team_staff?(current_user.team)
 .profileContentArea.listingPage
   .profilePageHeader
     %h2.columnDescriptor
@@ -30,5 +30,7 @@
               =render :partial => 'comments/comment', :collection => @video_asset.comments
             %span#more_comments_links= more_comments_links(@video_asset)
           -else
-            We're sorry, but this video is currently restricted.
+            We’re sorry, but this video is currently restricted. Please contact your coach at 
+            = link_to @video_asset.team.name, team_path(@video_asset.team)
+            to inquire about gaining in-season access to this video.
     

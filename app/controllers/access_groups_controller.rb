@@ -1,12 +1,18 @@
 class AccessGroupsController < BaseController
     
-  auto_complete_for :access_group, :team
-  skip_before_filter :verify_authenticity_token, :only => [:auto_complete_for_access_group_team ]
+  #auto_complete_for :access_group, :team
+  #skip_before_filter :verify_authenticity_token, :only => [:auto_complete_for_access_group_team ]
+  #before_filter :team_staff_or_admin, :except => [:auto_complete_for_access_group ]
+  auto_complete_for :access_group, :team_name
+  skip_before_filter :verify_authenticity_token, :only => [:auto_complete_for_access_group_team_name ]
   before_filter :team_staff_or_admin, :except => [:auto_complete_for_access_group_team ]
+  
+  
   before_filter :admin_required, :only=>[:new, :create, :update, :remove]
   
-  before_filter :instantiate_team_param, :only=>[:create, :update]
-  after_filter :serialize_team_param, :only=>[:create, :update]
+  #before_filter :instantiate_team_param, :only=>[:create, :update]
+  #after_filter :serialize_team_param, :only=>[:create, :update]
+  before_filter :fix_team_name, :only=>[:create, :update]
   
   
   sortable_attributes 'access_groups.id', 'access_groups.name', 'access_groups.description', 'access_groups.enabled', 'teams.name'
@@ -29,12 +35,14 @@ class AccessGroupsController < BaseController
     if @access_group.save
       redirect_to access_groups_path()
     else
+      serialize_team_param
       render :action => "new"
     end
   end
 
   def edit
     @access_group = AccessGroup.find(params[:id])
+      serialize_team_param
   end
   
   def update
@@ -45,6 +53,7 @@ class AccessGroupsController < BaseController
     if status
       redirect_to access_groups_path()
     else
+      serialize_team_param
       render :action => "edit"
     end
     
@@ -110,10 +119,10 @@ class AccessGroupsController < BaseController
   end
   
   
-  def auto_complete_for_access_group_team
+  def auto_complete_for_access_group_team_name
     @teams = []
-    if params[:access_group] && params[:access_group][:team]
-      conditions = ["LOWER(name) like ?", params[:access_group][:team].downcase + '%' ]
+    if params[:access_group] && params[:access_group][:team_name]
+      conditions = ["LOWER(name) like ?", params[:access_group][:team_name].downcase + '%' ]
       @teams = Team.find(:all, :conditions => conditions, :order => "name ASC", :limit => 10)
     end
     choices = "<%= content_tag(:ul, @teams.map { |t| content_tag(:li, h(t.name)) }) %>"    
@@ -130,6 +139,17 @@ class AccessGroupsController < BaseController
     ( current_user.admin? || current_user.team_staff? ) ? true : access_denied
   end
   
+  def fix_team_name
+    if params[:access_group]
+      team_name = params[:access_group][:team_name]
+      if team_name
+        team = Team.find(:first, :conditions=>{ :name=>team_name }) 
+        params[:access_group][:team_id] = team.id
+      end
+      params[:access_group].delete :team_name #[:team] = nil
+      #params[:access_group][:team_name] = nil
+    end
+  end
   
   def instantiate_team_param
     if params[:access_group]
@@ -145,8 +165,10 @@ class AccessGroupsController < BaseController
   end
   
   def serialize_team_param
-    team = params[:access_group][:team]
-    params[:access_group][:team] = team ? team.name : ''
+    if @access_group.team_id
+      params[:access_group] = {} if !params[:access_group]
+      params[:access_group][:team] = @access_group.team_name
+    end
   end
   
   

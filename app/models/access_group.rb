@@ -26,5 +26,18 @@ class AccessGroup < ActiveRecord::Base
   def allow?(user)
     access_users.collect(&:user_id).include? user.id
   end
+    
+  def team_name= name
+    team = Team.find(:first, :conditions=>{ :name=>name })
+    team_id = team.id if team
+  end
+  
+  def team_name
+    if team_id
+      team = Team.find(team_id)
+      team ? team.name : '' rescue '!'
+    end
+  end
+  
   
 end
