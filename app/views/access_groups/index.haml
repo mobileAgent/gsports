@@ -45,8 +45,8 @@
             -else
               %td.leagueList= h grp.name
               -#%td.leagueList= h grp.description
-              %td.leagueList= link_to grp.users.size, items_access_group_path(grp)
-              %td.leagueList= link_to grp.items.size, users_access_group_path(grp)
+              %td.leagueList= link_to grp.users.size, users_access_group_path(grp)
+              %td.leagueList= link_to grp.items.size, items_access_group_path(grp)
               
               
       .apple_pagination

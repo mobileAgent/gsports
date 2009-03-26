@@ -136,7 +136,7 @@ class VideoAssetsController < BaseController
     end
     @video_asset = VideoAsset.new(params[:video_asset])
     @video_asset.video_status = 'unknown'
-      
+    
     respond_to do |format|
       if @video_asset.save!
         flash[:notice] = 'VideoAsset was successfully created.'
@@ -158,6 +158,8 @@ class VideoAssetsController < BaseController
       flash[:notice] = "You don't have permission edit that video"
       redirect_to url_for({ :controller => "search", :action => "my_videos" }) and return
     end
+    
+    setup_access @video_asset
 
     respond_to do |format|
       @video_asset.tag_with(params[:tag_list] || '') 
@@ -251,10 +253,12 @@ class VideoAssetsController < BaseController
     @video_asset.video_status = 'saving'
     @video_asset.user_id = current_user.id
     @video_asset = add_team_and_league_relations(@video_asset,params)
+
+    access_ok = setup_access @video_asset
     
     @video_asset.tag_with(params[:tag_list] || '') 
 
-    if @video_asset.save
+    if access_ok && @video_asset.save
       publish(:push_video_files,"#{@video_asset.id}")
       flash[:notice] = "Your video is being procesed. It may be several minutes before it appears in your gallery"
       render :action=>:upload_success
@@ -396,5 +400,25 @@ class VideoAssetsController < BaseController
     VideoAsset.seasons_cache_delete
     Rails.cache.delete('quickfind_schools')
   end
+  
+  def setup_access video
+    result = true
+    logger.debug "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+    logger.debug "setup_access"
+    logger.debug "params #{params[:access_item].inspect}"
+    @access_item = AccessItem.new params[:access_item]
+    if @access_item.access_group_id
+      @access_item.item = video
+      logger.debug "access_item #{@access_item.inspect}"
+      #try this quietly
+      result = @access_item.save
+      logger.debug result.inspect
+      
+    end
+    logger.debug "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+    result
+  end
+  
+  
 
 end

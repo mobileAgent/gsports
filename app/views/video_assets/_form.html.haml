@@ -71,8 +71,8 @@
           %script
             var z=dhtmlXComboFromSelect("video_asset_game_type");
       
-      -# access_groups = AccessGroup.for_team(current_user.team)
-      -# if access_groups.size > 0
+      - access_groups = AccessGroup.for_team(current_user.team)
+      - if access_groups.size > 0
         %td &nbsp;
         %td
           %p
