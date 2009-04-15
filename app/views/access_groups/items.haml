@@ -20,10 +20,11 @@
             -video=item.item
             %tr.leagueList{ :id=>"access_item_#{item.id}" }
               %td.leagueList
-                %a{ :href=>video_asset_path(video) }
-                  %img{ :src=>@vidavee.file_thumbnail_medium(video.thumbnail_dockey || video.dockey) }
+                - if !video.nil?
+                  %a{ :href=>video_asset_path(video) }
+                    %img{ :src=>@vidavee.file_thumbnail_medium(video.thumbnail_dockey || video.dockey) }
               %td.leagueList  
-                = h video.title
+                = h (video.nil? ? 'Video Missing' : video.title )
               %td.leagueList
                 = link_to_remote 'Remove', {:url => {:controller=>:access_groups, :action=>:remove_video, :id=>item.id}, :confirm => 'Are you sure?', :method=>:delete}, :class=>'genericButton', :complete => evaluate_remote_response
         

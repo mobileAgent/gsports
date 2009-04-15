@@ -224,8 +224,12 @@ class TeamsController < BaseController
     @recent_uploads = @team_videos unless @team_videos.empty?
 
     if @team_videos.empty?
-      @team_videos << VideoAsset.references_team(team).all(:limit => 10, :order => 'updated_at DESC')
-      @team_popular_videos << VideoAsset.references_team(team).all(:limit => 10, :order => 'view_count DESC')
+      referenced = VideoAsset.references_team(team).all(:limit => 10, :order => 'updated_at DESC')
+      referenced.delete_if {|v| !v.access_item.empty? }
+      
+      @team_videos << referenced
+      @team_popular_videos << referenced
+      
       if !@team_videos.empty?
         @player_title = 'Games played with #{@team.name}'
       end
@@ -287,7 +291,9 @@ class TeamsController < BaseController
     else
       # non-member picks
       @hide_recent_uploads = true
-      @team_video_picks = VideoAsset.references_team(team).all(:limit => 6, :order => 'view_count DESC').collect(&:dockey).join(",") 
+      referenced = VideoAsset.references_team(team).all(:limit => 6, :order => 'view_count DESC')
+      referenced.delete_if {|v| !v.access_item.empty? }
+      @team_video_picks = referenced.collect(&:dockey).join(",") 
     end
     
   end

@@ -12,6 +12,10 @@ class VideoAsset < ActiveRecord::Base
   belongs_to :visiting_team, :class_name => 'Team', :foreign_key => 'visiting_team_id'
   has_many :video_clips, :dependent => :destroy
   belongs_to :shared_access, :dependent => :destroy
+
+  #has_many :channel_videos, :as => :attachable, :dependent => :destroy
+  has_many :access_item, :as => :item #, :dependent => :destroy
+
   
   # Every video needs a title
   validates_presence_of :title
@@ -74,7 +78,11 @@ class VideoAsset < ActiveRecord::Base
     lambda { |team| { :conditions => ["team_id=? and video_status = 'ready' and public_video = true", team.id] } }
 
   named_scope :references_team,
-    lambda { |team| { :conditions => ["(team_id=? or home_team_id=? or visiting_team_id=?) and video_status = 'ready' and public_video = true", team.id, team.id, team.id] } }
+    lambda { |team| 
+		{ 
+			:conditions => ["(team_id=? or home_team_id=? or visiting_team_id=?) and video_status = 'ready' and public_video = true", team.id, team.id, team.id]
+		} 
+	}
 
   named_scope :for_league,
     lambda { |league| { :conditions => ["league_id = ? and video_status = 'ready' and public_video = true", league.id] } }
