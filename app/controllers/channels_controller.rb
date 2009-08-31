@@ -42,6 +42,22 @@ class ChannelsController < BaseController
     
   end
 
+  def show
+    @channel = Channel.find(params[:id])
+    
+    respond_to do |format|
+      format.html {
+        render :layout=>'iframe'
+      }
+      format.xml {
+        render :xml=>channel_flash_xml(@channel) #@channel.to_flash_xml
+      }
+    end
+    
+  end
+  
+
+  # add video to channel
   def add
     @channel_video = ChannelVideo.new(params[:channel_video])
     
@@ -58,6 +74,7 @@ class ChannelsController < BaseController
         
   end
 
+  # remove video from channel
   def remove
     @channel_video = ChannelVideo.find(params[:id])
     @channel_video.destroy if @channel_video
@@ -67,22 +84,8 @@ class ChannelsController < BaseController
       page.replace_html target, :text => ''      
     end  
   end
-
-
-  def show
-    @channel = Channel.find(params[:id])
-    
-    respond_to do |format|
-      format.html {
-        render :layout=>'iframe'
-      }
-      format.xml {
-        render :xml=>channel_flash_xml(@channel) #@channel.to_flash_xml
-      }
-    end
-    
-  end
   
+  # callback method for flash app
   def playerVars
     @channel = Channel.find(1)
     render :xml=>channel_flash_xml(@channel) #@channel.to_flash_xml
