@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090317191804) do
+ActiveRecord::Schema.define(:version => 20090901134742) do
 
   create_table "access_groups", :force => true do |t|
     t.string  "name",        :limit => 30
@@ -244,6 +244,15 @@ ActiveRecord::Schema.define(:version => 20090317191804) do
 
   add_index "friendships", ["user_id"], :name => "index_friendships_on_user_id"
   add_index "friendships", ["friendship_status_id"], :name => "index_friendships_on_friendship_status_id"
+
+  create_table "gamex_leagues", :force => true do |t|
+    t.integer "league_id", :limit => 11
+  end
+
+  create_table "gamex_users", :force => true do |t|
+    t.integer "user_id",   :limit => 11
+    t.integer "league_id", :limit => 11
+  end
 
   create_table "homepage_features", :force => true do |t|
     t.datetime "created_at"
@@ -715,6 +724,7 @@ ActiveRecord::Schema.define(:version => 20090317191804) do
     t.string   "announcer_name",     :limit => 100
     t.integer  "announcer",          :limit => 11
     t.integer  "shared_access_id",   :limit => 11
+    t.integer  "gamex_id",           :limit => 11
   end
 
   create_table "video_clips", :force => true do |t|
@@ -730,6 +740,16 @@ ActiveRecord::Schema.define(:version => 20090317191804) do
     t.boolean  "public_video",                   :default => true
     t.boolean  "delta",                          :default => false
     t.integer  "shared_access_id", :limit => 11
+  end
+
+  create_table "video_histories", :force => true do |t|
+    t.integer  "user_id",       :limit => 11
+    t.integer  "school_id",     :limit => 11
+    t.integer  "video_id",      :limit => 11
+    t.string   "game_title"
+    t.string   "game_date"
+    t.string   "activity_type"
+    t.datetime "activity_date"
   end
 
   create_table "video_reels", :force => true do |t|

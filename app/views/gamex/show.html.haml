@@ -1,0 +1,88 @@
+.profileContentArea.listingPage
+  .profilePageHeader
+    %h2.columnDescriptor
+      %span
+        GameXchange
+  .listings
+    .padded
+
+      - @league = @gamex_user.league
+      
+      %a{ :href=>league_path(@league) }
+        - if @league.avatar
+          %img{ :src=>@league.avatar.public_filename, :title=>@league.name, :alt=>@league.name, :align=>'middle' }
+        = @league.name
+        
+          
+      %p
+        =link_to 'Download Video', download_gamex_path(:id => @gamex_user.id)
+        Preview and download game video from other schools. You can choose games from a list of the most-recently uploaded video from any school, or view the available games from one specific school. You can check out all the information about a video and preview it here on the GameXchange before downloading.
+
+      %p
+        =link_to 'Upload Video', new_video_asset_path(:gamex => @gamex_user.id) #upload_gamex_path(:id => @gamex_user.id)
+        Publish your video to the GameXchange. Before you upload, you'll be asked for all the relevant information about the game: home team, away team, game date, score, etc. Once your video finishes uploading, it will be immediately available on the GameXchange platform.
+
+      %p
+        =link_to 'Manage Video', manage_gamex_path(:id => @gamex_user.id)
+        After you've uploaded your video, check out your manage page to see the full listing of videos belonging to your school. You can update or edit the information associated with any of your videos at any time.
+        
+        
+      -# <%unless ([Role::USER_SCHOOL_MANAGE] & current_user.role_ids).blank?%>
+      -# <div class="imgDiv"><%=link_to image_tag('arrows.gif'), edit_account_path(current_user)%></div><div><%=link_to 'Manage Account', edit_account_path(current_user)%>
+      -# Update your contact info, change your logo, or reset your password.
+
+      -#.videoHistoryContianer
+        .videoHistoryBox
+          %span.boxTitle
+            Upload History
+          - if @upload_history.blank?
+            %p
+              No videos uploaded yet
+          - else
+            %table{ :cellpadding=>0, :cellspacing=>0 }
+            %tr
+              %th Date
+              %th Title     
+            - @upload_history.each_with_index do |vh, i|
+              %tr{ :class=>row_on_off(i) }
+                %td
+                  =gsxp_date(vh.activity_date)
+                %td
+                  =link_to vh.game_title, video_path(:id=>vh.video_id)
+
+          =link_to 'See All', video_histories_path
+
+
+      -#.videoHistoryContianer
+        .videoHistoryBox
+          %span.boxTitle
+            Download History
+          - if @viewed_history.blank?
+            %p
+              No videos downloaded yet
+          - else
+            %table{ :cellpadding=>0, :cellspacing=>0 }
+            %tr
+              %th Title
+              %th Num Views     
+            - @viewed_history.each_with_index do |vh, i|
+              %tr{ :class=>row_on_off(i) }
+                %td
+                  =link_to vh.game_title, video_path(:id=>vh.video_id)
+                %td
+                  =vh.total_viewed
+
+          =link_to 'See All', video_histories_path
+            
+
+
+
+
+
+
+
+
+
+
+
+

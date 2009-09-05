@@ -92,8 +92,10 @@ class VideoAssetsController < BaseController
       flash[:notice] = "You don't have permission to upload videos"
       redirect_to url_for({ :controller => "search", :action => "my_videos" }) and return
     end
-    
+
     @video_asset = VideoAsset.new
+
+    @video_asset.gamex_id = params[:gamex]
 
     # Set default team name in the home team slot to help them figure it out
     unless (current_user.admin? || current_user.league_staff?)
@@ -106,6 +108,7 @@ class VideoAssetsController < BaseController
       format.xml  { render :xml => @video_asset }
     end
   end
+
 
   # GET /video_assets/1/edit
   def edit

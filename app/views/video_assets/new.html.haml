@@ -1,3 +1,4 @@
+- @need_to_upload = true
 .profileContentArea.listingPage
   .profilePageHeader
     %h2.columnDescriptor
@@ -20,7 +21,7 @@
           Video uploads should not be started if they will span this window
     
       - form_for(:video_asset, @video_asset,:html => {:multipart => true}, :url => {:controller => 'video_assets' , :action => 'save_video'}, :html => {:id => 'upload_form', :onsubmit => 'return doSubmit();' } ) do |f|
-        = render :partial => "form", :locals => { :f => f }
+        = render :partial => ( @video_asset.gamex_id ? "gamex_form" : "form" ), :locals => { :f => f }
         %p
           <input type="hidden" name="hidFileID" id="hidFileID" value="" />
           <label for="uploaded_file_path">Selected File:</label>

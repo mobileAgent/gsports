@@ -1,0 +1,60 @@
+.profileContentArea.listingPage
+  .profilePageHeader
+    %h2.columnDescriptor
+      %span
+        GameXchange Download
+  .listings
+    .padded
+    
+      = error_messages_for :channel_video
+
+      - form_for :gamex_user, @gamex_user, :url => { :controller => :gamex, :action => :download } do |f|
+    
+        League: 
+        - if @gamex_users.size == 1
+          = f.hidden_field :id
+          = @gamex_user.league_name
+        -else
+          - options = {:prompt => "-Select-"}
+          - if @league
+            - options[:selected]=@league.id 
+          = f.collection_select :id, @gamex_users, :id, :league_name, options, {:onchange=>'this.form.submit()'}
+      
+        %p
+        
+        - if @gamex_user
+          Team:
+          - if @team
+            - options[:selected]=@team.id
+          = collection_select :team, :id, @teams, :id, :team_name, options, {:onchange=>'this.form.submit()'}
+          
+
+
+        %p
+          = f.submit 'Go'
+  
+          - if @league
+            %br
+            League
+            = @league.name
+          - if @team
+            %br
+            Team
+            = @team.name
+  
+  
+  
+      -# if current_user.can_upload?
+        .box
+        - if @video_assets.any?
+          = render :partial => '/shared/video_listing', :collection => @video_assets, :locals => { :show_tab => false }
+          .clearDiv
+ 
+          - if @video_assets.respond_to?('total_pages')
+            .apple_pagination
+              = will_paginate @video_assets
+        - else
+          .box
+            You don't have any videos yet.
+          
+          

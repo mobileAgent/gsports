@@ -74,6 +74,10 @@
         .menuitem
           = link_to 'Staff Accounts', staffs_path
   
+      -if current_user.gamex_users.size > 0
+        .menuitem
+          = link_to 'gameXchange', '/gamex'
+  
   
       .menuitem-hilite
         =link_to _('Edit Profile'), edit_user_path(current_user)

@@ -53,6 +53,8 @@ class User < ActiveRecord::Base
   has_many :messages, :foreign_key => 'to_id'
   has_many :sent_messages, :foreign_key => 'from_id'
   
+  has_many :gamex_users
+  
   belongs_to :country
 
   # Base model uses has_enumerated here, but at least fixtures

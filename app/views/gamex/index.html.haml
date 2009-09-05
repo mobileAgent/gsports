@@ -1,0 +1,12 @@
+.profileContentArea.listingPage
+  .profilePageHeader
+    %h2.columnDescriptor
+      %span
+        GameXchange Leagues
+  .listings
+    .padded
+
+      %ul
+        - @gamex_users.each() do |gamex_user|
+          %li
+            =link_to gamex_user.league.name, gamex_path(gamex_user.id)

@@ -1,0 +1,147 @@
+= f.error_messages
+= error_messages_for :access_item
+  
+= f.hidden_field :gamex_id
+    
+- autofill_title = @video_asset.nil? || @video_asset.title.nil? || @video_asset.title.blank?
+%script
+  function autofill_video_title() {
+  if (document.getElementById('autofill').checked)
+  return generate_video_title();
+  }
+
+%p
+  = f.label :sport
+  %br/
+  = text_field_with_auto_complete :video_asset, :sport, :autocomplete => "off", :onchange => "javascript:autofill_video_title(); return true;"
+%p
+  = f.label "Game Date"
+  %br/
+  %em= "Formats: (yyyy-mm-dd, yyyy-mm, yyyy, yyyy-yyyy)"
+  %br/
+  = text_field :video_asset, :game_date, :value => @video_asset.game_date_string, :onchange => "javascript:autofill_video_title(); return true;"
+  
+%p
+  %table
+    %tr
+      %td
+        %p
+          %label{:for=>"video_asset[home_team_name]"} Home Team (Our Team)
+          %br/
+          = text_field_with_auto_complete :video_asset, :home_team_name, :autocomplete => "off", :onchange => "javascript:autofill_video_title(); return true;"
+      %td &nbsp;
+      %td
+        %p
+          %label{:for=>"video_asset[home_score]"} Score
+          %br/
+          = text_field :video_asset, :home_score, :value => @video_asset.home_score, :size=>3, :onchange => "javascript:autofill_video_title(); return true;"
+    %tr
+      %td
+        %p
+          %label{:for=>"video_asset[visiting_team_name]"} Opponent
+          %br/
+          = text_field_with_auto_complete :video_asset, :visiting_team_name, :autocomplete => "off", :onchange => "javascript:autofill_video_title(); return true;"
+      %td &nbsp;
+      %td
+        %p
+          %label{:for=>"video_asset[visitor_score]"} Score
+          %br/        
+          = text_field :video_asset, :visitor_score, :value => @video_asset.visitor_score, :size=>3, :onchange => "javascript:autofill_video_title(); return true;"
+
+%p
+  %table
+    %tr
+      %td
+        %p
+          %label{:for=>"video_asset[game_gender]"} Boys/Girls
+          %br/
+          = collection_select("video_asset","game_gender",VideoAsset.GAME_GENDERS,"to_s","to_s",{ :selected => @video_asset.game_gender }, { :onchange => "javascript:autofill_video_title(); return true;" } )
+      %td &nbsp;
+      %td
+        %p
+          %label{:for=>"video_asset[game_level]"} Level
+          %br/
+          = collection_select("video_asset","game_level",@video_asset.game_level_choices, "to_s","to_s", { :selected => @video_asset.game_level}, {:style => "width: 115px", :onchange => "javascript:autofill_video_title(); return true;"})
+          %script
+            var z=dhtmlXComboFromSelect("video_asset_game_level");
+      %td &nbsp;
+      %td
+        %p
+          %label{:for=>"video_asset[game_type]"} Game Type
+          %br/
+          = collection_select("video_asset","game_type",@video_asset.game_type_choices, "to_s","to_s", {},{:style => "width: 115px", :onchange => "javascript:autofill_video_title(); return true;"})
+          %script
+            var z=dhtmlXComboFromSelect("video_asset_game_type");
+      
+      - access_groups = AccessGroup.for_team(current_user.team)
+      - if access_groups.size > 0
+        %td &nbsp;
+        %td
+          %p
+            %label{:for=>"access_item[id]"} Access Group
+            %br/
+            = collection_select :access_item, :access_group_id, access_groups, :id, :name, {:prompt => "-Select-"}
+         
+            
+=f.hidden_field :public_video, :value=>false
+
+%p
+  %br/
+  =f.check_box :missing_audio
+  =f.label(:missing_audio, "This video has <strong>no</strong> audio")
+  %br/
+  %br/
+  
+%p
+  = f.label :title
+  %input#autofill{:type => 'checkbox', :name => 'autofill', :checked => autofill_title, :onclick => 'autofill_video_title()', :value => 1}
+  Auto-fill
+  %br/
+  = f.text_field :title, :size => 85, :onkeydown => 'disable_autofill_video_title();return true'
+
+%p
+  = f.label :description
+  %br/
+  = f.text_area :description, :rows => 3, :cols => 75
+
+
+%p  
+- if current_user.admin?
+  %fieldset.emphasized
+    %legend="Advanced Fields (Admin Only)"
+    %p
+      %label{:for=>"video_asset[gsan]"} GSAN
+      %br/
+      = f.text_field :gsan
+    %p
+      %label{:for=>"video_asset[internal_notes]"} Internal Use Only
+      %br/
+      = f.text_area :internal_notes, :rows => 3, :cols => 65
+      
+    %p
+      = f.label :league_name
+      %br/
+      = text_field_with_auto_complete :video_asset, :league_name, :autocomplete => "off"
+    %p
+      = f.label :team_name
+      %br/
+      = text_field_with_auto_complete :video_asset, :team_name, :autocomplete => "off"
+
+  %fieldset.emphasized
+    %legend="Very Advanced Fields (Vidavee Coordination, Admin Only)"
+    %p
+      = f.label :dockey
+      %br/
+      = f.text_field :dockey, :size => 32
+    %p
+      = f.label :video_length
+      %br/
+      = f.text_field :video_length
+    %p
+      = f.label :video_type
+      %br/
+      = f.text_field :video_type
+    %p
+      = f.label :video_status
+      %br/
+      = f.text_field :video_status
