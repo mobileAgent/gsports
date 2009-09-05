@@ -20,8 +20,10 @@ class Vidavee < ActiveRecord::Base
   @TRANSCODING = 'transcoding'
   @BLOCKED = 'blocked'
   @FAILED = 'failed'
+  @PUSHING = 'pushing'
+  @SAVING = 'saving'
 
-  class << self;   attr_reader :QUEUED, :UPLOAD_FAILED, :READY, :TRANSCODING, :BLOCKED, :FAILED end
+  class << self;   attr_reader :QUEUED, :UPLOAD_FAILED, :READY, :TRANSCODING, :BLOCKED, :FAILED, :PUSHING, :SAVING end
   
   # These are for upload control
   def self.legal_file_extensions
@@ -537,15 +539,8 @@ class Vidavee < ActiveRecord::Base
   end
 
 
-  # Compute the MD5 sum on the required params for the security token
-  def sign(service,ts,sessionid='')
-    digest = Digest::MD5.new
-    str = "/" + service + "/" + secret + KEY_PARAM + key +
-      (sessionid.length > 0 ? (TOKEN_PARAM + sessionid) : "") +
-      TS_PARAM + ts
-    digest.update str
-    digest.hexdigest.upcase
-  end
+
+
 
   # Post a standard request, get a standard (usually xml) answer
   def vrequest(action,sessionid='',extra_params={},login=true)
@@ -553,8 +548,13 @@ class Vidavee < ActiveRecord::Base
     params = build_request_params(action,sessionid,extra_params,login)
     begin
       full_url = query_url(url,params)
+#puts "======================================================"
+#puts "url: #{full_url}"
+#puts "------------------------------------------------------"
       response = Curl::Easy.http_post(full_url)
       if (response.response_code == 200)
+#puts "response: #{response.body_str}"
+#puts "======================================================"
         return response.body_str
       else
         logger.error "Vidavee response code #{response.response_code} on #{full_url} => #{response.body_str}"
@@ -573,7 +573,12 @@ class Vidavee < ActiveRecord::Base
     params = []
     params << Curl::PostField.content(KEY_PARAM,key)
     params << Curl::PostField.content(TS_PARAM,ts)
-    params << Curl::PostField.content(SIG_PARAM,sign(action,ts))
+    
+    if sessionid && sessionid != ''
+      params << Curl::PostField.content(TOKEN_PARAM,sessionid)
+    end
+  
+    params << Curl::PostField.content(SIG_PARAM,sign(action,ts,sessionid))
     if include_login
       params << Curl::PostField.content(USER_PARAM,username)
       params << Curl::PostField.content(PASS_PARAM,password)
@@ -584,6 +589,16 @@ class Vidavee < ActiveRecord::Base
       end
     end
     params
+  end
+  
+  # Compute the MD5 sum on the required params for the security token
+  def sign(service,ts,sessionid='')
+    digest = Digest::MD5.new
+    str = "/" + service + "/" + secret + KEY_PARAM + key +
+      (sessionid.length > 0 ? (TOKEN_PARAM + sessionid) : "") +
+      TS_PARAM + ts
+    digest.update str
+    digest.hexdigest.upcase
   end
   
   # Create base url for vidavee rest service 
