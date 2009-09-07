@@ -2,13 +2,19 @@
   .profilePageHeader
     %h2.columnDescriptor
       %span
-        GameXchange Download
+        GameXchange
   .listings
     .padded
     
-      = error_messages_for :channel_video
+      = error_messages_for :gamex_user
 
-      - form_for :gamex_user, @gamex_user, :url => { :controller => :gamex, :action => :download } do |f|
+    
+      - if @gamex_user
+        %p{ :style=>'float:right' }
+          = link_to 'Upload a new video', new_video_asset_path('gamex_user[id]' => @gamex_user.id), :class => 'genericButton'
+
+
+      - form_for :gamex_user, @gamex_user, :url => { :controller => :gamex, :action => :console } do |f|
     
         League: 
         - if @gamex_users.size == 1
@@ -20,10 +26,14 @@
             - options[:selected]=@league.id 
           = f.collection_select :id, @gamex_users, :id, :league_name, options, {:onchange=>'this.form.submit()'}
       
+      
+        
+      
         %p
         
         - if @gamex_user
           Team:
+          - options = {:prompt => "-Select-"}
           - if @team
             - options[:selected]=@team.id
           = collection_select :team, :id, @teams, :id, :team_name, options, {:onchange=>'this.form.submit()'}
@@ -103,6 +113,3 @@
           - if @video_assets.respond_to?('total_pages')
             .apple_pagination
               = will_paginate @video_assets
-        - else
-          .box
-            You don't have any videos yet.

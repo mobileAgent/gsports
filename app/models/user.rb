@@ -165,6 +165,33 @@ class User < ActiveRecord::Base
   end
 
   def has_access?(item)
+    # assume we're good
+    access_pass = true
+  
+    # unless it's a gamex video
+    if item.class == VideoAsset and item.gamex_league_id   
+      if 0 < GamexUser.count(:conditions => { :user_id => id, :league_id => item.gamex_league_id } ) 
+        # is coach
+        return true
+      else
+        # isn't but this is a gamex video, need access to pass
+        access_pass = false
+      end
+    end
+  
+    # or is guarded by access groups
+    access_items = AccessItem.for_item(item)
+    if access_items
+      access_pass = false
+      access_items.each{ |access_item|
+        access_pass = true if (access_item.access_group.enabled && access_item.access_group.allow?(self) )
+      }
+    end
+    
+    access_pass
+  end
+
+  def old_has_access?(item)
     (AccessItem.for_item(item) || []).each{ |access_item|
       return false if (access_item.access_group.enabled && !access_item.access_group.allow?(self) )
     }

@@ -724,7 +724,7 @@ ActiveRecord::Schema.define(:version => 20090901134742) do
     t.string   "announcer_name",     :limit => 100
     t.integer  "announcer",          :limit => 11
     t.integer  "shared_access_id",   :limit => 11
-    t.integer  "gamex_id",           :limit => 11
+    t.integer  "gamex_league_id",    :limit => 11
   end
 
   create_table "video_clips", :force => true do |t|
@@ -750,6 +750,11 @@ ActiveRecord::Schema.define(:version => 20090901134742) do
     t.string   "game_date"
     t.string   "activity_type"
     t.datetime "activity_date"
+  end
+
+  create_table "video_reel_sources", :force => true do |t|
+    t.integer "video_reel_id", :limit => 11
+    t.integer "video_clip_id", :limit => 11
   end
 
   create_table "video_reels", :force => true do |t|

@@ -23,6 +23,12 @@ function generate_video_title_if_blank()
         generate_video_title()
 }
 
+function gamex_fill_team_name()
+{
+	select=$('video_asset_visiting_team_id')
+	$('video_asset_visiting_team_name').value = select.options[select.selectedIndex].text	
+}
+
 function generate_video_title()
 {
     var ht = $F('video_asset_home_team_name')

@@ -4,6 +4,11 @@
   - link = video_path(video_listing) #VideoClip === video_listing ? user_video_clip_path(video_listing.user_id,video_listing) : VideoReel === video_listing ? user_video_reel_path(video_listing.user_id,video_listing) : video_asset_path(video_listing)
   %div
     = link_to image_tag('/images/listing_icons/play.png', :mouseclick => '/images/listing_icons/sel-play.png', :border=>0, :alt => 'Watch Video', :title => 'Watch Video'), link, :class => 'listingButton'
+    
+-# if (VideoAsset === video_listing) and (video_listing.can_download?(current_user))
+  - link = video_listing.download_url()
+  %div
+    = link_to image_tag('/images/listing_icons/download.png', :mouseclick => '/images/listing_icons/sel-download.png', :border=>0, :alt => 'Download Video', :title => 'Download Video'), link, :class => 'listingButton'
 
 - controller = video_controller(video_listing) #VideoClip === video_listing ? 'video_clips' : VideoReel === video_listing ? 'video_reels' : 'video_assets'
 - if !@restrict

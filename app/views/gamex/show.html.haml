@@ -13,18 +13,46 @@
           %img{ :src=>@league.avatar.public_filename, :title=>@league.name, :alt=>@league.name, :align=>'middle' }
         = @league.name
         
-          
       %p
-        =link_to 'Download Video', download_gamex_path(:id => @gamex_user.id)
+        = link_to 'Upload a new video', new_video_asset_path(:gamex_user[id] => @gamex_user.id), :class => 'genericButton'
+          
+      -#%p
+        =link_to 'Download Video', download_gamex_path('gamex_user[id]' => @gamex_user.id)
         Preview and download game video from other schools. You can choose games from a list of the most-recently uploaded video from any school, or view the available games from one specific school. You can check out all the information about a video and preview it here on the GameXchange before downloading.
 
-      %p
-        =link_to 'Upload Video', new_video_asset_path(:gamex => @gamex_user.id) #upload_gamex_path(:id => @gamex_user.id)
+      -#%p
+        =link_to 'Upload Video', new_video_asset_path('gamex_user[id]' => @gamex_user.id) #upload_gamex_path(:id => @gamex_user.id)
         Publish your video to the GameXchange. Before you upload, you'll be asked for all the relevant information about the game: home team, away team, game date, score, etc. Once your video finishes uploading, it will be immediately available on the GameXchange platform.
 
-      %p
+      -#%p
         =link_to 'Manage Video', manage_gamex_path(:id => @gamex_user.id)
         After you've uploaded your video, check out your manage page to see the full listing of videos belonging to your school. You can update or edit the information associated with any of your videos at any time.
+        
+        
+        
+        
+      = render :partial => 'download'
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
         
       -# <%unless ([Role::USER_SCHOOL_MANAGE] & current_user.role_ids).blank?%>

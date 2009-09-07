@@ -95,8 +95,15 @@ class VideoAssetsController < BaseController
 
     @video_asset = VideoAsset.new
 
-    @video_asset.gamex_id = params[:gamex]
-
+    if params[ :gamex_user ] and gamex_id = params[ :gamex_user ][ :id ]
+      @gamex_user = GamexUser.find( gamex_id )
+      unless @gamex_user.user_id == current_user.id
+        access_denied
+        return 
+      end
+      @video_asset.gamex_league_id = @gamex_user.league_id
+    end
+        
     # Set default team name in the home team slot to help them figure it out
     unless (current_user.admin? || current_user.league_staff?)
       @video_asset.home_team_name = current_user.team.name

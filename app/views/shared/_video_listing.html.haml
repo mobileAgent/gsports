@@ -93,6 +93,9 @@
           - else
             = link_to 'Restrict', add_video_to_access_group_path(video_listing)
         
+        - if (VideoAsset === video_listing) and (video_listing.can_download?(current_user))
+          &nbsp;
+          = link_to 'Download', video_listing.download_url()
 
 
   .col2      

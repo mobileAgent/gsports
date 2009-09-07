@@ -26,7 +26,8 @@ class CreateGamex < ActiveRecord::Migration
       t.timestamp :activity_date      
     end
     
-    add_column :video_assets,  :gamex_id, :integer
+    add_column :video_assets,  :gamex_league_id, :integer
+    #add_column :video_clips,  :gamex_league_id, :integer
 
   end
 
@@ -36,7 +37,8 @@ class CreateGamex < ActiveRecord::Migration
     drop_table :video_reel_sources
     drop_table :video_histories
     
-    remove_column :video_assets, :gamex_id
+    remove_column :video_assets, :gamex_league_id
+    #remove_column :video_clips, :gamex_league_id
   end
   
 end

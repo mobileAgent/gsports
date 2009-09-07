@@ -103,6 +103,15 @@ class Vidavee < ActiveRecord::Base
     "#{s}?#{DOCKEY_PARAM}=#{dockey}"
   end
 
+  # return the path that would be called so we can put in the page instead
+  def file_asset_path(dockey,sessionid='',field='asset')
+    action = 'file/GetFileAsset'
+    url = url_for(action,sessionid)
+    params = build_request_params(action,sessionid,{DOCKEY_PARAM => dockey,:field=>field},true)
+    query_url(url,params)
+  end
+
+
   # This call is a little different from all the others so far in that it isn't
   # part of the restful api (no /rest/ after the context part so we can't use
   # the url_for -> vrequest methods as they are right now). It isn't signed

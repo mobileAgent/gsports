@@ -1,7 +1,7 @@
 = f.error_messages
 = error_messages_for :access_item
   
-= f.hidden_field :gamex_id
+= f.hidden_field :gamex_league_id
     
 - autofill_title = @video_asset.nil? || @video_asset.title.nil? || @video_asset.title.blank?
 %script
@@ -40,7 +40,9 @@
         %p
           %label{:for=>"video_asset[visiting_team_name]"} Opponent
           %br/
-          = text_field_with_auto_complete :video_asset, :visiting_team_name, :autocomplete => "off", :onchange => "javascript:autofill_video_title(); return true;"
+          -#= text_field_with_auto_complete :video_asset, :visiting_team_name, :autocomplete => "off", :onchange => "javascript:autofill_video_title(); return true;"
+          = f.collection_select :visiting_team_id, @gamex_user.teams(), :id, :team_name, {:prompt => "-Select-"}, {:onchange=>'javascript:gamex_fill_team_name()'}
+          %input{ :type=>'hidden', :id=>'video_asset_visiting_team_name' }
       %td &nbsp;
       %td
         %p

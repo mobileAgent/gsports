@@ -280,6 +280,22 @@ class VideoAsset < ActiveRecord::Base
     # nested includes make query into left outer join
     @video_assets = VideoAsset.paginate(:conditions => cond.to_sql, :page => params[:page], :order => 'video_assets.updated_at DESC', :include => [:tags, :team, { :visiting_team => {} ,:home_team => {} }])
   end
+  
+  def can_download? user
+    0 < GamexUser.count(:conditions=>{ :user_id=>user.id, :league_id=>self.gamex_league_id })
+  end
+  
+  def download_url
+    vidavee = Vidavee.first
+    session_token = vidavee.login
+    @vidavee_movie_path = vidavee.file_asset_path(self.dockey,session_token)
+  end
+  
+  
+  
+  
+  
+  
 
   private
   
@@ -313,5 +329,11 @@ class VideoAsset < ActiveRecord::Base
     vd.save!
   end
   
-  
 end
+
+
+
+
+
+
+

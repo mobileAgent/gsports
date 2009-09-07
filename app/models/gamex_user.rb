@@ -7,4 +7,8 @@ class GamexUser < ActiveRecord::Base
     league.name
   end
   
+  def teams
+  	GamexUser.find(:all, :conditions=>{ :league_id=>league_id }).collect() { |g| g.user.team }
+  end
+  
 end
