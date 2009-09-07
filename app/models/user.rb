@@ -181,7 +181,7 @@ class User < ActiveRecord::Base
   
     # or is guarded by access groups
     access_items = AccessItem.for_item(item)
-    if access_items
+    if access_items.any?
       access_pass = false
       access_items.each{ |access_item|
         access_pass = true if (access_item.access_group.enabled && access_item.access_group.allow?(self) )
