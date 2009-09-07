@@ -2,6 +2,7 @@
 %br
 %p
 -#%div
+= f.hidden_field :user_id
 %b
   User ID: 
   = @gamex_user.user.id
@@ -9,9 +10,9 @@
 = link_to @gamex_user.user.full_name, user_path(@gamex_user.user)
 -#= f.text_field :user_id, :size=>6
 
+%br
 
 - if @gamex_users.size > 0
-  %br
   %br
   %p
     Currently exchanging games in: 
