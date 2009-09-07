@@ -1,0 +1,25 @@
+.profileContentArea.listingPage
+  .profilePageHeader
+    %h2.columnDescriptor
+      %span
+        Edit GameX User
+      = @gamex_user.user.full_name
+  .listings
+    .listingItem
+    
+      %table
+        %tr
+          %td{ :valign=>'top' }
+    
+            %h1 Editing GameX User
+            
+            = error_messages_for :gamex_user
+      
+            - form_for(@gamex_user, :url => gamex_user_url(@gamex_user), :html => {:multipart => true}) do |f|
+              = render :partial => "form", :locals => { :f => f, :gamex_user => @gamex_user } 
+              %p= f.submit "Update"
+          
+            = link_to 'All GameX Users', gamex_users_path
+      
+                
+                

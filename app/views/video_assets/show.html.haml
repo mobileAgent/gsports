@@ -31,6 +31,7 @@
             %span#more_comments_links= more_comments_links(@video_asset)
           -else
             We’re sorry, but this video is currently restricted. Please contact your coach at 
-            = link_to @video_asset.team.name, team_path(@video_asset.team)
+            - team_name = (@video_asset.team ? @video_asset.team.name : '   ' )
+            = link_to team_name, team_path(@video_asset.team) 
             to inquire about gaining in-season access to this video.
     

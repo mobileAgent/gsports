@@ -1,0 +1,18 @@
+.profileContentArea.listingPage
+  .profilePageHeader
+    %h2.columnDescriptor
+      %span
+        GameX User
+      = @gamex_user.user.full_name
+  .listings
+    .listingItem
+      
+      Member of: 
+      = @gamex_user.league_name
+      
+      %br
+      %p
+      %br
+      
+      = link_to 'Edit', edit_gamex_user_path(@gamex_user) |
+      = link_to 'Back', gamex_users_path

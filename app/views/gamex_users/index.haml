@@ -1,0 +1,53 @@
+.profileContentArea.listingPage
+  .profilePageHeader
+    %h2.columnDescriptor
+      %span
+        GameX Users
+  .listings
+    .padded
+
+      - if current_user.admin?
+        %table
+          %tr
+            %td
+              -#= link_to 'New GameX User', url_for({:controller=>'gamex_users',:action=>'new'}), :class => 'genericButton'
+              Add coaches by visiting their profile and choosing GameXchange
+            %td
+            
+        %br/
+
+      %table{:border => 0, :cellspacing => 0, :cellpadding => 0, :width => '100%'}
+        %thead
+          %tr.yellowHeader
+            - if current_user.admin?
+              = sortable_table_header :class=>"padded sortableContentHeader", :name => "ID", :sort => "users.id"
+              = sortable_table_header :class=>"padded sortableContentHeader", :name => "Coach", :sort => "users.name"
+              = sortable_table_header :class=>"padded sortableContentHeader", :name => "Team", :sort => "teams.name"
+              = sortable_table_header :class=>"padded sortableContentHeader", :name => "League", :sort => "league.name"
+              -#= sortable_table_header :class=>"padded sortableContentHeader", :name => "Description", :sort => "access_groups.description"
+              -#%th.padded.sortableContentHeader= "Users"
+              %th.padded.sortableContentHeader= "Delete"
+
+        %tbody
+          - for gamex_user in @gamex_users
+            %tr.leagueList
+              %td.leagueList= gamex_user.user.id
+              %td.leagueList= link_to gamex_user.user.full_name, edit_gamex_user_path(gamex_user), {:title => "edit"}
+              %td.leagueList= h gamex_user.user.team.name
+              %td.leagueList= h gamex_user.league_name
+              %td.leagueList= link_to 'X', gamex_user, :confirm => 'Are you sure?', :method => :delete
+
+
+      .apple_pagination
+        = will_paginate @access_groups
+      
+      
+
+      -#%table
+        - for gamex_user in @gamex_users 
+          %tr
+            %td= link_to gamex_user.user.name, gamex_user
+            %td= link_to gamex_user.user.name, gamex_user 
+            %td= link_to 'Edit', edit_gamex_user_path(gamex_user) 
+            %td= link_to 'Destroy', gamex_user, :confirm => 'Are you sure?', :method => :delete 
+

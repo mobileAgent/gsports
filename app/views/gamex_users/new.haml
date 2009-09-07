@@ -1,0 +1,16 @@
+.profileContentArea.listingPage
+  .profilePageHeader
+    %h2.columnDescriptor
+      %span
+        New GameX User
+  .listings
+    .listingItem
+
+      = error_messages_for :gamex_user 
+      
+      - form_for(@gamex_user, :url => access_group_url(@gamex_user), :html => {:multipart => true}) do |f|
+        = render :partial => "form", :locals => { :f => f, :gamex_user => @gamex_user }
+        %p= f.submit "Create"
+          
+      = link_to 'All GameX Users', gamex_users_path 
+
