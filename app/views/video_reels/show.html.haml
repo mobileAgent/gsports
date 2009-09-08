@@ -1,3 +1,4 @@
+- allowed = current_user.has_access?(@video_reel) 
 .profileContentArea.lisingPage
   .profilePageHeader
     %h2.columnDescriptor
@@ -13,8 +14,9 @@
       
  
     .flashArea#flashArea
-    - if @vidavee && session[:vidavee] && @video_reel.dockey    
-      = render(:partial => 'shared/video_player', :locals => { :fvars => {:dockey => @video_reel.dockey, :allowFS => "true"}, :params => {:allowFullScreen=>"true"}, :target => 'flashArea', :height => 635, :width => 800 })
+    - if @vidavee && session[:vidavee] && @video_reel.dockey   
+      -if allowed
+        = render(:partial => 'shared/video_player', :locals => { :fvars => {:dockey => @video_reel.dockey, :allowFS => "true"}, :params => {:allowFullScreen=>"true"}, :target => 'flashArea', :height => 635, :width => 800 })
     
     .clearDiv
     
@@ -22,9 +24,12 @@
       %br
       .commentArea
         .forumContentBox
-          .commentForm
-            =render :partial => 'comments/comment_form', :locals => { :commentable => @video_reel }
-          .comments#comments
-            #newest_comment
-            =render :partial => 'comments/comment', :collection => @video_reel.comments
-          %span#more_comments_links= more_comments_links(@video_reel)
+          -if allowed
+            .commentForm
+              =render :partial => 'comments/comment_form', :locals => { :commentable => @video_reel }
+            .comments#comments
+              #newest_comment
+              =render :partial => 'comments/comment', :collection => @video_reel.comments
+            %span#more_comments_links= more_comments_links(@video_reel)
+          -else
+            We’re sorry, but this video is currently restricted. Please contact your coach to inquire about gaining in-season access to this video.

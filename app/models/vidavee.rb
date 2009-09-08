@@ -110,6 +110,24 @@ class Vidavee < ActiveRecord::Base
     params = build_request_params(action,sessionid,{DOCKEY_PARAM => dockey,:field=>field},true)
     query_url(url,params)
   end
+  
+  # crazy back door call for reel data
+  def get_clip_dockeys_for_reel(dockey)
+    url="http://#{uri}/hsstv/pClientXML.view?AF_renderParam_contentType=text/xml&dockey=#{dockey}"
+    #response = vrequest('playlist/GetGalleryPlaylists',sessionid)
+    #response = vrequest('playlist/GetDetailsPlaylistEmbedCode',sessionid,DOCKEY_PARAM => dockey)
+    response = Curl::Easy.http_post(url)
+      if (response.response_code == 200)
+        h = Hpricot.XML response.body_str
+        a = h.search('item').collect() {|e| 
+          /dockey=([0-9A-F]+)&/.match(e.attributes['url'])[1]
+        }
+       else
+        logger.error "Vidavee response code #{response.response_code} on #{full_url} => #{response.body_str}"
+        return nil
+      end
+    
+  end
 
 
   # This call is a little different from all the others so far in that it isn't
