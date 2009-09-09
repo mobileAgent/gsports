@@ -17,6 +17,11 @@
         %a{ :href => user_path(current_user.id) }
           %span
             = _('My Profile')
+      -if current_user.gamex_users.size > 0
+        %li.divider
+          %a{ :href => url_for({:controller => 'gamex', :action => 'download'}) }
+            %span
+              = _('Game Exchange')
       -if current_user && current_user.admin?
         %li.divider
           %a{ :href => url_for({:controller => 'admin', :action => 'dashboard'}) }

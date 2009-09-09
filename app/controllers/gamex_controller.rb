@@ -1,8 +1,10 @@
 class GamexController < BaseController
   
+  before_filter :in_gamex_content
+  
   
   def index
-    redirect_to '/gamex/console'
+    redirect_to '/gamex/download'
     return
     
     @gamex_users = current_user.gamex_users
@@ -23,9 +25,9 @@ class GamexController < BaseController
   
   
   
-  def console
+  def download
     
-    @gamex_users = GamexUser.find(:all, :conditions => { :user_id => current_user.id } )
+    @gamex_users = GamexUser.for_user(current_user) #find(:all, :conditions => { :user_id => current_user.id } )
     
     if @gamex_users.size == 1
       @gamex_user = @gamex_users.first
@@ -60,7 +62,7 @@ class GamexController < BaseController
   
   
   
-  def download
+  def download1
     
     @gamex_users = GamexUser.find(:all, :conditions => { :user_id => current_user.id } )
     #@gamex_user = GamexUser.new(params[:gamex])
@@ -96,6 +98,9 @@ class GamexController < BaseController
     
   end
 
+  def in_gamex_content
+    @render_gamex_menu = true
+  end
   
 end # class
 

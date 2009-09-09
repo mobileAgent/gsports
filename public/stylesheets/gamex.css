@@ -1,0 +1,38 @@
+
+table.gamex th {
+  font-size: 130%;
+  padding: 5px;
+}
+table.gamex td {
+	border-bottom: 1px solid #989B9B;
+	border-right: 1px solid #989B9B;
+	padding:5px;
+}
+
+
+.gamex .row0 {
+	background-color: #BDC1C0;
+}
+
+.gamex .row1 {
+}
+
+
+.gamexButton{
+	position: relative;
+	float: left;
+	background-image: url(../images/blueButton.png);
+	width: 175px;
+	height: 39px;
+	left: 0px;
+}
+
+.gamexButton a{
+	text-decoration: none;
+	font-weight: normal;
+	color: #fff;
+	font-size: 160%;
+	vertical-align: middle;
+	padding-top: 20px;
+       	padding-left: 20px;
+}

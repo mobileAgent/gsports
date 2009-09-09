@@ -1,25 +1,42 @@
+- @include_calendar = true
 = f.error_messages
 = error_messages_for :access_item
-  
-= f.hidden_field :gamex_league_id
     
 - autofill_title = @video_asset.nil? || @video_asset.title.nil? || @video_asset.title.blank?
 %script
   function autofill_video_title() {
-  if (document.getElementById('autofill').checked)
-  return generate_video_title();
+  //if (document.getElementById('autofill').checked)
+  //return generate_video_title();
   }
+  
+= hidden_field :gamex_user, :id
 
 %p
-  = f.label :sport
-  %br/
-  = text_field_with_auto_complete :video_asset, :sport, :autocomplete => "off", :onchange => "javascript:autofill_video_title(); return true;"
+  %table
+    %tr
+      %td
+        %p
+          = f.label :sport
+          %br/
+          %select{ :id=>"video_asset_sport", :name=>"video_asset[sport]", :onchange=>"javascript:autofill_video_title(); return true;" }
+            %option{ :selected=>'selected' } Football
+
+      %td &nbsp;
+      %td
+        %p
+          -if @gamex_users.size > 1
+            = f.label :league
+            %br/
+            = f.collection_select :gamex_league_id, @gamex_users, :league_id, :league_name
+          -else
+            = f.hidden_field :gamex_league_id, :value=>@gamex_user.league_id
+
+
 %p
   = f.label "Game Date"
   %br/
-  %em= "Formats: (yyyy-mm-dd, yyyy-mm, yyyy, yyyy-yyyy)"
-  %br/
-  = text_field :video_asset, :game_date, :value => @video_asset.game_date_string, :onchange => "javascript:autofill_video_title(); return true;"
+  -#= text_field :video_asset, :game_date, :value => @video_asset.game_date_string, :onchange => "javascript:autofill_video_title(); return true;"
+  = calendar_date_select_tag( "video_asset[game_date]",@video_asset.game_date,:time=>false,:size=>15,:maxlength=>'20%' )
   
 %p
   %table
@@ -87,14 +104,9 @@
             
 =f.hidden_field :public_video, :value=>false
 
-%p
-  %br/
-  =f.check_box :missing_audio
-  =f.label(:missing_audio, "This video has <strong>no</strong> audio")
-  %br/
-  %br/
-  
-%p
+=f.hidden_field :title
+
+-#%p
   = f.label :title
   %input#autofill{:type => 'checkbox', :name => 'autofill', :checked => autofill_title, :onclick => 'autofill_video_title()', :value => 1}
   Auto-fill

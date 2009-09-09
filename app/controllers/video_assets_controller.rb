@@ -2,7 +2,9 @@ class VideoAssetsController < BaseController
   include Viewable
   include ActiveMessaging::MessageSender
   publishes_to :push_video_files
-
+  
+  before_filter :gamex_clean_form, :only=>[:create, :update]
+  
   skip_before_filter :verify_authenticity_token, :only => [:auto_complete_for_video_asset_home_team_name,
                                                            :auto_complete_for_video_asset_visiting_team_name,
                                                            :auto_complete_for_video_asset_team_name,
@@ -16,7 +18,8 @@ class VideoAssetsController < BaseController
   verify :method => :post, :only => [ :save_video, :swfupload ]
   after_filter :cache_control, :only => [:create, :update, :destroy]
   after_filter :expire_games_of_the_week, :only => [:destroy]
-  before_filter :find_user, :only => [:index, :show, :new, :edit ]
+  before_filter :find_user, :only => [:index, :show, :new, :edit, :save_video ]
+  before_filter :find_gamex_user, :only => [:index, :show, :new, :edit, :save_video ]
   uses_tiny_mce(:options => AppConfig.narrow_mce_options.merge({:width => 530}),
                 :only => [:show])
 
@@ -95,14 +98,9 @@ class VideoAssetsController < BaseController
 
     @video_asset = VideoAsset.new
 
-    if params[ :gamex_user ] and gamex_id = params[ :gamex_user ][ :id ]
-      @gamex_user = GamexUser.find( gamex_id )
-      unless @gamex_user.user_id == current_user.id
-        access_denied
-        return 
-      end
-      @video_asset.gamex_league_id = @gamex_user.league_id
-    end
+    #if is_gamex?
+    #  @video_asset.gamex_league_id = @gamex_user.league_id
+    #end
         
     # Set default team name in the home team slot to help them figure it out
     unless (current_user.admin? || current_user.league_staff?)
@@ -139,10 +137,12 @@ class VideoAssetsController < BaseController
       redirect_to url_for({ :controller => "search", :action => "my_videos" }) and return
     end
     
-    gd = params[:video_asset][:game_date] 
-    if (gd && gd.length > 0 && gd.length <= 7) # yyyy-mm
-      params[:video_asset][:game_date] += '-01'
-      params[:video_asset][:ignore_game_day] = true
+    if ! is_gamex?
+      gd = params[:video_asset][:game_date] 
+      if (gd && gd.length > 0 && gd.length <= 7) # yyyy-mm
+        params[:video_asset][:game_date] += '-01'
+        params[:video_asset][:ignore_game_day] = true
+      end
     end
     @video_asset = VideoAsset.new(params[:video_asset])
     @video_asset.video_status = 'unknown'
@@ -174,18 +174,21 @@ class VideoAssetsController < BaseController
     respond_to do |format|
       @video_asset.tag_with(params[:tag_list] || '') 
       @video_asset = add_team_and_league_relations(@video_asset,params)
-      gd = params[:video_asset][:game_date]
-      params[:video_asset][:ignore_game_month] = false
-      params[:video_asset][:ignore_game_day] = false
-      params[:video_asset][:game_date_str] = gd
-      if (gd && gd.length > 0 && gd.length == 4) # yyyy
-        params[:video_asset][:game_date] += "-01"
-        params[:video_asset][:ignore_game_month] = true
-      end
-      gd = params[:video_asset][:game_date]
-      if (gd && gd.length > 0 && gd.length == 7) # yyyy-mm
-        params[:video_asset][:game_date] += '-01'
-        params[:video_asset][:ignore_game_day] = true
+      
+      if ! is_gamex?
+        gd = params[:video_asset][:game_date]
+        params[:video_asset][:ignore_game_month] = false
+        params[:video_asset][:ignore_game_day] = false
+        params[:video_asset][:game_date_str] = gd
+        if (gd && gd.length > 0 && gd.length == 4) # yyyy
+          params[:video_asset][:game_date] += "-01"
+          params[:video_asset][:ignore_game_month] = true
+        end
+        gd = params[:video_asset][:game_date]
+        if (gd && gd.length > 0 && gd.length == 7) # yyyy-mm
+          params[:video_asset][:game_date] += '-01'
+          params[:video_asset][:ignore_game_day] = true
+        end
       end
         
       if @video_asset.update_attributes(params[:video_asset])
@@ -236,6 +239,7 @@ class VideoAssetsController < BaseController
   
   # POST /vidapi/save_video (the rest of the form after the swfupload)
   def save_video
+    
     if params[:hidFileID]
       # Here we are hacking around a problem with ultra large
       # uploads where swfupload flash object is apparently timing out
@@ -263,7 +267,9 @@ class VideoAssetsController < BaseController
     @video_asset.video_status = 'saving'
     @video_asset.user_id = current_user.id
     @video_asset = add_team_and_league_relations(@video_asset,params)
-
+    
+    fix_gamex_fields()
+    
     access_ok = setup_access @video_asset
     
     @video_asset.tag_with(params[:tag_list] || '') 
@@ -404,6 +410,47 @@ class VideoAssetsController < BaseController
     @user = params[:user_id] ? User.find(params[:user_id]) : current_user
   end
 
+  def find_gamex_user
+    if is_gamex?
+      @gamex_users = GamexUser.for_user(current_user)
+      @render_gamex_menu = true
+      id_s = params[:gamex_user][:id]
+      if id_s.empty?
+        @gamex_user = @gamex_users.first
+      else
+        @gamex_user = GamexUser.find( id_s )
+      end
+      unless @gamex_user.user_id == current_user.id
+        access_denied
+      end
+    end
+  end
+  
+  def is_gamex?()
+    params[ :gamex_user ] and params[:gamex_user][:id]
+  end
+  
+  def fix_gamex_fields()
+    if is_gamex?
+      
+      #video_asset = VideoAsset.new(params[:video_asset])
+      
+      #params[:video_asset][:title] 
+      home_team_name = @video_asset.home_team ? @video_asset.home_team.name : ''
+      visiting_team_name = @video_asset.visiting_team ? @video_asset.visiting_team.name : ''
+      @video_asset.title = "#{home_team_name} vs. #{visiting_team_name}, #{@video_asset.game_date}"
+      
+      if params[:access_item][:access_group_id].empty?
+        @access_item = AccessItem.new(params[:access_item])
+        @access_item.errors.add :access_group, "An Access Group is required."
+        @video_asset.errors.add :id, "An Access Group is required."
+      end
+      
+    end
+  end
+  
+  
+
   def cache_control
     Rails.cache.delete('quickfind_sports')
     Rails.cache.delete('quickfind_seasons')
@@ -413,22 +460,26 @@ class VideoAssetsController < BaseController
   
   def setup_access video
     result = true
-    logger.debug "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-    logger.debug "setup_access"
-    logger.debug "params #{params[:access_item].inspect}"
+    #logger.debug "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+    #logger.debug "setup_access"
+    #logger.debug "params #{params[:access_item].inspect}"
     @access_item = AccessItem.new params[:access_item]
     if @access_item.access_group_id
       @access_item.item = video
-      logger.debug "access_item #{@access_item.inspect}"
+      #logger.debug "access_item #{@access_item.inspect}"
       #try this quietly
       result = @access_item.save
-      logger.debug result.inspect
+      #logger.debug result.inspect
       
     end
-    logger.debug "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+    #logger.debug "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
     result
   end
   
-  
 
 end
+
+
+
+
+

@@ -2,13 +2,19 @@
 .profileContentArea.listingPage
   .profilePageHeader
     %h2.columnDescriptor
-      %span
-        = link_to _('MY VIDEOS'), url_for({:controller => 'search', :action => 'my_videos', :user_id => @user.id})        
-      Upload New Video
+      -if @render_gamex_menu
+        %span
+          GameXchange
+        &gt; Upload
+      -else
+        %span
+          = link_to _('MY VIDEOS'), url_for({:controller => 'search', :action => 'my_videos', :user_id => @user.id})        
+        Upload New Video
       -#
         for
         = current_user.full_name
   .listings
+    -#%div{ :class=>(is_gamex? ? 'padding' : 'listingItem') }
     .listingItem
       - day = Time.now.strftime("%A")
       - hour = Time.now.hour
@@ -21,7 +27,8 @@
           Video uploads should not be started if they will span this window
     
       - form_for(:video_asset, @video_asset,:html => {:multipart => true}, :url => {:controller => 'video_assets' , :action => 'save_video'}, :html => {:id => 'upload_form', :onsubmit => 'return doSubmit();' } ) do |f|
-        = render :partial => ( @video_asset.gamex_league_id ? "gamex_form" : "form" ), :locals => { :f => f }
+        -#= render :partial => ( @video_asset.gamex_league_id ? "gamex_form" : "form" ), :locals => { :f => f }
+        = render :partial => ( @render_gamex_menu ? "gamex_form" : "form" ), :locals => { :f => f }
         %p
           <input type="hidden" name="hidFileID" id="hidFileID" value="" />
           <label for="uploaded_file_path">Selected File:</label>

@@ -1257,7 +1257,12 @@ td.numeric {
 	background-image: url(../images/sidebar_menu_title.png);
   background-repeat: no-repeat; 
 }
-#sidebar .menuitem, #sidebar .menuitem-hilite, #sidebar .menuitem-last {
+
+#sidebar .menutitle.green {
+  background-image: url(../images/sidebar_menu_titl-green.png);
+}
+
+#sidebar .menuitem, #sidebar .menuitem-hilite, #sidebar .menuitem-last, #sidebar .menuitem-hilite-last {
   /* padding+height=actual height */
   height: 16px;
   padding-top: 4px; 
@@ -1271,7 +1276,14 @@ td.numeric {
   background-image: url(../images/sidebar_menu_item_btm.png);
   background-repeat: no-repeat; 
 }
+
 #sidebar .menuitem-last {
+  height: 33px; 
+  background-image: url(../images/sidebar_menu_curve.png);
+	background-repeat: no-repeat;	
+}
+
+#sidebar .menuitem-hilite-last {
   height: 33px; 
   background-image: url(../images/sidebar_menu_btm_curve.png);
 	background-repeat: no-repeat;	

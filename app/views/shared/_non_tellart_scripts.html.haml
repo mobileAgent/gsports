@@ -24,11 +24,18 @@
   %script
     window.dhx_globalImgPath="/images/";  
 
+- if @include_calendar
+  = javascript_include_tag 'calendar_date_select/calendar_date_select'
+  = stylesheet_link_tag 'calendar_date_select/silver'
+  -#</script><script src="/javascripts/calendar_date_select/calendar_date_select.js?1251592264" type="text/javascript"></script>
+  -#<link href="/stylesheets/calendar_date_select/silver.css?1251592264" media="screen" rel="stylesheet" type="text/css" />
+  
 
 = stylesheet_link_tag 'screen'
 
 
 = stylesheet_link_tag 'plus'
+= stylesheet_link_tag 'gamex'
 = stylesheet_link_tag 'listings'
 = javascript_include_tag '/gs/scripts/profile.js'
 

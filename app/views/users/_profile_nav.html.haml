@@ -1,5 +1,16 @@
 - if current_user
   .leftNavCol
+  
+    -if @render_gamex_menu and current_user.gamex_users.size > 0
+      #sidebar
+        .menutitle.green
+          = _('GameX')
+        .menuitem
+          = link_to 'Upload', new_video_asset_path('gamex_user[id]' => '')
+        .menuitem-last
+          = link_to 'Download', '/gamex/download'
+
+  
     #sidebar
       .menutitle
         = _('My Tools')
@@ -29,7 +40,7 @@
           .menuitem
             = link_to( "Disable user", url_for({:controller => 'users', :action => 'disable', :id => @user}), {:method => :delete, :confirm => 'Are you sure you want to disable this user account?'} )
           .menuitem
-            = link_to( "GameXchange", url_for({:controller => 'gamex_users', :action => 'new', :'gamex_user[user_id]' => @user.id}) )
+            = link_to( "GameX Allow", url_for({:controller => 'gamex_users', :action => 'new', :'gamex_user[user_id]' => @user.id}) )
           
         .menuitem
           = link_to('Admin Panel', url_for({:controller => 'admin', :action => 'dashboard'}))
@@ -46,12 +57,13 @@
         .menuitem
           = link_to "Access Groups", access_groups_path
       
-      - if current_user && current_user.can_upload?
-        .menuitem
-          = link_to 'Upload Video', user_video_assets_path(current_user)
-      - else 
-        .menuitem
-          = link_to 'Upload Video', user_video_users_path(current_user)
+      -if !@render_gamex_menu
+        - if current_user && current_user.can_upload?
+          .menuitem
+            = link_to 'Upload Video', user_video_assets_path(current_user)
+        - else 
+          .menuitem
+            = link_to 'Upload Video', user_video_users_path(current_user)
         
       -if current_user.team_staff? || current_user.league_staff?
         .menuitem
@@ -77,16 +89,15 @@
         .menuitem
           = link_to 'Staff Accounts', staffs_path
   
-      -if current_user.gamex_users.size > 0
+      -#if !@render_gamex_menu && current_user.gamex_users.size > 0
         .menuitem
-          = link_to 'gameXchange', '/gamex'
-  
+          = link_to 'gameXchange', '/gamex/download'
   
       .menuitem-hilite
         =link_to _('Edit Profile'), edit_user_path(current_user)
       .menuitem-hilite
         =link_to _('Edit Account'), edit_account_user_path(current_user)
-      .menuitem-last
+      .menuitem-hilite-last
         =link_to _('Manage Blog'), manage_user_posts_path(current_user)
 
     %a.tutorialButton{ :href => '/info/cliptutorial' }

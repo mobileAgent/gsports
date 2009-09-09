@@ -2,100 +2,101 @@
   .profilePageHeader
     %h2.columnDescriptor
       %span
-        GameXchange Download
+        GameXchange
+      &gt; Download
   .listings
     .padded
     
-      = error_messages_for :channel_video
-
-      - form_for :gamex_user, @gamex_user, :url => { :controller => :gamex, :action => :download } do |f|
+      = error_messages_for :gamex_user
     
-        League: 
-        - if @gamex_users.size == 1
-          = f.hidden_field :id
-          = @gamex_user.league_name
-        -else
-          - options = {:prompt => "-Select-"}
-          - if @league
-            - options[:selected]=@league.id 
-          = f.collection_select :id, @gamex_users, :id, :league_name, options, {:onchange=>'this.form.submit()'}
-      
-        %p
-        
+      .box
         - if @gamex_user
-          Team:
-          - if @team
-            - options[:selected]=@team.id
-          = collection_select :team, :id, @teams, :id, :team_name, options, {:onchange=>'this.form.submit()'}
-          
+          %p{ :style=>'float:right' }
+            -#= link_to 'Upload a new video', new_video_asset_path('gamex_user[id]' => @gamex_user.id), :class => 'genericButton'
+            %a{ :href=>league_path(@gamex_user.league) }
+              - if @gamex_user.league.avatar
+                %img{ :src=>@gamex_user.league.avatar.public_filename, :title=>@gamex_user.league.name, :alt=>@gamex_user.league.name }
 
-
-        -#%p
-          = f.submit 'Go'
+        - form_for :gamex_user, @gamex_user, :url => { :controller => :gamex, :action => :download } do |f|
+      
+        
+          - if @gamex_users.size == 1
+            = f.hidden_field :id
+            -#= @gamex_user.league_name
+          -else
+            %h2 Download by League
+            %p
+              - options = {:prompt => "-Select-"}
+              - if @league
+                - options[:selected]=@league.id 
+              = f.collection_select :id, @gamex_users, :id, :league_name, options, {:onchange=>'this.form.submit()'}
+  
   
           - if @gamex_user
-            %br
-            League: 
-            -#= @gamex_user.league.name
-            %br
-            = @gamex_user.league_id
-          - if @team
-            %br
-            Team: 
-            = @team.name
-            %br
-            = @team.id
+            %h2 Download by Team
+            %p
+              - options = {:prompt => "-Select-"}
+              - if @team
+                - options[:selected]=@team.id
+              = collection_select :team, :id, @teams, :id, :team_name, options, {:onchange=>'this.form.submit()'}
+          
+          -#%p
+            = f.submit 'Go'
+  
+            - if @gamex_user
+              %br
+              League: 
+              -#= @gamex_user.league.name
+              %br
+              = @gamex_user.league_id
+            - if @team
+              %br
+              Team: 
+              = @team.name
+              %br
+              = @team.id
 
-      -#.box
-        %table{ :cellspacing => "0", :cellpadding => "0" }
-          %tr
-            %th{ :width => "60px" }
-              \&nbsp;
-            %th
-              Upload Date
-            %th
-              Team
-            %th
-              Opponent
-            %th
-              Sport
-            %th
-              Level
-            %th
-              Game Date
-        -# is_admin = current_user.is_admin?
+        %br
+        
         - if @video_assets
-          - @video_assets.each_with_index do |video,i|
+          - if ! @team
+            %h2 Download Recent
+          
+          %table.gamex{ :cellspacing => "0", :cellpadding => "0" }
             %tr
-              -#.<haml:loud>row_on_off(i)</haml:loud>
-              -# if is_admin
-                %td
-                  = image_tag('arrows_black.gif')
-                  = link_to 'Edit',admin_edit_path(:id=&gt;video.id)
-              -# else
-              %td
-                = image_tag('arrows_black.gif')
-                MEOW
-                -#= video_detail_path(video.id,edit)
-              %td
-                = video.created_at
-                -#= gsxp_date(video.created_at)
-              %td
-                = video.home_team
-              %td
-                = video.visiting_team
-              %td
-                = video.sport
-              %td
-                = video.game_level
-              %td
-                = video.game_date
-                -#= gsxp_date(video.game_date)
+              %th{ :width => "60px" } &nbsp;
+              %th Upload Date
+              %th Team
+              %th Opponent
+              %th Sport
+              %th Level
+              %th Game Date
+              
+            - if @video_assets
+              - @video_assets.each_with_index do |video,i|
+                %tr{ :class=>"row#{i%2}" }
+                  -#.<haml:loud>row_on_off(i)</haml:loud>
+                  %td
+                    %b &raquo;
+                    = link_to 'Select', video_asset_path(video, 'gamex_user[id]' => @gamex_user.id )
+                  %td
+                    = video.created_at.strftime("%m-%d-%y")
+                    -#= gsxp_date(video.created_at)
+                  %td
+                    = video.home_team ? video.home_team.name : '-'
+                  %td
+                    = video.visiting_team ? video.visiting_team.name : '-'
+                  %td
+                    = video.sport
+                  %td
+                    = video.game_level
+                  %td
+                    = video.game_date ? video.game_date.strftime("%m-%d-%y") : '-'
   
           
           
           
-      .box
+      -#.box
         - if @video_assets
           = render :partial => '/shared/video_listing', :collection => @video_assets, :locals => { :show_tab => false }
           .clearDiv
@@ -103,6 +104,3 @@
           - if @video_assets.respond_to?('total_pages')
             .apple_pagination
               = will_paginate @video_assets
-        - else
-          .box
-            You don't have any videos yet.

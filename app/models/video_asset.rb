@@ -20,6 +20,27 @@ class VideoAsset < ActiveRecord::Base
   # Every video needs a title
   validates_presence_of :title
   
+  
+  def validate_gamex()
+    if gamex_league_id?
+      
+      #video_asset = VideoAsset.new(params[:video_asset])
+      
+      #params[:video_asset][:title] 
+      home_team_name = @video_asset.home_team ? @video_asset.home_team.name : ''
+      visiting_team_name = @video_asset.visiting_team ? @video_asset.visiting_team.name : ''
+      @video_asset.title = "#{home_team_name} vs. #{visiting_team_name}, #{@video_asset.game_date}"
+      
+      if params[:access_item][:access_group_id].empty?
+        @access_item = AccessItem.new(params[:access_item])
+        @access_item.errors.add :access_group, "An Access Group is required."
+        @video_asset.errors.add :id, "An Access Group is required."
+      end
+      
+    end
+  end
+  
+  
   acts_as_commentable
   acts_as_taggable
   acts_as_rateable
