@@ -33,3 +33,14 @@
 %b League Name  
 %br
 = text_field_with_auto_complete :gamex_user, :league_name, :autocomplete => "off"
+
+
+- access_groups = AccessGroup.for_team(@gamex_user.user.team)
+- if access_groups.size > 0
+  %br
+  %p
+  %div
+  %b Access Group
+  %br
+  = f.collection_select :access_group_id, access_groups, :id, :name
+

@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090901134742) do
+ActiveRecord::Schema.define(:version => 20090907181224) do
 
   create_table "access_groups", :force => true do |t|
     t.string  "name",        :limit => 30
@@ -250,8 +250,9 @@ ActiveRecord::Schema.define(:version => 20090901134742) do
   end
 
   create_table "gamex_users", :force => true do |t|
-    t.integer "user_id",   :limit => 11
-    t.integer "league_id", :limit => 11
+    t.integer "user_id",         :limit => 11
+    t.integer "league_id",       :limit => 11
+    t.integer "access_group_id", :limit => 11
   end
 
   create_table "homepage_features", :force => true do |t|

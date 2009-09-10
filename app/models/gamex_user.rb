@@ -2,6 +2,7 @@ class GamexUser < ActiveRecord::Base
   
   belongs_to :user
   belongs_to :league
+  belongs_to :access_group
   
   
   named_scope :for_user,
