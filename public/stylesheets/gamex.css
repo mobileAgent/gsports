@@ -36,3 +36,17 @@ table.gamex td {
 	padding-top: 20px;
        	padding-left: 20px;
 }
+
+.gamex-tips {
+  float:right;
+  width: 200px;
+
+}
+
+.gamex-upload-box {
+  background-color: white;
+ 	padding-left: 20px;
+
+  width: 400px;
+
+}

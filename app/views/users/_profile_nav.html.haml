@@ -1,4 +1,16 @@
 - if current_user
+
+  -#if @render_gamex_menu and current_user.gamex_users.size > 0
+    .gamex-tips
+      #sidebar
+        .menutitle.green
+          = _('GameX Tips')
+        .menuitem
+          = link_to 'Upload', new_video_asset_path('gamex_user[id]' => '')
+        .menuitem-last
+          = link_to 'Download', '/gamex/download'
+
+
   .leftNavCol
   
     -if @render_gamex_menu and current_user.gamex_users.size > 0
@@ -91,7 +103,7 @@
   
       -#if !@render_gamex_menu && current_user.gamex_users.size > 0
         .menuitem
-          = link_to 'gameXchange', '/gamex/download'
+          = link_to 'GameXchange', '/gamex/download'
   
       .menuitem-hilite
         =link_to _('Edit Profile'), edit_user_path(current_user)

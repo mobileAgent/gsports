@@ -14,8 +14,17 @@
         for
         = current_user.full_name
   .listings
+
+    - if @gamex_user
+      %p{ :style=>'float:right' }
+        -#= link_to 'Upload a new video', new_video_asset_path('gamex_user[id]' => @gamex_user.id), :class => 'genericButton'
+        %a{ :href=>league_path(@gamex_user.league) }
+          - if @gamex_user.league.avatar
+            %img{ :src=>@gamex_user.league.avatar.public_filename, :title=>@gamex_user.league.name, :alt=>@gamex_user.league.name }
+
     -#%div{ :class=>(is_gamex? ? 'padding' : 'listingItem') }
-    .listingItem
+    - extra_class = (@gamex_user ? 'gamex-upload-box' : 'none')
+    .listingItem{ :class=>extra_class }
       - day = Time.now.strftime("%A")
       - hour = Time.now.hour
       - if (day == 'Tuesday' && hour > 16) || (day == 'Wednesday' && hour < 4)
