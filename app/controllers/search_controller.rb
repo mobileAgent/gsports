@@ -326,6 +326,11 @@ class SearchController < BaseController
                                             :classes => [VideoAsset, VideoReel, VideoClip, VideoUser],
                                             # :conditions => { :public_video => 1 },
                                             :order => 'updated_at DESC')
+  
+    @videos.delete_if() { |v|
+      !current_user.has_access?(v)
+    }
+
   end
   
 
