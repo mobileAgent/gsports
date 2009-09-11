@@ -59,7 +59,7 @@
         %br
         
         - if @video_assets
-          - if ! @team
+          - if @team
             %h2= "Games Uploaded by #{@team.name}"
           -else
             %h2 Recently Uploaded Games in this Conference
