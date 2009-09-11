@@ -1,6 +1,7 @@
 class BaseController < ApplicationController
   include Viewable
 
+  before_filter :set_controller_vars
   before_filter :vidavee_login
   before_filter :gs_login_required, :except => [:site_index, :beta]
   before_filter :billing_required, :except => [:site_index, :beta]
@@ -160,6 +161,11 @@ class BaseController < ApplicationController
         cookies[:promoteam] = { :value => @promoteam, :expires => 30.days.from_now } 
       end
     end
+  end
+
+  def set_controller_vars
+    @current_action = action_name
+    @current_controller = controller_name
   end
 
 end

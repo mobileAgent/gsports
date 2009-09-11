@@ -4,5 +4,35 @@
     .menutitle
       = _('GameX Tips')
     .menuitem
+
+      - case @current_controller
+      - when 'video_assets'
+
+        Please fill out all information about your game, and then click "Browse" to select your video file. Your video must be in one of the following formats: .wmv, .mpg, .mpeg, .mp4, .mov. Click the "Upload" button to start your upload.
+        Remember to leave your computer on and this browser window open while your video is uploading. You’ll see a progress bar showing your upload progress. Once it reaches 100%, your file has been transferred to GameXchange and will be processed by the GameXchange system. You can close the browser and/or turn off your computer at that point.
+
+      - else # default to gamex - when 'gamex'
+
+        - case @current_action
+        - when 'download'
+
+          - if @team
+            This page is showing a listing of only games uploaded by the school you have selected under "Find Games by Team".
+            When you have found the game you're looking for, click "Select" in order to watch and/or download it. Once downloaded, the game will exist on your computer's hard-drive, allowing you full flexibility to play it locally on your computer, burn it to DVD, etc.
+
+          - else
+            This page shows a listing of the most recently uploaded videos. You may also select a school from the "Find Games by Team" dropdown menu to show only games uploaded by one particular school.
+            When you have found the game you're looking for, click "Select" in order to watch and/or download it. Once downloaded, the game will exist on your computer's hard-drive, allowing you full flexibility to play it locally on your computer, burn it to DVD, etc.
+
+        - else # default to when 'history'
+
+          On this page, you can keep track of the activity within your school for all your videos.
+          The Upload History box shows all videos that have been uploaded to your school's account, and by whom.
+          The Viewing History box shows what videos your school's coaches have been accessing.
+
+
+
+
+
     .menuitem-last
 

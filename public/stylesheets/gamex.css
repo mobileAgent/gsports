@@ -60,19 +60,17 @@ table.gamex td {
 }
 
 .gamex-tips #sidebar .menutitle {
-
   background-image: url(../images/gamex_sidebar_title.png);
-
 }
 
 .gamex-tips #sidebar .menuitem {
   background-image: url(../images/gamex_sidebar.png);
-
+  height: auto;
+  background-repeat: repeat;
+  padding-right: 8px;
 }
 
 .gamex-tips #sidebar .menuitem-last {
-
   background-image: url(../images/gamex_sidebar_curve.png);
-
 }
 
