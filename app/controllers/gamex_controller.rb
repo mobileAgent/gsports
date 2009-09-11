@@ -99,6 +99,7 @@ class GamexController < BaseController
   end
 
   def in_gamex_content
+    @render_gamex_tips = true
     @render_gamex_menu = true
   end
   

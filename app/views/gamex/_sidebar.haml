@@ -1,4 +1,5 @@
 
+
 .leftNavCol.gamex-tips
   #sidebar
     .menutitle
@@ -8,8 +9,10 @@
       - case @current_controller
       - when 'video_assets'
 
-        Please fill out all information about your game, and then click "Browse" to select your video file. Your video must be in one of the following formats: .wmv, .mpg, .mpeg, .mp4, .mov. Click the "Upload" button to start your upload.
-        Remember to leave your computer on and this browser window open while your video is uploading. You’ll see a progress bar showing your upload progress. Once it reaches 100%, your file has been transferred to GameXchange and will be processed by the GameXchange system. You can close the browser and/or turn off your computer at that point.
+        - case @current_action
+        - when 'new'
+          Please fill out all information about your game, and then click "Browse" to select your video file. Your video must be in one of the following formats: .wmv, .mpg, .mpeg, .mp4, .mov. Click the "Upload" button to start your upload.
+          Remember to leave your computer on and this browser window open while your video is uploading. You’ll see a progress bar showing your upload progress. Once it reaches 100%, your file has been transferred to GameXchange and will be processed by the GameXchange system. You can close the browser and/or turn off your computer at that point.
 
       - else # default to gamex - when 'gamex'
 
