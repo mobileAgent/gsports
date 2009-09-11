@@ -91,6 +91,8 @@ class VideoAssetsController < BaseController
   # GET /video_assets/new
   # GET /video_assets/new.xml
   def new
+    @render_gamex_tips = true
+    
     unless current_user.can_upload?
       flash[:notice] = "You don't have permission to upload videos"
       redirect_to url_for({ :controller => "search", :action => "my_videos" }) and return

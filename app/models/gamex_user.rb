@@ -8,6 +8,9 @@ class GamexUser < ActiveRecord::Base
   named_scope :for_user,
     lambda { |user| { :conditions => { :user_id => user.id } } }
 
+  named_scope :for_user_and_league,
+    lambda { |user,league| { :conditions => { :user_id => user.id, :league_id => league.id } } }
+
   
   def league_name= name
     league = League.find(:first, :conditions=>{ :name=>name })

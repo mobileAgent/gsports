@@ -104,11 +104,22 @@ class VideoClipsController < BaseController
     
     saved = @video_clip.save!
 
+    if saved=
+      if @video_clip.video_asset.gamex_league_id
+        @access_item = AccessItem.new()
+        @access_item.item = @video_clip
+        gamex_user = GamexUser.for_user_and_league(current_user, @video_clip.video_asset.league).first
+        @access_item.access_group_id = gamex_user.access_group_id
+        @access_item.save!
+      end
+    end
+
+
     if (from_flash)
       render :inline => saved ? "#{@video_clip.to_xml}" : "<error>#{@video_clip.errors.join(',')}</error>"
       return
     end
-    
+
     respond_to do |format|
       if saved
         flash[:notice] = 'VideoClip was successfully created.'

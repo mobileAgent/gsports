@@ -17,7 +17,7 @@ class AccessItem < ActiveRecord::Base
 
   def validate
     #This is VideoAsset specific
-    unless item.team_id == access_group.team_id
+    if (item === VideoAsset ) && item.team_id != access_group.team_id
       errors.add(:access_group_id, "User is not a member of the team that owns this Access Group.")
     end
   end

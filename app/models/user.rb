@@ -171,14 +171,14 @@ class User < ActiveRecord::Base
     when VideoAsset
       asset_list = [ item ]
     when VideoClip
-      asset_list = [ item.video_asset ]
+      asset_list = [ item ] #.video_asset ]
     when VideoReel
       #TODO cache this value, or store it to db?
       Vidavee.first.get_clip_dockeys_for_reel(item.dockey).each() { |dockey|
         #logger.debug "ABX:Reel Part: #{dockey}"
         if clip = VideoClip.find(:first, :conditions=>{ :dockey=>dockey })
           #logger.debug "ABX:Clip: #{clip ? clip.id : 'nil'}"
-          asset_list <<  clip.video_asset
+          asset_list <<  clip #.video_asset
         end
       }
     else
