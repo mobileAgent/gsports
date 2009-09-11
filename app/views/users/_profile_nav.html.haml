@@ -1,15 +1,7 @@
 - if current_user
 
-  -#if @render_gamex_menu and current_user.gamex_users.size > 0
-    .gamex-tips
-      #sidebar
-        .menutitle.green
-          = _('GameX Tips')
-        .menuitem
-          = link_to 'Upload', new_video_asset_path('gamex_user[id]' => '')
-        .menuitem-last
-          = link_to 'Download', '/gamex/download'
-
+  -if @render_gamex_menu and current_user.gamex_users.size > 0
+    = render :partial => ( 'gamex/sidebar' )
 
   .leftNavCol
   

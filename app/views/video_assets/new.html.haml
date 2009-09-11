@@ -13,7 +13,8 @@
       -#
         for
         = current_user.full_name
-  .listings
+  - extra_listings_class = (@render_gamex_menu ? 'gamexlistings' : 'none')
+  .listings{ :class=>extra_listings_class }
 
     - if @gamex_user
       %p{ :style=>'float:right' }

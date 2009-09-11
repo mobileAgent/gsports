@@ -50,3 +50,29 @@ table.gamex td {
   width: 400px;
 
 }
+
+.gamexlistings {
+  width: 630px;
+}
+
+.gamex-tips #sidebar {
+  width: 176px;
+}
+
+.gamex-tips #sidebar .menutitle {
+
+  background-image: url(../images/gamex_sidebar_title.png);
+
+}
+
+.gamex-tips #sidebar .menuitem {
+  background-image: url(../images/gamex_sidebar.png);
+
+}
+
+.gamex-tips #sidebar .menuitem-last {
+
+  background-image: url(../images/gamex_sidebar_curve.png);
+
+}
+

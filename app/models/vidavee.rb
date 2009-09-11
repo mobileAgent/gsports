@@ -28,7 +28,7 @@ class Vidavee < ActiveRecord::Base
   # These are for upload control
   def self.legal_file_extensions(options={})
     if options[:gamex]
-      ['.wmv', '.mpg', '.mpeg', '.mp4', '.mov']
+      ['*.wmv', '*.mpg', '*.mpeg', '*.mp4', '*.mov']
     else
       ["*.3g2","*.3gp","*.3gp2","*.3gpp","*.asf","*.avi","*.avs","*.dv","*.flc","*.fli","*.flv","*.gvi","*.m1v","*.m2v","*.m4e","*.m4u","*.m4v","*.mjp","*.mkv","*.moov","*.mov","*.movie","*.mp4","*.mpe","*.mpeg","*.mpg","*.mpv2","*.qt","*.rm","*.ts","*.vfw","*.vob","*.wm","*.wmv"]
     end
