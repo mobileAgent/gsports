@@ -26,8 +26,12 @@ class Vidavee < ActiveRecord::Base
   class << self;   attr_reader :QUEUED, :UPLOAD_FAILED, :READY, :TRANSCODING, :BLOCKED, :FAILED, :PUSHING, :SAVING end
   
   # These are for upload control
-  def self.legal_file_extensions
-    ["*.3g2","*.3gp","*.3gp2","*.3gpp","*.asf","*.avi","*.avs","*.dv","*.flc","*.fli","*.flv","*.gvi","*.m1v","*.m2v","*.m4e","*.m4u","*.m4v","*.mjp","*.mkv","*.moov","*.mov","*.movie","*.mp4","*.mpe","*.mpeg","*.mpg","*.mpv2","*.qt","*.rm","*.ts","*.vfw","*.vob","*.wm","*.wmv"]
+  def self.legal_file_extensions(options={})
+    if options[:gamex]
+      ['.wmv', '.mpg', '.mpeg', '.mp4', '.mov']
+    else
+      ["*.3g2","*.3gp","*.3gp2","*.3gpp","*.asf","*.avi","*.avs","*.dv","*.flc","*.fli","*.flv","*.gvi","*.m1v","*.m2v","*.m4e","*.m4u","*.m4v","*.mjp","*.mkv","*.moov","*.mov","*.movie","*.mp4","*.mpe","*.mpeg","*.mpg","*.mpv2","*.qt","*.rm","*.ts","*.vfw","*.vob","*.wm","*.wmv"]
+    end
   end
 
   # http://tribeca.vidavee.com/hsstv/rest/session/CheckUser;jsessionid=39555E57BCF38625CF7DEA2EDD9038F7.node1?api_key=5342smallworld&api_ts=1214532647018&api_token=39555E57BCF38625CF7DEA2EDD9038F7.node1&api_sig=830678DF3E967D0392F936122F767754&session_id=

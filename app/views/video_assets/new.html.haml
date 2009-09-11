@@ -44,10 +44,12 @@
           %br/
           <input type="text" id="uploaded_file_path" disabled="disabled" style="border: solid 1px; background-color: #FFFFFF;" />
           - session_key = (ActionController::Base.session.first[:session_key] || '_session_id').to_sym
+          - @legal_file_extensions = Vidavee.legal_file_extensions({:gamex=>@gamex_user})
+          
           %script{:type=>'text/javascript'}
             var uploader;
             window.onload = function (){
-            ="uploader = new GSports.SwfUpload('#{swfupload_new_video_asset_path(session_key => session.session_id)}','#{Vidavee.legal_file_extensions.join(";")}');"
+            ="uploader = new GSports.SwfUpload('#{swfupload_new_video_asset_path(session_key => session.session_id)}','#{@legal_file_extensions.join(";")}');"
             };
     
         %div{:style=>"margin: 0px 10px;", :id => "flashUI"}
