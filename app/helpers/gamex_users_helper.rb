@@ -1,0 +1,2 @@
+module GamexUsersHelper
+end

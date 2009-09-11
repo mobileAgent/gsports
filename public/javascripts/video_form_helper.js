@@ -26,7 +26,14 @@ function generate_video_title_if_blank()
 function gamex_fill_team_name()
 {
 	select=$('video_asset_visiting_team_id')
-	$('video_asset_visiting_team_name').value = select.options[select.selectedIndex].text	
+  selection = select.options[select.selectedIndex]
+  if(selection.value == '-1'){
+    $('video_asset_visiting_team_name').value = ''
+    $('gamex-other-team-field').show()
+  }else{
+    $('gamex-other-team-field').hide()
+  	$('video_asset_visiting_team_name').value = selection.text
+  }
 }
 
 function generate_video_title()

@@ -70,8 +70,14 @@ GameXchange needs specific information about the game you are uploading in order
           %label{:for=>"video_asset[visiting_team_name]"} Opponent
           %br/
           -#= text_field_with_auto_complete :video_asset, :visiting_team_name, :autocomplete => "off", :onchange => "javascript:autofill_video_title(); return true;"
-          = f.collection_select :visiting_team_id, @gamex_user.teams(), :id, :team_name, {:prompt => "-Select-"}, {:onchange=>'javascript:gamex_fill_team_name()'}
-          %input{ :type=>'hidden', :id=>'video_asset_visiting_team_name' }
+          - other_team = Team.new({:name=>'Other'}); other_team.id = -1
+          - team_list = @gamex_user.teams + [ other_team ]
+          = f.collection_select :visiting_team_id, team_list, :id, :team_name, {:prompt => "-Select-"}, {:onchange=>'javascript:gamex_fill_team_name()'}
+          -#%input{ :type=>'hidden', :id=>'video_asset_visiting_team_name' }
+          %br
+          %span#gamex-other-team-field{ :style=>'display: none;' }
+            = text_field_with_auto_complete :video_asset, :visiting_team_name, :autocomplete => "off", :onchange => "javascript:autofill_video_title(); return true;"
+
       %td &nbsp;
       %td
         %p

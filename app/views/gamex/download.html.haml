@@ -24,7 +24,7 @@
             = f.hidden_field :id
             -#= @gamex_user.league_name
           -else
-            %h2 Download by League
+            %h2 Find Games by Conference
             %p
               - options = {:prompt => "-Select-"}
               - if @league
@@ -33,7 +33,7 @@
   
   
           - if @gamex_user
-            %h2 Download by Team
+            %h2 Find Games by School
             %p
               - options = {:prompt => "-Select-"}
               - if @team
@@ -60,7 +60,9 @@
         
         - if @video_assets
           - if ! @team
-            %h2 Download Recent
+            %h2= "Games Uploaded by #{@team.name}"
+          -else
+            %h2 Recently Uploaded Games in this Conference
           
           %table.gamex{ :cellspacing => "0", :cellpadding => "0" }
             %tr
