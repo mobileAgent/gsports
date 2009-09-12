@@ -165,30 +165,39 @@ class User < ActiveRecord::Base
   end
 
   def has_access?(item)
-    asset_list = []
+    #asset_list = []
     
     case item
     when VideoAsset
-      asset_list = [ item ]
+      #asset_list = [ item ]
+      pass = team_staff?(item.team) || has_access_to_asset?(item)
     when VideoClip
-      asset_list = [ item ] #.video_asset ]
+      #asset_list = [ item ] #.video_asset ]
+      asset = item.video_asset
+      pass = team_staff?(asset.team) || has_access_to_clip?(item) || has_access_to_asset?(asset)
     when VideoReel
       #TODO cache this value, or store it to db?
       Vidavee.first.get_clip_dockeys_for_reel(item.dockey).each() { |dockey|
         #logger.debug "ABX:Reel Part: #{dockey}"
+        clip_list = []
+
         if clip = VideoClip.find(:first, :conditions=>{ :dockey=>dockey })
           #logger.debug "ABX:Clip: #{clip ? clip.id : 'nil'}"
-          asset_list <<  clip #.video_asset
+          clip_list <<  clip #.video_asset
         end
+
+
+        clip_list.each() { |clip|
+          asset = clip.video_asset
+          pass = team_staff?(asset.team) || has_access_to_clip?(item) || has_access_to_asset?(asset)
+          #logger.debug "Asset id #{asset.id} access: #{pass}"
+          return false if !pass
+        }
+
       }
     else
     end
 
-    asset_list.each() { |asset|
-      pass = team_staff?(asset.team) || has_access_to_asset?(asset)
-      logger.debug "Asset id #{asset.id} access: #{pass}"
-      return false if !pass 
-    }
     
     return true
   end
@@ -226,7 +235,7 @@ class User < ActiveRecord::Base
     access_pass
   end
 
-  def old_has_access?(item)
+  def has_access_to_clip?(item)
     (AccessItem.for_item(item) || []).each{ |access_item|
       return false if (access_item.access_group.enabled && !access_item.access_group.allow?(self) )
     }
