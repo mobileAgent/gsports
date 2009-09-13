@@ -9,7 +9,12 @@ class GamexUser < ActiveRecord::Base
     lambda { |user| { :conditions => { :user_id => user.id } } }
 
   named_scope :for_user_and_league,
-    lambda { |user,league| { :conditions => { :user_id => user.id, :league_id => league.id } } }
+    lambda { |user_id,league_id|
+    
+      
+      { :conditions => { :user_id => user_id, :league_id => league_id } }
+
+    }
 
   
   def league_name= name

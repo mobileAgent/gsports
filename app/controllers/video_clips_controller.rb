@@ -104,12 +104,15 @@ class VideoClipsController < BaseController
     
     #saved =
     @video_clip.save!
+    saved = true
 
     #if saved
       if @video_clip.video_asset.gamex_league_id
         @access_item = AccessItem.new()
         @access_item.item = @video_clip
-        gamex_user = GamexUser.for_user_and_league(current_user, @video_clip.video_asset.league).first
+        gamex_user = GamexUser.for_user_and_league(current_user.id, @video_clip.video_asset.gamex_league_id).first
+        #gamex_user = GamexUser.for_user_and_league(current_user, @video_clip.video_asset.league).first
+        #gamex_user = GamexUser.find(@video_clip.video_asset.gamex_league_id).first
         @access_item.access_group_id = gamex_user.access_group_id
         @access_item.save!
       end
