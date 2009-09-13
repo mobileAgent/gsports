@@ -58,6 +58,12 @@ class GamexUsersController < BaseController
     respond_to do |format|
       if @gamex_user.save
         flash[:notice] = 'GamexUser was successfully created.'
+
+        @access_user = AccessUser.new()
+        @access_user.user_id = @gamex_user.user_id
+        @access_user.access_group_id = @gamex_user.access_group_id
+        @access_user.save
+
         format.html { redirect_to(@gamex_user) }
         format.xml  { render :xml => @gamex_user, :status => :created, :location => @gamex_user }
       else

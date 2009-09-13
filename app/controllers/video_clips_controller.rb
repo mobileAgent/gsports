@@ -102,9 +102,10 @@ class VideoClipsController < BaseController
       @video_clip.tag_with(params[:tag_list] || '') 
     end
     
-    saved = @video_clip.save!
+    #saved =
+    @video_clip.save!
 
-    if saved=
+    #if saved
       if @video_clip.video_asset.gamex_league_id
         @access_item = AccessItem.new()
         @access_item.item = @video_clip
@@ -112,7 +113,7 @@ class VideoClipsController < BaseController
         @access_item.access_group_id = gamex_user.access_group_id
         @access_item.save!
       end
-    end
+    #end
 
 
     if (from_flash)

@@ -119,11 +119,16 @@ GameXchange needs specific information about the game you are uploading in order
         %td
           %p
             - if @gamex_user
-              - @access_item = @gamex_user.access_group
+              - @access_item = AccessItem.new({:access_group_id => @gamex_user.access_group})
             %label{:for=>"access_item[id]"} Access Group
             %br/
-            = collection_select :access_item, :id, access_groups, :id, :name
-         
+            = collection_select :access_item, :access_group_id, access_groups, :id, :name
+
+
+
+
+
+
             
 =f.hidden_field :public_video, :value=>false
 

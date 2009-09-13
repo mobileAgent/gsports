@@ -91,7 +91,9 @@ class VideoAssetsController < BaseController
   # GET /video_assets/new
   # GET /video_assets/new.xml
   def new
-    @render_gamex_tips = true
+    if @gamex_user
+      @render_gamex_tips = true
+    end
     
     unless current_user.can_upload?
       flash[:notice] = "You don't have permission to upload videos"
@@ -463,15 +465,15 @@ class VideoAssetsController < BaseController
   def setup_access video
     result = true
     #logger.debug "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-    #logger.debug "setup_access"
-    #logger.debug "params #{params[:access_item].inspect}"
+    logger.debug "MEOW setup_access"
+    logger.debug "MEOW params #{params[:access_item].inspect}"
     @access_item = AccessItem.new params[:access_item]
     if @access_item.access_group_id
       @access_item.item = video
       #logger.debug "access_item #{@access_item.inspect}"
       #try this quietly
       result = @access_item.save
-      #logger.debug result.inspect
+      logger.debug "MEOW #{result.inspect}"
       
     end
     #logger.debug "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
