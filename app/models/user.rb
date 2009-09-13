@@ -171,10 +171,12 @@ class User < ActiveRecord::Base
     when VideoAsset
       #asset_list = [ item ]
       pass = team_staff?(item.team) || has_access_to_asset?(item)
+      return pass
     when VideoClip
       #asset_list = [ item ] #.video_asset ]
       asset = item.video_asset
       pass = team_staff?(asset.team) || has_access_to_clip?(item) || has_access_to_asset?(asset)
+      return pass
     when VideoReel
       #TODO cache this value, or store it to db?
       Vidavee.first.get_clip_dockeys_for_reel(item.dockey).each() { |dockey|
@@ -198,12 +200,12 @@ class User < ActiveRecord::Base
     else
     end
 
-    
     return true
   end
   
   def has_access_to_asset?(item)
     # assume we're good
+    logger.info("has_access?")
     access_pass = true
   
     # unless it's a gamex video
@@ -214,32 +216,39 @@ class User < ActiveRecord::Base
     end
     
     if gamex_asset_id      
-      if 0 < GamexUser.count(:conditions => { :user_id => id, :league_id => gamex_asset_id } ) 
+      if 0 < GamexUser.count(:conditions => { :user_id => id, :league_id => gamex_asset_id } )
+        logger.info("has_access? is coach")
         # is coach
         return true
       else
+        logger.info("has_access? isn't coach but this is a gamex video, need access to pass")
         # isn't but this is a gamex video, need access to pass
         access_pass = false
       end
     end
-  
+
+    logger.info("has_access? #{access_pass}")
     # or is guarded by access groups
     access_items = AccessItem.for_item(item)
     if access_items.any?
       access_pass = false
+      logger.info("has_access? #{access_pass}")
       access_items.each{ |access_item|
         access_pass = true if (access_item.access_group.enabled && access_item.access_group.allow?(self) )
+        logger.info("has_access? #{access_pass} on access group #{access_item.access_group_id} item #{access_item.id}")
       }
     end
+    logger.info("has_access? #{access_pass}")
     
     access_pass
   end
 
+  # this has to be explicit access to override other access
   def has_access_to_clip?(item)
     (AccessItem.for_item(item) || []).each{ |access_item|
-      return false if (access_item.access_group.enabled && !access_item.access_group.allow?(self) )
+      return true if (access_item.access_group.enabled && access_item.access_group.allow?(self) )
     }
-    true
+    false
   end
 
   def can_grant_access?(user=nil)
