@@ -97,7 +97,7 @@ class Message < ActiveRecord::Base
     recipient_ids = []
     is_alias = false
     to_names = names.split(',')
-    friend_ids = current_user.accepted_friendships.collect(&:friend_id)
+    friend_ids = current_user.mail_target_ids() #accepted_friendships.collect(&:friend_id)
     to_names.each do |recipient|
       if recipient == 'all' && current_user.admin?
         if (use_alias_id)

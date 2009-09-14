@@ -250,16 +250,19 @@ class MessagesController < BaseController
     if current_user.admin?
       @users = User.find(:all, :conditions => ["(LOWER(firstname) like ? or LOWER(lastname) like ?) and enabled = ?",search_name,search_name,true], :order => "lastname asc, firstname asc", :limit => 10)
     else
-      @friend_ids = Friendship.find(:all, :conditions => ['user_id = ? and friendship_status_id = ?',current_user.id,FriendshipStatus[:accepted].id]).collect(&:friend_id) 
-      if @friend_ids.nil? || @friend_ids.size == 0
-        render :inline => '' and return
-      end
-	  gamex_leagues = current_user.gamex_users.collect(&:league_id)
-	  if gamex_leagues.any?
-		  @friend_ids += GamexUser.find(:all, :conditions=>{ :league_id=>gamex_leagues }).collect(&:user_id)
-		  @friend_ids.uniq!
-	  end
-      @users = User.find(:all, :conditions => ["id in (?) and (LOWER(firstname) like ? or LOWER(lastname) like ?) and enabled = ?", @friend_ids,search_name,search_name,true], :order => "lastname asc, firstname asc", :limit => 10)
+#      @friend_ids = Friendship.find(:all, :conditions => ['user_id = ? and friendship_status_id = ?',current_user.id,FriendshipStatus[:accepted].id]).collect(&:friend_id)
+#      if @friend_ids.nil? || @friend_ids.size == 0
+#        render :inline => '' and return
+#      end
+
+      @users = User.find(:all,
+        :conditions => [
+          "id in (?) and (LOWER(firstname) like ? or LOWER(lastname) like ?) and enabled = ?",
+          current_user.mail_target_ids(),
+          search_name,
+          search_name,
+          true
+        ], :order => "lastname asc, firstname asc", :limit => 10)
     end
     choices = "<%= content_tag(:ul, @users.map { |u| content_tag(:li, h(u.full_name)) }) %>"
     render :inline => choices

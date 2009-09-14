@@ -91,6 +91,16 @@ class User < ActiveRecord::Base
   named_scope :league_staff,
     lambda { |league_id| { :conditions => ["league_id = ? and role_id IN (?)",league_id,[Role[:league_staff].id, Role[:league].id, Role[:admin].id] ] } }
 
+
+  def mail_target_ids()
+    @friend_ids = Friendship.find(:all, :conditions => ['user_id = ? and friendship_status_id = ?',self.id,FriendshipStatus[:accepted].id]).collect(&:friend_id)
+    if team_staff?
+      @friend_ids += User.team_staff(self.team.id).collect(&:id)
+      @friend_ids.uniq!
+    end
+    @friend_ids
+  end
+
   # set indexes for sphinx
   define_index do
     indexes [firstname,lastname], :as => :full_name, :sortable => true
