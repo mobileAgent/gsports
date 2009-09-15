@@ -21,7 +21,7 @@
             %tr.leagueList{ :id=>"access_item_#{item.id}" }
               %td.leagueList
                 - if !video.nil?
-                  %a{ :href=>video_asset_path(video) }
+                  %a{ :href=>video_path(video) }
                     %img{ :src=>@vidavee.file_thumbnail_medium(video.thumbnail_dockey || video.dockey) }
               %td.leagueList  
                 = h (video.nil? ? 'Video Missing' : video.title )
