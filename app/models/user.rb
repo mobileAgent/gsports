@@ -185,7 +185,7 @@ class User < ActiveRecord::Base
     when VideoClip
       #asset_list = [ item ] #.video_asset ]
       asset = item.video_asset
-      pass = team_staff?(asset.team) || has_access_to_clip?(item) || has_access_to_asset?(asset)
+      pass = team_staff?(asset.team) || has_access_to_clip?(item) || (!needs_access_to_clip?(item) && has_access_to_asset?(asset))
       return pass
     when VideoReel
       #TODO cache this value, or store it to db?
@@ -251,6 +251,10 @@ class User < ActiveRecord::Base
     logger.info("has_access? #{access_pass}")
     
     access_pass
+  end
+
+  def needs_access_to_clip?(item)
+    AccessItem.for_item(item).size > 0
   end
 
   # this has to be explicit access to override other access
