@@ -11,7 +11,7 @@
     
       .box
         - if @gamex_user
-          %p{ :style=>'float:right' }
+          %p.gamex-league-avatar
             -#= link_to 'Upload a new video', new_video_asset_path('gamex_user[id]' => @gamex_user.id), :class => 'genericButton'
             %a{ :href=>league_path(@gamex_user.league) }
               - if @gamex_user.league.avatar
@@ -85,15 +85,21 @@
                     = video.created_at.strftime("%m-%d-%y")
                     -#= gsxp_date(video.created_at)
                   %td
-                    = video.home_team ? video.home_team.name : '-'
+                    - if video.home_team
+                      - home_team_score = video.home_score ? " (#{video.home_score})" : ""
+                      - home_team_name = "#{video.home_team.nickname}#{ home_team_score }"
+                      = home_team_name #video.home_team ? video.home_team.name : '-'
                   %td
-                    = video.visiting_team ? video.visiting_team.name : '-'
+                    - if video.visiting_team
+                      - visitor_team_score = video.visitor_score ? " (#{video.visitor_score})" : ""
+                      - visiting_team_name = "#{video.visiting_team.nickname}#{ visitor_team_score }"
+                      = visiting_team_name #video.visiting_team ? video.visiting_team.name : '-'
                   %td
                     = video.sport
                   %td
                     = video.game_level
                   %td
-                    = video.game_date ? video.game_date.strftime("%m-%d-%y") : '-'
+                    = video.game_date ? video.game_date.strftime("%m-%d-%Y") : '-' # %H:%M%p
   
           
           
