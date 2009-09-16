@@ -451,9 +451,9 @@ class VideoAssetsController < BaseController
       #video_asset = VideoAsset.new(params[:video_asset])
       
       #params[:video_asset][:title] 
-      home_team_name = @video_asset.home_team ? @video_asset.home_team.name : ''
+      home_team_name = @video_asset.home_team ? @video_asset.home_team.nickname : ''
       home_team_score = @video_asset.home_score ? " (#{@video_asset.home_score})" : ""
-      visiting_team_name = @video_asset.visiting_team ? @video_asset.visiting_team.name : ''
+      visiting_team_name = @video_asset.visiting_team ? @video_asset.visiting_team.nickname : ''
       visitor_team_score = @video_asset.visitor_score ? " (#{@video_asset.visitor_score})" : ""
       game_date = @video_asset.game_date ? @video_asset.game_date.strftime("%m-%d-%Y") : ""
       @video_asset.title = "#{home_team_name}#{home_team_score} vs. #{visiting_team_name}#{visitor_team_score}, #{game_date}"
