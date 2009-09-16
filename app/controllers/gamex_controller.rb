@@ -44,7 +44,10 @@ class GamexController < BaseController
 
       @teams = @gamex_user.teams()
       
-      conditions = { :gamex_league_id => @gamex_user.league.id }
+      conditions = { 
+        :gamex_league_id => @gamex_user.league.id,
+        :video_status => 'ready'
+      }
       
   	  if params[:team] and (team_id = params[:team][:id]) and !team_id.empty?
   	    @team = Team.find(team_id)
