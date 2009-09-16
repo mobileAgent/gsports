@@ -3,7 +3,7 @@ class VideoAssetsController < BaseController
   include ActiveMessaging::MessageSender
   publishes_to :push_video_files
   
-  before_filter :gamex_clean_form, :only=>[:create, :update]
+  #before_filter :gamex_clean_form, :only=>[:create, :update]
   
   skip_before_filter :verify_authenticity_token, :only => [:auto_complete_for_video_asset_home_team_name,
                                                            :auto_complete_for_video_asset_visiting_team_name,
@@ -127,6 +127,13 @@ class VideoAssetsController < BaseController
       flash[:notice] = "You don't have permission edit that video"
       redirect_to url_for({ :controller => "search", :action => "my_videos" }) and return
     end
+
+	if league_id = @video_asset.gamex_league_id
+      @gamex_users = GamexUser.for_user(current_user)
+      @gamex_user = GamexUser.for_user_and_league(current_user, league_id).first
+      @render_gamex_menu = true
+	end
+
   rescue ActiveRecord::RecordNotFound
     flash[:notice] = 'That video could not be found.'
     redirect_to url_for({ :controller => "search", :action => "my_videos" })

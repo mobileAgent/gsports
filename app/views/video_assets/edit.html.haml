@@ -1,10 +1,16 @@
 .profileContentArea.listingPage
   .profilePageHeader
     %h2.columnDescriptor
+    -if @render_gamex_menu
+      %span
+        GameXchange
+      &gt; Upload
+    -else
       %span
         = link_to _('MY VIDEOS'), url_for({:controller => 'search', :action => 'my_videos', :user_id => @user.id})        
       = current_user.full_name
-  .listings
+  - extra_listings_class = (@render_gamex_menu ? 'gamexlistings' : 'none')
+  .listings{ :class=>extra_listings_class }
     .contentBox.tanBackground
       .contentBoxHeader.yellowHeader
         %h2.boxDescription
@@ -15,7 +21,7 @@
             = "<img src='#{@vidavee.file_thumbnail_medium(@video_asset.dockey)}' title='#{h @video_asset.title}'>"
           %br/
           - form_for @video_asset do |f|
-            = render :partial => "form", :locals => { :f => f }
+            = render :partial => ( @render_gamex_menu ? "gamex_form" : "form" ), :locals => { :f => f }
             %p
               = f.submit "Submit"
 
