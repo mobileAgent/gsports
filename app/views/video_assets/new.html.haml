@@ -17,7 +17,7 @@
   .listings{ :class=>extra_listings_class }
 
     - if @gamex_user
-      %p{ :style=>'float:right' }
+      %p.gamex-league-avatar
         -#= link_to 'Upload a new video', new_video_asset_path('gamex_user[id]' => @gamex_user.id), :class => 'genericButton'
         %a{ :href=>league_path(@gamex_user.league) }
           - if @gamex_user.league.avatar

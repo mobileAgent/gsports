@@ -43,16 +43,29 @@ table.gamex td {
 
 }
 
+.gamex-league-avatar {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  width: 630px;
+}
+
+.gamex-league-avatar img {
+  float: right;
+}
+
 .gamex-upload-box {
-  background-color: white;
+  background-color: transparent;
  	padding-left: 20px;
 
   width: 400px;
 
+  position: relative;
 }
 
 .gamexlistings {
   width: 630px;
+  position: relative;
 }
 
 .gamex-tips #sidebar {
