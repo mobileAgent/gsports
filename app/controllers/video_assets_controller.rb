@@ -201,8 +201,12 @@ class VideoAssetsController < BaseController
           params[:video_asset][:ignore_game_day] = true
         end
       end
-        
-      if @video_asset.update_attributes(params[:video_asset])
+      
+      updated = @video_asset.update_attributes(params[:video_asset])
+      
+      fix_gamex_fields() if updated
+
+      if updated and @video_asset.save()
         flash[:notice] = 'VideoAsset was successfully updated.'
         format.html { redirect_to(@video_asset) }
         format.xml  { head :ok }
