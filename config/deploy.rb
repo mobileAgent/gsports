@@ -44,7 +44,7 @@ namespace :deploy do
     migrate
     sphinx.restart
     create_symlinks
-    poller.restart_poller
+    #poller.restart_poller
     memcached.clear
     update_configuration
   end
