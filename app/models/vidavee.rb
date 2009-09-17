@@ -301,6 +301,8 @@ class Vidavee < ActiveRecord::Base
   end
   
   def update_asset_record(sessionid,video_asset,only={})
+    before_status = video_asset.video_status
+
     if video_asset.dockey.nil? || video_asset.dockey.empty?
       repair_missing_dockey(sessionid,video_asset)
       if video_asset.dockey.nil? || video_asset.dockey.empty?
@@ -322,6 +324,14 @@ class Vidavee < ActiveRecord::Base
     else
       logger.debug "No content in response #{response}"
     end
+
+
+    puts "status of video from #{before_status} to #{video_asset.video_status} :#{Vidavee.READY}: #{'ready' == video_asset.video_status} #{Vidavee.READY == 'ready'}"
+    if (before_status != video_asset.video_status) && (Vidavee.READY == video_asset.video_status)
+      puts "MEOW"
+      video_asset.ready_at = ::DateTime.now()
+    end
+
     video_asset
   end
   

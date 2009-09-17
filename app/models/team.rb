@@ -55,7 +55,10 @@ class Team < ActiveRecord::Base
 
   named_scope :having_videos,
     :conditions => ["teams.id in (select distinct tid from (select team_id as tid from video_assets union select home_team_id as tid from video_assets union select visiting_team_id as tid from video_assets) ttt)"]
-  
+
+  def nickname_or_name()
+    nickname ? nickname : name
+  end
 
   def self.find_list(tag_list)
     find(:all, :conditions => [ 'LOWER(name) LIKE ?', '%' + tag_list + '%' ])

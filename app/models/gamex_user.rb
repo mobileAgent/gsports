@@ -31,18 +31,19 @@ class GamexUser < ActiveRecord::Base
   
   
   def teams
-	have_teams = {}
-	team_list = []
-  	GamexUser.find(:all, :conditions=>{ :league_id=>league_id }).collect() { |g| 
-		team = g.user.team 
-		if have_teams[team.id]
-			#drop, no fuss
-		else
-			team_list << team
-			have_teams[team.id] = true
-		end
-	}
-	team_list
+    have_teams = {}
+    team_list = []
+      # , :include=>'team', :order=>'teams.name ASC'
+      GamexUser.find(:all, :conditions=>{ :league_id=>league_id }).collect() { |g|
+      team = g.user.team
+      if have_teams[team.id]
+        #drop, no fuss
+      else
+        team_list << team
+        have_teams[team.id] = true
+      end
+    }
+    team_list.sort_by { |team| team.name }
   end
   
   

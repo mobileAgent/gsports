@@ -19,7 +19,7 @@ class VideoAssetsController < BaseController
   after_filter :cache_control, :only => [:create, :update, :destroy]
   after_filter :expire_games_of_the_week, :only => [:destroy]
   before_filter :find_user, :only => [:index, :show, :new, :edit, :save_video ]
-  before_filter :find_gamex_user, :only => [:index, :show, :new, :edit, :save_video ]
+  before_filter :find_gamex_user, :only => [:index, :show, :new, :save_video ]
   uses_tiny_mce(:options => AppConfig.narrow_mce_options.merge({:width => 530}),
                 :only => [:show])
 
@@ -93,6 +93,7 @@ class VideoAssetsController < BaseController
   def new
     if @gamex_user
       @render_gamex_tips = true
+      load_opponents()
     end
     
     unless current_user.can_upload?
@@ -122,17 +123,20 @@ class VideoAssetsController < BaseController
   # GET /video_assets/1/edit
   def edit
     @video_asset = VideoAsset.find(params[:id])
+    
     unless (current_user.can_edit?(@video_asset))
       @video_asset = nil
       flash[:notice] = "You don't have permission edit that video"
       redirect_to url_for({ :controller => "search", :action => "my_videos" }) and return
     end
 
-	if league_id = @video_asset.gamex_league_id
-      @gamex_users = GamexUser.for_user(current_user)
-      @gamex_user = GamexUser.for_user_and_league(current_user, league_id).first
-      @render_gamex_menu = true
-	end
+
+    if league_id = @video_asset.gamex_league_id
+        gamex_users_for_video()
+        @render_gamex_menu = true
+        load_opponents({:for=>:edit})
+    end
+
 
   rescue ActiveRecord::RecordNotFound
     flash[:notice] = 'That video could not be found.'
@@ -441,6 +445,13 @@ class VideoAssetsController < BaseController
     end
   end
   
+  def gamex_users_for_video()
+    if @video_asset && @video_asset.gamex_league_id
+      @gamex_users = GamexUser.for_user(current_user)
+      @gamex_user = GamexUser.for_user_and_league(current_user,@video_asset.gamex_league_id).first
+    end
+  end
+
   def is_gamex?()
     params[ :gamex_user ] and params[:gamex_user][:id]
   end
@@ -451,9 +462,9 @@ class VideoAssetsController < BaseController
       #video_asset = VideoAsset.new(params[:video_asset])
       
       #params[:video_asset][:title] 
-      home_team_name = @video_asset.home_team ? @video_asset.home_team.nickname : ''
+      home_team_name = @video_asset.home_team ? @video_asset.home_team.nickname_or_name : ''
       home_team_score = @video_asset.home_score ? " (#{@video_asset.home_score})" : ""
-      visiting_team_name = @video_asset.visiting_team ? @video_asset.visiting_team.nickname : ''
+      visiting_team_name = @video_asset.visiting_team ? @video_asset.visiting_team.nickname_or_name : ''
       visitor_team_score = @video_asset.visitor_score ? " (#{@video_asset.visitor_score})" : ""
       game_date = @video_asset.game_date ? @video_asset.game_date.strftime("%m-%d-%Y") : ""
       @video_asset.title = "#{home_team_name}#{home_team_score} vs. #{visiting_team_name}#{visitor_team_score}, #{game_date}"
@@ -493,7 +504,27 @@ class VideoAssetsController < BaseController
     #logger.debug "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
     result
   end
-  
+
+  def load_opponents(options)
+
+    @video_asset.visiting_team_id
+    @opponents = @gamex_user.teams
+
+    other_team = Team.new({:name=>'Other'}); other_team.id = -1
+
+    if options[:for] == :edit && !@opponents.collect(&:id).include?(@video_asset.visiting_team_id)
+      #it's edit time and our team is not in the list
+      @show_opponent_text = true
+      @opponents = [ other_team ] + @gamex_user.teams
+    else
+      @opponents = @gamex_user.teams + [ other_team ]
+    end
+
+
+  end
+
+
+
 
 end
 
