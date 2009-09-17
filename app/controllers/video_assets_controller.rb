@@ -505,9 +505,9 @@ class VideoAssetsController < BaseController
     result
   end
 
-  def load_opponents(options)
+  def load_opponents(options={})
 
-    @video_asset.visiting_team_id
+    #@video_asset.visiting_team_id
     @opponents = @gamex_user.teams
 
     other_team = Team.new({:name=>'Other'}); other_team.id = -1
