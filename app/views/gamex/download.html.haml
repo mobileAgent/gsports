@@ -82,7 +82,7 @@
                     %b &raquo;
                     = link_to 'Select', video_asset_path(video, 'gamex_user[id]' => @gamex_user.id )
                   %td
-                    = video.ready_at ? video.ready_at.strftime("%m-%d-%Y %I:%M%p") : '-'
+                    = video.ready_at ? (Time.parse(video.ready_at.to_s)-(5*60*60)).strftime("%m-%d-%Y %I:%M%p") : '-'
                     -#= gsxp_date(video.created_at)
                   %td
                     - if video.home_team

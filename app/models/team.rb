@@ -57,7 +57,7 @@ class Team < ActiveRecord::Base
     :conditions => ["teams.id in (select distinct tid from (select team_id as tid from video_assets union select home_team_id as tid from video_assets union select visiting_team_id as tid from video_assets) ttt)"]
 
   def nickname_or_name()
-    nickname ? nickname : name
+    (nickname && !nickname.empty?) ? nickname : name
   end
 
   def self.find_list(tag_list)
