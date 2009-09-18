@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090917181340) do
+ActiveRecord::Schema.define(:version => 20090918182339) do
 
   create_table "access_groups", :force => true do |t|
     t.string  "name",        :limit => 30
@@ -449,6 +449,7 @@ ActiveRecord::Schema.define(:version => 20090917181340) do
     t.boolean  "enabled"
     t.boolean  "reusable"
     t.integer  "period_days",          :limit => 11
+    t.integer  "access_group_id",      :limit => 11
   end
 
   add_index "promotions", ["promo_code"], :name => "index_promotions_on_promo_code", :unique => true

@@ -38,6 +38,10 @@ class AccessGroup < ActiveRecord::Base
       team ? team.name : '' rescue '!'
     end
   end
+
+  def long_name
+    "#{name} for #{team_name}"
+  end
   
   
 end

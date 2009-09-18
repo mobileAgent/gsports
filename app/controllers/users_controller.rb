@@ -468,6 +468,14 @@ class UsersController < BaseController
     logger.debug "* Saving user record"
     @user.save!
 
+    #adding user to promotion access group
+    if access_group = @promotion.access_group
+      access = AccessUser.new()
+      access.user = @user
+      access.access_group = access_group
+      access.save
+    end
+
     logger.info "* Saving USER Membership"
     @user.make_member_by_credit_card(@cost,@billing_address,credit_card_for_db,@response,@promotion)
 

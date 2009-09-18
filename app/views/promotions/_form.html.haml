@@ -16,6 +16,13 @@
   %h3= _('Period (Days)')
 = form.text_field :period_days, :size => 4, :maxlength => 4
 
+%label{"for"=>"access_group_id"}
+  %h3= _('Access Group')
+- groups = AccessGroup.find(:all).sort {|x,y| x.long_name <=> y.long_name }
+= form.collection_select :access_group_id, groups, :id, :long_name, {:include_blank => true}, {}
+
+
+
 
 %label{"for"=>"subscription_plan"}
   %h3= _('Subscription')

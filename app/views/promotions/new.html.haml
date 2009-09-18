@@ -13,6 +13,6 @@
         .boxDescription
           = _('Promotion Details')
       .contentBoxContent      
-        - form_for :promotion, :url => promotions_path, :html => {:class => "MainForm"} do |f|
+        - form_for :promotion, :url => promotions_path, :html => {:class => "xMainForm"} do |f|
           = render :partial => "form", :object => f
           %p= submit_tag _('Create'), :or => link_to(_('Cancel'), promotions_path)

@@ -14,8 +14,10 @@
         .boxDescription
           = _('Promotion Details')
       .contentBoxContent      
-        - form_for :promotion, :url => promotion_url(@promotion), :html => {:method => 'put', :class => "MainForm"} do |f|
+        - form_for :promotion, :url => promotion_url(@promotion), :html => {:method => 'put', :class => "xMainForm"} do |f|
           %p= link_to _('Delete'), promotion_url(@promotion), :method => :delete, :confirm => "Are you sure you want to permanently delete this promotion?", :class => 'genericButton'
+
+          %br
           = render :partial => "form", :object => f
 			
           %p= submit_tag _('Save'), :or => link_to(_('Cancel'), promotions_path)
