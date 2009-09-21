@@ -8,7 +8,7 @@ else
     # for now, just remove the add button
     page.visual_effect :squish, divid, :duration => 1 
     flashnow(page,"You have requested friendship with #{@friendship.friend.full_name}")
-  else 
+  else
     page.replace(divid, "Requested friendship with #{@friendship.friend.full_name}!" )
   end
 end

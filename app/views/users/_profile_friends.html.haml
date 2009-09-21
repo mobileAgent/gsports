@@ -11,7 +11,7 @@
       - if @is_current_user && @pending_friendships_count > 0
         .featureItem
           = link_to "&raquo; View all my friend requests (#{@pending_friendships_count})", pending_user_friendships_path(@user)
-      - elsif current_user && current_user.can_request_friendship_with(@user)
+      -# elsif current_user && current_user.can_request_friendship_with(@user)
         .featureItem
           = add_friend_link(@user)
       - @accepted_friendships.each do |user|
