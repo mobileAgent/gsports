@@ -186,8 +186,17 @@ class SearchController < BaseController
     @user = params[:user_id] ? User.find(params[:user_id]) : current_user
     
     @video_assets = VideoAsset.for_user(@user).all(:limit => 10, :order => 'updated_at DESC')
+    @video_assets.delete_if() { |v|
+      !current_user.has_access?(v)
+    }
     @video_clips = VideoClip.for_user(@user).all(:limit => 10, :order => 'updated_at DESC')
+    @video_clips.delete_if() { |v|
+      !current_user.has_access?(v)
+    }
     @video_reels = VideoReel.for_user(@user).all(:limit => 10, :order => 'updated_at DESC')
+    @video_reels.delete_if() { |v|
+      !current_user.has_access?(v)
+    }
     @video_users = VideoUser.for_user(@user).all(:limit => 10, :order => 'updated_at DESC')
     protect_private_videos(@video_assets)
     protect_private_videos(@video_clips)

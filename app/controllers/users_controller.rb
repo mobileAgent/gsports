@@ -62,7 +62,13 @@ class UsersController < BaseController
     @comment = Comment.new(params[:comment])
     @published_post_count = Post.count(:all, :conditions => ["user_id = ? and published_as = ?", @user.id, 'live'])
     @clips = @user.video_clips.find(:all, :limit => 2, :order => "created_at DESC")
+    @clips.delete_if() { |v|
+      !current_user.has_access?(v)
+    }
     @reels = @user.video_reels.find(:all, :limit => 2, :order => "created_at DESC")
+    @reels.delete_if() { |v|
+      !current_user.has_access?(v)
+    }
     @profile_clips_and_reels = []
     while(@profile_clips_and_reels.size < 2 && (@clips.size + @reels.size > 0))
       @profile_clips_and_reels << @clips.shift if @clips.size > 0
