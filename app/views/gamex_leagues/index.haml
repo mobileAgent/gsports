@@ -1,0 +1,48 @@
+.profileContentArea.listingPage
+  .profilePageHeader
+    %h2.columnDescriptor
+      %span
+        GameX Leagues
+  .listings
+    .padded
+
+      - if current_user.admin?
+        %table
+          %tr
+            %td
+              = link_to 'New GameX League', url_for({:controller=>'gamex_leagues',:action=>'new'}), :class => 'genericButton'
+            %td
+            
+        %br/
+
+      %table{:border => 0, :cellspacing => 0, :cellpadding => 0, :width => '100%'}
+        %thead
+          %tr.yellowHeader
+            - if current_user.admin?
+              = sortable_table_header :class=>"padded sortableContentHeader", :name => "ID", :sort => "gamex_leagues.id"
+              = sortable_table_header :class=>"padded sortableContentHeader", :name => "League", :sort => "leagues.name"
+              = sortable_table_header :class=>"padded sortableContentHeader", :name => "Release Date", :sort => "gamex_leagues.release_date"
+              %th.padded.sortableContentHeader= "Delete"
+
+        %tbody
+          - for gamex_league in @gamex_leagues
+            %tr.leagueList
+              %td.leagueList= gamex_league.id
+              %td.leagueList= link_to gamex_league.league_name, edit_gamex_league_path(gamex_league), {:title => "edit"}
+              %td.leagueList= "#{gamex_league.release_time}"
+              %td.leagueList= link_to 'X', gamex_league, :confirm => 'Are you sure?', :method => :delete
+
+
+      .apple_pagination
+        = will_paginate @access_groups
+      
+      
+
+      -#%table
+        - for gamex_user in @gamex_users 
+          %tr
+            %td= link_to gamex_user.user.name, gamex_user
+            %td= link_to gamex_user.user.name, gamex_user 
+            %td= link_to 'Edit', edit_gamex_user_path(gamex_user) 
+            %td= link_to 'Destroy', gamex_user, :confirm => 'Are you sure?', :method => :delete 
+

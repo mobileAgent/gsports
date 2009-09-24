@@ -1,0 +1,16 @@
+.profileContentArea.listingPage
+  .profilePageHeader
+    %h2.columnDescriptor
+      %span
+        New GameX League
+  .listings
+    .listingItem
+
+      = error_messages_for :gamex_league
+      
+      - form_for(@gamex_league, :url => gamex_league_url(@gamex_league), :html => {:multipart => true}) do |f|
+        = render :partial => "form", :locals => { :f => f, :gamex_league => @gamex_league }
+        %p= f.submit "Create"
+          
+      = link_to 'All GameX Leagues', gamex_leagues_path
+

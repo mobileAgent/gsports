@@ -1,0 +1,33 @@
+.profileContentArea.listingPage
+  .profilePageHeader
+    %h2.columnDescriptor
+      %span
+        GameX League
+      = @gamex_league.league_name
+  .listings
+    .listingItem
+      
+      Member of: 
+      = @gamex_league.league_name
+
+      %br
+      %p
+      %br
+
+      Release Time:
+      -if @gamex_league.release_time
+        = GamexLeague::Days[@gamex_league.release_day.to_i + 1][0]
+        \&nbsp;
+        -#= GamexLeague::Hours[@gamex_league.release_hour.to_i][0]
+        = @gamex_league.release_hour
+        \:
+        = @gamex_league.release_min
+        = (@gamex_league.release_apm.to_i == 1) ? 'pm' : 'am'
+      
+
+      %br
+      %p
+      %br
+      
+      = link_to 'Edit', edit_gamex_league_path(@gamex_league) |
+      = link_to 'All GameX Leagues', gamex_leagues_path

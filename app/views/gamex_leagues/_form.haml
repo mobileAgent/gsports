@@ -1,0 +1,29 @@
+
+
+%br
+%p
+%div
+%b League Name
+%br
+= text_field_with_auto_complete :gamex_league, :league_name, :autocomplete => "off"
+
+
+%br
+%p
+%div
+%b Release Time
+%br
+= f.select :release_day, GamexLeague::Days, { :prompt=>'- Select -' }
+\&nbsp;
+= f.select :release_hour, GamexLeague::Hours
+\:
+= f.select :release_min, GamexLeague::Mins
+= f.select :release_apm, GamexLeague::APms
+
+-#
+  %hr
+  day:
+  =@gamex_league.release_day.inspect
+  %hr
+  hour:
+  =@gamex_league.release_hour.inspect

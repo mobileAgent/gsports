@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090918182339) do
+ActiveRecord::Schema.define(:version => 20090923184800) do
 
   create_table "access_groups", :force => true do |t|
     t.string  "name",        :limit => 30
@@ -246,7 +246,8 @@ ActiveRecord::Schema.define(:version => 20090918182339) do
   add_index "friendships", ["friendship_status_id"], :name => "index_friendships_on_friendship_status_id"
 
   create_table "gamex_leagues", :force => true do |t|
-    t.integer "league_id", :limit => 11
+    t.integer "league_id",    :limit => 11
+    t.integer "release_time", :limit => 11
   end
 
   create_table "gamex_users", :force => true do |t|
