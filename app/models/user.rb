@@ -229,6 +229,11 @@ class User < ActiveRecord::Base
       if 0 < GamexUser.count(:conditions => { :user_id => id, :league_id => gamex_asset_id } )
         logger.info("has_access? is coach")
         # is coach
+        
+        gamex_user = GamexUser.for_user_and_league(id, gamex_asset_id).first
+        gamex_league = gamex_user.gamex_league
+        gamex_league.release?(item)
+
         return true
       else
         logger.info("has_access? isn't coach but this is a gamex video, need access to pass")

@@ -16,6 +16,9 @@ class GamexUser < ActiveRecord::Base
 
     }
 
+  def gamex_league
+    GamexLeague.find(:first, :conditions=>{:league_id => league_id})
+  end
   
   def league_name= name
     league = League.find(:first, :conditions=>{ :name=>name })
