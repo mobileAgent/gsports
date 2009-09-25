@@ -21,7 +21,7 @@
         -#= GamexLeague::Hours[@gamex_league.release_hour.to_i][0]
         = @gamex_league.release_hour
         \:
-        = @gamex_league.release_min
+        = ("00"+@gamex_league.release_min.to_s)[-2,2]
         = (@gamex_league.release_apm.to_i == 1) ? 'pm' : 'am'
       
 

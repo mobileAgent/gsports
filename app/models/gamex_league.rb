@@ -33,6 +33,45 @@ class GamexLeague < ActiveRecord::Base
     team_list.sort_by { |team| team.name }
   end
 
+
+
+  def release?(video_asset)
+    return true if release_time.nil?
+
+    disperse_release_time()
+
+    shift = 0
+
+    vd = video_asset.ready_at
+    
+    if vd.wday > release_day
+      shift= (6-vd.wday+1) + release_day
+    elsif vd.wday < release_day
+      shift= vd.wday - release_day
+    end
+
+    logger.info("MEOW vd.wday #{vd.wday}, release_day #{release_day}")
+    logger.info("MEOW shifting #{shift}")
+
+    if shift > 0
+      vd += shift * 60 * 60 * 24
+    end
+
+    hour = hour12to24(release_hour, release_apm)
+
+    vd = vd.change(:hour => hour, :min => release_min)
+
+    # is it in the future - fail
+    return vd > ::DateTime.now()
+
+  end
+
+
+
+
+
+
+
   attr :release_day, true
   attr :release_hour, true
   attr :release_min, true
@@ -95,14 +134,29 @@ class GamexLeague < ActiveRecord::Base
     else
       hour = 0 if hour == 12 #12am is 0
     end
+
     time = release_day.to_i*24*60 + hour*60 + release_min.to_i
     self.release_time= (time > 0) ? time : nil
     #logger.info("MEOW #{a.inspect} > #{release_time}")
 #    logger.info("MEOW release_time #{release_time.inspect}")
   end
+
+  def hour12to24(h, apm)
+    hour = h.to_i
+    if apm.to_i == 1
+      #pm
+      hour += 12 if hour < 12 #12pm is just 12
+    else
+      hour = 0 if hour == 12 #12am is 0
+    end
+    hour
+  end
     
 
   def disperse_release_time
+    #TODO cache this
+
+
     if release_time.nil?
       self.release_day= -1
       return
@@ -135,6 +189,14 @@ class GamexLeague < ActiveRecord::Base
     self.release_hour= h
     self.release_min= m
     self.release_apm= pm
+  end
+
+  def release_time_str
+    return '' if release_time.nil?
+
+    disperse_release_time()
+
+    "#{Days[release_day.to_i + 1][0]} #{release_hour}:#{("00"+release_min.to_s)[-2,2]}#{(release_apm.to_i == 1) ? 'pm' : 'am'}"
   end
 
 #  def release_day
