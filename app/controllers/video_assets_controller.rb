@@ -123,13 +123,12 @@ class VideoAssetsController < BaseController
   # GET /video_assets/1/edit
   def edit
     @video_asset = VideoAsset.find(params[:id])
-    
+
     unless (current_user.can_edit?(@video_asset))
       @video_asset = nil
       flash[:notice] = "You don't have permission edit that video"
       redirect_to url_for({ :controller => "search", :action => "my_videos" }) and return
     end
-
 
     if league_id = @video_asset.gamex_league_id
         gamex_users_for_video()
@@ -137,6 +136,7 @@ class VideoAssetsController < BaseController
         load_opponents({:for=>:edit})
     end
 
+    
 
   rescue ActiveRecord::RecordNotFound
     flash[:notice] = 'That video could not be found.'
@@ -178,18 +178,20 @@ class VideoAssetsController < BaseController
   # PUT /video_assets/1.xml
   def update
     @video_asset = VideoAsset.find(params[:id])
+
+
     unless (current_user.can_edit?(@video_asset))
       @video_asset = nil
       flash[:notice] = "You don't have permission edit that video"
       redirect_to url_for({ :controller => "search", :action => "my_videos" }) and return
     end
-    
+
     setup_access @video_asset
 
     respond_to do |format|
-      @video_asset.tag_with(params[:tag_list] || '') 
+      @video_asset.tag_with(params[:tag_list] || '')
       @video_asset = add_team_and_league_relations(@video_asset,params)
-      
+
       if ! is_gamex?
         gd = params[:video_asset][:game_date]
         params[:video_asset][:ignore_game_month] = false
@@ -205,9 +207,9 @@ class VideoAssetsController < BaseController
           params[:video_asset][:ignore_game_day] = true
         end
       end
-      
+
       updated = @video_asset.update_attributes(params[:video_asset])
-      
+
       fix_gamex_fields() if updated
 
       if updated and @video_asset.save()
@@ -385,9 +387,11 @@ class VideoAssetsController < BaseController
       
       if(!params[:video_asset][:league_name].blank?)
         video_asset.league_name= params[:video_asset][:league_name]
-        # Transfer ownership to the admin
-        admin = User.league_admin(video_asset.league_id)
-        video_asset.user_id = admin[0].id if (admin && admin.any?)
+        if video_asset.gamex_league_id.nil?
+          # Transfer ownership to the admin
+          admin = User.league_admin(video_asset.league_id)
+          video_asset.user_id = admin[0].id if (admin && admin.any?)
+        end
         if (video_asset.team_id? && admin_set_team)
           video_asset.team.league_id= video_asset.league_id
         end
@@ -397,9 +401,11 @@ class VideoAssetsController < BaseController
       
       if(!params[:video_asset][:team_name].blank?)
         video_asset.team_name= params[:video_asset][:team_name]
-        # Transfer ownership to the admin
-        admin = User.team_admin(video_asset.team_id)
-        video_asset.user_id = admin[0].id if (admin && admin.any?)
+        if video_asset.gamex_league_id.nil?
+          # Transfer ownership to the admin
+          admin = User.team_admin(video_asset.team_id)
+          video_asset.user_id = admin[0].id if (admin && admin.any?)
+        end
         admin_set_team = true
       else
         video_asset.team = nil
@@ -447,8 +453,14 @@ class VideoAssetsController < BaseController
   
   def gamex_users_for_video()
     if @video_asset && @video_asset.gamex_league_id
-      @gamex_users = GamexUser.for_user(current_user)
-      @gamex_user = GamexUser.for_user_and_league(current_user,@video_asset.gamex_league_id).first
+		xuser = current_user
+		if current_user.admin?
+		  x_user = @video_asset.user
+		  #@gamex_user = GamexUser.for_user(@video_asset.user).first
+		  #@gamex_users = [@gamex_user]
+		end
+	    @gamex_users = GamexUser.for_user(x_user)
+	    @gamex_user = GamexUser.for_user_and_league(x_user,@video_asset.gamex_league_id).first
     end
   end
 
@@ -490,15 +502,15 @@ class VideoAssetsController < BaseController
   def setup_access video
     result = true
     #logger.debug "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-    logger.debug "MEOW setup_access"
-    logger.debug "MEOW params #{params[:access_item].inspect}"
+    #logger.debug "MEOW setup_access"
+    #logger.debug "MEOW params #{params[:access_item].inspect}"
     @access_item = AccessItem.new params[:access_item]
     if @access_item.access_group_id
       @access_item.item = video
       #logger.debug "access_item #{@access_item.inspect}"
       #try this quietly
       result = @access_item.save
-      logger.debug "MEOW #{result.inspect}"
+      #logger.debug "MEOW #{result.inspect}"
       
     end
     #logger.debug "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
@@ -508,16 +520,20 @@ class VideoAssetsController < BaseController
   def load_opponents(options={})
 
     #@video_asset.visiting_team_id
-    @opponents = @gamex_user.teams
+	#if current_user.admin?
+      #@opponents = GamexUser.for_user(@video_asset.user).first.teams
+	#else
+      @opponents = @gamex_user.teams
+	#end
 
     other_team = Team.new({:name=>'Other'}); other_team.id = -1
 
     if options[:for] == :edit && !@opponents.collect(&:id).include?(@video_asset.visiting_team_id)
       #it's edit time and our team is not in the list
       @show_opponent_text = true
-      @opponents = [ other_team ] + @gamex_user.teams
+      @opponents = [ other_team ] + @opponents
     else
-      @opponents = @gamex_user.teams + [ other_team ]
+      @opponents = @opponents + [ other_team ]
     end
 
 

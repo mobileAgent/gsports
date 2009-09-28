@@ -175,6 +175,12 @@ GameXchange needs specific information about the game you are uploading in order
       = f.label :team_name
       %br/
       = text_field_with_auto_complete :video_asset, :team_name, :autocomplete => "off"
+    %p
+      %br
+      = f.check_box :gamex_release_override
+      = f.label :gamex_release_override
+
+
 
   %fieldset.emphasized
     %legend="Very Advanced Fields (Vidavee Coordination, Admin Only)"

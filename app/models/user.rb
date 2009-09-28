@@ -214,6 +214,9 @@ class User < ActiveRecord::Base
   end
   
   def has_access_to_asset?(item)
+
+    return true if admin?
+
     # assume we're good
     logger.info("has_access?")
     access_pass = true

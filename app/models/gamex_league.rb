@@ -36,7 +36,7 @@ class GamexLeague < ActiveRecord::Base
 
 
   def release?(video_asset)
-    return true if release_time.nil?
+    return true if release_time.nil? or video_asset.gamex_release_override
 
     disperse_release_time()
 

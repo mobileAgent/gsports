@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090923184800) do
+ActiveRecord::Schema.define(:version => 20090928172057) do
 
   create_table "access_groups", :force => true do |t|
     t.string  "name",        :limit => 30
@@ -696,39 +696,40 @@ ActiveRecord::Schema.define(:version => 20090923184800) do
     t.string   "video_length"
     t.string   "video_type"
     t.string   "video_status"
-    t.integer  "sponsor_id",         :limit => 11
-    t.integer  "member_id",          :limit => 11
-    t.integer  "user_id",            :limit => 11
+    t.integer  "sponsor_id",             :limit => 11
+    t.integer  "member_id",              :limit => 11
+    t.integer  "user_id",                :limit => 11
     t.string   "sport"
     t.datetime "game_date"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "home_team_id",       :limit => 11
-    t.integer  "visiting_team_id",   :limit => 11
+    t.integer  "home_team_id",           :limit => 11
+    t.integer  "visiting_team_id",       :limit => 11
     t.string   "uploaded_file_path"
     t.string   "game_level"
     t.string   "game_gender"
-    t.integer  "view_count",         :limit => 11,  :default => 0
-    t.integer  "team_id",            :limit => 11
-    t.integer  "league_id",          :limit => 11
-    t.boolean  "public_video",                      :default => true
-    t.boolean  "delta",                             :default => false
-    t.integer  "home_score",         :limit => 11
-    t.integer  "visitor_score",      :limit => 11
+    t.integer  "view_count",             :limit => 11,  :default => 0
+    t.integer  "team_id",                :limit => 11
+    t.integer  "league_id",              :limit => 11
+    t.boolean  "public_video",                          :default => true
+    t.boolean  "delta",                                 :default => false
+    t.integer  "home_score",             :limit => 11
+    t.integer  "visitor_score",          :limit => 11
     t.string   "game_type"
     t.string   "gsan"
-    t.boolean  "ignore_game_day",                   :default => false
-    t.boolean  "ignore_game_month",                 :default => false
+    t.boolean  "ignore_game_day",                       :default => false
+    t.boolean  "ignore_game_month",                     :default => false
     t.string   "game_date_str"
     t.text     "internal_notes"
-    t.boolean  "missing_audio",                     :default => false
-    t.string   "filmed_by_name",     :limit => 100
-    t.integer  "filmed_by",          :limit => 11
-    t.string   "announcer_name",     :limit => 100
-    t.integer  "announcer",          :limit => 11
-    t.integer  "shared_access_id",   :limit => 11
-    t.integer  "gamex_league_id",    :limit => 11
+    t.boolean  "missing_audio",                         :default => false
+    t.string   "filmed_by_name",         :limit => 100
+    t.integer  "filmed_by",              :limit => 11
+    t.string   "announcer_name",         :limit => 100
+    t.integer  "announcer",              :limit => 11
+    t.integer  "shared_access_id",       :limit => 11
+    t.integer  "gamex_league_id",        :limit => 11
     t.datetime "ready_at"
+    t.boolean  "gamex_release_override"
   end
 
   create_table "video_clips", :force => true do |t|
