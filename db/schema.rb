@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090928172057) do
+ActiveRecord::Schema.define(:version => 20090929140218) do
 
   create_table "access_groups", :force => true do |t|
     t.string  "name",        :limit => 30
@@ -748,13 +748,12 @@ ActiveRecord::Schema.define(:version => 20090928172057) do
   end
 
   create_table "video_histories", :force => true do |t|
-    t.integer  "user_id",       :limit => 11
-    t.integer  "school_id",     :limit => 11
-    t.integer  "video_id",      :limit => 11
-    t.string   "game_title"
-    t.string   "game_date"
-    t.string   "activity_type"
-    t.datetime "activity_date"
+    t.integer  "user_id",        :limit => 11
+    t.integer  "team_id",        :limit => 11
+    t.integer  "video_asset_id", :limit => 11
+    t.string   "activity_type",  :limit => 1
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "video_reel_sources", :force => true do |t|

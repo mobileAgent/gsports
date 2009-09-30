@@ -78,6 +78,7 @@ class VideoAssetsController < BaseController
   # GET /video_assets/1.xml
   def show
     @video_asset = VideoAsset.find(params[:id])
+    VideoHistory.viewed(@video_asset,current_user)
     update_view_count(@video_asset)
     respond_to do |format|
       format.html # show.html.erb
@@ -299,15 +300,36 @@ class VideoAssetsController < BaseController
       publish(:push_video_files,"#{@video_asset.id}")
       flash[:notice] = "Your video is being procesed. It may be several minutes before it appears in your gallery"
       render :action=>:upload_success
+
+      #VideoHistory.uploaded(@video_asset)
     else
       flash[:notice] = "There was a problem with the video"
       render :action=>:new
     end
+
   end
 
   def upload_success
   end
-  
+
+
+
+
+  def download
+
+    @video_asset = VideoAsset.find(params[:id])
+
+    if current_user.has_access?(@video_asset)
+      VideoHistory.download(@video_asset, current_user)
+      redirect_to @video_asset.download_url()
+    else
+      render :text => 'access denied'
+    end
+
+  end
+
+
+
   auto_complete_for :video_asset, :sport
 
   def auto_complete_for_video_asset_team_name

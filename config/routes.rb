@@ -8,11 +8,11 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :pages
   map.resources :teams
   map.resources :leagues
-  map.resources :gamex, :collection => { :download => :any, :manage => :any }
+  map.resources :gamex, :collection => { :download => :any, :manage => :any, :history => :any }
   map.resources :gamex_users
   map.resources :gamex_leagues
   map.resources :vidavees
-  map.resources :video_assets, :new => { :save_video => :post, :swfupload => :post }, :collection => { :admin => :any }
+  map.resources :video_assets, :new => { :save_video => :post, :swfupload => :post }, :collection => { :admin => :any, :download => :any }
   map.resources :video_clips
   map.resources :video_reels
   map.resources :video_users, :new => { :save_video => :post, :swfupload => :post }, :collection => { :admin => :any }

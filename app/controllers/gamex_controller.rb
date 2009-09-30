@@ -1,7 +1,8 @@
 class GamexController < BaseController
   
   before_filter :in_gamex_content
-  
+  before_filter :find_gamex_user
+
   
   def index
     redirect_to '/gamex/download'
@@ -24,21 +25,9 @@ class GamexController < BaseController
   end
   
   
-  
   def download
     
-    @gamex_users = GamexUser.for_user(current_user) #find(:all, :conditions => { :user_id => current_user.id } )
-    
-    if @gamex_users.size == 1
-      @gamex_user = @gamex_users.first
-    else
-      if params[ :gamex_user ] and gamex_id = params[ :gamex_user ][ :id ]
-        @gamex_user = GamexUser.find( gamex_id )
-        unless @gamex_user.user_id == current_user.id
-          access_denied and return 
-        end
-      end
-    end
+
     
     if @gamex_user
 
@@ -62,49 +51,40 @@ class GamexController < BaseController
     
   end
   
-  
-  
-  
-  def download1
-    
-    @gamex_users = GamexUser.find(:all, :conditions => { :user_id => current_user.id } )
-    #@gamex_user = GamexUser.new(params[:gamex])
-    #@gamex_user = GamexUser.find( params[:id] )
-    
-    if @gamex_users.size == 1
-      @gamex_user = @gamex_users[0]
-      @league = @gamex_users[0].league
+
+  def history
+    case params[:scope]
+    when 'uploads'
+      @uploads = VideoHistory.uploads.paginate(:page => params[:page])
+    when 'views'
+      @views = VideoHistory.views.paginate(:page => params[:page], :per_page=>3)
     else
-      if params[ :gamex_user ] and gamex_id = params[ :gamex_user ][ :id ]
-        @gamex_user = GamexUser.find( gamex_id )
-        access_denied and return if @gamex_user.user_id != current_user.id
-      end
+      @uploads = VideoHistory.uploads.summary
+      @views = VideoHistory.views.summary
     end
-    
-    if @gamex_user
-
-      @teams = @gamex_user.teams() #GamexUser.find(:all, :conditions=>{ :league_id=>@gamex_user.league_id }).collect() { |g| g.user.team }
-
-	  if params[:team] and (team_id = params[:team][:id]) and !team_id.empty?
-	    @team = Team.find(team_id)
-      @video_assets = VideoAsset.paginate(:conditions => { :gamex_league_id=>@gamex_user.league.id, :team_id=>team_id }, :page => params[:page], :order => "created_at DESC", :include => :tags)
-	  end      
-      
-    end
-    
-	    
-    
   end
-  
-  
-  def manage
-    
-  end
+
 
   def in_gamex_content
     @render_gamex_tips = true
     @render_gamex_menu = true
   end
+  
+  def find_gamex_user
+    @gamex_users = GamexUser.for_user(current_user) #find(:all, :conditions => { :user_id => current_user.id } )
+
+    if @gamex_users.size == 1
+      @gamex_user = @gamex_users.first
+    else
+      if params[ :gamex_user ] and gamex_id = params[ :gamex_user ][ :id ]
+        @gamex_user = GamexUser.find( gamex_id )
+        unless @gamex_user.user_id == current_user.id
+          access_denied and return
+        end
+      end
+    end
+  end
+
   
 end # class
 

@@ -330,6 +330,7 @@ class Vidavee < ActiveRecord::Base
     if (before_status != video_asset.video_status) && (Vidavee.READY == video_asset.video_status)
       puts "MEOW"
       video_asset.ready_at = ::DateTime.now()
+      VideoHistory.uploaded(video_asset)
     end
 
     video_asset
