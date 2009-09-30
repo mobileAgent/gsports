@@ -50,10 +50,10 @@
                   %table
                     %tr
                       %td{ :width=>'280px' }
-                        = video.title
+                        = video ? video.title : '-'
                         %br
                         &nbsp;
-                        = video.dockey
+                        = video ? video.dockey : '-'
                       %td
                         = link_to_remote 'Remove', {:url => {:controller=>:channels, :action=>:remove, :id => v.id}, :confirm => 'Are you sure?', :method => :delete}, :class=>'genericButton', :complete => evaluate_remote_response
                   %br
