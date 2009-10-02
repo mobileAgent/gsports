@@ -43,6 +43,8 @@ class GamexLeague < ActiveRecord::Base
     shift = 0
 
     vd = video_asset.ready_at
+
+    return true if vd.nil?
     
     if vd.wday > release_day
       shift= (6-vd.wday+1) + release_day
