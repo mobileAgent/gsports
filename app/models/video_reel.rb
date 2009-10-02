@@ -10,7 +10,10 @@ class VideoReel < ActiveRecord::Base
   
   has_many :favorites, :as => :favoritable, :dependent => :destroy
   acts_as_activity :user, :if => Proc.new{|r| r.public_video }
+
   before_destroy :save_deleted_video
+  before_destroy { |video_clip| AccessItem.destroy_all "item_id = #{video_clip.id} and item_type = VideoClip" }
+  before_destroy { |video_clip| ChannelVideo.destroy_all "video_id = #{video_clip.id} and video_type = VideoClip" }
   
   # Every reel needs a title
   validates_presence_of :title

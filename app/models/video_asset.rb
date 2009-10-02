@@ -49,7 +49,11 @@ class VideoAsset < ActiveRecord::Base
   acts_as_activity :user, :if => Proc.new{|r| r.video_status == 'ready' && r.public_video }
   
   attr_protected :team_name, :league_name
+
+
   before_destroy :save_deleted_video
+  before_destroy { |video_asset| AccessItem.destroy_all "item_id = #{video_asset.id} and item_type = VideoAsset" }
+  before_destroy { |video_asset| ChannelVideo.destroy_all "video_id = #{video_asset.id} and video_type = VideoAsset" }
   
 
   after_save do |video|
@@ -349,6 +353,7 @@ class VideoAsset < ActiveRecord::Base
     vd.deleted_at = Time.now
     vd.save!
   end
+
   
 end
 
