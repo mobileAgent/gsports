@@ -1,6 +1,6 @@
 - show_tab ||= false 
 
-- video_type = VideoClip === video_listing ? 'video_clip' : VideoReel === video_listing ? 'video_reel' : 'video'
+- video_type = video_listing.type.to_s.underscore #VideoClip === video_listing ? 'video_clip' : VideoReel === video_listing ? 'video_reel' : 'video'
 
 - link = nil
 - if VideoClip === video_listing
@@ -41,7 +41,7 @@
               - if video_listing.visiting_team_id
                 = ", "
             - if video_listing.visiting_team_id
-              = link_to h(video_listing.visiting_team.title_name), team_path(video_listing.visiting_team_id)
+              = link_to h(video_listing.visiting_team.title_name), team_path(video_listing.visiting_team_id) rescue '-'
 
         %p{ :style => "height:3em" }
           Uploaded by:
