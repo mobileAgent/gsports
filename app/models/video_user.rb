@@ -18,6 +18,7 @@ class VideoUser < ActiveRecord::Base
   acts_as_activity :user, :if => Proc.new{|r| r.video_status == 'ready' && r.public_video }
 
   before_destroy :save_deleted_video
+  before_destroy { |item| Favorite.destroy_all "favoritable_id = #{item.id} and favoritable_type = '#{item.type.to_s}'" }
 
 
   after_save do |video|
