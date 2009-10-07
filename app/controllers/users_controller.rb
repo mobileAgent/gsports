@@ -419,10 +419,10 @@ class UsersController < BaseController
     cost_for_gateway = @cost == 0 ? (VERIFICATION_COST * 100).to_i : (@cost * 100).to_i
     @response = gateway.purchase(cost_for_gateway, @credit_card)
 
-    logger.debug "Response from gateway #{@response.inspect} for #{@user.full_name} at #{cost_for_gateway}"
+    logger.info "REGWATCH * Response from gateway #{@response.inspect} for #{@user.full_name} at #{cost_for_gateway}"
     
     if (@response.success?)
-      logger.debug "Gatway response is success #{@response.inspect}"
+      logger.info "REGWATCH * Gatway response is success"
 
       # Void the $1.00 transaction post haste!
       if @cost == 0
@@ -435,6 +435,7 @@ class UsersController < BaseController
 
 
     else
+      logger.info "REGWATCH * Gatway response failed"
       @billing_address ||= Address.new
       
       if @response.nil? || @response.message.nil? || @response.message.blank?
@@ -471,26 +472,36 @@ class UsersController < BaseController
     @user.enabled = true
     @user.activated_at = Time.now if @user.activated_at.nil?
 
-    logger.debug "* Saving user record"
+    logger.info "REGWATCH * Saving user record"
     @user.save!
 
-    #adding user to promotion access group
-    if access_group = @promotion.access_group
-      access = AccessUser.new()
-      access.user = @user
-      access.access_group = access_group
-      access.save
-    end
-
-    logger.info "* Saving USER Membership"
+    logger.info "REGWATCH * Saving USER Membership"
     @user.make_member_by_credit_card(@cost,@billing_address,credit_card_for_db,@response,@promotion)
 
     if self.current_user.nil?
-      logger.debug "* Logging the user in..."
+      logger.debug "REGWATCH * Logging the user in..."
       self.current_user = User.find(@user.id) # Log them in right now!
     end
 
     UserNotifier.deliver_welcome(@user)
+
+
+
+    logger.info "REGWATCH * adding user to promotion access group"
+    #adding user to promotion access group
+    begin
+      if access_group = @promotion.access_group
+        access = AccessUser.new()
+        access.user = @user
+        access.access_group = access_group
+        access.save
+      end
+    rescue Exception => e
+      logger.info "REGWATCH * adding user to promotion access group failed - #{e.message}"
+    end
+
+
+
     redirect_to signup_completed_user_path(@user)
   end
   
