@@ -88,7 +88,7 @@ class GamexLeaguesController < BaseController
     @gamex_league.destroy
 
     respond_to do |format|
-      format.html { redirect_to('/gamex_leagues/index') }
+      format.html { redirect_to('/gamex_leagues') }
       format.xml  { head :ok }
     end
   end
