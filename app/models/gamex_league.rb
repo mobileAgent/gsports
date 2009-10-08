@@ -3,6 +3,8 @@ class GamexLeague < ActiveRecord::Base
   belongs_to :league
   #belongs_to :access_group
 
+  validates_uniqueness_of :league_id #, :scope => :account_id
+
   
   def league_name= name
     league = League.find(:first, :conditions=>{ :name=>name })
