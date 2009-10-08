@@ -236,7 +236,7 @@ class User < ActiveRecord::Base
         gamex_user = GamexUser.for_user_and_league(id, gamex_asset_id).first
         gamex_league = gamex_user.gamex_league
         
-        return gamex_league.release?(item)
+        return gamex_league ? gamex_league.release?(item) : true
       else
         logger.info("has_access? isn't coach but this is a gamex video, need access to pass")
         # isn't but this is a gamex video, need access to pass
