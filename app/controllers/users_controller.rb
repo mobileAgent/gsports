@@ -475,22 +475,40 @@ class UsersController < BaseController
     logger.info "REGWATCH * Saving user record"
     @user.save!
 
-    logger.info "REGWATCH * Saving USER Membership"
-    @user.make_member_by_credit_card(@cost,@billing_address,credit_card_for_db,@response,@promotion)
 
-    if self.current_user.nil?
-      logger.debug "REGWATCH * Logging the user in..."
-      self.current_user = User.find(@user.id) # Log them in right now!
+    begin
+
+      logger.info "REGWATCH * Saving USER Membership for user #{@user.id}"
+      @user.make_member_by_credit_card(@cost,@billing_address,credit_card_for_db,@response,@promotion)
+
+      if self.current_user.nil?
+        logger.debug "REGWATCH * Logging the user in..."
+        self.current_user = User.find(@user.id) # Log them in right now!
+      end
+
+    rescue Exception => e
+      logger.info "REGWATCH * Saving USER Membership failed - #{e.message}"
+      logger.info( "REGWATCH\n\n#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}\n\n" )
+
+
     end
 
-    UserNotifier.deliver_welcome(@user)
+
+    begin
+
+      UserNotifier.deliver_welcome(@user)
+
+    rescue Exception => e
+      logger.info "REGWATCH * UserNotifier.deliver_welcome failed - #{e.message}"
+      logger.info( "REGWATCH\n\n#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}\n\n" )
+    end
 
 
-
-    logger.info "REGWATCH * adding user to promotion access group"
+    logger.info "REGWATCH * adding user to promotion access group?"
     #adding user to promotion access group
     begin
-      if access_group = @promotion.access_group
+      if access_group = @promotion ? @promotion.access_group : nil
+        logger.info "REGWATCH * promotion #{@promotion.inspect}, access group #{access_group.inspect}."
         access = AccessUser.new()
         access.user = @user
         access.access_group = access_group
@@ -498,6 +516,7 @@ class UsersController < BaseController
       end
     rescue Exception => e
       logger.info "REGWATCH * adding user to promotion access group failed - #{e.message}"
+      logger.info( "REGWATCH\n\n#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}\n\n" )
     end
 
 
