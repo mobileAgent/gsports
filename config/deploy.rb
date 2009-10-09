@@ -4,7 +4,8 @@ require 'capistrano/ext/multistage'
 set :stages, %w(development testing qa production) 
 
 set :application, "gsports"
-set :repository,  "git@github.com:mobileAgent/gsports.git"
+#set :repository,  "git@github.com:mobileAgent/gsports.git"
+set :repository,  "."
 set :scm, 'git'
 set :branch, "master"
 set :repository_cache, "git_master"
