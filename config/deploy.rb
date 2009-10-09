@@ -8,8 +8,8 @@ set :application, "gsports"
 set :repository,  "."
 set :scm, 'git'
 set :branch, "master"
-set :repository_cache, "git_master"
-set :deploy_via, :remote_cache
+#set :repository_cache, "git_master"
+#set :deploy_via, :remote_cache
 set :git_shallow_clone, 1
 set :scm_verbose, true
 
