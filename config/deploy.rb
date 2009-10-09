@@ -4,12 +4,20 @@ require 'capistrano/ext/multistage'
 set :stages, %w(development testing qa production) 
 
 set :application, "gsports"
-#set :repository,  "git@github.com:mobileAgent/gsports.git"
-set :repository,  "."
 set :scm, 'git'
 set :branch, "master"
+
+
+#set :repository,  "git@github.com:mobileAgent/gsports.git"
 #set :repository_cache, "git_master"
 #set :deploy_via, :remote_cache
+
+set :repository,  '.'
+set :deploy_via, :copy
+set :copy_exclude, ['.git', 'public/photos', 'log']
+
+
+
 set :git_shallow_clone, 1
 set :scm_verbose, true
 
