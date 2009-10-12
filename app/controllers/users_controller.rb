@@ -516,7 +516,7 @@ class UsersController < BaseController
       end
     rescue Exception => e
       logger.info "REGWATCH * adding user to promotion access group failed - #{e.message}"
-      logger.info( "REGWATCH\n\n#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}\n\n" )
+      logger.info( "REGWATCH\n\n#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}\n\n" ) #alt caller.join
     end
 
 
