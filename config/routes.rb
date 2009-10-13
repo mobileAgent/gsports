@@ -8,7 +8,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :pages
   map.resources :teams
   map.resources :leagues
-  map.resources :gamex, :collection => { :download => :any, :manage => :any, :history => :any }
+  map.resources :gamex, :collection => { :download => :any, :admin => :any, :history => :any }
   map.resources :gamex_users
   map.resources :gamex_leagues
   map.resources :vidavees

@@ -42,11 +42,12 @@
               %th Title
               %th Opponent
               %th Sport
-              %th Level
+              %th User
               %th Game Date
 
             - @uploads.each_with_index do |upload,i|
               - video = upload.video_asset
+              - next if video.nil?
               %tr{ :class=>"row#{i%2}" }
                 %td
                   %b &raquo;
@@ -67,7 +68,7 @@
                 %td
                   = video.sport
                 %td
-                  = video.game_level
+                  = video.user.full_name   #video.game_level
                 %td
                   = video.game_date ? video.game_date.strftime("%m-%d-%Y") : '-'
                 -#%td
@@ -95,7 +96,7 @@
           %table.gamex{ :cellspacing => "0", :cellpadding => "0" }
             %tr
               %th &nbsp;
-              %th Download Date
+              %th Last Viewed On
               %th Title
               %th Opponent
               %th Sport
@@ -105,6 +106,7 @@
 
             - @views.each_with_index do |view,i|
               - video = view.video_asset
+              - next if video.nil?
               %tr{ :class=>"row#{i%2}" }
                 %td
                   %b &raquo;

@@ -3,22 +3,27 @@
 %ul.list.checks
   %li= link_to "Leagues", leagues_path
   %li= link_to "Teams", teams_path
+  %br
   %li= link_to "Full Game Videos", admin_video_assets_path
   %li= link_to "User Uploaded Videos", admin_video_users_path
   %li= link_to "Clips", video_clips_path
   %li= link_to "Reels", video_reels_path
+  %br
   %li= link_to "Pages", pages_path
   %li= link_to "Vidavee Parameters", vidavees_path
+  %li= link_to "Post Categories", categories_path
+  %br
   %li= link_to "Billing", billing_index_path
   %li= link_to "Purchase Orders", purchase_orders_path
   %li= link_to "Subscription Plans", subscription_plans_path
   %li= link_to "Promotions", promotions_path
   %li= link_to "User Registrations", '/users/registrations/'
   %li= link_to "Memberships", '/membership'
-  %li= link_to "Post Categories", categories_path
+  %br
   %li= link_to "Access Groups", access_groups_path
   %li= link_to "GameX Users", gamex_users_path
   %li= link_to "GameX Leagues", gamex_leagues_path
+  %li= link_to "GameX History", '/gamex/admin'
   
   
   -if false

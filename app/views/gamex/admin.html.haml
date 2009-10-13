@@ -1,0 +1,53 @@
+.profileContentArea.listingPage
+  .profilePageHeader
+    %h2.columnDescriptor
+      %span
+        GameXchange
+      &gt; History
+      &gt; Admin View
+  .listings.gamexlistings
+    .padded
+        
+      .box
+        
+        - if @history
+          
+          %table.gamex{ :cellspacing => "0", :cellpadding => "0" }
+            %tr
+              -#%th &nbsp;
+              %th Action
+              %th Time
+              %th User
+              %th Team
+              %th Video
+              %th 
+
+
+            - @history.each_with_index do |event,i|
+              - video = event.video_asset
+              -# next if video.nil?
+              %tr{ :class=>"row#{i%2}" }
+                %td
+                  = event.activity_type_name()
+                %td
+                  = event.created_at.strftime("%m-%d-%Y %I:%M%p")
+                %td
+                  = video.user.full_name rescue '-'
+                %td
+                  = video.team.name rescue '-'
+                %td
+                  = link_to(video.title, video_asset_path(video)) rescue '-'
+                %td
+                  - case event.activity_type
+                  - when VideoHistory::UPLOADED
+                    - if video
+                      Ready
+                      = video.ready_at ? (Time.parse(video.ready_at.to_s)-(4*60*60)).strftime("%m-%d-%Y %I:%M%p") : '-'
+
+          %br
+            .box
+              - if @history.respond_to?('total_pages')
+                .apple_pagination
+                  = will_paginate @history
+
+

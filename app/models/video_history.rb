@@ -14,6 +14,8 @@ class VideoHistory < ActiveRecord::Base
 
   named_scope :uploads, :conditions=>{:activity_type => UPLOADED}, :order=>'id desc'
 
+  named_scope :for_team_id, lambda { |team_id| {:conditions=>{:team_id=>team_id}} }
+
   named_scope :summary, :limit=>10
 
 
@@ -22,6 +24,19 @@ class VideoHistory < ActiveRecord::Base
       game_title.gsub(/\,\s+(\d{2}\-\d{2}\-\d{4})/,'')
   end
 
+
+  def activity_type_name
+    case activity_type
+    when UPLOADED
+      'Uploaded'
+    when VIEWED
+      'Viewed'
+    when DOWNLOADED
+      'Downloaded'
+    else
+      '~'
+    end
+  end
 
 
   class << self

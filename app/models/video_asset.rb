@@ -55,6 +55,7 @@ class VideoAsset < ActiveRecord::Base
   before_destroy { |item| AccessItem.destroy_all "item_id = #{item.id} and item_type = '#{item.type.to_s}'" }
   before_destroy { |item| ChannelVideo.destroy_all "video_id = #{item.id} and video_type = '#{item.type.to_s}'" }
   before_destroy { |item| Favorite.destroy_all "favoritable_id = #{item.id} and favoritable_type = '#{item.type.to_s}'" }
+  before_destroy { |item| VideoHistory.destroy_all "video_asset_id = #{item.id}" }
   
 
   after_save do |video|

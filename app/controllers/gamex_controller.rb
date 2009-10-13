@@ -3,7 +3,8 @@ class GamexController < BaseController
   before_filter :in_gamex_content
   before_filter :find_gamex_user
 
-  
+  before_filter :admin_required, :only => [:admin ]
+
   def index
     redirect_to '/gamex/download'
     return
@@ -55,13 +56,19 @@ class GamexController < BaseController
   def history
     case params[:scope]
     when 'uploads'
-      @uploads = VideoHistory.uploads.paginate(:page => params[:page])
+      @uploads = VideoHistory.uploads.for_team_id(current_user.team_id).paginate(:page => params[:page])
     when 'views'
-      @views = VideoHistory.views.paginate(:page => params[:page], :per_page=>3)
+      @views = VideoHistory.views.for_team_id(current_user.team_id).paginate(:page => params[:page], :per_page=>3)
     else
-      @uploads = VideoHistory.uploads.summary
-      @views = VideoHistory.views.summary
+      @uploads = VideoHistory.uploads.for_team_id(current_user.team_id).summary
+      @views = VideoHistory.views.for_team_id(current_user.team_id).summary
     end
+  end
+
+
+  def admin
+    @render_gamex_tips = false
+    @history = VideoHistory.paginate(:order=>'id desc', :page => params[:page])
   end
 
 
