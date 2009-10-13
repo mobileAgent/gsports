@@ -475,12 +475,12 @@ class VideoAssetsController < BaseController
   
   def gamex_users_for_video()
     if @video_asset && @video_asset.gamex_league_id
-		xuser = current_user
-		if current_user.admin?
-		  x_user = @video_asset.user
-		  #@gamex_user = GamexUser.for_user(@video_asset.user).first
-		  #@gamex_users = [@gamex_user]
-		end
+      x_user = current_user
+      if current_user.admin?
+        x_user = @video_asset.user
+        #@gamex_user = GamexUser.for_user(@video_asset.user).first
+        #@gamex_users = [@gamex_user]
+      end
 	    @gamex_users = GamexUser.for_user(x_user)
 	    @gamex_user = GamexUser.for_user_and_league(x_user,@video_asset.gamex_league_id).first
     end
