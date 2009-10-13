@@ -219,7 +219,7 @@ class TeamsController < BaseController
     @team_clips_reels = Array.new
     @recent_uploads = Array.new
 
-    @team_videos = VideoAsset.for_team(team).all(:limit => 10, :order => 'updated_at DESC')
+    @team_videos = VideoAsset.for_team(team).all(:conditions=>{:gamex_league_id=>nil}, :limit => 10, :order => 'updated_at DESC')
     @team_popular_videos = VideoAsset.for_team(team).all(:limit => 10, :order => 'view_count DESC')
     @recent_uploads = @team_videos unless @team_videos.empty?
 
