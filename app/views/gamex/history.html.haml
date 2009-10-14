@@ -19,7 +19,7 @@
       
         
           - if @gamex_users.size == 1
-            %h2= "History for #{@gamex_user.league.name}"
+            %h2= "History for #{current_user.team.name}"
             = f.hidden_field :id
             -#= @gamex_user.league_name
           -else

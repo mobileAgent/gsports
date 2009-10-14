@@ -39,7 +39,7 @@
   %div
     = link_to image_tag('/images/listing_icons/edit.png', :mouseclick => '/images/listing_icons/sel-edit.png', :border=>0, :alt => 'Edit', :title => 'Edit'), link, :class => 'listingButton'
   %div
-    - if !(VideoAsset === video_listing) || video_listing.gamex_league_id.nil?
+    - if current_user.admin? || !(VideoAsset === video_listing) || video_listing.gamex_league_id.nil?
       = link_to_remote image_tag('/images/listing_icons/delete.png', :mouseclick => '/images/listing_icons/sel-delete.png', :border=>0, :alt => 'Delete', :title => 'Delete'), {:url => url_for(video_listing), :confirm => 'Are you sure?', :method => :delete},  :class=>'listingButton'
 - else
   = render :partial => 'shared/inappropriate_listing', :locals => { :item => video_listing }
