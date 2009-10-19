@@ -1,0 +1,14 @@
+
+.contentBox
+  %h3 MEMBER PERMISSIONS
+  %hr
+
+  - Permission.staff_permission_list.each() do |permission, name|
+    %p
+      - p = Permission.check(@staff.user, permission, current_user.team)
+      = check_box :permission, permission, { :checked => !p.nil? }, :y, :n
+
+      %b= name
+      %br
+      %br
+

@@ -1,0 +1,37 @@
+.profileContentArea.listingPage
+  .profilePageHeader
+    %h2.columnDescriptor
+      %span
+        Permissions
+  .listings
+    .padded
+
+      - if current_user.admin?
+        %table
+          %tr
+            %td
+              = link_to 'New Permission', url_for({:controller=>'permissions',:action=>'new'}), :class => 'genericButton'
+            %td
+        %br/
+      
+      %table{:border => 0, :cellspacing => 0, :cellpadding => 0, :width => '100%'}
+        %thead
+          %tr.yellowHeader
+            - if current_user.admin?
+              = sortable_table_header :class=>"padded sortableContentHeader", :name => "ID", :sort => "permissions.id"
+              = sortable_table_header :class=>"padded sortableContentHeader", :name => "Blessed", :sort => "permissions.blessed_type permissions.blessed_id"
+              = sortable_table_header :class=>"padded sortableContentHeader", :name => "Role", :sort => "permissions.role"
+              = sortable_table_header :class=>"padded sortableContentHeader", :name => "Scope", :sort => "permissions.scope_type permissions.scope_id"
+              %th.padded.sortableContentHeader= "Delete"
+                            
+        %tbody
+          - for perm in @permissions
+            %tr.leagueList
+              %td.leagueList= perm.id
+              %td.leagueList= "#{perm.blessed.type}/#{perm.blessed.id}/#{perm.blessed.name rescue '-'}"
+              %td.leagueList= perm.role
+              %td.leagueList= "#{perm.scope.type}/#{perm.scope.id}/#{perm.scope.name rescue '-'}"
+              %td.leagueList= link_to 'X', perm, :confirm => 'Are you sure?', :method => :delete
+              
+      .apple_pagination
+        = will_paginate @permissions

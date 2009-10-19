@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090929140218) do
+ActiveRecord::Schema.define(:version => 20091013141605) do
 
   create_table "access_groups", :force => true do |t|
     t.string  "name",        :limit => 30
@@ -389,6 +389,17 @@ ActiveRecord::Schema.define(:version => 20090929140218) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  create_table "permissions", :force => true do |t|
+    t.string  "blessed_type"
+    t.integer "blessed_id",   :limit => 11
+    t.string  "role",         :limit => 30
+    t.string  "scope_type"
+    t.integer "scope_id",     :limit => 11
+  end
+
+  add_index "permissions", ["blessed_type", "blessed_id"], :name => "index_permissions_on_blessed_type_and_blessed_id"
+  add_index "permissions", ["scope_type", "scope_id"], :name => "index_permissions_on_scope_type_and_scope_id"
 
   create_table "photos", :force => true do |t|
     t.string   "name"

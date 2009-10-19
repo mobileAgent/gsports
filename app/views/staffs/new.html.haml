@@ -2,19 +2,29 @@
   .profilePageHeader
     %h2.columnDescriptor
       %span
-        Create Staff Account
-  .listings
+        Edit Staff Account
+      = @staff.full_name
+
+  - form_for @staff, :html => {:class => 'StaffForm'} do |f|
   
-    .contentBox.tanBackground
-      .contentBoxHeader.yellowHeader
-        %h2.boxDescription
-          Create Staff Account
-      .contentBoxContent
-  
+    .twoColumn
+
+      .twoColumn.bothCols
+
         = error_messages_for :staff
 
-        - form_for @staff, :html => {:class => 'StaffForm'} do |f|
-          = render :partial => "form", :locals => { :f => f , :include_password => true }
-          %p= f.submit "Create"
-  
+      .mainCol1
+
+        = render :partial => "form", :locals => { :f => f, :include_password => false }
+        = render :partial => "form_coaching", :locals => { :f => f }
+
+      .mainCol2
+
+        = render :partial => "form_permissions", :locals => { :f => f }
+        = render :partial => "form_gamex", :locals => { :f => f }
+
+
+
+        = f.submit "Create"
+
 

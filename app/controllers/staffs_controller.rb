@@ -64,7 +64,7 @@ class StaffsController < BaseController
     @staff.role_id= current_user.team_admin? ? Role[:team_staff].id : Role[:league_staff].id
         
     respond_to do |format|
-      if @staff.save
+      if @staff.save && update_permissions(@staff, params[:permission])
         flash[:notice] = 'Staff account was created'
         format.html { redirect_to url_for({:action => 'index'}) }
         format.xml  { render :xml => @staff, :status => :created, :location => @staff }
@@ -87,7 +87,7 @@ class StaffsController < BaseController
     end
 
     respond_to do |format|
-      if @staff.update_attributes(params[:staff])
+      if @staff.update_attributes(params[:staff]) && update_permissions(@staff, params[:permission])
         flash[:notice] = 'Staff was successfully updated.'
         format.html { redirect_to url_for({:action => 'index'})}
         format.xml  { head :ok }
@@ -115,5 +115,28 @@ class StaffsController < BaseController
       format.xml  { head :ok }
     end
   end
+
+  private
+  
+  def update_permissions(staff, permissions)
+    
+    Permission.staff_permission_list.each(){ |p,name|
+
+      logger.info "STAFFS setting permission: #{name} (#{p}) to #{permissions[p]}"
+      
+      if permissions[p] == 'y'
+        Permission.grant(staff.user, p, staff.team)
+      else
+        Permission.revoke(staff.user, p, staff.team)
+      end
+
+
+    }
+    
+    
+    
+    
+  end
+
 
 end

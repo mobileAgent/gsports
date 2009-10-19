@@ -120,6 +120,46 @@ class User < ActiveRecord::Base
     set_property :delta => true
   end
 
+
+
+
+
+  def full_name
+    "#{firstname} #{lastname}"
+  end
+
+
+
+  # Override CE
+  def display_name
+    full_name
+  end
+
+  # Never let the login slug appear in urls or paths
+  def to_param
+    id.to_s
+  end
+
+
+
+
+
+
+
+#
+# Access Management
+#
+#
+
+  # Permission based role management
+
+  def can?(role, scope=nil)
+    Permission.check(self, role, scope)
+  end
+
+
+
+
   def self.league_staff_ids(league_id)
     User.league_staff(league_id).collect(&:id)
   end
@@ -159,6 +199,9 @@ class User < ActiveRecord::Base
   def scout_staff?
     role && (role.eql?(Role[:scout_staff]) || scount_admin?)
   end
+
+
+
 
   # this is for video_assets, all users can upload video_users
   def can_upload?
@@ -295,23 +338,8 @@ class User < ActiveRecord::Base
       []
     end
   end
-  
-  
 
-  def full_name
-    "#{firstname} #{lastname}"
-  end
 
-  # Override CE
-  def display_name
-    full_name
-  end
-
-  # Never let the login slug appear in urls or paths
-  def to_param
-    id.to_s
-  end
-  
 
   # Determine if this user can edit the specified video item
   def can_edit?(v)
@@ -329,6 +357,18 @@ class User < ActiveRecord::Base
     end
     return false
   end
+
+
+
+
+
+  
+
+
+#
+#  User Actions
+#
+#
   
   def make_member_by_invoice (monthly_cost, purchase_order, promotion=nil)
     mem = Membership.new(:billing_method => Membership::INVOICE_BILLING_METHOD)

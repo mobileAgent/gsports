@@ -1,0 +1,15 @@
+.profileContentArea.listingPage
+  .profilePageHeader
+    %h2.columnDescriptor
+      %span
+        New Permission
+  .listings
+    .listingItem
+
+      = error_messages_for :permission
+      
+      - form_for(@permission, :url => permission_url(@permission)) do |f|
+        = render :partial => "form", :locals => { :f => f, :permission => @permission }
+        %p= f.submit "Create"
+          
+      = link_to 'Back', permissions_path

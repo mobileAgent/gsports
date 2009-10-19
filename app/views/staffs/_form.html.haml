@@ -1,88 +1,92 @@
-%table
-  %tr
-    %td.field-block
-      %label{"for"=>"firstname"} 
-        * First Name
-        %br
-        = f.text_field :firstname, :size => 12
-    %td.field-block
-      %label{"for"=>"minitial"} 
-        M.I.
-        %br
-        = f.text_field :minitial, :size => 1
-    %td.field-block
-      %label{"for"=>"lastname"} 
-        * Last Name
-        %br
-        = f.text_field :lastname, :size => 16
+.contentBox
+  %h3 STAFF MEMBER INFORMATION
+  %hr
 
-%table
-  %tr
-    %td.field-block
-      %label{"for"=>"address1"} 
-        * Address Line One
-        %br
-        = f.text_field :address1, :size => 16
-    %td.field-block
-      %label{"for"=>"address2"} 
-        Address Line Two
-        %br
-        = f.text_field :address2, :size => 16
-
-%table
-  %tr
-    %td.field-block
-      %label{"for"=>"city"} 
-        * City
-        %br
-      = f.text_field :city, :size => 16
-    %td.field-block
-      %label{"for"=>"state"} 
-        * State
-        %br
-      =collection_select(:staff ,:state_id,State.all,"id","name", { :prompt => 'Choose State', :selected => (@staff.state_id ? @staff.state.name : '')})
-    %td.field-block
-      %label{"for"=>"zip"} 
-        * Zip/Postal Code
-        %br
-        = f.text_field :zip, :size => 10
-
-%table
-  %tr
-    %td.field-block
-      %label{"for"=>"phone"} 
-        * Phone
-        %br
-        = f.text_field :phone, :size => 12
-    %td.field-block
-      %label{"for"=>"email"}
-        * E-mail address
-        %br
-        = f.text_field :email, :size => 32
-
-- if include_password
   %table
     %tr
       %td.field-block
-        %label{"for"=>"password"}
-          Password:
+        %label{"for"=>"firstname"}
+          * First Name
           %br
-          = f.password_field :password, :size => 12
+          = f.text_field :firstname, :size => 12
       %td.field-block
-        %label{"for"=>"password_confirmation"}
-          Confirm password:
+        %label{"for"=>"minitial"}
+          M.I.
           %br
-          = f.password_field :password_confirmation, :size => 12
+          = f.text_field :minitial, :size => 1
+      %td.field-block
+        %label{"for"=>"lastname"}
+          * Last Name
+          %br
+          = f.text_field :lastname, :size => 16
 
-%label{"for"=>"birthdate"}
-  * Birthday (must be at least 13 years old.)
+  %table
+    %tr
+      %td.field-block
+        %label{"for"=>"address1"}
+          * Address Line One
+          %br
+          = f.text_field :address1, :size => 16
+      %td.field-block
+        %label{"for"=>"address2"}
+          Address Line Two
+          %br
+          = f.text_field :address2, :size => 16
+
+  %table
+    %tr
+      %td.field-block
+        %label{"for"=>"city"}
+          * City
+          %br
+        = f.text_field :city, :size => 16
+      %td.field-block
+        %label{"for"=>"state"}
+          * State
+          %br
+        =collection_select(:staff ,:state_id,State.all,"id","name", { :prompt => 'Choose State', :selected => (@staff.state_id ? @staff.state.name : '')})
+      %td.field-block
+        %label{"for"=>"zip"}
+          * Zip/Postal Code
+          %br
+          = f.text_field :zip, :size => 10
+
+  %table
+    %tr
+      %td.field-block
+        %label{"for"=>"phone"}
+          * Phone
+          %br
+          = f.text_field :phone, :size => 12
+      %td.field-block
+        %label{"for"=>"email"}
+          * E-mail address
+          %br
+          = f.text_field :email, :size => 32
+
+  - if include_password
+    %table
+      %tr
+        %td.field-block
+          %label{"for"=>"password"}
+            Password:
+            %br
+            = f.password_field :password, :size => 12
+        %td.field-block
+          %label{"for"=>"password_confirmation"}
+            Confirm password:
+            %br
+            = f.password_field :password_confirmation, :size => 12
+
+  %label{"for"=>"birthdate"}
+    * Birthday (must be at least 13 years old.)
+    %br
+    = date_select :staff, :birthday, {:start_year => 1926, :end_year => Time.now.year - 13}
+
   %br
-  = date_select :staff, :birthday, {:start_year => 1926, :end_year => Time.now.year - 13}
-
-%br
-%label
-  = f.check_box :enabled
-  Account Enabled?
+  %label
+    = f.check_box :enabled
+    Account Enabled?
 
 
 

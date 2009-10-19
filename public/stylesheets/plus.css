@@ -1634,3 +1634,72 @@ a.admin-userreg-link-user{
 }
 
 
+/* layout */
+
+.twoColumn {
+	width:801px;
+	padding: 0px 10px 0px 20px;
+	float:left;
+	background-color: #ffffff;
+	display:inline;
+}
+
+.twoColumn .bothCols {
+  width: 715px;
+}
+
+.twoColumn .bothCols .contentBox {
+  width: auto;
+  height: auto;
+  padding-right: 20px;
+}
+
+.twoColumn h1 {
+  font-size: 15pt;
+  width: 715px;
+  border-top-width: 0px;
+  border-right-width: 0px;
+  border-bottom-width: 5px;
+  border-left-width: 0px;
+  border-top-style: solid;
+  border-right-style: solid;
+  border-bottom-style: solid;
+  border-left-style: solid;
+  border-bottom-color: #000000;
+}
+
+.twoColumn .mainCol1 .contentBox, .twoColumn .mainCol2 .contentBox{
+	width: 325px;
+	height: auto;
+	padding-right: 10px;
+	margin-right: 20px;
+}
+.twoColumn .contentBox{
+	margin-left: 0px;
+	height: auto;
+	background-color: white;
+}
+.twoColumn .contentBoxContent{
+	height: auto;
+}
+
+.twoColumn hr {
+	xborder: 1px solid black;
+	border-bottom: 2px solid #29305B;
+	margin-bottom: 15px;
+}
+
+.twoColumn .section-head {
+	font-weight: bold;
+	font-size: 150%;
+}
+
+
+
+/*  */
+
+.row-highlight.on {
+  
+}
+
+/*  */
