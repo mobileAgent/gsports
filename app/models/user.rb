@@ -153,11 +153,77 @@ class User < ActiveRecord::Base
 
   # Permission based role management
 
+  # general
+
   def can?(role, scope=nil)
     Permission.check(self, role, scope)
   end
 
+  # specific
 
+  # this is for video_assets, all users can upload video_users
+  def can_upload?
+    admin? || can?(Permission::UPLOAD)
+    #admin? || team_staff? || league_staff?
+  end
+
+  def can_publish?(item=nil)
+    can?(Permission::MANAGE_CHANNELS, (item.respond_to?(:team) ? item.team : nil) )
+    #team_staff? && team.can_publish?(item)
+  end
+
+  def can_restrict?(item)
+    can?(Permission::MANAGE_GROUPS, (item.respond_to?(:team) ? item.team : nil) )
+    # team_staff? && item.class == VideoAsset && item.team_id == team_id && (AccessGroup.for_team(team).size > 0)
+    ## team_staff? && item.public_methods.include?('team') && item.team_id == team_id && (AccessGroup.for_team(team).size > 0)
+  end
+
+
+
+  def can_manage_staff?
+    can?(Permission::CREATE_STAFF)
+  end
+
+
+
+  def can_grant_access?(user=nil)
+
+    can?(Permission::MANAGE_GROUPS)
+
+#    in_general = team_staff? && (AccessGroup.for_team(team).size > 0)
+#    if user
+#      user.class == User && in_general
+#    else
+#      in_general
+#    end
+  end
+
+
+
+  # legacy team_staff access
+
+  # Determine if this user can edit the specified video item
+  def can_edit?(v)
+    return true if self.admin?
+    case v.class.to_s
+    when 'VideoAsset'
+      return true if (v.team_id && self.team_id == v.team_id && self.team_staff?)
+      return true if (v.league_id && self.league_id == v.league_id && self.league_staff?)
+    when 'VideoClip'
+      return true if v.user_id == self.id
+    when 'VideoReel'
+      return true if v.user_id == self.id
+    when 'VideoUser'
+      return true if v.user_id == self.id
+    end
+    return false
+  end
+
+
+
+
+
+  # user identity roles
 
 
   def self.league_staff_ids(league_id)
@@ -201,21 +267,7 @@ class User < ActiveRecord::Base
   end
 
 
-
-
-  # this is for video_assets, all users can upload video_users
-  def can_upload?
-    admin? || team_staff? || league_staff?
-  end
-  
-  def can_publish?(item=nil)
-    team_staff? && team.can_publish?(item)
-  end
-
-  def can_restrict?(item)
-    team_staff? && item.class == VideoAsset && item.team_id == team_id && (AccessGroup.for_team(team).size > 0)
-    #team_staff? && item.public_methods.include?('team') && item.team_id == team_id && (AccessGroup.for_team(team).size > 0)
-  end
+  # gamex and group based item access
 
   def has_access?(item)
     #asset_list = []
@@ -314,15 +366,6 @@ class User < ActiveRecord::Base
     }
     false
   end
-
-  def can_grant_access?(user=nil)
-    in_general = team_staff? && (AccessGroup.for_team(team).size > 0)
-    if user
-      user.class == User && in_general
-    else
-      in_general
-    end
-  end
   
   
   def get_managed_user_ids
@@ -338,26 +381,6 @@ class User < ActiveRecord::Base
       []
     end
   end
-
-
-
-  # Determine if this user can edit the specified video item
-  def can_edit?(v)
-    return true if self.admin?
-    case v.class.to_s
-    when 'VideoAsset'
-      return true if (v.team_id && self.team_id == v.team_id && self.team_staff?)
-      return true if (v.league_id && self.league_id == v.league_id && self.league_staff?)
-    when 'VideoClip'
-      return true if v.user_id == self.id
-    when 'VideoReel'
-      return true if v.user_id == self.id
-    when 'VideoUser'
-      return true if v.user_id == self.id
-    end
-    return false
-  end
-
 
 
 

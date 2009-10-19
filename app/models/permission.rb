@@ -22,6 +22,7 @@ class Permission < ActiveRecord::Base
   MANAGE_CHANNELS   = 'MN_CHAN'
   MANAGE_GROUPS     = 'MN_GRP'
   CREATE_STAFF      = 'CR_STAFF'
+  UPLOAD            = 'UPLOAD'
 
 
 
@@ -30,7 +31,8 @@ class Permission < ActiveRecord::Base
       [Permission::EDIT_TEAM_PAGE, 'Edit Team Page'],
       [Permission::MANAGE_CHANNELS, 'Manage Embeddable Channel Player'],
       [Permission::MANAGE_GROUPS, 'Manage Access Groups'],
-      [Permission::CREATE_STAFF, 'Create Team Staff']
+      [Permission::CREATE_STAFF, 'Create Team Staff'],
+      [Permission::UPLOAD, 'Upload Videos']
     ]
   end
 
