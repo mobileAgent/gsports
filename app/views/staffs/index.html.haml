@@ -6,12 +6,29 @@
       = @current_user.full_name
 
   .listings
-  
-    .listingItem
-      = link_to 'New Staff Member', new_staff_path(), :class => 'genericButton'
-  
-    = render :partial => 'staff_listing', :collection => @staffs
+
+    - if @scope
+
+      = h @scope.inspect
+      %br
+
+      .listingItem
+        = link_to 'New Staff Member', new_staff_path(), :class => 'genericButton'
+
+      = render :partial => 'staff_listing', :collection => @staffs
+
+    - else
 
 
+      = h @scopes.inspect
+      %br
+      = h @scope.inspect
+      %br
 
-    
+      %form{ }
+        %select{ :name=>:scope_select, :onChange="this.form.submit();" }
+          -#%option{ :value=>op_value }= op_name
+          - @scopes.each() do |s|
+            - op_name = "#{s.class.to_s}: #{s.name}"
+            - op_value = "#{s.class.to_s.downcase} #{s.id}"
+            %option{ :value=>op_value }= op_name

@@ -69,6 +69,11 @@ class Permission < ActiveRecord::Base
     !plist.empty?
   end
 
+  def self.range(blessed, role)
+    for_entity(blessed).has_role(role).collect(&:scope)
+  end
+
+
 
 
   

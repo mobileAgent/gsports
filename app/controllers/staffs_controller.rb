@@ -1,22 +1,30 @@
 class StaffsController < BaseController
 
   before_filter :admin_for_league_or_team
+  before_filter :find_staff_scope
 
   # GET /staff
   # GET /staff.xml
   def index
-    @staffs = @current_user.get_managed_users
+
+    @staffs = @scope ? @scope.staff() : []  #get_managed_users(@current_user, params)
 
     respond_to do |format|
       format.html # index.haml
       format.xml  { render :xml => @staffs }
     end
+
+
+
+
+
   end
 
   # GET /staff/1
   # GET /staff/1.xml
   def show
-    ids = @current_user.get_managed_user_ids
+    ids = get_managed_user_ids(@current_user, params) # @current_user.get_managed_user_ids
+    
     if (ids.member?(params[:id].to_i) || current_user.admin?)
       @staff = Staff.find(params[:id])
     else
@@ -43,7 +51,7 @@ class StaffsController < BaseController
 
   # GET /staff/1/edit
   def edit
-    ids = @current_user.get_managed_user_ids
+    ids = get_managed_user_ids(@current_user, params)
     if (ids.member?(params[:id].to_i) || current_user.admin?)
       @staff = Staff.find(params[:id])
     else
@@ -78,7 +86,8 @@ class StaffsController < BaseController
   # PUT /staff/1
   # PUT /staff/1.xml
   def update
-    ids = @current_user.get_managed_user_ids
+    ids = get_managed_user_ids(@current_user, params) #@current_user.get_managed_user_ids
+    
     if (ids.member?(params[:id].to_i) || current_user.admin?)
       @staff = Staff.find(params[:id])
     else
@@ -101,7 +110,8 @@ class StaffsController < BaseController
   # DELETE /staff/1
   # DELETE /staff/1.xml
   def destroy
-    ids = @current_user.get_managed_user_ids
+    ids = get_managed_user_ids(@current_user, params)
+    
     if (ids.member?(params[:id].to_i) || current_user.admin?)
       @staff = Staff.find(params[:id])
       @staff.destroy
@@ -133,10 +143,29 @@ class StaffsController < BaseController
 
     }
     
-    
-    
-    
   end
+
+
+  def find_staff_scope
+
+    @scopes = current_user.scopes_for(Permission::CREATE_STAFF)
+
+    if select = params[:scope_select]
+      p, id = select.split(' ')
+      params["#{p}_id"]= id
+
+    end
+
+    if league_id = params[:league_id] && (league = League.find(league_id)) && can_manage_staff?(league)
+      @scope = league
+    elsif (team_id = params[:team_id]) && (team = Team.find(team_id)) && can_manage_staff?(team)
+      @scope = team
+    elseif @scope.size == 1
+      @scope = @scopes[0]
+    end
+
+  end
+
 
 
 end

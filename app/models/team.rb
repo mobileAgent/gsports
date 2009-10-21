@@ -184,7 +184,14 @@ class Team < ActiveRecord::Base
     }
     member
   end
+
   
+
+  def staff()
+    (User.third_party_staff(self) + User.team_staff(self.id)).uniq
+  end
+
+
 
   protected
   

@@ -55,6 +55,9 @@ class User < ActiveRecord::Base
   
   has_many :gamex_users
   
+  has_many :permissions, :as => :blessed
+
+
   belongs_to :country
 
   # Base model uses has_enumerated here, but at least fixtures
@@ -86,6 +89,12 @@ class User < ActiveRecord::Base
   # Those who can do things for the team account
   named_scope :team_staff,
     lambda { |team_id| { :conditions => ["team_id = ? and role_id IN (?)",team_id,[Role[:team_staff].id,Role[:team].id, Role[:admin].id] ] } }
+
+  named_scope :third_party_staff,
+    lambda { |org| { :conditions=>{ 'permissions.scope_type'=>org.class.to_s, 'permissions.scope_id'=>org.id }, :include=>:permissions } }
+
+
+
 
   # Those who can do things for the league account
   named_scope :league_staff,
@@ -159,6 +168,10 @@ class User < ActiveRecord::Base
     Permission.check(self, role, scope)
   end
 
+  def scopes_for(role)
+    Permission.range(self, role)
+  end
+
   # specific
 
   # this is for video_assets, all users can upload video_users
@@ -180,8 +193,8 @@ class User < ActiveRecord::Base
 
 
 
-  def can_manage_staff?
-    can?(Permission::CREATE_STAFF)
+  def can_manage_staff?(scope=nil)
+    admin? || can?(Permission::CREATE_STAFF, scope)
   end
 
 
@@ -202,9 +215,11 @@ class User < ActiveRecord::Base
 
   # legacy team_staff access
 
-  # Determine if this user can edit the specified video item
+  # Determine if this user can edit the specified video* item
+
   def can_edit?(v)
     return true if self.admin?
+
     case v.class.to_s
     when 'VideoAsset'
       return true if (v.team_id && self.team_id == v.team_id && self.team_staff?)
@@ -215,7 +230,12 @@ class User < ActiveRecord::Base
       return true if v.user_id == self.id
     when 'VideoUser'
       return true if v.user_id == self.id
+    when 'Team'
+      return true if team_admin? || can?(Permission::EDIT_TEAM_PAGE, v)
+    when 'League'
+      return true if league_admin? || can?(Permission::EDIT_TEAM_PAGE, v)
     end
+
     return false
   end
 
@@ -366,24 +386,6 @@ class User < ActiveRecord::Base
     }
     false
   end
-  
-  
-  def get_managed_user_ids
-    get_managed_users.collect(&:id)
-  end
-
-  def get_managed_users
-    if league_admin? || (admin? && params[:league_id])
-      Staff.league_staff(league_id)
-    elsif team_admin? || (admin? && params[:team_id])
-      Staff.team_staff(team_id)
-    else
-      []
-    end
-  end
-
-
-
 
   
 

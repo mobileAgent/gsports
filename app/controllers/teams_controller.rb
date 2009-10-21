@@ -123,11 +123,12 @@ class TeamsController < BaseController
   # GET /team/1/edit
   def edit
     @team = Team.find(params[:id])
-    unless ((current_user.team_staff? && current_user.team_id == @team.id ) ||
-            current_user.admin?)
+
+    unless current_user.can_edit?(@team) # ((current_user.team_staff? && current_user.team_id == @team.id ) ||  current_user.admin?)
       flash[:notice] = "You don't have permission to edit that record"
       access_denied and return
     end
+
     @leagues = League.all(:order => "name asc")
   end
 
@@ -153,8 +154,8 @@ class TeamsController < BaseController
   # PUT /team/1.xml
   def update
     @team = Team.find(params[:id])
-    unless ((current_user.team_staff? && current_user.team_id == @team.id ) ||
-            current_user.admin?)
+
+    unless current_user.can_edit?(@team) # ((current_user.team_staff? && current_user.team_id == @team.id ) || current_user.admin?)
       flash[:notice] = "You don't have permission to edit that record"
       access_denied
     end
