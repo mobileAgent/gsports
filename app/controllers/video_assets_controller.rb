@@ -78,7 +78,7 @@ class VideoAssetsController < BaseController
   # GET /video_assets/1.xml
   def show
     @video_asset = VideoAsset.find(params[:id])
-    VideoHistory.viewed(@video_asset,current_user)
+    VideoHistory.viewed(@video_asset,current_user) if @video_asset.gamex_league_id
     update_view_count(@video_asset)
     respond_to do |format|
       format.html # show.html.erb
