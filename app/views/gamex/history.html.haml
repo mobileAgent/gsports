@@ -47,32 +47,38 @@
 
             - @uploads.each_with_index do |upload,i|
               - video = upload.video_asset
-              - next if video.nil?
-              %tr{ :class=>"row#{i%2}" }
-                %td
-                  %b &raquo;
-                  = link_to 'Select', video_asset_path(video, 'gamex_user[id]' => @gamex_user.id )
-                %td
-                  = video.ready_at ? (Time.parse(video.ready_at.to_s)-(4*60*60)).strftime("%m-%d-%Y %I:%M%p") : '-'
-                  -#= gsxp_date(video.created_at)
-                %td
-                  - if video.home_team
-                    - home_team_score = video.home_score ? " (#{video.home_score})" : ""
-                    - home_team_name = "#{video.home_team.nickname_or_name}#{ home_team_score }"
-                    = home_team_name #video.home_team ? video.home_team.name : '-'
-                %td
-                  - if video.visiting_team
-                    - visitor_team_score = video.visitor_score ? " (#{video.visitor_score})" : ""
-                    - visiting_team_name = "#{video.visiting_team.nickname_or_name}#{ visitor_team_score }"
-                    = visiting_team_name #video.visiting_team ? video.visiting_team.name : '-'
-                %td
-                  = video.sport
-                %td
-                  = video.user.full_name   #video.game_level
-                %td
-                  = video.game_date ? video.game_date.strftime("%m-%d-%Y") : '-'
-                -#%td
-                  = upload.views
+              - if video.nil?
+
+                %tr{ :class=>"row#{i%2}" }
+                  %td{ :colspan=>8, :align=>'center' }
+                    \- video deleted -
+
+              - else
+                %tr{ :class=>"row#{i%2}" }
+                  %td
+                    %b &raquo;
+                    = link_to 'Select', video_asset_path(video, 'gamex_user[id]' => @gamex_user.id )
+                  %td
+                    = video.ready_at ? (Time.parse(video.ready_at.to_s)-(4*60*60)).strftime("%m-%d-%Y %I:%M%p") : '-'
+                    -#= gsxp_date(video.created_at)
+                  %td
+                    - if video.home_team
+                      - home_team_score = video.home_score ? " (#{video.home_score})" : ""
+                      - home_team_name = "#{video.home_team.nickname_or_name}#{ home_team_score }"
+                      = home_team_name #video.home_team ? video.home_team.name : '-'
+                  %td
+                    - if video.visiting_team
+                      - visitor_team_score = video.visitor_score ? " (#{video.visitor_score})" : ""
+                      - visiting_team_name = "#{video.visiting_team.nickname_or_name}#{ visitor_team_score }"
+                      = visiting_team_name #video.visiting_team ? video.visiting_team.name : '-'
+                  %td
+                    = video.sport
+                  %td
+                    = video.user.full_name   #video.game_level
+                  %td
+                    = video.game_date ? video.game_date.strftime("%m-%d-%Y") : '-'
+                  -#%td
+                    = upload.views
 
 
           %br
@@ -106,32 +112,39 @@
 
             - @views.each_with_index do |view,i|
               - video = view.video_asset
-              - next if video.nil?
-              %tr{ :class=>"row#{i%2}" }
-                %td
-                  %b &raquo;
-                  = link_to 'Select', video_asset_path(video, 'gamex_user[id]' => @gamex_user.id )
-                %td
-                  = view.created_at ? (Time.parse(view.created_at.to_s)-(4*60*60)).strftime("%m-%d-%Y %I:%M%p") : '-'
-                  -#= gsxp_date(video.created_at)
-                %td
-                  - if video.home_team
-                    - home_team_score = video.home_score ? " (#{video.home_score})" : ""
-                    - home_team_name = "#{video.home_team.nickname_or_name}#{ home_team_score }"
-                    = home_team_name #video.home_team ? video.home_team.name : '-'
-                %td
-                  - if video.visiting_team
-                    - visitor_team_score = video.visitor_score ? " (#{video.visitor_score})" : ""
-                    - visiting_team_name = "#{video.visiting_team.nickname_or_name}#{ visitor_team_score }"
-                    = visiting_team_name #video.visiting_team ? video.visiting_team.name : '-'
-                %td
-                  = video.sport
-                %td
-                  = video.game_level
-                %td
-                  = video.game_date ? video.game_date.strftime("%m-%d-%Y") : '-'
-                %td
-                  = view.views
+              -# next if video.nil?
+              - if video.nil?
+
+                %tr{ :class=>"row#{i%2}" }
+                  %td{ :colspan=>8, :align=>'center' }
+                    \- video deleted -
+
+              - else
+                %tr{ :class=>"row#{i%2}" }
+                  %td
+                    %b &raquo;
+                    = link_to 'Select', video_asset_path(video, 'gamex_user[id]' => @gamex_user.id )
+                  %td
+                    = view.created_at ? (Time.parse(view.created_at.to_s)-(4*60*60)).strftime("%m-%d-%Y %I:%M%p") : '-'
+                    -#= gsxp_date(video.created_at)
+                  %td
+                    - if video.home_team
+                      - home_team_score = video.home_score ? " (#{video.home_score})" : ""
+                      - home_team_name = "#{video.home_team.nickname_or_name}#{ home_team_score }"
+                      = home_team_name #video.home_team ? video.home_team.name : '-'
+                  %td
+                    - if video.visiting_team
+                      - visitor_team_score = video.visitor_score ? " (#{video.visitor_score})" : ""
+                      - visiting_team_name = "#{video.visiting_team.nickname_or_name}#{ visitor_team_score }"
+                      = visiting_team_name #video.visiting_team ? video.visiting_team.name : '-'
+                  %td
+                    = video.sport
+                  %td
+                    = video.game_level
+                  %td
+                    = video.game_date ? video.game_date.strftime("%m-%d-%Y") : '-'
+                  %td
+                    = view.views
 
 
           %br

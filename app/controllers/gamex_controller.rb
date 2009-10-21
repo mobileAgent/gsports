@@ -58,7 +58,7 @@ class GamexController < BaseController
     when 'uploads'
       @uploads = VideoHistory.uploads.for_team_id(current_user.team_id).paginate(:page => params[:page])
     when 'views'
-      @views = VideoHistory.views.for_team_id(current_user.team_id).paginate(:page => params[:page], :per_page=>3)
+      @views = VideoHistory.views.for_team_id(current_user.team_id).paginate(:page => params[:page])
     else
       @uploads = VideoHistory.uploads.for_team_id(current_user.team_id).summary
       @views = VideoHistory.views.for_team_id(current_user.team_id).summary
