@@ -1,5 +1,12 @@
+- third_party = true && !@scope.is_staff_account?(@staff)
+= hidden_field_tag :scope_select, params[:scope_select]
+
 .contentBox
-  %h3 STAFF MEMBER INFORMATION
+  %h3
+    STAFF
+    - if third_party
+      THIRD PARTY
+    MEMBER INFORMATION
   %hr
 
   %table
@@ -8,17 +15,17 @@
         %label{"for"=>"firstname"}
           * First Name
           %br
-          = f.text_field :firstname, :size => 12
+          = f.text_field :firstname, :size => 12, :disabled => third_party
       %td.field-block
         %label{"for"=>"minitial"}
           M.I.
           %br
-          = f.text_field :minitial, :size => 1
+          = f.text_field :minitial, :size => 1, :disabled => third_party
       %td.field-block
         %label{"for"=>"lastname"}
           * Last Name
           %br
-          = f.text_field :lastname, :size => 16
+          = f.text_field :lastname, :size => 16, :disabled => third_party
 
   %table
     %tr
@@ -26,12 +33,12 @@
         %label{"for"=>"address1"}
           * Address Line One
           %br
-          = f.text_field :address1, :size => 16
+          = f.text_field :address1, :size => 16, :disabled => third_party
       %td.field-block
         %label{"for"=>"address2"}
           Address Line Two
           %br
-          = f.text_field :address2, :size => 16
+          = f.text_field :address2, :size => 16, :disabled => third_party
 
   %table
     %tr
@@ -39,17 +46,17 @@
         %label{"for"=>"city"}
           * City
           %br
-        = f.text_field :city, :size => 16
+        = f.text_field :city, :size => 16, :disabled => third_party
       %td.field-block
         %label{"for"=>"state"}
           * State
           %br
-        =collection_select(:staff ,:state_id,State.all,"id","name", { :prompt => 'Choose State', :selected => (@staff.state_id ? @staff.state.name : '')})
+        =collection_select(:staff ,:state_id,State.all,"id","name", { :prompt => 'Choose State', :selected => (@staff.state_id ? @staff.state.name : '')}, {:disabled => third_party})
       %td.field-block
         %label{"for"=>"zip"}
           * Zip/Postal Code
           %br
-          = f.text_field :zip, :size => 10
+          = f.text_field :zip, :size => 10, :disabled => third_party
 
   %table
     %tr
@@ -57,12 +64,12 @@
         %label{"for"=>"phone"}
           * Phone
           %br
-          = f.text_field :phone, :size => 12
+          = f.text_field :phone, :size => 12, :disabled => third_party
       %td.field-block
         %label{"for"=>"email"}
           * E-mail address
           %br
-          = f.text_field :email, :size => 32
+          = f.text_field :email, :size => 32, :disabled => third_party
 
   - if include_password
     %table
@@ -71,21 +78,21 @@
           %label{"for"=>"password"}
             Password:
             %br
-            = f.password_field :password, :size => 12
+            = f.password_field :password, :size => 12, :disabled => third_party
         %td.field-block
           %label{"for"=>"password_confirmation"}
             Confirm password:
             %br
-            = f.password_field :password_confirmation, :size => 12
+            = f.password_field :password_confirmation, :size => 12, :disabled => third_party
 
   %label{"for"=>"birthdate"}
     * Birthday (must be at least 13 years old.)
     %br
-    = date_select :staff, :birthday, {:start_year => 1926, :end_year => Time.now.year - 13}
+    = date_select :staff, :birthday, {:start_year => 1926, :end_year => Time.now.year - 13}, {:disabled => third_party}
 
   %br
   %label
-    = f.check_box :enabled
+    = f.check_box :enabled, :disabled => third_party
     Account Enabled?
 
 

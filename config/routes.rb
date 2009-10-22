@@ -21,7 +21,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :monikers
   map.resources :subscription_plans
   map.resources :membership
-  map.resources :staffs
+  map.resources :staffs, :collection => { :add => :any }
   map.resources :purchase_orders
   map.resources :ratings
   map.resources :shared_access  

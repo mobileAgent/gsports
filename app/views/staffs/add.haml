@@ -1,0 +1,21 @@
+.profileContentArea
+  .profilePageHeader
+    %h2.columnDescriptor
+      %span{ :style=>'float:left' }
+        = link_to 'Staff Accounts', '/staffs'
+      \&nbsp;
+      Add User
+
+
+  .listings
+
+    - if @scope
+
+      .listingItem
+        = @scope.class.to_s
+        = @scope.name
+
+      .listingItem
+        %form{}
+
+          = text_field_with_auto_complete :user, :name, :autocomplete => "off", :xonchange => "javascript:autofill_video_title(); return true;"

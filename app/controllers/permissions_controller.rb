@@ -1,6 +1,6 @@
 class PermissionsController < BaseController
 
-  #before_filter :admin_required, :only=>[:new, :create, :update, :remove]
+  before_filter :admin_required #, :only=>[:new, :create, :update, :remove]
 
 
   sortable_attributes 'permissions.id', 'permissions.role', 'permissions.blessed_type', 'permissions.blessed_id', 'permissions.scope_type', 'permissions.scope_id'

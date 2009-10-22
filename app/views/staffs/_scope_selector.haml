@@ -1,0 +1,8 @@
+%select{ :name=>:scope_select, :onChange=>"this.form.submit();" , :style=>'float:left; margin-left: 16px' }
+  - if !@scope
+    %option= '- Select Organization -'
+  - @scopes.each() do |s|
+    - op_name = "#{s.class.to_s}: #{s.name}"
+    - op_value = "#{s.class.to_s.downcase} #{s.id}"
+    - selected = (s == @scope) ? 'selected' : 'x'
+    %option{ :value=>op_value, selected=>1 }= op_name
