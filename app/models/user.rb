@@ -198,7 +198,6 @@ class User < ActiveRecord::Base
   end
 
 
-
   def can_grant_access?(user=nil)
 
     can?(Permission::MANAGE_GROUPS)
@@ -231,9 +230,9 @@ class User < ActiveRecord::Base
     when 'VideoUser'
       return true if v.user_id == self.id
     when 'Team'
-      return true if team_admin? || can?(Permission::EDIT_TEAM_PAGE, v)
+      return true if team_admin?(v) || can?(Permission::EDIT_TEAM_PAGE, v)
     when 'League'
-      return true if league_admin? || can?(Permission::EDIT_TEAM_PAGE, v)
+      return true if league_admin?(v) || can?(Permission::EDIT_TEAM_PAGE, v)
     end
 
     return false

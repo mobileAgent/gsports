@@ -56,3 +56,5 @@
     - @feed_icons.each do |feed|
       = auto_discovery_link_tag :rss, feed[:url], :title => "Subscribe to '#{feed[:title]}'"
       
+
+= javascript_include_tag 'application'

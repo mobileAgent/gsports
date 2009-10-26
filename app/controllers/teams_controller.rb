@@ -157,7 +157,7 @@ class TeamsController < BaseController
 
     unless current_user.can_edit?(@team) # ((current_user.team_staff? && current_user.team_id == @team.id ) || current_user.admin?)
       flash[:notice] = "You don't have permission to edit that record"
-      access_denied
+      access_denied and return
     end
 
     if current_user.admin?

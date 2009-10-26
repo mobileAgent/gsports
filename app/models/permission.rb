@@ -74,6 +74,9 @@ class Permission < ActiveRecord::Base
   end
 
 
+  def self.scope_selector_string(scope)
+    "#{scope.class.to_s.downcase} #{scope.id}"
+  end
 
 
   

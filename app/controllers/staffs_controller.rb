@@ -5,7 +5,7 @@ class StaffsController < BaseController
   before_filter :find_staff_scope
 
 
-  skip_before_filter :verify_authenticity_token, :only => [:auto_complete_for_user_name]
+  skip_before_filter :verify_authenticity_token, :only => [:auto_complete_for_user_name, :staff_summary]
 
 
 
@@ -53,18 +53,25 @@ class StaffsController < BaseController
 
   # GET /staff/1/edit
   def edit
-    ids = @scope.staff().collect(&:id) #get_managed_user_ids(@current_user, params)
-    if (ids.member?(params[:id].to_i) || current_user.admin?)
+    #ids = @scope.staff().collect(&:id) #get_managed_user_ids(@current_user, params)
+    #if (ids.member?(params[:id].to_i) || current_user.admin?)
       @staff = Staff.find(params[:id])
-    else
-      flash[:error] = "Illegal id specified"
-      redirect_to url_for({:action => 'index'}) and return
-    end
+    #else
+    #  flash[:error] = "Illegal id specified"
+    #  redirect_to url_for({:action => 'index'}) and return
+    #end
   end
 
   def add
 
     
+  end
+
+  def staff_summary
+    @staff = Staff.find(params[:id])
+    render :update do |page|
+      page.replace_html 'staff_summary', :partial => 'staff_summary'
+    end
   end
 
   # POST /staff
@@ -93,19 +100,20 @@ class StaffsController < BaseController
   # PUT /staff/1
   # PUT /staff/1.xml
   def update
+    @staff = Staff.find(params[:id])
+
     ids = @scope.staff().collect(&:id) #get_managed_user_ids(@current_user, params) #@current_user.get_managed_user_ids
-    
+
     if (ids.member?(params[:id].to_i) || current_user.admin?)
-      @staff = Staff.find(params[:id])
+      update_staff_status = @staff.update_attributes(params[:staff])
     else
-      flash[:error] = "Illegal id specified"
-      redirect_to url_for({:action => 'index'}) and return
+      update_staff_status = true
     end
 
     respond_to do |format|
-      if @staff.update_attributes(params[:staff]) && update_permissions(@staff, params[:permission])
+      if update_staff_status && update_permissions(@staff, params[:permission])
         flash[:notice] = 'Staff was successfully updated.'
-        format.html { redirect_to url_for({:action => 'index'}, {:scope_select=>params[:scope_select]})}
+        format.html { redirect_to url_for({:action => 'index', :scope_select=>params[:scope_select]})}
         format.xml  { head :ok }
       else
         format.html { render :action => "edit" }

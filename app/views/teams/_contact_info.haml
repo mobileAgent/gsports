@@ -18,7 +18,7 @@
         |
       =h @team.email
 
-    - if current_user && current_user.team_staff?(@team)
+    - if current_user && current_user.can_edit?(@team) #current_user.team_staff?(@team)
       \&nbsp;
       = link_to 'Edit', edit_team_path(@team), :class=>"edit-#{avatar_height}"
       
