@@ -1,6 +1,6 @@
 class StaffsController < BaseController
 
-  before_filter :admin_for_league_or_team
+  #before_filter :admin_for_league_or_team
 
   before_filter :find_staff_scope
 
@@ -184,6 +184,10 @@ class StaffsController < BaseController
   def find_staff_scope
 
     @scopes = current_user.scopes_for(Permission::CREATE_STAFF)
+
+    if @scopes.empty?
+      access_denied and return
+    end
 
     if select = params[:scope_select]
       p, id = select.split(' ')
