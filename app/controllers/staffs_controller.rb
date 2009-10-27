@@ -81,14 +81,26 @@ class StaffsController < BaseController
     @staff.login="gs#{Time.now.to_i}#{rand(100)}" # We never use this
     @staff.activated_at=Time.now
     # Todo, something better if current_user.admin?
-    @staff.team_id= current_user.team_id
-    @staff.league_id= current_user.league_id
-    @staff.role_id= current_user.team_admin? ? Role[:team_staff].id : Role[:league_staff].id
+#    @staff.team_id= current_user.team_id
+#    @staff.league_id= current_user.league_id
+#    @staff.role_id= current_user.team_admin? ? Role[:team_staff].id : Role[:league_staff].id
+    case @scope
+    when Team
+      @staff.team_id   = @scope.id
+      @staff.league_id = @scope.league_id
+      @staff.role_id   = Role[:team_staff].id
+    when League
+      @staff.team_id   = 1
+      @staff.league_id = @scope.id
+      @staff.role_id   = Role[:league_staff].id
+    else
+      raise Exception.new('Scope unknown for staff creation')
+    end
         
     respond_to do |format|
       if @staff.save && update_permissions(@staff, params[:permission])
         flash[:notice] = 'Staff account was created'
-        format.html { redirect_to url_for({:action => 'index'}, {:scope_select=>params[:scope_select]}) }
+        format.html { redirect_to url_for({:action => 'index', :scope_select=>Permission.scope_selector_string(@scope)}) }
         format.xml  { render :xml => @staff, :status => :created, :location => @staff }
       else
         format.html { render :action => "new" }
@@ -113,7 +125,7 @@ class StaffsController < BaseController
     respond_to do |format|
       if update_staff_status && update_permissions(@staff, params[:permission])
         flash[:notice] = 'Staff was successfully updated.'
-        format.html { redirect_to url_for({:action => 'index', :scope_select=>params[:scope_select]})}
+        format.html { redirect_to url_for({:action => 'index', :scope_select=>Permission.scope_selector_string(@scope)})}
         format.xml  { head :ok }
       else
         format.html { render :action => "edit" }

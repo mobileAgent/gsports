@@ -1,5 +1,5 @@
-- third_party = true && !@scope.is_staff_account?(@staff)
-= hidden_field_tag :scope_select, params[:scope_select]
+- third_party = @staff.id && !@scope.is_staff_account?(@staff)
+= hidden_field_tag :scope_select, Permission.scope_selector_string(@scope)
 
 .contentBox
   %h3

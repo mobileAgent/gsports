@@ -5,7 +5,7 @@
 
   - Permission.staff_permission_list.each() do |permission, name|
     %p
-      - p = Permission.check(@staff.user, permission, @scope)
+      - p = @staff.id && Permission.check(@staff.user, permission, @scope)
       = check_box :permission, permission, { :checked => !p.nil? }, :y, :n
 
       %b= name

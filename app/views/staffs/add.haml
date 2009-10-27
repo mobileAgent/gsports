@@ -20,7 +20,7 @@
           Search for a Member by Name
           = text_field_with_auto_complete :user, :name, {:autocomplete => "off", :xonchange => "javascript:autofill_video_title(); return true;"}, |
             {:after_update_element => "function(element,value){"+ |
-            "#{remote_function(:url=>{:action=>'staff_summary',:scope_select=>params[:scope_select]},:with=>"'id='+value.id.substring(12)")}" + |
+            "#{remote_function(:url=>{:action=>'staff_summary',:scope_select=>Permission.scope_selector_string(@scope)},:with=>"'id='+value.id.substring(12)")}" + |
             ";element.value = ''" + |
             "}" } |
 

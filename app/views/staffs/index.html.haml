@@ -13,8 +13,8 @@
     - if @scope
 
       .listingItem
-        = link_to 'New Staff Member', new_staff_path(:scope_select=>params[:scope_select]), { :class => 'genericButton', :style=>'float: left'}
-        = link_to 'Add Rights to Member', add_staffs_path(:scope_select=>params[:scope_select]), { :class => 'genericButton', :style=>'float: left; margin-left: 8px'}
+        = link_to 'New Staff Member', new_staff_path(:scope_select=>Permission.scope_selector_string(@scope)), { :class => 'genericButton', :style=>'float: left'}
+        = link_to 'Add Rights to Member', add_staffs_path(:scope_select=>Permission.scope_selector_string(@scope)), { :class => 'genericButton', :style=>'float: left; margin-left: 8px'}
         .clearDiv
 
       = render :partial => 'staff_listing', :collection => @staffs

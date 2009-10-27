@@ -2,8 +2,7 @@
   .profilePageHeader
     %h2.columnDescriptor
       %span
-        Edit Staff Account
-      = @staff.full_name
+        New Staff Account
 
   - form_for @staff, :html => {:class => 'StaffForm'} do |f|
   
@@ -15,7 +14,7 @@
 
       .mainCol1
 
-        = render :partial => "form", :locals => { :f => f, :include_password => false }
+        = render :partial => "form", :locals => { :f => f, :include_password => true }
         = render :partial => "form_coaching", :locals => { :f => f }
 
       .mainCol2
