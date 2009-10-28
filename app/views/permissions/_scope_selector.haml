@@ -1,0 +1,19 @@
+- auto_submit = true if !defined? auto_submit
+- style ||= ''
+- select_first = defined?(select_first) ? select_first : false
+-
+- on_change = auto_submit ? 'this.form.submit();' : ''
+-
+- if @scopes.size == 1
+  %span{ :style=>'margin-left: 16px' }= @scope.name
+  = hidden_field_tag :scope_select, Permission.scope_selector_string(@scope)
+-else
+  %select{ :name=>:scope_select, :onChange=>on_change , :style=>style }
+    - if !@scope && !select_first
+      %option= '- Select Organization -'
+    - @scopes.each() do |s|
+      - op_name = "#{s.class.to_s}: #{s.name}"
+      - op_value = Permission.scope_selector_string(s) #"#{s.class.to_s.downcase} #{s.id}"
+      - selected = (s == @scope) ? 'selected' : 'x'
+      %option{ :value=>op_value, selected=>1 }= op_name
+.clearDiv

@@ -8,9 +8,6 @@ class StaffsController < BaseController
   skip_before_filter :verify_authenticity_token, :only => [:auto_complete_for_user_name, :staff_summary]
 
 
-
-
-
   # GET /staff
   # GET /staff.xml
   def index
@@ -193,7 +190,7 @@ class StaffsController < BaseController
   end
 
 
-  def find_staff_scope
+  def xfind_staff_scope
 
     @scopes = current_user.scopes_for(Permission::CREATE_STAFF)
 
@@ -216,5 +213,8 @@ class StaffsController < BaseController
     end
 
   end
+
+
+  
 
 end

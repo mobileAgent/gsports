@@ -4,9 +4,7 @@
       %span{ :style=>'float:left' }
         = link_to 'Staff Accounts', '/staffs'
       %form{ }
-        = render :partial => 'scope_selector'
-
-
+        = render :partial => 'permissions/scope_selector', :locals=>{ :style=>'float:left; margin-left: 16px' }
 
   .listings
 
