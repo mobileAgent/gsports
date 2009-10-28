@@ -2,22 +2,39 @@ class ChannelsController < BaseController
     
   skip_before_filter :gs_login_required, :only => [:show]
   before_filter :publishing_allowed, :except => [:show]
+  before_filter :find_staff_scope, :only => [:index, :new, :create, :add]
   
   def index
-    @team = current_user.team
-    @channels = Channel.paginate(:all, :conditions => {:team_id => @team.id}, :page=>params[:page])
+    #@team = current_user.team
+    conditions = {}
+    
+    case @scope
+    when Team
+      conditions[:team_id]= @scope.id
+    when League
+      conditions[:league_id]= @scope.id
+    end
+    
+    @channels = Channel.paginate(:all, :conditions => conditions, :page=>params[:page])
   end
 
   def new
-    @team = current_user.team
+    #@team = current_user.team
     @channel = Channel.new
-    @channel.team_id = current_user.team.id
+    #@channel.team_id = current_user.team.id
   end
 
   def create
     @channel = Channel.new(params[:channel])
     @channel.team_id = current_user.team.id
-    
+
+    case @scope
+    when Team
+      @channel.team_id   = @scope.id
+    when League
+      @channel.league_id = @scope.id
+    end
+
     if @channel.save
       redirect_to channels_path()
     else
@@ -27,10 +44,12 @@ class ChannelsController < BaseController
 
   def edit
     @channel = Channel.find(params[:id])
+    @scope = @channel.team || @channel.league
   end
   
   def update
     @channel = Channel.find(params[:id])
+    @scope = @channel.team || @channel.league
     
     status = @channel.update_attributes(params[:channel])
 
@@ -68,10 +87,14 @@ class ChannelsController < BaseController
         redirect_to :action => "edit", :id=>@channel_video.channel_id
       end
     end
-    
-    #else select channel on which to publish video
-    @channels = Channel.find(:all, :conditions => {:team_id => @current_user.team_id})
-        
+
+    if @scope
+      #else select channel on which to publish video
+      @channels = Channel.find(:all, :conditions => Permission.scope_to_conditions(@scope) ) #{:team_id => @current_user.team_id})
+    else
+      @channels = []
+    end
+
   end
 
   # remove video from channel

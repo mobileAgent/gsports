@@ -50,11 +50,15 @@
             %br
             %br
             %p
-              - @first = true
+              -# @first = true
               - Permission.staff_permission_list.each() do |permission, name|
                 - if Permission.check(staff_listing, permission, @scope)
-                  %b= (@first ? '' : ', ') + name
-                  - @first = false
+                  -#%b= (@first ? '' : ', ') + name
+                  -# if !@first
+                    -#%br
+                    -# @first = false
+                  %b= name
+                  %br
 
             %br
             %br

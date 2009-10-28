@@ -76,6 +76,17 @@ class Permission < ActiveRecord::Base
 
   def self.scope_selector_string(scope)
     "#{scope.class.to_s.downcase} #{scope.id}"
+  rescue
+    ''
+  end
+
+  def self.scope_to_conditions(scope)
+    conditions = {}
+
+    field_name = "#{scope.class.to_s.downcase}_id"
+    conditions[field_name]= scope.id
+
+    conditions
   end
 
 

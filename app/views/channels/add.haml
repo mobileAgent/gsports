@@ -12,9 +12,20 @@
       
         = f.hidden_field :video_type
         = f.hidden_field :video_id
+
+        - video = @channel_video.video
+
+        %img{ :src=>"#{@vidavee.file_thumbnail_medium(video.thumbnail_dockey || video.dockey)}", :title=>"#{h(video.title).gsub(/\'/,'')}", :alt=>"#{h(video.title).gsub(/\'/,'')}" }
+        %br
+        = h video.title
+
+        %br
+        %br
+        %p
       
-        Publish to: 
-        = f.collection_select :channel_id, @channels, :id, :name, {:prompt => "-Select-"}
+        Publish to:
+        = render :partial => 'permissions/scope_selector', :locals=>{ :style=>'' }
+        = f.collection_select :channel_id, @channels, :id, :name, {:prompt => "- Select Channel -"}
         
         %p
           = f.submit 'Publish'

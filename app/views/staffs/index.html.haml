@@ -3,7 +3,7 @@
     %h2.columnDescriptor
       %span{ :style=>'float:left' }
         = link_to 'Staff Accounts', '/staffs'
-      %form{ }
+      %form{ :style=>"height: 0px;" }
         = render :partial => 'permissions/scope_selector', :locals=>{ :style=>'float:left; margin-left: 16px' }
 
   .listings
