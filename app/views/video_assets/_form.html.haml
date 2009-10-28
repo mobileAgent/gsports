@@ -7,7 +7,8 @@
   if (document.getElementById('autofill').checked)
   return generate_video_title();
   }
-
+%p
+  = render :partial => 'permissions/scope_selector', :locals => { :auto_submit=>false, :select_first=>true }
 %p
   = f.label :sport
   %br/

@@ -20,6 +20,10 @@ class VideoAssetsController < BaseController
   after_filter :expire_games_of_the_week, :only => [:destroy]
   before_filter :find_user, :only => [:index, :show, :new, :edit, :save_video ]
   before_filter :find_gamex_user, :only => [:index, :show, :new, :save_video ]
+  before_filter :find_staff_scope, :only => [:new, :save_video]
+
+
+
   uses_tiny_mce(:options => AppConfig.narrow_mce_options.merge({:width => 530}),
                 :only => [:show])
 
@@ -297,7 +301,7 @@ class VideoAssetsController < BaseController
     @video_asset.tag_with(params[:tag_list] || '') 
 
     if access_ok && @video_asset.save
-      publish(:push_video_files,"#{@video_asset.id}")
+      #publish(:push_video_files,"#{@video_asset.id}")
       flash[:notice] = "Your video is being procesed. It may be several minutes before it appears in your gallery"
       render :action=>:upload_success
 
@@ -431,6 +435,17 @@ class VideoAssetsController < BaseController
         admin_set_team = true
       else
         video_asset.team = nil
+      end
+
+    elsif @scope
+
+      case @scope
+      when Team
+          video_asset.team= @scope
+          video_asset.league_id= @scope.league_id
+      when League
+          video_asset.team= nil
+          video_asset.league_id= @scope.id
       end
       
     else
