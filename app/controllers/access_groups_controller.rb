@@ -5,8 +5,9 @@ class AccessGroupsController < BaseController
   #before_filter :team_staff_or_admin, :except => [:auto_complete_for_access_group ]
   auto_complete_for :access_group, :team_name
   skip_before_filter :verify_authenticity_token, :only => [:auto_complete_for_access_group_team_name ]
-  before_filter :team_staff_or_admin, :except => [:auto_complete_for_access_group_team ]
   
+  #before_filter :team_staff_or_admin, :except => [:auto_complete_for_access_group_team ]
+  before_filter :only => [:index, :new, :create, :add_user, :add_video] do  |c| c.find_staff_scope(Permission::MANAGE_GROUPS) end
   
   before_filter :admin_required, :only=>[:new, :create, :update, :remove]
   
@@ -18,10 +19,15 @@ class AccessGroupsController < BaseController
   sortable_attributes 'access_groups.id', 'access_groups.name', 'access_groups.description', 'access_groups.enabled', 'teams.name'
   
   def index
-    if !current_user.admin?
-      @access_groups = AccessGroup.for_team(current_user.team).paginate(:all, :order => sort_order, :page=>params[:page])  
+    if current_user.admin?
+      @access_groups = AccessGroup.paginate(:all, :order => sort_order, :include => [:team], :page=>params[:page])
     else
-      @access_groups = AccessGroup.paginate(:all, :order => sort_order, :include => [:team], :page=>params[:page])    
+      case @scope
+      when Team
+        @access_groups = AccessGroup.for_team(@scope).paginate(:all, :order => sort_order, :page=>params[:page])
+#      when League
+#        @access_groups = AccessGroup.for_league(@scope).paginate(:all, :order => sort_order, :page=>params[:page])
+      end
     end
   end
 
