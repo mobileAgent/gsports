@@ -34,6 +34,32 @@ class BaseController < ApplicationController
     false
   end
   
+
+  def find_staff_scope(permission)
+
+    @scopes = current_user.scopes_for(permission)
+
+    if @scopes.empty?
+      access_denied and return
+    end
+
+    if select = params[:scope_select]
+      p, id = select.split(' ')
+      params["#{p}_id"]= id
+
+    end
+
+    if (league_id = params[:league_id]) && (league = League.find(league_id)) && current_user.can?(permission, league)
+      @scope = league
+    elsif (team_id = params[:team_id]) && (team = Team.find(team_id)) && current_user.can?(permission, team)
+      @scope = team
+    elsif @scopes.size == 1
+      @scope = @scopes[0]
+    end
+
+  end
+
+  
   protected
  
   # shared by the shared_access_controller for preparing the index page 
@@ -168,31 +194,6 @@ class BaseController < ApplicationController
     @current_controller = controller_name
   end
 
-
-
-  def find_staff_scope
-
-    @scopes = current_user.scopes_for(Permission::CREATE_STAFF)
-
-    if @scopes.empty?
-      access_denied and return
-    end
-
-    if select = params[:scope_select]
-      p, id = select.split(' ')
-      params["#{p}_id"]= id
-
-    end
-
-    if (league_id = params[:league_id]) && (league = League.find(league_id)) && current_user.can_manage_staff?(league)
-      @scope = league
-    elsif (team_id = params[:team_id]) && (team = Team.find(team_id)) && current_user.can_manage_staff?(team)
-      @scope = team
-    elsif @scopes.size == 1
-      @scope = @scopes[0]
-    end
-
-  end
 
 
 

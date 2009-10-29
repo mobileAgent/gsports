@@ -2,8 +2,8 @@ class StaffsController < BaseController
 
   #before_filter :admin_for_league_or_team
 
-  before_filter :find_staff_scope
-
+  #before_filter :find_staff_scope
+  before_filter { |c| c.find_staff_scope Permission::CREATE_STAFF }
 
   skip_before_filter :verify_authenticity_token, :only => [:auto_complete_for_user_name, :staff_summary]
 

@@ -6,8 +6,10 @@
   - on_change = auto_submit ? 'this.form.submit();' : ''
   -
   - if @scopes.size == 1
-    %span{ :style=>'margin-left: 16px' }= @scope.name
+    %span{ :xstyle=>'margin-left: 16px' }= "#{@scope.class.to_s}: #{@scope.name}" #@scope.name
     = hidden_field_tag :scope_select, Permission.scope_selector_string(@scope)
+    %br
+    %br
   -else
     %select{ :name=>:scope_select, :onChange=>on_change , :style=>style }
       - if !@scope && !select_first

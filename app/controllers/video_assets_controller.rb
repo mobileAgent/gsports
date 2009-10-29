@@ -20,7 +20,8 @@ class VideoAssetsController < BaseController
   after_filter :expire_games_of_the_week, :only => [:destroy]
   before_filter :find_user, :only => [:index, :show, :new, :edit, :save_video ]
   before_filter :find_gamex_user, :only => [:index, :show, :new, :save_video ]
-  before_filter :find_staff_scope, :only => [:new, :save_video]
+  #before_filter :find_staff_scope, :only => [:new, :save_video]
+  before_filter :only => [:new, :save_video] do  |c| c.find_staff_scope(Permission::UPLOAD) end
 
 
 

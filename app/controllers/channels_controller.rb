@@ -2,7 +2,8 @@ class ChannelsController < BaseController
     
   skip_before_filter :gs_login_required, :only => [:show]
   before_filter :publishing_allowed, :except => [:show]
-  before_filter :find_staff_scope, :only => [:index, :new, :create, :add]
+  #before_filter :find_staff_scope, :only => [:index, :new, :create, :add]
+  before_filter :only => [:index, :new, :create, :add] do  |c| c.find_staff_scope(Permission::MANAGE_CHANNELS) end
   
   def index
     #@team = current_user.team
