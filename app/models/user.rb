@@ -165,11 +165,16 @@ class User < ActiveRecord::Base
   # general
 
   def can?(role, scope=nil)
-    Permission.check(self, role, scope)
+    admin? || Permission.check(self, role, scope)
   end
 
   def scopes_for(role)
-    Permission.range(self, role)
+    if admin?
+      Permission.has_role(role).collect(&:scope).uniq.sort_by(){ |s| "#{s.class} #{s.name}"}
+    else
+      Permission.range(self, role)
+    end
+    
   end
 
   # specific

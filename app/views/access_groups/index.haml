@@ -1,3 +1,4 @@
+- scope_select=Permission.scope_selector_string(@scope)
 .profileContentArea.listingPage
   .profilePageHeader
     %h2.columnDescriptor
@@ -8,49 +9,48 @@
   .listings
     .padded
 
-      - if current_user.admin?
+      - if @scope
+
         %table
           %tr
             %td
-              = link_to 'New Access Group', url_for({:controller=>'access_groups',:action=>'new'}), :class => 'genericButton'
+              = link_to 'New Access Group', url_for({:controller=>'access_groups',:action=>'new', :scope_select=>scope_select}), :class => 'genericButton'
             %td
-            
+
         %br/
 
-      - if current_user.admin? || @scope
         %table{:border => 0, :cellspacing => 0, :cellpadding => 0, :width => '100%'}
           %thead
             %tr.yellowHeader
-              - if current_user.admin?
-                = sortable_table_header :class=>"padded sortableContentHeader", :name => "ID", :sort => "access_groups.id"
-                = sortable_table_header :class=>"padded sortableContentHeader", :name => "Team", :sort => "teams.name"
-                = sortable_table_header :class=>"padded sortableContentHeader", :name => "Name", :sort => "access_groups.name"
-                -#= sortable_table_header :class=>"padded sortableContentHeader", :name => "Description", :sort => "access_groups.description"
-                %th.padded.sortableContentHeader= "Users"
-                %th.padded.sortableContentHeader= "Videos"
-                = sortable_table_header :class=>"padded sortableContentHeader", :name => "Enabled", :sort => "access_groups.enabled"
-              - else
-                = sortable_table_header :class=>"padded sortableContentHeader", :name => "Name", :sort => "access_groups.name"
-                -#= sortable_table_header :class=>"padded sortableContentHeader", :name => "Description", :sort => "access_groups.description"
+              = sortable_table_header :class=>"padded sortableContentHeader", :name => "Name", :sort => "access_groups.name"
+              -#= sortable_table_header :class=>"padded sortableContentHeader", :name => "Description", :sort => "access_groups.description"
 
-                %th.padded.sortableContentHeader= "Users"
-                %th.padded.sortableContentHeader= "Videos"
+              %th.padded.sortableContentHeader= "Users"
+              %th.padded.sortableContentHeader= "Videos"
 
           %tbody
             - for grp in @access_groups
               %tr.leagueList
-              - if current_user.admin?
-                %td.leagueList= grp.id
-                %td.leagueList= h grp.team.name
-                %td.leagueList= link_to grp.name, edit_access_group_path(grp), {:title => "edit"}
+                %td.leagueList{ :valign=>'top'}= link_to grp.name, edit_access_group_path(grp, :scope_select=>scope_select), {:title => "edit"}
+
                 -#%td.leagueList= h grp.description
-                %td.leagueList= h grp.enabled
-              -else
-                %td.leagueList= h grp.name
-                -#%td.leagueList= h grp.description
-                %td.leagueList= link_to grp.users.size, users_access_group_path(grp)
-                %td.leagueList= link_to grp.items.size, items_access_group_path(grp)
+                %td.leagueList{ :valign=>'top'}
+                  -#=link_to grp.users.size, users_access_group_path(grp)
+                  - for user in grp.users[0,9]
+                    = user.full_name
+                    %br
+                  &nbsp;&nbsp;
+                  =link_to "Manage #{grp.users.size} users", users_access_group_path(grp)
+
+                %td.leagueList{ :valign=>'top'}
+                  -#=link_to grp.users.size, users_access_group_path(grp)
+                  - for item in grp.items[0,9]
+                    = item.title rescue '-'
+                    %br
+                  &nbsp;&nbsp;
+                  = link_to "Manage #{grp.items.size} videos", items_access_group_path(grp)
 
 
         .apple_pagination
           = will_paginate @access_groups
+

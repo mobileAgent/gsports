@@ -36,6 +36,12 @@ class BaseController < ApplicationController
   
 
   def find_staff_scope(permission)
+debugger
+#    if current_user.admin?
+#      @scopes = Permission.has_role(permission).collect(&:scope).uniq.sort_by(){ |s| "#{s.class} #{s.name}"}
+#    else
+#      @scopes = current_user.scopes_for(permission)
+#    end
 
     @scopes = current_user.scopes_for(permission)
 
@@ -46,7 +52,6 @@ class BaseController < ApplicationController
     if select = params[:scope_select]
       p, id = select.split(' ')
       params["#{p}_id"]= id
-
     end
 
     if (league_id = params[:league_id]) && (league = League.find(league_id)) && current_user.can?(permission, league)

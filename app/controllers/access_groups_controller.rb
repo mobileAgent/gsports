@@ -7,32 +7,33 @@ class AccessGroupsController < BaseController
   skip_before_filter :verify_authenticity_token, :only => [:auto_complete_for_access_group_team_name ]
   
   #before_filter :team_staff_or_admin, :except => [:auto_complete_for_access_group_team ]
-  before_filter :only => [:index, :new, :create, :add_user, :add_video] do  |c| c.find_staff_scope(Permission::MANAGE_GROUPS) end
+  before_filter  do  |c| c.find_staff_scope(Permission::MANAGE_GROUPS) end
   
-  before_filter :admin_required, :only=>[:new, :create, :update, :remove]
+  #before_filter :admin_required, :only=>[:new, :create, :update, :remove]
   
   #before_filter :instantiate_team_param, :only=>[:create, :update]
   #after_filter :serialize_team_param, :only=>[:create, :update]
-  before_filter :fix_team_name, :only=>[:create, :update]
+  #before_filter :fix_team_name, :only=>[:create, :update]
   
   
   sortable_attributes 'access_groups.id', 'access_groups.name', 'access_groups.description', 'access_groups.enabled', 'teams.name'
   
   def index
-    if current_user.admin?
-      @access_groups = AccessGroup.paginate(:all, :order => sort_order, :include => [:team], :page=>params[:page])
-    else
+#    if current_user.admin?
+#      @access_groups = AccessGroup.paginate(:all, :order => sort_order, :include => [:team], :page=>params[:page])
+#    else
       case @scope
       when Team
         @access_groups = AccessGroup.for_team(@scope).paginate(:all, :order => sort_order, :page=>params[:page])
 #      when League
 #        @access_groups = AccessGroup.for_league(@scope).paginate(:all, :order => sort_order, :page=>params[:page])
       end
-    end
+#    end
   end
 
   def new
     @access_group = AccessGroup.new
+    @access_group.enabled = true
   end
 
   def create
@@ -82,7 +83,7 @@ class AccessGroupsController < BaseController
       end
     end
     
-    @access_groups = AccessGroup.for_team(current_user.team)
+    @access_groups = AccessGroup.for_team(@scope) if @scope
   end
 
   def add_video    
@@ -94,7 +95,7 @@ class AccessGroupsController < BaseController
       end
     end
     
-    @access_groups = AccessGroup.for_team(current_user.team)
+    @access_groups = AccessGroup.for_team(@scope) if @scope
   end
 
   def remove_video
