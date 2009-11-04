@@ -1595,7 +1595,25 @@ a.admin-userreg-link-user{
   text-decoration: none;
 }
 
+/* popups */
+
+#centerpoint {
+   top: 40%;
+   left: 50%;
+   position: absolute;
+   overflow: visible;
+}
+
+#dialog{}
+
+/* registration popup */
+
 .registerPopup{
+
+  position: relative;
+	margin-top: -100px;
+	margin-left: -175px;
+
 	background-color: #151C36;
 	color: white;
 	text-align: left;
@@ -1627,11 +1645,46 @@ a.admin-userreg-link-user{
 	text-align: right;
 }
 
-#dialog{
-	position: absolute;
-	left: 320px;
-	top: 300px;
+/* reporting popup */
+
+.new-report-popup{
+
+  position: relative;
+	margin-top: -100px;
+	margin-left: -300px;
+
+	background-color: #EBEAEB;
+	color: black;
+	text-align: left;
+	width: 600px;
+	font-size: 116%;
+	padding: 15px;
+
+  border: 2px solid #909090;
 }
+
+.new-report-popup h2{
+	font-size: 161.6%;
+  text-transform:uppercase;
+  color:#0081C0;
+}
+
+.new-report-popup input[type="text"], .new-report-popup textarea{
+	border: 0px;
+	border-left: 1px solid #909090;
+	border-top: 1px solid #909090;
+	padding: 2px;
+	font-size: 116%;
+	font-weight: bold;
+	width: 250px;
+	background: white;
+	width: 90%;
+}
+
+.new-report-popup .closer{
+	text-align: right;
+}
+
 
 
 /* layout */

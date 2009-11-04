@@ -1,0 +1,15 @@
+.profileContentArea.listingPage
+  .profilePageHeader
+    %h2.columnDescriptor
+      %span
+        New Scouting Report
+  .listings
+    .listingItem
+
+      = error_messages_for :report
+
+      - form_for(@report) do |f|
+        = render :partial => "form", :locals => { :f => f, :access_group => @access_group }
+        %p= f.submit "Start Report &raquo;"
+
+      = link_to 'Back', channels_path

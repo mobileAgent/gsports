@@ -36,7 +36,7 @@ class BaseController < ApplicationController
   
 
   def find_staff_scope(permission)
-debugger
+
 #    if current_user.admin?
 #      @scopes = Permission.has_role(permission).collect(&:scope).uniq.sort_by(){ |s| "#{s.class} #{s.name}"}
 #    else
@@ -49,15 +49,10 @@ debugger
       access_denied and return
     end
 
-    if select = params[:scope_select]
-      p, id = select.split(' ')
-      params["#{p}_id"]= id
-    end
+    scope = Permission.selector_string_to_scope(params[:scope_select])
 
-    if (league_id = params[:league_id]) && (league = League.find(league_id)) && current_user.can?(permission, league)
-      @scope = league
-    elsif (team_id = params[:team_id]) && (team = Team.find(team_id)) && current_user.can?(permission, team)
-      @scope = team
+    if scope && current_user.can?(permission, scope)
+      @scope = scope
     elsif @scopes.size == 1
       @scope = @scopes[0]
     end

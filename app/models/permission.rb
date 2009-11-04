@@ -23,6 +23,7 @@ class Permission < ActiveRecord::Base
   MANAGE_GROUPS     = 'MN_GRP'
   CREATE_STAFF      = 'CR_STAFF'
   UPLOAD            = 'UPLOAD'
+  REPORT            = 'REPORT'
 
 
 
@@ -32,7 +33,8 @@ class Permission < ActiveRecord::Base
       [Permission::MANAGE_CHANNELS, 'Manage Embeddable Channel Player'],
       [Permission::MANAGE_GROUPS, 'Manage Access Groups'],
       [Permission::CREATE_STAFF, 'Create Team Staff'],
-      [Permission::UPLOAD, 'Upload Videos']
+      [Permission::UPLOAD, 'Upload Videos'],
+      [Permission::REPORT, 'Scouting Report']
     ]
   end
 
@@ -74,11 +76,34 @@ class Permission < ActiveRecord::Base
   end
 
 
+  # param ecoding for scopes
+
   def self.scope_selector_string(scope)
     "#{scope.class.to_s.downcase} #{scope.id}"
   rescue
     ''
   end
+
+  def self.selector_string_to_scope(select)
+    return nil if select.nil? || select.empty?
+    
+    p, id = select.split(' ')
+
+    # returning value:
+    case p
+    when 'team'
+      Team.find(id)
+    when 'league'
+      League.find(id)
+    else
+      # unsupported scope, out of bounds
+      nil
+    end
+
+  end
+
+  #
+
 
   def self.scope_to_conditions(scope)
     conditions = {}

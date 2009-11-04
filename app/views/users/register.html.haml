@@ -5,7 +5,7 @@
     .SideBar
       %h1
         Registration
-      %p      
+      %p 
         The Registration process is completed in three easy steps.
       %p
         First, select the type of account that best fits you or your organization.
@@ -28,14 +28,15 @@
           ACCOUNT TYPE
         
         - select_me = @register_as == 0
-        %div{ :class => ( select_me ? 'SelectedAccount' : 'UnSelectedAccount' ) }
-          
+        - select = ( select_me ? 'SelectedAccount' : 'UnSelectedAccount' )
+        %div{ :class => select }
+
           %label.verbalSemantic{ :for => "Ath" }
             Athletes, Students, Family and Fans
           .AccountRadio
-            %input#Ath{ :name => :role, :checked => select_me, :type => "radio", :value => "", :onclick => "updateSelectedAccount(this)", :style => 'border: none' }/
+            %input#Ath{ :name => :role, :checked => select_me, :type => "radio", :value => "", :onclick => "updateSelectedAccount(this)", :style => 'border: none' }
           .AccountIllustration
-            %img{ :src => "/gs/images/account_athletes.jpg", :height => "99", :alt => "Athletes Illustration", :onclick => "return selectThisAccount('Ath')", :width => "131" }/
+            %img{ :src => "/gs/images/account_athletes.jpg", :height => "99", :alt => "Athletes Illustration", :onclick => "return selectThisAccount('Ath')", :width => "131" }
           .AccountDescriptionAthletes
             %h2
               Athletes, Students, Family and Fans.
@@ -43,14 +44,15 @@
               Subscribers of this account have full access to all game video, editing features and social networking on the Global Sports platform. Users are able to create a personal profile page which includes photos, friends, forums, favorites (such as video clips) and share them with family and friends, for $9.99 per month.
     
         - select_me = @register_as == Role[:team].id
-        %div{ :class => ( select_me ? 'SelectedAccount' : 'UnSelectedAccount' ) }
+        - select = ( select_me ? 'SelectedAccount' : 'UnSelectedAccount' )
+        %div{ :class => select }
 
           %label.verbalSemantic{ :for => "School" }
             Schools and Private Athletic Clubs
           .AccountRadio
-            %input#School{ :name => :role, :checked => select_me, :type => "radio", :value => Role[:team].id, :onclick => "updateSelectedAccount(this)", :style => 'border: none' }/
+            %input#School{ :name => :role, :checked => select_me, :type => "radio", :value => Role[:team].id, :onclick => "updateSelectedAccount(this)", :style => 'border: none' }
           .AccountIllustration
-            %img{ :src => "/gs/images/accout_school_illu.jpg", :height => "99", :alt => "Teams Illustration", :onclick => "return selectThisAccount('School')", :width => "131" }/
+            %img{ :src => "/gs/images/accout_school_illu.jpg", :height => "99", :alt => "Teams Illustration", :onclick => "return selectThisAccount('School')", :width => "131" }
           .AccountDescriptionSchools
             %h2
               Schools and Private Athletic Clubs
@@ -58,13 +60,14 @@
               Select this account type if you represent a school or private club and want your video of sporting events on Global Sports&rsquo; platform. You will upload game video and be provided with a branded Homepage with customizable sections for news, events and Game and Players of the Week.  
         
         - select_me = @register_as == Role[:league].id
-        %div{ :class => ( select_me ? 'SelectedAccount' : 'UnSelectedAccount' ) }
+        - select = ( select_me ? 'SelectedAccount' : 'UnSelectedAccount' )
+        %div{ :class => select }
           %label.verbalSemantic{ :for => "Leagues" }
             Leagues and Conferences
           .AccountRadio
-            %input#Leagues{ :name => :role, :checked => select_me, :type => "radio", :value => Role[:league].id, :onclick => "updateSelectedAccount(this)", :style => 'border: none' }/
+            %input#Leagues{ :name => :role, :checked => select_me, :type => "radio", :value => Role[:league].id, :onclick => "updateSelectedAccount(this)", :style => 'border: none' }
           .AccountIllustration
-            %img{ :src => "/gs/images/accout_league_illu.jpg", :height => "99", :alt => "Leagues Illustration", :onclick => "return selectThisAccount('Leagues')", :width => "131" }/
+            %img{ :src => "/gs/images/accout_league_illu.jpg", :height => "99", :alt => "Leagues Illustration", :onclick => "return selectThisAccount('Leagues')", :width => "131" }
           .AccountDescriptionLeagues
             %h2
               Leagues and Conferences
@@ -72,13 +75,14 @@
               Select this account type if you represent a league or conference and want your video of tournaments and playoff games that you sponsor to be part of the Global Sports platform.  You will be provided with a branded Homepage with customizable sections for news, events, and Game and Players of the Week.
         
         - select_me = @register_as == Role[:scout].id
-        %div{ :class => ( select_me ? 'SelectedAccount' : 'UnSelectedAccount' ) }
+        - select = ( select_me ? 'SelectedAccount' : 'UnSelectedAccount' )
+        %div{ :class => select }
           %label.verbalSemantic{ :for => "Scouts" }
             Scouts and Recruiters
           .AccountRadio
-            %input#Scouts{ :name => :role, :checked => select_me, :type => "radio", :value => Role[:scout].id, :onclick => "updateSelectedAccount(this)", :style => 'border: none' }/
+            %input#Scouts{ :name => :role, :checked => select_me, :type => "radio", :value => Role[:scout].id, :onclick => "updateSelectedAccount(this)", :style => 'border: none' }
           .AccountIllustration
-            %img{ :src => "/gs/images/account_scouts.jpg", :height => "99", :alt => "Recruiters Illustration", :onclick => "return selectThisAccount('Scouts')", :width => "131" }/
+            %img{ :src => "/gs/images/account_scouts.jpg", :height => "99", :alt => "Recruiters Illustration", :onclick => "return selectThisAccount('Scouts')", :width => "131" }
           .AccountDescriptionScouts
             %h2
               Scouts and Recruiters
@@ -86,4 +90,4 @@
               This account type allows access to the Recruiter&rsquo;s module of the Global Sports platform.  Within this premium module, you will find scouting reports, statistical information and video coverage (full game, highlights reels and combine performances) on the nation&rsquo;s hottest recruiting prospects.
         .accountContinue
           %p
-            %input{ :name => "Continue", :type => "image", :src => "/gs/images/account_continue.png", :value => "Continue", :alt => "Continue", :style => 'border: none' }/
+            %input{ :name => "Continue", :type => "image", :src => "/gs/images/account_continue.png", :value => "Continue", :alt => "Continue", :style => 'border: none' }

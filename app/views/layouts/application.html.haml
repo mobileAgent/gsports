@@ -3,14 +3,16 @@
 !!! Strict
 %html{:xmlns=>"http://www.w3.org/1999/xhtml", 'xml:lang'=>"en", :lang=>"en"}
   %head
-    /
-      [if lt IE 7]>
-      <style type="text/css">
-      \.contentBoxHeader { background-image: none; }
-      </style>
-      <![endif]
-    %link{:rel=>"shortcut icon", :href=>"/favicon.ico"}/
-    %meta{"http-equiv"=>"Content-Type", :content=>"text/html;charset=utf-8"}/
+    ='<!--'
+    =' [if lt IE 7]>'
+    =' <style type="text/css">'
+    =' \.contentBoxHeader { background-image: none; }'
+    =' </style>'
+    =' <![endif]'
+    ='-->'
+    %link{:rel=>"shortcut icon", :href=>"/favicon.ico"}
+
+    %meta{"http-equiv"=>"Content-Type", :content=>"text/html;charset=utf-8"}
   
     %title= page_title
      
@@ -24,7 +26,8 @@
       = auto_discovery_link_tag(:rss, @rss_url, {:title => @rss_title})
     
   %body
-    %div{:class => logged_in? ? "backgroundContainer bg_#{(rand(27)+1)}" : 'backgroundContainerHome'}
+    - background = logged_in? ? "backgroundContainer bg_#{(rand(27)+1)}" : 'backgroundContainerHome'
+    %div{:class => background }
       .outerContainer
         - if logged_in?
           = render :partial => "shared/block_util"
@@ -35,8 +38,9 @@
           = render :partial => "shared/block_guest_header"
         
         = render :partial => "shared/messages"
-        
-        %div{:class => (logged_in? ? 'mainContentArea' : 'landingContentArea')}
+
+        - content_area = logged_in? ? 'mainContentArea' : 'landingContentArea'
+        %div{:class => content_area}
           - if excluded_sidebar_pages.select { |page| current_page?(page) }.empty?
             =render :partial => "users/profile_nav"
 
@@ -55,6 +59,7 @@
       = render :partial => "shared/block_footer"
       = render :partial => "shared/block_legal"     
 
-    #dialog/
+    #centerpoint
+      #dialog
     
     = render :partial => "shared/google_analytics" 

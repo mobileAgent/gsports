@@ -1,0 +1,26 @@
+- scope_select=Permission.scope_selector_string(@scope)
+.new-report-popup
+  - close = true if close.nil?
+  - if close
+    .closer
+      %a{ :onclick=>"Element.update('dialog', '');" }
+        close[x]
+        -#
+
+  %h2.columnDescriptor
+    Create New Report
+  %br
+
+  - form_for(@report) do |f|
+
+    = render :partial => 'permissions/scope_selector', :locals=>{ :style=>'float:left; margin-left: 16px' }
+
+    = render :partial => "form", :locals => { :f => f }
+
+    %br
+    %p
+      -#%input.submit.button{ :name => "submit", :src => "/gs/images/top_nav_login.gif", :type => "image", :value => "Start Report", :alt => "Start Report" }/
+      = link_to 'Start Report &raquo;', "javascript:$('new_report').submit()", :class => 'genericButton'
+
+%br
+%br

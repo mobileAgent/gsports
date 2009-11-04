@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20091013141605) do
+ActiveRecord::Schema.define(:version => 20091103211957) do
 
   create_table "access_groups", :force => true do |t|
     t.string  "name",        :limit => 30
@@ -487,6 +487,23 @@ ActiveRecord::Schema.define(:version => 20091013141605) do
   end
 
   add_index "ratings", ["user_id"], :name => "fk_ratings_user"
+
+  create_table "report_details", :force => true do |t|
+    t.integer "report_id",  :limit => 11
+    t.string  "video_type"
+    t.integer "video_id",   :limit => 11
+    t.integer "post_id",    :limit => 11
+  end
+
+  create_table "reports", :force => true do |t|
+    t.string  "name"
+    t.integer "author_id",       :limit => 11
+    t.string  "owner_type"
+    t.integer "owner_id",        :limit => 11
+    t.integer "access_group_id", :limit => 11
+    t.string  "type",            :limit => 30
+    t.string  "description"
+  end
 
   create_table "roles", :force => true do |t|
     t.string  "name"

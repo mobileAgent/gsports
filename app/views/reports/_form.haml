@@ -1,0 +1,23 @@
+
+%div{ :style=>'float: left' }
+  %br
+  %p
+
+  %div
+    %b Title
+    %br/
+    = f.text_field :name
+
+%div{ :style=>'float: left; margin-left: 20px;' }
+
+  %br
+  %p
+  %div
+    %b Description
+    %br/
+    = f.text_area :description, :rows=>3, :cols=>35
+
+.clearDiv
+
+
+
