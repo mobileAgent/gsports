@@ -9,7 +9,13 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20091103211957) do
+ActiveRecord::Schema.define(:version => 20091105184122) do
+
+  create_table "access_contacts", :force => true do |t|
+    t.integer "access_group_id", :limit => 11
+    t.string  "contact_type",    :limit => 3
+    t.string  "destination"
+  end
 
   create_table "access_groups", :force => true do |t|
     t.string  "name",        :limit => 30
@@ -501,7 +507,7 @@ ActiveRecord::Schema.define(:version => 20091103211957) do
     t.string  "owner_type"
     t.integer "owner_id",        :limit => 11
     t.integer "access_group_id", :limit => 11
-    t.string  "type",            :limit => 30
+    t.string  "report_type",     :limit => 30
     t.string  "description"
   end
 

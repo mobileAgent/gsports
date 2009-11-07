@@ -26,6 +26,7 @@
               -#= sortable_table_header :class=>"padded sortableContentHeader", :name => "Description", :sort => "access_groups.description"
 
               %th.padded.sortableContentHeader= "Users"
+              %th.padded.sortableContentHeader= "Contacts"
               %th.padded.sortableContentHeader= "Videos"
 
           %tbody
@@ -33,24 +34,34 @@
               %tr.leagueList
                 %td.leagueList{ :valign=>'top'}= link_to grp.name, edit_access_group_path(grp, :scope_select=>scope_select), {:title => "edit"}
 
-                -#%td.leagueList= h grp.description
                 %td.leagueList{ :valign=>'top'}
                   -#=link_to grp.users.size, users_access_group_path(grp)
-                  - for user in grp.users[0,9]
-                    = user.full_name
-                    %br
+                  - for access_user in grp.access_users #[0,9]
+                    %div{ :id=>"access_user_#{access_user.id}" }
+                      = access_user.user.full_name
+                      [
+                      = link_to_remote 'X', {:url => {:controller=>:access_groups, :action=>:remove_user, :id=>access_user.id}, :confirm => 'Are you sure?', :method=>:delete}, :complete => evaluate_remote_response
+                      ]
+                %td.leagueList{ :valign=>'top'}
+                  -#=link_to grp.users.size, users_access_group_path(grp)
+                  - for contact in grp.contacts
+                    %div{ :id=>"access_contact_#{contact.id}" }
+                      = contact.destination
+                      [
+                      = link_to_remote 'X', {:url => {:controller=>:access_groups, :action=>:remove_contact, :id=>contact.id}, :confirm => 'Are you sure?', :method=>:delete}, :complete => evaluate_remote_response
+                      ]
+                  %br
                   &nbsp;&nbsp;
-                  =link_to "Manage #{grp.users.size} users", users_access_group_path(grp)
+                  =link_to_remote "Add Contact", {:url => {:controller=>:access_groups, :action=>:pop_new_contact, :scope_select=>scope_select, :access_group_id=>grp.id} }
 
                 %td.leagueList{ :valign=>'top'}
                   -#=link_to grp.users.size, users_access_group_path(grp)
-                  - for item in grp.items[0,9]
-                    = item.title rescue '-'
-                    %br
-                  &nbsp;&nbsp;
-                  = link_to "Manage #{grp.items.size} videos", items_access_group_path(grp)
-
-
+                  - for access_item in grp.access_items
+                    %div{ :id=>"access_item_#{access_item.id}" }
+                      = access_item.item.title rescue '-'
+                      [
+                      = link_to_remote 'X', {:url => {:controller=>:access_groups, :action=>:remove_video, :id=>access_item.id}, :confirm => 'Are you sure?', :method=>:delete}, :complete => evaluate_remote_response
+                      ]
         .apple_pagination
           = will_paginate @access_groups
 

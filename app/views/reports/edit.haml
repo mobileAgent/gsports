@@ -2,59 +2,17 @@
   .profilePageHeader
     %h2.columnDescriptor
       %span
-        Create Report
-      = @access_group.name
+        Edit Report
+      = @report.name
   .listings
+
+    = error_messages_for :report
+
     .listingItem
-    
-      %table
-        %tr
-          %td{ :valign=>'top' }
-    
-            %h1 Editing Access Group
-            
-            = error_messages_for :access_group
-      
-            - form_for(@access_group, :url => access_group_url(@access_group), :html => {:multipart => true}) do |f|
-              = render :partial => "form", :locals => { :f => f }
-              %p= f.submit "Update"
-          
-            = link_to 'All Access Groups', access_groups_path
-      
-      
-          %td{ :width=>'100px' }
-          -#%td{ :valign=>'top' }
-          
-          
-            %p
-            %br
-            %br
-              - url = access_group_path(@access_group)
-              %p
-                = link_to 'Test', '', :onclick=>"javascript:window.open('#{url}','_blank','width=#{@channel.frame_width||101},height=#{@channel.frame_height||101},toolbar=1,resizable=0');return false;", :class=>'genericButton'
-              %br
-              %form
-                Embed video player with the following URL:
-                %textarea{ :onFocus=>'javascript:this.select()', :readonly=>true, :rows=>4, :cols=>47 } 
-                  = h %Q~<iframe src="#{APP_URL}#{url}" width="#{@channel.frame_width||201}px" height="#{@channel.frame_height||201}px" scrolling=no frameborder='0' ></iframe>~
-              %br
-    
-            .channel_videos
-              - @channel.videos.each do |v|
-                - video = v.video
-                .channel_video{ :id=>"channel_video_#{v.id}" }
-                  %table
-                    %tr
-                      %td{ :width=>'280px' }
-                        = video.title
-                        %br
-                        &nbsp;
-                        = video.dockey
-                      %td
-                        = link_to_remote 'Remove', {:url => {:controller=>:channels, :action=>:remove, :id => v.id}, :confirm => 'Are you sure?', :method => :delete}, :class=>'genericButton', :complete => evaluate_remote_response
-                  %br
-                
-              
-                
-                
-                
+
+      - form_for(@report, :url => report_url(@report), :html => {:multipart => true}) do |f|
+        = render :partial => "form", :locals => { :f => f }
+        %p= f.submit "Update"
+
+      = link_to 'All Reports', reports_path(:scope_select=>Permission.scope_selector_string(@scope))
+

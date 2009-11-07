@@ -6,6 +6,7 @@ class AccessGroup < ActiveRecord::Base
   
   has_many :access_items
   has_many :access_users
+  has_many :access_contacts
   
   validates_presence_of :name
   validates_presence_of :team_id
@@ -22,6 +23,12 @@ class AccessGroup < ActiveRecord::Base
   def users()
     access_users.collect(&:user)
   end
+
+  def contacts()
+    access_contacts
+  end
+
+
   
   def allow?(user)
     access_users.collect(&:user_id).include? user.id

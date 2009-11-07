@@ -74,6 +74,7 @@ class AccessGroupsController < BaseController
     @access_group = AccessGroup.find(params[:id])
   end
 
+
   def add_user
     @access_user = AccessUser.new(params[:access_user])
 
@@ -85,6 +86,17 @@ class AccessGroupsController < BaseController
     
     @access_groups = AccessGroup.for_team(@scope) if @scope
   end
+
+  def remove_user
+    @access_user = AccessUser.find(params[:id])
+    @access_user.destroy if @access_user
+
+    render :update do |page|
+      target = "access_user_#{@access_user.id}"
+      page.replace_html target, :text => ''
+    end
+  end
+
 
   def add_video    
     @access_item = AccessItem.new(params[:access_item])
@@ -101,23 +113,48 @@ class AccessGroupsController < BaseController
   def remove_video
     @access_item = AccessItem.find(params[:id])
     @access_item.destroy if @access_item
-    
+
     #TODO access check?
-    
+
     render :update do |page|
       target = "access_item_#{@access_item.id}"
-      page.replace_html target, :text => ''      
-    end  
+      page.replace_html target, :text => ''
+    end
   end
 
-  def remove_user
-    @access_user = AccessUser.find(params[:id])
-    @access_user.destroy if @access_user
+
+  def pop_new_contact
+    @access_group = AccessGroup.find(params[:access_group_id])
+
+    @access_contact = AccessContact.new
+    @access_contact.access_group_id = @access_group
 
     render :update do |page|
-      target = "access_user_#{@access_user.id}"
-      page.replace_html target, :text => ''      
-    end  
+      target = "dialog"
+      page.replace_html target, :partial => 'pop_new_contact'
+    end
+  end
+
+  def add_contact
+    @access_contact = AccessContact.new(params[:access_contact])
+
+    if @access_contact.access_group_id
+      if @access_contact.save
+        redirect_to :action => "index", :scope_select=>Permission.scope_selector_string(@access_contact.access_group.team)
+      end
+    end
+
+    @access_contact = AccessGroup.for_team(@scope) if @scope
+  end
+
+  def remove_contact
+    @access_contact = AccessContact.find(params[:id])
+    @access_contact.destroy if @access_contact
+
+    render :update do |page|
+      target = "access_contact_#{@access_contact.id}"
+      page.replace_html target, :text => ''
+    end
   end
 
 

@@ -1606,6 +1606,10 @@ a.admin-userreg-link-user{
 
 #dialog{}
 
+#dialog .closer{
+	text-align: right;
+}
+
 /* registration popup */
 
 .registerPopup{
@@ -1639,50 +1643,6 @@ a.admin-userreg-link-user{
 	width: 250px;
 	background: #ccc;
 	width: 90%;
-}
-
-.registerPopup .closer{
-	text-align: right;
-}
-
-/* reporting popup */
-
-.new-report-popup{
-
-  position: relative;
-	margin-top: -100px;
-	margin-left: -300px;
-
-	background-color: #EBEAEB;
-	color: black;
-	text-align: left;
-	width: 600px;
-	font-size: 116%;
-	padding: 15px;
-
-  border: 2px solid #909090;
-}
-
-.new-report-popup h2{
-	font-size: 161.6%;
-  text-transform:uppercase;
-  color:#0081C0;
-}
-
-.new-report-popup input[type="text"], .new-report-popup textarea{
-	border: 0px;
-	border-left: 1px solid #909090;
-	border-top: 1px solid #909090;
-	padding: 2px;
-	font-size: 116%;
-	font-weight: bold;
-	width: 250px;
-	background: white;
-	width: 90%;
-}
-
-.new-report-popup .closer{
-	text-align: right;
 }
 
 
@@ -1754,5 +1714,111 @@ a.admin-userreg-link-user{
 .row-highlight.on {
   
 }
+
+/* Scouting Reports */
+
+.new-report-popup{
+
+  position: relative;
+	margin-top: -100px;
+	margin-left: -300px;
+
+	background-color: #EBEAEB;
+	color: black;
+	text-align: left;
+	width: 600px;
+	font-size: 116%;
+	padding: 15px;
+
+  border: 2px solid #909090;
+}
+
+.new-report-popup h2{
+	font-size: 161.6%;
+  text-transform:uppercase;
+  color:#0081C0;
+}
+
+.new-report-popup input[type="text"], .new-report-popup textarea{
+	border: 0px;
+	border-left: 1px solid #909090;
+	border-top: 1px solid #909090;
+	padding: 2px;
+	font-size: 116%;
+	font-weight: bold;
+	width: 250px;
+	background: white;
+	width: 90%;
+}
+
+.new-report-popup .closer{
+	text-align: right;
+}
+
+
+.report-video-browser {
+  float: left;
+  width: 300px;
+  height: 620px;
+  border: 2px solid #909090;
+  margin-left: 20px;
+}
+
+.report-layout {
+  float: left;
+  width: 570px;
+  height: 620px;
+  border: 2px solid #909090;
+  margin-left: 20px;
+  margin-bottom: 30px;
+}
+
+.report-builder #clip-window {
+  width: 300px;
+  height: 290px;
+  overflow: scroll;
+}
+
+.report-builder #clip-window .video {
+  xborder: 1px solid black;
+  margin: 8px;
+
+}
+
+/*  */
+
+
+
+.new-contact-popup{
+  position: relative;
+	margin-top: -50px;
+	margin-left: -150px;
+
+	background-color: #EBEAEB;
+	color: black;
+	text-align: left;
+	width: 300px;
+	font-size: 116%;
+	padding: 15px;
+
+  border: 2px solid #909090;
+}
+
+.new-contact-popup h2{
+	font-size: 161.6%;
+  text-transform:uppercase;
+  color:#0081C0;
+}
+
+.new-contact-popup input[type="text"], .new-contact-popup select{
+	border: 0px;
+	border-left: 1px solid #909090;
+	border-top: 1px solid #909090;
+	padding: 2px;
+	font-size: 116%;
+	font-weight: bold;
+	background: white;
+}
+
 
 /*  */

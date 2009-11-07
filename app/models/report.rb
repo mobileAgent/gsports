@@ -14,4 +14,19 @@ class Report < ActiveRecord::Base
 
   named_scope :for_owner, lambda { |owner| { :conditions => {:owner_type=>owner.class.name, :owner_id=>owner.id} }  }
 
+  Types = {
+    'O' => 'Offence',
+    'D' => 'Defense',
+    'ST' => 'Sepcial Teams',
+    'I' => 'Internal',
+    'P' => 'Player',
+    'X' => 'Other'
+  }
+
+  TypeKeyList = ['O', 'D', 'ST', 'I', 'P', 'X']
+
+  def type_name
+    Types[report_type]
+  end
+
 end

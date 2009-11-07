@@ -28,7 +28,7 @@
             - if @reports
               - for report in @reports
                 %tr.leagueList
-                  %td.leagueList{ :valign=>'top'}= link_to report.name, edit_report_path(report, :scope_select=>scope_select), {:title => "edit"}
+                  %td.leagueList{ :valign=>'top'}= link_to report.name, { :controller=>:reports, :action=>:build, :id=>report.id, :scope_select=>scope_select}, {:title => "edit"}
 
                   -#%td.leagueList= h grp.description
                   %td.leagueList{ :valign=>'top'}

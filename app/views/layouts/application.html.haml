@@ -41,7 +41,7 @@
 
         - content_area = logged_in? ? 'mainContentArea' : 'landingContentArea'
         %div{:class => content_area}
-          - if excluded_sidebar_pages.select { |page| current_page?(page) }.empty?
+          - if excluded_sidebar_pages.select { |page| current_page?(page) }.empty? && !@skip_profile_nav
             =render :partial => "users/profile_nav"
 
           = @content_for_layout

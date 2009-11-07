@@ -9,7 +9,7 @@ class CreateReports < ActiveRecord::Migration
       t.string   :owner_type
       t.integer  :owner_id
       t.integer  :access_group_id
-      t.string   :type, :limit=>30
+      t.string   :report_type, :limit=>30
       t.string   :description
 
 
