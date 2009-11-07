@@ -36,7 +36,7 @@ class ReportsController < BaseController
     @report.author = current_user
 
     if @report.save
-      redirect_to edit_reports_path(@report)
+      redirect_to build_reports_path(:id => @report.id)
     else
       render :action => "new"
     end
