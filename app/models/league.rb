@@ -55,6 +55,14 @@ class League < ActiveRecord::Base
   def league_name
     self.name
   end
+
+  def staff()
+    (User.third_party_staff(self) + User.league_staff(self.id)).uniq
+  end
+
+  def is_staff_account?(user)
+    user.league_staff?(self)
+  end
   
   def avatar_photo_url(size = nil)
     if avatar

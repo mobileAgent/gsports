@@ -1,0 +1,26 @@
+.profileContentArea.listingPage
+  .profilePageHeader
+    %h2.columnDescriptor
+      %span
+        Edit Permission
+      = @permission.name
+  .listings
+    .listingItem
+    
+      %table
+        %tr
+          %td{ :valign=>'top' }
+    
+            %h1 Editing Permission
+            
+            = error_messages_for :permission
+      
+            - form_for(@permission, :url => permission_url(@permission)) do |f|
+              = render :partial => "form", :locals => { :f => f, :permission => @permission }
+              %p= f.submit "Update"
+          
+            = link_to 'All Permissions', permissions_path
+      
+      
+          %td{ :width=>'100px' }
+          

@@ -12,11 +12,14 @@
       - form_for :access_user, @access_user, :url => { :controller => :access_groups, :action => :add_user } do |f|
       
         = f.hidden_field :user_id
-      
-        Grant access for 
-        = @access_user.user.full_name
-        to: 
-        = f.collection_select :access_group_id, @access_groups, :id, :name, {:prompt => "-Select-"}
-        
-        %p
-          = f.submit 'Grant'
+
+        = render :partial => 'permissions/scope_selector', :locals=>{}
+
+        - if @access_groups
+          Grant access for
+          = @access_user.user.full_name
+          to:
+          = f.collection_select :access_group_id, @access_groups, :id, :name, {:prompt => "-Select-"}
+
+          %p
+            = f.submit 'Grant'

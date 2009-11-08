@@ -1,12 +1,16 @@
+- third_party = !@scope.is_staff_account?(staff_listing)
+- scope_select=Permission.scope_selector_string(@scope)
 .listingItem{:id => "staff_item_#{staff_listing.id}"}
   .listingImage
-    = link_to image_tag( staff_listing.avatar_photo_url(:thumb), :class => "polaroid" ), edit_staff_path(staff_listing)
+    = link_to image_tag( staff_listing.avatar_photo_url(:thumb), :class => "polaroid" ), edit_staff_path(staff_listing, {:scope_select=>scope_select})
   .listingDescription
     %table{ :width=>'100%' }
       %tr
         %td{ :valign=>'top' }
           %h4
-            = link_to staff_listing.full_name, edit_staff_path(staff_listing)
+            = link_to staff_listing.full_name, edit_staff_path(staff_listing, {:scope_select=>scope_select})
+            - if third_party
+              \&nbsp;(Third Party Staff Member)
           .recentFriendFeed
             Email:
             = staff_listing.email
@@ -38,11 +42,27 @@
             
         %td{ :width=>'25px' }
         %td{ :valign=>'top' }
-          .recentFriendFeed     
+          .recentFriendFeed
             %br
             %br
             = staff_listing.enabled ? 'Account Enabled' : 'Account Disabled'
-          
+
+            %br
+            %br
+            %p
+              -# @first = true
+              - Permission.staff_permission_list.each() do |permission, name|
+                - if Permission.check(staff_listing, permission, @scope)
+                  -#%b= (@first ? '' : ', ') + name
+                  -# if !@first
+                    -#%br
+                    -# @first = false
+                  %b= name
+                  %br
+
+            %br
+            %br
+
             - if staff_listing.tags.size > 0 
               %br
               %br
@@ -51,10 +71,10 @@
 
   %ul.listingActions
     %li
-      %a.genericButton{ :href => edit_staff_path(staff_listing) }
+      %a.genericButton{ :href => edit_staff_path(staff_listing, {:scope_select=>scope_select}) }
         %span
           Edit
-    - unless current_user.id == staff_listing.id
+    - unless (current_user.id == staff_listing.id) || third_party
       %li
         = link_to 'Destroy', staff_path(staff_listing), :confirm => 'Are you sure?', :method => :delete,  :class=>'genericButton'
   .clearDiv

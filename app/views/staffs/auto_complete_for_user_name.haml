@@ -1,0 +1,8 @@
+%ul
+  -@users.each do |user|
+    %li{ :id=>"user_finder_#{user.id}"}
+      =h(user.full_name)
+      - if user.team
+        \&nbsp;(
+        =h user.team.nickname || user.team.name
+        )

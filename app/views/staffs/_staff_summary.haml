@@ -1,0 +1,12 @@
+- add_path = edit_staff_path(:id=>@staff.id, :scope_select=>Permission.scope_selector_string(@scope) )
+
+%div{ :style=>'float:left; padding: 8px' }
+  = link_to image_tag( @staff.avatar_photo_url(:thumb) ), add_path
+%b
+  = link_to @staff.full_name, add_path
+%br
+= @staff.team.name
+
+.clearDiv
+
+

@@ -1595,7 +1595,29 @@ a.admin-userreg-link-user{
   text-decoration: none;
 }
 
+/* popups */
+
+#centerpoint {
+   top: 40%;
+   left: 50%;
+   position: absolute;
+   overflow: visible;
+}
+
+#dialog{}
+
+#dialog .closer{
+	text-align: right;
+}
+
+/* registration popup */
+
 .registerPopup{
+
+  position: relative;
+	margin-top: -100px;
+	margin-left: -175px;
+
 	background-color: #151C36;
 	color: white;
 	text-align: left;
@@ -1623,14 +1645,180 @@ a.admin-userreg-link-user{
 	width: 90%;
 }
 
-.registerPopup .closer{
+
+
+/* layout */
+
+.twoColumn {
+	width:801px;
+	padding: 0px 10px 0px 20px;
+	float:left;
+	background-color: #ffffff;
+	display:inline;
+}
+
+.twoColumn .bothCols {
+  width: 715px;
+}
+
+.twoColumn .bothCols .contentBox {
+  width: auto;
+  height: auto;
+  padding-right: 20px;
+}
+
+.twoColumn h1 {
+  font-size: 15pt;
+  width: 715px;
+  border-top-width: 0px;
+  border-right-width: 0px;
+  border-bottom-width: 5px;
+  border-left-width: 0px;
+  border-top-style: solid;
+  border-right-style: solid;
+  border-bottom-style: solid;
+  border-left-style: solid;
+  border-bottom-color: #000000;
+}
+
+.twoColumn .mainCol1 .contentBox, .twoColumn .mainCol2 .contentBox{
+	width: 325px;
+	height: auto;
+	padding-right: 10px;
+	margin-right: 20px;
+}
+.twoColumn .contentBox{
+	margin-left: 0px;
+	height: auto;
+	background-color: white;
+}
+.twoColumn .contentBoxContent{
+	height: auto;
+}
+
+.twoColumn hr {
+	xborder: 1px solid black;
+	border-bottom: 2px solid #29305B;
+	margin-bottom: 15px;
+}
+
+.twoColumn .section-head {
+	font-weight: bold;
+	font-size: 150%;
+}
+
+
+
+/*  */
+
+.row-highlight.on {
+  
+}
+
+/* Scouting Reports */
+
+.new-report-popup{
+
+  position: relative;
+	margin-top: -100px;
+	margin-left: -300px;
+
+	background-color: #EBEAEB;
+	color: black;
+	text-align: left;
+	width: 600px;
+	font-size: 116%;
+	padding: 15px;
+
+  border: 2px solid #909090;
+}
+
+.new-report-popup h2{
+	font-size: 161.6%;
+  text-transform:uppercase;
+  color:#0081C0;
+}
+
+.new-report-popup input[type="text"], .new-report-popup textarea{
+	border: 0px;
+	border-left: 1px solid #909090;
+	border-top: 1px solid #909090;
+	padding: 2px;
+	font-size: 116%;
+	font-weight: bold;
+	width: 250px;
+	background: white;
+	width: 90%;
+}
+
+.new-report-popup .closer{
 	text-align: right;
 }
 
-#dialog{
-	position: absolute;
-	left: 320px;
-	top: 300px;
+
+.report-video-browser {
+  float: left;
+  width: 300px;
+  height: 620px;
+  border: 2px solid #909090;
+  margin-left: 20px;
+}
+
+.report-layout {
+  float: left;
+  width: 570px;
+  height: 620px;
+  border: 2px solid #909090;
+  margin-left: 20px;
+  margin-bottom: 30px;
+}
+
+.report-builder #clip-window {
+  width: 300px;
+  height: 290px;
+  overflow: scroll;
+}
+
+.report-builder #clip-window .video {
+  xborder: 1px solid black;
+  margin: 8px;
+
+}
+
+/*  */
+
+
+
+.new-contact-popup{
+  position: relative;
+	margin-top: -50px;
+	margin-left: -150px;
+
+	background-color: #EBEAEB;
+	color: black;
+	text-align: left;
+	width: 300px;
+	font-size: 116%;
+	padding: 15px;
+
+  border: 2px solid #909090;
+}
+
+.new-contact-popup h2{
+	font-size: 161.6%;
+  text-transform:uppercase;
+  color:#0081C0;
+}
+
+.new-contact-popup input[type="text"], .new-contact-popup select{
+	border: 0px;
+	border-left: 1px solid #909090;
+	border-top: 1px solid #909090;
+	padding: 2px;
+	font-size: 116%;
+	font-weight: bold;
+	background: white;
 }
 
 
+/*  */

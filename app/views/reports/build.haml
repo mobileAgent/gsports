@@ -1,0 +1,58 @@
+- @skip_profile_nav = true
+
+= javascript_include_tag '/TafelTree/Tree.js'
+= javascript_include_tag '/TafelTree/gsTree.js'
+= stylesheet_link_tag '/TafelTree/tree.css'
+
+
+%script{ :type=>"text/javascript" }
+  var tree_struct =
+  = @tree_detail.to_json
+
+
+.profileContentArea
+  .profilePageHeader
+    %h2.columnDescriptor
+      %span
+        Create Report
+      = @report.name
+
+  .padded
+
+    = error_messages_for :report
+
+    .report-builder
+
+      - form_for(@report, :url => report_url(@report), :html => {:multipart => true}) do |f|
+        -#= render :partial => "form", :locals => { :f => f }
+
+
+        .report-video-browser
+          Video Library
+          %p
+          #tree-view
+
+          %p
+          Videos in this Library
+          -#%label
+            = check_box_tag 'show_clips', 'yes', true
+            Show Clips
+          -#%label
+            = check_box_tag 'show_reels', 'yes', true
+            Show Reels
+
+          %p
+          #clip-window
+
+
+
+        .report-layout
+          = @report.type_name
+
+
+        .clearDiv
+
+
+        -#%p= f.submit "Update"
+
+        -#= link_to 'All Reports', reports_path(:scope_select=>Permission.scope_selector_string(@scope))

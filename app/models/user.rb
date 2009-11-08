@@ -55,6 +55,9 @@ class User < ActiveRecord::Base
   
   has_many :gamex_users
   
+  has_many :permissions, :as => :blessed
+
+
   belongs_to :country
 
   # Base model uses has_enumerated here, but at least fixtures
@@ -86,6 +89,12 @@ class User < ActiveRecord::Base
   # Those who can do things for the team account
   named_scope :team_staff,
     lambda { |team_id| { :conditions => ["team_id = ? and role_id IN (?)",team_id,[Role[:team_staff].id,Role[:team].id, Role[:admin].id] ] } }
+
+  named_scope :third_party_staff,
+    lambda { |org| { :conditions=>{ 'permissions.scope_type'=>org.class.to_s, 'permissions.scope_id'=>org.id }, :include=>:permissions } }
+
+
+
 
   # Those who can do things for the league account
   named_scope :league_staff,
@@ -119,6 +128,127 @@ class User < ActiveRecord::Base
     has created_at, updated_at, profile_public, enabled
     set_property :delta => true
   end
+
+
+
+
+
+  def full_name
+    "#{firstname} #{lastname}"
+  end
+
+
+
+  # Override CE
+  def display_name
+    full_name
+  end
+
+  # Never let the login slug appear in urls or paths
+  def to_param
+    id.to_s
+  end
+
+
+
+
+
+
+
+#
+# Access Management
+#
+#
+
+  # Permission based role management
+
+  # general
+
+  def can?(role, scope=nil)
+    admin? || Permission.check(self, role, scope)
+  end
+
+  def scopes_for(role)
+    if admin?
+      Permission.has_role(role).collect(&:scope).uniq.sort_by(){ |s| "#{s.class} #{s.name}"}
+    else
+      Permission.range(self, role)
+    end
+    
+  end
+
+  # specific
+
+  # this is for video_assets, all users can upload video_users
+  def can_upload?
+    admin? || can?(Permission::UPLOAD)
+    #admin? || team_staff? || league_staff?
+  end
+
+  def can_publish?(item=nil)
+    can?(Permission::MANAGE_CHANNELS, (item.respond_to?(:team) ? item.team : nil) )
+    #team_staff? && team.can_publish?(item)
+  end
+
+  def can_restrict?(item)
+    can?(Permission::MANAGE_GROUPS, (item.respond_to?(:team) ? item.team : nil) )
+    # team_staff? && item.class == VideoAsset && item.team_id == team_id && (AccessGroup.for_team(team).size > 0)
+    ## team_staff? && item.public_methods.include?('team') && item.team_id == team_id && (AccessGroup.for_team(team).size > 0)
+  end
+
+
+
+  def can_manage_staff?(scope=nil)
+    admin? || can?(Permission::CREATE_STAFF, scope)
+  end
+
+
+  def can_grant_access?(user=nil)
+
+    can?(Permission::MANAGE_GROUPS)
+
+#    in_general = team_staff? && (AccessGroup.for_team(team).size > 0)
+#    if user
+#      user.class == User && in_general
+#    else
+#      in_general
+#    end
+  end
+
+
+
+  # legacy team_staff access
+
+  # Determine if this user can edit the specified video* item
+
+  def can_edit?(v)
+    return true if self.admin?
+
+    case v.class.to_s
+    when 'VideoAsset'
+      return true if (v.team_id && self.team_id == v.team_id && self.team_staff?)
+      return true if (v.league_id && self.league_id == v.league_id && self.league_staff?)
+    when 'VideoClip'
+      return true if v.user_id == self.id
+    when 'VideoReel'
+      return true if v.user_id == self.id
+    when 'VideoUser'
+      return true if v.user_id == self.id
+    when 'Team'
+      return true if team_admin?(v) || can?(Permission::EDIT_TEAM_PAGE, v)
+    when 'League'
+      return true if league_admin?(v) || can?(Permission::EDIT_TEAM_PAGE, v)
+    end
+
+    return false
+  end
+
+
+
+
+
+  # user identity roles
+
 
   def self.league_staff_ids(league_id)
     User.league_staff(league_id).collect(&:id)
@@ -160,19 +290,8 @@ class User < ActiveRecord::Base
     role && (role.eql?(Role[:scout_staff]) || scount_admin?)
   end
 
-  # this is for video_assets, all users can upload video_users
-  def can_upload?
-    admin? || team_staff? || league_staff?
-  end
-  
-  def can_publish?(item=nil)
-    team_staff? && team.can_publish?(item)
-  end
 
-  def can_restrict?(item)
-    team_staff? && item.class == VideoAsset && item.team_id == team_id && (AccessGroup.for_team(team).size > 0)
-    #team_staff? && item.public_methods.include?('team') && item.team_id == team_id && (AccessGroup.for_team(team).size > 0)
-  end
+  # gamex and group based item access
 
   def has_access?(item)
     #asset_list = []
@@ -272,63 +391,13 @@ class User < ActiveRecord::Base
     false
   end
 
-  def can_grant_access?(user=nil)
-    in_general = team_staff? && (AccessGroup.for_team(team).size > 0)
-    if user
-      user.class == User && in_general
-    else
-      in_general
-    end
-  end
-  
-  
-  def get_managed_user_ids
-    get_managed_users.collect(&:id)
-  end
-
-  def get_managed_users
-    if league_admin? || (admin? && params[:league_id])
-      Staff.league_staff(league_id)
-    elsif team_admin? || (admin? && params[:team_id])
-      Staff.team_staff(team_id)
-    else
-      []
-    end
-  end
-  
   
 
-  def full_name
-    "#{firstname} #{lastname}"
-  end
 
-  # Override CE
-  def display_name
-    full_name
-  end
-
-  # Never let the login slug appear in urls or paths
-  def to_param
-    id.to_s
-  end
-  
-
-  # Determine if this user can edit the specified video item
-  def can_edit?(v)
-    return true if self.admin?
-    case v.class.to_s
-    when 'VideoAsset'
-      return true if (v.team_id && self.team_id == v.team_id && self.team_staff?)
-      return true if (v.league_id && self.league_id == v.league_id && self.league_staff?)
-    when 'VideoClip'
-      return true if v.user_id == self.id
-    when 'VideoReel'
-      return true if v.user_id == self.id
-    when 'VideoUser'
-      return true if v.user_id == self.id
-    end
-    return false
-  end
+#
+#  User Actions
+#
+#
   
   def make_member_by_invoice (monthly_cost, purchase_order, promotion=nil)
     mem = Membership.new(:billing_method => Membership::INVOICE_BILLING_METHOD)

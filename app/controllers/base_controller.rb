@@ -34,6 +34,32 @@ class BaseController < ApplicationController
     false
   end
   
+
+  def find_staff_scope(permission)
+
+#    if current_user.admin?
+#      @scopes = Permission.has_role(permission).collect(&:scope).uniq.sort_by(){ |s| "#{s.class} #{s.name}"}
+#    else
+#      @scopes = current_user.scopes_for(permission)
+#    end
+
+    @scopes = current_user.scopes_for(permission)
+
+    if @scopes.empty?
+      access_denied and return
+    end
+
+    scope = Permission.selector_string_to_scope(params[:scope_select])
+
+    if scope && current_user.can?(permission, scope)
+      @scope = scope
+    elsif @scopes.size == 1
+      @scope = @scopes[0]
+    end
+
+  end
+
+  
   protected
  
   # shared by the shared_access_controller for preparing the index page 
@@ -167,5 +193,12 @@ class BaseController < ApplicationController
     @current_action = action_name
     @current_controller = controller_name
   end
+
+
+
+
+
+
+
 
 end

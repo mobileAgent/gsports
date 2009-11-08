@@ -42,35 +42,38 @@
               - else
                 = @header_post.post
 
-  /
-    col1 content
+  / col1 content
   .mainCol1
     = javascript_include_tag 'tabs'
     
     .orgTabs
-      #tab1.orgTab{ :class=>((tab_id == 1) ? 'open' : 'closed') }
+      - tabclass = ((tab_id == 1) ? 'open' : 'closed')
+      #tab1.orgTab{ :class=>tabclass }
         .left
         .content
           %a{ :href=>'javascript:Tabs.open(1)' }
             News
         .right
       - unless @hide_recent_uploads
-        #tab2.orgTab{ :class=>((tab_id == 2) ? 'open' : 'closed') }
+      - tabclass = ((tab_id == 2) ? 'open' : 'closed')
+        #tab2.orgTab{ :class=>tabclass }
           .left
           .content
             %a{ :href=>'javascript:Tabs.open(2)' }
               Recent Uploads
-          .right    
+          .right
       - if (false && @team_photo_picks && !@team_photo_picks.empty?)
-        #tab3.orgTab{ :class=>((tab_id == 3) ? 'open' : 'closed') }
+        - tabclass = ((tab_id == 3) ? 'open' : 'closed')
+        #tab3.orgTab{ :class=>tabclass }
           .left
           .content
             %a{ :href=>'javascript:Tabs.open(3)' }
               Clips / Reels
           .right
       .clearDiv
-      
-    .tabContent{ :class => is_member ? "tall" : "short" }
+
+    - tabclass = is_member ? "tall" : "short"
+    .tabContent{ :class => tabclass }
     
       -#      School News
       - class_member = is_member ? "tall" : "short"
@@ -141,8 +144,7 @@
             .moreLink
               -# link_to
 
-  /
-    col2 content
+  / col2 content
   .mainCol2
     .tabSpacer
 

@@ -13,9 +13,12 @@
       
         = f.hidden_field :item_type
         = f.hidden_field :item_id
-      
-        Restrict access to: 
-        = f.collection_select :access_group_id, @access_groups, :id, :name, {:prompt => "-Select-"}
-        
-        %p
-          = f.submit 'Restrict'
+
+        = render :partial => 'permissions/scope_selector', :locals=>{}
+
+        - if @access_groups
+          Restrict access to:
+          = f.collection_select :access_group_id, @access_groups, :id, :name, {:prompt => "-Select-"}
+
+          %p
+            = f.submit 'Restrict'

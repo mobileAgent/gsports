@@ -9,7 +9,13 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090929140218) do
+ActiveRecord::Schema.define(:version => 20091105184122) do
+
+  create_table "access_contacts", :force => true do |t|
+    t.integer "access_group_id", :limit => 11
+    t.string  "contact_type",    :limit => 3
+    t.string  "destination"
+  end
 
   create_table "access_groups", :force => true do |t|
     t.string  "name",        :limit => 30
@@ -390,6 +396,17 @@ ActiveRecord::Schema.define(:version => 20090929140218) do
     t.datetime "updated_at"
   end
 
+  create_table "permissions", :force => true do |t|
+    t.string  "blessed_type"
+    t.integer "blessed_id",   :limit => 11
+    t.string  "role",         :limit => 30
+    t.string  "scope_type"
+    t.integer "scope_id",     :limit => 11
+  end
+
+  add_index "permissions", ["blessed_type", "blessed_id"], :name => "index_permissions_on_blessed_type_and_blessed_id"
+  add_index "permissions", ["scope_type", "scope_id"], :name => "index_permissions_on_scope_type_and_scope_id"
+
   create_table "photos", :force => true do |t|
     t.string   "name"
     t.text     "description"
@@ -476,6 +493,23 @@ ActiveRecord::Schema.define(:version => 20090929140218) do
   end
 
   add_index "ratings", ["user_id"], :name => "fk_ratings_user"
+
+  create_table "report_details", :force => true do |t|
+    t.integer "report_id",  :limit => 11
+    t.string  "video_type"
+    t.integer "video_id",   :limit => 11
+    t.integer "post_id",    :limit => 11
+  end
+
+  create_table "reports", :force => true do |t|
+    t.string  "name"
+    t.integer "author_id",       :limit => 11
+    t.string  "owner_type"
+    t.integer "owner_id",        :limit => 11
+    t.integer "access_group_id", :limit => 11
+    t.string  "report_type",     :limit => 30
+    t.string  "description"
+  end
 
   create_table "roles", :force => true do |t|
     t.string  "name"

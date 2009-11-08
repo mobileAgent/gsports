@@ -1,0 +1,44 @@
+- scope_select=Permission.scope_selector_string(@scope)
+.profileContentArea.listingPage
+  .profilePageHeader
+    %h2.columnDescriptor
+      %span{ :style=>'float:left' }
+        Reports
+      %form{ :style=>"height: 0px;" }
+        = render :partial => 'permissions/scope_selector', :locals=>{ :style=>'float:left; margin-left: 16px' }
+  .listings
+    .padded
+
+      - if @scope
+
+        = link_to_remote 'New Report', {:url => {:controller=>:reports, :action=>:pop_new}}, {:class => 'genericButton'}
+
+        %br/
+
+        %table{:border => 0, :cellspacing => 0, :cellpadding => 0, :width => '100%'}
+          %thead
+            %tr.yellowHeader
+              = sortable_table_header :class=>"padded sortableContentHeader", :name => "Name", :sort => "access_groups.name"
+              -#= sortable_table_header :class=>"padded sortableContentHeader", :name => "Description", :sort => "access_groups.description"
+
+              %th.padded.sortableContentHeader= "X"
+              %th.padded.sortableContentHeader= "O"
+
+          %tbody
+            - if @reports
+              - for report in @reports
+                %tr.leagueList
+                  %td.leagueList{ :valign=>'top'}= link_to report.name, { :controller=>:reports, :action=>:build, :id=>report.id, :scope_select=>scope_select}, {:title => "edit"}
+
+                  -#%td.leagueList= h grp.description
+                  %td.leagueList{ :valign=>'top'}
+                    meow
+
+                  %td.leagueList{ :valign=>'top'}
+                    woof
+
+
+        - if @reports
+          .apple_pagination
+            = will_paginate @reports
+

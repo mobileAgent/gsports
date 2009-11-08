@@ -15,6 +15,8 @@
           = link_to 'Download', '/gamex/download'
         .menuitem
           = link_to 'History', '/gamex/history'
+        .menuitem
+          = link_to 'Reports', reports_url()
         .menuitem-last
           = link_to 'Help', 'http://files.globalsports.net/gamexchange/helpcenter/home/index.php', :target => '_blank'
 
@@ -93,7 +95,7 @@
         .menuitem
           = link_to 'Edit League Info', edit_league_path(current_user.league)
         
-      -if current_user.team_admin? || current_user.league_admin?
+      -if current_user.can_manage_staff? #team_admin? || current_user.league_admin?
         .menuitem
           = link_to 'Staff Accounts', staffs_path
   

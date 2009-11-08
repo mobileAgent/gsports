@@ -1,128 +1,131 @@
-%table{ :width=>'100%' }
-  %tr
-    %td{ :valign=>'top' }
-      %h3 School Logo
-      .contentBoxContent.topRowFixHeight
-        .centeringDiv{:style => "text-align: center; vertical-align: middle"}
-          = image_tag @team.avatar_photo_url
-      %label
-        Choose a photo to use for your school logo
-        %br/
-        %em (100x100 or 234x60 only)
-        %br/
-      = file_field :avatar, :uploaded_data, :size => "20"
-      %br
-      %br
-      %div
-        %b Name
-        %br/
-        = f.text_field :name
-  
-      %div
-        %b Nickname
-        %br/
-        = f.text_field :nickname
-        
-    %td
-      %div
-        %b Address Line One
-        %br/
-        = f.text_field :address1
-        
-      %div
-        %b Address Line Two
-        %br/
-        = f.text_field :address2
-        
-      
-      %div
-        %b County
-        %br/
-        = f.text_field :county_name
-      
-      %div
-      %table{:cellspacing => 4}
-        %tr
-          %td City
-          %td State
-          %td Zip/Postal Code
-        %tr
-          %td
-            = f.text_field :city, :size => 25
-          %td  
-            =collection_select("team","state_id",State.all,"id","name",{ :prompt => '--', :selected => @team.state_name })
-          %td  
-            = f.text_field :zip, :size => 12
-      
-      %div
-        %b Description
-        %br/
-        = f.text_area :description , :rows => 3, :cols => 45
-      
-      %div
-        %b Phone
-        %br/
-        = f.text_field :phone, :size => 12
-      
-      %div
-        %b Contact E-mail address
-        %br/
-        = f.text_field :email, :size => 32
-      
-      
-      %div
-        %b Default Tab
-        %br/
+.contentBox
+  %h3 STAFF MEMBER INFORMATION
+  %hr
+
+  %table{ :width=>'100%' }
+    %tr
+      %td{ :valign=>'top' }
+        %h3 School Logo
+        .contentBoxContent.topRowFixHeight
+          .centeringDiv{:style => "text-align: center; vertical-align: middle"}
+            = image_tag @team.avatar_photo_url
         %label
-          = f.radio_button :tab_id, '1'
-          News
-        %br/
-        %label
-          = f.radio_button :tab_id, '2'
-          Recent Uploads
-      
-      
-      -if current_user.admin?
-        %fieldset.emphasized
+          Choose a photo to use for your school logo
+          %br/
+          %em (100x100 or 234x60 only)
+          %br/
+        = file_field :avatar, :uploaded_data, :size => "20"
+        %br
+        %br
+        %div
+          %b Name
+          %br/
+          = f.text_field :name
+
+        %div
+          %b Nickname
+          %br/
+          = f.text_field :nickname
+
+      %td
+        %div
+          %b Address Line One
+          %br/
+          = f.text_field :address1
+
+        %div
+          %b Address Line Two
+          %br/
+          = f.text_field :address2
+
+
+        %div
+          %b County
+          %br/
+          = f.text_field :county_name
+
+        %div
+        %table{:cellspacing => 4}
+          %tr
+            %td City
+            %td State
+            %td Zip/Postal Code
+          %tr
+            %td
+              = f.text_field :city, :size => 25
+            %td
+              =collection_select("team","state_id",State.all,"id","name",{ :prompt => '--', :selected => @team.state_name })
+            %td
+              = f.text_field :zip, :size => 12
+
+        %div
+          %b Description
+          %br/
+          = f.text_area :description , :rows => 3, :cols => 45
+
+        %div
+          %b Phone
+          %br/
+          = f.text_field :phone, :size => 12
+
+        %div
+          %b Contact E-mail address
+          %br/
+          = f.text_field :email, :size => 32
+
+
+        %div
+          %b Default Tab
+          %br/
           %label
-            Admin Only
-          %div
-            %b League
-            %br/
-            =collection_select("team","league_id",@leagues,"id","name",{ :prompt => '- Select League -', :selected => @team.league_id })
-      
-          %div
-            %b Ad Zone (Be sure to coordinate with ad server zones)
-            %br/
-            = f.text_field :ad_zone, :size => 5
-      
-          %table
-            %tr
-              %td
-                %div
-                  %b Allow Channel Publication
-                  %br/
-                  %label
-                    = f.check_box :can_publish_assets, {}, 1, nil
-                    Full Games
-                  %label
-                    = f.check_box :can_publish_clips, {}, 1, nil
-                    Clips
-                  %label
-                    = f.check_box :can_publish_reels, {}, 1, nil
-                    Reels
-              %td
-                %div
-                  %b Limit
-                  %br/
-                  = f.text_field :publish_limit, :size => 3
-
-          
-          %div
-            %b Staff Limit
-            %br/
-            = f.text_field :staff_limit, :size => 3
+            = f.radio_button :tab_id, '1'
+            News
+          %br/
+          %label
+            = f.radio_button :tab_id, '2'
+            Recent Uploads
 
 
+        -if current_user.admin?
+          %fieldset.emphasized
+            %label
+              Admin Only
+            %div
+              %b League
+              %br/
+              =collection_select("team","league_id",@leagues,"id","name",{ :prompt => '- Select League -', :selected => @team.league_id })
 
-    
+            %div
+              %b Ad Zone (Be sure to coordinate with ad server zones)
+              %br/
+              = f.text_field :ad_zone, :size => 5
+
+            %table
+              %tr
+                %td
+                  %div
+                    %b Allow Channel Publication
+                    %br/
+                    %label
+                      = f.check_box :can_publish_assets, {}, 1, nil
+                      Full Games
+                    %label
+                      = f.check_box :can_publish_clips, {}, 1, nil
+                      Clips
+                    %label
+                      = f.check_box :can_publish_reels, {}, 1, nil
+                      Reels
+                %td
+                  %div
+                    %b Limit
+                    %br/
+                    = f.text_field :publish_limit, :size => 3
+
+
+            %div
+              %b Staff Limit
+              %br/
+              = f.text_field :staff_limit, :size => 3
+
+
+

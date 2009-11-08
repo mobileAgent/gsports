@@ -1,53 +1,67 @@
+- scope_select=Permission.scope_selector_string(@scope)
 .profileContentArea.listingPage
   .profilePageHeader
     %h2.columnDescriptor
-      %span
+      %span{ :style=>'float:left' }
         Access Groups
+      %form{ :style=>"height: 0px;" }
+        = render :partial => 'permissions/scope_selector', :locals=>{ :style=>'float:left; margin-left: 16px' }
   .listings
     .padded
 
-      - if current_user.admin?
+      - if @scope
+
         %table
           %tr
             %td
-              = link_to 'New Access Group', url_for({:controller=>'access_groups',:action=>'new'}), :class => 'genericButton'
+              = link_to 'New Access Group', url_for({:controller=>'access_groups',:action=>'new', :scope_select=>scope_select}), :class => 'genericButton'
             %td
-            
+
         %br/
-      
-      %table{:border => 0, :cellspacing => 0, :cellpadding => 0, :width => '100%'}
-        %thead
-          %tr.yellowHeader
-            - if current_user.admin?
-              = sortable_table_header :class=>"padded sortableContentHeader", :name => "ID", :sort => "access_groups.id"
-              = sortable_table_header :class=>"padded sortableContentHeader", :name => "Team", :sort => "teams.name"
+
+        %table{:border => 0, :cellspacing => 0, :cellpadding => 0, :width => '100%'}
+          %thead
+            %tr.yellowHeader
               = sortable_table_header :class=>"padded sortableContentHeader", :name => "Name", :sort => "access_groups.name"
               -#= sortable_table_header :class=>"padded sortableContentHeader", :name => "Description", :sort => "access_groups.description"
+
               %th.padded.sortableContentHeader= "Users"
+              %th.padded.sortableContentHeader= "Contacts"
               %th.padded.sortableContentHeader= "Videos"
-              = sortable_table_header :class=>"padded sortableContentHeader", :name => "Enabled", :sort => "access_groups.enabled"
-            - else  
-              = sortable_table_header :class=>"padded sortableContentHeader", :name => "Name", :sort => "access_groups.name"
-              -#= sortable_table_header :class=>"padded sortableContentHeader", :name => "Description", :sort => "access_groups.description"
-              
-              %th.padded.sortableContentHeader= "Users"
-              %th.padded.sortableContentHeader= "Videos"
-              
-        %tbody
-          - for grp in @access_groups
-            %tr.leagueList
-            - if current_user.admin?
-              %td.leagueList= grp.id
-              %td.leagueList= h grp.team.name
-              %td.leagueList= link_to grp.name, edit_access_group_path(grp), {:title => "edit"}
-              -#%td.leagueList= h grp.description
-              %td.leagueList= h grp.enabled
-            -else
-              %td.leagueList= h grp.name
-              -#%td.leagueList= h grp.description
-              %td.leagueList= link_to grp.users.size, users_access_group_path(grp)
-              %td.leagueList= link_to grp.items.size, items_access_group_path(grp)
-              
-              
-      .apple_pagination
-        = will_paginate @access_groups
+
+          %tbody
+            - for grp in @access_groups
+              %tr.leagueList
+                %td.leagueList{ :valign=>'top'}= link_to grp.name, edit_access_group_path(grp, :scope_select=>scope_select), {:title => "edit"}
+
+                %td.leagueList{ :valign=>'top'}
+                  -#=link_to grp.users.size, users_access_group_path(grp)
+                  - for access_user in grp.access_users #[0,9]
+                    %div{ :id=>"access_user_#{access_user.id}" }
+                      = access_user.user.full_name
+                      [
+                      = link_to_remote 'X', {:url => {:controller=>:access_groups, :action=>:remove_user, :id=>access_user.id}, :confirm => 'Are you sure?', :method=>:delete}, :complete => evaluate_remote_response
+                      ]
+                %td.leagueList{ :valign=>'top'}
+                  -#=link_to grp.users.size, users_access_group_path(grp)
+                  - for contact in grp.contacts
+                    %div{ :id=>"access_contact_#{contact.id}" }
+                      = contact.destination
+                      [
+                      = link_to_remote 'X', {:url => {:controller=>:access_groups, :action=>:remove_contact, :id=>contact.id}, :confirm => 'Are you sure?', :method=>:delete}, :complete => evaluate_remote_response
+                      ]
+                  %br
+                  &nbsp;&nbsp;
+                  =link_to_remote "Add Contact", {:url => {:controller=>:access_groups, :action=>:pop_new_contact, :scope_select=>scope_select, :access_group_id=>grp.id} }
+
+                %td.leagueList{ :valign=>'top'}
+                  -#=link_to grp.users.size, users_access_group_path(grp)
+                  - for access_item in grp.access_items
+                    %div{ :id=>"access_item_#{access_item.id}" }
+                      = access_item.item.title rescue '-'
+                      [
+                      = link_to_remote 'X', {:url => {:controller=>:access_groups, :action=>:remove_video, :id=>access_item.id}, :confirm => 'Are you sure?', :method=>:delete}, :complete => evaluate_remote_response
+                      ]
+        .apple_pagination
+          = will_paginate @access_groups
+

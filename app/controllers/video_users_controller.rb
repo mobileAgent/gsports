@@ -212,7 +212,7 @@ class VideoUsersController < BaseController
     @video_user.tag_with(params[:tag_list] || '') 
 
     if @video_user.save
-      publish(:push_user_video_files,"#{@video_user.id}")
+      #publish(:push_user_video_files,"#{@video_user.id}")
       flash[:notice] = "Your video is being procesed. It may be several minutes before it appears in your gallery"
       render :action=>:upload_success
     else

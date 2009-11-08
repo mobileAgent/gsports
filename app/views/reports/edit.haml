@@ -1,0 +1,18 @@
+.profileContentArea.listingPage
+  .profilePageHeader
+    %h2.columnDescriptor
+      %span
+        Edit Report
+      = @report.name
+  .listings
+
+    = error_messages_for :report
+
+    .listingItem
+
+      - form_for(@report, :url => report_url(@report), :html => {:multipart => true}) do |f|
+        = render :partial => "form", :locals => { :f => f }
+        %p= f.submit "Update"
+
+      = link_to 'All Reports', reports_path(:scope_select=>Permission.scope_selector_string(@scope))
+
