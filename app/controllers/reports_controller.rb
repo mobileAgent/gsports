@@ -1,6 +1,6 @@
 class ReportsController < BaseController
 
-  skip_before_filter :verify_authenticity_token, :only => [:clips, :player ]
+  skip_before_filter :verify_authenticity_token, :only => [:clips, :player, :sync ]
 
   before_filter  do  |c| c.find_staff_scope(Permission::REPORT) end
 
@@ -82,6 +82,13 @@ class ReportsController < BaseController
 
     end
 
+  end
+
+  def sync
+    @report = Report.find(params[:id])
+    @video_list = params[:video_list]
+
+    render :partial => 'sync'
   end
 
   def update

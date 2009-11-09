@@ -81,7 +81,7 @@
         .clearDiv
 
         .report-buttons{ :style=>'float: right' }
-          = link_to_remote 'Save', {:url => {:controller=>:reports, :action=>:update_report}}, {:class => 'genericButton'}
+          = link_to 'Save Report', "javascript:gs_reports_update(#{@report.id})", {:class => 'genericButton'}
 
         .clearDiv
 

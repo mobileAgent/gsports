@@ -31,8 +31,6 @@
     drop.addClassName('placed-clip')
     drop.innerHTML = $(dragName).innerHTML
     $('clip-strip').insert( drop )
-
-
     //Event.observe(divid, 'click', function(event) { gs_reports_clip_select(oid, ocls) } )
 
     Sortable.destroy('clip-strip')
@@ -40,14 +38,34 @@
   }
 
   function gs_reports_clip_select(rid,ctype,cid) {
-    console.log('select '+ctype+'/'+cid)
-
     $('report-player').update('Loading...')
 
     new Ajax.Updater('report-player', '/reports/player', {
 			parameters: { 'id': rid, 'video_id': ctype, 'video_type': cid },
 			evalScripts: true
     });
+  }
+
+
+  function gs_reports_update(rid) {
+    req = []
+    
+    $A($('clip-strip').childNodes).each(
+      function(child) {
+        x = child.down('tag')
+        oid = child.down('tag').readAttribute('oid')
+        ocls = child.down('tag').readAttribute('ocls')
+        req.push( { 'video_id': ocls, 'video_type': oid } )
+      }
+    );
+
+    window.meow = req
+
+    new Ajax.Updater('report-player', '/reports/sync', {
+      parameters: { 'id': rid, 'video_list':JSON.stringify(req) },
+      evalScripts: true
+    });
+
   }
 
   
