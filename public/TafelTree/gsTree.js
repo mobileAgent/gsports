@@ -15,12 +15,20 @@
     $('clip-window').update('Loading clips...')
     
     new Ajax.Updater('clip-window', '/reports/clips', {
-			parameters: { "video_asset_id": vid }
+			parameters: { "video_asset_id": vid },
+			evalScripts: true
     });
 
+  }
 
 
+  function gs_reports_drop_clip(dragName,dropName) {
+    drop = new Element("div", { id: $(dragName).id+"_" })
+    drop.innerHTML = $(dragName).innerHTML
 
+    $('clip-strip').insert( drop )
+    Sortable.destroy('clip-strip')
+    Sortable.create('clip-strip', { tag: 'div'});
   }
 
 

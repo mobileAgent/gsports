@@ -45,12 +45,56 @@
           #clip-window
 
 
-
         .report-layout
           = @report.type_name
 
+          #clip-strip
+
+            -(1..3).each() do |i|
+              -dropper_id = "clip-dropper-#{i}"
+              %div{ :id=>dropper_id, :class=>'clip-dropper' }
+                = i
+
+              -#%script{ :type=>"text/javascript" }
+                = "Droppables.add('#{dropper_id}', { hoverclass: 'clip-dropper-hover'});"
+
+          %script{ :type=>"text/javascript" }
+            Sortable.create('clip-strip', { tag: 'div'});
+            Droppables.add('clip-strip', {onDrop:function(dragName,dropName) {gs_reports_drop_clip(dragName,dropName)}, hoverclass: 'clip-strip-hover'})
+
+          -#meow
+            %table
+              %tr
+                %td
+                  %ul{ :id=>'fList' }
+                    %li
+                      Apples
+                    %li
+                      Grapes
+                    %li
+                      Strawberries
+                %td
+                  %div{ :id=>'fish', :class=>'meat' }
+                    Fish
+                  %div{ :id=>'chicken', :class=>'meat' }
+                    Chicken
+
+            %script{ :type=>"text/javascript" }
+              Sortable.create("fList", {constraint:false})
+              new Draggable('fish',{revert:true})
+              new Draggable('chicken',{revert:true})
+              Droppables.add('fList', {accept:'meat',onDrop:function(dragName,dropName) {placeFood(dragName,dropName)}})
+
+              function placeFood(dragName,dropName) {
+              $("fList").insert(new Element("li", { id: $(dragName).id+"_" }))
+              $($(dragName).id+"_").innerHTML = $(dragName).innerHTML
+              Sortable.destroy("fList")
+              Sortable.create("fList", {constraint:false})
+              }
 
         .clearDiv
+
+        -# http://soletme.free.fr/dragdrop/index.html
 
 
         -#%p= f.submit "Update"

@@ -7,4 +7,6 @@
     = clip.title
 
     %script{ :type=>"text/javascript" }
-      = "new Draggable(#{panel_id});"
+      = "new Draggable('#{panel_id}', {revert: true, superghosting: true});"
+
+

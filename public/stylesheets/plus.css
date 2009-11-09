@@ -1820,5 +1820,31 @@ a.admin-userreg-link-user{
 	background: white;
 }
 
+#clip-strip {
+  float: right;
+  border: 1px solid pink;
+}
+
+#clip-strip-hover {
+  background-color: pink;
+}
+
+.clip-dropper {
+	width: 100px;
+	height: 80px;
+
+  margin: 8px 16px;
+
+	border: solid 1px black;
+  background-color: grey;
+  color: white;
+  font-size: 300%;
+  text-align: center;
+}
+
+.clip-dropper-hover {
+	background-color: orange;
+}
+
 
 /*  */
