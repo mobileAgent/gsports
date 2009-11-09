@@ -1,6 +1,6 @@
 class ReportsController < BaseController
 
-  skip_before_filter :verify_authenticity_token, :only => [:clips ]
+  skip_before_filter :verify_authenticity_token, :only => [:clips, :player ]
 
   before_filter  do  |c| c.find_staff_scope(Permission::REPORT) end
 
@@ -48,6 +48,8 @@ class ReportsController < BaseController
 
   def build
     @report = Report.find(params[:id])
+    @details = @report.details() #ReportDetail.for_report(@report)
+    @detail = @details.first
 
     @library = []
     @tree_detail = []
@@ -103,7 +105,24 @@ class ReportsController < BaseController
     render :partial => 'clips'
   end
 
-  
+
+
+  def player
+    debugger
+    
+    @report = Report.find(params[:id])
+    @detail = ReportDetail.new()
+    
+    case params[:video_type]
+    when 'VideoClip'
+      @detail.video = VideoClip.find(params[:video_id])
+    when 'VideoReel'
+      @detail.video = VideoReel.find(params[:video_id])
+    end
+
+    render :partial => 'player'
+  end
+
 
 
 

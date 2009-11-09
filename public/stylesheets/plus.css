@@ -1758,23 +1758,25 @@ a.admin-userreg-link-user{
 
 .report-video-browser {
   float: left;
-  width: 300px;
+  width: 290px;
   height: 620px;
   border: 2px solid #909090;
   margin-left: 20px;
+  overflow: hidden;
 }
 
 .report-layout {
   float: left;
-  width: 570px;
+  width: 580px;
   height: 620px;
   border: 2px solid #909090;
-  margin-left: 20px;
+  border-left: 0px;
+  padding-left: 10px;
   margin-bottom: 30px;
 }
 
 .report-builder #clip-window {
-  width: 300px;
+  width: 290px;
   height: 290px;
   overflow: scroll;
 }
@@ -1786,8 +1788,6 @@ a.admin-userreg-link-user{
 }
 
 /*  */
-
-
 
 .new-contact-popup{
   position: relative;
@@ -1820,30 +1820,55 @@ a.admin-userreg-link-user{
 	background: white;
 }
 
-#clip-strip {
+#clip-strip-holder {
   float: right;
-  border: 1px solid pink;
+  position: relative;
+  width: 200px;
+  overflow: scroll;
+  width: 160px;
+  height: 612px;
+  border: 2px solid lightgrey;
+  margin: 3px;
+}
+
+#clip-strip {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 140px;
+  height: 618px;
+}
+
+#clip-strip-decoy {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 140px;
 }
 
 #clip-strip-hover {
-  background-color: pink;
+  background-color: orange;
 }
 
 .clip-dropper {
-	width: 100px;
-	height: 80px;
+	width: 120px;
+	height: 90px;
 
-  margin: 8px 16px;
+  margin: 4px 12px;
 
-	border: solid 1px black;
-  background-color: grey;
+  background-color: lightgrey;
   color: white;
-  font-size: 300%;
+  font-size: 500%;
+  font-weight: bold;
   text-align: center;
 }
 
 .clip-dropper-hover {
 	background-color: orange;
+}
+
+.placed-clip {
+  margin: 4px 12px;
 }
 
 

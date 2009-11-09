@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20091105184122) do
+ActiveRecord::Schema.define(:version => 20091109170242) do
 
   create_table "access_contacts", :force => true do |t|
     t.integer "access_group_id", :limit => 11
@@ -498,7 +498,7 @@ ActiveRecord::Schema.define(:version => 20091105184122) do
     t.integer "report_id",  :limit => 11
     t.string  "video_type"
     t.integer "video_id",   :limit => 11
-    t.integer "post_id",    :limit => 11
+    t.integer "order",      :limit => 11
   end
 
   create_table "reports", :force => true do |t|

@@ -20,6 +20,8 @@ class ReportDetail < ActiveRecord::Base
   named_scope :for_item,
     lambda { |item| {:conditions => {:item_id=>item.id, :item_type=>item.class.name} } }
 
+  named_scope :for_report, lambda { |report| { :conditions => {:report_id=>report.id}, :order=>:orderby } }
+
 
   def validate
     #This is VideoAsset specific
