@@ -22,8 +22,8 @@
   function gs_reports_drop_clip(rid,dragName,dropName) {
     divid = $(dragName).id+"_"
 
-    oid = $(dragName).down('tag').readAttribute('oid')
-    ocls = $(dragName).down('tag').readAttribute('ocls')
+    oid = $(dragName).down('.tag').readAttribute('oid')
+    ocls = $(dragName).down('.tag').readAttribute('ocls')
     clickstr = "javascript:gs_reports_clip_select("+rid+", "+oid+", '"+ocls+"')"
 
 
@@ -52,8 +52,8 @@
     
     $A($('clip-strip').childNodes).each(
       function(child) {
-        oid = child.down('tag').readAttribute('oid')
-        ocls = child.down('tag').readAttribute('ocls')
+        oid = child.down('.tag').readAttribute('oid')
+        ocls = child.down('.tag').readAttribute('ocls')
         req.push( { 'video_id': oid, 'video_type': ocls } )
       }
     );
@@ -61,7 +61,7 @@
     window.meow = req
 
     new Ajax.Updater('report-player', '/reports/sync', {
-      parameters: { 'id': rid, 'video_list':JSON.stringify(req) },
+      parameters: { 'id': rid, 'video_list':Object.toJSON(req) },
       evalScripts: true
     });
 

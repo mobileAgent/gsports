@@ -65,7 +65,7 @@
             #clip-strip
               - @details.each() do |detail|
                 .placed-clip{ :onclick=>"javascript:gs_reports_clip_select(#{@report.id}, #{detail.video_id}, '#{detail.video_type}')" }
-                  %tag{ :oid=>detail.video_id, :ocls=>detail.video_type }
+                  %span{ :class=>'tag', :oid=>detail.video_id, :ocls=>detail.video_type }
                   %img{ :src=>"#{@vidavee.file_thumbnail_medium(detail.video.dockey)}" }
                   %br
                   = detail.video.title
