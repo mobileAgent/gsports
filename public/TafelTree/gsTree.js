@@ -52,10 +52,9 @@
     
     $A($('clip-strip').childNodes).each(
       function(child) {
-        x = child.down('tag')
         oid = child.down('tag').readAttribute('oid')
         ocls = child.down('tag').readAttribute('ocls')
-        req.push( { 'video_id': ocls, 'video_type': oid } )
+        req.push( { 'video_id': oid, 'video_type': ocls } )
       }
     );
 

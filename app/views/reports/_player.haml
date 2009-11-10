@@ -1,5 +1,5 @@
 
-- if @detail
+-# if @detail
   ='<object id="movie1257802180293" height="350" width="400.0" align="middle" classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0">'
   ='<param name="allowScriptAccess" value="always"/>'
   ='<param name="movie" value="http://tribeca.vidavee.com/hsstv/vidavee/playerv3/vFlasher_debug.swf/showEndCard=off&width=400.0&fullScreenDisabled=no&height=300.0&dockey='+@detail.video.dockey+'&p2=off&p7=on&p3=on&p8=on&p16=v3Skin.swf&p18=watermark%3Dno%3BshareWidgets%3Doff%3BvtagDisplay%3Doff%3B&"/>'
@@ -17,6 +17,21 @@
   #flashme
   = render(:partial => 'shared/video_player', :locals => { :fvars => {:dockey => @detail.video.dockey, :allowFS => "true"}, :params => {:allowFullScreen=>"true"}, :target => 'flashme', :height => 420, :width => 400 })
 
+
+- dockey = @detail.video.dockey
+
+#flashAreaIFrame
+  - flashvars = {}
+  - flashvars[:dockeys]= @team_video_picks
+  - flashvars[:playerVars]= "#{APP_URL}/reports/detail.xml?id=#{@detail.report.id}&video_type=#{@detail.video_type}&video_id=#{@detail.video_id}"
+  - params = {}
+  - params[:allowScriptAccess]='always'
+  - frame_height = 330
+  - frame_width = 400
+  = render :partial => 'shared/video_player', :locals => {:target => 'flashAreaIFrame', :player_name => '/players/embeddedplayer.swf', :fvars => flashvars, :width=>"#{frame_width}px", :height=>"#{frame_height}px", :params=>params }
+
+
+
 %b= @report.name
 %br
 = @report.description
@@ -25,8 +40,10 @@
 %br
 
 %b= @detail.video.title rescue '-'
+
 %br
 = @detail.video.description rescue '-'
 
 %script{ :type=>"text/javascript" }
-  console.log("arf")
+  //console.log("arf")
+

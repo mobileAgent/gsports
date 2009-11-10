@@ -1,5 +1,6 @@
 class ReportsController < BaseController
 
+  skip_before_filter :gs_login_required, :only => [:detail]
   skip_before_filter :verify_authenticity_token, :only => [:clips, :player, :sync ]
 
   before_filter  do  |c| c.find_staff_scope(Permission::REPORT) end
@@ -84,10 +85,39 @@ class ReportsController < BaseController
 
   end
 
+
   def sync
     @report = Report.find(params[:id])
-    @video_list = params[:video_list]
+    #@video_list = JSON.parse(params[:video_list].tr('\\', ''))
+    list_param = params[:video_list].tr('\\', '').sub(/^"/,'').sub(/"$/,'')
+    @video_list = JSON.parse(list_param)
 
+    @report_details = []
+    order = 1
+
+    @video_list.each() do |video|
+
+      if detail = ReportDetail.new(video)
+
+        detail.report_id = @report.id
+        detail.orderby = order += 1
+        @report_details << detail
+
+      end
+      
+
+    end
+
+    Report.transaction {
+      @report.details.each do |detail|
+        detail.destroy
+      end
+
+      @report_details.each do |detail|
+        detail.save!
+      end
+    }
+    
     render :partial => 'sync'
   end
 
@@ -115,22 +145,54 @@ class ReportsController < BaseController
 
 
   def player
-    debugger
-    
     @report = Report.find(params[:id])
-    @detail = ReportDetail.new()
+    @detail = ReportDetail.new({:video_type=>params[:video_type],:video_id=>params[:video_id]}) #.for_report(@report).for_item_type(params[:video_type], params[:video_id])
+    @detail.report = @report
     
-    case params[:video_type]
-    when 'VideoClip'
-      @detail.video = VideoClip.find(params[:video_id])
-    when 'VideoReel'
-      @detail.video = VideoReel.find(params[:video_id])
-    end
+    @detail.find_video()
 
     render :partial => 'player'
   end
 
 
+  def detail
+    #@detail = ReportDetail.find(params[:id])
+    @report = Report.find(params[:id])
+    @detail = ReportDetail.new({:video_type=>params[:video_type],:video_id=>params[:video_id]})
+    @detail.report = @report
+
+    options = {}
+    options[:indent] ||= 2
+
+    xml = options[:builder] ||= Builder::XmlMarkup.new(:indent => options[:indent])
+
+    xml.instruct! unless options[:skip_instruct]
+    out = xml.vars {
+      xml.frameW(400)
+      xml.frameH(330)
+      xml.playerW(400)
+      xml.playerH(330)
+      xml.thumbW(0)
+      xml.thumbH(0)
+      xml.numColumnsOrRows(0)
+      xml.numPerColumnOrRow(0)
+      xml.dockeys(@detail.video.dockey)
+      #xml.homepageLink("#{APP_URL}/#{team_path(channel.team_id)}") if channel.team_id
+      xml.homepageLink(APP_URL)
+      xml.validationUrl(APP_URL)
+
+      xml.autoPlay(true)
+
+      xml.position('bottom')
+    }
+
+    respond_to do |format|
+      format.xml {
+        render :xml=>out #@channel.to_flash_xml
+      }
+    end
+
+  end
 
 
 
