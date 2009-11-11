@@ -1,0 +1,32 @@
+
+- options ||= { }
+- #
+- # :panel_id=>panel_id
+- # :draggable=>false  [ requires :panel_id ]
+- # :click_to_preview
+- # :class=>css class
+- # :style=>css style
+- #
+
+- video_id = video.id
+- video_type = video.class.to_s
+
+- options[:panel_id_prefix] ||= 'xideo-'
+- options[:panel_id] ||= options[:panel_id_prefix] + '-' + video_type + video_id.to_s
+
+- remove_js = "$('#{options[:panel_id]}').remove"
+
+- onclick = options[ :click_to_preview ] ? "javascript:gs_reports_clip_select(#{@report.id}, #{video_id}, '#{video_type}')" : ''
+
+- classes = 'report-clip'
+- classes = classes + ' report-dropper' if options[ :draggable ]
+
+%div{ :id=>options[:panel_id], :class=>classes, :style=>options[:style], :onclick=>onclick }
+  %span{ :class=>'tag', :oid=>video_id, :ocls=>video_type }
+  %img{ :src=>"#{@vidavee.file_thumbnail_medium(video.dockey)}" }
+  %a{ :class=>'closer', :href=>"javascript:gs_reports_drop_video('#{options[:panel_id]}')" } x
+  %span{ :class=>'title'}= video.title 
+
+  - if options[ :draggable ]
+    %script{ :type=>"text/javascript" }
+      = "new Draggable('#{options[:panel_id]}', {revert: true, superghosting: true});"

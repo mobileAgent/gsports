@@ -1781,10 +1781,15 @@ a.admin-userreg-link-user{
   overflow: scroll;
 }
 
-.report-builder #clip-window .video {
+.report-builder #clip-window .report-clip {
   xborder: 1px solid black;
   margin: 8px;
 
+}
+
+
+#clip-window .report-clip .closer {
+  visibility: hidden;
 }
 
 /*  */
@@ -1850,11 +1855,18 @@ a.admin-userreg-link-user{
   background-color: orange;
 }
 
+
+.clip-dropper {
+  margin: 4px 12px;
+  float:left;
+  position:relative;
+  width: 120px;
+  height: 110px;
+}
+
 .clip-dropper table {
 	width: 120px;
 	height: 90px;
-
-  margin: 3px 12px;
 
   background-color: lightgrey;
   color: white;
@@ -1867,11 +1879,50 @@ a.admin-userreg-link-user{
 	background-color: orange;
 }
 
-.placed-clip {
+
+
+
+
+.report-clip {
   margin: 4px 12px;
   float:left;
   position:relative;
+  width: 120px;
+  height: 110px;
 }
+
+.report-clip .closer {
+  position: absolute;
+  top: 3px;
+  right: 5px;
+  xfloat: right;
+}
+
+.report-clip a.closer {
+  text-decoration: none;
+  color: white;
+  font-weight: bold;
+  font-size: 120%;
+}
+
+
+.report-clip a.closer:hover {
+  color: orange;
+}
+
+.report-clip img {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+}
+
+.report-clip .title {
+  position: absolute;
+  top: 93px;
+  left: 0px;
+}
+
+
 
 
 /*  */

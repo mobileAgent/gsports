@@ -20,18 +20,21 @@
   }
 
   function gs_reports_drop_clip(rid,dragName,dropName) {
+
+  console.log('MEOW!')
+
     divid = $(dragName).id+"_"
 
     oid = $(dragName).down('.tag').readAttribute('oid')
     ocls = $(dragName).down('.tag').readAttribute('ocls')
     clickstr = "javascript:gs_reports_clip_select("+rid+", "+oid+", '"+ocls+"')"
 
-
     drop = new Element("div", { id: divid, onclick:clickstr })
-    drop.addClassName('placed-clip')
+    drop.addClassName('report-clip')
     drop.innerHTML = $(dragName).innerHTML
     $('clip-strip').insert( drop )
     //Event.observe(divid, 'click', function(event) { gs_reports_clip_select(oid, ocls) } )
+
 
     Sortable.destroy('clip-strip')
     Sortable.create('clip-strip', { tag: 'div'});
@@ -67,6 +70,9 @@
 
   }
 
+  function gs_reports_drop_video(id) {
+    $(id).remove()
+  }
   
   function TafelTreeInit () {
     tree = new TafelTree('tree-view', tree_struct, {
