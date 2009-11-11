@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20091105184122) do
+ActiveRecord::Schema.define(:version => 20091110051450) do
 
   create_table "access_contacts", :force => true do |t|
     t.integer "access_group_id", :limit => 11
@@ -346,13 +346,14 @@ ActiveRecord::Schema.define(:version => 20091105184122) do
     t.datetime "updated_at"
     t.string   "title"
     t.text     "body"
-    t.boolean  "read",                            :default => false
-    t.integer  "replied",          :limit => 1
-    t.integer  "to_id",            :limit => 11
-    t.integer  "from_id",          :limit => 11
-    t.integer  "thread_id",        :limit => 11
-    t.string   "to_email",         :limit => 256
-    t.integer  "shared_access_id", :limit => 11
+    t.boolean  "read",                              :default => false
+    t.integer  "replied",            :limit => 1
+    t.integer  "to_id",              :limit => 11
+    t.integer  "from_id",            :limit => 11
+    t.integer  "thread_id",          :limit => 11
+    t.string   "to_email",           :limit => 256
+    t.integer  "shared_access_id",   :limit => 11
+    t.integer  "to_access_group_id", :limit => 11
   end
 
   create_table "metro_areas", :force => true do |t|
@@ -460,10 +461,10 @@ ActiveRecord::Schema.define(:version => 20091105184122) do
     t.integer  "subscription_plan_id", :limit => 11
     t.string   "name"
     t.decimal  "cost",                               :precision => 8, :scale => 2
-    t.text     "content"
     t.text     "html_content"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.text     "content"
     t.boolean  "enabled"
     t.boolean  "reusable"
     t.integer  "period_days",          :limit => 11
@@ -531,14 +532,15 @@ ActiveRecord::Schema.define(:version => 20091105184122) do
 
   create_table "sent_messages", :force => true do |t|
     t.string   "title"
-    t.integer  "from_id",          :limit => 11
+    t.integer  "from_id",             :limit => 11
     t.string   "to_ids"
     t.text     "body"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "thread_id",        :limit => 11
+    t.integer  "thread_id",           :limit => 11
     t.text     "to_emails"
-    t.integer  "shared_access_id", :limit => 11
+    t.integer  "shared_access_id",    :limit => 11
+    t.string   "to_access_group_ids", :limit => 255
   end
 
   create_table "sessions", :force => true do |t|
@@ -580,7 +582,7 @@ ActiveRecord::Schema.define(:version => 20091105184122) do
     t.string   "firstname"
     t.string   "state_name"
     t.string   "link"
-    t.boolean  "is_sor",                     :default => false
+    t.boolean  "is_sor"
     t.string   "html_content"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -730,8 +732,8 @@ ActiveRecord::Schema.define(:version => 20091105184122) do
     t.string   "video_length"
     t.string   "video_type"
     t.string   "video_status"
-    t.integer  "sponsor_id",             :limit => 11
-    t.integer  "member_id",              :limit => 11
+    t.integer  "league_id",              :limit => 11
+    t.integer  "team_id",                :limit => 11
     t.integer  "user_id",                :limit => 11
     t.string   "sport"
     t.datetime "game_date"
@@ -743,8 +745,6 @@ ActiveRecord::Schema.define(:version => 20091105184122) do
     t.string   "game_level"
     t.string   "game_gender"
     t.integer  "view_count",             :limit => 11,  :default => 0
-    t.integer  "team_id",                :limit => 11
-    t.integer  "league_id",              :limit => 11
     t.boolean  "public_video",                          :default => true
     t.boolean  "delta",                                 :default => false
     t.integer  "home_score",             :limit => 11

@@ -38,12 +38,37 @@ class SentMessage < ActiveRecord::Base
     self.to_emails= email
   end
 
+  # [1,2,3] => "1/2/3"
+  def to_access_group_ids_array=(ary)
+    logger.debug("assign to_access_group_ids array: #{ary.join(',')}")
+    
+    self.to_access_group_ids= ary.to_param unless ary.nil?
+  end
+
+  def to_access_group_id=(id)
+    self.to_access_group_ids= id.to_s unless id.nil?
+  end
+
+  # "1/2/3" => [1,2,3]
+  def to_access_group_ids_array
+    logger.debug("to_access_group_ids: #{to_access_group_ids}")
+    
+    return self.to_access_group_ids.split('/').collect(&:to_i) unless to_access_group_ids.nil?
+  end
+
   def recipient_display_array
+        
     users = User.find(:all, :conditions => ["id IN (?)", to_ids_array])
     ary = users.inject([]) { |a,u| a << u.full_name}
-    ary << 'all' if to_ids.index('-1')
-    ary << 'team' if to_ids.index('-2')
-    ary << 'league' if to_ids.index('-3')
+
+    if to_access_group_ids
+      groups = AccessGroup.find(to_access_group_ids_array)
+      groups.each {|group| ary.insert(0, group.name)}
+    end
+
+    ary.insert(0, 'all') if to_ids.index('-1')
+    ary.insert(0, 'team') if to_ids.index('-2')
+    ary.insert(0, 'league') if to_ids.index('-3')
 
     if to_emails
       ary << to_emails_array

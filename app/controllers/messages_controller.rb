@@ -110,7 +110,16 @@ class MessagesController < BaseController
       end
     end 
 
-    if (recipient_ids.nil? || recipient_ids.empty?) && (recipient_emails.nil? || recipient_emails.empty?)
+    if (params[:to_access_group_id])
+      logger.debug("To access group id: #{params[:to_access_group_id].join(',')}")    
+      begin
+        recipient_access_groups = AccessGroup.find(params[:to_access_group_id])
+      rescue Exception => e
+        logger.error "Error parsing recipient access groups: #{e.message}"
+      end
+    end 
+
+    if (recipient_ids.nil? || recipient_ids.empty?) && (recipient_emails.nil? || recipient_emails.empty?) && (recipient_access_groups.nil? || recipient_access_groups.empty?)
       logger.debug("There were no recipients found, sending back to new")
       if current_user.admin?
           flash[:info] = "That recipient list didn't work out."
@@ -135,7 +144,10 @@ class MessagesController < BaseController
 
     @message = nil # pull out to scope for rescue render
     unless recipient_ids.nil?
+      recipient_ids.uniq!
       recipient_ids.each do |recipient_id|
+        logger.debug("Sending message to user id: #{recipient_id}")
+        
         @message = Message.new(params[:message])
         @message.from_id= current_user.id
         @message.to_id= recipient_id
@@ -149,6 +161,7 @@ class MessagesController < BaseController
       end
     end
     unless recipient_emails.nil?
+      recipient_emails.uniq!
       recipient_emails.each do |email|
         @message = Message.new(params[:message])
         @message.from_id= current_user.id
@@ -165,16 +178,111 @@ class MessagesController < BaseController
         UserNotifier.deliver_generic(email, @message.title, @body, :html => is_html, :from => current_user.email )
       end
     end
+        
+    # create a new array to keep all user ids that this message
+    # was sent to, so that we can avoid sending duplicate messages
+    all_sent_user_ids = Array.new
+    all_sent_user_ids.concat(recipient_ids) unless recipient_ids.nil? || recipient_ids.empty?
+    
+    # create a new array to keep all email addresses that this message
+    # was sent to, so that we can avoid sending duplicate messages
+    all_sent_emails = Array.new
+    all_sent_emails.concat(recipient_emails) unless recipient_emails.nil? || recipient_emails.empty?
+    
+    unless recipient_access_groups.nil?
+      recipient_access_groups.each do |group|
+        group_users = group.users()
+        unless group_users.nil?
+          group_users.uniq!
+          group_users.each do |user|
+            # don't deliver duplicate copies
+            if all_sent_user_ids.include?(user.id)
+              logger.debug("Skipping duplicate recipient user in access group: #{user.id}")
+            else
+              logger.debug("Sending message to access group user id: #{user.id}")
+              
+              # remember this user id so we don't send multiple copies
+              all_sent_user_ids << user.id
+              
+              @message = Message.new(params[:message])
+              @message.from_id= current_user.id
+              @message.to_id= user.id
+              @message.to_access_group_id= group.id
+              if @message.title.nil? || @message.title.blank?
+                @message.title= "(no subject)"
+              end
+              # override the body
+              @message.body = @body
+              @message.shared_access_id= @shared_access.id if @shared_access
+              @message.save!
+            end
+          end
+        end
+       
+        # for each access group contact, send them the message via email -- translate SMS numbers to email
+        group_contacts = group.contacts()
+        unless group_contacts.nil?
+          group_contacts.uniq!
+         
+          group_contacts.each do |contact|
+            # don't deliver duplicate copies
+            if all_sent_emails.include?(contact.destination)
+              logger.debug("Skipping duplicate recipient email in access group: #{contact.destination}")
+            else
+              # remember this contact so we don't send multiple copies
+              all_sent_emails << contact.destination
+              
+              email = contact.to_email_recipient
+              logger.debug("Sending message to access group recipient: #{contact.destination}")
+        
+              @message = Message.new(params[:message])
+              @message.from_id= current_user.id
+              @message.to_email= email
+              @message.to_id= nil
+              if @message.title.nil? || @message.title.blank?
+                @message.title= "(no subject)"
+              end
+              # override the body
+              @message.body= @body
+              @message.shared_access_id= @shared_access.id if @shared_access
+              # don't clutter the messages table with these...
+              #@message.save!
+              UserNotifier.deliver_generic(email, @message.title, @body, :html => is_html, :from => current_user.email )
+            end
+          end
+        end
+      end
+    end
    
     # And finally drop a sent message for the sender
     logger.debug "Doing the sent message for #{current_user.id}"
     sent_message = SentMessage.new(params[:message])
     sent_message.from_id= current_user.id
+    
+    #######
+    # FLAG: to copy all the recipients out of the access group into the sent message,
+    #   set "expand_access_group_contacts" to true
+    expand_access_group_contacts = true
+    if (expand_access_group_contacts)
+      recipient_ids = all_sent_user_ids
+      recipient_emails = all_sent_emails
+    end
+    #######
+    
     unless recipient_ids.nil?
       to_ids,uses_alias = (is_alias ? Message.get_message_recipient_ids(params[:message][:to_name],current_user,true) : [recipient_ids,false])
       sent_message.to_ids_array= to_ids
     end
+    
     sent_message.to_emails_array= recipient_emails unless recipient_emails.nil?
+    
+    unless (recipient_access_groups.nil? || recipient_access_groups.empty?)
+      group_ids = Array.new
+      recipient_access_groups.each { |group| group_ids << group.id }
+      logger.debug("Setting sent_message access groups to #{group_ids.join(',')}")
+      sent_message.to_access_group_ids_array= group_ids
+    end
+    
     if sent_message.title.nil? || sent_message.title.blank?
       sent_message.title= "(no subject)"
     end

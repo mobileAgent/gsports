@@ -5,6 +5,7 @@ class Message < ActiveRecord::Base
   validates_presence_of :to_id, :unless => :external_email_present?
   validates_presence_of :from_id
   belongs_to :user, :foreign_key => :to_id
+  belongs_to :access_group, :foreign_key => :to_access_group_id
   belongs_to :shared_access
   
   attr_protected :to_ids, :to_name
@@ -83,6 +84,9 @@ class Message < ActiveRecord::Base
     elsif to_email
       # support for external email addresses
       @recipient = User.new :email => to_email
+    elsif to_access_group_id
+      # support for access groups
+      @recipient = AccessGroup.find :to_access_group_id
     end
   end
   
