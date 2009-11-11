@@ -1758,23 +1758,25 @@ a.admin-userreg-link-user{
 
 .report-video-browser {
   float: left;
-  width: 300px;
+  width: 290px;
   height: 620px;
   border: 2px solid #909090;
   margin-left: 20px;
+  overflow: hidden;
 }
 
 .report-layout {
   float: left;
-  width: 570px;
+  width: 580px;
   height: 620px;
   border: 2px solid #909090;
-  margin-left: 20px;
+  border-left: 0px;
+  padding-left: 10px;
   margin-bottom: 30px;
 }
 
 .report-builder #clip-window {
-  width: 300px;
+  width: 290px;
   height: 290px;
   overflow: scroll;
 }
@@ -1786,8 +1788,6 @@ a.admin-userreg-link-user{
 }
 
 /*  */
-
-
 
 .new-contact-popup{
   position: relative;
@@ -1818,6 +1818,59 @@ a.admin-userreg-link-user{
 	font-size: 116%;
 	font-weight: bold;
 	background: white;
+}
+
+#clip-strip-holder {
+  float: right;
+  position: relative;
+  width: 200px;
+  overflow: scroll;
+  width: 160px;
+  height: 612px;
+  border: 2px solid lightgrey;
+  margin: 3px;
+}
+
+#clip-strip {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 140px;
+  height: 618px;
+}
+
+#clip-strip-decoy {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 140px;
+}
+
+#clip-strip-hover {
+  background-color: orange;
+}
+
+.clip-dropper table {
+	width: 120px;
+	height: 90px;
+
+  margin: 3px 12px;
+
+  background-color: lightgrey;
+  color: white;
+  font-size: 500%;
+  font-weight: bold;
+  text-align: center;
+}
+
+.clip-dropper-hover {
+	background-color: orange;
+}
+
+.placed-clip {
+  margin: 4px 12px;
+  float:left;
+  position:relative;
 }
 
 

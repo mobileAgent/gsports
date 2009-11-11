@@ -45,12 +45,46 @@
           #clip-window
 
 
-
         .report-layout
+          %b= @report.name
           = @report.type_name
 
+          #clip-strip-holder
+
+            #clip-strip-decoy
+
+              -(1..5).each() do |i|
+                -dropper_id = "clip-dropper-#{i}"
+                %div{ :id=>dropper_id, :class=>'clip-dropper' }
+                  %table{ :width=>'100%', :height=>'100%' }
+                    %tr
+                      %td{ :align=>'center', :valign=>'center' }= i
+                  %br
+
+            #clip-strip
+              - @details.each() do |detail|
+                .placed-clip{ :onclick=>"javascript:gs_reports_clip_select(#{@report.id}, #{detail.video_id}, '#{detail.video_type}')" }
+                  %span{ :class=>'tag', :oid=>detail.video_id, :ocls=>detail.video_type }
+                  %img{ :src=>"#{@vidavee.file_thumbnail_medium(detail.video.dockey)}" }
+                  %br
+                  = detail.video.title
+
+          %script{ :type=>"text/javascript" }
+            Sortable.create('clip-strip', { tag: 'div'});
+            ="Droppables.add('clip-strip', { accept: 'video', hoverclass: 'clip-strip-hover', onDrop: function(dragName,dropName) {gs_reports_drop_clip(#{@report.id},dragName,dropName)}})"
+
+          #report-player
+            - if @detail
+              = render :partial=>'player'
 
         .clearDiv
+
+        .report-buttons{ :style=>'float: right' }
+          = link_to 'Save Report', "javascript:gs_reports_update(#{@report.id})", {:class => 'genericButton'}
+
+        .clearDiv
+
+        -# alternative: http://soletme.free.fr/dragdrop/index.html
 
 
         -#%p= f.submit "Update"

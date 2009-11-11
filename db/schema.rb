@@ -499,7 +499,7 @@ ActiveRecord::Schema.define(:version => 20091110051450) do
     t.integer "report_id",  :limit => 11
     t.string  "video_type"
     t.integer "video_id",   :limit => 11
-    t.integer "post_id",    :limit => 11
+    t.integer "order",      :limit => 11
   end
 
   create_table "reports", :force => true do |t|

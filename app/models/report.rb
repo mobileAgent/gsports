@@ -14,6 +14,12 @@ class Report < ActiveRecord::Base
 
   named_scope :for_owner, lambda { |owner| { :conditions => {:owner_type=>owner.class.name, :owner_id=>owner.id} }  }
 
+
+  def details
+    ReportDetail.for_report(self)
+  end
+
+  
   Types = {
     'O' => 'Offence',
     'D' => 'Defense',
@@ -28,5 +34,7 @@ class Report < ActiveRecord::Base
   def type_name
     Types[report_type]
   end
+
+
 
 end

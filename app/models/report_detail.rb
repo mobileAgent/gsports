@@ -8,31 +8,31 @@ class ReportDetail < ActiveRecord::Base
   belongs_to :post
 
   validates_presence_of :video_type
+  #validate :type_is_allowed
+
   validates_presence_of :video_id
 
+  validates_uniqueness_of :video_id, :scope => [:video_id, :video_type,:report_id], :message => 'has already been included.'
 
 
 
-
-  validates_uniqueness_of :item_id, :scope => [:item_type,:access_group_id], :message => 'has already been added to this group.'
-  validates_uniqueness_of :item_id, :scope => [:item_type], :message => 'has already been added to a group.'
-
-  named_scope :for_item,
-    lambda { |item| {:conditions => {:item_id=>item.id, :item_type=>item.class.name} } }
+  AllowedTypes = ['VideoClip', 'VideoReel']
 
 
-  def validate
-    #This is VideoAsset specific
-    if (item === VideoAsset ) && item.team_id != access_group.team_id
-      errors.add(:access_group_id, "User is not a member of the team that owns this Access Group.")
-    end
+  def type_is_allowed
+    errors.add(:video, "Type is not allowed") unless ReportDetail::AllowedTypes.include?(video_type)
   end
 
-  def self.restriction_for item
-    restrict = nil
-    ai = AccessItem.for_item(item).first
-    restrict = ai.access_group if ai
-    restrict
+
+  named_scope :for_item,      lambda { |item| {:conditions => {:item_id=>item.id, :item_type=>item.class.name} } }
+
+  named_scope :for_item_type, lambda { |item_type, item_id| {:conditions => {:item_id=>item_id, :item_type=>item_type} } }
+
+  named_scope :for_report,    lambda { |report| { :conditions => {:report_id=>report.id}, :order=>:orderby } }
+
+  def find_video()
+    self.video = video_type.constantize.find(video_id) if AllowedTypes.include? video_type
   end
+
 
 end

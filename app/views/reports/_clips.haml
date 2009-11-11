@@ -2,9 +2,12 @@
 - @video_clips.each() do |clip|
   - panel_id = "clip-#{clip.id}"
   .video{ :id=>panel_id,:style=>'float: left' }
+    %span{ :class=>'tag', :oid=>clip.id, :ocls=>clip.class.to_s }
     %img{ :src=>"#{@vidavee.file_thumbnail_medium(clip.dockey)}" }
     %br
     = clip.title
 
     %script{ :type=>"text/javascript" }
-      = "new Draggable(#{panel_id});"
+      = "new Draggable('#{panel_id}', {revert: true, superghosting: true});"
+
+

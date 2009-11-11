@@ -37,7 +37,9 @@ class Channel < ActiveRecord::Base
   end
   
   def dockeys()
-    channel_videos.collect{|cv| cv.video.dockey}.join(',')
+    dockeys = channel_videos.collect{|cv| cv.video.dockey if cv.video}
+    dockeys.delete(nil)
+    dockeys.join(',')
   end
   
   def self.layout_map()
