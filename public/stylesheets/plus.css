@@ -1850,11 +1850,11 @@ a.admin-userreg-link-user{
   background-color: orange;
 }
 
-.clip-dropper {
+.clip-dropper table {
 	width: 120px;
 	height: 90px;
 
-  margin: 4px 12px;
+  margin: 3px 12px;
 
   background-color: lightgrey;
   color: white;
@@ -1869,6 +1869,8 @@ a.admin-userreg-link-user{
 
 .placed-clip {
   margin: 4px 12px;
+  float:left;
+  position:relative;
 }
 
 
