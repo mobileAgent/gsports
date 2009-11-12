@@ -23,10 +23,14 @@
       - if !thread
         %p
           %strong
-            - if message.recipient.id != current_user.id
+            - unless message.to_access_group_id.nil?
               To:
-              = h(message.recipient.full_name)
-              %br
+              = h(AccessGroup.find(message.to_access_group_id).name)
+            - else
+              -if message.recipient.id != current_user.id
+                To:
+                = h(message.recipient.full_name)
+            %br
             Subject: 
             = truncate(h(message.title),85)
             - if thread_size > 1
