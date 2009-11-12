@@ -114,7 +114,8 @@ class ReportsController < BaseController
       end
 
       @report_details.each do |detail|
-        detail.save!
+        detail.save
+        #skipping errors
       end
     }
     

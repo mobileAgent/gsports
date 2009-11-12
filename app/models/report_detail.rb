@@ -8,7 +8,7 @@ class ReportDetail < ActiveRecord::Base
   belongs_to :post
 
   validates_presence_of :video_type
-  #validate :type_is_allowed
+  validate :type_is_allowed
 
   validates_presence_of :video_id
 

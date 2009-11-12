@@ -50,7 +50,7 @@
   }
 
 
-  function gs_reports_update(rid) {
+  function gs_reports_update(rid, publish) {
     req = []
     
     $A($('clip-strip').childNodes).each(
@@ -64,7 +64,7 @@
     window.meow = req
 
     new Ajax.Updater('report-player', '/reports/sync', {
-      parameters: { 'id': rid, 'video_list':Object.toJSON(req) },
+      parameters: { 'id': rid, 'video_list':Object.toJSON(req), 'publish':publish },
       evalScripts: true
     });
 
