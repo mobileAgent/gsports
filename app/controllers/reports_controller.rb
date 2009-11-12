@@ -48,6 +48,9 @@ class ReportsController < BaseController
   end
 
   def build
+    @browser_reject = request.user_agent =~ /msie 6/i
+
+
     @report = Report.find(params[:id])
     @details = @report.details() #ReportDetail.for_report(@report)
     @detail = @details.first

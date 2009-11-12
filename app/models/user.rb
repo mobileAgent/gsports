@@ -317,7 +317,6 @@ class User < ActiveRecord::Base
           clip_list <<  clip #.video_asset
         end
 
-
         clip_list.each() { |clip|
           asset = clip.video_asset
           pass = team_staff?(asset.team) || has_access_to_clip?(item) || has_access_to_asset?(asset)

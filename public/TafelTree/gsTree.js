@@ -21,8 +21,6 @@
 
   function gs_reports_drop_clip(rid,dragName,dropName) {
 
-  console.log('MEOW!')
-
     divid = $(dragName).id+"_"
 
     oid = $(dragName).down('.tag').readAttribute('oid')

@@ -1851,8 +1851,9 @@ a.admin-userreg-link-user{
   width: 140px;
 }
 
-#clip-strip-hover {
-  background-color: orange;
+.clip-strip-hover {
+  background-color: yellow;
+  opacity:0.4;filter:alpha(opacity=40)
 }
 
 

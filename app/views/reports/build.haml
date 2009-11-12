@@ -32,17 +32,26 @@
           %p
           #tree-view
 
-          %p
-          Videos in this Library
-          -#%label
-            = check_box_tag 'show_clips', 'yes', true
-            Show Clips
-          -#%label
-            = check_box_tag 'show_reels', 'yes', true
-            Show Reels
+          - if @browser_reject
+            %h2 Browser Out of Date
+            %br
+            A more current browser is required to run the Report Builder.
+            %br
+            %br
+            Please consdier
+            %a{ :href=>"http://www.mozilla.com/firefox/" } FireFox
+          -else
+            %p
+            Videos in this Library
+            -#%label
+              = check_box_tag 'show_clips', 'yes', true
+              Show Clips
+            -#%label
+              = check_box_tag 'show_reels', 'yes', true
+              Show Reels
 
-          %p
-          #clip-window
+            %p
+            #clip-window
 
 
         .report-layout
