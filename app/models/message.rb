@@ -86,7 +86,10 @@ class Message < ActiveRecord::Base
       @recipient = User.new :email => to_email
     elsif to_access_group_id
       # support for access groups
-      @recipient = AccessGroup.find :to_access_group_id
+      group = AccessGroup.find :to_access_group_id
+      unless group.nil?
+        @recipient = User.new :last_name => "Group: #{group.name}"
+      end
     end
   end
   
@@ -97,6 +100,8 @@ class Message < ActiveRecord::Base
   # Useful for grabbing a set of names and aliases from the 
   # compose form and generating a list of ids that the message
   # gets sent to.
+  # NOTE: does not check against access groups, but this may be something
+  #  we want to add later. It would require an update to the ajax auto-complete, too.
   def self.get_message_recipient_ids(names,current_user,use_alias_id= false)
     recipient_ids = []
     is_alias = false
