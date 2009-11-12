@@ -33,6 +33,20 @@ class AccessGroup < ActiveRecord::Base
   def allow?(user)
     access_users.collect(&:user_id).include? user.id
   end
+
+  def self.allow_access?(user, item)
+    debugger
+    access_items = AccessItem.for_item(item)
+    if access_items.any?
+      access_pass = false
+      logger.info("has_access? #{access_pass}")
+      access_items.each(){ |access_item|
+        access_pass = true if (access_item.access_group.enabled && access_item.access_group.allow?(user) )
+        logger.info("has_access? #{access_pass} on access group #{access_item.access_group_id} item #{access_item.id}")
+      }
+    end
+    access_pass
+  end
     
   def team_name= name
     team = Team.find(:first, :conditions=>{ :name=>name })

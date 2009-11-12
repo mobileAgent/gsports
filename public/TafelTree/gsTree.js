@@ -38,6 +38,8 @@
 
     Sortable.destroy('clip-strip')
     Sortable.create('clip-strip', { tag: 'div'});
+
+    gs_reports_clip_select(rid, oid, ocls)
   }
 
   function gs_reports_clip_select(rid,ctype,cid) {
@@ -62,16 +64,16 @@
     );
 
     window.meow = req
-
-    new Ajax.Updater('report-player', '/reports/sync', {
+    
+    new Ajax.Updater('dialog', '/reports/sync', {
       parameters: { 'id': rid, 'video_list':Object.toJSON(req), 'publish':publish },
       evalScripts: true
     });
 
   }
 
-  function gs_reports_drop_video(id) {
-    $(id).remove()
+  function gs_reports_drop_video(source) {
+    source.parentNode.remove()
   }
   
   function TafelTreeInit () {

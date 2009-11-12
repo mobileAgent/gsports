@@ -3,7 +3,7 @@ class ReportsController < BaseController
   skip_before_filter :gs_login_required, :only => [:detail]
   skip_before_filter :verify_authenticity_token, :only => [:clips, :player, :sync ]
 
-  before_filter  do  |c| c.find_staff_scope(Permission::REPORT) end
+  before_filter :except => [:show] do  |c| c.find_staff_scope(Permission::REPORT) end
 
 
   sortable_attributes 'reports.id', 'reports.name'
@@ -118,8 +118,12 @@ class ReportsController < BaseController
         #skipping errors
       end
     }
-    
-    render :partial => 'sync'
+
+    if params[:publish]
+      render :partial => 'publish'
+    else
+      render :partial => 'sync'
+    end
   end
 
   def update
@@ -195,6 +199,20 @@ class ReportsController < BaseController
 
   end
 
+
+  def show
+    @report = Report.find(params[:id])
+
+    unless current_user.has_access?(@report) #AccessGroup.allow_access?(current_user, @report)
+      access_denied
+      return
+    end
+
+    @details = @report.details() #ReportDetail.for_report(@report)
+    @detail = @details.first
+    
+
+  end
 
 
 end

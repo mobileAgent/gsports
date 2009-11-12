@@ -14,7 +14,7 @@
   .profilePageHeader
     %h2.columnDescriptor
       %span
-        Create Report
+        Build Report
       = @report.name
 
   .padded
@@ -46,8 +46,12 @@
 
 
         .report-layout
-          %b= @report.name
-          = @report.type_name
+          %span{ :style=>'float:right' }
+            = @report.type_name
+
+          %h1= @report.name
+
+          .clearDiv
 
           #clip-strip-holder
 
@@ -67,6 +71,11 @@
               - @details.each() do |detail|
                 = render :partial=>'clip', :locals=>{ :video=>detail.video, :options=>{ :click_to_preview=>true, :panel_id_prefix=>'report'} }
 
+          %span{ :style=>'color: grey' }
+            = @report.created_at.strftime("%m-%d-%Y %I:%M%p") rescue ''
+            %br
+            = @report.author.full_name
+
           %script{ :type=>"text/javascript" }
             Sortable.create('clip-strip', { tag: 'div'});
             ="Droppables.add('clip-strip', { accept: 'report-dropper', hoverclass: 'clip-strip-hover', onDrop: function(dragName,dropName) {gs_reports_drop_clip(#{@report.id},dragName,dropName)}})"
@@ -78,8 +87,10 @@
         .clearDiv
 
         .report-buttons{ :style=>'float: right' }
-          = link_to 'Save', "javascript:gs_reports_update(#{@report.id}, false)", {:class => 'genericButton'}
           = link_to 'Save & Publish', "javascript:gs_reports_update(#{@report.id}, true)", {:class => 'genericButton'}
+        .report-buttons{ :style=>'float: right' }
+          = link_to 'Save', "javascript:gs_reports_update(#{@report.id}, false)", {:class => 'genericButton'}
+          &nbsp;
 
         .clearDiv
 

@@ -327,6 +327,7 @@ class User < ActiveRecord::Base
 
       }
     else
+      return AccessGroup.allow_access?(self, item)
     end
 
     return true

@@ -1,4 +1,6 @@
 
+%br
+
 -# if @detail
   ='<object id="movie1257802180293" height="350" width="400.0" align="middle" classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0">'
   ='<param name="allowScriptAccess" value="always"/>'
@@ -30,6 +32,8 @@
   - frame_width = 400
   = render :partial => 'shared/video_player', :locals => {:target => 'flashAreaIFrame', :player_name => '/players/embeddedplayer.swf', :fvars => flashvars, :width=>"#{frame_width}px", :height=>"#{frame_height}px", :params=>params }
 
+%br
+%br
 
 
 %b= @report.name

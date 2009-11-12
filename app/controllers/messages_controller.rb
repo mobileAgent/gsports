@@ -119,6 +119,29 @@ class MessagesController < BaseController
       end
     end 
 
+    #this is a publication message
+    if (report_id = params[:report][:id])
+      report = Report.find(report_id)
+
+      #access_group_id = params[:access_item][:access_group_id]
+      #group = AccessGroup.find(access_group_id);
+
+      @access_item = AccessItem.new params[:access_item]
+      if @access_item.access_group_id
+        @access_item.item = report
+        result = @access_item.save
+      end
+
+      logger.debug("Publish report #{report_id} access group id: #{@access_item.access_group_id}")
+
+      #depricated
+#      report.access_group = group
+#      result = report.save
+
+      recipient_access_groups = [@access_item.access_group]
+    end
+
+    
     if (recipient_ids.nil? || recipient_ids.empty?) && (recipient_emails.nil? || recipient_emails.empty?) && (recipient_access_groups.nil? || recipient_access_groups.empty?)
       logger.debug("There were no recipients found, sending back to new")
       if current_user.admin?

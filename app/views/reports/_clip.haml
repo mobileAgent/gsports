@@ -24,7 +24,8 @@
 %div{ :id=>options[:panel_id], :class=>classes, :style=>options[:style], :onclick=>onclick }
   %span{ :class=>'tag', :oid=>video_id, :ocls=>video_type }
   %img{ :src=>"#{@vidavee.file_thumbnail_medium(video.dockey)}" }
-  %a{ :class=>'closer', :href=>"javascript:gs_reports_drop_video('#{options[:panel_id]}')" } x
+  %a{ :class=>'closer', :onclick=>"javascript:gs_reports_drop_video(this)" } x
+  -# '#{options[:panel_id]}'
   %span{ :class=>'title'}= video.title 
 
   - if options[ :draggable ]

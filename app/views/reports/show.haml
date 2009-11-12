@@ -1,0 +1,41 @@
+
+= javascript_include_tag '/TafelTree/gsTree.js'
+
+.profileContentArea
+  .profilePageHeader
+    %h2.columnDescriptor
+      %span
+        Report
+      = @report.name
+
+  .padded
+
+    .report-builder
+
+      - form_for(@report, :url => report_url(@report), :html => {:multipart => true}) do |f|
+        -#= render :partial => "form", :locals => { :f => f }
+
+        .report-layout
+          %span{ :style=>'float:right' }
+            = @report.type_name
+
+          %h1= @report.name
+
+          .clearDiv
+
+          #clip-strip-holder
+
+            #clip-strip
+              - @details.each() do |detail|
+                = render :partial=>'clip', :locals=>{ :video=>detail.video, :options=>{ :click_to_preview=>true, :panel_id_prefix=>'report'} }
+
+          %span{ :style=>'color: grey' }
+            = @report.created_at.strftime("%m-%d-%Y %I:%M%p") rescue ''
+            %br
+            = @report.author.full_name
+
+          #report-player
+            - if @detail
+              = render :partial=>'player'
+
+        .clearDiv
