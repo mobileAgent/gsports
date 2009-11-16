@@ -1,5 +1,6 @@
 
-= javascript_include_tag '/TafelTree/gsTree.js'
+= javascript_include_tag 'reports'
+= stylesheet_link_tag 'reports'
 
 .profileContentArea
   .profilePageHeader
@@ -10,7 +11,7 @@
 
   .padded
 
-    .report-builder
+    .report-viewer
 
       - form_for(@report, :url => report_url(@report), :html => {:multipart => true}) do |f|
         -#= render :partial => "form", :locals => { :f => f }
@@ -35,7 +36,6 @@
             = @report.author.full_name
 
           #report-player
-            - if @detail
-              = render :partial=>'player'
+            = render :partial=>'player'
 
         .clearDiv

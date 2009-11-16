@@ -121,18 +121,43 @@ class Vidavee < ActiveRecord::Base
     #response = vrequest('playlist/GetGalleryPlaylists',sessionid)
     #response = vrequest('playlist/GetDetailsPlaylistEmbedCode',sessionid,DOCKEY_PARAM => dockey)
     response = Curl::Easy.http_post(url)
-      if (response.response_code == 200)
-        h = Hpricot.XML response.body_str
-        a = h.search('item').collect() {|e| 
-          /dockey=([0-9A-F]+)&/.match(e.attributes['url'])[1]
-        }
-       else
-        logger.error "Vidavee response code #{response.response_code} on #{full_url} => #{response.body_str}"
-        return nil
-      end
-    
+
+    if (response.response_code == 200)
+      h = Hpricot.XML response.body_str
+      a = h.search('item').collect() {|e|
+        /dockey=([0-9A-F]+)&/.match(e.attributes['url'])[1]
+      }
+     else
+      logger.error "Vidavee response code #{response.response_code} on #{url} => #{response.body_str}"
+      return nil
+    end
+
   end
 
+
+  def new_playlist(sessionid, title, dockeys, list_dockey=nil)
+RAILS_DEFAULT_LOGGER.info("Vidavee.new_playlist(#{sessionid.inspect}, #{title.inspect}, #{dockeys.inspect}, #{list_dockey.inspect})")
+    params = { :title=>"CGI.escpase(title)}" }
+    api_method = 'NewPlaylist'
+
+    if(list_dockey!=nil)
+      params['AF_documentKey']= list_dockey
+      api_method= 'UpdatePlaylist'
+    end
+
+    dockeys.each_index() do |i|
+      arg = "videos:#{i+1}:"
+      params[arg]= dockeys[i]
+    end
+debugger
+    response = vrequest("playlist/#{api_method}",sessionid, params)
+
+    if response
+      key = extract(response,'//dockey')
+RAILS_DEFAULT_LOGGER.info("Vidavee.new_playlist:= #{key})")
+      key.text if key
+    end
+  end
 
   # This call is a little different from all the others so far in that it isn't
   # part of the restful api (no /rest/ after the context part so we can't use
@@ -330,7 +355,7 @@ class Vidavee < ActiveRecord::Base
     if (before_status != video_asset.video_status) && (Vidavee.READY == video_asset.video_status)
       puts "MEOW"
       video_asset.ready_at = ::DateTime.now()
-      VideoHistory.uploaded(video_asset) if @video_asset.gamex_league_id
+      VideoHistory.uploaded(video_asset) if video_asset.gamex_league_id
     end
 
     video_asset
@@ -590,13 +615,13 @@ class Vidavee < ActiveRecord::Base
     params = build_request_params(action,sessionid,extra_params,login)
     begin
       full_url = query_url(url,params)
-#puts "======================================================"
-#puts "url: #{full_url}"
-#puts "------------------------------------------------------"
+puts "======================================================"
+puts "url: #{full_url}"
+puts "------------------------------------------------------"
       response = Curl::Easy.http_post(full_url)
       if (response.response_code == 200)
-#puts "response: #{response.body_str}"
-#puts "======================================================"
+puts "response: #{response.body_str}"
+puts "======================================================"
         return response.body_str
       else
         logger.error "Vidavee response code #{response.response_code} on #{full_url} => #{response.body_str}"

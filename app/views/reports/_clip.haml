@@ -26,7 +26,10 @@
   %img{ :src=>"#{@vidavee.file_thumbnail_medium(video.dockey)}" }
   %a{ :class=>'closer', :onclick=>"javascript:gs_reports_drop_video(this)" } x
   -# '#{options[:panel_id]}'
-  %span{ :class=>'title'}= video.title 
+  %span{ :class=>'title'}
+    = video.title 
+    -#' - '
+    -#= video.dockey
 
   - if options[ :draggable ]
     %script{ :type=>"text/javascript" }

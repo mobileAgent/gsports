@@ -15,12 +15,15 @@
 
     = render :partial => 'permissions/scope_selector', :locals=>{ :style=>'float:left; margin-left: 16px' }
 
+    %div{ :style=>'font-size: 90%'} Please give your report a Title and Description, and choose a Type of Report.
+    %br
+
     = render :partial => "form", :locals => { :f => f }
 
     %br
     %p
       -#%input.submit.button{ :name => "submit", :src => "/gs/images/top_nav_login.gif", :type => "image", :value => "Start Report", :alt => "Start Report" }/
-      = link_to 'Start Report &raquo;', "javascript:$('new_report').submit()", :class => 'genericButton'
-
+      = link_to '', "javascript:$('new_report').submit()", :class => 'start-report-button'
+    .clearDiv
 %br
 %br

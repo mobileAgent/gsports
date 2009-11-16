@@ -62,9 +62,15 @@
     );
 
     window.meow = req
+
+    params = { 'id': rid, 'video_list':Object.toJSON(req) }
+    if(publish)
+      params['publish']=publish
     
-    new Ajax.Updater('dialog', '/reports/sync', {
-      parameters: { 'id': rid, 'video_list':Object.toJSON(req), 'publish':publish },
+    target = publish ? 'report-player' : 'dialog'
+
+    new Ajax.Updater(target, '/reports/sync', {
+      parameters: params,
       evalScripts: true
     });
 

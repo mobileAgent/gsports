@@ -53,7 +53,7 @@ class ReportsController < BaseController
 
     @report = Report.find(params[:id])
     @details = @report.details() #ReportDetail.for_report(@report)
-    @detail = @details.first
+    #@detail = @details.first
 
     @library = []
     @tree_detail = []
@@ -99,16 +99,11 @@ class ReportsController < BaseController
     order = 1
 
     @video_list.each() do |video|
-
       if detail = ReportDetail.new(video)
-
         detail.report_id = @report.id
         detail.orderby = order += 1
         @report_details << detail
-
       end
-      
-
     end
 
     Report.transaction {
@@ -122,12 +117,23 @@ class ReportsController < BaseController
       end
     }
 
+    dockeys = @report_details.collect(&:video).delete_if(){|v|v==nil}.collect(&:dockey)
+
+    #vidavee = Vidavee.first
+    #session_token = vidavee.login
+    if dockey = @vidavee.new_playlist(session[:vidavee], "REPORT-PLAYLIST-#{@report.id}", dockeys, @report.dockey)
+      @report.dockey = dockey
+      @report.save
+    end
+
     if params[:publish]
       render :partial => 'publish'
     else
-      render :partial => 'sync'
+      @detail = nil
+      render :partial => 'player'
     end
   end
+
 
   def update
     @report = Report.find(params[:id])
@@ -146,6 +152,9 @@ class ReportsController < BaseController
     @video_asset = VideoAsset.find(params[:video_asset_id])
 
     @video_clips = VideoClip.find(:all, :conditions=>{:video_asset_id => @video_asset.id})
+    @video_clips.delete_if() { |v|
+      !current_user.has_access?(v)
+    }
 
     render :partial => 'clips'
   end
@@ -154,20 +163,26 @@ class ReportsController < BaseController
 
   def player
     @report = Report.find(params[:id])
-    @detail = ReportDetail.new({:video_type=>params[:video_type],:video_id=>params[:video_id]}) #.for_report(@report).for_item_type(params[:video_type], params[:video_id])
-    @detail.report = @report
-    
-    @detail.find_video()
+
+    if params[:video_type]
+      @detail = ReportDetail.new({:video_type=>params[:video_type],:video_id=>params[:video_id]}) #.for_report(@report).for_item_type(params[:video_type], params[:video_id])
+      #@detail.report = @report
+      @detail.find_video()
+    end    
 
     render :partial => 'player'
   end
 
 
   def detail
+    debugger
     #@detail = ReportDetail.find(params[:id])
     @report = Report.find(params[:id])
     @detail = ReportDetail.new({:video_type=>params[:video_type],:video_id=>params[:video_id]})
     @detail.report = @report
+
+    @dockey = @detail.video_id ? @detail.video.dockey : @report.dockey
+    @dockey ||= 0
 
     options = {}
     options[:indent] ||= 2
@@ -184,7 +199,7 @@ class ReportsController < BaseController
       xml.thumbH(0)
       xml.numColumnsOrRows(0)
       xml.numPerColumnOrRow(0)
-      xml.dockeys(@detail.video.dockey)
+      xml.dockeys(@dockey)
       #xml.homepageLink("#{APP_URL}/#{team_path(channel.team_id)}") if channel.team_id
       xml.homepageLink(APP_URL)
       xml.validationUrl(APP_URL)
@@ -212,7 +227,7 @@ class ReportsController < BaseController
     end
 
     @details = @report.details() #ReportDetail.for_report(@report)
-    @detail = @details.first
+    #@detail = @details.first
     
 
   end

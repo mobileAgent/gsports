@@ -23,7 +23,7 @@ class Report < ActiveRecord::Base
   Types = {
     'O' => 'Offence',
     'D' => 'Defense',
-    'ST' => 'Sepcial Teams',
+    'ST' => 'Special Teams',
     'I' => 'Internal',
     'P' => 'Player',
     'X' => 'Other'

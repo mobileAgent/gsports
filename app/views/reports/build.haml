@@ -1,9 +1,9 @@
 - @skip_profile_nav = true
 
 = javascript_include_tag '/TafelTree/Tree.js'
-= javascript_include_tag '/TafelTree/gsTree.js'
 = stylesheet_link_tag '/TafelTree/tree.css'
-
+= javascript_include_tag 'reports'
+= stylesheet_link_tag 'reports'
 
 %script{ :type=>"text/javascript" }
   var tree_struct =
@@ -28,7 +28,7 @@
 
 
         .report-video-browser
-          Video Library
+          %h1 Video Library
           %p
           #tree-view
 
@@ -41,8 +41,7 @@
             Please consdier
             %a{ :href=>"http://www.mozilla.com/firefox/" } FireFox
           -else
-            %p
-            Videos in this Library
+            %h2 Videos in this Library
             -#%label
               = check_box_tag 'show_clips', 'yes', true
               Show Clips
@@ -63,6 +62,7 @@
           .clearDiv
 
           #clip-strip-holder
+            -#Drag clips here to add to Report
 
             #clip-strip-decoy
 
@@ -90,15 +90,14 @@
             ="Droppables.add('clip-strip', { accept: 'report-dropper', hoverclass: 'clip-strip-hover', onDrop: function(dragName,dropName) {gs_reports_drop_clip(#{@report.id},dragName,dropName)}})"
 
           #report-player
-            - if @detail
-              = render :partial=>'player'
+            = render :partial=>'player'
 
         .clearDiv
 
         .report-buttons{ :style=>'float: right' }
           = link_to 'Save & Publish', "javascript:gs_reports_update(#{@report.id}, true)", {:class => 'genericButton'}
         .report-buttons{ :style=>'float: right' }
-          = link_to 'Save', "javascript:gs_reports_update(#{@report.id}, false)", {:class => 'genericButton'}
+          = link_to 'Save Draft', "javascript:gs_reports_update(#{@report.id}, false)", {:class => 'genericButton'}
           &nbsp;
 
         .clearDiv

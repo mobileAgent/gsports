@@ -1,0 +1,281 @@
+
+
+/* Scouting Reports */
+
+.new-report-popup{
+
+  position: relative;
+	margin-top: -100px;
+	margin-left: -300px;
+
+	background-color: #EBEAEB;
+	color: black;
+	text-align: left;
+	width: 600px;
+	font-size: 116%;
+	padding: 15px;
+
+  border: 2px solid #909090;
+}
+
+.new-report-popup h2{
+	font-size: 161.6%;
+  text-transform:uppercase;
+  color:#0081C0;
+}
+
+.new-report-popup .section {
+  text-transform: uppercase;
+  font-size: 13px;
+  color: #595959;
+  border-bottom: 2px solid #3f3f3f;
+  margin-bottom: 8px;
+}
+
+.new-report-popup input[type="text"], .new-report-popup textarea{
+	border: 0px;
+	border-left: 1px solid #909090;
+	border-top: 1px solid #909090;
+	padding: 2px;
+	font-size: 116%;
+	font-weight: bold;
+	width: 250px;
+	background: white;
+	width: 90%;
+}
+
+.new-report-popup input[type="radio"] {
+  margin-bottom: 3px;
+}
+
+.new-report-popup .closer{
+	text-align: right;
+}
+
+.new-report-popup a.start-report-button{
+  background: url('../images/reports/start_report_button.png') no-repeat 0 0;
+  display: block;
+  width: 143px;
+  height: 36px;
+  float: right;
+}
+
+.new-report-popup a.start-report-button:hover
+{
+  background-position: 0 -36px;
+}
+
+a.new-report-button{
+  background: url('../images/reports/new_report_button.png') no-repeat 0 0;
+  display: block;
+  width: 162px;
+  height: 50px;
+  float: right;
+  margin-right:36px;
+}
+
+a.new-report-button:hover
+{
+  background-position: 0 -50px;
+}
+
+
+/* builder & viewer */
+
+
+.report-layout {
+  float: left;
+  width: 580px;
+  height: 620px;
+  padding-left: 10px;
+  margin-bottom: 30px;
+}
+
+
+.report-video-browser {
+  float: left;
+  width: 290px;
+  height: 620px;
+  border: 2px solid #909090;
+  margin-left: 20px;
+  overflow: hidden;
+}
+
+.report-video-browser #tree-view {
+  background-color: #efefef;
+}
+
+.report-video-browser h1 {
+  font-size: 140%;
+  font-weight: bold;
+  color: #585757;
+  margin: 0px 0px 3px 8px;
+}
+
+.report-video-browser h2 {
+  font-size: 100%;
+  font-weight: bold;
+  color: #3851a1;
+  margin: 0px 0px 3px 8px;
+}
+
+.report-video-browser .tafelTreecanevas {
+  xfont-size: 100%;
+  font-weight: bold;
+  color: #585757;
+}
+
+.report-video-browser .tafelTree_row {
+  font-size: 90%;
+  font-weight: normal;
+  color: #585757;
+}
+
+
+.report-builder .report-layout {
+  border: 2px solid #909090;
+  border-left: 0px;
+}
+
+.report-viewer .report-layout {
+  border: 0;
+}
+
+
+/* clips */
+
+.report-builder #clip-window {
+  width: 290px;
+  height: 290px;
+  overflow: scroll;
+  background-color: #efefef;
+}
+
+.report-builder #clip-window .report-clip {
+  xborder: 1px solid black;
+  margin: 8px;
+
+}
+
+.report-viewer .report-clip .closer {
+  visibility: hidden;
+}
+
+#clip-window .report-clip .closer {
+  visibility: hidden;
+}
+
+
+.report-clip img {
+  width:91px;
+  height:68px;
+  border: 1px solid black;
+}
+
+
+.report-clip {
+  margin: 4px 12px;
+  float:left;
+  position:relative;
+
+  width: 120px;
+  height: 110px;
+
+  width: 90px;
+  height: 80px;
+}
+
+.report-clip .closer {
+  position: absolute;
+  top: 1px;
+  right: 2px;
+  xfloat: right;
+}
+
+.report-clip a.closer {
+  text-decoration: none;
+  color: white;
+  font-weight: bold;
+  font-size: 120%;
+}
+
+
+.report-clip a.closer:hover {
+  color: orange;
+}
+
+.report-clip img {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+}
+
+.report-clip .title {
+  position: absolute;
+  top: 73px;
+  left: 0px;
+}
+
+
+
+
+/* clip strip */
+
+
+#clip-strip-holder {
+  float: right;
+  position: relative;
+  width: 200px;
+  overflow: scroll;
+  width: 140px;
+  height: 580px;
+  border: 2px solid lightgrey;
+  margin: 3px;
+}
+
+#clip-strip {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 140px;
+  height: 618px;
+}
+
+#clip-strip-decoy {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 140px;
+}
+
+.clip-strip-hover {
+  background-color: yellow;
+  opacity:0.4;filter:alpha(opacity=40)
+}
+
+
+.clip-dropper {
+  margin: 4px 12px;
+  float:left;
+  position:relative;
+  width: 120px;
+  height: 80px;
+}
+
+.clip-dropper table {
+	width: 120px;
+	height: 90px;
+  width:91px;
+  height:68px;
+
+  background-color: lightgrey;
+  color: white;
+  font-size: 400%;
+  font-weight: bold;
+  text-align: center;
+}
+
+.clip-dropper-hover {
+	background-color: orange;
+}
+

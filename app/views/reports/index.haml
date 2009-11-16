@@ -1,19 +1,18 @@
+= stylesheet_link_tag 'reports'
 - scope_select=Permission.scope_selector_string(@scope)
 .profileContentArea.listingPage
   .profilePageHeader
     %h2.columnDescriptor
+      - if @scope
+        = link_to_remote '', {:url => {:controller=>:reports, :action=>:pop_new}}, {:class => 'new-report-button'}
       %span{ :style=>'float:left' }
         Reports
       %form{ :style=>"height: 0px;" }
         = render :partial => 'permissions/scope_selector', :locals=>{ :style=>'float:left; margin-left: 16px' }
-  .listings
+  .listings{ :style=>'margin-top: 0' }
     .padded
 
       - if @scope
-
-        = link_to_remote 'New Report', {:url => {:controller=>:reports, :action=>:pop_new}}, {:class => 'genericButton'}
-
-        %br/
 
         %table{:border => 0, :cellspacing => 0, :cellpadding => 0, :width => '100%'}
           %thead
@@ -21,8 +20,8 @@
               = sortable_table_header :class=>"padded sortableContentHeader", :name => "Name", :sort => "access_groups.name"
               -#= sortable_table_header :class=>"padded sortableContentHeader", :name => "Description", :sort => "access_groups.description"
 
-              %th.padded.sortableContentHeader= "X"
-              %th.padded.sortableContentHeader= "O"
+              %th.padded.sortableContentHeader= "Name"
+              %th.padded.sortableContentHeader= "Description"
 
           %tbody
             - if @reports
@@ -32,10 +31,10 @@
 
                   -#%td.leagueList= h grp.description
                   %td.leagueList{ :valign=>'top'}
-                    meow
+                    = report.name
 
                   %td.leagueList{ :valign=>'top'}
-                    woof
+                    = report.description
 
 
         - if @reports
