@@ -12,7 +12,7 @@
   - params[:allowScriptAccess]='always'
   - frame_height = 330
   - frame_width = 400
-  = render :partial => 'shared/video_player', :locals => {:target => 'flashAreaIFrame', :player_name => '/players/embeddedplayer.swf', :fvars => flashvars, :width=>"#{frame_width}px", :height=>"#{frame_height}px", :params=>params }
+  = render :partial => 'shared/video_player', :locals => {:allowFullScreen=>"true", :target => 'flashAreaIFrame', :player_name => '/players/embeddedplayer.swf', :fvars => flashvars, :width=>"#{frame_width}px", :height=>"#{frame_height}px", :params=>params }
 
 %br
 %br
