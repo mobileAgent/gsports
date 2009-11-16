@@ -39,6 +39,15 @@
 
     gs_reports_clip_select(rid, oid, ocls)
   }
+  
+  function gs_reports_add_all(rid) {
+    target = $('clip-strip')
+    $A($('clip-window').childNodes).each(function(child) {
+      if(child.id && child.hasClassName('report-clip')){
+        gs_reports_drop_clip(1,child,target)
+      }
+    });
+  }
 
   function gs_reports_clip_select(rid,ctype,cid) {
     $('report-player').update('Loading...')

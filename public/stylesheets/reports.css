@@ -146,7 +146,7 @@ a.new-report-button:hover
 
 .report-builder #clip-window {
   width: 290px;
-  height: 290px;
+  height: 260px;
   overflow: scroll;
   background-color: #efefef;
 }
@@ -217,6 +217,18 @@ a.new-report-button:hover
 }
 
 
+.report-builder a.add-all-button{
+  background: url('../images/reports/add_all_button.jpg') no-repeat 0 0;
+  display: block;
+  width: 141px;
+  height: 21px;
+  float: right;
+}
+
+.report-builder a.add-all-button:hover
+{
+  background-position: 0 -21px;
+}
 
 
 /* clip strip */
