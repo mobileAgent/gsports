@@ -11,7 +11,7 @@
 	background-color: #EBEAEB;
 	color: black;
 	text-align: left;
-	width: 600px;
+	width: 570px;
 	font-size: 116%;
 	padding: 15px;
 
@@ -41,11 +41,11 @@
 	font-weight: bold;
 	width: 250px;
 	background: white;
-	width: 90%;
 }
 
 .new-report-popup input[type="radio"] {
   margin-bottom: 3px;
+  border: 0;
 }
 
 .new-report-popup .closer{
@@ -91,6 +91,15 @@ a.new-report-button:hover
   margin-bottom: 30px;
 }
 
+.report-layout h1{
+  font-size: 138.5%;
+  font-weight: bold;
+  font-size: 18px;
+  font-weight: bold;
+  color: black
+  margin-bottom: 5px;
+}
+
 .report-viewer .report-layout {
   width: 760px;
 }
@@ -110,15 +119,14 @@ a.new-report-button:hover
   height: 300px;
   background-color: #efefef;
   border-right: 11px solid #efefef;
+  margin-bottom:6px;
 }
 
 .report-video-browser h1 {
   font-size: 140%;
   color: #585757;
-  font-size: 18px;
-  color: black
   font-weight: bold;
-  margin: 0px 0px 3px 8px;
+  margin: 2px 0px 3px 8px;
 }
 
 .report-video-browser h2 {
@@ -127,6 +135,7 @@ a.new-report-button:hover
   color: #3851a1;
   margin: 0px 0px 3px 8px;
 }
+
 
 .report-video-browser .tafelTreecanevas {
   xfont-size: 100%;
@@ -197,8 +206,7 @@ a.new-report-button:hover
 .report-clip .closer {
   position: absolute;
   top: 1px;
-  right: 2px;
-  xfloat: right;
+  left: 80px;
 }
 
 .report-clip a.closer {
@@ -211,6 +219,9 @@ a.new-report-button:hover
 
 .report-clip a.closer:hover {
   color: orange;
+  font-size: 140%;
+  top: 0px;
+  left: 79px;
 }
 
 .report-clip img {

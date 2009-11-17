@@ -20,8 +20,8 @@
         -#= render :partial => "form", :locals => { :f => f }
 
         .report-layout
-          %span{ :style=>'float:right' }
-            = @report.type_name
+          %span{ :style=>'margin: 2px 2px 0pt 0pt; color: grey; float:right' }
+            %i= @report.type_name
 
           %h1= @report.name
 

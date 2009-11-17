@@ -28,7 +28,8 @@
 
 
         .report-video-browser
-          %h1 Video Library
+          %div{ :style=>"border-bottom: 1px solid #b3b3b3;" }
+            %h1 Video Library
           %p
           #tree-view
 
@@ -41,7 +42,8 @@
             Please consdier
             %a{ :href=>"http://www.mozilla.com/firefox/" } FireFox
           -else
-            %h2 Videos in this Library
+            %div{ :style=>"border-bottom: 1px solid #b3b3b3;" }
+              %h2 Videos in this Library
             -#%label
               = check_box_tag 'show_clips', 'yes', true
               Show Clips
@@ -57,8 +59,8 @@
 
 
         .report-layout
-          %span{ :style=>'float:right' }
-            = @report.type_name
+          %span{ :style=>'margin: 2px 2px 0pt 0pt; color: grey; float:right' }
+            %i= @report.type_name
 
           %h1= @report.name
 
