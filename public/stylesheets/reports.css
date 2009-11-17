@@ -99,6 +99,7 @@ a.new-report-button:hover
   border: 2px solid #909090;
   margin-left: 20px;
   overflow: hidden;
+  position: relative;
 }
 
 .report-video-browser #tree-view {
