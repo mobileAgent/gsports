@@ -1,5 +1,4 @@
-
-%br
+- options ||= {}
 
 - detail_url = "#{APP_URL}/reports/detail.xml?id=#{@report.id}"
 - detail_url += "&video_type=#{@detail.video_type}&video_id=#{@detail.video_id}" if @detail
@@ -10,17 +9,22 @@
   - flashvars[:playerVars]= detail_url
   - params = {}
   - params[:allowScriptAccess]='always'
-  - frame_height = 330
-  - frame_width = 400
-  = render :partial => 'shared/video_player', :locals => {:allowFullScreen=>"true", :target => 'flashAreaIFrame', :player_name => '/players/embeddedplayer.swf', :fvars => flashvars, :width=>"#{frame_width}px", :height=>"#{frame_height}px", :params=>params }
+  - params[:allowFullScreen]="true"
+  - if options[:small_player] || @small_player
+    - frame_width = 334
+    - frame_height = 282
+  - else
+    - frame_width = 400
+    - frame_height = 330
+  = render :partial => 'shared/video_player', :locals => {:target => 'flashAreaIFrame', :player_name => '/players/embeddedplayer.swf', :fvars => flashvars, :width=>"#{frame_width}px", :height=>"#{frame_height}px", :params=>params }
 
 %br
 %br
 
-
-%b= @report.name
-%br
-= @report.description
+-#
+  %b= @report.name
+  %br
+  = @report.description
 
 -#.meow
   %br

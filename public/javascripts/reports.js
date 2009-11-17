@@ -51,9 +51,13 @@
 
   function gs_reports_clip_select(rid,ctype,cid) {
     $('report-player').update('Loading...')
+    
+    params = { 'id': rid, 'video_id': ctype, 'video_type': cid }
+    if(gs_reports_small_player)
+      params['small_player']=1
 
     new Ajax.Updater('report-player', '/reports/player', {
-			parameters: { 'id': rid, 'video_id': ctype, 'video_type': cid },
+			parameters: params,
 			evalScripts: true
     });
   }
@@ -93,7 +97,7 @@
     tree = new TafelTree('tree-view', tree_struct, {
     'generate' : true,
     'imgBase' : '/TafelTree/imgs/',
-    'width' : '290px',
+    'width' : '280px',
     'height' : '300px',
     'openAtLoad' : true,
     'cookies' : false

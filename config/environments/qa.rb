@@ -46,3 +46,29 @@ ExceptionNotifier.email_prefix = '[GS-QA] '
 
 AD_SERVER_BASE = 'www.danmcardle.com/openx/www/delivery'
 AD_ZONE_N = ['a04a93c3','a4e788a7','a03c6fbc','a6e6602c','a6d175df']
+
+
+
+begin
+
+	require 'tlsmail'
+	#config.gem 'tlsmail', :version => ">= 0.0.1"
+
+	Net::SMTP.enable_tls(OpenSSL::SSL::VERIFY_NONE)
+
+	ActionMailer::Base.smtp_settings = {
+		:address => 'smtp.gmail.com',
+		:port => 587,
+		:domain => 'outerbody.com',
+		:authentication => :plain,
+		:user_name => 'gsports-qa@outerbody.com',
+		:password => '647Q36'
+	}
+
+rescue MissingSourceFile
+	puts 'TLS failed to init'
+end
+
+
+
+

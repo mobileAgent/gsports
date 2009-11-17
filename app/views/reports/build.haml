@@ -83,17 +83,22 @@
               - @details.each() do |detail|
                 = render :partial=>'clip', :locals=>{ :video=>detail.video, :options=>{ :click_to_preview=>true, :panel_id_prefix=>'report'} }
 
-          %span{ :style=>'color: grey' }
-            = @report.created_at.strftime("%m-%d-%Y %I:%M%p") rescue ''
-            %br
+          %div{ :style=>'color: grey; margin-bottom: 8px;' }
+            %i= @report.created_at.strftime("%b %d, %Y") rescue ''
+            by 
             = @report.author.full_name
 
+          %div{ :style=>'margin-bottom: 8px;' }
+            = @report.description
+          
           %script{ :type=>"text/javascript" }
             Sortable.create('clip-strip', { tag: 'div'});
             ="Droppables.add('clip-strip', { accept: 'report-dropper', hoverclass: 'clip-strip-hover', onDrop: function(dragName,dropName) {gs_reports_drop_clip(#{@report.id},dragName,dropName)}})"
+            var gs_reports_small_player = true
 
           #report-player
-            = render :partial=>'player'
+            - @small_player= true
+            = render :partial=>'player' #, :locals=>{ :options=>{:small_player=>true} }
 
         .clearDiv
 

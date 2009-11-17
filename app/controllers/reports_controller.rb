@@ -164,6 +164,8 @@ class ReportsController < BaseController
   def player
     @report = Report.find(params[:id])
 
+    @small_player= params[:small_player]
+
     if params[:video_type]
       @detail = ReportDetail.new({:video_type=>params[:video_type],:video_id=>params[:video_id]}) #.for_report(@report).for_item_type(params[:video_type], params[:video_id])
       #@detail.report = @report

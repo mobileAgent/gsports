@@ -2,6 +2,9 @@
 = javascript_include_tag 'reports'
 = stylesheet_link_tag 'reports'
 
+%script{ :type=>"text/javascript" }
+  var gs_reports_small_player = false
+
 .profileContentArea
   .profilePageHeader
     %h2.columnDescriptor
@@ -29,11 +32,14 @@
             #clip-strip
               - @details.each() do |detail|
                 = render :partial=>'clip', :locals=>{ :video=>detail.video, :options=>{ :click_to_preview=>true, :panel_id_prefix=>'report'} }
-
-          %span{ :style=>'color: grey' }
-            = @report.created_at.strftime("%m-%d-%Y %I:%M%p") rescue ''
-            %br
+          
+          %div{ :style=>'color: grey; margin-bottom: 8px;' }
+            %i= @report.created_at.strftime("%b %d, %Y") rescue ''
+            by
             = @report.author.full_name
+
+          %div{ :style=>'margin-bottom: 8px;' }
+            = @report.description
 
           #report-player
             = render :partial=>'player'
