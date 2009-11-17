@@ -120,7 +120,8 @@ class MessagesController < BaseController
     end 
 
     #this is a publication message
-    if (report_id = params[:report][:id])
+    report_id = params[:report] ? params[:report][:id] : nil
+    if (report_id)
       report = Report.find(report_id)
 
       #access_group_id = params[:access_item][:access_group_id]
