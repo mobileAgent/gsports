@@ -86,10 +86,10 @@
           %div{ :style=>'color: grey; margin-bottom: 8px;' }
             %i= @report.created_at.strftime("%b %d, %Y") rescue ''
             by 
-            = @report.author.full_name
+            %i= @report.author.full_name
 
-          %div{ :style=>'margin-bottom: 8px;' }
-            = @report.description
+          %div{ :style=>'color: grey; margin-bottom: 8px;' }
+            %i= @report.description
           
           %script{ :type=>"text/javascript" }
             Sortable.create('clip-strip', { tag: 'div'});

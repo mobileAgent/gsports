@@ -12,10 +12,10 @@
   - params[:allowFullScreen]="true"
   - if options[:small_player] || @small_player
     - frame_width = 334
-    - frame_height = 282
+    - frame_height = 360
   - else
     - frame_width = 400
-    - frame_height = 330
+    - frame_height = 360
   = render :partial => 'shared/video_player', :locals => {:target => 'flashAreaIFrame', :player_name => '/players/embeddedplayer.swf', :fvars => flashvars, :width=>"#{frame_width}px", :height=>"#{frame_height}px", :params=>params }
 
 %br
@@ -41,7 +41,8 @@
   %b= @detail.video.title rescue '-'
 
   %br
-  = @detail.video.description rescue '-'
+  %div{ :style=>'color: grey; margin-top: 8px; margin-bottom: 8px;' }
+    = @detail.video.description rescue '-'
 
 
   

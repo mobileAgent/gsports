@@ -92,7 +92,7 @@ a.new-report-button:hover
 }
 
 .report-viewer .report-layout {
-  width: 674px;
+  width: 760px;
 }
 
 .report-video-browser {
@@ -114,8 +114,10 @@ a.new-report-button:hover
 
 .report-video-browser h1 {
   font-size: 140%;
-  font-weight: bold;
   color: #585757;
+  font-size: 18px;
+  color: black
+  font-weight: bold;
   margin: 0px 0px 3px 8px;
 }
 
@@ -263,7 +265,7 @@ a.new-report-button:hover
 }
 
 #clip-strip div {
-  width: 230px;
+  width: 200px;
 }
 
 
