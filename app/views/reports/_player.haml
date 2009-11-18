@@ -1,7 +1,11 @@
 - options ||= {}
 
 - detail_url = "#{APP_URL}/reports/detail.xml?id=#{@report.id}"
-- detail_url += "&video_type=#{@detail.video_type}&video_id=#{@detail.video_id}" if @detail
+- if @detail
+  - detail_url += "&video_type=#{@detail.video_type}&video_id=#{@detail.video_id}" 
+- if @small_player
+  - detail_url += "&small_player=1"
+  
 
 
 #flashAreaIFrame
@@ -12,10 +16,10 @@
   - params[:allowFullScreen]="true"
   - if options[:small_player] || @small_player
     - frame_width = 334
-    - frame_height = 360
+    - frame_height = 272
   - else
     - frame_width = 400
-    - frame_height = 360
+    - frame_height = 331
   = render :partial => 'shared/video_player', :locals => {:target => 'flashAreaIFrame', :player_name => '/players/embeddedplayer.swf', :fvars => flashvars, :width=>"#{frame_width}px", :height=>"#{frame_height}px", :params=>params }
 
 %br
@@ -40,7 +44,7 @@
 - if @detail
   %b
     Now Displaying:
-    @detail.video.title rescue '-'
+    = @detail.video.title rescue '-'
 
   %br
   %div{ :style=>'color: grey; margin-top: 8px; margin-bottom: 8px;' }

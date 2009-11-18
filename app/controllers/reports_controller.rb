@@ -91,12 +91,12 @@ class ReportsController < BaseController
 
   def sync
     @report = Report.find(params[:id])
+    @small_player= params[:small_player]
+    
     #@video_list = JSON.parse(params[:video_list].tr('\\', ''))
     list_param = params[:video_list].tr('\\', '').sub(/^"/,'').sub(/"$/,'')
     @video_list = JSON.parse(list_param)
 
-    @small_player= params[:small_player]
-    
     @report_details = []
     order = 1
 
@@ -165,7 +165,6 @@ class ReportsController < BaseController
 
   def player
     @report = Report.find(params[:id])
-
     @small_player= params[:small_player]
 
     if params[:video_type]
@@ -185,6 +184,18 @@ class ReportsController < BaseController
     @detail = ReportDetail.new({:video_type=>params[:video_type],:video_id=>params[:video_id]})
     @detail.report = @report
     @small_player= params[:small_player]
+    
+    if @small_player
+      player_width = 334
+      player_height = 246
+      frame_width = 334
+      frame_height = 272
+    else
+      player_width = 400
+      player_height = 295
+      frame_width = 400
+      frame_height = 331
+    end
 
     @dockey = @detail.video_id ? @detail.video.dockey : @report.dockey
     @dockey ||= 0
@@ -196,10 +207,10 @@ class ReportsController < BaseController
 
     xml.instruct! unless options[:skip_instruct]
     out = xml.vars {
-      xml.frameW(400)
-      xml.frameH(330)
-      xml.playerW(400)
-      xml.playerH(330)
+      xml.frameW(frame_width)
+      xml.frameH(frame_height)
+      xml.playerW(player_width)
+      xml.playerH(player_height)
       xml.thumbW(0)
       xml.thumbH(0)
       xml.numColumnsOrRows(0)

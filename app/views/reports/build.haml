@@ -105,9 +105,9 @@
         .clearDiv
 
         .report-buttons{ :style=>'float: right' }
-          = link_to 'Save & Publish', "javascript:gs_reports_update(#{@report.id}, true)", {:class => 'genericButton'}
+          = link_to 'Save & Publish', "javascript:gs_reports_update(#{@report.id},true)", {:class => 'genericButton'}
         .report-buttons{ :style=>'float: right' }
-          = link_to 'Save Draft', "javascript:gs_reports_update(#{@report.id}, false)", {:class => 'genericButton', :style=>'margin-right:8px'}
+          = link_to 'Save Draft', "javascript:gs_reports_update(#{@report.id},false)", {:class => 'genericButton', :style=>'margin-right:8px'}
 
         .clearDiv
 
