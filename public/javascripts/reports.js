@@ -79,7 +79,10 @@
     params = { 'id': rid, 'video_list':Object.toJSON(req) }
     if(publish)
       params['publish']=publish
-    
+
+    if(gs_reports_small_player)
+      params['small_player']=1
+
     target = publish ? 'report-player' : 'dialog'
 
     new Ajax.Updater(target, '/reports/sync', {

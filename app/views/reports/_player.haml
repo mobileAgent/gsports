@@ -38,7 +38,9 @@
 %br
 
 - if @detail
-  %b= @detail.video.title rescue '-'
+  %b
+    Now Displaying:
+    @detail.video.title rescue '-'
 
   %br
   %div{ :style=>'color: grey; margin-top: 8px; margin-bottom: 8px;' }

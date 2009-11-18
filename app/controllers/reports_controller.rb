@@ -182,6 +182,7 @@ class ReportsController < BaseController
     @report = Report.find(params[:id])
     @detail = ReportDetail.new({:video_type=>params[:video_type],:video_id=>params[:video_id]})
     @detail.report = @report
+    @small_player= params[:small_player]
 
     @dockey = @detail.video_id ? @detail.video.dockey : @report.dockey
     @dockey ||= 0
