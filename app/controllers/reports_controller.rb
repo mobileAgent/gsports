@@ -95,6 +95,8 @@ class ReportsController < BaseController
     list_param = params[:video_list].tr('\\', '').sub(/^"/,'').sub(/"$/,'')
     @video_list = JSON.parse(list_param)
 
+    @small_player= params[:small_player]
+    
     @report_details = []
     order = 1
 
