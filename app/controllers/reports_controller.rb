@@ -94,6 +94,7 @@ class ReportsController < BaseController
         
       }
 
+      sport_list = []
       sports.each_pair() do |sport, seasons|
         season_list = []
 
@@ -105,15 +106,17 @@ class ReportsController < BaseController
           }
           season_list << season_branch
         end
-
+        season_list.sort!() {|a,b| a[:txt].to_i <=> b[:txt].to_i }
         sport_tree_root = {
           :id=>"sport-#{sport}",
           :txt => sport,
           :items => season_list,
         }
-        @tree_detail << sport_tree_root
+        sport_list << sport_tree_root
       end
+      sport_list.sort!() {|a,b| a[:txt] <=> b[:txt]}
 
+      @tree_detail += sport_list
 
     end
 
