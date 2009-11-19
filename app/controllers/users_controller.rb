@@ -220,7 +220,7 @@ class UsersController < BaseController
           logger.debug "Setting team league to admin value"
         end        
       end
-      
+
       # REG_NO_SAVE
       # Not doing DB updates here yet. Wait until after payment
       # @team.save!
@@ -475,6 +475,7 @@ class UsersController < BaseController
     logger.info "REGWATCH * Saving user record"
     @user.save!
 
+    add_default_permissions(@user)
 
     begin
 
@@ -522,6 +523,29 @@ class UsersController < BaseController
 
 
     redirect_to signup_completed_user_path(@user)
+  end
+
+  def add_default_permissions(user)
+
+    scope = nil
+
+    case user.role.id
+    when Role[:team].id
+      scope = user.team
+    when Role[:league].id
+      scope = user.league
+    else
+      return
+    end
+
+    Permission.staff_permission_list.each() { |permission,name|
+      begin
+        Permission.grant(user, permission, scope)
+      rescue Exception=>e
+        logger.warn "error granting permission for user:#{user.id}. #{e.message}"
+      end
+    }
+
   end
   
   def signup_completed

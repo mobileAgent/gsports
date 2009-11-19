@@ -21,7 +21,7 @@ class VideoAssetsController < BaseController
   before_filter :find_user, :only => [:index, :show, :new, :edit, :save_video ]
   before_filter :find_gamex_user, :only => [:index, :show, :new, :save_video ]
   #before_filter :find_staff_scope, :only => [:new, :save_video]
-  before_filter :only => [:new, :save_video] do  |c| c.find_staff_scope(Permission::UPLOAD) end
+  before_filter :only => [:new, :edit, :save_video] do  |c| c.find_staff_scope(Permission::UPLOAD) end
 
 
 

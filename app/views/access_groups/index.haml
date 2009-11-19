@@ -57,18 +57,19 @@
                 %td.leagueList{ :valign=>'top'}
                   -#=link_to grp.users.size, users_access_group_path(grp)
                   - for access_item in grp.access_items
-                    %div{ :id=>"access_item_#{access_item.id}" }
-                      = access_item.item.class.to_s
-                      \:&nbsp;
-                      - if access_item.item.respond_to? :title
-                        = access_item.item.title rescue '-'
-                      - elsif access_item.item.respond_to? :name
-                        = access_item.item.name rescue '-'
-                      - else
-                        = access_item.item.id
-                      [
-                      = link_to_remote 'X', {:url => {:controller=>:access_groups, :action=>:remove_video, :id=>access_item.id}, :confirm => 'Are you sure?', :method=>:delete}, :complete => evaluate_remote_response
-                      ]
+                    - if access_item
+                      %div{ :id=>"access_item_#{access_item.id}" }
+                        = access_item.item.class.to_s
+                        \:&nbsp;
+                        - if access_item.item.respond_to? :title
+                          = access_item.item.title rescue '-'
+                        - elsif access_item.item.respond_to? :name
+                          = access_item.item.name rescue '-'
+                        - else
+                          = access_item.item ? access_item.item.id : '-'
+                        [
+                        = link_to_remote 'X', {:url => {:controller=>:access_groups, :action=>:remove_video, :id=>access_item.id}, :confirm => 'Are you sure?', :method=>:delete}, :complete => evaluate_remote_response
+                        ]
         .apple_pagination
           = will_paginate @access_groups
 
