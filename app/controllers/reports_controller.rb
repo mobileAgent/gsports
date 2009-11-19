@@ -58,8 +58,69 @@ class ReportsController < BaseController
     @library = []
     @tree_detail = []
 
+    scope_vids = nil
+    case @scope
+    when Team
+      scope_vids = VideoAsset.for_team(@scope)
+    when League
+      scope_vids = VideoAsset.for_league(@scope)
+    end
+    
+    if(scope_vids)
+      sports = {}
+
+      scope_vids.each() { |video|
+        sport_name = ( video.sport && !video.sport.empty?) ? video.sport : 'Unknown'
+
+        seasons = sports[sport_name]
+        if !seasons
+          seasons = {}
+          sports[sport_name] = seasons
+        end
+
+        season_name = ( video.game_date && video.game_date.year ) ? video.game_date.year : 'Unknown'
+
+        season = seasons[season_name]
+        if !season
+          season = []
+          seasons[season_name] = season
+        end
+
+        item = {}
+        item[:id] = video.id
+        item[:txt] = video.title
+        item[:onclick] = 'gs_reports_loadclips'
+        season << item
+        
+      }
+
+      sports.each_pair() do |sport, seasons|
+        season_list = []
+
+        seasons.each_pair() do |season, items|
+          season_branch = {
+            :id=>"season-#{season}",
+            :txt => season,
+            :items => items,
+          }
+          season_list << season_branch
+        end
+
+        sport_tree_root = {
+          :id=>"sport-#{sport}",
+          :txt => sport,
+          :items => season_list,
+        }
+        @tree_detail << sport_tree_root
+      end
+
+
+    end
+
+
     GamexUser.for_user(current_user).each() do |gamex|
 
+      # Gamex Videos
 
 	    vids = VideoAsset.find(:all,
         :conditions => {
@@ -68,7 +129,7 @@ class ReportsController < BaseController
         },
         :order => "created_at DESC"
       )
-      
+
       items = []
       vids.each() { |video|
         item = {}
@@ -77,16 +138,21 @@ class ReportsController < BaseController
         item[:onclick] = 'gs_reports_loadclips'
         items << item
       }
-      tree_root = {
+      gamex_tree_root = {
         :id=>"gamex #{gamex.league.id}",
         :txt => gamex.league.name,
         :items => items,
       }
-      @tree_detail << tree_root
+
+      @tree_detail << gamex_tree_root
 
     end
 
+
+
+
   end
+
 
 
   def sync

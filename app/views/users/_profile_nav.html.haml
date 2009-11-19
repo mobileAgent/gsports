@@ -15,9 +15,6 @@
           = link_to 'Download', '/gamex/download'
         .menuitem
           = link_to 'History', '/gamex/history'
-        - if current_user.can?(Permission::REPORT)
-          .menuitem
-            = link_to 'Reports', reports_url()
         .menuitem-last
           = link_to 'Help', 'http://files.globalsports.net/gamexchange/helpcenter/home/index.php', :target => '_blank'
 
@@ -103,7 +100,11 @@
       -if !@render_gamex_menu && current_user.gamex_users.size > 0
         .menuitem
           = link_to 'GameXchange', '/gamex/download'
-  
+
+      - if current_user.can?(Permission::REPORT)
+        .menuitem
+          = link_to 'Reports', reports_url()
+
       .menuitem-hilite
         =link_to _('Edit Profile'), edit_user_path(current_user)
       .menuitem-hilite

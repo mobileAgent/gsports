@@ -101,7 +101,7 @@
     'imgBase' : '/TafelTree/imgs/',
     'width' : '280px',
     'height' : '290px',
-    'openAtLoad' : true,
+    'openAtLoad' : false,
     'cookies' : false
     });
   }
