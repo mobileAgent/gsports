@@ -165,16 +165,8 @@ namespace :vidavee do
     
     puts "Pushing video_asset id:#{video_asset.id}"
 
-    video_asset.video_status= Vidavee.PUSHING
-    video_asset.save!
+    dockey = video_asset.push_me()
 
-    vidavee = Vidavee.find(:first)
-    login = vidavee.login
-    if login.nil?
-      puts "Cannot log into vidavee back end"
-      return
-    end
-    dockey = vidavee.push_video login, video_asset, video_asset.uploaded_file_path
     if dockey
       puts "Success dockey=#{dockey}"
     else
@@ -183,7 +175,39 @@ namespace :vidavee do
     
 
   end
-  
+
+
+
+
+  desc "Push the specified video_asset.status to the vidavee backend.  Default status is 'saving'"
+  task :push_user_video_file_by_status, [:status] => :environment do |t,args|
+
+    args.with_defaults(:status => Vidavee.SAVING)
+
+    push_count = VideoUser.count(:all, :conditions=>{ :video_status => Vidavee.PUSHING })
+    if push_count > 4
+      puts "There are currently #{push_count} user videos being pushed... let's wait."
+      return
+    end
+
+    video_user = VideoUser.find(:first, :conditions=>{ :video_status => args.status })
+    if video_user.nil?
+      puts "Video asset not found for status #{args.status}"
+      return
+    end
+
+    puts "Pushing video_user id:#{video_user.id}"
+
+    dockey = video_user.push_me()
+
+    if dockey
+      puts "Success dockey=#{dockey}"
+    else
+      puts "Failed"
+    end
+
+
+  end
   
   
   

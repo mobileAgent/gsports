@@ -160,6 +160,11 @@ a.new-report-button:hover
 }
 
 
+.tafelTreecanevas{
+  cursor: pointer;
+}
+
+
 /* clips */
 
 .report-builder #clip-window {
@@ -173,7 +178,6 @@ a.new-report-button:hover
 .report-builder #clip-window .report-clip {
   xborder: 1px solid black;
   margin: 8px;
-
 }
 
 .report-viewer .report-clip .closer {
@@ -202,6 +206,8 @@ a.new-report-button:hover
 
   width: 90px;
   height: 80px;
+
+  cursor: pointer;
 }
 
 .report-clip .closer {

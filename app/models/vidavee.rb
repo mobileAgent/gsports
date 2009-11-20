@@ -353,9 +353,10 @@ RAILS_DEFAULT_LOGGER.info("Vidavee.new_playlist:= #{key})")
 
     puts "status of video from #{before_status} to #{video_asset.video_status} :#{Vidavee.READY}: #{'ready' == video_asset.video_status} #{Vidavee.READY == 'ready'}"
     if (before_status != video_asset.video_status) && (Vidavee.READY == video_asset.video_status)
-      puts "MEOW"
-      video_asset.ready_at = ::DateTime.now()
-      VideoHistory.uploaded(video_asset) if video_asset.gamex_league_id
+      if(video_asset === VideoAsset)
+        video_asset.ready_at = ::DateTime.now()
+        VideoHistory.uploaded(video_asset) if video_asset.gamex_league_id
+      end
     end
 
     video_asset
@@ -471,8 +472,8 @@ RAILS_DEFAULT_LOGGER.info("Vidavee.new_playlist:= #{key})")
       response = do_upload(url,*upload_params)
       dockey_elem = extract(response,'//dockey')
     rescue 
-      response = "Could not contact Vidavee backend: #{$!}"
-      logger.error "Could not contact Vidavee backend: #{$!}"
+      response = "Vidavee.push_video(): Could not contact Vidavee backend: #{$!}"
+      logger.error "Vidavee.push_video(): Could not contact Vidavee backend: #{$!}"
     end
 
     # update attributes in the asset
@@ -628,7 +629,7 @@ puts "======================================================"
         return nil
       end
     rescue 
-      logger.error "Could not contact Vidavee backend for #{url}: #{$!}"
+      logger.error "Vidavee.vrequest(): Could not contact Vidavee backend for #{url}: #{$!}"
       nil
     end
   end

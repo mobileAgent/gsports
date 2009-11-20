@@ -24,6 +24,11 @@
 			evalScripts: true
     });
 
+    branch.openIt(true);
+  }
+
+  function gs_reports_expandme(branch){
+    branch.openIt(true);
   }
 
   function gs_reports_drop_clip(rid,dragName,dropName) {

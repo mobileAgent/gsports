@@ -28,7 +28,20 @@ module VideoUpload
   end
   
   
-  
+  def push_me()
+
+    self.video_status= Vidavee.PUSHING
+    self.save!
+
+    vidavee = Vidavee.find(:first)
+    login = vidavee.login
+    raise Exception.new( "Cannot log into vidavee back end" ) if login.nil?
+
+    dockey = vidavee.push_video login, self, self.uploaded_file_path
+
+    dockey
+
+  end
   
 
 

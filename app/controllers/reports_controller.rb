@@ -102,7 +102,6 @@ class ReportsController < BaseController
         item[:txt] = video.title
         item[:onclick] = 'gs_reports_loadclips'
 
-        if true
         tag_items = []
         tags = Tag.find(:all, :joins=>"JOIN taggings on tag_id = tags.id JOIN video_clips on taggable_id = video_clips.id and taggable_type = 'VideoClip'", :conditions=>{ 'video_clips.video_asset_id'=>video.id} ).uniq
         tags.each() do |tag|
@@ -113,13 +112,6 @@ class ReportsController < BaseController
           }
         end
         item[:items] = tag_items
-        else
-          item[:items] = [{
-            :id => "test_id",
-            :txt => "test_name",
-            :onclick => "gs_reports_loadclips"
-          }]
-        end
 
         season << item
 
@@ -133,6 +125,7 @@ class ReportsController < BaseController
             :id=>"season-#{season}",
             :txt => season,
             :items => items,
+            :onclick => "gs_reports_expandme"
           }
           season_list << season_branch
         end
@@ -141,6 +134,7 @@ class ReportsController < BaseController
           :id=>"sport-#{sport}",
           :txt => sport,
           :items => season_list,
+          :onclick => "gs_reports_expandme"
         }
         sport_list << sport_tree_root
       end
@@ -177,6 +171,7 @@ class ReportsController < BaseController
         :id=>"gamex #{gamex.league.id}",
         :txt => gamex.league.name,
         :items => items,
+        :onclick => "gs_reports_expandme"
       }
 
       @tree_detail << gamex_tree_root

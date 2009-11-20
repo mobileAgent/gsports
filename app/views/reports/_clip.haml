@@ -21,7 +21,10 @@
 - classes = 'report-clip'
 - classes = classes + ' report-dropper' if options[ :draggable ]
 
+- tip_name = "#{options[:panel_id]}-tip"
+
 %div{ :id=>options[:panel_id], :class=>classes, :style=>options[:style], :onclick=>onclick }
+
   %span{ :class=>'tag', :oid=>video_id, :ocls=>video_type }
   %img{ :src=>"#{@vidavee.file_thumbnail_medium(video.dockey)}" }
   %a{ :class=>'closer', :onclick=>"javascript:gs_reports_drop_video(this)" } x
@@ -34,3 +37,23 @@
   - if options[ :draggable ]
     %script{ :type=>"text/javascript" }
       = "new Draggable('#{options[:panel_id]}', {revert: true, superghosting: true});"
+
+  .tanBackground{ :id=>tip_name, :style => "display:none; margin: 5px; padding: 5px; background-color: #E2E4A7; border: 1px solid #444444;" }
+    = video.description
+    %br
+    Length:
+    = video.video_length
+
+%script{ :type => "text/javascript" }
+  = %Q~var tooltip = new Tooltip('#{options[:panel_id]}', '#{tip_name}')~
+  tooltip.options.sticky_x = '-5px'
+  tooltip.options.sticky_y = '-5px'
+  tooltip.options.default_css = false
+
+
+
+
+
+
+
+
