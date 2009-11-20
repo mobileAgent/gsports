@@ -3,8 +3,15 @@
 	var reports_tree_request = null;
 
   function gs_reports_loadclips(branch) {
+    var vid, tid;
+    
+    bid = ""+branch.getId();
+    
+    [vid,tid]=bid.split('-')
 
-    vid = branch.getId();
+    params = { "video_asset_id": vid }
+    if(tid)
+      params["tag_id"] = tid
 
 		if( !(reports_tree_request == null) ){
 			reports_tree_request.transport.abort();
@@ -13,7 +20,7 @@
     $('clip-window').update('Loading clips...')
     
     new Ajax.Updater('clip-window', '/reports/clips', {
-			parameters: { "video_asset_id": vid },
+			parameters: params,
 			evalScripts: true
     });
 

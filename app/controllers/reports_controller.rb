@@ -58,14 +58,25 @@ class ReportsController < BaseController
     @library = []
     @tree_detail = []
 
+    @tree_detail += make_scope_video_tree()
+
+    @tree_detail << make_gamex_tree_root()
+
+  end
+
+
+  def make_scope_video_tree()
+    sport_list = []
+
     scope_vids = nil
+
     case @scope
     when Team
       scope_vids = VideoAsset.for_team(@scope)
     when League
       scope_vids = VideoAsset.for_league(@scope)
     end
-    
+
     if(scope_vids)
       sports = {}
 
@@ -90,11 +101,30 @@ class ReportsController < BaseController
         item[:id] = video.id
         item[:txt] = video.title
         item[:onclick] = 'gs_reports_loadclips'
+
+        if true
+        tag_items = []
+        tags = Tag.find(:all, :joins=>"JOIN taggings on tag_id = tags.id JOIN video_clips on taggable_id = video_clips.id and taggable_type = 'VideoClip'", :conditions=>{ 'video_clips.video_asset_id'=>video.id} ).uniq
+        tags.each() do |tag|
+          tag_items << {
+            :id => "#{video.id}-#{tag.id}",
+            :txt => tag.name,
+            :onclick => "gs_reports_loadclips"
+          }
+        end
+        item[:items] = tag_items
+        else
+          item[:items] = [{
+            :id => "test_id",
+            :txt => "test_name",
+            :onclick => "gs_reports_loadclips"
+          }]
+        end
+
         season << item
-        
+
       }
 
-      sport_list = []
       sports.each_pair() do |sport, seasons|
         season_list = []
 
@@ -116,10 +146,12 @@ class ReportsController < BaseController
       end
       sport_list.sort!() {|a,b| a[:txt] <=> b[:txt]}
 
-      @tree_detail += sport_list
-
     end
 
+    sport_list
+  end
+
+  def make_gamex_tree_root()
 
     GamexUser.for_user(current_user).each() do |gamex|
 
@@ -150,12 +182,7 @@ class ReportsController < BaseController
       @tree_detail << gamex_tree_root
 
     end
-
-
-
-
   end
-
 
 
   def sync
@@ -221,8 +248,13 @@ class ReportsController < BaseController
 
   def clips
     @video_asset = VideoAsset.find(params[:video_asset_id])
-
-    @video_clips = VideoClip.find(:all, :conditions=>{:video_asset_id => @video_asset.id})
+    
+    if params[:tag_id]
+      @tag = Tag.find(params[:tag_id])
+      @video_clips = VideoClip.find(:all, :conditions=>{ 'taggings.tag_id' => @tag.id, :video_asset_id=>@video_asset.id }, :joins=>"JOIN taggings on taggable_id = video_clips.id and taggable_type = 'VideoClip'")
+    else
+      @video_clips = VideoClip.find(:all, :conditions=>{:video_asset_id => @video_asset.id})
+    end
     @video_clips.delete_if() { |v|
       !current_user.has_access?(v)
     }
