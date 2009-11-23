@@ -266,7 +266,7 @@ a.new-report-button:hover
 #clip-strip-holder {
   float: right;
   position: relative;
-  width: 244px;
+  width: 245px;
   height: 580px;
   overflow: scroll;
   border: 2px solid lightgrey;
@@ -299,7 +299,7 @@ a.new-report-button:hover
   position: absolute;
   top: 0px;
   left: 0px;
-  width: 140px;
+  width: 230px;
 }
 
 .clip-strip-hover {

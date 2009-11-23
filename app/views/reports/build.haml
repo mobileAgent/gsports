@@ -71,7 +71,6 @@
             -#Drag clips here to add to Report
 
             #clip-strip-decoy
-
               -(1..5).each() do |i|
                 -dropper_id = "clip-dropper-#{i}"
                 %div{ :id=>dropper_id, :class=>'clip-dropper' }
@@ -79,9 +78,6 @@
                     %tr
                       %td{ :align=>'center', :valign=>'center' }= i
                   %br
-
-
-
             #clip-strip
               - @details.each() do |detail|
                 = render :partial=>'clip', :locals=>{ :video=>detail.video, :options=>{ :click_to_preview=>true, :panel_id_prefix=>'report'} }
@@ -96,7 +92,7 @@
           
           %script{ :type=>"text/javascript" }
             Sortable.create('clip-strip', { tag: 'div'});
-            ="Droppables.add('clip-strip', { accept: 'report-dropper', hoverclass: 'clip-strip-hover', onDrop: function(dragName,dropName) {gs_reports_drop_clip(#{@report.id},dragName,dropName)}})"
+            ="Droppables.add('clip-strip-decoy', { accept: 'report-dropper', hoverclass: 'clip-strip-hover', onDrop: function(dragName,dropName) {gs_reports_drop_clip(#{@report.id},dragName,dropName)}})"
             var gs_reports_small_player = true
 
           #report-player
