@@ -357,9 +357,10 @@ class User < ActiveRecord::Base
         
         return gamex_league ? gamex_league.release?(item) : true
       else
-        logger.info("has_access? isn't coach but this is a gamex video, need access to pass")
-        # isn't but this is a gamex video, need access to pass
-        access_pass = false
+        logger.info("has_access? isn't coach but this is a gamex video, passing to access group check")
+#        logger.info("has_access? isn't coach but this is a gamex video, need access to pass")
+#        # isn't but this is a gamex video, need access to pass
+#        access_pass = false
       end
     end
 
