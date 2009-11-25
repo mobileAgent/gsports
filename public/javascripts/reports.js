@@ -1,6 +1,10 @@
-  
+
+
+
+
   var tree = null;
 	var reports_tree_request = null;
+	var reports_active_tooltip = null;
 
   function gs_reports_loadclips(branch) {
     var vid, tid;
@@ -133,6 +137,12 @@
       $('clip-strip-decoy').insert( dropper )
 
     }
+  }
+
+  function gs_reports_clear_tips() {
+    //$('tooltip').update('')
+    //if(reports_active_tooltip)
+    //  reports_active_tooltip.remove();
   }
   
   function TafelTreeInit () {

@@ -45,10 +45,11 @@
     = video.video_length
 
 -#%script{ :type => "text/javascript" }
-  = %Q~var tooltip = new Tooltip('#{options[:panel_id]}', '#{tip_name}')~
-  tooltip.options.sticky_x = '-5px'
-  tooltip.options.sticky_y = '-5px'
-  tooltip.options.default_css = false
+  = %Q~var tooltip = new Tooltip('#{options[:panel_id]}', '#{tip_name}', { DOM_location: {parentId: "tooltip" }, target:'bottomLeft', tip:'topLeft' } )~
+  -#= %Q~var tooltip = new Tooltip('#{options[:panel_id]}', 'tooltip')~
+  -#tooltip.options.sticky_x = '-5px'
+  -#tooltip.options.sticky_y = '-5px'
+  -#tooltip.options.default_css = false
 
 
 

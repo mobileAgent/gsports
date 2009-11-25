@@ -4,7 +4,8 @@
 = stylesheet_link_tag '/TafelTree/tree.css'
 = javascript_include_tag 'reports'
 = stylesheet_link_tag 'reports'
-= javascript_include_tag 'tooltip'
+-#= javascript_include_tag 'tooltip'
+-#= javascript_include_tag 'cordinc_tooltip.js'
 
 %script{ :type=>"text/javascript" }
   var tree_struct =
@@ -114,3 +115,5 @@
         -#%p= f.submit "Update"
 
         -#= link_to 'All Reports', reports_path(:scope_select=>Permission.scope_selector_string(@scope))
+
+        #tooltip

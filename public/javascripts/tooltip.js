@@ -64,7 +64,7 @@ Tooltip.prototype = {
       backgroundColor: "#d6d6fc",
       delta_x: 5,
       delta_y: 5,
-      zindex: 1000,
+      zindex: 99999,
       sticky_x: null,
       sticky_y: null,
       relative_width: false
