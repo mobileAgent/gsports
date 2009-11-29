@@ -5,34 +5,36 @@
         =link_to "MAILBOX", messages_path
       = @title || "Sent Messages"
 
-  %form#Forum{ :action => "#", :method => "post" }
-    .mailContainer
-      /
-        Search
-      .mailMarginTop
-      .contentBox.tanBackground
-        .contentBoxHeader.yellowHeader
-          %h2.boxDescription
-            Sent Messages
+  %script
+    function hMessageAction(action) {
+    var f = document.forms['message_form'];
+    if (action=='delete') {
+    if(window.confirm('Are you sure you want to permanently delete these messages?')) {
+    ="f.action='#{url_for(:controller => 'sent_messages', :action => 'delete_multi')}';"
+    f.submit();
+    }
+    }
+    return false;
+    }
 
-        %div{ :style => "padding: 10px 20px 10px 20px" }
-          .mailMoreLink{ :style => "float:left" }
-            = link_to 'Inbox', messages_path
-            &nbsp;
-            = link_to 'Compose', new_message_path
-          %br
-          - if @sent_messages.respond_to?('total_pages') && @sent_messages.total_pages > 1
-            .apple_pagination
-              = will_paginate @sent_messages
+  -form_for :message, :url => { :action => "new" }, :method => "post", :html => {:name => "message_form"} do |f|
+    .mailContent
+      = render :partial => 'messages/tab_heading', :locals => {:page => 'sent'}
+  
+      .mailContainer
+        .mailNew
+          = render :partial => 'sent_messages/message_listing', :collection => @sent_messages
+  
+          %div
+            \&nbsp;
+            %br/
+            %br/
+          .forumIEfix
+            \&nbsp;
             
-      .forumContentBox
-        .forumBoxHeader
-
-        = render :partial => 'sent_messages/message', :collection => @sent_messages
-
-        %div
-          \&nbsp;
-          %br/
-          %br/
-        .forumIEfix
-          \&nbsp;
+            
+            
+          .clearDiv
+        .clearDiv
+        .clearDiv
+    .clearDiv

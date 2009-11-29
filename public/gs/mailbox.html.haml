@@ -288,7 +288,7 @@
                   Selected Mail
                 .mailItemSelected
                   .mailSenderSelect
-                    %input{ :checked => "checked", :name => "mailSelct", :type => "checkbox", :value => "", :onchange => "selectThisMessage(this)" }/
+                    %input{ :checked => "checked", :name => "mailSelct", :type => "checkbox", :value => "#{message.id}" }/
                   .mailPoster
                     %span.mailPosterImg
                       %a{ :href => "#" }
@@ -324,7 +324,7 @@
                   Unselected mail
                 .mailItem
                   .mailSenderSelect
-                    %input{ :name => "mailSelct", :type => "checkbox", :value => "", :onchange => "selectThisMessage(this)" }/
+                    %input{ :name => "mailSelct", :type => "checkbox", :value => "#{message.id}" }/
                   .mailPoster
                     %span.mailPosterImg
                       %a{ :href => "#" }

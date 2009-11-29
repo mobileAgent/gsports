@@ -1,0 +1,47 @@
+-message = message_listing
+- mthread = Message.message_thread(message)
+- if mthread.size > 1
+  - unread_count = mthread.unread(current_user.id).size
+
+- thread_size = (mthread ? mthread.size : 0).to_i
+- thread_unread = unread_count || 0
+- unreadCss = 'unread' unless message.read?
+
+.mailItem{:id => "message_#{message.id}", :class => "#{unreadCss}"}
+  .mailSelect
+    -if message.read?
+      %input{ :name => "msg_id_check[]", :type => "checkbox", :value => message.id, :onclick=>"hMessageCheck(this)" }/
+    -else
+      =image_tag('/images/listing_icons/17/globe.png')
+  .mailPoster
+    .mailPosterThumb
+      %a{:href=>"#{user_path(message.sender)}", :class=>"photo"}
+        =image_tag(message.sender.avatar_photo_url(:thumb), :alt=>"Profile Picture", :width=>"50", :height=>"50")
+    .mailPosterName
+      %br/
+      = link_to h(message.sender.full_name), user_path(message.sender)
+      - if message.sender.team_name
+        = link_to message.sender.team_name, team_path(message.sender.team_id)
+
+  .mailPostDivider
+    %br/
+
+  .mailPostListing{:onclick => "window.location='#{url_for(:action => :thread, :id => message.real_thread_id)}'", :style => "cursor:pointer"}
+    .mailPostListingDate
+      =human_date_time(message.created_at)
+
+    .mailPostListingSubject
+      =h(message.title)
+      - if thread_size > 1
+        = "(#{thread_size})"
+
+    .mailPostListingBody
+      = h(truncate_words(strip_tags(message.body),30))
+
+  .mailPostActions
+    = link_to image_tag('/images/listing_icons/17/delete.png', :mouseclick => '/images/listing_icons/17/delete_ro.png', :border=>0, :alt => 'Delete', :title => 'Delete'), url_for({ :controller => 'messages', :action => 'destroy', :id => message.id }), :method => 'delete', :confirm => 'Permanently delete this message?', :class => 'listingButton'
+    = render :partial => 'shared/inappropriate_listing', :locals => {:item => message, :img => '/images/listing_icons/17/inappropriate.png', :img_ro => '/images/listing_icons/17/inappropriate_ro.png'}
+    - if message.from_id != current_user.id
+      = link_to image_tag('/images/listing_icons/17/reply.png', :mouseclick => '/images/listing_icons/17/reply_ro.png', :border=>0, :alt => 'Reply', :title => 'Reply'), url_for({ :controller => 'messages', :action => 'new', :re => message.id }), :class => 'listingButton'        
+      
+  .clearDiv

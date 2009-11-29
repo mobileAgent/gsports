@@ -4,101 +4,40 @@
       %span
         =link_to "MAILBOX", messages_path
       = @title || "My Inbox"
-      
-  %form#Forum{ :action => "#", :method => "post" }
-    .mailContainer
-      /
-        Search
-      .mailMarginTop
-      .contentBox.tanBackground
-        .contentBoxHeader.yellowHeader
-          %h2.boxDescription
-            Messages
-        %div{ :style => "padding: 10px 20px 10px 20px" }
-          .mailMoreLink{ :style => "float:left" }
-            = link_to 'Sent Messages', sent_messages_path
-            &nbsp;
-            = link_to 'Compose', new_message_path
-          %br
-          - if @msgs.respond_to?('total_pages') && @msgs.total_pages > 1
-            .apple_pagination
-              = will_paginate @msgs
-          
 
-        -#.contentBoxContent.friendSearchWidgetArea
-          .mailSearchOptions
-            .mailButtonsRight
-              %a.genericButtonLight{ :href => "#" }
-                Delete Messages
-              %br/
-              %a.genericButtonLight{ :href => "#" }
-                Mark Inapropriate
-            .mailButtonsLeft
-              %a.genericButtonLight{ :href => "#" }
-                Mark as Read
-              %br/
-              %a.genericButtonLight{ :href => "#" }
-                Mark as Unread
-            .mailSelectLeft
-              %label.mailSelect{ :for => "mailFindSelect" }
-                Select
-              %select#mailFindSelect.mailSortBy{ :name => "mailSelect" }
-                %option{ :selected => "selected", :value => "" }
-                  \- - -
-                %option{ :value => "" }
-                  Option
-                %option{ :value => "" }
-                  Option
-                %option{ :value => "" }
-                  Option
-          .mailSearchOptionsLeft
-            %span.mailSearchColumn
-              Search:
-            %label.verbalSemantic{ :for => "mailSearchTerms" }
-              Search Terms
-            %input#mailSearchTerms.mailSearchBox{ :name => "searchTerms", :size => "20", :type => "text" }/
-            %input.mailSubmit{ :name => "submit", :src => "/gs/images/top_nav_search.gif", :type => "image", :value => "search", :alt => "Search" }/
+  %script
+    function hMessageAction(action) {
+    var f = document.forms['message_form'];
+    if(action=='unread') {
+    ="f.action='#{url_for(:controller => 'messages', :action => 'mark_unread_multi')}';"
+    f.submit();
+    } else if (action=='delete') {
+    if(window.confirm('Are you sure you want to permanently delete these messages?')) {
+    ="f.action='#{url_for(:controller => 'messages', :action => 'delete_multi')}';"
+    f.submit();
+    }
+    }
+    return false;
+    }
+    
+  -form_for :message, :url => { :action => "new" }, :method => "post", :html => {:name => "message_form"} do |f| 
+    .mailContent
+      = render :partial => 'messages/tab_heading', :locals => {:page => 'inbox'}
+        
+      .mailContainer  
+        .mailNew
+          = render :partial => 'messages/message_listing', :collection => @msgs
+  
+          %div
+            \&nbsp;
             %br/
             %br/
-            .clearDiv
-            %span.friendSearchColumn
-              Sort by:
-            %label.verbalSemantic{ :for => "mailFindSortBy" }
-              Sort by
-            %select#mailFindSortBy.mailSortBy{ :name => "sortBy" }
-              %option{ :value => "" }
-                Newest
-              %option{ :value => "" }
-                Option
-              %option{ :value => "" }
-                Option
-              %option{ :value => "" }
-                Option
-            %br/
-            .clearDiv
+          .forumIEfix
+            \&nbsp;
+            
+            
+            
           .clearDiv
-      
-      
-      
-      
-      /
-        Search
-
-      .forumContentBox
-        .forumBoxHeader
-
-        = render :partial => 'messages/message', :collection => @msgs
-
-        %div
-          \&nbsp;
-          %br/
-          %br/
-        .forumIEfix
-          \&nbsp;
-          
-          
-          
         .clearDiv
-      .clearDiv
-      .clearDiv
-  .clearDiv
+        .clearDiv
+    .clearDiv

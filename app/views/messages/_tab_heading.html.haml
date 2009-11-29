@@ -1,0 +1,71 @@
+-# PREREQUISITE
+-#  outside of this page, there must be a form defined with id='message_form'
+
+- page |= 'na' if page.nil?
+- unread = Message.unread(current_user)
+- mcount = (unread > 0) ? "(#{unread})" : ''
+
+.listingNavTabs
+  %div{ :class => "#{page == 'inbox' ? 'listingNavTab-sel' : 'listingNavTab'}" }
+    -if unread > 0
+      %strong
+        =link_to "Inbox (#{unread})", messages_path
+    -else
+      =link_to "Inbox", messages_path
+
+  %div{ :class => "#{page == 'sent' ? 'listingNavTab-sel' : 'listingNavTab'}" }
+    = link_to 'Sent Messages', sent_messages_path
+  .clearDiv
+  
+%script
+  function hMessageCheck(cb) {
+  var cbs=document.getElementsByName(cb.name)
+  var checkedCount=0;
+  for(var i=0;i<cbs.length && checkedCount<2;i++) {
+  if (cbs[i].checked) { checkedCount++; } 
+  }
+  document.getElementById('messageSelectedNone').style.display=checkedCount==0?'block':'none';
+  document.getElementById('messageSelectedSingle').style.display=checkedCount==1?'block':'none';
+  document.getElementById('messageSelectedMultiple').style.display=checkedCount>1?'block':'none';
+  }
+  
+.mailActions
+  = link_to image_tag('/images/messages/compose.jpg', :mouseclick => '/images/messages/compose_ro.jpg', :border=>0, :alt=>'Compose', :title=>'Compose'), new_message_path
+  = link_to image_tag('/images/messages/text.jpg', :mouseclick => '/images/messages/text_ro.jpg', :border=>0, :alt=>'Send Text Message', :title=>'Send Text Message'), new_message_path
+  #messageSelectedNone
+    = image_tag('/images/messages/unread_in.jpg')
+  
+    - if false
+      = image_tag('/images/messages/forward_in.jpg')
+  
+    = image_tag('/images/messages/delete_in.jpg')
+  
+  #messageSelectedMultiple{:style => 'display:none'}
+    - if !page.include? 'sent'
+      = link_to image_tag('/images/messages/unread.jpg', :mouseclick => '/images/messages/unread_ro.jpg', :border=>0, :alt=>'Mark Unread', :title=>'Mark Unread'), "javascript:hMessageAction('unread')"
+    -else
+      = image_tag('/images/messages/unread_in.jpg')
+    
+    - if false
+      = image_tag('/images/messages/forward_in.jpg')
+      
+    = link_to image_tag('/images/messages/delete.jpg', :mouseclick => '/images/messages/delete_ro.jpg', :border=>0, :alt=>'Delete', :title=>'Delete'),  "javascript:hMessageAction('delete')"
+
+  #messageSelectedSingle{:style => 'display:none'}
+    - if !page.include? 'sent'
+      = link_to image_tag('/images/messages/unread.jpg', :mouseclick => '/images/messages/unread_ro.jpg', :border=>0, :alt=>'Mark Unread', :title=>'Mark Unread'), "javascript:hMessageAction('unread')"
+    -else
+      = image_tag('/images/messages/unread_in.jpg')
+
+    - if false 
+      = link_to image_tag('/images/messages/forward.jpg', :mouseclick => '/images/messages/forward_ro.jpg', :border=>0, :alt=>'Forward', :title=>'Forward'),  "javascript:hMessageAction('forward')"
+
+    = link_to image_tag('/images/messages/delete.jpg', :mouseclick => '/images/messages/delete_ro.jpg', :border=>0, :alt=>'Delete', :title=>'Delete'),  "javascript:hMessageAction('delete')"
+
+  .clearDiv
+    
+-if page.include? 'view'
+  %script
+    document.getElementById('messageSelectedNone').style.display='none'
+    document.getElementById('messageSelectedSingle').style.display='block'
+    document.getElementById('messageSelectedMultiple').style.display='none'

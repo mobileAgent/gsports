@@ -1,7 +1,8 @@
 class MessagesController < BaseController
   
   protect_from_forgery :except => [:auto_complete_for_friend_full_name]
-  
+  uses_tiny_mce(:options => AppConfig.gsdefault_mce_options, :only => [:new, :create ])
+
   # GET /messages
   # GET /messages.xml
   def index
@@ -16,7 +17,14 @@ class MessagesController < BaseController
     thread = Message.find(params[:id])
     msgs = Message.message_thread(thread).owned_by(current_user.id)
     @unread_count = msgs.unread(current_user.id).size
-    @msgs = msgs.paginate(:page => params[:page], :order => "created_at DESC")
+    @msgs = msgs.paginate(:page => params[:page], :order => "created_at ASC")
+    
+    # mark as read...
+    @msgs.each do |msg|
+      next if msg.to_id != current_user.id
+      msg.read = 1
+      msg.save!
+    end
     
     render :action => 'thread'
   end
@@ -28,8 +36,57 @@ class MessagesController < BaseController
       msg.read = 1
       msg.save!
     end
-    redirect_to :action => 'thread', :id => params[:id]
+    
+    respond_to do |format|
+      format.html { redirect_to(messages_url) }
+      format.xml  { head :ok }
+      format.js
+    end
   end
+
+  def thread_unread
+    c = 0;
+    thread = Message.find(params[:id])
+    Message.message_thread(thread).each do |msg|
+      next if msg.to_id != current_user.id
+      if msg.read
+        msg.read = 0
+        msg.save!
+        c += 1
+      end
+    end
+    if c > 0
+      flash[:info] = "#{c > 1 ? c.to_s() + ' messages have' : 'Message has'} been marked unread."
+    end
+    
+    
+    respond_to do |format|
+      format.html { redirect_to(messages_url) }
+      format.xml  { head :ok }
+      format.js
+    end
+  end
+
+  def thread_delete
+    c = 0;
+    thread = Message.find(params[:id])
+    Message.message_thread(thread).each do |msg|
+      next if msg.to_id != current_user.id
+      msg.destroy
+      c += 1
+    end
+    if c > 0
+      flash[:info] = "#{c > 1 ? c + ' messages have' : 'Message has'} been deleted."
+    end
+    
+    respond_to do |format|
+      format.html { redirect_to(messages_url) }
+      format.xml  { head :ok }
+      format.js
+    end
+  end
+
+  
   
   # GET /messages/new
   def new
@@ -346,14 +403,70 @@ class MessagesController < BaseController
       return
     end
     @message.destroy
-    @msgs = Message.inbox(current_user)
+    
     respond_to do |format|
-      format.html { render :action => 'inbox' }
+      format.html { redirect_to(messages_url) }
+      format.xml  { head :ok }
       format.js
     end
   end
   
-  
+  def delete_multi
+    c=0
+    params[:msg_id_check].each do |msg_id|
+      message = Message.find(msg_id)
+      if (! (current_user.admin? || current_user.id == message.to_id))
+        redirect_to user_path(current_user)
+        return
+      end
+      message.destroy
+      c+=1
+    end
+    flash[:info] = "#{c} message#{c>1?'s have':' has'} been deleted."
+
+    respond_to do |format|
+      format.html { redirect_to(messages_url) }
+      format.xml  { head :ok }
+      format.js
+    end
+  end
+
+  def mark_unread_multi
+    c=0
+    params[:msg_id_check].each do |msg_id|
+      message = Message.find(msg_id)
+      if (! (current_user.admin? || current_user.id == message.to_id))
+        redirect_to user_path(current_user)
+        return
+      end
+      message.read=false;
+      message.save!
+      c+=1
+    end
+    flash[:info] = "#{c} conversation#{c>1?'s have':' has'} been marked unread."
+
+    respond_to do |format|
+      format.html { redirect_to(messages_url) }
+      format.xml  { head :ok }
+      format.js
+    end
+  end
+
+  def mark_unread
+    @message = Message.find(params[:id])
+    if (! (current_user.admin? || current_user.id == @message.to_id))
+      redirect_to user_path(current_user)
+      return
+    end
+    @message.read=0
+    @message.save!
+    
+    respond_to do |format|
+      format.html { redirect_to(messages_url) }
+      format.xml  { head :ok }
+      format.js
+    end
+  end
 
   def show
     @message = Message.find(params[:id])

@@ -171,13 +171,14 @@
   font-weight: bold
 }
 
+
 .listingNavTabs {
-  border-bottom: 5px solid #000000;
+  border-bottom: 1px solid #000000;
   padding: 0px 10px 0px 10px;
-  margin-bottom: 10px;
+  margin-bottom: 5px;
 }
 .listingNavTab, .listingNavTab-sel {
-  width: 125px;
+  width: 180px;
   height: 25px;
   margin-right: 5px;
   padding: 0px 5px 0px 5px;
@@ -185,23 +186,245 @@
   font-size: 110%;
   white-space: nowrap;
   overflow: hidden;
-  text-overflow: ellipsis;
   text-align: center;
   line-height: 25px;
   vertical-align: bottom;
   float: left;
-}
-.listingNavTab, .listingNavTab a, .listingNavTab a:visited {
   border: 1px solid #000000;
   border-bottom: 0px;
-  background-color: #FFFFFF;
-  color: #000000;
-  text-decoration: none;
+  text-overflow: ellipsis;
 }
-.listingNavTab-sel, .listingNavTab-sel a, .listingNavTab-sel a:visited {
-  border: 1px solid #000000;
-  background-color: #141C35;
-  color: #F4E50F;
+.listingNavTab {
+  background-color: #ececec;
+  color: #000000;
+}
+.listingNavTab-sel {
+  background-color: #3e4559;
+  color: #FFFFFF;
   font-weight: bold;
+  border-bottom: 2px solid #3e4559;
+}
+.listingNavTab a, .listingNavTab a:visited {
+  text-decoration: none;
+  color:#000000;
+}  
+.listingNavTab-sel a, .listingNavTab-sel a:visited {
+  text-decoration: none;
+  color: #FFFFFF;
+}  
+
+.mailContent{
+  width:805px;
+  padding: 20px 0px 10px 0px;
+  margin-left: 10px;
+  margin-bottom:10px;
+  float:left;
+  background-color: #ffffff;
+  display:inline;
 }
 
+.mailActions {
+  background-color: #FFFFFF;
+  width: auto;
+  display: block;
+  height: auto;
+  border-bottom: 1px solid #000000;
+  padding: 5px 5px 5px 5px;
+  margin-bottom: 10px;
+}
+.mailActions img {
+  margin-right: 10px;
+  float:left;
+}
+
+/* wrapper for new layout */
+.mailNew {
+}
+.mailNew .mailItem {
+  background-color: #FFFFFF;
+  width: auto;
+  height: 65px;
+  display: block;
+  padding: 10px 10px 10px 10px;
+  border-top: 1px solid #000000;
+  border-bottom: 1px solid #000000;
+  margin-bottom: 10px;  
+}
+.mailNew .unread {
+  background-color: #e9ecf5;
+}
+.mailNew .mailItem .mailSelect {
+  margin-top: 30px;
+  vertical-align: middle;
+  text-align: center;
+  float: left;
+}
+.mailNew .mailItem .mailPoster {
+  width: 200px;
+  float: left;
+  padding: 0px 5px 0px 5px;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.mailNew .mailItem .mailPoster .mailPosterThumb {
+  width: 50px;
+  padding-right: 5px;
+  float: left;
+}
+.mailNew .mailItem .mailPoster .mailPosterThumb img {
+  border: 1px solid #000000;
+  margin: 1px 1px 1px 1px;
+}
+.mailNew .mailItem .mailPoster .mailPosterThumb a:hover img {
+  border: 2px solid #000000;
+  margin: 0px 0px 0px 0px;
+}
+.mailNew .mailItem .mailPoster .mailPosterName {
+  width: 130px;
+  height: 50px;
+  padding-left: 5px;
+  float: left;
+  vertical-align: middle;
+  text-align: left;
+  font-weight: bold;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.mailNew .mailItem .mailPoster .mailPosterName a {
+  font-size: 110%;
+  text-decoration: none;
+}
+.mailNew .mailItem .mailPoster .mailPosterName a:hover {
+  text-decoration: underline;
+}
+
+.mailNew .mailItem .mailPostDivider {
+  width: 10px;
+  height: 50px;
+  float:left;
+  background-image: url(../images/messages/dots.png);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-position-y: center;
+}
+
+.mailNew .mailItem .mailPostListing {
+  width: 490px;
+  height: 50px;
+  padding-left: 10px;
+  float: left;
+  vertical-align: middle;
+}
+.mailNew .mailItem .mailPostListing .mailPostListingDate,
+.mailNew .mailItem .mailPostListing .mailPostListingSubject,
+.mailNew .mailItem .mailPostListing .mailPostListingBody {
+  white-space: nowrap;
+  overflow: hidden;
+  text-align: left;
+  text-overflow: ellipsis;
+  line-height: 150%;
+  background-color: inherit;
+}
+.mailNew .mailItem .mailPostListing .mailPostListingDate {
+  font-weight: bold;
+}
+.mailNew .mailItem .mailPostListing .mailPostListingSubject {
+  font-size: 125%;
+  color: #677cb2; 
+  font-weight: bold;
+}
+.mailNew .mailItem .mailPostListing .mailPostListingSubject a {
+  color: #677cb2;
+}
+.mailNew .mailItem .mailPostListing .mailPostListingSubject a:hover {
+  color: #677cb2;
+  text-decoration: underline;
+}
+
+.mailNew .mailItem .mailPostActions {
+  width: 17px;
+  float: right;
+}
+.mailNew .mailItem .mailPostActions a {  
+  width: 17px;
+  height: 17px;
+  margin: 3px 0px 3px 0px;
+  text-align: center;
+  float: right;
+}
+
+/* MESSAGE DISPLAY */
+.mailDetail {
+  background-color: #FFFFFF;
+  width: auto;
+  height: auto;
+  display: block;
+  padding: 10px 10px 10px 10px;
+  border-bottom: 1px solid #000000;
+  margin-bottom: 10px;
+}
+.mailDetail .mailPoster {
+  width: 200px;
+  float: left;
+  padding: 0px 5px 0px 5px;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.mailDetail .mailPoster .mailPosterThumb {
+  width: 50px;
+  padding-right: 5px;
+  float: left;
+}
+.mailDetail .mailPoster .mailPosterThumb img {
+  border: 1px solid #000000;
+  margin: 1px 1px 1px 1px;
+}
+.mailDetail .mailPoster .mailPosterThumb a:hover img {
+  border: 2px solid #000000;
+  margin: 0px 0px 0px 0px;
+}
+.mailDetail .mailPoster .mailPosterName {
+  width: 130px;
+  height: 50px;
+  float: left;
+  padding-left: 5px;
+  text-align: center;
+  font-size: 110%;
+  font-weight: bold;
+  vertical-align: middle;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.mailDetailContent {
+  width:500px;
+  float:left;
+}
+.mailDetailContent .mailDetailDate,
+.mailDetailContent .mailDetailTo,
+.mailDetailContent .mailDetailSubject {
+  width: 400px;
+  float:left;
+  text-align: left;
+  line-height: 150%;
+}
+.mailDetailContent .mailDetailDate,
+.mailDetailContent .mailDetailTo {
+  font-weight: bold;
+}
+.mailDetailContent .mailDetailSubject {
+  font-size: 125%;
+  color: #677cb2; 
+  font-weight: bold;
+}
+.mailDetailContent .mailDetailActions {
+  float:right;
+  width:100px;
+  height:30px;
+}
+.mailDetailContent .mailDetailActions a {
+  float:right;
+  margin:3px 0px 3px 3px;
+}

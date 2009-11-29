@@ -5,32 +5,29 @@
         =link_to "MAILBOX", messages_path
       Thread:
       = @title || @msgs.first.title
-      
-  %form#Forum{ :action => "#", :method => "post" }
-    .mailContainer
-      /
-        Search
-      .mailMarginTop
-      .contentBox.tanBackground
-        .contentBoxHeader.yellowHeader
-          %h2.boxDescription
-            Thread 
-        %div{ :style => "padding: 10px 20px 10px 20px" }
-          .mailMoreLink{ :style => "float:left" }
-            = link_to 'Inbox', messages_path
-            &nbsp;
-            = link_to 'Sent Messages', sent_messages_path
-            &nbsp;
-            = link_to 'Compose', new_message_path
-            &nbsp;
-            - if @unread_count > 0
-              = link_to 'Mark Thread as Read', :action=>'thread_read', :id=>@msgs.first.real_thread_id
 
-          %div{ :style => "float:right" }
-            = link_to 'Reply', url_for({ :controller => 'messages', :action => 'new', :re => @msgs.first.id }), :style => "float:right", :class => 'genericButton'
+  %script
+    function hMessageAction(action) {
+    var f = document.forms['message_form'];
+    if(action=='unread') {
+    ="f.action='#{url_for(:controller => 'messages', :action=>'thread_unread', :id=>@msgs.first.real_thread_id)}';"
+    f.submit();
+    } else if (action=='delete') {
+    if(window.confirm('Are you sure you want to permanently delete this thread?')) {
+    ="f.action='#{url_for(:controller => 'messages', :action=>'thread_delete', :id=>@msgs.first.real_thread_id)}';"
+    f.submit();
+    }
+    }
+    return false;
+    }
+    
+  -form_for :message, :url => { :action => "new" }, :method => "post", :html => {:name => "message_form"} do |f| 
+    .mailContent
+      = render :partial => 'messages/tab_heading', :locals => {:page => 'view'}
 
-          .clearDiv 
-          %br
+      -#
+        %div{ :style => "float:right" }
+          = link_to 'Reply', url_for({ :controller => 'messages', :action => 'new', :re => @msgs.first.id }), :style => "float:right", :class => 'genericButton'
 
       - if @msgs.respond_to?('total_pages') && @msgs.total_pages > 1
         .apple_pagination

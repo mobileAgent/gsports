@@ -11,90 +11,96 @@
       - else
         New Message
 
-  .listings 
-    .contentBox.tanBackground
-      .contentBoxHeader.yellowHeader
-        %h2.boxDescription
-          Compose Message 
-      .contentBoxContent
-        = error_messages_for :message
-      
-        - form_for(@message ||= Message.new, :html => {:id => "EditProfile"}) do |f|
-          -if @message.thread_id
-            = f.hidden_field :to_id
-            = f.hidden_field :thread_id
-            = f.hidden_field :title
-            %p
-            %label
-              To:
-              = @message.to_name
+  .mailContent
+    = render :partial => 'messages/tab_heading', :locals => {:page => 'compose'}
+  
+    = error_messages_for :message
+        
+    - form_for(@message ||= Message.new, :html => {:id => "EditProfile"}) do |f|
+      -if @message.thread_id
+        = f.hidden_field :to_id
+        = f.hidden_field :thread_id
+        = f.hidden_field :title
+        %p
+        %label
+          To:
+          = @message.to_name
+        %br/
+
+        %p
+          %br/
+        %label
+          Subject: RE:
+          = @message.title 
+  
+      -else
+  
+        -if (current_user.accepted_friendships.size > 0 || current_user.admin? || current_user.team_staff? || current_user.league_staff?)
+          %label{:style => "float:left"}
+            To:&nbsp;
+          %label{:style => "float:left"}
+            %em (required, separate multiple names with commas)
             %br/
-            %br/
-
-          -else
-
-            -if (current_user.accepted_friendships.size > 0 || current_user.admin? || current_user.team_staff? || current_user.league_staff?)
-              %label
-                To:
-                %em (required, separate multiple names with commas)
-                %br/
-                %em (Start typing a few letters of the name of the friend you want to send to...)
-                -if current_user.admin?
-                  %br/
-                  %em (you can enter the keyword 'all' to send to all users, it will take a while)
-                - if current_user.team_staff?
-                  %br/
-                  %em= "(you can enter the keyword 'team' to send to all users associated with #{current_user.team.name})"
-                - if current_user.league_staff?
-                  %br/
-                  %em= "(you can enter the keyword 'league' to send to all users associated with #{current_user.league.name})"
-              %p
-                = text_field_with_auto_complete :message, :to_name, {:autocomplete => 'off', :style => 'width:80%'},{:url => { :controller => 'messages', :action => 'auto_complete_for_friend_full_name'}, :tokens => [',']}
- 
-            -if current_user.team_staff?
-              - team_access_groups = AccessGroup.for_team(current_user.team)
-              - unless team_access_groups.nil?
-                %p
-                %label
-                  Message all contacts in selected groups
-                %p
-                  - for grp in team_access_groups
-                    %div{:style => 'width:200px; display:inline; padding:3px'}
-                      = check_box_tag "to_access_group_id[]", grp.id
-                      = grp.name
-                %br/
-
-            - if @shared_access 
-              %p
-              %label
-                Email address of non-member
-                %em (separate multiple emails with commas)
-              %p
-                = f.text_field :to_email, :style => 'width:80%;'
-                %br/
-
-            %p
-            %label
-              Subject 
-              %em (required)
-            %p
-              = f.text_field :title, :style => 'width:80%;'
+            %em (Start typing a few letters of the name of the friend you want to send to...)
+            -if current_user.admin?
               %br/
-
+              %em (you can enter the keyword 'all' to send to all users, it will take a while)
+            - if current_user.team_staff?
+              %br/
+              %em= "(you can enter the keyword 'team' to send to all users associated with #{current_user.team.name})"
+            - if current_user.league_staff?
+              %br/
+              %em= "(you can enter the keyword 'league' to send to all users associated with #{current_user.league.name})"
+          .clearDiv
+          %p
+            = text_field_with_auto_complete :message, :to_name, {:autocomplete => 'off', :style => 'width:80%'},{:url => { :controller => 'messages', :action => 'auto_complete_for_friend_full_name'}, :tokens => [',']}
+   
+        -if current_user.team_staff?
+          - team_access_groups = AccessGroup.for_team(current_user.team)
+          - unless team_access_groups.nil?
+            %p
+            %label
+              Message all contacts in selected groups
+            %p
+              - for grp in team_access_groups
+                %div{:style => 'width:200px; display:inline; padding:3px'}
+                  = check_box_tag "to_access_group_id[]", grp.id
+                  = grp.name
+            %br/
+  
+        - if @shared_access 
           %p
           %label
-            Body Text 
-            %em (required)
+            Email address of non-member
+            %em (separate multiple emails with commas)
           %p
-            = f.text_area :body, :rows => 10, :style => 'width:80%;'
-
-          -if @shared_access
-            = f.hidden_field :shared_access_id
-            =render :partial => 'messages/shared_item', :locals => {:body => nil}
-
-          %p
-            = submit_tag "Send"
-            -if @shared_access
-              &nbsp;(Note: the recipient will see your email address '
-              = current_user.email
-              ')
+            = f.text_field :to_email, :style => 'width:80%;'
+            %br/
+  
+        %p
+          %br/
+        %label
+          Subject 
+          %em (required)
+        %p
+          = f.text_field :title, :style => 'width:80%'
+          %br/
+  
+      %p
+        %br/
+      %label
+        Body Text 
+        %em (required)
+      %p
+        = f.text_area :body, :rows => 10, :style => 'width:80%'
+  
+      -if @shared_access
+        = f.hidden_field :shared_access_id
+        =render :partial => 'messages/shared_item', :locals => {:body => nil}
+  
+      %p
+        = submit_tag "Send"
+        -if @shared_access
+          &nbsp;(Note: the recipient will see your email address '
+          = current_user.email
+          ')

@@ -1,0 +1,50 @@
+- message = message_listing
+- recipient_names = message.recipient_display_array
+
+- if message.to_ids_array.size > 0
+  - to_user = User.find(message.to_ids_array[0])
+
+.mailItem{:id => "message_#{message.id}"}
+  .mailSelect
+    %input{ :name => "msg_id_check[]", :type => "checkbox", :value => message.id, :onclick=>"hMessageCheck(this)"}/
+  .mailPoster
+    .mailPosterThumb
+      -unless to_user.nil?
+        %a{:href=>"#{user_path(to_user)}", :class=>"photo"}
+          =image_tag(to_user.avatar_photo_url(:thumb), :alt=>"Profile Picture", :width=>"50", :height=>"50")
+      -else
+        =image_tag('/images/icon_missing_thumb.gif', :width=>"50", :height=>"50")
+    .mailPosterName      
+      %br/
+      -unless to_user.nil?
+        = link_to to_user.full_name, user_path(to_user)
+        - if recipient_names.size == 1
+          - if to_user.team_name
+            = link_to to_user.team_name, team_path(to_user.team_id)          
+        - else
+          = "and #{recipient_names.size - 1} other#{recipient_names.size > 2 ? 's' : ''}"
+        
+      -else 
+        - if recipient_names.size == 1
+          = h(recipient_names.join(", "))
+        - else
+          = #{recipient_names.size} recipients" 
+
+  .mailPostDivider
+    %br/
+      
+  .mailPostListing{:onclick => "window.location='#{url_for(:action => :show, :id => message.id)}'", :style => "cursor:pointer"}
+    .mailPostListingDate
+      =human_date_time(message.created_at)
+
+    .mailPostListingSubject
+      =h(message.title)
+
+    .mailPostListingBody
+      = h(truncate_words(strip_tags(message.body),30))
+
+  .mailPostActions
+    = link_to image_tag('/images/listing_icons/17/delete.png', :mouseclick => '/images/listing_icons/17/delete_ro.png', :border=>0, :alt => 'Delete', :title => 'Delete'), {:url => { :controller => 'sent_messages', :action => 'destroy', :id => message}, :method => :delete, :confirm => 'Are you sure?'}, {:method => :delete, :confirm => 'Permanently delete this post?', :class => 'listingButton'}
+  
+  .clearDiv
+    

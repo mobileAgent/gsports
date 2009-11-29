@@ -7,52 +7,43 @@
 - thread_size = (mthread ? mthread.size : 0).to_i
 - thread_unread = unread_count || 0
 
-.mailItem{:id => "message_#{message.id}"}
-  .mailSenderSelect
-    -#
-      %input{ :name => "mailSelct", :type => "checkbox", :value => message.id, :onchange => "selectThisMessage(this)" }/
+.mailDetail{:id => "message_#{message.id}"}
   .mailPoster
-    %span.mailPosterImg
+    .mailPosterThumb
       %a{:href=>"#{user_path(message.sender)}", :class=>"photo"}
-        =image_tag(message.sender.avatar_photo_url(:thumb), :alt=>"Profile Picture", :width=>"80", :height=>"80")
-    = link_to message.sender.full_name, user_path(message.sender)
-  .mailPostSummary
-    .mailPostSummaryDate
+        =image_tag(message.sender.avatar_photo_url(:thumb), :alt=>"Profile Picture", :width=>"50", :height=>"50")
+    .mailPosterName
+      %br/
+      = link_to message.sender.full_name, user_path(message.sender)
+  .mailDetailContent
+
+    .mailDetailActions
+      = link_to image_tag('/images/listing_icons/17/delete.png', :mouseclick => '/images/listing_icons/17/delete_ro.png', :border=>0, :alt => 'Delete', :title => 'Delete'), {:url => { :controller => 'messages', :action => 'destroy', :id => message}, :method => :delete, :confirm => 'Are you sure?'}, {:method => :delete, :confirm => 'Permanently delete this post?', :class => 'listingButton'}
+      = render :partial => 'shared/inappropriate_listing', :locals => {:item => message, :img => '/images/listing_icons/17/inappropriate.png', :img_ro => '/images/listing_icons/17/inappropriate_ro.png'}
+      - if message.from_id != current_user.id
+        = link_to image_tag('/images/listing_icons/17/reply.png', :mouseclick => '/images/listing_icons/17/reply_ro.png', :border=>0, :alt => 'Reply', :title => 'Reply'), url_for({ :controller => 'messages', :action => 'new', :re => message.id }), :class => 'listingButton'        
+
+    .mailDetailDate
       =human_date_time(message.created_at)
-    %p
-      - if !thread
-        %p
-          %strong
-            - unless message.to_access_group_id.nil?
-              To:
-              = h(AccessGroup.find(message.to_access_group_id).name)
-            - else
-              -if message.recipient.id != current_user.id
-                To:
-                = h(message.recipient.full_name)
-            %br
-            Subject: 
-            = truncate(h(message.title),85)
-            - if thread_size > 1
-              = " (#{thread_size})"
-            %br
-    %br
-    - if thread_size > 1
-      %div{ :onclick => "window.location='#{url_for(:action => :thread, :id => message.real_thread_id)}'", :style => "cursor:pointer" }
+
+    .mailDetailSubject
+      =h(message.title)
+      - if !thread && thread_size > 1
+        = link_to "(#{thread_size} messages)", :action => :thread, :id => message.real_thread_id
+
+    -# todo: need to pull out the To: fiend from the sent_message
+      - if message.thread_id.nil?
+        .mailDetailTo
+          -SentMessage.find().recipientDisplay
+    
+    .clearDiv
+
+    .mailDetailBody
+      - if thread_size > 1
+        %div{ :onclick => "window.location='#{url_for(:action => :thread, :id => message.real_thread_id)}'", :style => "cursor:pointer" }
+          = render :partial => "message_body", :locals => {:message_body => message, :summary => true, :thread_unread => thread_unread}
+      - else
         = render :partial => "message_body", :locals => {:message_body => message, :summary => true, :thread_unread => thread_unread}
-    - else
-      = render :partial => "message_body", :locals => {:message_body => message, :summary => true, :thread_unread => thread_unread}
 
-    - if thread_size > 1
-      .mailReadMessage 
-        = link_to "read thread of #{thread_size} messages &raquo;" + (thread_unread > 0 ? " (#{thread_unread} unread)" : ""), :action => :thread, :id => message.real_thread_id
-
-  .forumActions
-    - if !thread && message.from_id != current_user.id
-      = link_to 'Reply', url_for({ :controller => 'messages', :action => 'new', :re => message.id }), :class => 'genericButton'
-      %br
-    - if message.to_id == current_user.id
-      = link_to_remote 'Delete', {:url => { :controller => 'messages', :action => 'destroy', :id => message}, :method => :delete, :confirm => 'Are you sure?'}, :class => 'genericButton'
-      %br
-      = render :partial => 'shared/inappropriate_item', :locals => {:item => message}
   .clearDiv
+.clearDiv
