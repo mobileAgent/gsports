@@ -170,7 +170,9 @@ class User < ActiveRecord::Base
 
   def scopes_for(role)
     if admin?
-      Permission.has_role(role).collect(&:scope).uniq.sort_by(){ |s| "#{s.class} #{s.name}"}
+      p = Permission.has_role(role).collect(&:scope).uniq
+      p.delete_if { |s| s.nil? }
+      p.sort_by(){ |s| "#{s.class} #{s.name}"}
     else
       Permission.range(self, role)
     end
