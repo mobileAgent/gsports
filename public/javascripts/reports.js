@@ -1,6 +1,10 @@
-  
+
+
+
+
   var tree = null;
 	var reports_tree_request = null;
+	var reports_active_tooltip = null;
 
   function gs_reports_loadclips(branch) {
     var vid, tid;
@@ -50,6 +54,7 @@
     Sortable.create('clip-strip', { tag: 'div'});
 
     gs_reports_clip_select(rid, oid, ocls)
+    gs_reports_update_clip_droppers()
   }
   
   function gs_reports_add_all(rid) {
@@ -59,6 +64,7 @@
         gs_reports_drop_clip(1,child,target)
       }
     });
+    gs_reports_update_clip_droppers()
   }
 
   function gs_reports_clip_select(rid,ctype,cid) {
@@ -105,6 +111,38 @@
 
   function gs_reports_drop_video(source) {
     source.parentNode.remove()
+  }
+
+  function gs_reports_update_clip_droppers() {
+    clips = 0
+    $A($('clip-strip').childNodes).each(function(child) {     if(child.id && child.hasClassName('report-clip')){ clips++ }     });
+    droppers = 0
+    $A($('clip-strip-decoy').childNodes).each(function(child) {     if(child.id && child.hasClassName('clip-dropper')){ droppers++ }     });
+
+    if(clips >= droppers){
+      dropper_no = droppers+1
+
+      dropper_id = "clip-dropper-"+dropper_no
+
+      dropper = new Element("div", { id: dropper_id })
+      dropper.addClassName('clip-dropper')
+        table = new Element("table")
+          tr = new Element("tr")
+            td = new Element("td")
+            td.innerHTML = dropper_no
+          tr.appendChild(td);
+        table.appendChild(tr);
+      dropper.appendChild(table);
+
+      $('clip-strip-decoy').insert( dropper )
+
+    }
+  }
+
+  function gs_reports_clear_tips() {
+    //$('tooltip').update('')
+    //if(reports_active_tooltip)
+    //  reports_active_tooltip.remove();
   }
   
   function TafelTreeInit () {
