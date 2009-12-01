@@ -417,7 +417,7 @@ class UsersController < BaseController
 
     # if the cost is 0, we need to make a $9.99, and then void it for verification 
     cost_for_gateway = @cost == 0 ? (VERIFICATION_COST * 100).to_i : (@cost * 100).to_i
-    @response = gateway.purchase(cost_for_gateway, @credit_card)
+    @response = gateway.purchase(cost_for_gateway, @credit_card, {:description=>"Registration for User ID: #{@user.id}"})
 
     logger.info "REGWATCH * Response from gateway #{@response.inspect} for #{@user.full_name} at #{cost_for_gateway}"
     
@@ -892,7 +892,7 @@ class UsersController < BaseController
       cost_for_gateway = (@cost * 100).to_i
       
       # make the purchase
-      @response = gateway.purchase(cost_for_gateway, @am_credit_card)      
+      @response = gateway.purchase(cost_for_gateway, @am_credit_card, {:description=>"Update Billing for User ID: #{@user.id}"})
       logger.debug "Response from gateway #{@response.inspect} for #{cost_for_gateway}"
      
       if (@response.success?)
