@@ -25,7 +25,7 @@ class UsersController < BaseController
   
   VERIFICATION_COST = 9.99
   
-  sortable_attributes :id, :firstname, :lastname, :team_id, :league_id, 'memberships.billing_method', :email
+  sortable_attributes :id, :firstname, :lastname, :team_id, :league_id, 'memberships.billing_method', :email, :role_id, 'teams.name'
   
   
   def show
@@ -1090,7 +1090,7 @@ class UsersController < BaseController
   end
 
   def registrations
-    @users = User.paginate :all, :order=>sort_order, :include => [ :memberships ], :page => params[:page]
+    @users = User.paginate :all, :order=>sort_order, :include => [ :memberships, :team ], :page => params[:page]
   end
 
   def edit_promotion

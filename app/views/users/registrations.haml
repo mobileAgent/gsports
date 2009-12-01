@@ -12,31 +12,36 @@
             = sortable_table_header :class=>"padded sortableContentHeader", :name => "Last Name",  :sort => "lastname"
             = sortable_table_header :class=>"padded sortableContentHeader", :name => "(ID)",         :sort => "id"
             = sortable_table_header :class=>"padded sortableContentHeader", :name => "email",         :sort => "email"
-            
+
             = sortable_table_header :class=>"padded sortableContentHeader", :name => "Billing",    :sort => 'memberships.billing_method'
             %th.padded.contentBoxHeader History
             %th.padded.contentBoxHeader Join Date
             %th.padded.contentBoxHeader Promotion
             %th.padded.contentBoxHeader Promo Code Expiry
             %th.padded.contentBoxHeader 
+        %thead
+          %tr.yellowHeader
+            = sortable_table_header :class=>"padded sortableContentHeader", :name => "Team",      :sort => "teams.name"
+            %th.padded.contentBoxHeader{ :colspan=>2 }
+            = sortable_table_header :class=>"padded sortableContentHeader", :name => "Role",         :sort => "role_id"
+            %th.padded.contentBoxHeader{ :colspan=>6 }
     
         %tbody
           - for user in @users
             %tr.leagueList
               
               %td.leagueList{ :colspan=>4 }
-                = link_to "#{h user.full_name} (#{user.id})", user_path(user.id), :class=>'admin-userreg-link-user'
+                = link_to "#{h user.full_name} (#{user.id})", user_path(user.id) #, :class=>'admin-userreg-link-user'
                 = link_to "#{h user.email}", "mailto:#{user.email}", :style=>'float:right;'
                 %br
-
-                - if user.team #_admin?
-                  - team_name = user.team.name rescue NoMethodError rescue RecordNotFound
-                  = link_to "#{team_name} (#{user.team_id})", team_path(user.team_id), :class=>'admin-userreg-link-org'
-                  %br
-                - elsif user.league_admin?
+                - if user.league_admin?
                   - league_name = user.league.name rescue RecordNotFound rescue NoMethodError 
-                  = link_to "#{league_name} (#{user.league_id})", league_path(user.league_id), :class=>'admin-userreg-link-org'
-                
+                  = link_to "#{league_name} (#{user.league_id})", league_path(user.league_id) #, :class=>'admin-userreg-link-org'
+                - elsif user.team #_admin?
+                  - team_name = user.team.name rescue NoMethodError rescue RecordNotFound
+                  = link_to "#{team_name} (#{user.team_id})", team_path(user.team_id) #, :class=>'admin-userreg-link-org'
+                %span{ :style=>'float:right;' }= h user.role.name
+
               - mem = user.current_membership
               - if mem
                 
