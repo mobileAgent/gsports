@@ -25,7 +25,7 @@ class UsersController < BaseController
   
   VERIFICATION_COST = 9.99
   
-  sortable_attributes :id, :firstname, :lastname, :team_id, :league_id, 'memberships.billing_method'
+  sortable_attributes :id, :firstname, :lastname, :team_id, :league_id, 'memberships.billing_method', :email
   
   
   def show
