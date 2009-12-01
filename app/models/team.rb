@@ -8,6 +8,7 @@ class Team < ActiveRecord::Base
   belongs_to :state
 
   before_destroy :reassign_dependent_items
+  before_destroy { |team| Permission.in_scope(team).destroy_all }
 
   # Every team needs a name and a league
   validates_presence_of :name
