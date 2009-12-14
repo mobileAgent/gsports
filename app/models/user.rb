@@ -137,7 +137,9 @@ class User < ActiveRecord::Base
     "#{firstname} #{lastname}"
   end
 
-
+  def name
+    full_name
+  end
 
   # Override CE
   def display_name
