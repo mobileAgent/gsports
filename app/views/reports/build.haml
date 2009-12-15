@@ -99,6 +99,11 @@
           #report-player
             - @small_player= true
             = render :partial=>'player' #, :locals=>{ :options=>{:small_player=>true} }
+          %br
+          %br
+          #report-detail
+            = render :partial=>'clip_detail'
+
 
         .clearDiv
 
@@ -117,3 +122,6 @@
         -#= link_to 'All Reports', reports_path(:scope_select=>Permission.scope_selector_string(@scope))
 
         #tooltip
+
+%script{ :type=>"text/javascript" }
+  Event.observe(window, 'load', function() { setTimeout ( "gs_reports_play_all()", 2000 ); } );

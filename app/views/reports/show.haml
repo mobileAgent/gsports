@@ -43,5 +43,13 @@
 
           #report-player
             = render :partial=>'player'
+          %br
+          %br
+          #report-detail
+            = render :partial=>'clip_detail'
 
         .clearDiv
+
+
+%script{ :type=>"text/javascript" }
+  Event.observe(window, 'load', function() { setTimeout ( "gs_reports_play_all()", 2000 ); } );

@@ -41,7 +41,8 @@
 
     oid = $(dragName).down('.tag').readAttribute('oid')
     ocls = $(dragName).down('.tag').readAttribute('ocls')
-    clickstr = "javascript:gs_reports_clip_select("+rid+", "+oid+", '"+ocls+"')"
+    //clickstr = "javascript:gs_reports_clip_select("+rid+", "+oid+", '"+ocls+"')"
+    clickstr = "javascript:gs_reports_clip_select("+rid+", '"+divid+"')"
 
     drop = new Element("div", { id: divid, onclick:clickstr })
     drop.addClassName('report-clip')
@@ -53,7 +54,7 @@
     Sortable.destroy('clip-strip')
     Sortable.create('clip-strip', { tag: 'div'});
 
-    gs_reports_clip_select(rid, oid, ocls)
+    gs_reports_clip_select(rid, divid) //oid, ocls)
     gs_reports_update_clip_droppers()
   }
   
@@ -67,17 +68,56 @@
     gs_reports_update_clip_droppers()
   }
 
-  function gs_reports_clip_select(rid,ctype,cid) {
-    $('report-player').update('Loading...')
-    
-    params = { 'id': rid, 'video_id': ctype, 'video_type': cid }
-    if(gs_reports_small_player)
-      params['small_player']=1
+  function gs_reports_clip_select(rid,divid) { //ctype,cid) {
 
-    new Ajax.Updater('report-player', '/reports/player', {
+    cid = $(divid).down('.tag').readAttribute('oid')
+    ctype = $(divid).down('.tag').readAttribute('ocls')
+    dockey = $(divid).down('.tag').readAttribute('dockey')
+
+    $('report-detail').update('Loading...')
+    
+    params = { 'id': rid, 'video_id': cid, 'video_type': ctype }
+    //if(gs_reports_small_player)
+    //  params['small_player']=1
+
+    new Ajax.Updater('report-detail', '/reports/clip_detail', {
 			parameters: params,
 			evalScripts: true
     });
+
+    gs_reports_playDockey(dockey)
+  }
+
+
+  function gs_reports_playDockey(dockey) {
+    $("flashAreaIFrame").playDockey(dockey);
+  }
+
+  function gs_reports_getFlexApp(appName)
+  {
+    if (navigator.appName.indexOf ("Microsoft") !=-1)
+    {
+      return window[appName];
+    }
+    else
+    {
+      return document[appName];
+    }
+  }
+
+  var gs_reports_dockey_list = new Array();
+  var gs_reports_dockey_active_list = null;
+
+  function getNextDockey() {
+    key = gs_reports_dockey_active_list.shift()
+    if(key){
+      gs_reports_playDockey(key)
+    }
+  }
+
+  function gs_reports_play_all() {
+    gs_reports_dockey_active_list = gs_reports_dockey_list.clone()
+    getNextDockey()
   }
 
 
@@ -144,7 +184,7 @@
     //if(reports_active_tooltip)
     //  reports_active_tooltip.remove();
   }
-  
+
   function TafelTreeInit () {
     tree = new TafelTree('tree-view', tree_struct, {
     'generate' : true,
