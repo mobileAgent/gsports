@@ -11,7 +11,10 @@
     
     bid = ""+branch.getId();
     
-    [vid,tid]=bid.split('-')
+    //[vid,tid]=bid.split('-')
+    var ids=bid.split('-')
+    vid = ids[0]
+    bid = ids[1]
 
     params = { "video_asset_id": vid }
     if(tid)
@@ -192,9 +195,13 @@
     'width' : '280px',
     'height' : '290px',
     'openAtLoad' : false,
-    'cookies' : false
+    'cookies' : false,
+    'lineStyle' : 'none'
     });
+
   }
+
+
 
 
 

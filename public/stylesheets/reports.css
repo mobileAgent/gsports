@@ -173,6 +173,7 @@ a.new-report-button:hover
   overflow: scroll;
   background-color: #efefef;
   position: relative;
+  overflow-x:hidden;
 }
 
 .report-builder #clip-window .report-clip {
@@ -271,6 +272,7 @@ a.new-report-button:hover
   overflow: scroll;
   border: 2px solid lightgrey;
   margin: 3px;
+  overflow-x:hidden;
 }
 
 #clip-strip {
@@ -333,3 +335,16 @@ a.new-report-button:hover
 	background-color: orange;
 }
 
+
+
+
+
+
+
+.tafelTree_root {
+ border-top: 1px dashed #909090;
+}
+
+.tafelTree_row {
+ border-top: 1px dashed #909090;
+}
