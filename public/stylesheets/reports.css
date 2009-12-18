@@ -275,9 +275,16 @@ a.new-report-button:hover
   overflow-x:hidden;
 }
 
+.report-layout .drag-label {
+  position: absolute;
+  font-weight: bold;
+  font-style: italic;
+  padding: 3px;
+}
+
 #clip-strip {
   position: absolute;
-  top: 0px;
+  top: 20px;
   left: 0px;
   width: 230px;
   display: block;
@@ -299,7 +306,7 @@ a.new-report-button:hover
 
 #clip-strip-decoy {
   position: absolute;
-  top: 0px;
+  top: 20px;
   left: 0px;
   width: 230px;
 }

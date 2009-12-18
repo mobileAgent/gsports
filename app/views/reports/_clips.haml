@@ -1,7 +1,7 @@
 
 - @video_clips.each() do |clip|
   -# panel_id = "clip-#{clip.id}"
-  = render :partial=>'clip', :locals=>{ :video=>clip, :options=>{ :draggable=>true, :style=>'float: left', :panel_id_prefix=>'library' } }
+  = render :partial=>'clip', :locals=>{ :video=>clip, :options=>{ :draggable=>true, :style=>'float: left', :panel_id_prefix=>'library', :with_hover=>true } }
 
   -#.video{ :id=>panel_id,:style=>'float: left' }
     %span{ :class=>'tag', :oid=>clip.id, :ocls=>clip.class.to_s }

@@ -188,6 +188,21 @@
     //  reports_active_tooltip.remove();
   }
 
+
+  function gs_reports_clip_hover(target) {
+    t = $(target)
+    img = t.select('img')[0]
+    img.setStyle('border: 1px solid yellow')
+  }
+
+
+  function gs_reports_clip_leave(target) {
+    t = $(target)
+    img = t.select('img')[0]
+    img.setStyle('border: 1px solid black')
+  }
+
+
   function TafelTreeInit () {
     tree = new TafelTree('tree-view', tree_struct, {
     'generate' : true,

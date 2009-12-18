@@ -25,7 +25,14 @@
 
 - tip_name = "#{options[:panel_id]}-tip"
 
-%div{ :id=>options[:panel_id], :class=>classes, :style=>options[:style], :onclick=>onclick }
+- if options[:with_hover]
+  - mouse_over="gs_reports_clip_hover('#{options[:panel_id]}')"
+  - mouse_out ="gs_reports_clip_leave('#{options[:panel_id]}')"
+- else
+  - mouse_over=""
+  - mouse_out =""
+
+%div{ :id=>options[:panel_id], :class=>classes, :style=>options[:style], :onclick=>onclick, :onmouseover=>mouse_over, :onmouseout=>mouse_out }
 
   %span{ :class=>'tag', :oid=>video_id, :ocls=>video_type, :dockey=>video_dockey }
   %img{ :src=>"#{@vidavee.file_thumbnail_medium(video.dockey)}" }
