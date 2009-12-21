@@ -114,7 +114,25 @@
   function getNextDockey() {
     key = gs_reports_dockey_active_list.shift()
     if(key){
-      gs_reports_playDockey(key)
+      //gs_reports_playDockey(key)
+
+      //find clip by dockey
+      divid = null
+
+      $A($('clip-strip').select('div')).each(
+        function(child) {
+          //tag = child.down('.tag')
+          tag = child.select('span[class=tag]')[0]
+          if(tag){
+            dockey = tag.readAttribute('dockey')
+            if(dockey == key)
+              divid = child.id
+          }
+        }
+      );
+
+      if(divid)
+        gs_reports_clip_select(gs_report_id, divid)
     }
   }
 

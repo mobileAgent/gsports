@@ -189,6 +189,10 @@ a.new-report-button:hover
   visibility: hidden;
 }
 
+#clip-window .report-clip .title {
+  height: 18px;
+  overflow: hidden;
+}
 
 .report-clip img {
   width:91px;
@@ -302,6 +306,9 @@ a.new-report-button:hover
   top:0;
   left:100px;
   font-weight: bold;
+  
+  height: 80px;
+  overflow: hidden;
 }
 
 #clip-strip-decoy {
