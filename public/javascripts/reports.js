@@ -127,11 +127,15 @@
   function gs_reports_update(rid, publish) {
     req = []
     
-    $A($('clip-strip').childNodes).each(
+    $A($('clip-strip').select('div')).each(   //.childNodes).each(
       function(child) {
-        oid = child.down('.tag').readAttribute('oid')
-        ocls = child.down('.tag').readAttribute('ocls')
-        req.push( { 'video_id': oid, 'video_type': ocls } )
+        //tag = child.down('.tag')
+        tag = child.select('span[class=tag]')[0]
+        if(tag){
+          oid = tag.readAttribute('oid')
+          ocls = tag.readAttribute('ocls')
+          req.push( { 'video_id': oid, 'video_type': ocls } )
+        }
       }
     );
 
@@ -145,9 +149,14 @@
    
     target = (publish ? 'dialog' : 'report-player')
 
+    flashnow('Saving report.')
+
     new Ajax.Updater(target, '/reports/sync', {
       parameters: params,
-      evalScripts: true
+      evalScripts: true,
+      onComplete: function() {
+        flashnow('Report saved.')
+      }
     });
 
   }
