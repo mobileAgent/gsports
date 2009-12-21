@@ -301,10 +301,10 @@ class ReportsController < BaseController
       frame_width = 334
       frame_height = 272
     else
-      player_width = 400
-      player_height = 295
-      frame_width = 400
-      frame_height = 331
+      player_width = 500 #400
+      player_height = 369 #295
+      frame_width = 500 #400
+      frame_height = 414 #331
     end
 
     @dockey = @detail.video_id ? @detail.video.dockey : @report.dockey

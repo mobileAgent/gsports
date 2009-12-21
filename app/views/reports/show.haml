@@ -34,7 +34,12 @@
             #clip-strip
               - @details.each() do |detail|
                 = render :partial=>'clip', :locals=>{ :video=>detail.video, :options=>{ :click_to_preview=>true, :panel_id_prefix=>'report'} }
-          
+
+          #play-button{ :style=>'float: right' }
+            %a{ :href=>'javascript:gs_reports_play_all()', :class => 'listingButton' }
+              = image_tag('/images/listing_icons/play.png', :mouseclick => '/images/listing_icons/sel-play.png', :border=>0)
+            -#  %h2 Watch&nbsp;Report
+
           %div{ :style=>'color: grey; margin-bottom: 8px;' }
             %i= @report.created_at.strftime("%b %d, %Y") rescue ''
             by
