@@ -125,4 +125,5 @@
         #tooltip
 
 %script{ :type=>"text/javascript" }
-  Event.observe(window, 'load', function() { setTimeout ( "gs_reports_play_all()", 2000 ); } );
+  -#Event.observe(window, 'load', function() { setTimeout ( "gs_reports_play_all()", 2000 ); } );
+  Event.observe(window, 'load', function(){ gs_reports_play_all() } );

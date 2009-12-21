@@ -96,18 +96,6 @@
     $("flashAreaIFrame").playDockey(dockey);
   }
 
-  function gs_reports_getFlexApp(appName)
-  {
-    if (navigator.appName.indexOf ("Microsoft") !=-1)
-    {
-      return window[appName];
-    }
-    else
-    {
-      return document[appName];
-    }
-  }
-
   var gs_reports_dockey_list = new Array();
   var gs_reports_dockey_active_list = null;
 
@@ -137,8 +125,12 @@
   }
 
   function gs_reports_play_all() {
-    gs_reports_dockey_active_list = gs_reports_dockey_list.clone()
-    getNextDockey()
+    if($("flashAreaIFrame").playDockey){
+      gs_reports_dockey_active_list = gs_reports_dockey_list.clone()
+      getNextDockey()
+    } else {
+      setTimeout ( "gs_reports_play_all()", 2000 ); 
+    }
   }
 
 
