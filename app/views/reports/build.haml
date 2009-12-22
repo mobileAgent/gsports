@@ -65,9 +65,8 @@
           %span{ :style=>'margin: 2px 2px 0pt 0pt; color: grey; float:right' }
             %i= @report.type_name
 
-          %h1= @report.name
 
-          .clearDiv
+          %br{ :clear=>'right' }
 
           #clip-strip-holder
             .drag-label Drag clips here to add to Report
@@ -83,6 +82,8 @@
             #clip-strip
               - @details.each() do |detail|
                 = render :partial=>'clip', :locals=>{ :video=>detail.video, :options=>{ :click_to_preview=>true, :panel_id_prefix=>'report'} }
+
+          %h1= @report.name
 
           #play-button{ :style=>'float: right' }
             %a{ :href=>'javascript:gs_reports_play_all()', :class => 'listingButton' }

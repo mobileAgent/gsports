@@ -96,8 +96,8 @@ a.new-report-button:hover
   font-weight: bold;
   font-size: 18px;
   font-weight: bold;
-  color: black
-  margin-bottom: 5px;
+  color: black;
+  padding: 0 0 15px 0;
 }
 
 .report-viewer .report-layout {
@@ -356,9 +356,9 @@ a.new-report-button:hover
 
 
 .tafelTree_root {
- border-top: 1px dashed #909090;
+ border-top: 1px dashed #ccc;
 }
 
 .tafelTree_row {
- border-top: 1px dashed #909090;
+ border-top: 1px dashed #ccc;
 }
