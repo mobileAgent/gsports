@@ -617,6 +617,15 @@ ActiveRecord::Schema.define(:version => 20091113175407) do
     t.string "name"
   end
 
+  create_table "team_sports", :force => true do |t|
+    t.string   "name"
+    t.integer  "team_id",         :limit => 11
+    t.integer  "access_group_id", :limit => 11
+    t.string   "description"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "teams", :force => true do |t|
     t.string   "name"
     t.string   "city"

@@ -120,7 +120,7 @@ class StaffsController < BaseController
     end
 
     respond_to do |format|
-      if update_staff_status && update_permissions(@staff, params[:permission])
+      if update_staff_status && update_permissions(@staff, params[:permission]) && update_coaching_relationships(@staff, params[:coach])
         flash[:notice] = 'Staff was successfully updated.'
         format.html { redirect_to url_for({:action => 'index', :scope_select=>Permission.scope_selector_string(@scope)})}
         format.xml  { head :ok }
@@ -189,7 +189,49 @@ class StaffsController < BaseController
     
   end
 
+  Coach_Sport_RE = /^sport-(.*)$/
 
+  def update_coaching_relationships(staff, sports)
+
+    trash = @staff.user.scopes_for(Permission::COACH)
+
+    sports.each_pair() do |key, value|
+      next if value.empty?
+      
+      m= key.match(Coach_Sport_RE)
+      if m
+        if value == "-1"
+          suffix = m[1]
+          value = sports["sporttext-"+suffix]
+        end
+
+        team_sport = TeamSport.for(@scope, value).first
+
+        if trash.index(team_sport)
+          #have it
+          trash.delete(team_sport)
+        else
+          #need it
+          if !team_sport
+            team_sport = TeamSport.new()
+            team_sport.team = @scope
+            team_sport.name = value
+            team_sport.save!
+          end
+
+          Permission.grant(staff.user, Permission::COACH, team_sport)
+        end
+      end
+
+    end
+
+    trash.each() do |scope|
+      Permission.revoke(staff.user, Permission::COACH, scope)
+    end
+
+  end
+
+  
   def xfind_staff_scope
 
     @scopes = current_user.scopes_for(Permission::CREATE_STAFF)

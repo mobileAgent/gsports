@@ -33,14 +33,19 @@ class Permission < ActiveRecord::Base
 
 
   #common roles
-  
+  #
   EDIT_TEAM_PAGE    = 'ED_TEAMPAGE'
   MANAGE_CHANNELS   = 'MN_CHAN'
   MANAGE_GROUPS     = 'MN_GRP'
   CREATE_STAFF      = 'CR_STAFF'
   UPLOAD            = 'UPLOAD'
   REPORT            = 'REPORT'
-
+  #
+  #other roles
+  #
+  COACH             = 'COACH'
+  #
+  #end roles
 
 
   def self.staff_permission_list

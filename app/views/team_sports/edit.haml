@@ -1,0 +1,21 @@
+.profileContentArea.listingPage
+  .profilePageHeader
+    %h2.columnDescriptor
+      %span
+      = @team_sport.team.name
+      = @team_sport.name
+  .listings
+    .listingItem
+    
+      %h1 Editing Team Sport Info
+      
+      = error_messages_for :team_sport
+      
+      - form_for (@team_sport, :url => team_sport_url(@team_sport), :html => {:method => 'put', :multipart => true}) do |f|
+        = render :partial => "form", :locals => { :f => f }
+        %p= f.submit "Update"
+       
+          
+      = link_to 'Show', team_sport_path(@team_sport) |
+      = link_to 'Back', team_sports_path
+

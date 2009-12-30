@@ -1,0 +1,39 @@
+
+
+#- scope_select=Permission.scope_selector_string(@scope)
+
+
+.profileContentArea.listingPage
+  .profilePageHeader
+    %h2.columnDescriptor
+      %span{ :style=>'float:left' }
+        Team Sports
+      -#%form{ :style=>"height: 0px;" }
+        = render :partial => 'permissions/scope_selector', :locals=>{ :style=>'float:left; margin-left: 16px' }
+  .listings
+    .padded
+
+      %table
+        %tr
+          %td
+            = link_to 'New Team Sport', url_for({:controller=>'team_sports',:action=>'new'}), :class => 'genericButton'
+          %td
+
+      %br
+
+      %table{:border => 0, :cellspacing => 0, :cellpadding => 0, :width => '100%'}
+        %thead
+          %tr.yellowHeader
+            = sortable_table_header :class=>"padded sortableContentHeader", :name => "ID",     :sort => "team_sports.id"
+            = sortable_table_header :class=>"padded sortableContentHeader", :name => "Name",     :sort => "team_sports.name"
+            %th.padded.contentBoxHeader/
+
+        %tbody
+          - for team_sport in @team_sports
+            %tr.leagueList
+              %td.leagueList=h team_sport.id
+              %td.leagueList= link_to team_sport.name, edit_team_sport_path(team_sport), {:title => "edit"}
+
+
+      .apple_pagination
+        = will_paginate @team_sports
