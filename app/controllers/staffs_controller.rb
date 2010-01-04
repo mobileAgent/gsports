@@ -220,6 +220,8 @@ class StaffsController < BaseController
           end
 
           Permission.grant(staff.user, Permission::COACH, team_sport)
+
+          team_sport.setup_access_groups(@staff.user)
         end
       end
 

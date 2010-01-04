@@ -3,7 +3,7 @@ class TeamSport < ActiveRecord::Base
   belongs_to :team
   belongs_to :access_group
 
-  before_save :check_access_group
+  #before_save :check_access_group
 
   #TODO create access group on save if nil
 
@@ -11,7 +11,7 @@ class TeamSport < ActiveRecord::Base
 
 
 
-  def check_access_group
+  def setup_access_groups(user)
 
     group = AccessGroup.for_team(team).named(name).first
     if !group
@@ -20,7 +20,24 @@ class TeamSport < ActiveRecord::Base
       group.name = name
       group.enabled = true
       group.save!
+
+      access = AccessUser.new()
+      access.access_group = group
+      access.user = user
+      access.save!
+      
       access_group = group
+
+      subgroup = AccessGroup.new()
+      subgroup.team = team
+      subgroup.name = "#{name} Staff"
+      subgroup.enabled = true
+      subgroup.save!
+
+      subaccess = AccessUser.new()
+      subaccess.access_group = subgroup
+      subaccess.user = user
+      subaccess.save!
     end
 
 
