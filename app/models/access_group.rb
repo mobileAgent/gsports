@@ -15,6 +15,9 @@ class AccessGroup < ActiveRecord::Base
   named_scope :for_team,
     lambda { |team| {:conditions => {:team_id=>team.id, :enabled=>true}, :include => [:team] } }
 
+  named_scope :named,
+    lambda { |name| {:conditions => {:name=>name, :enabled=>true}} }
+
   
   def items()
     access_items.collect(&:item)

@@ -1,3 +1,4 @@
+- scope_select=Permission.scope_selector_string(@scope)
 
 .profileContentArea.listingPage
   .profilePageHeader
@@ -12,7 +13,7 @@
       %table
         %tr
           %td
-            = link_to 'New Team Sport', url_for({:controller=>'team_sports',:action=>'new'}), :class => 'genericButton'
+            = link_to 'New Team Sport', url_for({:controller=>'team_sports',:action=>'new', :scope_select=>scope_select}), :class => 'genericButton'
           %td
 
       %br
@@ -28,7 +29,7 @@
           - for team_sport in @team_sports
             %tr.leagueList
               %td.leagueList=h team_sport.id
-              %td.leagueList= link_to team_sport.name, edit_team_sport_path(team_sport), {:title => "edit"}
+              %td.leagueList= link_to team_sport.name, edit_team_sport_path(team_sport, :scope_select=>scope_select), {:title => "edit"}
 
 
       .apple_pagination
