@@ -1760,3 +1760,17 @@ a.admin-userreg-link-user{
 }
 
 
+.team-coach-panel select {
+
+}
+
+.team-coach-panel input {
+
+}
+
+.team-coach-panel a {
+ padding-left: 5px;
+ text-decoration: none;
+ color: red;
+ font-weight:bold;
+}

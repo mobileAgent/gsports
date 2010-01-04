@@ -7,9 +7,14 @@ class TeamSportsController < BaseController
 
 
   def index
+    conditions = {}
+    
+    if !current_user.admin?
+      conditions = { :id => @scopes.collect(&:id) }
+    end
 
     @team_sports = TeamSport.paginate(:all, :order => sort_order,
-      :conditions => { :id => @scopes.collect(&:id) },
+      :conditions => conditions,
       :page => params[:page])
 
   end
