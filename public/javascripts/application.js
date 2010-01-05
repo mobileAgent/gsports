@@ -116,3 +116,14 @@
   }
 
 
+
+
+  // Groups
+
+  gs.group = {}
+
+
+  gs.group.get_user_selection_id = function(text, li) {
+    $('access_user_user_id').value = li.id;
+  }
+

@@ -29,4 +29,6 @@
               %td.leagueList
                 = link_to_remote 'Remove', {:url => {:controller=>:access_groups, :action=>:remove_user, :id=>access.id}, :confirm => 'Are you sure?', :method=>:delete}, :class=>'genericButton', :complete => evaluate_remote_response
                 
-                
+
+      %br
+      =link_to_remote "Add Member", {:url => {:controller=>:access_groups, :action=>:pop_new_user, :scope_select=>scope_select, :access_group_id=>@access_group.id} }

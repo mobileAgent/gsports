@@ -42,6 +42,10 @@
                       [
                       = link_to_remote 'X', {:url => {:controller=>:access_groups, :action=>:remove_user, :id=>access_user.id}, :confirm => 'Are you sure?', :method=>:delete}, :complete => evaluate_remote_response
                       ]
+                  %br
+                  &nbsp;&nbsp;
+                  =link_to_remote "Add Member", {:url => {:controller=>:access_groups, :action=>:pop_new_user, :scope_select=>scope_select, :access_group_id=>grp.id} }
+
                 %td.leagueList{ :valign=>'top'}
                   -#=link_to grp.users.size, users_access_group_path(grp)
                   - for contact in grp.contacts
