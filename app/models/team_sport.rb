@@ -32,6 +32,7 @@ class TeamSport < ActiveRecord::Base
       subgroup.team = team
       subgroup.name = "#{name} Staff"
       subgroup.enabled = true
+      subgroup.parent = group
       subgroup.save!
 
       subaccess = AccessUser.new()
@@ -39,6 +40,8 @@ class TeamSport < ActiveRecord::Base
       subaccess.user = user
       subaccess.save!
     end
+
+    self.access_group = group
 
 
   end

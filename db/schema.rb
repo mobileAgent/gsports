@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20091113175407) do
+ActiveRecord::Schema.define(:version => 20100107203137) do
 
   create_table "access_contacts", :force => true do |t|
     t.integer "access_group_id", :limit => 11
@@ -22,6 +22,7 @@ ActiveRecord::Schema.define(:version => 20091113175407) do
     t.string  "description", :limit => 30
     t.integer "team_id",     :limit => 11
     t.boolean "enabled"
+    t.integer "parent_id",   :limit => 11
   end
 
   create_table "access_items", :force => true do |t|

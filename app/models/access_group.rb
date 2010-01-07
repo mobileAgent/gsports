@@ -1,6 +1,7 @@
 class AccessGroup < ActiveRecord::Base
   
   belongs_to :team
+  belongs_to :parent, :class_name=>'AccessGroup'
   
   #has_many :channel_video, as => :video #,, :dependent => :destroy
   

@@ -216,12 +216,13 @@ class StaffsController < BaseController
             team_sport = TeamSport.new()
             team_sport.team = @scope
             team_sport.name = value
-            team_sport.save!
           end
 
-          Permission.grant(staff.user, Permission::COACH, team_sport)
-
           team_sport.setup_access_groups(@staff.user)
+
+          team_sport.save!
+
+          Permission.grant(staff.user, Permission::COACH, team_sport)
         end
       end
 
