@@ -68,6 +68,12 @@ class User < ActiveRecord::Base
 
   attr_protected :team_name, :league_name
 
+
+
+  before_destroy { |item| GamexUser.destroy_all "user_id = #{item.id}" }
+
+
+
   [:team_avatar, :ad_zone].each do |method|
     delegate method, :to => :team
   end
