@@ -224,6 +224,9 @@ class MessagesController < BaseController
     end
 
     @message = nil # pull out to scope for rescue render
+
+    recipient_ids = [recipient_ids] if recipient_ids.class == String
+
     unless recipient_ids.nil?
       recipient_ids.uniq!
       recipient_ids.each do |recipient_id|

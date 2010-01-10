@@ -10,7 +10,8 @@
 %script{ :type=>"text/javascript" }
   var tree_struct =
   = @tree_detail.to_json
-
+  var gs_report_id =
+  = @report.id
 
 .profileContentArea
   .profilePageHeader
@@ -64,12 +65,11 @@
           %span{ :style=>'margin: 2px 2px 0pt 0pt; color: grey; float:right' }
             %i= @report.type_name
 
-          %h1= @report.name
 
-          .clearDiv
+          %br{ :clear=>'right' }
 
           #clip-strip-holder
-            -#Drag clips here to add to Report
+            .drag-label Drag clips here to add to Report
 
             #clip-strip-decoy
               -(1..5).each() do |i|
@@ -82,6 +82,13 @@
             #clip-strip
               - @details.each() do |detail|
                 = render :partial=>'clip', :locals=>{ :video=>detail.video, :options=>{ :click_to_preview=>true, :panel_id_prefix=>'report'} }
+
+          %h1= @report.name
+
+          #play-button{ :style=>'float: right' }
+            %a{ :href=>'javascript:gs_reports_play_all()', :class => 'listingButton' }
+              = image_tag('/images/listing_icons/play.png', :mouseclick => '/images/listing_icons/sel-play.png', :border=>0)
+
 
           %div{ :style=>'color: grey; margin-bottom: 8px;' }
             %i= @report.created_at.strftime("%b %d, %Y") rescue ''
@@ -99,6 +106,11 @@
           #report-player
             - @small_player= true
             = render :partial=>'player' #, :locals=>{ :options=>{:small_player=>true} }
+          %br
+          %br
+          #report-detail
+            = render :partial=>'clip_detail'
+
 
         .clearDiv
 
@@ -106,6 +118,8 @@
           = link_to 'Save & Publish', "javascript:gs_reports_update(#{@report.id},true)", {:class => 'genericButton'}
         .report-buttons{ :style=>'float: right' }
           = link_to 'Save Draft', "javascript:gs_reports_update(#{@report.id},false)", {:class => 'genericButton', :style=>'margin-right:8px'}
+        -#.report-buttons{ :style=>'float: right' }
+          = link_to 'Preview', "javascript:gs_reports_play_all()", {:class => 'genericButton', :style=>'margin-right:8px'}
 
         .clearDiv
 
@@ -117,3 +131,7 @@
         -#= link_to 'All Reports', reports_path(:scope_select=>Permission.scope_selector_string(@scope))
 
         #tooltip
+
+%script{ :type=>"text/javascript" }
+  -#Event.observe(window, 'load', function() { setTimeout ( "gs_reports_play_all()", 2000 ); } );
+  Event.observe(window, 'load', function(){ gs_reports_play_all() } );

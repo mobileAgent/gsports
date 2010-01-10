@@ -11,7 +11,10 @@
     
     bid = ""+branch.getId();
     
-    [vid,tid]=bid.split('-')
+    //[vid,tid]=bid.split('-')
+    var ids=bid.split('-')
+    vid = ids[0]
+    bid = ids[1]
 
     params = { "video_asset_id": vid }
     if(tid)
@@ -41,7 +44,8 @@
 
     oid = $(dragName).down('.tag').readAttribute('oid')
     ocls = $(dragName).down('.tag').readAttribute('ocls')
-    clickstr = "javascript:gs_reports_clip_select("+rid+", "+oid+", '"+ocls+"')"
+    //clickstr = "javascript:gs_reports_clip_select("+rid+", "+oid+", '"+ocls+"')"
+    clickstr = "javascript:gs_reports_clip_select("+rid+", '"+divid+"')"
 
     drop = new Element("div", { id: divid, onclick:clickstr })
     drop.addClassName('report-clip')
@@ -53,7 +57,7 @@
     Sortable.destroy('clip-strip')
     Sortable.create('clip-strip', { tag: 'div'});
 
-    gs_reports_clip_select(rid, oid, ocls)
+    gs_reports_clip_select(rid, divid) //oid, ocls)
     gs_reports_update_clip_droppers()
   }
   
@@ -67,28 +71,81 @@
     gs_reports_update_clip_droppers()
   }
 
-  function gs_reports_clip_select(rid,ctype,cid) {
-    $('report-player').update('Loading...')
-    
-    params = { 'id': rid, 'video_id': ctype, 'video_type': cid }
-    if(gs_reports_small_player)
-      params['small_player']=1
+  function gs_reports_clip_select(rid,divid) { //ctype,cid) {
 
-    new Ajax.Updater('report-player', '/reports/player', {
+    cid = $(divid).down('.tag').readAttribute('oid')
+    ctype = $(divid).down('.tag').readAttribute('ocls')
+    dockey = $(divid).down('.tag').readAttribute('dockey')
+
+    $('report-detail').update('Loading...')
+    
+    params = { 'id': rid, 'video_id': cid, 'video_type': ctype }
+    //if(gs_reports_small_player)
+    //  params['small_player']=1
+
+    new Ajax.Updater('report-detail', '/reports/clip_detail', {
 			parameters: params,
 			evalScripts: true
     });
+
+    gs_reports_playDockey(dockey)
+  }
+
+
+  function gs_reports_playDockey(dockey) {
+    $("flashAreaIFrame").playDockey(dockey);
+  }
+
+  var gs_reports_dockey_list = new Array();
+  var gs_reports_dockey_active_list = null;
+
+  function getNextDockey() {
+    key = gs_reports_dockey_active_list.shift()
+    if(key){
+      //gs_reports_playDockey(key)
+
+      //find clip by dockey
+      divid = null
+
+      $A($('clip-strip').select('div')).each(
+        function(child) {
+          //tag = child.down('.tag')
+          tag = child.select('span[class=tag]')[0]
+          if(tag){
+            dockey = tag.readAttribute('dockey')
+            if(dockey == key)
+              divid = child.id
+          }
+        }
+      );
+
+      if(divid)
+        gs_reports_clip_select(gs_report_id, divid)
+    }
+  }
+
+  function gs_reports_play_all() {
+    if($("flashAreaIFrame").playDockey){
+      gs_reports_dockey_active_list = gs_reports_dockey_list.clone()
+      getNextDockey()
+    } else {
+      setTimeout ( "gs_reports_play_all()", 2000 ); 
+    }
   }
 
 
   function gs_reports_update(rid, publish) {
     req = []
     
-    $A($('clip-strip').childNodes).each(
+    $A($('clip-strip').select('div')).each(   //.childNodes).each(
       function(child) {
-        oid = child.down('.tag').readAttribute('oid')
-        ocls = child.down('.tag').readAttribute('ocls')
-        req.push( { 'video_id': oid, 'video_type': ocls } )
+        //tag = child.down('.tag')
+        tag = child.select('span[class=tag]')[0]
+        if(tag){
+          oid = tag.readAttribute('oid')
+          ocls = tag.readAttribute('ocls')
+          req.push( { 'video_id': oid, 'video_type': ocls } )
+        }
       }
     );
 
@@ -102,9 +159,14 @@
    
     target = (publish ? 'dialog' : 'report-player')
 
+    flashnow('Saving report.')
+
     new Ajax.Updater(target, '/reports/sync', {
       parameters: params,
-      evalScripts: true
+      evalScripts: true,
+      onComplete: function() {
+        flashnow('Report saved.')
+      }
     });
 
   }
@@ -144,7 +206,22 @@
     //if(reports_active_tooltip)
     //  reports_active_tooltip.remove();
   }
-  
+
+
+  function gs_reports_clip_hover(target) {
+    t = $(target)
+    img = t.select('img')[0]
+    img.setStyle('border: 1px solid yellow')
+  }
+
+
+  function gs_reports_clip_leave(target) {
+    t = $(target)
+    img = t.select('img')[0]
+    img.setStyle('border: 1px solid black')
+  }
+
+
   function TafelTreeInit () {
     tree = new TafelTree('tree-view', tree_struct, {
     'generate' : true,
@@ -152,9 +229,13 @@
     'width' : '280px',
     'height' : '290px',
     'openAtLoad' : false,
-    'cookies' : false
+    'cookies' : false,
+    'lineStyle' : 'none'
     });
+
   }
+
+
 
 
 

@@ -1,7 +1,7 @@
 class ReportsController < BaseController
 
   skip_before_filter :gs_login_required, :only => [:detail]
-  skip_before_filter :verify_authenticity_token, :only => [:clips, :player, :sync ]
+  skip_before_filter :verify_authenticity_token, :only => [:clips, :player, :clip_detail, :sync ]
 
   before_filter :except => [:show] do  |c| c.find_staff_scope(Permission::REPORT) end
 
@@ -273,6 +273,20 @@ class ReportsController < BaseController
   end
 
 
+
+  def clip_detail
+    @report = Report.find(params[:id])
+    
+    if params[:video_type]
+      @detail = ReportDetail.new({:video_type=>params[:video_type],:video_id=>params[:video_id]}) #.for_report(@report).for_item_type(params[:video_type], params[:video_id])
+      #@detail.report = @report
+      @detail.find_video()
+    end
+
+    render :partial => 'clip_detail'
+  end
+
+
   def detail
     debugger
     #@detail = ReportDetail.find(params[:id])
@@ -287,10 +301,10 @@ class ReportsController < BaseController
       frame_width = 334
       frame_height = 272
     else
-      player_width = 400
-      player_height = 295
-      frame_width = 400
-      frame_height = 331
+      player_width = 480 #400
+      player_height = 360 #295
+      frame_width = 480 #400
+      frame_height = 396 #331
     end
 
     @dockey = @detail.video_id ? @detail.video.dockey : @report.dockey

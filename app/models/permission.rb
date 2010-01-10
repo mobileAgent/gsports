@@ -15,6 +15,22 @@ class Permission < ActiveRecord::Base
 
   validates_uniqueness_of :role, :scope => [:blessed_type, :blessed_id, :scope_type, :scope_id], :message => 'already exists in this scope.'
 
+  def validate
+
+    begin
+      blessed
+    rescue
+      errors.add :name, "Blessed reference is invalid"
+    end
+
+    begin
+      scope
+    rescue
+      errors.add :name, "Scope reference is invalid"
+    end
+    
+  end
+
 
   #common roles
   

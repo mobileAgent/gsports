@@ -1,0 +1,12 @@
+
+- if @detail
+  %b
+    Now Displaying:
+    = @detail.video.title rescue '-'
+
+  %br
+  %div{ :style=>'color: grey; margin-top: 8px; margin-bottom: 8px;' }
+    = @detail.video.description rescue '-'
+
+
+

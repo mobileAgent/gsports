@@ -10,22 +10,31 @@
 
 - video_id = video.id
 - video_type = video.class.to_s
+- video_dockey = video.dockey
 
 - options[:panel_id_prefix] ||= 'xideo-'
 - options[:panel_id] ||= options[:panel_id_prefix] + '-' + video_type + video_id.to_s
 
 - remove_js = "$('#{options[:panel_id]}').remove"
 
-- onclick = options[ :click_to_preview ] ? "javascript:gs_reports_clip_select(#{@report.id}, #{video_id}, '#{video_type}')" : ''
+- #onclick = options[ :click_to_preview ] ? "javascript:gs_reports_clip_select(#{@report.id}, #{video_id}, '#{video_type}')" : ''
+- onclick = options[ :click_to_preview ] ? "javascript:gs_reports_clip_select(#{@report.id}, '#{options[:panel_id]}')" : ''
 
 - classes = 'report-clip'
 - classes = classes + ' report-dropper' if options[ :draggable ]
 
 - tip_name = "#{options[:panel_id]}-tip"
 
-%div{ :id=>options[:panel_id], :class=>classes, :style=>options[:style], :onclick=>onclick }
+- if options[:with_hover]
+  - mouse_over="gs_reports_clip_hover('#{options[:panel_id]}')"
+  - mouse_out ="gs_reports_clip_leave('#{options[:panel_id]}')"
+- else
+  - mouse_over=""
+  - mouse_out =""
 
-  %span{ :class=>'tag', :oid=>video_id, :ocls=>video_type }
+%div{ :id=>options[:panel_id], :class=>classes, :style=>options[:style], :onclick=>onclick, :onmouseover=>mouse_over, :onmouseout=>mouse_out }
+
+  %span{ :class=>'tag', :oid=>video_id, :ocls=>video_type, :dockey=>video_dockey }
   %img{ :src=>"#{@vidavee.file_thumbnail_medium(video.dockey)}" }
   %a{ :class=>'closer', :onclick=>"javascript:gs_reports_drop_video(this)" } x
   -# '#{options[:panel_id]}'
@@ -44,8 +53,9 @@
     Length:
     = video.video_length
 
--#%script{ :type => "text/javascript" }
-  = %Q~var tooltip = new Tooltip('#{options[:panel_id]}', '#{tip_name}', { DOM_location: {parentId: "tooltip" }, target:'bottomLeft', tip:'topLeft' } )~
+%script{ :type => "text/javascript" }
+  = %Q~gs_reports_dockey_list.push('#{video_dockey}')~
+  -#= %Q~var tooltip = new Tooltip('#{options[:panel_id]}', '#{tip_name}', { DOM_location: {parentId: "tooltip" }, target:'bottomLeft', tip:'topLeft' } )~
   -#= %Q~var tooltip = new Tooltip('#{options[:panel_id]}', 'tooltip')~
   -#tooltip.options.sticky_x = '-5px'
   -#tooltip.options.sticky_y = '-5px'

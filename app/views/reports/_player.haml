@@ -18,37 +18,7 @@
     - frame_width = 334
     - frame_height = 272
   - else
-    - frame_width = 400
-    - frame_height = 331
-  = render :partial => 'shared/video_player', :locals => {:target => 'flashAreaIFrame', :player_name => '/players/embeddedplayer.swf', :fvars => flashvars, :width=>"#{frame_width}px", :height=>"#{frame_height}px", :params=>params }
+    - frame_width = 480 #400
+    - frame_height = 396 #331
+  = render :partial => 'shared/video_player', :locals => {:target => 'flashAreaIFrame', :player_name => '/players/reportplayer.swf', :fvars => flashvars, :width=>"#{frame_width}px", :height=>"#{frame_height}px", :params=>params }
 
-%br
-%br
-
--#
-  %b= @report.name
-  %br
-  = @report.description
-
--#.meow
-  %br
-  %br
-  -key = @report.dockey
-  = key
-  \: 
-  =Vidavee.first.get_clip_dockeys_for_reel(key).join(', ')
-
-%br
-%br
-
-- if @detail
-  %b
-    Now Displaying:
-    = @detail.video.title rescue '-'
-
-  %br
-  %div{ :style=>'color: grey; margin-top: 8px; margin-bottom: 8px;' }
-    = @detail.video.description rescue '-'
-
-
-  

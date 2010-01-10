@@ -96,8 +96,8 @@ a.new-report-button:hover
   font-weight: bold;
   font-size: 18px;
   font-weight: bold;
-  color: black
-  margin-bottom: 5px;
+  color: black;
+  padding: 0 0 15px 0;
 }
 
 .report-viewer .report-layout {
@@ -173,6 +173,7 @@ a.new-report-button:hover
   overflow: scroll;
   background-color: #efefef;
   position: relative;
+  overflow-x:hidden;
 }
 
 .report-builder #clip-window .report-clip {
@@ -188,6 +189,10 @@ a.new-report-button:hover
   visibility: hidden;
 }
 
+#clip-window .report-clip .title {
+  height: 18px;
+  overflow: hidden;
+}
 
 .report-clip img {
   width:91px;
@@ -271,11 +276,19 @@ a.new-report-button:hover
   overflow: scroll;
   border: 2px solid lightgrey;
   margin: 3px;
+  overflow-x:hidden;
+}
+
+.report-layout .drag-label {
+  position: absolute;
+  font-weight: bold;
+  font-style: italic;
+  padding: 3px;
 }
 
 #clip-strip {
   position: absolute;
-  top: 0px;
+  top: 20px;
   left: 0px;
   width: 230px;
   display: block;
@@ -293,11 +306,14 @@ a.new-report-button:hover
   top:0;
   left:100px;
   font-weight: bold;
+  
+  height: 80px;
+  overflow: hidden;
 }
 
 #clip-strip-decoy {
   position: absolute;
-  top: 0px;
+  top: 20px;
   left: 0px;
   width: 230px;
 }
@@ -333,3 +349,16 @@ a.new-report-button:hover
 	background-color: orange;
 }
 
+
+
+
+
+
+
+.tafelTree_root {
+ border-top: 1px dashed #ccc;
+}
+
+.tafelTree_row {
+ border-top: 1px dashed #ccc;
+}
