@@ -105,6 +105,10 @@
         .menuitem
           = link_to 'Reports', reports_url()
 
+      - if current_user.can?(Permission::COACH)
+        .menuitem
+          = link_to 'Manage My Teams', team_sports_url()
+
       .menuitem-hilite
         =link_to _('Edit Profile'), edit_user_path(current_user)
       .menuitem-hilite

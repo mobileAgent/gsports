@@ -1,0 +1,105 @@
+
+
+.team-sport-summary {
+  position: relative;
+
+}
+
+.team-sport-summary .avatar {
+  float:left;
+  height: 80px;
+  width: 80px;
+
+  border: 1px solid #151C36;
+  background-color: #151C36;
+}
+
+.team-sport-summary .avatar img {
+  padding: 8px;
+}
+
+.team-sport-summary .dock {
+  float:left;
+  height: 72px;
+  width: 600px;
+  border: 1px solid #ccc;
+  border-left: 0;
+  border-right: 0;
+
+  padding-left: 8px;
+  padding-top: 8px;
+}
+
+.team-sport-summary .messager {
+  float: right;
+  margin: 8px 8px 0 0;
+  padding: 2px;
+  border: 1px solid black;
+
+}
+
+.team-sport-summary .opener {
+  float:left;
+  height: 80px;
+  width: 80px;
+
+  border: 1px solid #151C36;
+  background-color: #151C36;
+
+}
+
+
+.team-sport-summary .opener a{
+  background: url('/images/team_sports/sport-opener.gif') no-repeat 0 0;
+  display: block;
+  width: 64px;
+  height: 64px;
+  margin: 8px 0 0 8px;
+}
+
+.team-sport-summary .opener a.open
+{
+  background-position: 0 -64px;
+}
+
+
+
+
+
+.team-sport-summary .roster {
+
+}
+
+.team-sport-summary .roster table {
+  width: 772px;
+	border: 1px solid black;
+	border-top: 0;
+	border-left: 0;
+	border-spacing: 0;
+	border-collapse: separate;
+}
+
+.team-sport-summary .roster th {
+	padding: 1px;
+	border: 1px solid black;
+	border-bottom: 0;
+	border-right: 0;
+}
+
+.team-sport-summary .roster tr {
+}
+
+.team-sport-summary .roster td {
+	padding: 1px;
+	border: 1px solid black;
+	border-bottom: 0;
+	border-right: 0;
+}
+
+
+
+
+.team-sport-summary .buffer {
+  padding-bottom: 8px;
+
+}

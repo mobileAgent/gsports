@@ -8,3 +8,11 @@
   %b Description
   %br/
   = f.text_area :description
+
+%div
+  %b Photo
+  %br/
+  = image_tag @team_sport.avatar_photo_url
+  %br
+  = file_field :avatar, :uploaded_data, :size => "20"
+

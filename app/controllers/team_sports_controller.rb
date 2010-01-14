@@ -2,6 +2,7 @@ class TeamSportsController < BaseController
 
   before_filter :except => [:show] do  |c| c.find_staff_scope(Permission::COACH) end
 
+  skip_before_filter :verify_authenticity_token, :only => [:roster, :library ]
 
   sortable_attributes 'team_sports.name', 'team_sports.id', 'teams.name'
 
@@ -54,7 +55,16 @@ class TeamSportsController < BaseController
   def create
     @team_sport = TeamSport.new(params[:team_sport])
 
+    @avatar = Photo.new(params[:avatar])
+    @avatar.user_id = current_user.id
+    if @avatar.save
+      @team_sport.avatar = @avatar
+    else
+      flash[:notice] = 'Avatar was not created.'
+    end
+
     if @team_sport.save
+
       flash[:notice] = 'Sport was successfully created.'
       redirect_to team_sports_url
     else
@@ -71,7 +81,16 @@ class TeamSportsController < BaseController
       access_denied and return
     end
 
+    @avatar = Photo.new(params[:avatar])
+    @avatar.user_id = current_user.id
+    if @avatar.save
+      @team_sport.avatar = @avatar
+    else
+      flash[:notice] = 'Avatar was not created.'
+    end
+
     if @team_sport.update_attributes(params[:team_sport])
+      
       flash[:notice] = 'School info was successfully updated.'
       redirect_to team_sports_url
     else
@@ -93,6 +112,9 @@ class TeamSportsController < BaseController
     redirect_to(team_sports_url)
   end
 
-
+  def roster
+    @team_sport = TeamSport.find(params[:id])
+    render :layout => false
+  end
 
 end

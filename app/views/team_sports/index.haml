@@ -1,3 +1,7 @@
+
+= javascript_include_tag 'team_sports'
+= stylesheet_link_tag 'team_sports'
+
 - scope_select=Permission.scope_selector_string(@scope)
 
 .profileContentArea.listingPage
@@ -10,27 +14,57 @@
   .listings
     .padded
 
-      %table
-        %tr
-          %td
-            = link_to 'New Team Sport', url_for({:controller=>'team_sports',:action=>'new', :scope_select=>scope_select}), :class => 'genericButton'
-          %td
 
-      %br
+      - for team_sport in @team_sports
+        - panel_id = "team-sport-#{team_sport.id}"
+        .team-sport-summary{ :id=>panel_id }
+          .avatar
+            %img{ :src=>team_sport.avatar_photo_url(), :width=>64, :height=>64 }
 
-      %table{:border => 0, :cellspacing => 0, :cellpadding => 0, :width => '100%'}
-        %thead
-          %tr.yellowHeader
-            = sortable_table_header :class=>"padded sortableContentHeader", :name => "ID",     :sort => "team_sports.id"
-            = sortable_table_header :class=>"padded sortableContentHeader", :name => "Name",     :sort => "team_sports.name"
-            %th.padded.contentBoxHeader/
+          .dock
 
-        %tbody
-          - for team_sport in @team_sports
-            %tr.leagueList
-              %td.leagueList=h team_sport.id
-              %td.leagueList= link_to team_sport.name, edit_team_sport_path(team_sport, :scope_select=>scope_select), {:title => "edit"}
+            .messager
+              SEND MESSAGE
+
+            %h1= link_to team_sport.name, edit_team_sport_path(team_sport, :scope_select=>scope_select), {:title => "edit"}
+            = "#{team_sport.access_group.users.size() rescue 0} Athletes | #{team_sport.access_group.items.size() rescue 0} Restricted Videos"
+            %br
+            Coaches:
+            - Permission.has_role(Permission::COACH).in_scope(team_sport).collect(&:blessed).each() do |coach|
+              = link_to coach.full_name, user_path(coach.id)
 
 
-      .apple_pagination
-        = will_paginate @team_sports
+          .opener
+            %a{ :href=>"javascript:gs.team_sports.open_panel(#{team_sport.id})" }
+
+          .clearDiv
+          .roster
+          .buffer
+        .clearDiv
+
+
+      -#
+        %table
+          %tr
+            %td
+              = link_to 'New Team Sport', url_for({:controller=>'team_sports',:action=>'new', :scope_select=>scope_select}), :class => 'genericButton'
+            %td
+
+        %br
+
+        %table{:border => 0, :cellspacing => 0, :cellpadding => 0, :width => '100%'}
+          %thead
+            %tr.yellowHeader
+              = sortable_table_header :class=>"padded sortableContentHeader", :name => "ID",     :sort => "team_sports.id"
+              = sortable_table_header :class=>"padded sortableContentHeader", :name => "Name",     :sort => "team_sports.name"
+              %th.padded.contentBoxHeader/
+
+          %tbody
+            - for team_sport in @team_sports
+              %tr.leagueList
+                %td.leagueList=h team_sport.id
+                %td.leagueList= link_to team_sport.name, edit_team_sport_path(team_sport, :scope_select=>scope_select), {:title => "edit"}
+
+
+        .apple_pagination
+          = will_paginate @team_sports

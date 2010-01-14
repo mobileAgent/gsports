@@ -2,6 +2,7 @@ class TeamSport < ActiveRecord::Base
 
   belongs_to :team
   belongs_to :access_group
+  belongs_to :avatar, :class_name => "Photo", :foreign_key => "avatar_id"
 
   #before_save :check_access_group
 
@@ -47,4 +48,20 @@ class TeamSport < ActiveRecord::Base
   end
 
 
+
+  def avatar_photo_url(size = nil)
+    if avatar
+      avatar.public_filename(size)
+    else
+      case size
+        when :thumb
+          AppConfig.photo['missing_thumb']
+        else
+          AppConfig.photo['missing_medium']
+      end
+    end
+  end
+
+
+  
 end

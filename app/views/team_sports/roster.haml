@@ -1,0 +1,36 @@
+%table
+  %tr
+    %th
+      Status
+    %th
+      \#
+    %th
+      First
+    %th
+      Last
+    %th
+      Email
+    %th
+      Mobile #
+    %th
+      Position
+    %th
+      Actions
+
+  - (@team_sport.access_group.users rescue []).each() do |athlete|
+    %tr
+      %td
+        %img{ :src=>athlete.avatar_photo_url(), :width=>64, :height=>64 }
+      %td
+        = h athlete.id
+      %td
+        = h athlete.firstname
+      %td
+        = h athlete.lastname
+      %td
+        = h athlete.email
+      %td
+        = h athlete.phone
+      %td
+      
+      %td
