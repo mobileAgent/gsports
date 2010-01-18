@@ -4,17 +4,17 @@
       %span
         =link_to "MAILBOX", messages_path
       Thread:
-      = @title || @msgs.first.title
+      = @message_thread.title
 
   %script
     function hMessageAction(action) {
     var f = document.forms['message_form'];
     if(action=='unread') {
-    ="f.action='#{url_for(:controller => 'messages', :action=>'thread_unread', :id=>@msgs.first.real_thread_id)}';"
+    ="f.action='#{url_for(:controller => 'messages', :action=>'thread_unread', :id=>@message_thread.id)}';"
     f.submit();
     } else if (action=='delete') {
     if(window.confirm('Are you sure you want to permanently delete this thread?')) {
-    ="f.action='#{url_for(:controller => 'messages', :action=>'thread_delete', :id=>@msgs.first.real_thread_id)}';"
+    ="f.action='#{url_for(:controller => 'messages', :action=>'thread_delete', :id=>@message_thread.id)}';"
     f.submit();
     }
     }
@@ -27,16 +27,48 @@
 
       -#
         %div{ :style => "float:right" }
-          = link_to 'Reply', url_for({ :controller => 'messages', :action => 'new', :re => @msgs.first.id }), :style => "float:right", :class => 'genericButton'
-
-      - if @msgs.respond_to?('total_pages') && @msgs.total_pages > 1
-        .apple_pagination
-          = will_paginate @msgs
+          = link_to 'Reply', url_for({ :controller => 'messages', :action => 'new', :re => @sent_msgs.first.id }), :style => "float:right", :class => 'genericButton'
           
       .forumContentBox
         .forumBoxHeader
+          
+        - @sent_msgs.each do |sent|
+          - if sent.from_id==current_user.id
+            = render :partial => 'messages/sent_message', :locals => {:sent_message => sent}
+          - else
+            -msg = Message.find(:first, :conditions => {:sent_message_id => sent.id, :to_id => current_user.id})
+            - if msg
+              = render :partial => 'messages/sent_message', :locals => {:sent_message => sent, :message => msg}
+            - else
+              -# No message found for this user. This can happen if a message was deleted from the DB, just be quiet about it and move on...
 
-        = render :partial => 'messages/message', :collection => @msgs, :locals => {:thread => true}
+        .mailDetail
+          .mailPoster
+            .mailPosterThumb
+              %a{:href=>"#{user_path(current_user)}", :class=>"photo"}
+                =image_tag(current_user.avatar_photo_url(:thumb), :alt=>"Profile Picture", :width=>"50", :height=>"50")
+            .mailPosterName
+              %br/
+              = link_to current_user.full_name, user_path(current_user)
+          .mailDetailContent
+            
+            - form_for (Message.new, :url => { :action => "create" }) do |f|
+              -fields_for @message_thread do |thread_f|
+                = thread_f.hidden_field :id
+                
+              -fields_for SentMessage.new do |sent_f|
+                %p
+                  %br/
+                %p
+                  = sent_f.text_area :body, :rows => 10, :style => 'width:100%'
+          
+              %p
+                %div{:align => 'right'}
+                  = submit_tag "Reply"
+      
+          .clearDiv
+        .clearDiv
+
 
         %div
           \&nbsp;

@@ -101,6 +101,8 @@ module ApplicationHelper
       if item.user_id
         link = "/#{item.user_id}/#{item.class.to_s.tableize}/#{item.id}"
       end
+    when MessageThread
+      link = "/messages/thread/#{item.id}"
     end
 
     if link.nil?
