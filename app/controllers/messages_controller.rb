@@ -444,6 +444,7 @@ class MessagesController < BaseController
       if (expand_access_group_contacts)
         recipient_ids = all_sent_user_ids
         recipient_emails = all_sent_emails
+        recipient_phones = all_sent_phones
      end
       #######
     
