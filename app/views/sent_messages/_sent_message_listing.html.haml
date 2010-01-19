@@ -55,6 +55,6 @@
 
   .mailPostActions
     = link_to image_tag('/images/listing_icons/17/delete.png', :mouseclick => '/images/listing_icons/17/delete_ro.png', :border=>0, :alt => 'Delete', :title => 'Delete'), url_for({ :controller => 'messages', :action => 'thread_delete', :id => sent_message.thread_id, :sent => true }), :method => 'delete', :confirm => 'Delete this message?', :class => 'listingButton'
-    = link_to image_tag('/images/listing_icons/17/reply.png', :mouseclick => '/images/listing_icons/17/reply_ro.png', :border=>0, :alt => 'Reply', :title => 'Reply'), url_for({ :controller => 'messages', :action => 'new', :re_thread => sent_message.thread_id }), :class => 'listingButton'        
+    = link_to image_tag('/images/listing_icons/17/reply.png', :mouseclick => '/images/listing_icons/17/reply_ro.png', :border=>0, :alt => 'Reply', :title => 'Reply'), url_for({ :controller => 'messages', :action => 'thread', :id => sent_message.thread_id, :anchor => 'reply' }), :class => 'listingButton'        
       
   .clearDiv

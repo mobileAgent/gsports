@@ -2,7 +2,7 @@
 -#  outside of this page, there must be a form defined with id='message_form'
 
 - page = 'na' if page.nil?
-- colleciton ||= nil
+- collection ||= nil
 - unread = Message.unread(current_user)
 - mcount = (unread > 0) ? "(#{unread})" : ''
 

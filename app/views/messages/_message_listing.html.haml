@@ -40,6 +40,6 @@
   .mailPostActions
     = link_to image_tag('/images/listing_icons/17/delete.png', :mouseclick => '/images/listing_icons/17/delete_ro.png', :border=>0, :alt => 'Delete', :title => 'Delete'), url_for({ :controller => 'messages', :action => 'thread_delete', :id => message.thread_id }), :method => 'delete', :confirm => 'Permanently delete this message?', :class => 'listingButton'
     = render :partial => 'shared/inappropriate_listing', :locals => {:item => message.message_thread, :img => '/images/listing_icons/17/inappropriate.png', :img_ro => '/images/listing_icons/17/inappropriate_ro.png'}
-    = link_to image_tag('/images/listing_icons/17/reply.png', :mouseclick => '/images/listing_icons/17/reply_ro.png', :border=>0, :alt => 'Reply', :title => 'Reply'), url_for({ :controller => 'messages', :action => 'new', :re_thread => message.thread_id }), :class => 'listingButton'        
+    = link_to image_tag('/images/listing_icons/17/reply.png', :mouseclick => '/images/listing_icons/17/reply_ro.png', :border=>0, :alt => 'Reply', :title => 'Reply'), url_for({ :controller => 'messages', :action => 'thread', :id => message.thread_id, :anchor => 'reply' }), :class => 'listingButton'        
       
   .clearDiv

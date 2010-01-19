@@ -21,7 +21,7 @@
     return false;
     }
     
-  -form_for :message, :url => { :action => "new" }, :method => "post", :html => {:name => "message_form"} do |f| 
+  -form_for :message, :url => { :action => "create" }, :method => "post", :html => {:name => "message_form"} do |f| 
     .mailContent
       = render :partial => 'messages/tab_heading', :locals => {:page => 'view'}
 
@@ -51,20 +51,20 @@
               %br/
               = link_to current_user.full_name, user_path(current_user)
           .mailDetailContent
+            %a{ :name => 'reply' }
             
-            - form_for (Message.new, :url => { :action => "create" }) do |f|
-              -fields_for @message_thread do |thread_f|
-                = thread_f.hidden_field :id
+            -fields_for @message_thread do |thread_f|
+              = thread_f.hidden_field :id
                 
-              -fields_for SentMessage.new do |sent_f|
-                %p
-                  %br/
-                %p
-                  = sent_f.text_area :body, :rows => 10, :style => 'width:100%'
-          
+            -fields_for SentMessage.new do |sent_f|
               %p
-                %div{:align => 'right'}
-                  = submit_tag "Reply"
+                %br/
+              %p
+                = sent_f.text_area :body, :id => 'replybox', :rows => 10, :style => 'width:100%'
+          
+            %p
+              %div{:align => 'right'}
+                = image_submit_tag '/images/messages/send.jpg', :border => 0, :style => 'border:none'
       
           .clearDiv
         .clearDiv
@@ -83,3 +83,9 @@
       .clearDiv
       .clearDiv
   .clearDiv
+
+  %script
+    if(location.hash && location.hash.indexOf('reply')>=0) {
+    var r = document.getElementById('replybox');
+    if (r) { r.focus(); }
+    }

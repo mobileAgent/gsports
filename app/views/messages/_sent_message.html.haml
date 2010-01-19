@@ -17,7 +17,7 @@
         - if message
           = link_to image_tag('/images/listing_icons/17/delete.png', :mouseclick => '/images/listing_icons/17/delete_ro.png', :border=>0, :alt => 'Delete', :title => 'Delete'), {:url => { :controller => 'messages', :action => 'destroy', :id => message}, :method => :delete, :confirm => 'Are you sure?'}, {:method => :delete, :confirm => 'Delete this post?', :class => 'listingButton'}
           = render :partial => 'shared/inappropriate_listing', :locals => {:item => message, :img => '/images/listing_icons/17/inappropriate.png', :img_ro => '/images/listing_icons/17/inappropriate_ro.png'}
-          = link_to image_tag('/images/listing_icons/17/reply.png', :mouseclick => '/images/listing_icons/17/reply_ro.png', :border=>0, :alt => 'Reply', :title => 'Reply'), url_for({ :controller => 'messages', :action => 'new', :re_thread => sent_message.thread_id }), :class => 'listingButton'        
+          = link_to image_tag('/images/listing_icons/17/reply.png', :mouseclick => '/images/listing_icons/17/reply_ro.png', :border=>0, :alt => 'Reply', :title => 'Reply'), url_for({ :anchor => 'reply' }), :class => 'listingButton'        
 
         - else
           -# todo: WHAT ACTIONS FOR A SENT MESSAGE?

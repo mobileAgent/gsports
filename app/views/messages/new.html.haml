@@ -119,7 +119,8 @@
             =render :partial => 'messages/shared_item', :locals => {:body => nil}
       
         %p
-          = submit_tag "Send"
+          = image_submit_tag '/images/messages/send.jpg', :border => 0, :style => 'border:none'
+          
           -if @shared_access
             &nbsp;(Note: the recipient will see your email address '
             = current_user.email
