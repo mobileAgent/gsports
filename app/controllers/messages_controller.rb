@@ -92,7 +92,6 @@ class MessagesController < BaseController
     end
   end
   
-  
   # GET /messages/new
   def new
     # allow external-only emails to be sent for shared items
@@ -142,13 +141,18 @@ class MessagesController < BaseController
         @message_thread.title = "#{current_user.full_name} sent you #{@shared_access.video? ? 'a video' : 'something'}: \"#{@shared_item.title}\""
       end
     end  
-        
+
     render :action => :new
   end
   
   # GET /messages/new links
   def update
     new
+  end
+
+  def new_text
+    @sent_message = SentMessage.new(params[:sent_message]);
+    @message_thread = MessageThread.new
   end
 
   # POST /messages
@@ -189,6 +193,8 @@ class MessagesController < BaseController
       
       recipient_emails = @message_thread.to_emails_array
       
+      recipient_phones = @message_thread.to_phones_array
+      
       if @message_thread.to_access_group_ids_array
         recipient_access_groups = AccessGroup.find(@message_thread.to_access_group_ids_array)
       end
@@ -213,6 +219,14 @@ class MessagesController < BaseController
           recipient_emails = MessageThread.get_message_emails(params[:message_thread][:to_email])
         rescue Exception => e
           logger.error "Error parsing email addresses: #{e.message}"
+        end
+      end 
+  
+      if (params[:message_thread][:to_phone])
+        begin
+          recipient_phones = MessageThread.get_message_phones(params[:message_thread][:to_phone])
+        rescue Exception => e
+          logger.error "Error parsing phone numbers: #{e.message}"
         end
       end 
   
@@ -248,9 +262,9 @@ class MessagesController < BaseController
         recipient_access_groups = [@access_item.access_group]
       end
   
-      if (recipient_ids.nil? || recipient_ids.empty?) && (recipient_emails.nil? || recipient_emails.empty?) && (recipient_access_groups.nil? || recipient_access_groups.empty?)
+      if (recipient_ids.nil? || recipient_ids.empty?) && (recipient_emails.nil? || recipient_emails.empty?) && (recipient_phones.nil? || recipient_phones.empty?) && (recipient_access_groups.nil? || recipient_access_groups.empty?)
         logger.debug("There were no recipients found, sending back to new")
-        if current_user.admin?
+        if current_user.admin? 
             flash[:info] = "That recipient list didn't work out."
           else
             flash[:info] = "You can only send messages to your friends"
@@ -262,7 +276,11 @@ class MessagesController < BaseController
 
       @message_thread.from_id= current_user.id
       if @message_thread.title.nil? || @message_thread.title.blank?
-        @message_thread.title= "(no subject)"
+        if params[:sms] && @sent_message.body && !@sent_message.body.blank?
+          @message_thread.title = truncate_words(@sent_message.body,10)
+        else
+          @message_thread.title= "(no subject)"
+        end
       end
 
       logger.debug("Starting new thread: #{@message_thread.title}")
@@ -333,6 +351,35 @@ class MessagesController < BaseController
     # was sent to, so that we can avoid sending duplicate messages
     all_sent_emails = Array.new
     all_sent_emails.concat(recipient_emails) unless recipient_emails.nil? || recipient_emails.empty?
+
+    # create a new array to keep all phone numbers that this message
+    # was sent to, so that we can avoid sending duplicate messages
+    all_sent_phones = Array.new
+    
+    unless recipient_phones.nil?
+      recipient_phones.uniq!
+      recipient_phones.each do |sms|
+        # translate SMS numbers to email
+        contact = AccessContact.createSMSContact(sms)
+        email = contact.to_email_recipient
+        
+        # don't deliver duplicate copies
+        if all_sent_phones.include?(contact.destination)
+          logger.debug("Skipping duplicate recipient email from sms number: #{sms}")
+        else
+          # remember this contact so we don't send multiple copies
+          all_sent_phones << contact.destination
+          
+          logger.debug("Sending message  #{@sent_message.id} to phone number: #{sms}")
+    
+          # don't clutter the messages table with these...
+          #@message = Message.new(:sent_message_id => @sent_message.id, :thread_id => @sent_message.thread_id)
+          #@message.to_email= email
+          #@message.save!
+          UserNotifier.deliver_generic(email, @message_thread.title, @body, :html => is_html, :from => current_user.email )
+        end
+      end
+    end
     
     unless recipient_access_groups.nil?
       recipient_access_groups.each do |group|
@@ -364,8 +411,10 @@ class MessagesController < BaseController
          
           group_contacts.each do |contact|
             # don't deliver duplicate copies
-            if all_sent_emails.include?(contact.destination)
+            if contact.contact_type == AccessContact.Type_Email && all_sent_emails.include?(contact.destination)
               logger.debug("Skipping duplicate recipient email in access group: #{contact.destination}")
+            elsif contact.contact_type == AccessContact.Type_SMS && all_sent_phones.include?(contact.destination)
+              logger.debug("Skipping duplicate recipient phone in access group: #{contact.destination}")
             else
               # remember this contact so we don't send multiple copies
               all_sent_emails << contact.destination
@@ -391,7 +440,7 @@ class MessagesController < BaseController
       #######
       # FLAG: to copy all the recipients out of the access group into the sent message,
       #   set "expand_access_group_contacts" to true
-      expand_access_group_contacts = true
+      expand_access_group_contacts = false
       if (expand_access_group_contacts)
         recipient_ids = all_sent_user_ids
         recipient_emails = all_sent_emails
@@ -404,6 +453,7 @@ class MessagesController < BaseController
       end
     
       @message_thread.to_emails_array= recipient_emails unless recipient_emails.nil?
+      @message_thread.to_phones_array= recipient_phones unless recipient_phones.nil?
     
       unless (recipient_access_groups.nil? || recipient_access_groups.empty?)
         group_ids = Array.new
@@ -536,6 +586,17 @@ class MessagesController < BaseController
     end
   end
 
+  def truncate_words(text, length = 30, end_string = '...')
+    return if text.blank?
+    words = text.split()
+    if words.length > length
+      words[0..(length-1)].join(' ') + (words.length > length ? end_string : '')
+    else
+      text
+    end
+  end
+
+
   # Auto complete for addressing message to people in your 
   # friends list by name
   def auto_complete_for_friend_full_name
@@ -560,5 +621,6 @@ class MessagesController < BaseController
     choices = "<%= content_tag(:ul, @users.map { |u| content_tag(:li, h(u.full_name)) }) %>"
     render :inline => choices
   end
+
 
 end

@@ -14,24 +14,6 @@
   .mailContent
     = render :partial => 'messages/tab_heading', :locals => {:page => 'compose'}
 
-    -# show existing messages
-      - if @message_thread.id
-        .forumContentBox
-          .forumBoxHeader
-          
-            - @message_thread.sent_messages.each do |sent|
-              = render :partial => 'messages/sent_message', :locals => {:sent_message => sent}
-  
-          %div
-            \&nbsp;
-            %br/
-            %br/
-          .forumIEfix
-            \&nbsp;
-              
-          .clearDiv
-        .clearDiv
-    
     %a{ :name => 'composebox' }
   
       = error_messages_for :sent_message
@@ -112,7 +94,7 @@
             Body Text 
             %em (required)
           %p
-            = sent_f.text_area :body, :rows => 10, :style => 'width:80%'
+            = sent_f.text_area :body, :rows => 10, :style => 'width:100%'
       
           -if @shared_access
             = sent_f.hidden_field :shared_access_id

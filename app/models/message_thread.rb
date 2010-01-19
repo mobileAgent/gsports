@@ -5,7 +5,7 @@ class MessageThread < ActiveRecord::Base
   has_many :sent_messages, :foreign_key => 'thread_id', :order => 'created_at ASC'
   has_many :messages, :foreign_key => 'thread_id', :order => 'created_at ASC'
   
-  attr_protected :to_ids, :to_name, :to_email
+  attr_protected :to_ids, :to_name, :to_email, :to_phone
 
   def sender()
     return @sender if @sender
@@ -110,6 +110,24 @@ class MessageThread < ActiveRecord::Base
     to_emails
   end 
 
+  def self.get_message_phones(phone_str)
+    to_phones = []
+    phones = phone_str.split(',')
+    phones.each do |sms|
+      # validate the number
+      sanitized = sms.strip
+      sanitized.gsub!(/[^\d]/,'')
+      # support 10 digit numbers only
+      unless sanitized.length == 10
+        logger.error "Invalid phone number #{sms}"
+      else
+        to_phones << sanitized
+      end
+    end
+    to_phones
+  end 
+
+  
   def external_email_ok?
     !shared_item_id.nil?
   end
@@ -133,7 +151,6 @@ class MessageThread < ActiveRecord::Base
     self.to_emails= ary.to_param unless ary.nil?
   end
 
-
   # "x@y.z/a@b.c/h@j.k" => [x@y.z,a@b.c,h@j.k]
   def to_emails_array
     return self.to_emails.split('/').collect unless to_emails.nil?
@@ -146,6 +163,26 @@ class MessageThread < ActiveRecord::Base
   def to_email
     to_emails
   end
+
+
+  # [x@y.z,a@b.c,h@j.k] => "x@y.z/a@b.c/h@j.k"
+  def to_phones_array=(ary)
+    self.to_phones= ary.to_param unless ary.nil?
+  end
+
+  # "x@y.z/a@b.c/h@j.k" => [x@y.z,a@b.c,h@j.k]
+  def to_phones_array
+    return self.to_phones.split('/').collect unless to_phones.nil?
+  end
+
+  def to_phone=(phone)
+    self.to_phones= phone
+  end
+  
+  def to_phone
+    to_phones
+  end
+
 
   # [1,2,3] => "1/2/3"
   def to_access_group_ids_array=(ary)
@@ -204,6 +241,10 @@ class MessageThread < ActiveRecord::Base
     if to_emails
       ary << to_emails_array
     end 
+    
+    if to_phones
+      ary << to_phones_array
+    end
 
     ary
  end 

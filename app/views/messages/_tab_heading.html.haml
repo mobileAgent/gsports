@@ -40,7 +40,7 @@
   
 .mailActions
   = link_to image_tag('/images/messages/compose.jpg', :mouseclick => '/images/messages/compose_ro.jpg', :border=>0, :alt=>'Compose', :title=>'Compose'), new_message_path
-  = link_to image_tag('/images/messages/text.jpg', :mouseclick => '/images/messages/text_ro.jpg', :border=>0, :alt=>'Send Text Message', :title=>'Send Text Message'), new_message_path
+  = link_to image_tag('/images/messages/text.jpg', :mouseclick => '/images/messages/text_ro.jpg', :border=>0, :alt=>'Send Text Message', :title=>'Send Text Message'), url_for(:controller => :messages, :action => :new_text)
   #messageSelectedNone
     = image_tag('/images/messages/unread_in.jpg')
   

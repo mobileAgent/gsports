@@ -16,7 +16,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :video_clips
   map.resources :video_reels
   map.resources :video_users, :new => { :save_video => :post, :swfupload => :post }, :collection => { :admin => :any }
-  map.resources :messages
+  map.resources :messages, :collection => {:thread => :get, :new_text => :get}
   map.resources :billing
   map.resources :monikers
   map.resources :subscription_plans

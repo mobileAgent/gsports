@@ -62,6 +62,7 @@ class AccessContact < ActiveRecord::Base
     ac = AccessContact.new()
     ac.contact_type = contact_type
     ac.destination = destination
+    return ac
   end
 
 end

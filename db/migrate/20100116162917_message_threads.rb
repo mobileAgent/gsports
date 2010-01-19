@@ -9,6 +9,7 @@ class MessageThreads < ActiveRecord::Migration
       t.datetime :created_at
       t.string   :to_ids
       t.text     :to_emails
+      t.text     :to_phones
       t.string   :to_access_group_ids
     end
     
