@@ -7,7 +7,7 @@ class MessagesController < BaseController
   # GET /messages.xml
   def index
     @thread_summary = true
-    @msgs = Message.user_threads(current_user.id).paginate(:page => params[:page], :order => "created_at DESC")
+    @msgs = Message.paginate :page => params[:page], :per_page => 20, :conditions => ["deleted = 0 AND to_id = ?", current_user.id], :group => "thread_id", :order => "created_at DESC"
     render :action => 'inbox'
   end
   

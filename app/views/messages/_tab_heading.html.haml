@@ -1,7 +1,8 @@
 -# PREREQUISITE
 -#  outside of this page, there must be a form defined with id='message_form'
 
-- page |= 'na' if page.nil?
+- page = 'na' if page.nil?
+- colleciton ||= nil
 - unread = Message.unread(current_user)
 - mcount = (unread > 0) ? "(#{unread})" : ''
 
@@ -15,6 +16,14 @@
 
   %div{ :class => "#{page == 'sent' ? 'listingNavTab-sel' : 'listingNavTab'}" }
     = link_to 'Sent Messages', sent_messages_path
+
+  - if collection
+    %div{:style => 'float:right'}
+      -if collection.total_pages < 2
+        = "Showing all #{collection.size} thread#{collection.size > 1 ? 's' : ''}"
+      -else
+        = "Showing threads #{collection.offset+1} - #{collection.offset + collection.length} of #{collection.total_entries}"
+
   .clearDiv
   
 %script
@@ -61,6 +70,12 @@
       = link_to image_tag('/images/messages/forward.jpg', :mouseclick => '/images/messages/forward_ro.jpg', :border=>0, :alt=>'Forward', :title=>'Forward'),  "javascript:hMessageAction('forward')"
 
     = link_to image_tag('/images/messages/delete.jpg', :mouseclick => '/images/messages/delete_ro.jpg', :border=>0, :alt=>'Delete', :title=>'Delete'),  "javascript:hMessageAction('delete')"
+
+  - if collection && collection.total_pages > 1
+    %div{:style => 'float:right'} 
+      Page 
+      = will_paginate collection, {:container => false, :separator => ' | ', :prev_label => '', :next_label => ''}
+
 
   .clearDiv
     

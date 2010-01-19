@@ -22,7 +22,7 @@
     
   -form_for :message, :url => { :action => "new" }, :method => "post", :html => {:name => "message_form"} do |f| 
     .mailContent
-      = render :partial => 'messages/tab_heading', :locals => {:page => 'inbox'}
+      = render :partial => 'messages/tab_heading', :locals => {:page => 'inbox', :collection => @msgs}
         
       .mailContainer  
         .mailNew
@@ -35,9 +35,9 @@
           .forumIEfix
             \&nbsp;
             
-            
-            
           .clearDiv
         .clearDiv
         .clearDiv
+
+      = render :partial => 'messages/tab_footer', :locals => {:page => 'inbox', :collection => @msgs}
     .clearDiv

@@ -4,7 +4,7 @@ class SentMessagesController < BaseController
   # GET /sent_messages.xml
   def index
     @thread_summary = true
-    @sent_messages = SentMessage.sent_threads(current_user).paginate(:page => params[:page], :order => "created_at DESC")
+    @sent_messages = SentMessage.paginate :page => params[:page], :per_page => 20, :conditions => ["owner_deleted = 0 AND from_id = ?", current_user.id], :group => "thread_id", :order => "created_at DESC"
     render :action => 'outbox'
   end
   
