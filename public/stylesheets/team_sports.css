@@ -80,10 +80,12 @@
 }
 
 .team-sport-summary .roster th {
-	padding: 1px;
+  color: #58B120;
+	padding: 3px;
 	border: 1px solid black;
 	border-bottom: 0;
 	border-right: 0;
+	border-top: 0;
 }
 
 .team-sport-summary .roster tr {
@@ -94,8 +96,16 @@
 	border: 1px solid black;
 	border-bottom: 0;
 	border-right: 0;
+  background-color: #eee;
 }
 
+
+.team-sport-summary .roster td {
+	padding: 3px;
+	border: 1px solid black;
+	border-bottom: 0;
+	border-right: 0;
+}
 
 
 

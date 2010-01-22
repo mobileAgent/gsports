@@ -1,36 +1,63 @@
-%table
-  %tr
-    %th
-      Status
-    %th
-      \#
-    %th
-      First
-    %th
-      Last
-    %th
-      Email
-    %th
-      Mobile #
-    %th
-      Position
-    %th
-      Actions
+- roster = (@team_sport.access_group.roster rescue [])
+- remote_form_for :roster_entry, @roster_entry, :url=>post_roster_entries_path() do |f|
+  = f.hidden_field :id
+  = f.hidden_field :access_group_id
+  %table
+    %tr
+      %th
+        Status
+      %th
+        \#
+      = sortable_table_header :name => "First",     :sort => "teams.name"
+      = sortable_table_header :name => "Last",     :sort => "teams.name"
+      %th
+        Email
+      %th
+        Mobile #
+      %th
+        Position
+      %th
+        Actions
 
-  - (@team_sport.access_group.users rescue []).each() do |athlete|
+    - roster.each() do |athlete|
+      %tr
+        %td
+          %img{ :src=>athlete.avatar_photo_url(), :width=>64, :height=>64 }
+        %td
+          = h athlete.number
+        %td
+          = h athlete.firstname
+        %td
+          = h athlete.lastname
+        %td
+          = h athlete.email
+        %td
+          = h athlete.phone
+        %td
+          = h athlete.position
+        %td
+
     %tr
       %td
-        %img{ :src=>athlete.avatar_photo_url(), :width=>64, :height=>64 }
+        = f.check_box :send_invite
+        Send Invite
       %td
-        = h athlete.id
+        = f.text_field :number, :size=>2
       %td
-        = h athlete.firstname
+        = f.text_field :firstname, :size=>12
       %td
-        = h athlete.lastname
+        = f.text_field :lastname, :size=>12
       %td
-        = h athlete.email
+        = f.text_field :email, :size=>16
       %td
-        = h athlete.phone
+        = f.text_field :phone, :size=>10
       %td
-      
+        = f.text_field :position, :size=>8
       %td
+        = f.submit 'Add Athlete'
+
+  - if roster.respond_to? 'total_pages'
+    .apple_pagination
+      = will_paginate roster
+
+  -#<% remote_form_for :roster_entry, @roster_entry, :url => roster_entry_path(@roster_entry), :html => { :method => :put, :class => "edit_post", :id => "edit_post_45" } do |f| %>

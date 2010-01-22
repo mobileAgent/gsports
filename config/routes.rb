@@ -31,6 +31,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :reports, :collection => { :pop_new => :any, :build => :any, :clips=>:any, :player=>:any, :clip_detail=>:any, :detail=>:any, :sync=>:any, :publish=>:any }
   map.resources :sessions, :collection => { :pop_login_box => :any }
   map.resources :team_sports, :collection => { :roster => :any, :library => :any }
+  map.resources :roster_entries, :collection => { :post => :any }
   
 
   map.register         'register',        :controller => 'users', :action => 'register'

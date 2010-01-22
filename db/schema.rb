@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100114195007) do
+ActiveRecord::Schema.define(:version => 20100121174744) do
 
   create_table "access_contacts", :force => true do |t|
     t.integer "access_group_id", :limit => 11
@@ -342,7 +342,30 @@ ActiveRecord::Schema.define(:version => 20100114195007) do
   add_index "memberships", ["user_id"], :name => "index_memberships_on_user_id"
   add_index "memberships", ["created_at"], :name => "index_memberships_on_created_at"
 
+  create_table "message_threads", :force => true do |t|
+    t.string   "title",               :limit => 250, :null => false
+    t.integer  "from_id",             :limit => 11,  :null => false
+    t.datetime "created_at"
+    t.string   "to_ids"
+    t.text     "to_emails"
+    t.text     "to_phones"
+    t.string   "to_access_group_ids"
+  end
+
   create_table "messages", :force => true do |t|
+    t.integer  "thread_id",       :limit => 11,                    :null => false
+    t.integer  "sent_message_id", :limit => 11,                    :null => false
+    t.integer  "to_id",           :limit => 11,                    :null => false
+    t.datetime "created_at"
+    t.boolean  "read",                          :default => false
+    t.boolean  "deleted",                       :default => false
+  end
+
+  add_index "messages", ["thread_id"], :name => "index_messages_on_thread_id"
+  add_index "messages", ["sent_message_id"], :name => "index_messages_on_sent_message_id"
+  add_index "messages", ["to_id"], :name => "index_messages_on_to_id"
+
+  create_table "messages_obsolete", :force => true do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "title"
@@ -520,6 +543,18 @@ ActiveRecord::Schema.define(:version => 20100114195007) do
     t.integer "subscription_plan_id", :limit => 11
   end
 
+  create_table "roster_entries", :force => true do |t|
+    t.integer  "access_group_id", :limit => 11
+    t.string   "number"
+    t.string   "firstname"
+    t.string   "lastname"
+    t.string   "email"
+    t.string   "phone"
+    t.string   "position"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "sb_posts", :force => true do |t|
     t.integer  "user_id",    :limit => 11
     t.integer  "topic_id",   :limit => 11
@@ -534,6 +569,18 @@ ActiveRecord::Schema.define(:version => 20100114195007) do
   add_index "sb_posts", ["user_id", "created_at"], :name => "index_posts_on_user_id"
 
   create_table "sent_messages", :force => true do |t|
+    t.integer  "thread_id",        :limit => 11,                    :null => false
+    t.integer  "from_id",          :limit => 11,                    :null => false
+    t.text     "body"
+    t.datetime "created_at"
+    t.integer  "shared_access_id", :limit => 11
+    t.boolean  "owner_deleted",                  :default => false
+  end
+
+  add_index "sent_messages", ["thread_id"], :name => "index_sent_messages_on_thread_id"
+  add_index "sent_messages", ["from_id"], :name => "index_sent_messages_on_from_id"
+
+  create_table "sent_messages_obsolete", :force => true do |t|
     t.string   "title"
     t.integer  "from_id",             :limit => 11
     t.string   "to_ids"

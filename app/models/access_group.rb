@@ -28,6 +28,10 @@ class AccessGroup < ActiveRecord::Base
     access_users.collect(&:user)
   end
 
+  def roster()
+    RosterEntry.roster(id)
+  end
+
   def contacts()
     access_contacts
   end

@@ -114,6 +114,9 @@ class TeamSportsController < BaseController
 
   def roster
     @team_sport = TeamSport.find(params[:id])
+    @roster_entry = RosterEntry.new()
+    @roster_entry.access_group = @team_sport.access_group
+    @roster_entry.number=5
     render :layout => false
   end
 
