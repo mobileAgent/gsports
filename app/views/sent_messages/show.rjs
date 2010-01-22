@@ -1,0 +1,4 @@
+page.replace("mail_item_#{@sent_message.id}", :partial => "messages/message_body", :locals => { :message_body => @sent_message, :summary => (params[:summary] || false) })
+page.visual_effect(:highlight, "mail_item_#{@sent_message.id}")
+page.replace("mailbox_header_with_count", :partial => "shared/mailbox_with_count")
+page.visual_effect(:highlight, "mailbox_header_with_count")

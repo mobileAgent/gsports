@@ -24,4 +24,8 @@ class SentMessage < ActiveRecord::Base
     return false
   end
   
+  def user_message(user)
+    messages.find(:first, :conditions => { :sent_message_id => id, :user_id => user.id })
+  end
+  
 end

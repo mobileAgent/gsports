@@ -39,4 +39,31 @@ class SentMessagesController < BaseController
     end
   end
 
+  def show
+    @sent_message = SentMessage.find(params[:id])
+
+    if @sent_message.from_id != current_user.id
+      # get the TO: user message
+      @message = @sent_message.for_user(current_user)
+
+      # make sure the user has access to this message
+      if @message.nil? && !current_user.admin? 
+        redirect_to user_path(current_user)
+        return
+      else
+        # Sir, gentlemen do not read other people's mail.
+        # My good man, they do, but they don't mark it as 'read' when they do.
+        if @message && @message.unread? && current_user.id == @message.to_id
+          @message.read= true
+          @message.save!
+        end
+      end
+    end
+    
+    respond_to do |format|
+      format.html # => show.html.haml
+      format.js # => show.rjs 
+    end
+  end
+
 end

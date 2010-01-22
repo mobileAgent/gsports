@@ -22,11 +22,11 @@
     
   -form_for :message, :url => { :action => "new" }, :method => "post", :html => {:name => "message_form"} do |f| 
     .mailContent
-      = render :partial => 'messages/tab_heading', :locals => {:page => 'inbox', :collection => @msgs}
+      = render :partial => 'messages/tab_heading', :locals => {:page => 'inbox', :collection => @message_threads}
         
       .mailContainer  
         .mailNew
-          = render :partial => 'messages/message_listing', :collection => @msgs
+          = render :partial => 'messages/thread_listing', :collection => @message_threads
   
           %div
             \&nbsp;

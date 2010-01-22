@@ -19,7 +19,7 @@
     
   -form_for :message, :url => { :action => "new" }, :method => "post", :html => {:name => "message_form"} do |f| 
     .mailContent
-      = render :partial => 'messages/tab_heading', :locals => {:page => 'sent', :collection => @sent_messages}
+      = render :partial => 'messages/tab_heading', :locals => {:page => 'outbox', :collection => @sent_messages}
         
       .mailContainer  
         .mailNew

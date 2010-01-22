@@ -21,14 +21,12 @@
     return false;
     }
     
+  - is_sent = (@sent_msgs.size == 1 && @sent_msgs[0].from_id==current_user.id)
+    
   -form_for :message, :url => { :action => "create" }, :method => "post", :html => {:name => "message_form"} do |f| 
     .mailContent
-      = render :partial => 'messages/tab_heading', :locals => {:page => 'view'}
-
-      -#
-        %div{ :style => "float:right" }
-          = link_to 'Reply', url_for({ :controller => 'messages', :action => 'new', :re => @sent_msgs.first.id }), :style => "float:right", :class => 'genericButton'
-          
+      = render :partial => 'messages/tab_heading', :locals => {:page => 'thread'.concat(is_sent ? '-sent' : '')}
+        
       .forumContentBox
         .forumBoxHeader
           
@@ -42,33 +40,38 @@
             - else
               -# No message found for this user. This can happen if a message was deleted from the DB, just be quiet about it and move on...
 
-        .mailDetail
-          .mailPoster
-            .mailPosterThumb
-              %a{:href=>"#{user_path(current_user)}", :class=>"photo"}
-                =image_tag(current_user.avatar_photo_url(:thumb), :alt=>"Profile Picture", :width=>"50", :height=>"50")
-            .mailPosterName
-              %br/
-              = link_to current_user.full_name, user_path(current_user)
-          .mailDetailContent
-            %a{ :name => 'reply' }
-            
-            -fields_for @message_thread do |thread_f|
-              = thread_f.hidden_field :id
-                
-            -fields_for SentMessage.new do |sent_f|
-              %p
+        .mailDetailTop
+          .mailDetail
+            .mailPoster
+              .mailPosterThumb
+                %a{:href=>"#{user_path(current_user)}", :class=>"photo"}
+                  =image_tag(current_user.avatar_photo_url(:thumb), :alt=>"Profile Picture", :width=>"50", :height=>"50")
+              .mailPosterName
                 %br/
-              %p
-                = sent_f.text_area :body, :id => 'replybox', :rows => 10, :style => 'width:100%'
-          
-            %p
-              %div{:align => 'right'}
-                = image_submit_tag '/images/messages/send.jpg', :border => 0, :style => 'border:none'
-      
-          .clearDiv
-        .clearDiv
+                = link_to current_user.full_name, user_path(current_user)
+                - if current_user.team_name
+                  .mailPosterTeam
+                    = link_to current_user.team_name, team_path(current_user.team_id)
 
+            .mailDetailContent
+              %a{ :name => 'reply' }
+              
+              -fields_for @message_thread do |thread_f|
+                = thread_f.hidden_field :id
+                  
+              -fields_for SentMessage.new do |sent_f|
+                %p
+                  %br/
+                %p
+                  = sent_f.text_area :body, :id => 'replybox', :rows => 10, :style => 'width:100%'
+            
+              %p
+                %div{:align => 'right'}
+                  = image_submit_tag '/images/messages/send.jpg', :border => 0, :style => 'border:none'
+        
+            .clearDiv
+          .clearDiv
+        .mailDetailBottom
 
         %div
           \&nbsp;

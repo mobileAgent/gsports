@@ -29,9 +29,11 @@
         = link_to to_user.full_name, user_path(to_user)
         - if recipient_names.size == 1
           - if to_user.team_name
-            = link_to to_user.team_name, team_path(to_user.team_id)          
+            .mailPosterTeam
+              = link_to to_user.team_name, team_path(to_user.team_id)          
         - else
-          = "and #{recipient_names.size - 1} other#{recipient_names.size > 2 ? 's' : ''}"        
+          .mailPosterTeam
+            = "and #{recipient_names.size - 1} other#{recipient_names.size > 2 ? 's' : ''}"        
       -else 
         - if recipient_names.size == 1
           = h(recipient_names[0])
