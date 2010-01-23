@@ -1,4 +1,6 @@
+
 - readonly ||= false
+- reply_action ||= 'none'
 - if sent_message.from_id != current_user.id
   - message = Message.find(:first, :conditions => {:sent_message_id => sent_message.id, :to_id => current_user.id})
 
@@ -23,8 +25,12 @@
             -# No longer support single message delete, only thread delete
               = link_to image_tag('/images/listing_icons/17/delete.png', :mouseclick => '/images/listing_icons/17/delete_ro.png', :border=>0, :alt => 'Delete', :title => 'Delete'), message, :confirm => 'Delete this message?', :method => :delete, :class => 'listingButton'
             = render :partial => 'shared/inappropriate_listing', :locals => {:item => message, :img => '/images/listing_icons/17/inappropriate.png', :img_ro => '/images/listing_icons/17/inappropriate_ro.png'}
-            = link_to image_tag('/images/listing_icons/17/reply.png', :mouseclick => '/images/listing_icons/17/reply_ro.png', :border=>0, :alt => 'Reply', :title => 'Reply'), '#reply', :class => 'listingButton'        
-  
+            - if reply_action == 'thread'
+              -# show a local link to the bottom of the screen
+              = link_to image_tag('/images/listing_icons/17/reply.png', :mouseclick => '/images/listing_icons/17/reply_ro.png', :border=>0, :alt => 'Reply', :title => 'Reply'), '#reply', :class => 'listingButton'        
+            -elsif reply_action == 'message'
+              = link_to image_tag('/images/listing_icons/17/reply.png', :mouseclick => '/images/listing_icons/17/reply_ro.png', :border=>0, :alt => 'Reply', :title => 'Reply'), {:controller => :messages, :action => :new, :re => sent_message.id}, :class => 'listingButton'        
+
       .mailDetailDate
         =human_date_time(sent_message.created_at)
   

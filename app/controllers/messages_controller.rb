@@ -113,11 +113,15 @@ class MessagesController < BaseController
     logger.debug("built message #{@sent_message.inspect} from params #{params.inspect}")
    
     if params[:re_thread]
+      # tack the message on to an existing thread
       @message_thread = MessageThread.find(params[:re_thread].to_i)
     elsif params[:re]
-      #todo: start a new thread if replying to individual message??
-      @reply_to = Message.find(params[:re].to_i)
-      @message_thread = MessageThread.find(@reply_to.thread_id)
+      #start a new thread replying to an individual message
+      @reply_to = SentMessage.find(params[:re].to_i)
+      if @reply_to
+        @message_thread = MessageThread.new(:from_id => current_user.id, :to_id => @reply_to.from_id, :title => "RE: #{@reply_to.message_thread.title}")
+        @sent_message.body = render_to_string :partial => "messages/reply_to", :locals => { :reply_to => @reply_to }
+      end
     end
     
     if @message_thread.nil?
@@ -126,7 +130,7 @@ class MessagesController < BaseController
     
       if params[:to]
         begin
-          @message_thread.to_name= User.find(params[:to]).full_name
+          @message_thread.to_id= User.find(params[:to].to_i).id
         rescue
           logger.debug("sked for a bad to_id #{params[:to]}")
         end

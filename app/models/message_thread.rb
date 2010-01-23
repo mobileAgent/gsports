@@ -19,6 +19,42 @@ class MessageThread < ActiveRecord::Base
   def unread_count(user)
     messages.unread(user.id).size
   end
+
+  def multiple_recipients?
+    recipient_count = 0;
+
+    unless to_ids_array.nil?    
+      recipient_count += to_ids_array.size
+      return true if recipient_count > 1
+    end  
+
+    if to_ids
+      # team, league, and "all" aliases are assumed to be multi-recipients
+      return true if (to_ids.index('-1') || to_ids.index('-2') || to_ids.index('-3'))
+    end
+    
+    if to_emails
+      recipient_count += to_emails_array.size
+      return true if recipient_count > 1
+    end 
+      
+    if to_phones
+      recipient_count += to_phones_array.size
+      return true if recipient_count > 1
+    end
+  
+    unless to_access_group_ids.nil?
+      groups = AccessGroup.find(to_access_group_ids_array)
+      groups.each do |group| 
+        recipient_count += group.contacts.size
+        return true if recipient_count > 1
+      end
+    end
+
+  
+    return false  
+  end
+  
   
   def to_name=(full_name)
     fn,ln = full_name.split(' ')

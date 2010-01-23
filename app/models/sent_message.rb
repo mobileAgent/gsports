@@ -28,4 +28,8 @@ class SentMessage < ActiveRecord::Base
     messages.find(:first, :conditions => { :sent_message_id => id, :user_id => user.id })
   end
   
+  def sent_on_display(format = "%Y/%m/%d ")
+   created_at.strftime(format)
+  end
+  
 end

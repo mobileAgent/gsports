@@ -32,11 +32,11 @@
           
         - @sent_msgs.each do |sent|
           - if sent.from_id==current_user.id
-            = render :partial => 'messages/sent_message', :locals => {:sent_message => sent}
+            = render :partial => 'messages/sent_message', :locals => {:sent_message => sent, :reply_action => 'none' }
           - else
             -msg = Message.find(:first, :conditions => {:sent_message_id => sent.id, :to_id => current_user.id})
             - if msg
-              = render :partial => 'messages/sent_message', :locals => {:sent_message => sent, :message => msg}
+              = render :partial => 'messages/sent_message', :locals => {:sent_message => sent, :message => msg, :reply_action => (@message_thread.multiple_recipients? ? 'message' : 'thread')}
             - else
               -# No message found for this user. This can happen if a message was deleted from the DB, just be quiet about it and move on...
 
