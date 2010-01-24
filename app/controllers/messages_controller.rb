@@ -274,15 +274,18 @@ class MessagesController < BaseController
           else
             flash[:info] = "You can only send messages to your friends"
           end
-          #todo jme: need this?
-          #@message = Message.new(params[:message])
           render :action => :new and return
       end
 
       @message_thread.from_id= current_user.id
       if @message_thread.title.nil? || @message_thread.title.blank?
         if params[:sms] && @sent_message.body && !@sent_message.body.blank?
-          @message_thread.title = truncate_words(@sent_message.body,10)
+          # make subject from first line of message
+          @text_body = make_text_body(@sent_message.body)
+          @text_body.each_line do |line|
+            @message_thread.title = truncate_words(line,10)
+            break;
+          end
         else
           @message_thread.title= "(no subject)"
         end
@@ -298,7 +301,7 @@ class MessagesController < BaseController
     # Now we have all the ids, send the message to each one
 
     @body = @sent_message.body
-    is_html = false
+    is_html = true
 
     if @shared_access
       @shared_item = @shared_access.item
@@ -360,9 +363,18 @@ class MessagesController < BaseController
     # create a new array to keep all phone numbers that this message
     # was sent to, so that we can avoid sending duplicate messages
     all_sent_phones = Array.new
-    
+
+    if @text_body.nil?
+      if (recipient_phones && recipient_phones.size > 0) ||(recipient_access_groups && recipient_access_groups.size > 0)
+        @text_body = make_text_body(@body)
+      else
+        @text_body = @body
+      end
+    end      
+
     unless recipient_phones.nil?
       recipient_phones.uniq!
+      
       recipient_phones.each do |sms|
         # translate SMS numbers to email
         contact = AccessContact.createSMSContact(sms)
@@ -381,7 +393,7 @@ class MessagesController < BaseController
           #@message = Message.new(:sent_message_id => @sent_message.id, :thread_id => @sent_message.thread_id)
           #@message.to_email= email
           #@message.save!
-          UserNotifier.deliver_generic(email, @message_thread.title, @body, :html => is_html, :from => current_user.email )
+          UserNotifier.deliver_generic(email, @message_thread.title, @text_body, :html => false, :from => current_user.email )
         end
       end
     end
@@ -415,11 +427,15 @@ class MessagesController < BaseController
           group_contacts.uniq!
          
           group_contacts.each do |contact|
+            group_is_html = is_html
+            group_body = @body
             # don't deliver duplicate copies
             if contact.contact_type == AccessContact.Type_Email && all_sent_emails.include?(contact.destination)
               logger.debug("Skipping duplicate recipient email in access group: #{contact.destination}")
             elsif contact.contact_type == AccessContact.Type_SMS && all_sent_phones.include?(contact.destination)
               logger.debug("Skipping duplicate recipient phone in access group: #{contact.destination}")
+              group_is_html = false
+              group_body = @text_body
             else
               # remember this contact so we don't send multiple copies
               all_sent_emails << contact.destination
@@ -431,7 +447,7 @@ class MessagesController < BaseController
               #@message = Message.new(:sent_message_id => @sent_message.id, :thread_id => @sent_message.thread_id)
               #@message.to_email= email
               #@message.save!
-              UserNotifier.deliver_generic(email, @message_thread.title, @body, :html => is_html, :from => current_user.email )
+              UserNotifier.deliver_generic(email, @message_thread.title, group_body, :html => group_is_html, :from => current_user.email )
             end
           end
         end
@@ -594,6 +610,7 @@ class MessagesController < BaseController
 
   def truncate_words(text, length = 30, end_string = '...')
     return if text.blank?
+    text = ActionController::Base.helpers.strip_tags(text)
     words = text.split()
     if words.length > length
       words[0..(length-1)].join(' ') + (words.length > length ? end_string : '')
@@ -629,4 +646,15 @@ class MessagesController < BaseController
   end
 
 
+  def make_text_body(body)
+    # strip tags for text message recipients
+    # TODO: make this conditional
+    text_body = ActionController::Base.helpers.strip_tags(body)    
+    # normalize spaces
+    text_body.squeeze!
+    # remove leading and trailing whitespace
+    text_body.strip!
+    
+    return text_body
+  end
 end
