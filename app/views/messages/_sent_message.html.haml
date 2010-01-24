@@ -26,8 +26,8 @@
       .mailDetailActions
         - unless readonly
           - if message
-            -# No longer support single message delete, only thread delete
-              = link_to image_tag('/images/listing_icons/17/delete.png', :mouseclick => '/images/listing_icons/17/delete_ro.png', :border=>0, :alt => 'Delete', :title => 'Delete'), message, :confirm => 'Delete this message?', :method => :delete, :class => 'listingButton'
+            -if current_user.admin?
+              = link_to image_tag('/images/listing_icons/17/delete.png', :mouseclick => '/images/listing_icons/17/delete_ro.png', :border=>0, :alt => 'Delete', :title => 'Delete'), {:controller => :sent_messages, :action => :admin_delete, :id => sent_message.id}, :confirm => 'Remove this message from all recipient mailboxes?', :class => 'listingButton'
             = render :partial => 'shared/inappropriate_listing', :locals => {:item => message, :img => '/images/listing_icons/17/inappropriate.png', :img_ro => '/images/listing_icons/17/inappropriate_ro.png'}
             - if reply_action == 'thread'
               -# show a local link to the bottom of the screen

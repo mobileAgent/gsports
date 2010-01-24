@@ -3,7 +3,7 @@ ActionController::Routing::Routes.draw do |map|
 
   
   map.resources :promotions
-  map.resources :sent_messages
+  map.resources :sent_messages, :collection => {:admin_delete => :any, :delete_multi => :any}
   map.resources :members
   map.resources :pages
   map.resources :teams

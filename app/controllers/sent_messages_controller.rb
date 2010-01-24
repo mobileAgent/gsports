@@ -7,6 +7,33 @@ class SentMessagesController < BaseController
     @sent_messages = SentMessage.paginate :page => params[:page], :per_page => 20, :conditions => ["owner_deleted = 0 AND from_id = ?", current_user.id], :group => "thread_id", :order => "created_at DESC"
     render :action => 'outbox'
   end
+
+  def admin_delete
+    c = 0
+    if current_user.admin?
+      if params[:id]
+        @sent_message = SentMessage.find(params[:id].to_i)
+        Message.find(:all, :conditions => {:sent_message_id => @sent_message.id}).each do |msg|
+          next if msg.deleted
+          msg.deleted = 1
+          msg.save
+          c += 1
+        end
+        @sent_message.owner_deleted = 1
+        @sent_message.save
+      end
+    end
+    if c > 0
+      flash[:info] = "#{c} message#{c==1?' has':'s have'} been deleted."
+    else
+      flash[:info] = "No messages were deleted"
+    end
+
+    respond_to do |format|
+      format.html { redirect_to(url_for(:controller => 'messages', :action => 'thread', :id => @sent_message.thread_id)) }
+      format.js
+    end
+  end
   
   def delete_multi
     c=0
@@ -28,7 +55,7 @@ class SentMessagesController < BaseController
           c += 1
         end
       end
-      flash[:info] = "#{c} message#{c==1?'has':'s have'} been deleted."
+      flash[:info] = "#{c} message#{c==1?' has':'s have'} been deleted."
     else
       flash[:info] = "No messages were selected to be deleted"
     end

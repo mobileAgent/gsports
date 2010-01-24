@@ -25,7 +25,7 @@ class SentMessage < ActiveRecord::Base
   end
   
   def user_message(user)
-    messages.find(:first, :conditions => { :sent_message_id => id, :to_id => user.id })
+    messages.find(:first, :conditions => { :deleted => 0, :sent_message_id => id, :to_id => user.id })
   end
   
   def sent_on_display(format = "%Y/%m/%d ")
