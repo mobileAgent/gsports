@@ -41,8 +41,15 @@
           = #{recipient_names.size} recipients" 
 
   .mailPostDivider
-    %br/
-
+    %div
+      &bull;
+    %div
+      &bull;
+    %div
+      &bull;
+    %div
+      &bull;
+    
   .mailPostListing{:onclick => "window.location='#{url_for(:controller => :messages, :action => :thread, :id => msg_thread.id)}'", :style => "cursor:pointer"}
     .mailPostListingDate
       =human_date_time(sent_message.created_at)

@@ -25,7 +25,14 @@
           = link_to msg_thread.sender.team_name, team_path(msg_thread.sender.team_id)
 
   .mailPostDivider
-    %br/
+    %div
+      &bull;
+    %div
+      &bull;
+    %div
+      &bull;
+    %div
+      &bull;
 
   .mailPostListing{:onclick => "window.location='#{url_for(:action => :thread, :id => msg_thread.id)}'", :style => "cursor:pointer"}
     .mailPostListingDate

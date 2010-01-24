@@ -3,7 +3,11 @@
 - reply_action ||= 'none'
 - if sent_message.from_id != current_user.id
   - message = Message.find(:first, :conditions => {:sent_message_id => sent_message.id, :to_id => current_user.id})
-
+%div
+  &nbsp;
+  %br/
+  &nbsp;
+  
 .mailDetailTop
   .mailDetail{:id => "message_#{sent_message.id}"}
     .mailPoster
@@ -27,9 +31,9 @@
             = render :partial => 'shared/inappropriate_listing', :locals => {:item => message, :img => '/images/listing_icons/17/inappropriate.png', :img_ro => '/images/listing_icons/17/inappropriate_ro.png'}
             - if reply_action == 'thread'
               -# show a local link to the bottom of the screen
-              = link_to image_tag('/images/listing_icons/17/reply.png', :mouseclick => '/images/listing_icons/17/reply_ro.png', :border=>0, :alt => 'Reply', :title => 'Reply'), '#reply', :class => 'listingButton'        
+              = link_to image_tag('/images/listing_icons/17/reply.png', :mouseclick => '/images/listing_icons/17/reply_ro.png', :border=>0, :alt => 'Reply', :title => 'Reply'), '#reply', :onclick => 'var r = document.getElementById(\'replybox\'); if (r) { r.focus(); } return true;', :class => 'listingButton'        
             -elsif reply_action == 'message'
-              = link_to image_tag('/images/listing_icons/17/reply.png', :mouseclick => '/images/listing_icons/17/reply_ro.png', :border=>0, :alt => 'Reply', :title => 'Reply'), {:controller => :messages, :action => :new, :re => sent_message.id}, :class => 'listingButton'        
+              = link_to image_tag('/images/listing_icons/17/reply.png', :mouseclick => '/images/listing_icons/17/reply_ro.png', :border=>0, :alt => 'Reply', :title => 'Reply'), {:controller => :messages, :action => :new, :re => sent_message.id}, :class => 'listingButton'
 
       .mailDetailDate
         =human_date_time(sent_message.created_at)

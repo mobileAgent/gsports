@@ -241,7 +241,7 @@
 .mailContent .mailItem {
   background-color: #FFFFFF;
   width: auto;
-  height: 65px;
+  /*height: 65px;*/
   display: block;
   padding: 10px 10px 10px 10px;
   border-top: 1px solid #000000;
@@ -266,7 +266,7 @@
 }
 
 .mailContent .mailPoster .mailPosterThumb {
-  width: 50px;
+  width: 55px;
   padding-right: 5px;
   float: left;
 }
@@ -280,7 +280,6 @@
 }
 .mailContent .mailPoster .mailPosterName {
   width: 130px;
-  height: 50px;
   padding-left: 5px;
   font-size: 9pt;
   float: left;
@@ -316,17 +315,22 @@
 
 .mailContent .mailItem .mailPostDivider {
   width: 10px;
-  height: 65px;
   float:left;
+  color: #E7E7E7;
+  font-size: 10pt;
+  padding: 0px 0px 0px 0px;
+  /*
+  height: 55px;
   background-image: url(../images/messages/dots.png);
   background-repeat: no-repeat;
   background-position: center;
   background-position-y: center;
+  */
 }
 
 .mailContent .mailItem .mailPostListing {
   width: 490px;
-  height: 65px;
+  /*height: 55px;*/
   padding-left: 10px;
   float: left;
   vertical-align: middle;
@@ -334,6 +338,7 @@
 .mailContent .mailItem .mailPostListing .mailPostListingDate,
 .mailContent .mailItem .mailPostListing .mailPostListingSubject,
 .mailContent .mailItem .mailPostListing .mailPostListingBody {
+  width: 490px;
   white-space: nowrap;
   overflow: hidden;
   text-align: left;
@@ -371,7 +376,6 @@
 
 /* MESSAGE DISPLAY */
 .mailDetailTop {
-  margin-top: 20px;
   background: transparent url(../images/messages/center_message.png);
 }
 .mailDetail {
@@ -386,12 +390,10 @@
   background-image: url(../images/messages/bottom_message.png);
   background-position: top;
   background-repeat: repeat-y;
-  margin-bottom: 10px;
 }
 .mailDetailContent {
   width:545px;
-  padding-left:20px;
-  padding-top: 10px;
+  padding: 10px 0px 0px 20px;
   float:left;
 }
 .mailDetailContent .mailDetailDate {

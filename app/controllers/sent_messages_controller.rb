@@ -44,7 +44,7 @@ class SentMessagesController < BaseController
 
     if @sent_message.from_id != current_user.id
       # get the TO: user message
-      @message = @sent_message.for_user(current_user)
+      @message = @sent_message.user_message(current_user)
 
       # make sure the user has access to this message
       if @message.nil? && !current_user.admin? 
