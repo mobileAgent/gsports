@@ -68,15 +68,22 @@
                 %p
                   %br/
                 %p
-                  = sent_f.text_area :body, :id => 'replybox', :rows => 10, :style => 'width:100%'
+                  = sent_f.text_area :body, :id => 'replybox', :rows => 8, :style => 'width:100%'
             
-              %p
-                %div{:align => 'right'}
-                  = image_submit_tag '/images/messages/send.jpg', :border => 0, :style => 'border:none'
-        
             .clearDiv
           .clearDiv
         .mailDetailBottom
+
+        .mailComposeSend        
+          %br/
+          %p
+            %div{:align => 'right'}
+              = image_submit_tag '/images/messages/send.jpg', :border => 0, :style => 'border:none'
+    
+          %br/
+          %div{:align => 'right'}
+            %strong Note:
+            = "External phone and email recipients will see your email address: '#{current_user.email}'"
 
         %div
           \&nbsp;

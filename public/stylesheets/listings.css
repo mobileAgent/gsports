@@ -432,3 +432,39 @@
   float:right;
   margin:0px 0px 3px 1px;
 }
+li.autocomplete {
+  border-bottom: 1px solid #666666;
+}
+div.auto_complete .mailPoster {
+  float: none;
+  width: auto;
+  height: 60px;
+  padding: 5px 5px 0px 5px;
+}
+
+/* ########################## */
+/* Overload style for mail To: autocomplete
+/* ########################## */
+.mailContent  div.auto_complete {
+  width: 250px;/*350px;*/
+  /*background: #fff;*/
+}
+.mailContent  div.auto_complete ul {
+  /*border:1px solid #888;*/
+  /*margin:0;*/
+  /*padding:0;*/
+  width:250px/*100%;*/
+  /*list-style-type:none;*/
+}
+.mailContent  div.auto_complete ul li {
+  /*margin:0;*/
+  padding: 0px; /*3px;*/
+}
+.mailContent  div.auto_complete ul li.selected {
+  background-color: #e9ecf5/*#ffb;*/
+}
+.mailContent  div.auto_complete ul strong.highlight {
+  color: #000000;/*#800;*/
+  /*margin:0;*/
+  /*padding:0;*/
+}

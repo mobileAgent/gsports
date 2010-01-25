@@ -28,7 +28,7 @@
               %p= truncate_words( user.description, 10, '...')
             %br/
             - if @is_current_user
-              =link_to 'Send Message', new_message_path(:to => user.id), :class => 'url'
+              =link_to 'Send Message', new_message_path(:to_id => user.id), :class => 'url'
               %br/
           .clearDiv
         

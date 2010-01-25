@@ -13,7 +13,7 @@ module FriendshipsHelper
           end
           links << ['Deny', deny_user_friendship_path(friendship.user, friendship), negButtonOpts ]
         when FriendshipStatus[:accepted].id  
-          links << ['Send Message', new_message_path(:to => friendship.friend.id), posButtonOpts ]
+          links << ['Send Message', new_message_path(:to_id => friendship.friend.id), posButtonOpts ]
           links << ["Remove this friend", deny_user_friendship_path(friendship.user, friendship), negButtonOpts ]
         when FriendshipStatus[:denied].id
           links << ["Accept this request", accept_user_friendship_path(friendship.user, friendship), posButtonOpts ]
@@ -22,7 +22,7 @@ module FriendshipsHelper
     elsif friendship.friend_id != current_user.id
       if current_user.friendships.collect(&:friend_id).member?(friendship.friend_id)
         if (current_user.accepted_friendships.collect(&:friend_id).member?(friendship.friend_id))
-            links << ['Send Message', new_message_path(:to => friendship.friend.id), posButtonOpts ]
+            links << ['Send Message', new_message_path(:to_id => friendship.friend.id), posButtonOpts ]
         end
       end
     end

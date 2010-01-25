@@ -31,14 +31,14 @@
               = link_to image_tag('/images/listing_icons/add.png', :mouseclick => '/images/listing_icons/sel-add.png', :border=>0, :alt => 'Accept', :title => 'Accept'), accept_user_friendship_path(friendship.user, friendship), :method => 'put', :class => 'listingButton'
               = link_to image_tag('/images/listing_icons/inappropriate.png', :mouseclick => '/images/listing_icons/sel-inappropriate.png', :border=>0, :alt => 'Deny', :title => 'Deny'), deny_user_friendship_path(friendship.user, friendship), :method => 'put', :class => 'listingButton'
           - elsif friendship.friendship_status_id == FriendshipStatus[:accepted].id
-            = link_to image_tag('/images/listing_icons/message.png', :mouseclick => '/images/listing_icons/sel-message.png', :border=>0, :alt => 'Send Message', :title => 'Send Message'), new_message_path(:to => friendship.friend.id), :method => 'put', :class => 'listingButton'
+            = link_to image_tag('/images/listing_icons/message.png', :mouseclick => '/images/listing_icons/sel-message.png', :border=>0, :alt => 'Send Message', :title => 'Send Message'), new_message_path(:to_id => friendship.friend.id), :method => 'put', :class => 'listingButton'
             = link_to image_tag('/images/listing_icons/delete.png', :mouseclick => '/images/listing_icons/sel-delete.png', :border=>0, :alt => 'Remove this friend', :title => 'Remove this friend'), deny_user_friendship_path(friendship.user, friendship), :method => 'put', :class => 'listingButton'
           - elsif friendship.friendship_status_id == FriendshipStatus[:denied].id
             = link_to image_tag('/images/listing_icons/add.png', :mouseclick => '/images/listing_icons/sel-add.png', :border=>0, :alt => 'Accept this request', :title => 'Accept this request'), accept_user_friendship_path(friendship.user, friendship), :method => 'put', :class => 'listingButton'
         - elsif friendship.friend_id != current_user.id
           - if current_user.friendships.collect(&:friend_id).member?(friendship.friend_id)
             - if (current_user.accepted_friendships.collect(&:friend_id).member?(friendship.friend_id))
-              = link_to image_tag('/images/listing_icons/message.png', :mouseclick => '/images/listing_icons/sel-message.png', :border=>0, :alt => 'Send Message', :title => 'Send Message'), new_message_path(:to => friendship.friend.id), :method => 'put', :class => 'listingButton'
+              = link_to image_tag('/images/listing_icons/message.png', :mouseclick => '/images/listing_icons/sel-message.png', :border=>0, :alt => 'Send Message', :title => 'Send Message'), new_message_path(:to_id => friendship.friend.id), :method => 'put', :class => 'listingButton'
 
   .clearDiv
   .frameBtm

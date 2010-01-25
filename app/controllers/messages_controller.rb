@@ -94,7 +94,7 @@ class MessagesController < BaseController
   end
   
   # GET /messages/new
-  def new
+  def new    
     # allow external-only emails to be sent for shared items
     shared_access_id = params[:shared_access_id] || (params[:sent_message] ? params[:sent_message][:shared_access_id] : nil)
     if shared_access_id
@@ -128,11 +128,11 @@ class MessagesController < BaseController
       @message_thread = MessageThread.new(params[:thread])
       @message_thread.title = params[:title] if params[:title]
     
-      if params[:to]
+      if params[:to_id]
         begin
-          @message_thread.to_id= User.find(params[:to].to_i).id
+          @message_thread.to_id= User.find(params[:to_id].to_i).id
         rescue
-          logger.debug("sked for a bad to_id #{params[:to]}")
+          logger.debug("sked for a bad to_id #{params[:to_id]}")
         end
       end
     end
@@ -158,6 +158,8 @@ class MessagesController < BaseController
   def new_text
     @sent_message = SentMessage.new(params[:sent_message]);
     @message_thread = MessageThread.new
+    @sms = true
+    render :action => :new, :locals => { :sms => @sms } 
   end
 
   # POST /messages
@@ -172,10 +174,17 @@ class MessagesController < BaseController
     @sent_message = SentMessage.new(params[:sent_message])
 
     new_thread = false
-    thread_id = params[:message_thread][:id]
-    if thread_id
+    use_alias = false
+    thread_id = nil
+    if params[:message_thread][:id] && !params[:message_thread][:id].empty?
+      thread_id = params[:message_thread][:id].to_i
       @message_thread = MessageThread.find(thread_id)
     end
+
+    recipient_ids = Array.new
+    recipient_emails = Array.new
+    recipient_phones = Array.new
+    recipient_access_groups = Array.new
     
     if @message_thread && @message_thread.id
       new_thread = false
@@ -208,49 +217,77 @@ class MessagesController < BaseController
       new_thread = true
       @message_thread = MessageThread.new(params[:message_thread])
       
-      if (params[:message_thread][:to_name])
-        begin
-          recipient_ids,is_alias =
-            MessageThread.get_message_recipient_ids(params[:message_thread][:to_name], current_user)
-        rescue Exception => e
-          logger.error "Error parsing friend names: #{e.message}"
+      if params[:message_thread][:to]
+        entry_csv = params[:message_thread][:to]
+        logger.debug ("Parsing TO: #{entry_csv}")
+    
+        recipient_errors = Array.new
+        
+        entry_csv.split(',').each do |entry|
+          entry.strip!
+          
+          # is it an email address?
+          email = MessageThread.get_message_emails(entry)
+          if email
+            logger.debug "Adding valid email address #{entry}"
+            recipient_emails << email
+            next
+          end
+          
+          # is it a phone number
+          phone = MessageThread.get_message_phones(entry)
+          if phone
+            logger.debug "Adding valid phone number #{entry}"
+            recipient_phones << phone
+            next
+          end
+          
+          if current_user.team_staff?
+            access_group = AccessGroup.find(:first, conditions => {:team_id => current_user.team_id, :name => entry, :enabled => true})
+            if access_group
+              recipient_access_groups << access_group
+              next
+            end
+          end
+          
+          begin
+            ids,is_alias =
+              MessageThread.get_message_recipient_ids(entry, current_user)
+            if ids && !ids.empty?
+              recipient_ids << ids
+              use_alias ||= is_alias
+              next
+            end
+          rescue Exception => e
+            logger.error "Error parsing friend names: #{e.message}"
+          end 
+          
+          logger.error "Invalid recipient entry: #{entry}"
+          recipient_errors << entry
         end
-      else
-        recipient_ids,is_alias = params[:message_thread][:to_id],false
+          
+        @message_thread.to_ids_array= recipient_ids unless recipient_ids.empty?
+        @message_thread.to_emails_array= recipient_emails unless recipient_emails.empty?
+        @message_thread.to_phones_array= recipient_phones unless recipient_phones.empty?
+        @message_thread.to_access_groups_array= recipient_access_groups unless recipient_access_groups.empty?
+        
+        unless recipient_errors.empty?
+          flash[:error] = "Invalid recipient entr#{recipient_errors.size > 1 ? 'ies' : 'y'}: #{recipient_errors.join(', ')}"
+          render :action => :new and return
+        end
       end
-  
-      if (params[:message_thread][:to_email])
-        begin
-          recipient_emails = MessageThread.get_message_emails(params[:message_thread][:to_email])
-        rescue Exception => e
-          logger.error "Error parsing email addresses: #{e.message}"
-        end
-      end 
-  
-      if (params[:message_thread][:to_phone])
-        begin
-          recipient_phones = MessageThread.get_message_phones(params[:message_thread][:to_phone])
-        rescue Exception => e
-          logger.error "Error parsing phone numbers: #{e.message}"
-        end
-      end 
-  
-      if (params[:to_access_group_id])
-        logger.debug("To access group id: #{params[:to_access_group_id].join(',')}")    
-        begin
-          recipient_access_groups = AccessGroup.find(params[:to_access_group_id])
-        rescue Exception => e
-          logger.error "Error parsing recipient access groups: #{e.message}"
-        end
-      end 
-  
+      
+      if params[:to_id]
+        recipient_ids << params[:to_id].to_i
+      end
+      if params[:message_thread][:to_id]
+        recipient_ids << params[:message_thread][:to_id].to_i
+      end
+
       #this is a publication message
       report_id = params[:report] ? params[:report][:id] : nil
       if (report_id)
         report = Report.find(report_id)
-  
-        #access_group_id = params[:access_item][:access_group_id]
-        #group = AccessGroup.find(access_group_id);
   
         @access_item = AccessItem.new params[:access_item]
         if @access_item.access_group_id
@@ -260,14 +297,14 @@ class MessagesController < BaseController
   
         logger.debug("Publish report #{report_id} access group id: #{@access_item.access_group_id}")
   
-        #depricated
-  #      report.access_group = group
-  #      result = report.save
-  
         recipient_access_groups = [@access_item.access_group]
       end
   
-      if (recipient_ids.nil? || recipient_ids.empty?) && (recipient_emails.nil? || recipient_emails.empty?) && (recipient_phones.nil? || recipient_phones.empty?) && (recipient_access_groups.nil? || recipient_access_groups.empty?)
+      if (recipient_ids.nil? || recipient_ids.empty?) && 
+         (recipient_emails.nil? || recipient_emails.empty?) && 
+         (recipient_phones.nil? || recipient_phones.empty?) && 
+         (recipient_access_groups.nil? || recipient_access_groups.empty?)
+        
         logger.debug("There were no recipients found, sending back to new")
         if current_user.admin? 
             flash[:info] = "That recipient list didn't work out."
@@ -470,8 +507,15 @@ class MessagesController < BaseController
       #######
     
       unless recipient_ids.nil?
-        to_ids,uses_alias = (is_alias ? Message.get_message_recipient_ids(params[:message_thread][:to_name],current_user,true) : [recipient_ids,false])
-        @message_thread.to_ids_array= to_ids
+        if use_alias
+          # We expanded the sent user ids for "all", "team", "league" aliases... want to use an alias id for them in the DB
+          #TODO: we can do better than to re-parse all the recipients here
+          ids,is_alias =
+              MessageThread.get_message_recipient_ids(params[:message_thread][:to], current_user, true)
+          @message_thread.to_ids_array= ids
+        else
+          @message_thread.to_ids_array= recipient_ids
+        end
       end
     
       @message_thread.to_emails_array= recipient_emails unless recipient_emails.nil?
@@ -623,7 +667,7 @@ class MessagesController < BaseController
   # Auto complete for addressing message to people in your 
   # friends list by name
   def auto_complete_for_friend_full_name
-    search_name = '%' + params[:message_thread][:to_name] + '%'
+    search_name = '%' + params[:message_thread][:to] + '%'
     if current_user.admin?
       @users = User.find(:all, :conditions => ["(LOWER(firstname) like ? or LOWER(lastname) like ?) and enabled = ?",search_name,search_name,true], :order => "lastname asc, firstname asc", :limit => 10)
     else
@@ -641,8 +685,9 @@ class MessagesController < BaseController
           true
         ], :order => "lastname asc, firstname asc", :limit => 10)
     end
-    choices = "<%= content_tag(:ul, @users.map { |u| content_tag(:li, h(u.full_name)) }) %>"
-    render :inline => choices
+    #choices = "<%= content_tag(:ul, @users.map { |u| content_tag(:li, h(u.full_name)) }) %>"
+    #render :inline => choices
+    render  :partial => "messages/auto_complete_for_users", :locals => { :collection => @users }
   end
 
 

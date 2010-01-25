@@ -1,0 +1,16 @@
+-if @users && !@users.empty?
+  %ul.mail_autocomplete
+    - count = 0
+    - @users.each do |user|
+      - break if count >= 5
+      - count += 1
+      %li
+        .mailPoster
+          .mailPosterThumb
+            =image_tag(user.avatar_photo_url(:thumb), :alt=>"Profile Picture", :width=>"50", :height=>"50")
+          .mailPosterName
+            %br/
+            .full_name= h(user.full_name)
+            - if user.team_name
+              .mailPosterTeam
+                = h(user.team_name)

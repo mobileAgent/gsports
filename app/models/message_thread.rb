@@ -4,8 +4,6 @@ class MessageThread < ActiveRecord::Base
   validates_presence_of :from_id
   has_many :sent_messages, :foreign_key => 'thread_id', :order => 'created_at ASC'
   has_many :messages, :foreign_key => 'thread_id', :order => 'created_at ASC'
-  
-  attr_protected :to_ids, :to_name, :to_email, :to_phone
 
   def sender()
     return @sender if @sender
@@ -50,35 +48,21 @@ class MessageThread < ActiveRecord::Base
         return true if recipient_count > 1
       end
     end
-
   
     return false  
   end
   
+  def to=(entries_csv)
+  end
   
-  def to_name=(full_name)
-    fn,ln = full_name.split(' ')
-    u = User.find(:first, :conditions => ['firstname = ? and lastname = ?',fn,ln])
-    if u
-      puts "Found user id #{u.id} from full name #{full_name}"
-      self.to_id= u.id 
-    else
-      puts "No user found for #{full_name}"
-    end
+  def to
+    return recipient_display_array(nil).join(', ')
   end
 
-  def to_name
-    users = User.find(:all, :conditions => ["id IN (?)", to_ids_array])
-    if users && users.size > 0
-      ary = users.inject([]) { |a,u| a << u.full_name}
-      return ary.join(", ")
-    else
-      return ''
-    end
-    # support for external email addresses
-    #self.to_id? ? User.find(self.to_id).full_name : to_email
+  def to_id=(user_id)
+    to_ids= user_id
   end
-  
+      
   # Useful for grabbing a set of names and aliases from the 
   # compose form and generating a list of ids that the message
   # gets sent to.
@@ -130,7 +114,7 @@ class MessageThread < ActiveRecord::Base
     end
     [recipient_ids,is_alias]
   end
- 
+
   def self.get_message_emails(email_str)
     to_emails = []
     emails = email_str.split(',')
@@ -152,9 +136,10 @@ class MessageThread < ActiveRecord::Base
     phones.each do |sms|
       # validate the number
       sanitized = sms.strip
-      sanitized.gsub!(/[^\d]/,'')
+      sanitized.gsub!(/[^\w]/,'')
+
       # support 10 digit numbers only
-      unless sanitized.length == 10
+      unless /^\d{10}$/.match(sanitized)
         logger.error "Invalid phone number #{sms}"
       else
         to_phones << sanitized
@@ -178,10 +163,6 @@ class MessageThread < ActiveRecord::Base
     self.to_ids= ary.to_param unless ary.nil?
   end
 
-  def to_id=(id)
-    self.to_ids= id.to_s unless id.nil?
-  end
-
   # [x@y.z,a@b.c,h@j.k] => "x@y.z/a@b.c/h@j.k"
   def to_emails_array=(ary)
     self.to_emails= ary.to_param unless ary.nil?
@@ -191,15 +172,6 @@ class MessageThread < ActiveRecord::Base
   def to_emails_array
     return self.to_emails.split('/').collect unless to_emails.nil?
   end
-
-  def to_email=(email)
-    self.to_emails= email
-  end
-  
-  def to_email
-    to_emails
-  end
-
 
   # [x@y.z,a@b.c,h@j.k] => "x@y.z/a@b.c/h@j.k"
   def to_phones_array=(ary)
@@ -211,24 +183,11 @@ class MessageThread < ActiveRecord::Base
     return self.to_phones.split('/').collect unless to_phones.nil?
   end
 
-  def to_phone=(phone)
-    self.to_phones= phone
-  end
-  
-  def to_phone
-    to_phones
-  end
-
-
   # [1,2,3] => "1/2/3"
   def to_access_group_ids_array=(ary)
     logger.debug("assign to_access_group_ids array: #{ary.join(',')}")
     
     self.to_access_group_ids= ary.to_param unless ary.nil?
-  end
-
-  def to_access_group_id=(id)
-    self.to_access_group_ids= id.to_s unless id.nil?
   end
 
   # "1/2/3" => [1,2,3]
@@ -279,10 +238,15 @@ class MessageThread < ActiveRecord::Base
     end 
     
     if to_phones
-      ary << to_phones_array
+      to_phones_array.each do |phone|
+        if phone.length == 10
+          ary << phone.sub(/(\d{3})(\d{3})(\d{4})/,'(\1)\2-\3')
+        else
+          ary << phone
+        end
+      end
     end
 
     ary
- end 
- 
+  end 
 end
