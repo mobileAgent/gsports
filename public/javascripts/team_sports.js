@@ -30,6 +30,10 @@
       this.current_open_panel = sport_div
       this.current_open_panel_id = id
       roster_div.show()
+    }else{
+      //just closing
+      gs.team_sports.current_open_panel = null;
+      gs.team_sports.current_open_panel_id = null;
     }
 
   }

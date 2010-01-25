@@ -20,9 +20,11 @@
         Actions
 
     - roster.each() do |athlete|
+      
       %tr
         %td
-          %img{ :src=>athlete.avatar_photo_url(), :width=>64, :height=>64 }
+          -if athlete.user
+            %img{ :src=>athlete.user.avatar_photo_url(), :width=>64, :height=>64 }
         %td
           = h athlete.number
         %td

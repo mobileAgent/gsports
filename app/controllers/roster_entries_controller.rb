@@ -22,6 +22,9 @@ class RosterEntriesController < BaseController
 
   def post
     @roster_entry = nil
+
+    saved = false
+
     begin
       @roster_entry = RosterEntry.find(params[:id])
 
@@ -30,13 +33,7 @@ class RosterEntriesController < BaseController
         access_denied and return
       end
 
-      if @team_sport.update_attributes(params[:team_sport])
-
-        flash[:notice] = 'School info was successfully updated.'
-        redirect_to team_sports_url
-      else
-        render :action => "edit"
-      end
+      saved = @team_sport.update_attributes(params[:team_sport])
 
     rescue
       #it's new
@@ -48,16 +45,16 @@ class RosterEntriesController < BaseController
         access_denied and return
       end
 
-      if @roster_entry.save
+      saved = @roster_entry.save
 
-        render :update do |page|
-          #page.replace_html 'staff_summary', :text => 'zoom'
-          flashnow(page,'Roster entry was added created.')
-          page.call 'gs.team_sports.open_panel', @roster_entry.team_sport.id
-        end
+    end
 
+    render :update do |page|
+      if saved
+        flashnow(page,'School info was successfully updated.')
       else
-        render :action => "new"
+        #page.replace_html 'staff_summary', :text => 'zoom'
+        flashnow(page,'Roster entry could not be updated.')
       end
     end
 
