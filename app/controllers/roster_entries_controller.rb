@@ -2,9 +2,9 @@ class RosterEntriesController < BaseController
 
   before_filter :except => [:show] do  |c| c.find_staff_scope(Permission::COACH) end
 
-  skip_before_filter :verify_authenticity_token, :only => [:post ]
+  skip_before_filter :verify_authenticity_token, :only => [:roster, :post ]
 
-  sortable_attributes 'roster_entries.number', 'roster_entries.firstname', 'roster_entries.lastname', 'roster_entries.email', 'roster_entries.phone', 'roster_entries.position'
+  sortable_attributes 'number', 'firstname', 'lastname', 'email', 'phone', 'position'
 
 
   def index
@@ -102,6 +102,21 @@ class RosterEntriesController < BaseController
     @roster_entry.destroy
 
     redirect_to(team_sports_url)
+  end
+
+  def roster
+    @team_sport = TeamSport.find(params[:id])
+
+    @roster_entry = RosterEntry.new()
+    @roster_entry.access_group = @team_sport.access_group
+
+
+    @roster = RosterEntry.roster(@team_sport.access_group).paginate(:all, :order => sort_order, :page => params[:page])
+
+
+
+
+    render :layout => false
   end
 
 end

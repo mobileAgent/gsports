@@ -22,7 +22,7 @@
     if(this.current_open_panel_id != id){
       roster_div.update('Loading roster...')
       sport_div.select('.opener')[0].select('a')[0].addClassName('open')
-      new Ajax.Updater(roster_div, '/team_sports/roster', {
+      new Ajax.Updater(roster_div, '/roster_entries/roster', {
         parameters: { "id": id },
         evalScripts: true
       });
@@ -37,3 +37,19 @@
     }
 
   }
+
+  gs.team_sports.sort_row = function(url) {
+    id = gs.team_sports.current_open_panel_id
+    
+    panel_name = 'team-sport-'+id
+    sport_div = $(panel_name)
+    roster_div = sport_div.select('.roster')[0]
+
+    //roster_div.update('Loading roster...')
+
+    new Ajax.Updater(roster_div, url, {
+        parameters: { "id": id },
+        evalScripts: true
+      });
+  }
+

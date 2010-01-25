@@ -88,6 +88,11 @@
 	border-top: 0;
 }
 
+.team-sport-summary .roster th a {
+  color: #58B120;
+  text-decoration: none;
+}
+
 .team-sport-summary .roster tr {
 }
 
