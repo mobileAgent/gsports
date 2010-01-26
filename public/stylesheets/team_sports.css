@@ -113,6 +113,11 @@
 }
 
 
+.team-sport-summary .roster .send-invite {
+  font-weight: bold;
+  padding-bottom: 6px;
+}
+
 
 .team-sport-summary .buffer {
   padding-bottom: 8px;

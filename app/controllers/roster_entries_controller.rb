@@ -4,7 +4,7 @@ class RosterEntriesController < BaseController
 
   skip_before_filter :verify_authenticity_token, :only => [:roster, :post ]
 
-  sortable_attributes 'number', 'firstname', 'lastname', 'email', 'phone', 'position'
+  sortable_attributes 'id', 'number', 'firstname', 'lastname', 'email', 'phone', 'position'
 
 
   def index
@@ -21,40 +21,42 @@ class RosterEntriesController < BaseController
 
 
   def post
+    
     @roster_entry = nil
 
     saved = false
+    msg = ''
 
     begin
       @roster_entry = RosterEntry.find(params[:id])
 
-      unless current_user.can?(Permission::COACH, @roster_entry.team_sport)
-        flash[:notice] = "You don't have permission to edit that record"
-        access_denied and return
+      if current_user.can?(Permission::COACH, @roster_entry.team_sport)
+        saved = @team_sport.update_attributes(params[:team_sport])
+      else
+        msg = "You don't have permission to edit that record"
       end
-
-      saved = @team_sport.update_attributes(params[:team_sport])
 
     rescue
       #it's new
 
       @roster_entry = RosterEntry.new(params[:roster_entry])
 
-      unless current_user.can?(Permission::COACH, @roster_entry.team_sport)
-        flash[:notice] = "You don't have permission to edit that record"
-        access_denied and return
+      if current_user.can?(Permission::COACH, @roster_entry.team_sport)
+        saved = @roster_entry.save
+      else
+        msg = "You don't have permission to edit that record"
       end
-
-      saved = @roster_entry.save
 
     end
 
     render :update do |page|
       if saved
-        flashnow(page,'School info was successfully updated.')
+        flashnow(page,'Roster entry was successfully updated.')
+        page.call 'gs.team_sports.sort_row', "/roster_entries/roster/#{@roster_entry.team_sport.id}?order=descending&page=1&sort=id"
       else
         #page.replace_html 'staff_summary', :text => 'zoom'
-        flashnow(page,'Roster entry could not be updated.')
+        flashnow(page,"Roster entry could not be updated.")
+        flashnow(page,msg,'error')
       end
     end
 
@@ -111,7 +113,7 @@ class RosterEntriesController < BaseController
     @roster_entry.access_group = @team_sport.access_group
 
 
-    @roster = RosterEntry.roster(@team_sport.access_group).paginate(:all, :order => sort_order, :page => params[:page])
+    @roster = RosterEntry.roster(@team_sport.access_group)#.paginate(:all, :order => sort_order, :page => params[:page])
 
 
 

@@ -16,9 +16,9 @@ module ApplicationHelper
   include SortableTable::App::Helpers::ApplicationHelper
 
   # For rjs pages to tickle the flash on the current page
-  def flashnow(page,msg)
-    page.select("#flash_notice span").first.replace("<span>#{msg}</span>")
-    page.select("#flash_notice").first.show
+  def flashnow(page,msg,level='notice')
+    page.select("#flash_#{level} span").first.replace("<span>#{msg}</span>")
+    page.select("#flash_#{level}").first.show
   end
 
   def game_date(dtm)
