@@ -136,6 +136,13 @@ module BaseHelper
       link_to_remote name, {:url => {:controller=>:sessions, :action=>:pop_login_box}}, options
     end
   end
-  
+
+  def format_phone(phone)
+    fmt = phone
+    if phone && phone.length == 10
+      fmt =phone.sub(/(\d{3})(\d{3})(\d{4})/,'(\1)\2-\3')
+    end
+    fmt
+  end
 
 end

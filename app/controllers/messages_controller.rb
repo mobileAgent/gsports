@@ -227,18 +227,20 @@ class MessagesController < BaseController
           entry.strip!
           
           # is it an email address?
-          email = MessageThread.get_message_emails(entry)
-          if email
+          emails = MessageThread.get_message_emails(entry)
+          unless emails.nil? || emails.empty?
             logger.debug "Adding valid email address #{entry}"
-            recipient_emails << email
+            recipient_emails << emails
+            recipient_emails.flatten!
             next
           end
           
           # is it a phone number
-          phone = MessageThread.get_message_phones(entry)
-          if phone
+          phones = MessageThread.get_message_phones(entry)
+          unless phones.nil? || phones.empty?
             logger.debug "Adding valid phone number #{entry}"
-            recipient_phones << phone
+            recipient_phones << phones
+            recipient_phones.flatten!
             next
           end
           
@@ -253,9 +255,10 @@ class MessagesController < BaseController
           begin
             ids,is_alias =
               MessageThread.get_message_recipient_ids(entry, current_user)
-            if ids && !ids.empty?
+            unless ids.nil? || ids.empty?
               recipient_ids << ids
               use_alias ||= is_alias
+              recipient_ids.flatten!
               next
             end
           rescue Exception => e
@@ -334,7 +337,7 @@ class MessagesController < BaseController
 
     end # end if new thread
     
-    logger.debug "Sending message from #{current_user.id} to #{recipient_emails.nil? ? '-' : recipient_ids.to_json}, #{recipient_emails.nil? ? '-' : recipient_emails.join(',')}"
+    logger.debug "Sending message from #{current_user.id} to user ids=>#{recipient_emails.nil? ? '-' : recipient_ids.to_json}, emails=>#{recipient_emails.nil? ? '-' : recipient_emails.join(',')}, phones=>#{recipient_phones.nil? ? '-' : recipient_phones.join(',')}, groups=>#{recipient_access_groups.nil? ? '-' : recipient_access_groups.join(',')}"
     # Now we have all the ids, send the message to each one
 
     @body = @sent_message.body
@@ -365,7 +368,7 @@ class MessagesController < BaseController
 
     recipient_ids = [recipient_ids] if recipient_ids.class == String
 
-    unless recipient_ids.nil?
+    unless recipient_ids.nil? || recipient_ids.empty?
       recipient_ids.uniq!
       recipient_ids.each do |recipient_id|
         logger.debug("Sending message #{@sent_message.id} to user id: #{recipient_id}")
@@ -375,7 +378,7 @@ class MessagesController < BaseController
         @message.save!
       end
     end
-    unless recipient_emails.nil?
+    unless recipient_emails.nil? || recipient_emails.empty?
       recipient_emails.uniq!
       recipient_emails.each do |email|
         logger.debug("Sending message  #{@sent_message.id} to email: #{email}")
@@ -383,7 +386,12 @@ class MessagesController < BaseController
         #@message = Message.new(:sent_message_id => @sent_message.id, :thread_id => @sent_message.thread_id)
         #@message.to_email= email
         #@message.save!
-        UserNotifier.deliver_generic(email, @message_thread.title, @body, :html => is_html, :from => current_user.email )
+        begin
+          UserNotifier.deliver_generic(email, @message_thread.title, @body, :html => is_html, :from => current_user.email )
+        rescue Exception => e
+          logger.error "Error sending email to #{email}: #{e.message}"
+          flash[:error] = "Unable to send email to #{email}"
+        end          
       end
     end
         
@@ -409,7 +417,7 @@ class MessagesController < BaseController
       end
     end      
 
-    unless recipient_phones.nil?
+    unless recipient_phones.nil? || recipient_phones.empty?
       recipient_phones.uniq!
       
       recipient_phones.each do |sms|
@@ -430,12 +438,17 @@ class MessagesController < BaseController
           #@message = Message.new(:sent_message_id => @sent_message.id, :thread_id => @sent_message.thread_id)
           #@message.to_email= email
           #@message.save!
-          UserNotifier.deliver_generic(email, @message_thread.title, @text_body, :html => false, :from => current_user.email )
+          begin
+            UserNotifier.deliver_generic(email, @message_thread.title, @text_body, :html => false, :from => current_user.email )
+          rescue Exception => e
+            logger.error "Error sending email to #{email}: #{e.message}"
+            flash[:error] = "Unable to send message to #{contact.destination}"
+          end          
         end
       end
     end
     
-    unless recipient_access_groups.nil?
+    unless recipient_access_groups.nil? || recipient_access_groups.empty?
       recipient_access_groups.each do |group|
         group_users = group.users()
         unless group_users.nil?
@@ -460,7 +473,7 @@ class MessagesController < BaseController
        
         # for each access group contact, send them the message via email -- translate SMS numbers to email
         group_contacts = group.contacts()
-        unless group_contacts.nil?
+        unless group_contacts.nil? || group_contacts.empty?
           group_contacts.uniq!
          
           group_contacts.each do |contact|
@@ -484,7 +497,12 @@ class MessagesController < BaseController
               #@message = Message.new(:sent_message_id => @sent_message.id, :thread_id => @sent_message.thread_id)
               #@message.to_email= email
               #@message.save!
-              UserNotifier.deliver_generic(email, @message_thread.title, group_body, :html => group_is_html, :from => current_user.email )
+              begin
+                UserNotifier.deliver_generic(email, @message_thread.title, group_body, :html => group_is_html, :from => current_user.email )
+              rescue Exception => e
+                logger.error "Error sending email to #{email}: #{e.message}"
+                flash[:error] = "Unable to send message to #{contact.destination}"
+              end          
             end
           end
         end
@@ -667,27 +685,69 @@ class MessagesController < BaseController
   # Auto complete for addressing message to people in your 
   # friends list by name
   def auto_complete_for_friend_full_name
-    search_name = '%' + params[:message_thread][:to] + '%'
-    if current_user.admin?
-      @users = User.find(:all, :conditions => ["(LOWER(firstname) like ? or LOWER(lastname) like ?) and enabled = ?",search_name,search_name,true], :order => "lastname asc, firstname asc", :limit => 10)
-    else
-#      @friend_ids = Friendship.find(:all, :conditions => ['user_id = ? and friendship_status_id = ?',current_user.id,FriendshipStatus[:accepted].id]).collect(&:friend_id)
-#      if @friend_ids.nil? || @friend_ids.size == 0
-#        render :inline => '' and return
-#      end
-
-      @users = User.find(:all,
-        :conditions => [
-          "id in (?) and (LOWER(firstname) like ? or LOWER(lastname) like ?) and enabled = ?",
-          current_user.mail_target_ids(),
-          search_name,
-          search_name,
-          true
-        ], :order => "lastname asc, firstname asc", :limit => 10)
+    if params[:message_thread][:to]
+      search_name = params[:message_thread][:to].strip.downcase
+      search_name_sql = search_name + '%'
+      search_name_sql = '%' + search_name_sql if search_name.length > 3
+      
+      logger.debug "Auto complete for '#{search_name}'"
+            
+      if current_user.admin?
+        @users = User.find(:all, :conditions => ["(LOWER(firstname) like ? or LOWER(lastname) like ?) and enabled = ?",search_name_sql,search_name_sql,true], :order => "lower(lastname) asc, lower(firstname) asc", :limit => 5)
+        @groups = AccessGroup.find(:all, :conditions => ["lower(name) like ? and enabled=?",search_name_sql,true], :order => "lower(name)", :limit => 5)
+      else
+        @users = User.find(:all,
+          :conditions => [
+            "id in (?) and (LOWER(firstname) like ? or LOWER(lastname) like ?) and enabled = ?",
+            current_user.mail_target_ids(),
+            search_name_sql,
+            search_name_sql,
+            true
+          ], :order => "lower(lastname) asc, lower(firstname) asc", :limit => 5)
+  
+        if current_user.team_staff?
+          @groups = AccessGroup.find(:all, :conditions => ["lower(name) like ? and team_id=? and enabled=?",search_name_sql,current_user.team_id,true], :order => "lower(name)", :limit => 5)
+        end
+      end    
+      
+      search_name_sql= '%' + search_name_sql unless search_name_sql[0] == '%'
+      
+      threads = MessageThread.find(:all, :select => "distinct to_emails", :conditions => ["from_id=? and lower(to_emails) like ?",current_user.id,search_name_sql], :limit => 5)
+      if threads && !threads.empty?
+        @emails = Array.new
+        threads.each do |thread|
+          e = thread.to_emails_array.select {|email| email.downcase.include?(search_name)}
+          if e && !e.empty?
+            @emails << e
+          end
+        end
+        @emails = @emails.flatten.uniq
+        @emails = nil if @emails.empty?
+      end
+      
+      if search_name =~ /\d/
+        stripped = search_name.gsub(/[^\w]/,'')
+        if /^d+$/.match(stripped)
+          threads = MessageThread.find(:all, :select => "distinct to_phones", :conditions => ["from_id=? and to_phones like ?",current_user.id,search_name_sql], :limit => 5)
+          if threads && !threads.empty?
+            @phones = Array.new
+            threads.each do |thread|
+              p = thread.to_phones_array.select {|phone| phone.include?(search_name)}
+              if p && !p.empty?
+                @phones << p
+              end
+            end
+            @phones = @phones.flatten.uniq
+            @phones = nil if @phones.empty?
+          end
+        end
+      end
+      
+      #choices = "<%= content_tag(:ul, @users.map { |u| content_tag(:li, h(u.full_name)) }) %>"
+      #render :inline => choices
+      logger.debug (render_to_string :partial => "messages/auto_complete_for_users")
+      render :partial => "messages/auto_complete_for_users"
     end
-    #choices = "<%= content_tag(:ul, @users.map { |u| content_tag(:li, h(u.full_name)) }) %>"
-    #render :inline => choices
-    render  :partial => "messages/auto_complete_for_users", :locals => { :collection => @users }
   end
 
 

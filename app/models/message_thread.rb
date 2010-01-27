@@ -121,7 +121,14 @@ class MessageThread < ActiveRecord::Base
     emails.each do |email|
       # validate the email
       email.strip!
-      unless /^([^@\s]+)@((?:[-a-z0-9A-Z]+\.)+[a-zA-Z]{2,})$/.match(email)
+      
+      # "simple" email regexp: /^([^@\s]+)@((?:[-a-z0-9A-Z]+\.)+[a-zA-Z]{2,})$/
+            
+      # allow emails in the format
+      #  abc@123.com
+      #  <abc@123.com>
+      #  John Davis <abc@123.com>
+      unless /(?:^|^<|(.+) <)([^@\s]+)@((?:[-a-z0-9A-Z]+\.)+[a-zA-Z]{2,})>?$/.match(email)
         logger.error "Invalid email address #{email}"
       else
         to_emails << email

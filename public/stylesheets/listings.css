@@ -435,25 +435,34 @@
 li.autocomplete {
   border-bottom: 1px solid #666666;
 }
-div.auto_complete .mailPoster {
+.mailContent div.auto_complete .mailPoster {
   float: none;
-  width: auto;
-  height: 60px;
+  height: auto;
+  width:100%;
   padding: 5px 5px 0px 5px;
 }
+.mailContent div.auto_complete .mailPoster .mailPosterThumb {
+  width: 55px;
+}
+.mailContent div.auto_complete .mailPoster .mailPosterName {
+  width: 450px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
 
 /* ########################## */
 /* Overload style for mail To: autocomplete
 /* ########################## */
 .mailContent  div.auto_complete {
-  width: 250px;/*350px;*/
+  width:100%;/*350px;*/
   /*background: #fff;*/
 }
 .mailContent  div.auto_complete ul {
   /*border:1px solid #888;*/
   /*margin:0;*/
   /*padding:0;*/
-  width:250px/*100%;*/
+  /*width:100%;*/
   /*list-style-type:none;*/
 }
 .mailContent  div.auto_complete ul li {

@@ -39,7 +39,7 @@
                   %div{:style => "border-bottom: 1px solid #000000; padding: 3px; background-color: #cccccc" }
                     You can type people's names, group names, email addresses, or text/phone numbers below
                   %div{:style => "padding:3px"}
-                    = text_field_with_auto_complete :message_thread, :to, {:autocomplete => 'off', :style => 'width:100%;border:none'},{:url => { :controller => 'messages', :action => 'auto_complete_for_friend_full_name'}, :tokens => [','], :select => 'full_name'}          
+                    = text_field_with_auto_complete :message_thread, :to, {:autocomplete => 'off', :style => 'width:100%;border:none'},{:url => { :controller => 'messages', :action => 'auto_complete_for_friend_full_name'}, :tokens => [','], :select => 'autocompletename'}          
               .clearDiv        
             .clearDiv
             %div
@@ -90,7 +90,7 @@
                     %p
                       %label Your Message:
                     %br/
-                    = sent_f.text_area :body, :id => 'replybox', :rows => 15, :style => 'width:100%'
+                    = sent_f.text_area :body, :id => 'replybox', :rows => 12, :style => 'width:100%'
                 
   
                     -if @shared_access
