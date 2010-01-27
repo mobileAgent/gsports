@@ -52,7 +52,7 @@ class RosterEntriesController < BaseController
     render :update do |page|
       if saved
         flashnow(page,'Roster entry was successfully updated.')
-        page.call 'gs.team_sports.sort_row', "/roster_entries/roster/#{@roster_entry.team_sport.id}?order=descending&page=1&sort=id"
+        page.call 'gs.team_sports.sort_row', "/roster_entries/roster/#{@roster_entry.team_sport.id}?order=descending&sort=id"
       else
         #page.replace_html 'staff_summary', :text => 'zoom'
         flashnow(page,"Roster entry could not be updated.")
