@@ -1,0 +1,20 @@
+- editing ||= false
+%tr
+  %td{ :align=>'center' }
+    .send-invite
+      Send Invite
+    = f.check_box :send_invite
+  %td
+    = f.text_field :number, :size=>2
+  %td
+    = f.text_field :firstname, :size=>12
+  %td
+    = f.text_field :lastname, :size=>12
+  %td
+    = f.text_field :email, :size=>16
+  %td
+    = f.text_field :phone, :size=>10
+  %td
+    = f.text_field :position, :size=>8
+  %td
+    = f.submit (editing ? 'Edit Athlete' : 'Add Athlete')

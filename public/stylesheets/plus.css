@@ -1619,6 +1619,31 @@ a.admin-userreg-link-user{
 }
 
 
+#dialog .popup{
+
+  position: relative;
+	margin-top: -100px;
+	margin-left: -300px;
+
+	background-color: #EBEAEB;
+	color: black;
+	text-align: left;
+	width: 570px;
+	font-size: 116%;
+	padding: 15px;
+
+  border: 2px solid #909090;
+}
+
+#dialog .popup h1{
+	font-size: 161.6%;
+  text-transform:uppercase;
+  color:#0081C0;
+}
+
+
+
+
 
 
 /* registration popup */

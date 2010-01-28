@@ -25,6 +25,48 @@
   }
 
 
+  gs.ui = {}
+
+  gs.ui.open_dialog = function(url, p_ajax_options) {
+
+    ajax_options = $H({
+      //parameters: { "id": id },
+      evalScripts: true
+    }).merge(p_ajax_options)
+
+
+    dialog = $('dialog')
+
+
+    popup = new Element("div")
+    popup.addClassName('popup')
+
+    popup = new Element("div")
+    popup.addClassName('popup')
+
+    closer = new Element("div")
+    closer.addClassName('closer')
+
+    close_button = new Element("a", { onclick:"Element.update('dialog', '');" })
+    close_button.update('close[x]')
+    closer.insert( close_button )
+
+    popup.insert( closer )
+
+
+    content = new Element("div", { id: 'dialog-content' })
+    content.update( 'loading dialog content...' )
+
+    popup.insert( content )
+
+
+    dialog.update( popup )
+
+
+    new Ajax.Updater(content, url, ajax_options);
+
+  }
+
 
 
 

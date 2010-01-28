@@ -1,0 +1,1 @@
+page.replace('team-sport-'+(params[:team_sport_id] || 'X'), :partial => 'items')

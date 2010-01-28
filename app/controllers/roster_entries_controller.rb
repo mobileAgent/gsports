@@ -21,17 +21,17 @@ class RosterEntriesController < BaseController
 
 
   def post
-    
+    debugger
     @roster_entry = nil
 
     saved = false
     msg = ''
 
     begin
-      @roster_entry = RosterEntry.find(params[:id])
+      @roster_entry = RosterEntry.find(params[:roster_entry][:id])
 
       if current_user.can?(Permission::COACH, @roster_entry.team_sport)
-        saved = @team_sport.update_attributes(params[:team_sport])
+        saved = @roster_entry.update_attributes(params[:roster_entry])
       else
         msg = "You don't have permission to edit that record"
       end
@@ -103,20 +103,37 @@ class RosterEntriesController < BaseController
 
     @roster_entry.destroy
 
-    redirect_to(team_sports_url)
+    #redirect_to(team_sports_url)
+
+    respond_to do |format|
+      format.html { redirect_to(team_sports_url) }
+      format.js { 
+        render :update do |page|
+          target = "athlete-#{@roster_entry.id}"
+          page.replace_html target, :text => ''
+          #page.call 'gs.team_sports.show_row'
+        end
+      }
+    end
   end
 
   def roster
     @team_sport = TeamSport.find(params[:id])
 
-    @roster_entry = RosterEntry.new()
-    @roster_entry.access_group = @team_sport.access_group
+    @roster = RosterEntry.roster(@team_sport.access_group).find(:all, :order => sort_order)#.paginate(:all, :order => sort_order, :page => params[:page])
 
+    if params[:edit]
+      edit_me = params[:edit].to_i
+      @roster_entry = RosterEntry.find(edit_me)
+      if @roster_entry && current_user.can?(Permission::COACH, @roster_entry.team_sport)
+        @editing = edit_me
+      end
+    end
 
-    @roster = RosterEntry.roster(@team_sport.access_group)#.paginate(:all, :order => sort_order, :page => params[:page])
-
-
-
+    if @roster_entry.nil?
+      @roster_entry = RosterEntry.new()
+      @roster_entry.access_group = @team_sport.access_group
+    end
 
     render :layout => false
   end

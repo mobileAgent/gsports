@@ -1,0 +1,6 @@
+.popup
+  .closer
+    %a{ :onclick=>"Element.update('dialog', '');" }
+      close[x]
+
+  = @content_for_layout

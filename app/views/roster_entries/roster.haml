@@ -16,47 +16,14 @@
         Actions
 
     - @roster.each() do |athlete|
+      - edit_me = athlete.id == @editing
+      - if edit_me
+        = render :partial=>'edit_entry', :locals=>{ :f => f, :editing=>true }
+      - else
+        = render :partial=>'show_entry', :locals=>{ :athlete => athlete }
 
-      %tr
-        %td
-          -if athlete.user
-            %img{ :src=>athlete.user.avatar_photo_url(), :width=>64, :height=>64 }
-        %td
-          = h athlete.number
-        %td
-          = h athlete.firstname
-        %td
-          = h athlete.lastname
-        %td
-          = h athlete.email
-        %td
-          = h athlete.phone
-        %td
-          = h athlete.position
-        %td
-          = link_to 'Edit'
-          |
-          = link_to 'Remove'
-
-    %tr
-      %td{ :align=>'center' }
-        .send-invite
-          Send Invite
-        = f.check_box :send_invite
-      %td
-        = f.text_field :number, :size=>2
-      %td
-        = f.text_field :firstname, :size=>12
-      %td
-        = f.text_field :lastname, :size=>12
-      %td
-        = f.text_field :email, :size=>16
-      %td
-        = f.text_field :phone, :size=>10
-      %td
-        = f.text_field :position, :size=>8
-      %td
-        = f.submit 'Add Athlete'
+    - if !@editing
+      = render :partial=>'edit_entry', :locals=>{ :f => f }
 
   - if @roster.respond_to? 'total_pages'
     .apple_pagination

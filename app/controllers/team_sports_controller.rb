@@ -2,7 +2,7 @@ class TeamSportsController < BaseController
 
   before_filter :except => [:show] do  |c| c.find_staff_scope(Permission::COACH) end
 
-  skip_before_filter :verify_authenticity_token, :only => [:roster, :library ]
+  skip_before_filter :verify_authenticity_token, :only => [:roster, :videos, :library ]
 
   sortable_attributes 'team_sports.name', 'team_sports.id', 'teams.name'
 
@@ -112,11 +112,19 @@ class TeamSportsController < BaseController
     redirect_to(team_sports_url)
   end
 
-  def roster
+  def xroster
     @team_sport = TeamSport.find(params[:id])
     @roster_entry = RosterEntry.new()
     @roster_entry.access_group = @team_sport.access_group
     render :layout => false
+  end
+
+  def videos
+    @team_sport = TeamSport.find(params[:id])
+    @access_group = @team_sport.access_group
+    
+    #render :template=>'access_groups/items' , :layout => 'dialog'
+    render :partial=>'videos'
   end
 
 end

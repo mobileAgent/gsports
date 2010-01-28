@@ -1,0 +1,22 @@
+-row_name = "athlete-#{athlete.id}"
+%tr{ :id=>row_name }
+  %td
+    -if athlete.user
+      %img{ :src=>athlete.user.avatar_photo_url(), :width=>64, :height=>64 }
+  %td
+    = h athlete.number
+  %td
+    = h athlete.firstname
+  %td
+    = h athlete.lastname
+  %td
+    = h athlete.email
+  %td
+    = h athlete.phone
+  %td
+    = h athlete.position
+  %td
+    = link_to 'Edit', "javascript:gs.team_sports.edit_row('#{@team_sport.id}', '#{athlete.id}')"
+    |
+    = link_to_remote 'Remove', {:url => roster_entry_path(athlete), :confirm => 'Are you sure?', :method=>:delete}, :complete => evaluate_remote_response
+
