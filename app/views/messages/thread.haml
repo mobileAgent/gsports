@@ -78,7 +78,10 @@
           %br/
           %p
             %div{:align => 'right'}
-              = image_submit_tag '/images/messages/send.jpg', :border => 0, :style => 'border:none'
+              - if @message_thread.multiple_recipients?
+                = image_submit_tag '/images/messages/button_reply_all.png', :border => 0, :style => 'border:none', :mouseclick => '/images/messages/button_reply_all_ro.jpg'
+              - else
+                = image_submit_tag '/images/messages/button_reply.png', :border => 0, :style => 'border:none', :mouseclick => '/images/messages/button_reply_ro.jpg'
     
           %br/
           %div{:align => 'right'}
