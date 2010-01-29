@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20091113175407) do
+ActiveRecord::Schema.define(:version => 20100116191142) do
 
   create_table "access_contacts", :force => true do |t|
     t.integer "access_group_id", :limit => 11
@@ -341,20 +341,28 @@ ActiveRecord::Schema.define(:version => 20091113175407) do
   add_index "memberships", ["user_id"], :name => "index_memberships_on_user_id"
   add_index "memberships", ["created_at"], :name => "index_memberships_on_created_at"
 
-  create_table "messages", :force => true do |t|
+  create_table "message_threads", :force => true do |t|
+    t.string   "title",               :limit => 250, :null => false
+    t.integer  "from_id",             :limit => 11,  :null => false
     t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "title"
-    t.text     "body"
-    t.boolean  "read",                              :default => false
-    t.integer  "replied",            :limit => 1
-    t.integer  "to_id",              :limit => 11
-    t.integer  "from_id",            :limit => 11
-    t.integer  "thread_id",          :limit => 11
-    t.string   "to_email",           :limit => 256
-    t.integer  "shared_access_id",   :limit => 11
-    t.integer  "to_access_group_id", :limit => 11
+    t.string   "to_ids"
+    t.text     "to_emails"
+    t.text     "to_phones"
+    t.string   "to_access_group_ids"
   end
+
+  create_table "messages", :force => true do |t|
+    t.integer  "thread_id",        :limit => 11,                    :null => false
+    t.integer  "sent_message_id",  :limit => 11,                    :null => false
+    t.integer  "to_id",            :limit => 11,                    :null => false
+    t.datetime "created_at"
+    t.boolean  "read",                           :default => false
+    t.boolean  "deleted",                        :default => false
+  end
+
+  add_index "messages", ["thread_id"], :name => "index_messages_on_thread_id"
+  add_index "messages", ["sent_message_id"], :name => "index_messages_on_sent_message_id"
+  add_index "messages", ["to_id"], :name => "index_messages_on_to_id"
 
   create_table "metro_areas", :force => true do |t|
     t.string  "name"
@@ -461,10 +469,10 @@ ActiveRecord::Schema.define(:version => 20091113175407) do
     t.integer  "subscription_plan_id", :limit => 11
     t.string   "name"
     t.decimal  "cost",                               :precision => 8, :scale => 2
-    t.text     "content"
     t.text     "html_content"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.text     "content"
     t.boolean  "enabled"
     t.boolean  "reusable"
     t.integer  "period_days",          :limit => 11
@@ -533,17 +541,16 @@ ActiveRecord::Schema.define(:version => 20091113175407) do
   add_index "sb_posts", ["user_id", "created_at"], :name => "index_posts_on_user_id"
 
   create_table "sent_messages", :force => true do |t|
-    t.string   "title"
-    t.integer  "from_id",             :limit => 11
-    t.string   "to_ids"
+    t.integer  "thread_id",        :limit => 11,                    :null => false
+    t.integer  "from_id",          :limit => 11,                    :null => false
     t.text     "body"
     t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "thread_id",           :limit => 11
-    t.text     "to_emails"
-    t.integer  "shared_access_id",    :limit => 11
-    t.string   "to_access_group_ids"
+    t.integer  "shared_access_id", :limit => 11
+    t.boolean  "owner_deleted",                  :default => false
   end
+
+  add_index "sent_messages", ["thread_id"], :name => "index_sent_messages_on_thread_id"
+  add_index "sent_messages", ["from_id"], :name => "index_sent_messages_on_from_id"
 
   create_table "sessions", :force => true do |t|
     t.string   "sessid"
@@ -584,7 +591,7 @@ ActiveRecord::Schema.define(:version => 20091113175407) do
     t.string   "firstname"
     t.string   "state_name"
     t.string   "link"
-    t.boolean  "is_sor",                     :default => false
+    t.boolean  "is_sor"
     t.string   "html_content"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -734,8 +741,8 @@ ActiveRecord::Schema.define(:version => 20091113175407) do
     t.string   "video_length"
     t.string   "video_type"
     t.string   "video_status"
-    t.integer  "sponsor_id",             :limit => 11
-    t.integer  "member_id",              :limit => 11
+    t.integer  "league_id",              :limit => 11
+    t.integer  "team_id",                :limit => 11
     t.integer  "user_id",                :limit => 11
     t.string   "sport"
     t.datetime "game_date"
@@ -747,8 +754,6 @@ ActiveRecord::Schema.define(:version => 20091113175407) do
     t.string   "game_level"
     t.string   "game_gender"
     t.integer  "view_count",             :limit => 11,  :default => 0
-    t.integer  "team_id",                :limit => 11
-    t.integer  "league_id",              :limit => 11
     t.boolean  "public_video",                          :default => true
     t.boolean  "delta",                                 :default => false
     t.integer  "home_score",             :limit => 11

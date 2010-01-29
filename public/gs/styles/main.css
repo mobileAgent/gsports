@@ -103,7 +103,7 @@
 }
 
 .mailPoster a {
-	font-size: 110%;
+	/*font-size: 110%;*/
 	color: #333333;
 	text-align: left;
 	display: block;
@@ -111,7 +111,7 @@
 }
 
 .mailPoster a:hover {
-	font-size: 110%;
+  /*font-size: 110%;*/
 	color: #333333;
 	text-decoration: none;	
 }

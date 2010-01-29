@@ -101,6 +101,8 @@ module ApplicationHelper
       if item.user_id
         link = "/#{item.user_id}/#{item.class.to_s.tableize}/#{item.id}"
       end
+    when MessageThread
+      link = "/messages/thread/#{item.id}"
     end
 
     if link.nil?
@@ -120,5 +122,16 @@ module ApplicationHelper
     end
 
     super source, options
-  end  
+  end
+  
+  def remaining_char_count(field_id, update_id, max=0, options={})
+    function = "$('#{update_id}').innerHTML = #{max > 0 ? (max.to_s + '-') : ''} $F('#{field_id}').length;"
+    out = javascript_tag(function) # set current length
+    options = {:frequency => 0.1, :function => function}.merge(options) # default options
+    out += observe_field(field_id, options) # and observe it    
+  end
+  
+  def character_count(field_id, update_id, options={})
+    remaining_char_count(field_id,update_id,0,options)
+  end
 end

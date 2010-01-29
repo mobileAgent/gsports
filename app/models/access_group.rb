@@ -27,8 +27,6 @@ class AccessGroup < ActiveRecord::Base
   def contacts()
     access_contacts
   end
-
-
   
   def allow?(user)
     access_users.collect(&:user_id).include? user.id

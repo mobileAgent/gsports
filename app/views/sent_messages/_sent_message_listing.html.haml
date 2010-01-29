@@ -1,0 +1,69 @@
+- sent_message = sent_message_listing
+- msg_thread = sent_message.message_thread
+
+- thread_size = msg_thread.size
+- thread_unread = msg_thread.unread_count(current_user) || 0
+- unreadCss = 'unread' if thread_unread > 0
+
+- recipient_names = msg_thread.recipient_display_array(current_user)
+
+- if msg_thread.to_ids_array && msg_thread.to_ids_array.size > 0
+  - to_user = User.find(msg_thread.to_ids_array[0])
+
+.mailItem{:id => "message_#{sent_message.id}", :class => "#{unreadCss}"}
+  .mailSelect
+    -if thread_unread == 0 
+      %input{ :name => "thread_id_check[]", :type => "checkbox", :value => sent_message.thread_id, :onclick=>"hMessageCheck(this)" }/
+    -else
+      =image_tag('/images/listing_icons/17/globe.png')
+  .mailPoster
+    .mailPosterThumb
+      -unless to_user.nil?
+        %a{:href=>"#{user_path(to_user)}", :class=>"photo"}
+          =image_tag(to_user.avatar_photo_url(:thumb), :alt=>"Profile Picture", :width=>"50", :height=>"50")
+      -else
+        =image_tag('/images/icon_missing_thumb.gif', :width=>"50", :height=>"50")
+    .mailPosterName
+      %br/
+      -unless to_user.nil?
+        = link_to to_user.full_name, user_path(to_user)
+        - if recipient_names.size == 1
+          - if to_user.team_name
+            .mailPosterTeam
+              = link_to to_user.team_name, team_path(to_user.team_id)          
+        - else
+          .mailPosterTeam
+            = "and #{recipient_names.size - 1} other#{recipient_names.size > 2 ? 's' : ''}"        
+      -else 
+        - if recipient_names.size == 1
+          = h(recipient_names[0])
+        - else
+          = #{recipient_names.size} recipients" 
+
+  .mailPostDivider
+    %div
+      &bull;
+    %div
+      &bull;
+    %div
+      &bull;
+    %div
+      &bull;
+    
+  .mailPostListing{:onclick => "window.location='#{url_for(:controller => :messages, :action => :thread, :id => msg_thread.id)}'", :style => "cursor:pointer"}
+    .mailPostListingDate
+      =human_date_time(sent_message.created_at)
+
+    .mailPostListingSubject
+      =h(msg_thread.title)
+      - if thread_size > 1
+        = "(#{thread_size})"
+
+    .mailPostListingBody
+      = h(truncate_words(strip_tags(sent_message.body),30))
+
+  .mailPostActions
+    = link_to image_tag('/images/listing_icons/17/delete.png', :mouseclick => '/images/listing_icons/17/delete_ro.png', :border=>0, :alt => 'Delete', :title => 'Delete'), url_for({ :controller => 'messages', :action => 'thread_delete', :id => sent_message.thread_id, :sent => true }), :method => 'delete', :confirm => 'Delete this message?', :class => 'listingButton'
+    = link_to image_tag('/images/listing_icons/17/reply.png', :mouseclick => '/images/listing_icons/17/reply_ro.png', :border=>0, :alt => 'Reply', :title => 'Reply'), url_for({ :controller => 'messages', :action => 'thread', :id => sent_message.thread_id, :anchor => 'reply' }), :class => 'listingButton'        
+      
+  .clearDiv

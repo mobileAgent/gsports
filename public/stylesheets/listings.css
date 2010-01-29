@@ -171,37 +171,310 @@
   font-weight: bold
 }
 
+
 .listingNavTabs {
-  border-bottom: 5px solid #000000;
+  border-bottom: 1px solid #000000;
   padding: 0px 10px 0px 10px;
-  margin-bottom: 10px;
+  margin-bottom: 5px;
 }
 .listingNavTab, .listingNavTab-sel {
-  width: 125px;
+  width: 150px;
   height: 25px;
   margin-right: 5px;
   padding: 0px 5px 0px 5px;
   font-weight: bold;
-  font-size: 110%;
+  font-size: 11px;
   white-space: nowrap;
   overflow: hidden;
-  text-overflow: ellipsis;
   text-align: center;
   line-height: 25px;
   vertical-align: bottom;
   float: left;
-}
-.listingNavTab, .listingNavTab a, .listingNavTab a:visited {
   border: 1px solid #000000;
   border-bottom: 0px;
-  background-color: #FFFFFF;
-  color: #000000;
-  text-decoration: none;
+  text-overflow: ellipsis;
 }
-.listingNavTab-sel, .listingNavTab-sel a, .listingNavTab-sel a:visited {
-  border: 1px solid #000000;
-  background-color: #141C35;
-  color: #F4E50F;
+.listingNavTab {
+  background-color: #ececec;
+  color: #000000;
+}
+.listingNavTab-sel {
+  background-color: #3e4559;
+  color: #FFFFFF;
   font-weight: bold;
+  border-bottom: 2px solid #3e4559;
+}
+.listingNavTab a, .listingNavTab a:visited {
+  text-decoration: none;
+  color:#000000;
+}  
+.listingNavTab-sel a, .listingNavTab-sel a:visited {
+  text-decoration: none;
+  color: #FFFFFF;
+}  
+
+.mailContent{
+  width:805px;
+  padding: 20px 0px 10px 0px;
+  margin-left: 10px;
+  margin-bottom:10px;
+  float:left;
+  background-color: #ffffff;
+  display:inline;
 }
 
+.mailActions {
+  background-color: #FFFFFF;
+  width: auto;
+  display: block;
+  height: auto;
+  border-bottom: 1px solid #000000;
+  padding: 5px 5px 5px 5px;
+  margin-bottom: 10px;
+}
+.mailActions img {
+  margin-right: 10px;
+  float:left;
+}
+
+/* wrapper for new layout */
+.mailContent .mailItem {
+  background-color: #FFFFFF;
+  width: auto;
+  /*height: 65px;*/
+  display: block;
+  padding: 10px 10px 10px 10px;
+  border-top: 1px solid #000000;
+  border-bottom: 1px solid #000000;
+  margin-bottom: 10px;  
+}
+.mailContent .unread {
+  background-color: #e9ecf5;
+}
+.mailContent .mailItem .mailSelect {
+  margin-top: 30px;
+  vertical-align: middle;
+  text-align: center;
+  float: left;
+}
+.mailContent .mailPoster {
+  width: 200px;
+  float: left;
+  padding: 0px 5px 0px 5px;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.mailContent .mailPoster .mailPosterThumb {
+  width: 55px;
+  padding-right: 5px;
+  float: left;
+}
+.mailContent .mailPoster .mailPosterThumb img {
+  border: 1px solid #000000;
+  margin: 1px 1px 1px 1px;
+}
+.mailContent .mailPoster .mailPosterThumb a:hover img {
+  border: 2px solid #000000;
+  margin: 0px 0px 0px 0px;
+}
+.mailContent .mailPoster .mailPosterName {
+  width: 130px;
+  padding-left: 5px;
+  font-size: 9pt;
+  float: left;
+  vertical-align: middle;
+  text-align: left;
+  font-weight: bold;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.mailContent .mailPoster .mailPosterName a {
+  text-decoration: none;
+}
+.mailContent .mailPoster .mailPosterName a:hover {
+  text-decoration: underline;
+}
+.mailContent .mailPoster .mailPosterName .mailPosterTeam {
+  font-size: 8pt;
+}
+.mailContent .mailPoster a {
+  color: #333333;
+}
+.mailContent .mailPoster a:hover {
+  color: #333333;
+  text-decoration: none;  
+}
+.mailContent .mailPoster .mailPosterTeam a {
+  color: #666666;
+}
+.mailContent .mailPoster a:hover {
+  color: #666666;
+  text-decoration: none;  
+}
+
+.mailContent .mailItem .mailPostDivider {
+  width: 10px;
+  float:left;
+  color: #E7E7E7;
+  font-size: 10pt;
+  padding: 0px 0px 0px 0px;
+  /*
+  height: 55px;
+  background-image: url(../images/messages/dots.png);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-position-y: center;
+  */
+}
+
+.mailContent .mailItem .mailPostListing {
+  width: 490px;
+  /*height: 55px;*/
+  padding-left: 10px;
+  float: left;
+  vertical-align: middle;
+}
+.mailContent .mailItem .mailPostListing .mailPostListingDate,
+.mailContent .mailItem .mailPostListing .mailPostListingSubject,
+.mailContent .mailItem .mailPostListing .mailPostListingBody {
+  width: 490px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-align: left;
+  line-height: 150%;
+  background-color: inherit;
+  text-overflow: ellipsis;
+}
+.mailContent .mailItem .mailPostListing .mailPostListingDate {
+  font-weight: bold;
+}
+.mailContent .mailItem .mailPostListing .mailPostListingSubject {
+  font-size: 10pt;
+  color: #677cb2; 
+  font-weight: bold;
+}
+.mailContent .mailItem .mailPostListing .mailPostListingSubject a {
+  color: #677cb2;
+}
+.mailContent .mailItem .mailPostListing .mailPostListingSubject a:hover {
+  color: #677cb2;
+  text-decoration: underline;
+}
+
+.mailContent .mailItem .mailPostActions {
+  width: 17px;
+  float: right;
+}
+.mailContent .mailItem .mailPostActions a {  
+  width: 17px;
+  height: 17px;
+  margin: 3px 0px 3px 0px;
+  text-align: center;
+  float: right;
+}
+
+/* MESSAGE DISPLAY */
+.mailDetailTop {
+  background: transparent url(../images/messages/center_message.png);
+}
+.mailDetail {
+  background: transparent url(../images/messages/top_message.png) no-repeat top;
+  width: auto;
+  height: auto;
+  display: block;
+  padding: 0px 10px 10px 10px;
+}
+.mailDetailBottom {
+  height: 13px;
+  background-image: url(../images/messages/bottom_message.png);
+  background-position: top;
+  background-repeat: repeat-y;
+}
+.mailDetailContent {
+  width:545px;
+  padding: 10px 0px 0px 20px;
+  float:left;
+}
+.mailDetailContent .mailDetailDate {
+  margin-top: 5px;
+}
+.mailDetailContent .mailDetailDate,
+.mailDetailContent .mailDetailTo,
+.mailDetailContent .mailDetailSubject {
+  width: 465px;
+  float:left;
+  text-align: left;
+  line-height: 150%;
+}
+.mailDetailContent .mailDetailDate,
+.mailDetailContent .mailDetailTo {
+  font-weight: bold;
+}
+.mailDetailContent .mailDetailSubject {
+  font-size: 13px;
+  color: #677cb2; 
+  font-weight: bold;
+}
+.mailDetailContent .mailDetailBody .mailPostBody .mailPostSummaryBody {
+  background: transparent;
+  padding: 0px;
+  margin-top: 15px;
+}
+.mailDetailContent .mailDetailBody .mailPostBody .mailPostSummaryBody p {
+  background-color: transparent;
+}
+.mailDetailContent .mailDetailActions {
+  float:right;
+  width:80px;
+  height:30px;
+}
+.mailDetailContent .mailDetailActions a {
+  float:right;
+  margin:0px 0px 3px 1px;
+}
+li.autocomplete {
+  border-bottom: 1px solid #666666;
+}
+.mailContent div.auto_complete .mailPoster {
+  float: none;
+  height: auto;
+  width:100%;
+  padding: 5px 5px 0px 5px;
+}
+.mailContent div.auto_complete .mailPoster .mailPosterThumb {
+  width: 55px;
+}
+.mailContent div.auto_complete .mailPoster .mailPosterName {
+  width: 450px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+
+/* ########################## */
+/* Overload style for mail To: autocomplete
+/* ########################## */
+.mailContent  div.auto_complete {
+  width:100%;/*350px;*/
+  /*background: #fff;*/
+}
+.mailContent  div.auto_complete ul {
+  /*border:1px solid #888;*/
+  /*margin:0;*/
+  /*padding:0;*/
+  /*width:100%;*/
+  /*list-style-type:none;*/
+}
+.mailContent  div.auto_complete ul li {
+  /*margin:0;*/
+  padding: 0px; /*3px;*/
+}
+.mailContent  div.auto_complete ul li.selected {
+  background-color: #e9ecf5/*#ffb;*/
+}
+.mailContent  div.auto_complete ul strong.highlight {
+  color: #000000;/*#800;*/
+  /*margin:0;*/
+  /*padding:0;*/
+}

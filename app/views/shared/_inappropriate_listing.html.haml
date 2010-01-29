@@ -1,2 +1,4 @@
-%div.inappropriate_control
-  = link_to_remote image_tag('/images/listing_icons/inappropriate.png', :mouseclick => '/images/listing_icons/sel-inappropriate.png', :border=>0, :alt => 'Mark Inappropriate', :title => 'Mark Inappropriate'), { :url => {:controller => :messages, :action => :create, 'message[to_id]' => User.find_by_email(ADMIN_EMAIL).id, 'message[title]' => "Inappropriate #{item.class.to_s}", 'message[body]' => "Inappropriate content marked <a href='#{generate_link_for_message(item)}'>#{item.class.to_s} id #{item.id}</a>"}, :with=>"'listing=true'"}, {:class => 'listingButton'}
+- img = '/images/listing_icons/inappropriate.png' if img.nil?
+- img_ro = '/images/listing_icons/sel-inappropriate.png' if img_ro.nil?
+.inappropriate_control
+  = link_to_remote image_tag("#{img}", :mouseclick => "#{img_ro}", :border=>0, :alt => 'Mark Inappropriate', :title => 'Mark Inappropriate'), { :url => {:controller => :messages, :action => :create, 'message_thread[to_id]' => User.find_by_email(ADMIN_EMAIL).id, 'message_thread[title]' => "Inappropriate #{item.class.to_s}", 'sent_message[body]' => "Inappropriate content marked <a href='#{generate_link_for_message(item)}'>#{item.class.to_s} id #{item.id}</a>"}, :with=>"'listing=true'"}, {:class => 'listingButton'}

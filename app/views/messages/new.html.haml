@@ -1,3 +1,5 @@
+- sms ||= @sms || !params[:sms].nil?
+
 .profileContentArea.listingPage
   .profilePageHeader
     %h2.columnDescriptor
@@ -6,95 +8,122 @@
       - if @shared_access
         Sharing 
         = truncate(@shared_access.item.title,60)
-      - elsif @message.thread_id && @message.title
-        = "RE: #{truncate(@message.title, 60)}"
+      - elsif @message_thread && @message_thread.title
+        = "RE: #{truncate(@message_thread.title, 60)}"
+      - elsif sms
+        New Text Message
       - else
         New Message
 
-  .listings 
-    .contentBox.tanBackground
-      .contentBoxHeader.yellowHeader
-        %h2.boxDescription
-          Compose Message 
-      .contentBoxContent
-        = error_messages_for :message
-      
+  .mailContent
+    = render :partial => 'messages/tab_heading', :locals => {:page => 'compose'}
+     
+    .forumContentBox
+      .forumBoxHeader
+
+        = error_messages_for :message_thread
+        = error_messages_for :sent_message
+            
         - form_for(@message ||= Message.new, :html => {:id => "EditProfile"}) do |f|
-          -if @message.thread_id
-            = f.hidden_field :to_id
-            = f.hidden_field :thread_id
-            = f.hidden_field :title
-            %p
-            %label
-              To:
-              = @message.to_name
-            %br/
-            %br/
-
-          -else
-
-            -if (current_user.accepted_friendships.size > 0 || current_user.admin? || current_user.team_staff? || current_user.league_staff?)
-              %label
-                To:
-                %em (required, separate multiple names with commas)
-                %br/
-                %em (Start typing a few letters of the name of the friend you want to send to...)
-                -if current_user.admin?
-                  %br/
-                  %em (you can enter the keyword 'all' to send to all users, it will take a while)
-                - if current_user.team_staff?
-                  %br/
-                  %em= "(you can enter the keyword 'team' to send to all users associated with #{current_user.team.name})"
-                - if current_user.league_staff?
-                  %br/
-                  %em= "(you can enter the keyword 'league' to send to all users associated with #{current_user.league.name})"
-              %p
-                = text_field_with_auto_complete :message, :to_name, {:autocomplete => 'off', :style => 'width:80%'},{:url => { :controller => 'messages', :action => 'auto_complete_for_friend_full_name'}, :tokens => [',']}
- 
-            -if current_user.team_staff?
-              - team_access_groups = AccessGroup.for_team(current_user.team)
-              - unless team_access_groups.nil?
-                %p
-                %label
-                  Message all contacts in selected groups
-                %p
-                  - for grp in team_access_groups
-                    %div{:style => 'width:200px; display:inline; padding:3px'}
-                      = check_box_tag "to_access_group_id[]", grp.id
-                      = grp.name
-                %br/
-
-            - if @shared_access 
-              %p
-              %label
-                Email address of non-member
-                %em (separate multiple emails with commas)
-              %p
-                = f.text_field :to_email, :style => 'width:80%;'
-                %br/
-
-            %p
-            %label
-              Subject 
-              %em (required)
-            %p
-              = f.text_field :title, :style => 'width:80%;'
+          -if sms
+            %input{:type=>'hidden',:name=>'sms',:value=>'true'}
+                        
+          -unless @message_thread.id
+            -fields_for @message_thread do |thread_f|
+              .mailComposeTo{ :style => 'float:left; width:190px; margin:10px; text-align:right' }
+                %div{ :style => 'width:190px;text-align:right;margin-top:20pt' }
+                  %label To:&nbsp;
+              %div{:style => "float:left; width:570px"}
+                %div{:style => "border: 1px solid #000000;"}
+                  %div{:style => "border-bottom: 1px solid #000000; padding: 3px; background-color: #cccccc; font-size: 10px; font-style: italic" }
+                    You can type names, group names, email addresses, or text/phone numbers below. Separate multiple recipients with commas.
+                  %div{:style => "padding:3px"}
+                    = text_area_with_auto_complete :message_thread, :to, {:autocomplete => 'off', :style => 'width:100%;border:none', :rows => 2, :cols => 80, :class => 'mceNoEditor' },{:url => { :controller => 'messages', :action => 'auto_complete_for_friend_full_name'}, :tokens => [','], :select => 'autocompletename', :after_update_element => "function(element,value){element.value = element.value + ', '}" }          
+              .clearDiv        
+            .clearDiv80
+            %div
+              &nbsp;
               %br/
+              &nbsp;
+            .mailDetailTop
+              .mailDetail
+                .mailPoster
+                  .mailPosterThumb
+                    %a{:href=>"#{user_path(current_user)}", :class=>"photo"}
+                      =image_tag(current_user.avatar_photo_url(:thumb), :alt=>"Profile Picture", :width=>"50", :height=>"50")
+                  .mailPosterName
+                    %br/
+                    = link_to current_user.full_name, user_path(current_user)
+                    - if current_user.team_name
+                      .mailPosterTeam
+                        = link_to current_user.team_name, team_path(current_user.team_id)
+    
+                .mailDetailContent
+                  -fields_for @message_thread do |thread_f|
+                    = thread_f.hidden_field :id
+                    
+                    -if @message_thread.id
+                      %p
+                      %label
+                        To:&nbsp;
+                        = h(@message_thread.recipient_display_array(current_user).join(", "))
+                      %br/
+              
+                      -unless sms
+                        %p
+                          %br/
+                        %label
+                          Subject:&nbsp; 
+                          RE:
+                          = h(@message_thread.title)
+    
+                    -else
+                      -unless sms 
+                        %label
+                          Subject:&nbsp
+                        = thread_f.text_field :title, :style => 'width:80%'
+                        %br/
+                        
+                  %br/
+                  -fields_for @sent_message do |sent_f|
+                    %p
+                      %label Your Message:
+                    %br/
+                    - if sms
+                      = sent_f.text_area :body, :id => 'replybox', :rows => 6, :style => 'width:100%', :class => 'mceNoEditor', :onkeypress => "var max=160;var t = $('replybox'); if(t.value.length >= max) { t.value = t.value.substring(0,max); }"
+                    - else
+                      = sent_f.text_area :body, :id => 'replybox', :rows => 10, :style => 'width:100%'
 
-          %p
-          %label
-            Body Text 
-            %em (required)
-          %p
-            = f.text_area :body, :rows => 10, :style => 'width:80%;'
+                    -if sms
+                      %br/
+                      %div{ :align => 'right' }
+                        %span{ :id => 'body_char_count' } 160
+                        characters remaining                        
+                      = remaining_char_count('replybox', 'body_char_count', 160)
 
-          -if @shared_access
-            = f.hidden_field :shared_access_id
-            =render :partial => 'messages/shared_item', :locals => {:body => nil}
+                    -if @shared_access
+                      = sent_f.hidden_field :shared_access_id
+                      =render :partial => 'messages/shared_item', :locals => {:body => nil}
+                .clearDiv
+              .clearDiv
+            .mailDetailBottom
 
-          %p
-            = submit_tag "Send"
-            -if @shared_access
-              &nbsp;(Note: the recipient will see your email address '
-              = current_user.email
-              ')
+            .mailComposeSend        
+              %br/
+              %p
+                %div{:align => 'right'}
+                  = image_submit_tag '/images/messages/send.jpg', :border => 0, :style => 'border:none'
+        
+              %br/
+              %div{:align => 'right'}
+                %strong Note:
+                = "External phone and email recipients will see your email address: '#{current_user.email}'"
+
+- if @message_thread && @message_thread.title
+  -# Focus on the text box
+  %script
+    $('replybox').focus();
+- else             
+  -# Focus on the to box
+  %script
+    $('message_thread_to').focus();

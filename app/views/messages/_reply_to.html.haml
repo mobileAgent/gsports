@@ -1,0 +1,10 @@
+- if reply_to
+
+  %br/
+  %br/
+  %br/
+
+  %div{ :style => 'color:#666666' }
+    ="---- On #{reply_to.created_at.strftime('%a, %b %d, %Y at %I:%M%p')}, #{reply_to.sender.full_name} wrote:"
+    %blockquote
+      = reply_to.body

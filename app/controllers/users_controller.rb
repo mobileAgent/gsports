@@ -1163,7 +1163,7 @@ class UsersController < BaseController
       # send an email here so we make sure this TX gets cleaned up
       begin
         email_body = "Payflow transaction needs to be voided for authorization: #{authorization}/#{payment_response.params['auth_code']}"
-        m = Message.new(:to => User.admin.first.id, 
+        m = Message.new(:to_id => User.admin.first.id, 
                         :title => "Unable to void Authorization TX", 
                         :body => email_body)
         m.save!

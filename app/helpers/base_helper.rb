@@ -112,19 +112,11 @@ module BaseHelper
   end
 
   def count_words(text)
-    return 0 if text.blank?
-    words = strip_tags(text).split()
-    words.length
+    Utilities::count_words(text)
   end
 
   def truncate_words(text, length = 30, end_string = '...')
-    return if text.blank?
-    words = strip_tags(text).split()
-    if words.length > length
-      words[0..(length-1)].join(' ') + (words.length > length ? end_string : '')
-    else
-      text
-    end
+    Utilities::truncate_words(text,length,end_string)
   end
   
   def protected_link_to name, url, options = {}
@@ -136,6 +128,5 @@ module BaseHelper
       link_to_remote name, {:url => {:controller=>:sessions, :action=>:pop_login_box}}, options
     end
   end
-  
 
 end
