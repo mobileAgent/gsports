@@ -1,7 +1,7 @@
 class MessagesController < BaseController
   
   protect_from_forgery :except => [:auto_complete_for_friend_full_name]
-  uses_tiny_mce(:options => AppConfig.gsdefault_mce_options, :only => [:new, :create ])
+  uses_tiny_mce(:options => AppConfig.gsdefault_mce_options, :only => [:new, :create, :thread ])
 
   # GET /messages
   # GET /messages.xml
@@ -119,7 +119,9 @@ class MessagesController < BaseController
       #start a new thread replying to an individual message
       @reply_to = SentMessage.find(params[:re].to_i)
       if @reply_to
+        logger.debug "Replying to #{@reply_to.sender.full_name}"
         @message_thread = MessageThread.new(:from_id => current_user.id, :to_id => @reply_to.from_id, :title => "RE: #{@reply_to.message_thread.title}")
+        @sent_message.thread_id = nil
         @sent_message.body = render_to_string :partial => "messages/reply_to", :locals => { :reply_to => @reply_to }
       end
     end
@@ -223,13 +225,14 @@ class MessagesController < BaseController
     
         recipient_errors = Array.new
         
-        entry_csv.split(',').each do |entry|
+        Utilities::csv_split(entry_csv).each do |entry|
           entry.strip!
+          next if entry.length == 0
           
           # is it an email address?
           emails = MessageThread.get_message_emails(entry)
           unless emails.nil? || emails.empty?
-            logger.debug "Adding valid email address #{entry}"
+            logger.debug "Adding valid email address '#{entry}'"
             recipient_emails << emails
             recipient_emails.flatten!
             next
@@ -238,18 +241,22 @@ class MessagesController < BaseController
           # is it a phone number
           phones = MessageThread.get_message_phones(entry)
           unless phones.nil? || phones.empty?
-            logger.debug "Adding valid phone number #{entry}"
+            logger.debug "Adding valid phone number '#{entry}'"
             recipient_phones << phones
             recipient_phones.flatten!
             next
           end
           
-          if current_user.team_staff?
-            access_group = AccessGroup.find(:first, conditions => {:team_id => current_user.team_id, :name => entry, :enabled => true})
-            if access_group
-              recipient_access_groups << access_group
-              next
-            end
+          # is it a group name
+          if current_user.admin?
+            access_group = AccessGroup.find(:first, :conditions => {:name => entry, :enabled => true})
+          elsif current_user.team_staff?
+            access_group = AccessGroup.find(:first, :conditions => {:team_id => current_user.team_id, :name => entry, :enabled => true})
+          end          
+          if access_group
+            logger.debug "Adding valid group '#{entry}'"
+            recipient_access_groups << access_group
+            next
           end
           
           begin
@@ -272,7 +279,7 @@ class MessagesController < BaseController
         @message_thread.to_ids_array= recipient_ids unless recipient_ids.empty?
         @message_thread.to_emails_array= recipient_emails unless recipient_emails.empty?
         @message_thread.to_phones_array= recipient_phones unless recipient_phones.empty?
-        @message_thread.to_access_groups_array= recipient_access_groups unless recipient_access_groups.empty?
+        @message_thread.to_access_group_ids_array= recipient_access_groups.collect(&:id) unless recipient_access_groups.empty?
         
         unless recipient_errors.empty?
           flash[:error] = "Invalid recipient entr#{recipient_errors.size > 1 ? 'ies' : 'y'}: #{recipient_errors.join(', ')}"
@@ -323,7 +330,7 @@ class MessagesController < BaseController
           # make subject from first line of message
           @text_body = make_text_body(@sent_message.body)
           @text_body.each_line do |line|
-            @message_thread.title = truncate_words(line,10)
+            @message_thread.title = Utilities::truncate_words(line,10)
             break;
           end
         else
@@ -536,8 +543,8 @@ class MessagesController < BaseController
         end
       end
     
-      @message_thread.to_emails_array= recipient_emails unless recipient_emails.nil?
-      @message_thread.to_phones_array= recipient_phones unless recipient_phones.nil?
+      @message_thread.to_emails_array= recipient_emails unless recipient_emails.nil? || recipient_emails.empty?
+      @message_thread.to_phones_array= recipient_phones unless recipient_phones.nil? || recipient_phones.empty?
     
       unless (recipient_access_groups.nil? || recipient_access_groups.empty?)
         group_ids = Array.new
@@ -670,17 +677,6 @@ class MessagesController < BaseController
     end
   end
 
-  def truncate_words(text, length = 30, end_string = '...')
-    return if text.blank?
-    text = ActionController::Base.helpers.strip_tags(text)
-    words = text.split()
-    if words.length > length
-      words[0..(length-1)].join(' ') + (words.length > length ? end_string : '')
-    else
-      text
-    end
-  end
-
 
   # Auto complete for addressing message to people in your 
   # friends list by name
@@ -691,27 +687,21 @@ class MessagesController < BaseController
       search_name_sql = '%' + search_name_sql if search_name.length > 3
       
       logger.debug "Auto complete for '#{search_name}'"
-            
+
       if current_user.admin?
-        @users = User.find(:all, :conditions => ["(LOWER(firstname) like ? or LOWER(lastname) like ?) and enabled = ?",search_name_sql,search_name_sql,true], :order => "lower(lastname) asc, lower(firstname) asc", :limit => 5)
         @groups = AccessGroup.find(:all, :conditions => ["lower(name) like ? and enabled=?",search_name_sql,true], :order => "lower(name)", :limit => 5)
-      else
-        @users = User.find(:all,
-          :conditions => [
-            "id in (?) and (LOWER(firstname) like ? or LOWER(lastname) like ?) and enabled = ?",
-            current_user.mail_target_ids(),
-            search_name_sql,
-            search_name_sql,
-            true
-          ], :order => "lower(lastname) asc, lower(firstname) asc", :limit => 5)
-  
-        if current_user.team_staff?
-          @groups = AccessGroup.find(:all, :conditions => ["lower(name) like ? and team_id=? and enabled=?",search_name_sql,current_user.team_id,true], :order => "lower(name)", :limit => 5)
-        end
-      end    
+      elsif current_user.team_staff?
+        @groups = AccessGroup.find(:all, :conditions => ["lower(name) like ? and team_id=? and enabled=?",search_name_sql,current_user.team_id,true], :order => "lower(name)", :limit => 5)
+      end   
+
+      friend_ids = current_user.mail_target_ids
+      # the order by "(id in (<friend_list>)) desc" clause puts friends at the top of the list
+      @users = User.find(:all, 
+          :conditions => ["(LOWER(firstname) like ? or LOWER(lastname) like ?) and enabled = ?",search_name_sql,search_name_sql,true], 
+          :order => "(id in (#{friend_ids && !friend_ids.empty? ? friend_ids.join(',') : '0'})) desc, lower(lastname) asc, lower(firstname) asc", :limit => 5)
       
       search_name_sql= '%' + search_name_sql unless search_name_sql[0] == '%'
-      
+            
       threads = MessageThread.find(:all, :select => "distinct to_emails", :conditions => ["from_id=? and lower(to_emails) like ?",current_user.id,search_name_sql], :limit => 5)
       if threads && !threads.empty?
         @emails = Array.new
@@ -725,9 +715,9 @@ class MessagesController < BaseController
         @emails = nil if @emails.empty?
       end
       
-      if search_name =~ /\d/
+      if search_name.match(/\d/)
         stripped = search_name.gsub(/[^\w]/,'')
-        if /^d+$/.match(stripped)
+        if stripped.match(/^\d+$/)
           threads = MessageThread.find(:all, :select => "distinct to_phones", :conditions => ["from_id=? and to_phones like ?",current_user.id,search_name_sql], :limit => 5)
           if threads && !threads.empty?
             @phones = Array.new
@@ -762,4 +752,5 @@ class MessagesController < BaseController
     
     return text_body
   end
+  
 end

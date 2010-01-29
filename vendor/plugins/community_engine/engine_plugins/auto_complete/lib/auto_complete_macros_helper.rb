@@ -111,6 +111,14 @@ module AutoCompleteMacrosHelper
     auto_complete_field("#{object}_#{method}", { :url => { :action => "auto_complete_for_#{object}_#{method}" } }.update(completion_options))
   end
 
+  ## GSPORTS ADDED for messaging
+  def text_area_with_auto_complete(object, method, tag_options = {}, completion_options = {})
+    (completion_options[:skip_style] ? "" : auto_complete_stylesheet) +
+    text_area(object, method, tag_options) +
+    content_tag("div", "", :id => "#{object}_#{method}_auto_complete", :class => "auto_complete") +
+    auto_complete_field("#{object}_#{method}", { :url => { :action => "auto_complete_for_#{object}_#{method}" } }.update(completion_options))
+  end
+
   private
     def auto_complete_stylesheet
       content_tag('style', <<-EOT, :type => Mime::CSS)

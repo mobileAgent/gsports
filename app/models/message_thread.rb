@@ -60,7 +60,9 @@ class MessageThread < ActiveRecord::Base
   end
 
   def to_id=(user_id)
-    to_ids= user_id
+    logger.debug "Setting to_id for user #{user_id}"
+    self.to_ids= user_id.to_s
+    logger.debug "#{to_ids}"
   end
       
   # Useful for grabbing a set of names and aliases from the 
@@ -71,7 +73,7 @@ class MessageThread < ActiveRecord::Base
   def self.get_message_recipient_ids(names,current_user,use_alias_id= false)
     recipient_ids = []
     is_alias = false
-    to_names = names.split(',')
+    to_names = Utilities::csv_split(names)
     friend_ids = current_user.mail_target_ids() #accepted_friendships.collect(&:friend_id)
     to_names.each do |recipient|
       if recipient == 'all' && current_user.admin?
@@ -117,7 +119,7 @@ class MessageThread < ActiveRecord::Base
 
   def self.get_message_emails(email_str)
     to_emails = []
-    emails = email_str.split(',')
+    emails = Utilities::csv_split(email_str)
     emails.each do |email|
       # validate the email
       email.strip!
@@ -139,7 +141,7 @@ class MessageThread < ActiveRecord::Base
 
   def self.get_message_phones(phone_str)
     to_phones = []
-    phones = phone_str.split(',')
+    phones = Utilities::csv_split(phone_str)
     phones.each do |sms|
       # validate the number
       sanitized = sms.strip
@@ -240,17 +242,13 @@ class MessageThread < ActiveRecord::Base
       ary.insert(0, 'league') if to_ids.index('-3')
     end
     
-    if to_emails
+    unless to_emails_array.nil?
       ary << to_emails_array
     end 
     
-    if to_phones
+    unless to_phones_array.nil?
       to_phones_array.each do |phone|
-        if phone.length == 10
-          ary << phone.sub(/(\d{3})(\d{3})(\d{4})/,'(\1)\2-\3')
-        else
-          ary << phone
-        end
+        ary << Utilities::readable_phone(phone)
       end
     end
 

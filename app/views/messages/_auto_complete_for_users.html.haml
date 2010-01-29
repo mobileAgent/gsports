@@ -35,7 +35,7 @@
   -# Reset count for emails and phones... they are small
   - count = count / 2
 
-    - if count < max && @emails && !@emails.empty?
+  - if count < max && @emails && !@emails.empty?
     - @emails.each do |email|
       -# break if count >= max
       - count += 1
@@ -46,7 +46,7 @@
             %span.autocompletename= h(email)
         .clearDiv
             
-  - if count < max && @phones && !emails.empty?
+  - if count < max && @phones && !@phones.empty?
     - @phones.each do |phone|
       -# break if count >= max
       - count += 1
@@ -54,6 +54,5 @@
         .mailPoster
           .mailPosterThumb &nbsp;
           .mailPosterName
-            %span.autocompletename= h(format_phone(phone))
+            %span.autocompletename= h(Utilities::readable_phone(phone))
         .clearDiv
-            

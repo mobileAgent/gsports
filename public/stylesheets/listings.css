@@ -397,7 +397,7 @@
   float:left;
 }
 .mailDetailContent .mailDetailDate {
-  margin-top: 10px;
+  margin-top: 5px;
 }
 .mailDetailContent .mailDetailDate,
 .mailDetailContent .mailDetailTo,
@@ -418,7 +418,8 @@
 }
 .mailDetailContent .mailDetailBody .mailPostBody .mailPostSummaryBody {
   background: transparent;
-  padding: 10px;
+  padding: 0px;
+  margin-top: 15px;
 }
 .mailDetailContent .mailDetailBody .mailPostBody .mailPostSummaryBody p {
   background-color: transparent;

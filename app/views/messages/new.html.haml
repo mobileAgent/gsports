@@ -27,21 +27,20 @@
         - form_for(@message ||= Message.new, :html => {:id => "EditProfile"}) do |f|
           -if sms
             %input{:type=>'hidden',:name=>'sms',:value=>'true'}
-            
+                        
           -unless @message_thread.id
             -fields_for @message_thread do |thread_f|
               .mailComposeTo{ :style => 'float:left; width:190px; margin:10px; text-align:right' }
-                %br/
-                %div{ :style => 'width:190px;text-align:right' }
+                %div{ :style => 'width:190px;text-align:right;margin-top:20pt' }
                   %label To:&nbsp;
               %div{:style => "float:left; width:570px"}
                 %div{:style => "border: 1px solid #000000;"}
-                  %div{:style => "border-bottom: 1px solid #000000; padding: 3px; background-color: #cccccc" }
-                    You can type people's names, group names, email addresses, or text/phone numbers below
+                  %div{:style => "border-bottom: 1px solid #000000; padding: 3px; background-color: #cccccc; font-size: 10px; font-style: italic" }
+                    You can type names, group names, email addresses, or text/phone numbers below. Separate multiple recipients with commas.
                   %div{:style => "padding:3px"}
-                    = text_field_with_auto_complete :message_thread, :to, {:autocomplete => 'off', :style => 'width:100%;border:none'},{:url => { :controller => 'messages', :action => 'auto_complete_for_friend_full_name'}, :tokens => [','], :select => 'autocompletename'}          
+                    = text_area_with_auto_complete :message_thread, :to, {:autocomplete => 'off', :style => 'width:100%;border:none', :rows => 2, :cols => 80, :class => 'mceNoEditor' },{:url => { :controller => 'messages', :action => 'auto_complete_for_friend_full_name'}, :tokens => [','], :select => 'autocompletename', :after_update_element => "function(element,value){element.value = element.value + ', '}" }          
               .clearDiv        
-            .clearDiv
+            .clearDiv80
             %div
               &nbsp;
               %br/
@@ -90,12 +89,15 @@
                     %p
                       %label Your Message:
                     %br/
-                    = sent_f.text_area :body, :id => 'replybox', :rows => (sms ? 6 : 12), :style => 'width:100%', :onkeypress => "var max=160;var t = $('replybox'); if(t.value.length >= max) { t.value = t.value.substring(0,max); }"
+                    - if sms
+                      = sent_f.text_area :body, :id => 'replybox', :rows => 6, :style => 'width:100%', :class => 'mceNoEditor', :onkeypress => "var max=160;var t = $('replybox'); if(t.value.length >= max) { t.value = t.value.substring(0,max); }"
+                    - else
+                      = sent_f.text_area :body, :id => 'replybox', :rows => 10, :style => 'width:100%'
 
                     -if sms
-                      %br /
+                      %br/
                       %div{ :align => 'right' }
-                        %span{ :id => 'body_char_count' } /
+                        %span{ :id => 'body_char_count' } 160
                         characters remaining                        
                       = remaining_char_count('replybox', 'body_char_count', 160)
 
@@ -116,4 +118,12 @@
               %div{:align => 'right'}
                 %strong Note:
                 = "External phone and email recipients will see your email address: '#{current_user.email}'"
-            
+
+- if @message_thread && @message_thread.title
+  -# Focus on the text box
+  %script
+    $('replybox').focus();
+- else             
+  -# Focus on the to box
+  %script
+    $('message_thread_to').focus();
