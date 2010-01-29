@@ -26,10 +26,12 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :ratings
   map.resources :shared_access  
   map.resources :channels, :collection => { :add => :any, :playerVars => :any }
-  map.resources :access_groups, :collection => { :add_user => :any, :add_video => :any, :add_contact => :any, :pop_new_contact => :any, :remove_user => :any, :remove_video => :any, :remove_contact => :any, :users => :any, :items => :any }
+  map.resources :access_groups, :collection => { :add_user => :any, :add_video => :any, :add_contact => :any, :pop_new_contact => :any, :pop_new_user => :any, :remove_user => :any, :remove_video => :any, :remove_contact => :any, :users => :any, :items => :any }
   map.resources :permissions
   map.resources :reports, :collection => { :pop_new => :any, :build => :any, :clips=>:any, :player=>:any, :clip_detail=>:any, :detail=>:any, :sync=>:any, :publish=>:any }
   map.resources :sessions, :collection => { :pop_login_box => :any }
+  map.resources :team_sports, :collection => { :library => :any, :videos=>:any }
+  map.resources :roster_entries, :collection => { :roster => :any, :post => :any }
   
 
   map.register         'register',        :controller => 'users', :action => 'register'

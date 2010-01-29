@@ -1,0 +1,14 @@
+%ul
+  -@users.each do |user|
+    %li{ :id=>user.id }
+      %span{ :style=>'display:none' }
+        = h(user.full_name)
+      %table
+        %tr
+          %td
+            = image_tag user.avatar_photo_url(:thumb), :width=>32, :height=>32
+          %td{ :style=>'padding-left:8px' }
+            = h(user.full_name)
+            - if user.team
+              %br
+              =h user.team.nickname || user.team.name

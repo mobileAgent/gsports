@@ -1,0 +1,77 @@
+
+
+
+
+- # ### DEPRICATED
+
+
+
+
+- roster = (@team_sport.access_group.roster rescue [])
+- remote_form_for :roster_entry, @roster_entry, :url=>post_roster_entries_path() do |f|
+  = f.hidden_field :id
+  = f.hidden_field :access_group_id
+  %table
+    %tr
+      %th
+        Status
+      %th
+        \#
+      %th
+        - opts = { :name => "First", :sort => "teams.name" }
+        - url = sortable_url(opts)
+        = link_to opts[:name], "javascript:gs.team_sports.sort_row('#{url}')", {:title => opts[:title], :class => sortable_table_header_classes(opts)}
+      = sortable_table_header :name => "Last",     :sort => "teams.name"
+      %th
+        Email
+      %th
+        Mobile #
+      %th
+        Position
+      %th
+        Actions
+
+    - roster.each() do |athlete|
+      
+      %tr
+        %td
+          -if athlete.user
+            %img{ :src=>athlete.user.avatar_photo_url(), :width=>64, :height=>64 }
+        %td
+          = h athlete.number
+        %td
+          = h athlete.firstname
+        %td
+          = h athlete.lastname
+        %td
+          = h athlete.email
+        %td
+          = h athlete.phone
+        %td
+          = h athlete.position
+        %td
+
+    %tr
+      %td
+        = f.check_box :send_invite
+        Send Invite
+      %td
+        = f.text_field :number, :size=>2
+      %td
+        = f.text_field :firstname, :size=>12
+      %td
+        = f.text_field :lastname, :size=>12
+      %td
+        = f.text_field :email, :size=>16
+      %td
+        = f.text_field :phone, :size=>10
+      %td
+        = f.text_field :position, :size=>8
+      %td
+        = f.submit 'Add Athlete'
+
+  - if roster.respond_to? 'total_pages'
+    .apple_pagination
+      = will_paginate roster
+
+  -#<% remote_form_for :roster_entry, @roster_entry, :url => roster_entry_path(@roster_entry), :html => { :method => :put, :class => "edit_post", :id => "edit_post_45" } do |f| %>

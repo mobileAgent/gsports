@@ -1,0 +1,37 @@
+- scope_select=Permission.scope_selector_string(@scope)
+.new-contact-popup
+  - close = true if close.nil?
+  - if close
+    .closer
+      %a{ :onclick=>"Element.update('dialog', '');" }
+        close[x]
+        -#
+
+  %h2.columnDescriptor
+    Add New Member to
+    = @access_group.name
+  %br
+
+  - form_for :access_user, @access_user, :url => { :controller => :access_groups, :action => :add_user } do |f|
+
+    = f.hidden_field :access_group_id, :value=>@access_group.id
+
+    -#= f.collection_select :contact_type, AccessContact.type_list, :contact_type, :contact_type_s, {}
+    -#= f.text_field :destination, :size=>20
+
+    = text_field_with_auto_complete :user, :name, {:autocomplete => "off", :xonchange => "javascript:autofill_video_title(); return true;"}, :after_update_element => 'gs.group.get_user_selection_id'
+    
+    = f.hidden_field :user_id
+
+
+    %br
+    %p
+      = f.submit "Add Contact"
+
+%br
+%br
+
+
+
+
+

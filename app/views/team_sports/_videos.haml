@@ -1,0 +1,23 @@
+%h2
+  Videos for
+  = @team_sport.name
+
+%table{:border => 0, :cellspacing => 0, :cellpadding => 0, :width => '350px'}
+  -#%thead
+    %tr.yellowHeader
+      %th.padded.contentHeader
+      %th.padded.contentHeader
+      %th.padded.contentHeader
+  %tbody
+    - for item in @access_group.access_items
+      -video=item.item
+      %tr.leagueList{ :id=>"access_item_#{item.id}" }
+        %td.leagueList
+          - if !video.nil?
+            %a{ :href=>video_path(video) }
+              %img{ :src=>@vidavee.file_thumbnail_medium(video.thumbnail_dockey || video.dockey) }
+        %td.leagueList
+          = h (video.nil? ? 'Video Missing' : video.title )
+        %td.leagueList
+          = link_to_remote 'X', {:url => {:controller=>:access_groups, :action=>:remove_video, :id=>item.id}, :confirm => 'Are you sure?', :method=>:delete}, :complete => evaluate_remote_response
+

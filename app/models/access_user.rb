@@ -2,6 +2,8 @@ class AccessUser < ActiveRecord::Base
 
   belongs_to :access_group
   belongs_to :user
+
+  validates_presence_of :user_id
   
   validates_uniqueness_of :user_id, :scope => [:access_group_id], :message => 'has already been added to this group.'
 

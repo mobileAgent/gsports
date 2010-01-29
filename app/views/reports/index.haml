@@ -4,7 +4,7 @@
   .profilePageHeader
     %h2.columnDescriptor
       - if @scope
-        = link_to_remote '', {:url => {:controller=>:reports, :action=>:pop_new}}, {:class => 'new-report-button'}
+        = link_to_remote '', {:url => {:controller=>:reports, :action=>:pop_new, :scope_select=>scope_select}}, {:class => 'new-report-button'}
       %span{ :style=>'float:left' }
         Reports
       %form{ :style=>"height: 0px;" }

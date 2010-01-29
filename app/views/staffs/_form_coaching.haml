@@ -1,3 +1,18 @@
--#.contentBox
+.contentBox{ :id=>'coach-info', :xstyle=>'display: none' }
   %h3 COACHING INFORMATION
   %hr
+
+  #coaching-roles
+    -# TODO list current roles
+
+  %br
+  %br
+
+  = link_to 'Add Coaching Role', 'javascript:gs.team.add_coach()' #, :class => 'genericButton'
+
+%script
+  - sport_list = @quickfind_sports.collect(&:sport).to_json
+  = "eval('gs.team.sport_list = #{sport_list}')"
+  - if @staff.id
+    - @staff.user.scopes_for(Permission::COACH).each() do |scope|
+      = "gs.team.add_coach('#{scope.name}')"

@@ -6,7 +6,7 @@
     %h2.boxDescription
       Photo
   .contentBoxContent.topRowFixHeight
-    .centeringDiv{:style => "text-align: center; vertical-align: middle"}
+    .centeringDiv{:style => 'text-align: center; vertical-align: middle'}
       = image_tag @user.avatar_photo_url(:profile)
     - if !@user.avatar and @is_current_user
       %br

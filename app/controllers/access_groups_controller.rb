@@ -3,8 +3,10 @@ class AccessGroupsController < BaseController
   #auto_complete_for :access_group, :team
   #skip_before_filter :verify_authenticity_token, :only => [:auto_complete_for_access_group_team ]
   #before_filter :team_staff_or_admin, :except => [:auto_complete_for_access_group ]
+
   auto_complete_for :access_group, :team_name
-  skip_before_filter :verify_authenticity_token, :only => [:auto_complete_for_access_group_team_name ]
+  auto_complete_for :user, :name
+  skip_before_filter :verify_authenticity_token, :only => [:auto_complete_for_access_group_team_name, :auto_complete_for_user_name ]
   
   #before_filter :team_staff_or_admin, :except => [:auto_complete_for_access_group_team ]
   before_filter  do  |c| c.find_staff_scope(Permission::MANAGE_GROUPS) end
@@ -75,13 +77,26 @@ class AccessGroupsController < BaseController
   end
 
 
+  def pop_new_user
+    @access_group = AccessGroup.find(params[:access_group_id])
+
+    @access_user = AccessUser.new
+    @access_user.access_group_id = @access_group
+
+    render :update do |page|
+      target = "dialog"
+      page.replace_html target, :partial => 'pop_new_user'
+    end
+  end
+
   def add_user
     @access_user = AccessUser.new(params[:access_user])
 
     if @access_user.access_group_id
-      if @access_user.save
-        redirect_to :action => "users", :id=>@access_user.access_group_id
+      if !@access_user.save
+        flash[:error] = 'Member not found.'
       end
+      redirect_to :action => "users", :id=>@access_user.access_group_id
     end
     
     @access_groups = AccessGroup.for_team(@scope) if @scope
@@ -172,8 +187,18 @@ class AccessGroupsController < BaseController
     choices = "<%= content_tag(:ul, @teams.map { |t| content_tag(:li, h(t.name)) }) %>"    
     render :inline => choices
   end
-  
-  
+
+
+  def auto_complete_for_user_name
+    @users = []
+
+    partial_name = params[:user][:name].to_s.downcase + '%'
+
+    if !partial_name.empty?
+      @users = User.find(:all, :conditions => ["LOWER(firstname) like ? OR LOWER(lastname) like ?", partial_name, partial_name ], :order => "firstname, lastname ASC", :limit => 10 )
+    end
+
+  end
   
   
   

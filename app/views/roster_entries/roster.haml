@@ -1,0 +1,31 @@
+- remote_form_for :roster_entry, @roster_entry, :url=>post_roster_entries_path() do |f|
+  = f.hidden_field :id
+  = f.hidden_field :access_group_id
+
+  %table
+    %tr
+      %th
+        Status
+      = gs_team_sports_sortable_table_header :name => '#',     :sort => "number"
+      = gs_team_sports_sortable_table_header :name => "First",     :sort => "firstname"
+      = gs_team_sports_sortable_table_header :name => "Last",     :sort => "lastname"
+      = gs_team_sports_sortable_table_header :name => "Email",     :sort => "email"
+      = gs_team_sports_sortable_table_header :name => 'Mobile #',     :sort => "phone"
+      = gs_team_sports_sortable_table_header :name => "Position",     :sort => "position"
+      %th
+        Actions
+
+    - @roster.each() do |athlete|
+      - edit_me = athlete.id == @editing
+      - if edit_me
+        = render :partial=>'edit_entry', :locals=>{ :f => f, :editing=>true }
+      - else
+        = render :partial=>'show_entry', :locals=>{ :athlete => athlete }
+
+    - if !@editing
+      = render :partial=>'edit_entry', :locals=>{ :f => f }
+
+  - if @roster.respond_to? 'total_pages'
+    .apple_pagination
+      = will_paginate @roster
+

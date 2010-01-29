@@ -1,6 +1,7 @@
 class AccessGroup < ActiveRecord::Base
   
   belongs_to :team
+  belongs_to :parent, :class_name=>'AccessGroup'
   
   #has_many :channel_video, as => :video #,, :dependent => :destroy
   
@@ -15,6 +16,9 @@ class AccessGroup < ActiveRecord::Base
   named_scope :for_team,
     lambda { |team| {:conditions => {:team_id=>team.id, :enabled=>true}, :include => [:team] } }
 
+  named_scope :named,
+    lambda { |name| {:conditions => {:name=>name, :enabled=>true}} }
+
   
   def items()
     access_items.collect(&:item)
@@ -22,6 +26,10 @@ class AccessGroup < ActiveRecord::Base
   
   def users()
     access_users.collect(&:user)
+  end
+
+  def roster()
+    RosterEntry.roster(id)
   end
 
   def contacts()
