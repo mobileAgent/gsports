@@ -123,3 +123,12 @@
   padding-bottom: 8px;
 
 }
+
+
+.team-sport-videos {
+  border: 1px solid black;
+  width: 380px;
+  height: 400px;
+  overflow:scroll
+}
+

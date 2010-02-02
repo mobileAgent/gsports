@@ -2,6 +2,13 @@
 = javascript_include_tag 'team_sports'
 = stylesheet_link_tag 'team_sports'
 
+%script{ :djconfig => "parseOnLoad: true", :type => "text/javascript", :src => "http://ajax.googleapis.com/ajax/libs/dojo/1.3/dojo/dojo.xd.js" }
+%script{ :type => "text/javascript" }
+  dojo.require("dijit.Dialog");
+
+%link{ :href => "http://ajax.googleapis.com/ajax/libs/dojo/1.3/dijit/themes/tundra/tundra.css", :rel => "stylesheet", :type => "text/css" }
+
+
 - scope_select=Permission.scope_selector_string(@scope)
 
 .profileContentArea.listingPage
@@ -28,7 +35,7 @@
 
             %h1= link_to team_sport.name, edit_team_sport_path(team_sport, :scope_select=>scope_select), {:title => "edit"}
             = "#{team_sport.access_group.users.size() rescue 0} Athletes |"
-            = link_to "#{team_sport.access_group.items.size() rescue 0} Restricted Videos", "javascript:gs.ui.open_dialog('http://gsports.sonic/team_sports/videos/#{team_sport.id}')"
+            = link_to "#{team_sport.access_group.items.size() rescue 0} Restricted Videos", "javascript:gs.team_sports.show_videos('#{team_sport.id}')"  #"javascript:gs.ui.open_dialog('http://gsports.sonic/team_sports/videos/#{team_sport.id}')"
             %br
             Coaches:
             - Permission.has_role(Permission::COACH).in_scope(team_sport).collect(&:blessed).each() do |coach|

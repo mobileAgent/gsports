@@ -74,5 +74,10 @@
       });
   }
 
-
-
+  gs.team_sports.show_videos = function(id) {
+    new dijit.Dialog({
+        title: "Restricted Videos",
+        style: "width: 400px",
+        href:'/team_sports/videos/'+id
+    }).show()
+  }

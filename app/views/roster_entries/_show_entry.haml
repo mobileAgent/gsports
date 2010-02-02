@@ -4,7 +4,8 @@
     -if athlete.user
       %img{ :src=>athlete.user.avatar_photo_url(), :width=>64, :height=>64 }
   %td
-    = h athlete.number
+    -if athlete.number && !athlete.number.empty?
+      = "##{h athlete.number}"
   %td
     = h athlete.firstname
   %td
