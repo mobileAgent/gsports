@@ -53,6 +53,9 @@ class RosterEntriesController < BaseController
       if saved
         flashnow(page,'Roster entry was successfully updated.')
         page.call 'gs.team_sports.sort_row', "/roster_entries/roster/#{@roster_entry.team_sport.id}?order=descending&sort=id"
+        if !@roster_entry.match_users().empty?
+          page.call 'gs.team_sports.match_user', @roster_entry.id
+        end
       else
         #page.replace_html 'staff_summary', :text => 'zoom'
         flashnow(page,"Roster entry could not be updated.")
@@ -137,5 +140,16 @@ class RosterEntriesController < BaseController
 
     render :layout => false
   end
+
+  def match
+    @roster_entry = RosterEntry.find(params[:id])
+    @matches = @roster_entry.match_users()
+    render :partial=>'match'
+  end
+
+  def update_entry
+
+  end
+
 
 end

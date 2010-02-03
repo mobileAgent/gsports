@@ -1,0 +1,28 @@
+
+Some of the information that you entered matches a name in our system.  Is this the person you were looking for?
+%br
+%br
+
+- remote_form_for :roster_entry, @roster_entry, :url=>post_roster_entries_path() do |f|
+  = f.hidden_field :id
+  = f.hidden_field :access_group_id
+
+.team-sport-matches
+  %table{:border => 0, :cellspacing => 0, :cellpadding => 0, :width => '350px'}
+    -#%thead
+      %tr.yellowHeader
+        %th.padded.contentHeader
+        %th.padded.contentHeader
+        %th.padded.contentHeader
+    %tbody
+      - for match in @matches
+        %tr
+          %td
+            %img{ :src=>match.avatar_photo_url(), :width=>64, :height=>64 }
+          %td{ :style=>'padding: 6px;' }
+            = h match.full_name
+            %br
+            = h match.team.name
+
+= f.submit 'Submit'
+

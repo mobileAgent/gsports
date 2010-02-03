@@ -30,8 +30,8 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :permissions
   map.resources :reports, :collection => { :pop_new => :any, :build => :any, :clips=>:any, :player=>:any, :clip_detail=>:any, :detail=>:any, :sync=>:any, :publish=>:any }
   map.resources :sessions, :collection => { :pop_login_box => :any }
-  map.resources :team_sports, :collection => { :library => :any, :videos=>:any }
-  map.resources :roster_entries, :collection => { :roster => :any, :post => :any }
+  map.resources :team_sports, :collection => { :videos=>:any }
+  map.resources :roster_entries, :collection => { :roster => :any, :post => :any, :match => :any, :update_entry=>:any }
   
 
   map.register         'register',        :controller => 'users', :action => 'register'

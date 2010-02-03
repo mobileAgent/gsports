@@ -16,4 +16,8 @@ class RosterEntry < ActiveRecord::Base
     TeamSport.for_access_group_id(access_group_id).first
   end
 
+  def match_users()
+    User.find(:all, :conditions=>{:team_id=>access_group.team_id, :firstname=>firstname, :lastname=>lastname})
+  end
+
 end

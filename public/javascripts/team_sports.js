@@ -81,3 +81,12 @@
         href:'/team_sports/videos/'+id
     }).show()
   }
+
+
+  gs.team_sports.match_user = function(id) {
+    new dijit.Dialog({
+        title: "Possible Athlete Match",
+        style: "width: 400px",
+        href:'/roster_entries/match/'+id
+    }).show()
+  }
