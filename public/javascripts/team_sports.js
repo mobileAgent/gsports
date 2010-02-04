@@ -85,6 +85,7 @@
 
   gs.team_sports.match_user = function(id) {
     new dijit.Dialog({
+        id: 'dialog_match_user',
         title: "Possible Athlete Match",
         style: "width: 400px",
         href:'/roster_entries/match/'+id

@@ -3,6 +3,8 @@
   %td
     -if athlete.user
       %img{ :src=>athlete.user.avatar_photo_url(), :width=>64, :height=>64 }
+    -else
+      %img{ :src=>'/images/pixel.gif', :width=>'64px', :height=>'64px' }
   %td
     -if athlete.number && !athlete.number.empty?
       = "##{h athlete.number}"

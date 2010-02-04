@@ -51,9 +51,9 @@ class RosterEntriesController < BaseController
 
     render :update do |page|
       if saved
-        flashnow(page,'Roster entry was successfully updated.')
+        flashnow(page,"Roster entry was successfully updated. #{params[:skip_match_dialog].inspect}-#{@roster_entry.user_id.inspect}-#{@roster_entry.match_users().collect(&:id).inspect}")
         page.call 'gs.team_sports.sort_row', "/roster_entries/roster/#{@roster_entry.team_sport.id}?order=descending&sort=id"
-        if !@roster_entry.match_users().empty?
+        if params[:skip_match_dialog].nil? && @roster_entry.user_id.nil? && !@roster_entry.match_users().empty?
           page.call 'gs.team_sports.match_user', @roster_entry.id
         end
       else

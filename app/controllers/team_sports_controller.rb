@@ -4,7 +4,7 @@ class TeamSportsController < BaseController
 
   skip_before_filter :verify_authenticity_token, :only => [:roster, :videos, :library ]
 
-  sortable_attributes 'team_sports.name', 'team_sports.id', 'teams.name'
+  #sortable_attributes 'team_sports.name', 'team_sports.id', 'teams.name'
 
 
   def index
@@ -14,7 +14,7 @@ class TeamSportsController < BaseController
       conditions = { :id => @scopes.collect(&:id) }
     end
 
-    @team_sports = TeamSport.paginate(:all, :order => sort_order,
+    @team_sports = TeamSport.paginate(:all, :order => 'name asc', #sort_order,
       :conditions => conditions,
       :page => params[:page])
 
