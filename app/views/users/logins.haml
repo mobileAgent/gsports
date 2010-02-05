@@ -1,0 +1,31 @@
+.profileContentArea.listingPage
+  .profilePageHeader
+    %h2.columnDescriptor
+      %span
+        User Login Summary
+  .listings
+    .padded
+
+      %table{:border => 0, :cellspacing => 0, :cellpadding => 0, :width => '100%'}
+        %thead
+          %tr.yellowHeader
+            - if current_user.admin?
+              = sortable_table_header :class=>"padded sortableContentHeader", :name => "ID", :sort => "user_id"
+              = sortable_table_header :class=>"padded sortableContentHeader", :name => "Firstname", :sort => "u.firstname"
+              = sortable_table_header :class=>"padded sortableContentHeader", :name => "Lastname", :sort => "u.lastname"
+              = sortable_table_header :class=>"padded sortableContentHeader", :name => "Logins", :sort => "count"
+              = sortable_table_header :class=>"padded sortableContentHeader", :name => "Last", :sort => "last"
+
+        %tbody
+          - for activity in @logins
+            %tr.leagueList
+              %td.leagueList= h activity.user.id
+              %td.leagueList= h activity.user.firstname
+              %td.leagueList= h activity.user.lastname
+              %td.leagueList= h activity.attributes['count']
+              %td.leagueList= h activity.attributes['last']
+
+      .apple_pagination
+        = will_paginate @logins
+
+
