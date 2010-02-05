@@ -23,7 +23,7 @@ Users that are not assigned to this team cannot view these videos. To remove a v
           %td
             - if !video.nil?
               %a{ :href=>video_path(video) }
-                %img{ :src=>@vidavee.file_thumbnail_medium(video.thumbnail_dockey || video.dockey) }
+                %img{ :src=>@vidavee.file_thumbnail_medium(video.thumbnail_dockey || video.dockey), :style=>'padding: 3px 0 0 3px;' }
           %td{ :style=>'padding: 6px;' }
             = h (video.nil? ? 'Video Missing' : video.title )
           %td
