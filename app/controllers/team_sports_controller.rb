@@ -127,4 +127,31 @@ class TeamSportsController < BaseController
     render :partial=>'videos'
   end
 
+  def message
+    @team_sport = TeamSport.find(params[:id])
+
+    to = case params[:recipient].to_i
+    when 1
+      "#{@team_sport.access_group.name} Staff"
+    when 2
+      "#{@team_sport.access_group.name}"
+    when 3
+      "#{@team_sport.access_group.name},#{@team_sport.access_group.name} Staff"
+    else
+      ''
+    end
+
+    action = case params[:message_type].to_i
+    when 1
+      new_message_path(:to=>to)
+    when 2
+      new_text_messages_path(:to=>to)
+    else
+      new_message_path(:to=>to)
+    end
+
+    redirect_to action
+
+  end
+
 end

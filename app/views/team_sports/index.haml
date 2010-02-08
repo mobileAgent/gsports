@@ -31,7 +31,15 @@
           .dock
 
             .messager
-              SEND MESSAGE
+              - form_for (:team_sport, team_sport, :url => message_team_sports_path(:id=>team_sport.id)) do |f|
+                %span
+                  SEND MESSAGE
+                = image_submit_tag '/images/messages/compose.jpg', :class=>'compose', :border=>0, :alt=>'Compose', :title=>'Compose'
+
+                .clearDiv
+                = select_tag "recipient", options_for_select(['- Recipient List -']+team_sport.recipient_list())
+                = select_tag "message_type", options_for_select(['- Message Type -', ['Email',1], ['Text',2]])
+
 
             %h1= link_to team_sport.name, edit_team_sport_path(team_sport, :scope_select=>scope_select), {:title => "edit"}
             = "#{team_sport.access_group.users.size() rescue 0} Athletes |"

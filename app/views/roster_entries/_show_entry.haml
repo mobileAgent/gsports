@@ -19,7 +19,6 @@
   %td
     = h athlete.position
   %td
+    = link_to_remote '', {:url => roster_entry_path(athlete), :confirm => 'Are you sure?', :method=>:delete}, :complete => evaluate_remote_response, :class=>'delete-button'
     = link_to 'Edit', "javascript:gs.team_sports.edit_row('#{@team_sport.id}', '#{athlete.id}')"
-    |
-    = link_to_remote 'Remove', {:url => roster_entry_path(athlete), :confirm => 'Are you sure?', :method=>:delete}, :complete => evaluate_remote_response
 

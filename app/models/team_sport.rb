@@ -63,6 +63,26 @@ class TeamSport < ActiveRecord::Base
     end
   end
 
+  def recipient_list()
+#    [
+#      "All #{name} team athletes and coaches",
+#      "All #{name} team athletes",
+#      "All #{name} team coaches",
+#      "All #{name} team parents",
+#      "All #{name} team athletes and parents",
+#      "All #{name} team athletes, coaches and parents"
+#    ]
+#    [
+#      "All #{name} team athletes and coaches",
+#      "All #{name} team athletes",
+#      "All #{name} team coaches",
+#    ]
+    [
+      ["Athletes and Coaches", 3],
+      ["Athletes", 2],
+      ["Coaches", 1]
+    ]
+  end
 
   
 end
