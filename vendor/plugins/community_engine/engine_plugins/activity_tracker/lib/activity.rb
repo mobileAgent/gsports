@@ -14,5 +14,10 @@ class Activity < ActiveRecord::Base
   def self.by(user)
     Activity.count(:all, :conditions => ["user_id = ?", user.id])
   end
+
+  def self.logins(sort_order)
+    sort_order = 'last desc' if sort_order == 'id desc'
+    find_by_sql %Q~select user_id, count(1) "count", max(a.created_at) "last" from activities a join users u on u.id = a.user_id where action = 'logged_in'  group by user_id order by #{sort_order} ~
+  end
     
 end
