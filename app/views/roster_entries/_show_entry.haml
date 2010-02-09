@@ -8,16 +8,22 @@
   %td
     -if athlete.number && !athlete.number.empty?
       = "##{h athlete.number}"
+    &nbsp;
   %td
     = h athlete.firstname
+    &nbsp;
   %td
     = h athlete.lastname
+    &nbsp;
   %td
     = h athlete.email
+    &nbsp;
   %td
     = h athlete.phone
+    &nbsp;
   %td
     = h athlete.position
+    &nbsp;
   %td
     = link_to_remote '', {:url => roster_entry_path(athlete), :confirm => 'Are you sure?', :method=>:delete}, :complete => evaluate_remote_response, :class=>'delete-button'
     = link_to 'Edit', "javascript:gs.team_sports.edit_row('#{@team_sport.id}', '#{athlete.id}')"

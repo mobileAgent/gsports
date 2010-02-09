@@ -37,6 +37,7 @@
   border: 1px solid black;
   background: #E6E6E6 url(/images/team_sports/msg-fade.png) repeat-x top left;
   height: 49px;
+  max-width: 300px;
 }
 
 .team-sport-summary .messager span {
