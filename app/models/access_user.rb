@@ -7,6 +7,11 @@ class AccessUser < ActiveRecord::Base
   
   validates_uniqueness_of :user_id, :scope => [:access_group_id], :message => 'has already been added to this group.'
 
+
+  named_scope :for, lambda { |user, access_group|
+      { :conditions=>{:user_id=>user.id, :access_group_id=>access_group.id} }
+  }
+
   def self.access_for user
     access = nil
     au = AccessUser.find :first, :conditions=>{ :user_id => user.id }

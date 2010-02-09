@@ -194,6 +194,17 @@ input[type='button'].submit {
   border: 0px;
 }
 
+input[type='button'] {
+  color: #c7c7c7;
+  background-color: #363636;
+  padding: 3px 1em 3px 1em;
+  cursor: pointer;
+  margin: 1em 0;
+  width: auto;
+  font-weight: bold;
+  xborder: 0px;
+}
+
 input[type='submit'] {
   color: #c7c7c7;
   background-color: #363636;
@@ -556,7 +567,7 @@ div.thumbFIT {
   margin: 10px 0px 10px 15px;
 }
 
-input[type='button'] {
+xinput[type='button'] {
   color: #FFEF0A;
   background-color: #444444;
   border: 2px outset #666666;

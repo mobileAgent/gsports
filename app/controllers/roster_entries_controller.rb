@@ -56,6 +56,15 @@ class RosterEntriesController < BaseController
         if params[:skip_match_dialog].nil? && @roster_entry.user_id.nil? && !@roster_entry.match_users().empty?
           page.call 'gs.team_sports.match_user', @roster_entry.id
         end
+        if @roster_entry.user_id
+          access = AccessUser.for(@roster_entry.user, @roster_entry.access_group)
+          if access.empty?
+            au = AccessUser.new()
+            au.user = @roster_entry.user
+            au.access_group = @roster_entry.access_group
+            au.save!
+          end
+        end
       else
         #page.replace_html 'staff_summary', :text => 'zoom'
         flashnow(page,"Roster entry could not be updated.")
