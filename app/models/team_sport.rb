@@ -2,6 +2,7 @@ class TeamSport < ActiveRecord::Base
 
   belongs_to :team
   belongs_to :access_group
+  belongs_to :staff_access_group, :class_name => 'AccessGroup'
   belongs_to :avatar, :class_name => "Photo", :foreign_key => "avatar_id"
 
   #before_save :check_access_group
@@ -16,6 +17,8 @@ class TeamSport < ActiveRecord::Base
   def setup_access_groups(user)
 
     group = AccessGroup.for_team(team).named(name).first
+    subgroup = nil
+    
     if !group
       group = AccessGroup.new()
       group.team = team
@@ -28,8 +31,6 @@ class TeamSport < ActiveRecord::Base
       access.user = user
       access.save!
       
-      access_group = group
-
       subgroup = AccessGroup.new()
       subgroup.team = team
       subgroup.name = "#{name} Staff"
@@ -41,9 +42,11 @@ class TeamSport < ActiveRecord::Base
       subaccess.access_group = subgroup
       subaccess.user = user
       subaccess.save!
+
     end
 
     self.access_group = group
+    self.staff_access_group = subgroup
 
 
   end

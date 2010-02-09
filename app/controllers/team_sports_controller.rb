@@ -132,22 +132,22 @@ class TeamSportsController < BaseController
 
     to = case params[:recipient].to_i
     when 1
-      "#{@team_sport.access_group.name} Staff"
+      "#{@team_sport.staff_access_group.id}"
     when 2
-      "#{@team_sport.access_group.name}"
+      "#{@team_sport.access_group.id}"
     when 3
-      "#{@team_sport.access_group.name},#{@team_sport.access_group.name} Staff"
+      "#{@team_sport.access_group.id},#{@team_sport.staff_access_group.id}"
     else
       ''
     end
 
     action = case params[:message_type].to_i
     when 1
-      new_message_path(:to=>to)
+      new_message_path(:to_group=>to)
     when 2
-      new_text_messages_path(:to=>to)
+      new_text_messages_path(:to_group=>to)
     else
-      new_message_path(:to=>to)
+      new_message_path(:to_group=>to)
     end
 
     redirect_to action
