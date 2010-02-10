@@ -132,11 +132,11 @@ class TeamSportsController < BaseController
 
     to = case params[:recipient].to_i
     when 1
-      "#{@team_sport.staff_access_group.id}"
+      "#{@team_sport.staff_access_group.id rescue -1}"
     when 2
       "#{@team_sport.access_group.id}"
     when 3
-      "#{@team_sport.access_group.id},#{@team_sport.staff_access_group.id}"
+      "#{@team_sport.access_group.id},#{@team_sport.staff_access_group.id rescue -1}"
     else
       ''
     end
