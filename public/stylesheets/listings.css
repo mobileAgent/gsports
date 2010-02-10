@@ -257,7 +257,7 @@
   text-align: center;
   float: left;
 }
-.mailContent .mailPoster {
+.mailPoster {
   width: 200px;
   float: left;
   padding: 0px 5px 0px 5px;
@@ -265,20 +265,20 @@
   vertical-align: middle;
 }
 
-.mailContent .mailPoster .mailPosterThumb {
+.mailPoster .mailPosterThumb {
   width: 55px;
   padding-right: 5px;
   float: left;
 }
-.mailContent .mailPoster .mailPosterThumb img {
+.mailPoster .mailPosterThumb img {
   border: 1px solid #000000;
   margin: 1px 1px 1px 1px;
 }
-.mailContent .mailPoster .mailPosterThumb a:hover img {
+.mailPoster .mailPosterThumb a:hover img {
   border: 2px solid #000000;
   margin: 0px 0px 0px 0px;
 }
-.mailContent .mailPoster .mailPosterName {
+.mailPoster .mailPosterName {
   width: 130px;
   padding-left: 5px;
   font-size: 9pt;
@@ -289,26 +289,26 @@
   white-space: nowrap;
   overflow: hidden;
 }
-.mailContent .mailPoster .mailPosterName a {
+.mailPoster .mailPosterName a {
   text-decoration: none;
 }
-.mailContent .mailPoster .mailPosterName a:hover {
+.mailPoster .mailPosterName a:hover {
   text-decoration: underline;
 }
-.mailContent .mailPoster .mailPosterName .mailPosterTeam {
+.mailPoster .mailPosterName .mailPosterTeam {
   font-size: 8pt;
 }
-.mailContent .mailPoster a {
+.mailPoster a {
   color: #333333;
 }
-.mailContent .mailPoster a:hover {
+.mailPoster a:hover {
   color: #333333;
   text-decoration: none;  
 }
-.mailContent .mailPoster .mailPosterTeam a {
+.mailPoster .mailPosterTeam a {
   color: #666666;
 }
-.mailContent .mailPoster a:hover {
+.mailPoster a:hover {
   color: #666666;
   text-decoration: none;  
 }
@@ -436,17 +436,17 @@
 li.autocomplete {
   border-bottom: 1px solid #666666;
 }
-.mailContent div.auto_complete .mailPoster {
+div.auto_complete .mailPoster {
   float: none;
   height: auto;
   width:100%;
   padding: 5px 5px 0px 5px;
 }
-.mailContent div.auto_complete .mailPoster .mailPosterThumb {
+div.auto_complete .mailPoster .mailPosterThumb {
   width: 55px;
 }
-.mailContent div.auto_complete .mailPoster .mailPosterName {
-  width: 450px;
+div.auto_complete .mailPoster .mailPosterName {
+  /*width: 450px;*/
   padding-top: 5px;
   padding-bottom: 5px;
 }
@@ -466,15 +466,34 @@ li.autocomplete {
   /*width:100%;*/
   /*list-style-type:none;*/
 }
-.mailContent  div.auto_complete ul li {
+.mailContent  div.auto_complete ul li,
+.to_group_popup.auto_complete ul li {
   /*margin:0;*/
   padding: 0px; /*3px;*/
-}
-.mailContent  div.auto_complete ul li.selected {
+} 
+.mailContent  div.auto_complete ul li.selected,
+.to_group_popup.auto_complete ul li.selected {
   background-color: #e9ecf5/*#ffb;*/
 }
-.mailContent  div.auto_complete ul strong.highlight {
+.mailContent  div.auto_complete ul strong.highlight,
+.to_group_popup.auto_complete ul strong.highlight {
   color: #000000;/*#800;*/
   /*margin:0;*/
   /*padding:0;*/
+}
+
+
+/*  */
+
+.to_group_popup.auto_complete {
+  position: relative;
+  text-align: left;
+  border: 1px solid #888;
+  width: 380px;
+  height: 350px;
+  overflow: scroll;
+  overflow-x: hidden;
+}
+.to_group_popup.auto_complete ul {
+  border:none;
 }

@@ -1,4 +1,5 @@
 - sms ||= @sms || params[:sms] || @message_thread.is_sms?
+- has_groups = session[:mail_to_coach_group_ids] || session[:mail_to_member_group_ids] 
 
 .profileContentArea.listingPage
   .profilePageHeader
@@ -36,11 +37,25 @@
               %div{:style => "float:left; width:570px"}
                 %div{:style => "border: 1px solid #000000;"}
                   %div{:style => "border-bottom: 1px solid #000000; padding: 3px; background-color: #cccccc; font-size: 10px; font-style: italic" }
-                    You can type names, group names, email addresses, or text/phone numbers below. Separate multiple recipients with commas.
+                    %div{:style => "float:left; width:450px"}
+                      = "You can type names, #{has_groups ? 'group names,' : ''} email addresses, or text/phone numbers below. Separate multiple recipients with commas."
+                    %div{:style => "float:right"}
+                      - if has_groups
+                        %script
+                          function to_group_select(name) {
+                          Element.update('dialog', '');
+                          $('message_thread_to').value=$('message_thread_to').value + name + ', ';
+                          $('message_thread_to').focus();
+                          }
+                        =link_to_remote image_tag('/images/messages/groups.jpg', :border => 0, :style => 'border:none'), :url => "pop_group_choices"
+                      - else
+                        = image_tag('/images/messages/groups_in.jpg')
+                    .clearDiv
                   %div{:style => "padding:3px"}
                     = text_area_with_auto_complete :message_thread, :to, {:autocomplete => 'off', :style => 'width:100%;border:none', :rows => 2, :cols => 80, :class => 'mceNoEditor' },{:url => { :controller => 'messages', :action => 'auto_complete_for_friend_full_name'}, :tokens => [','], :select => 'autocompletename', :after_update_element => "function(element,value){element.value = element.value + ', '}" }          
-              .clearDiv        
+              .clearDiv
             .clearDiv80
+            
             %div
               &nbsp;
               %br/

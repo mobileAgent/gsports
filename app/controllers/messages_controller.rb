@@ -1,6 +1,6 @@
 class MessagesController < BaseController
   
-  protect_from_forgery :except => [:auto_complete_for_friend_full_name]
+  protect_from_forgery :except => [:auto_complete_for_friend_full_name, :pop_group_choices]
   uses_tiny_mce(:options => AppConfig.gsdefault_mce_options, :only => [:new, :create, :thread ])
 
  
@@ -148,13 +148,13 @@ class MessagesController < BaseController
       end
       
       # list of available groups prepared by setup_new_message_session
-      if params[:to_group] && session[:mail_to_coach_groups] 
+      if params[:to_group] && session[:mail_to_coach_group_ids] 
         group_ids = Array.new
         group_params = Utilities::csv_split(params[:to_group])
         group_params.each do |param|
-          matched = session[:mail_to_coach_groups].select {|group| group.id == param.to_i}
+          matched = session[:mail_to_coach_group_ids].select {|group_id| group_id == param.to_i}
           if matched && !matched.empty?
-            group_ids << matched.collect(&:id)
+            group_ids << matched
           end
         end
         unless group_ids.empty?
@@ -261,8 +261,13 @@ class MessagesController < BaseController
           # is it a group name
           if current_user.admin?
             access_group = AccessGroup.find(:first, :conditions => {:name => entry, :enabled => true})
-          elsif session[:mail_to_coach_groups]
-            access_group = session[:mail_to_coach_groups].select{ |group| group.name == entry }.shift
+          else
+            if session[:mail_to_coach_group_ids]
+              access_group = AccessGroup.find(:first, :conditions => {:id => session[:mail_to_coach_group_ids], :name => entry})
+            end
+            if access_group.nil? && session[:mail_to_member_group_ids]
+              access_group = AccessGroup.find(:first, :conditions => {:id => session[:mail_to_member_group_ids], :name => entry})
+            end
           end          
           if access_group
             logger.debug "Adding valid group '#{entry}'"
@@ -270,14 +275,12 @@ class MessagesController < BaseController
             next
           end
 
+          #used by roster lookup and user lookup
+          fn,ln = entry.split(' ')
+
           # is it a roster entry
-          if session[:mail_to_coach_groups]
-            roster_entry = nil
-            session[:mail_to_coach_groups].each do |group|
-              roster_entry = group.roster().select{ |roster| roster.full_name == entry }.shift
-              break if roster_entry
-            end
-            # found a roster entry... now what??
+          if session[:mail_to_coach_group_ids]
+            roster_entry = RosterEntry.find(:first, :conditions => {:access_group_id => session[:mail_to_coach_group_ids], :firstname => fn, :lastname => ln})
             if roster_entry
               logger.debug "Adding roster entry #{roster_entry.id}: #{entry}"
               recipient_roster_entries << roster_entry
@@ -304,9 +307,7 @@ class MessagesController < BaseController
           end
           
           # is it a gs user
-          fn,ln = entry.split(' ')
-          user = User.find(:first,
-              :conditions => ['firstname = ? and lastname = ? and enabled = ?',fn,ln,true])
+          user = User.find(:first, :conditions => {:firstname => fn, :lastname => ln, :enabled => true})
           if user
             recipient_ids << user.id
           end
@@ -606,7 +607,8 @@ class MessagesController < BaseController
 
     # clean up session objects
     session[:mail_to_user_ids] = nil
-    session[:mail_to_coach_groups] = nil
+    session[:mail_to_coach_group_ids] = nil
+    session[:mail_to_member_group_ids] = nil
     
     # send notifications, if necessary
     unless email_notifications.empty? && text_notifications.empty?
@@ -752,7 +754,10 @@ class MessagesController < BaseController
       friend_ids = session[:mail_to_user_ids]
       
       # Expect cached coach access groups on the session (from 'new' action)
-      coach_access_groups = session[:mail_to_coach_groups]
+      coach_access_group_ids = session[:mail_to_coach_group_ids]
+      
+      # Expect cached groups that user is a member of on the session (from 'new' action'
+      member_access_group_ids = session[:mail_to_member_group_ids]
       
       # the order by "(id in (<friend_list>)) desc" clause puts friends at the top of the list
       @users = User.find(:all, 
@@ -765,15 +770,20 @@ class MessagesController < BaseController
             :conditions => ["lower(name) like ? and enabled=?",search_name_sql,true], 
             :order => "lower(name)", :limit => 5)
       else
-        if coach_access_groups && !coach_access_groups.empty?
+        search_group_ids = Array.new
+        search_group_ids << coach_access_group_ids if coach_access_group_ids 
+        search_group_ids << member_access_group_ids if member_access_group_ids
+        unless search_group_ids.empty?
           @groups = AccessGroup.find(:all, 
               :conditions => ["lower(name) like ? and id in (?) and enabled=?",
-                              search_name_sql,coach_access_groups,true], 
+                              search_name_sql,search_group_ids.flatten.uniq,true], 
               :order => "lower(name)", :limit => 5)
-          
+        end
+
+        if coach_access_group_ids && !coach_access_group_ids.empty?
           @roster_entries = RosterEntry.find(:all, 
               :conditions => ["access_group_id in (?) and (lower(firstname) like ? or lower(lastname) like ?)", 
-                              coach_access_groups, search_name_sql,search_name_sql],
+                              coach_access_group_ids, search_name_sql,search_name_sql],
               :order => "lower(firstname), lower(lastname)", :limit => 5)
           
           # pull users out of roster entries, leaving only non-registered addresses
@@ -852,6 +862,18 @@ class MessagesController < BaseController
     end
   end
 
+  def pop_group_choices
+    group_ids = Array.new
+    group_ids << session[:mail_to_coach_group_ids] if session[:mail_to_coach_group_ids] 
+    group_ids << session[:mail_to_member_group_ids] if session[:mail_to_member_group_ids] 
+    @groups = AccessGroup.find(group_ids.flatten.uniq, :order => :name) unless group_ids.empty?
+    
+    render :update do |page|
+      target = "dialog"
+      page.replace_html target, :partial => 'pop_group_choices'
+    end
+  end
+
   private
   
   def make_text_body(body)    
@@ -882,12 +904,18 @@ class MessagesController < BaseController
     session[:mail_to_user_ids] = friend_ids unless friend_ids.nil?
 
     # cache coach access groups on the session
+    #  - coaches can send to individual roster entries
     team_sports = current_user.scopes_for(Permission::COACH)
     if team_sports && !team_sports.empty?
       team_ids = team_sports.collect(&:team_id).compact
       coach_access_groups = AccessGroup.find(:all, :conditions => ["team_id in (?) and enabled=?",team_ids,true])
-      session[:mail_to_coach_groups] = coach_access_groups unless coach_access_groups.nil?      
+      session[:mail_to_coach_group_ids] = coach_access_groups.collect(&:id) unless coach_access_groups.nil?      
     end
+    
+    # cache member access groups on the session
+    #   - members can send to entire group, but not individual roster entries
+    member_groups = AccessGroup.for_user(current_user)
+    session[:mail_to_member_group_ids] = member_groups.collect(&:id) unless member_groups && !member_groups.empty?
   end
   
   def send_message_to_user(sent_message, user, access_group_id=nil)
