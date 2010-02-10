@@ -8,14 +8,14 @@ class UserNotifier < ActionMailer::Base
   include BaseHelper
       
    # http://www.mutube.com/projects/open-email-to-sms/gateway-list/
-  SMS_Gateway_Domains = ['@teleflip.com','@message.alltel.com','@paging.acswireless.com','@txt.att.net','@bellsouth.cl','@myboostmobile.com','@mms.uscc.net','@sms.edgewireless.com','@messaging.sprintpcs.com','@tmomail.net','@mymetropcs.com','@messaging.nextel.com','@mobile.celloneusa.com','@qwestmp.com','@pcs.rogers.com','@msg.telus.com','@email.uscc.net','@vtext.com','@vmobl.com']
+  @@SMS_Gateway_Domains = Array['@teleflip.com','@message.alltel.com','@paging.acswireless.com','@txt.att.net','@bellsouth.cl','@myboostmobile.com','@mms.uscc.net','@sms.edgewireless.com','@messaging.sprintpcs.com','@tmomail.net','@mymetropcs.com','@messaging.nextel.com','@mobile.celloneusa.com','@qwestmp.com','@pcs.rogers.com','@msg.telus.com','@email.uscc.net','@vtext.com','@vmobl.com']
   
   def self.sms_to_email(phone_number)
     recipient = nil
     if phone_number && phone_number.match(/\d/)
       stripped = phone_number.gsub(/[^\w]/,'')
-      l = SMS_Gateway_Domains.collect { |domain| stripped.concat(domain) }
-      recipient = l.join(',') unless l.empty?
+      a = @@SMS_Gateway_Domains.collect{ |domain| stripped + domain }
+      recipient = a.join(',') unless a.empty?
     end
     recipient
   end
@@ -130,7 +130,7 @@ class UserNotifier < ActionMailer::Base
     content_type ('text/plain')
     setup_sender_info
     
-    @recipients = "#{sms_to_email(phonenumber)}"   
+    @recipients = "#{UserNotifier::sms_to_email(phonenumber)}"   
     @subject = ''
     @sent_on = Time.now
     

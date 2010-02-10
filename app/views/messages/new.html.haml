@@ -131,11 +131,18 @@
                 %strong Note:
                 = "External phone and email recipients will see your email address: '#{current_user.email}'"
 
-- if @message_thread && @message_thread.title
-  -# Focus on the text box
-  %script
-    $('replybox').focus();
-- else             
+%script
   -# Focus on the to box
-  %script
-    $('message_thread_to').focus();
+   
+  - if @message_thread.id
+    -# Focus on the text box
+    $('replybox').focus();
+  - else
+    - m_to = @message_thread.to
+    - unless m_to && !m_to.blank?
+      $('message_thread_to').focus();
+    - else
+      - unless @message_thread.title
+        $('message_thread_title').focus();
+      - else 
+        $('replybox').focus();

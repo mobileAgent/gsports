@@ -59,8 +59,11 @@ class MessageThread < ActiveRecord::Base
   def to=(entries_csv)
   end
   
+  # used by the form
   def to
-    return recipient_display_array(nil).join(', ')
+    s = recipient_display_array(nil).join(', ')
+    s + ", " unless s.nil? || s.empty?
+    s
   end
 
   def to_id=(user_id)
@@ -194,7 +197,7 @@ class MessageThread < ActiveRecord::Base
     ary = Array.new
     
     unless to_roster_entry_ids_array.nil?
-      roster_entries = RosterEntry.find(:all, :conditions => [":id IN (?)", to_roster_entry_ids_array])
+      roster_entries = RosterEntry.find(:all, :conditions => ["id IN (?)", to_roster_entry_ids_array])
       ary << roster_entries.collect { |r| r.full_name }
     end
     

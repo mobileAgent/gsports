@@ -214,19 +214,24 @@ class MessagesController < BaseController
       
       # pull out user ids
       recipient_ids << @message_thread.to_ids_array
+      recipient_ids.flatten!
             
       recipient_emails << @message_thread.to_emails_array
+      recipient_emails.flatten!
       
       recipient_phones << @message_thread.to_phones_array
+      recipient_phones.flatten!
       
       # get groups
       if @message_thread.to_access_group_ids_array
         recipient_access_groups = AccessGroup.find(@message_thread.to_access_group_ids_array)
+        recipient_access_groups.flatten!
       end
 
       # get roster entries
       if @message_thread.to_roster_entry_ids_array
         recipient_roster_entries << RosterEntry.find(@message_thread.to_roster_entry_ids_array)
+        recipient_roster_entries.flatten!
       end
             
       # add the original sender
@@ -257,7 +262,7 @@ class MessagesController < BaseController
           if current_user.admin?
             access_group = AccessGroup.find(:first, :conditions => {:name => entry, :enabled => true})
           elsif session[:mail_to_coach_groups]
-            access_group = session[:mail_to_coach_groups].select{ |group| group.name = entry }.shift
+            access_group = session[:mail_to_coach_groups].select{ |group| group.name == entry }.shift
           end          
           if access_group
             logger.debug "Adding valid group '#{entry}'"
@@ -267,13 +272,16 @@ class MessagesController < BaseController
 
           # is it a roster entry
           if session[:mail_to_coach_groups]
+            roster_entry = nil
             session[:mail_to_coach_groups].each do |group|
-              roster_entry = group.roster().select{ |roster| roster.fullname = entry }.shift
-              next if roster_entry
+              roster_entry = group.roster().select{ |roster| roster.full_name == entry }.shift
+              break if roster_entry
             end
             # found a roster entry... now what??
             if roster_entry
+              logger.debug "Adding roster entry #{roster_entry.id}: #{entry}"
               recipient_roster_entries << roster_entry
+              next
             end
           end
 
@@ -413,16 +421,19 @@ class MessagesController < BaseController
     # was sent to, so that we can avoid sending duplicate messages
     all_sent_roster_entries = Array.new
     all_sent_roster_entries.concat(recipient_roster_entries) unless recipient_roster_entries.nil? || recipient_roster_entries.empty?
+    all_sent_roster_entries.flatten!
 
     # create a new array to keep all user ids that this message
     # was sent to, so that we can avoid sending duplicate messages
     all_sent_user_ids = Array.new
     all_sent_user_ids.concat(recipient_ids) unless recipient_ids.nil? || recipient_ids.empty?
+    all_sent_user_ids.flatten!
     
     # create a new array to keep all email addresses that this message
     # was sent to, so that we can avoid sending duplicate messages
     all_sent_emails = Array.new
     all_sent_emails.concat(recipient_emails) unless recipient_emails.nil? || recipient_emails.empty?
+    all_sent_emails.flatten!
 
     # create a new array to keep all phone numbers that this message
     # was sent to, so that we can avoid sending duplicate messages
@@ -440,7 +451,7 @@ class MessagesController < BaseController
             # don't deliver duplicate copies
             unless all_sent_user_ids.include?(user.id)
               logger.debug("Adding access user for group (#{group.id}), user id: #{user.id}")
-              all_sent_user_ids << [user.id,group.id]
+              all_sent_user_ids << user.id
             end
           end
         end
@@ -448,6 +459,7 @@ class MessagesController < BaseController
         # for each access roster entry in the group, send them the message via email -- translate SMS numbers to email
         roster_entries = group.roster
         all_sent_roster_entries << roster_entries unless roster_entries.nil? || roster_entries.empty?
+        all_sent_roster_entries.flatten!
       end
     end
 
@@ -483,7 +495,7 @@ class MessagesController < BaseController
           if @message_thread.is_sms?
             if roster_entry.phone && !roster_entry.phone.blank?
               if sender_is_coach || user.notify_message_sms
-                logger.debug("Adding group (#{group.id}) recipient phone number: #{roster_entry.phone}")
+                logger.debug("Adding group (#{roster_entry.access_group_id}) recipient phone number: #{roster_entry.phone}")
                 all_sent_phones << roster_entry.phone
               end
             end
@@ -495,7 +507,7 @@ class MessagesController < BaseController
             # 2-b. For all other senders, only text if the user allows text message notifications (user.notify_message_sms)
             if @sent_message.sms_notify? && (sender_is_coach || user.notify_message_sms)
               if (roster_entry.phone && !roster_entry.phone.blank?)
-                logger.debug("Notifying user #{roster_entry.user_i} roster entry via phone #{roster_entry.phone}")
+                logger.debug("Notifying user #{roster_entry.user_id} roster entry via phone #{roster_entry.phone}")
                 text_notifications << roster_entry.phone
               end
             end
@@ -503,7 +515,7 @@ class MessagesController < BaseController
             #  Send an email notification if the user's notification settings permit (user.notify_message_email)
             if user.notify_message_email
               if (roster_entry.email && !roster_entry.email.blank?)
-                logger.debug("Notifying user #{roster_entry.user_i} roster entry via email: #{roster_entry.email}")
+                logger.debug("Notifying user #{roster_entry.user_id} roster entry via email: #{roster_entry.email}")
                 email_notifications << roster_entry.email
               end
             end
@@ -511,11 +523,11 @@ class MessagesController < BaseController
        else
           # Non-registered user roster entries
           if @message_thread.is_sms? && sender_is_coach && roster_entry.phone && !roster_entry.phone.blank?
-            logger.debug("Adding group (#{group.id}) recipient phone #{roster_entry.phone}")
+            logger.debug("Adding group (#{roster_entry.access_group_id}) recipient phone #{roster_entry.phone}")
             all_sent_phones << roster_entry.phone
           else
             if roster_entry.email && !roster_entry.email.blank?
-              logger.debug("Adding group (#{group.id}) recipient email: #{roster_entry.email}")
+              logger.debug("Adding group (#{roster_entry.access_group_id}) recipient email: #{roster_entry.email}")
               all_sent_emails << roster_entry.email
             end
             
@@ -753,7 +765,7 @@ class MessagesController < BaseController
             :conditions => ["lower(name) like ? and enabled=?",search_name_sql,true], 
             :order => "lower(name)", :limit => 5)
       else
-        if coach_access_groups && coach_access_groups.empty?
+        if coach_access_groups && !coach_access_groups.empty?
           @groups = AccessGroup.find(:all, 
               :conditions => ["lower(name) like ? and id in (?) and enabled=?",
                               search_name_sql,coach_access_groups,true], 
@@ -836,7 +848,6 @@ class MessagesController < BaseController
       
       #choices = "<%= content_tag(:ul, @users.map { |u| content_tag(:li, h(u.full_name)) }) %>"
       #render :inline => choices
-      logger.debug(render_to_string :partial => "messages/auto_complete_for_users")
       render :partial => "messages/auto_complete_for_users"
     end
   end
@@ -875,11 +886,11 @@ class MessagesController < BaseController
     if team_sports && !team_sports.empty?
       team_ids = team_sports.collect(&:team_id).compact
       coach_access_groups = AccessGroup.find(:all, :conditions => ["team_id in (?) and enabled=?",team_ids,true])
-      session[:mail_to_coach_groups] = coach_access_groups unless coach_access_groups.nil?
+      session[:mail_to_coach_groups] = coach_access_groups unless coach_access_groups.nil?      
     end
   end
   
-  def self.send_message_to_user(sent_message, user, access_group_id=nil)
+  def send_message_to_user(sent_message, user, access_group_id=nil)
     if sent_message && user
       logger.debug("Delivering message #{sent_message.id} to user: #{user.id} #{user.full_name}")
   
@@ -890,7 +901,7 @@ class MessagesController < BaseController
     end
   end  
   
-  def self.send_message_notifications(sent_message, emails, phone_numbers)
+  def send_message_notifications(sent_message, emails, phone_numbers)
     if sent_message
       if emails
         emails.each do |email|

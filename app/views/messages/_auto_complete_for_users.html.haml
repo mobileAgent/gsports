@@ -8,7 +8,11 @@
       %li
         .mailPoster
           .mailPosterThumb
-            =image_tag(group.team.avatar_photo_url(:thumb), :alt=>"Team", :width=>"50", :height=>"50")
+            - sport = TeamSport.for_access_group_id(group.id).first
+            - if sport
+              =image_tag(sport.avatar_photo_url(:thumb), :alt=>"#{sport.name}", :width=>"50", :height=>"50")
+            - else
+              =image_tag(group.team.avatar_photo_url(:thumb), :alt=>"Team", :width=>"50", :height=>"50")
           .mailPosterName
             %br/
             %span.autocompletename= h(group.name)
@@ -39,13 +43,20 @@
       %li
         .mailPoster
           .mailPosterThumb
-            =image_tag(user.avatar_photo_url(:thumb), :alt=>"Profile Picture", :width=>"50", :height=>"50")
+            - if roster.user_id
+              =image_tag(roster.user.avatar_photo_url(:thumb), :alt=>"Profile Picture", :width=>"50", :height=>"50")
+            - else
+              - sport = TeamSport.for_access_group_id(roster.access_group_id).first
+              - if sport
+                =image_tag(sport.avatar_photo_url(:thumb), :alt=>"#{sport.name}", :width=>"50", :height=>"50")
+              - else
+                =image_tag(roster.access_group.team.avatar_photo_url(:thumb), :alt=>"#{roster.access_group.team.name}", :width=>"50", :height=>"50")
           .mailPosterName
             %br/
-            %span.autocompletename= h(user.full_name)
-            - if user.team_name
+            %span.autocompletename= h(roster.full_name)
+            - if roster.access_group
               .mailPosterTeam
-                = h(user.team_name)
+                = h(roster.access_group.name)
         .clearDiv
       
   -# Reset count for emails and phones... they are small

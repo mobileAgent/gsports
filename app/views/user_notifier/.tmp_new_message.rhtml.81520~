@@ -1,6 +1,6 @@
 <%= @from.full_name %> has sent you a message on <%= AppConfig.community_name %>! 
 
-  <% @title %>
+  Subject: <% @title %>
 
 Use this link to see:
 
