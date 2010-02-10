@@ -100,20 +100,29 @@ class User < ActiveRecord::Base
     lambda { |org| { :conditions=>{ 'permissions.scope_type'=>org.class.to_s, 'permissions.scope_id'=>org.id }, :include=>:permissions } }
 
 
-
-
   # Those who can do things for the league account
   named_scope :league_staff,
     lambda { |league_id| { :conditions => ["league_id = ? and role_id IN (?)",league_id,[Role[:league_staff].id, Role[:league].id, Role[:admin].id] ] } }
 
-
   def mail_target_ids()
     @friend_ids = Friendship.find(:all, :conditions => ['user_id = ? and friendship_status_id = ?',self.id,FriendshipStatus[:accepted].id]).collect(&:friend_id)
     if team_staff?
-      @friend_ids += User.team_staff(self.team.id).collect(&:id)
-      @friend_ids.uniq!
+      @friend_ids.concat(User.team_staff(self.team.id).collect(&:id))
     end
-    @friend_ids
+
+    # if a coach, pull users from roster entries
+    team_sports = scopes_for(Permission::COACH)
+    if team_sports && !team_sports.empty?
+      team_ids = team_sports.collect(&:team_id).compact
+      groups = AccessGroup.find(:all, :conditions => ["team_id in (?) and enabled=?", team_ids,true])
+      if groups && !groups.empty? 
+        groups.each do |group|
+          @friend_ids.concat (group.roster().collect(&:user_id).compact)
+        end
+      end
+    end
+
+    @friend_ids.uniq
   end
 
   # set indexes for sphinx
@@ -620,6 +629,22 @@ class User < ActiveRecord::Base
 
   def can_send_message_to?(other_user)
     admin? || friends_ids.member?(other_user.id)
+  end
+  
+  def suppress_notify_message_email()
+    !notify_message_email
+  end
+
+  def suppress_notify_message_email= (v)
+    notify_message_email = !v
+  end
+
+  def suppress_notify_message_sms()
+    !notify_message_sms
+  end
+
+  def suppress_notify_message_sms= (v)
+    notify_message_sms = !v
   end
   
   def current_membership

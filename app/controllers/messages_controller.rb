@@ -3,6 +3,7 @@ class MessagesController < BaseController
   protect_from_forgery :except => [:auto_complete_for_friend_full_name]
   uses_tiny_mce(:options => AppConfig.gsdefault_mce_options, :only => [:new, :create, :thread ])
 
+ 
   # GET /messages
   # GET /messages.xml
   def index
@@ -92,14 +93,21 @@ class MessagesController < BaseController
       format.js
     end
   end
-  
+
+  def new_text
+    @sms = true
+    new
+  end
+
   # GET /messages/new
   def new    
+    setup_new_message_session
+    
     # allow external-only emails to be sent for shared items
     shared_access_id = params[:shared_access_id] || (params[:sent_message] ? params[:sent_message][:shared_access_id] : nil)
     if shared_access_id
-      logger.debug("Sharing item: #{shared_access_id}")
-      @shared_access = SharedAccess.find(shared_access_id.to_i)
+      logger.debug("sharing item: #{shared_access_id}")
+      @shared_access = sharedaccess.find(shared_access_id.to_i)
     end
 
     unless (@shared_access || current_user.admin? || current_user.team_staff? || current_user.league_staff?)
@@ -129,12 +137,28 @@ class MessagesController < BaseController
     if @message_thread.nil?
       @message_thread = MessageThread.new(params[:thread])
       @message_thread.title = params[:title] if params[:title]
+      @message_thread.is_sms = true if @sms || params[:sms]
     
       if params[:to_id]
         begin
           @message_thread.to_id= User.find(params[:to_id].to_i).id
         rescue
           logger.debug("sked for a bad to_id #{params[:to_id]}")
+        end
+      end
+      
+      # list of available groups prepared by setup_new_message_session
+      if params[:to_group] && session[:mail_to_coach_groups] 
+        group_ids = Array.new
+        group_params = Utilities::csv_split(params[:to_group])
+        group_params.each do |param|
+          matched = session[:mail_to_coach_groups].select {|group| group.id == param.to_i}
+          if matched && !matched.empty?
+            group_ids << matched.collect(&:id)
+          end
+        end
+        unless group_ids.empty?
+          @message_thread.to_access_group_ids_array= group_ids.flatten
         end
       end
     end
@@ -157,13 +181,6 @@ class MessagesController < BaseController
     new
   end
 
-  def new_text
-    @sent_message = SentMessage.new(params[:sent_message]);
-    @message_thread = MessageThread.new
-    @sms = true
-    render :action => :new, :locals => { :sms => @sms } 
-  end
-
   # POST /messages
   # POST /messages.xml
   def create
@@ -176,43 +193,55 @@ class MessagesController < BaseController
     @sent_message = SentMessage.new(params[:sent_message])
 
     new_thread = false
-    use_alias = false
     thread_id = nil
     if params[:message_thread][:id] && !params[:message_thread][:id].empty?
       thread_id = params[:message_thread][:id].to_i
       @message_thread = MessageThread.find(thread_id)
     end
 
+    recipient_roster_entries = Array.new
     recipient_ids = Array.new
+    recipient_access_groups = Array.new
     recipient_emails = Array.new
     recipient_phones = Array.new
-    recipient_access_groups = Array.new
+        
+    # we may need to send a text or email notification
+    text_notifications = Array.new
+    email_notifications = Array.new
     
     if @message_thread && @message_thread.id
       new_thread = false
       
-      # pull out recipients
-      recipient_ids = @message_thread.to_ids_array
+      # pull out user ids
+      recipient_ids << @message_thread.to_ids_array
+      recipient_ids.flatten!
+            
+      recipient_emails << @message_thread.to_emails_array
+      recipient_emails.flatten!
       
+      recipient_phones << @message_thread.to_phones_array
+      recipient_phones.flatten!
+      
+      # get groups
+      if @message_thread.to_access_group_ids_array
+        recipient_access_groups = AccessGroup.find(@message_thread.to_access_group_ids_array)
+        recipient_access_groups.flatten!
+      end
+
+      # get roster entries
+      if @message_thread.to_roster_entry_ids_array
+        recipient_roster_entries << RosterEntry.find(@message_thread.to_roster_entry_ids_array)
+        recipient_roster_entries.flatten!
+      end
+            
       # add the original sender
       unless @message_thread.from_id == current_user.id
-        if recipient_ids.nil?
-          recipient_ids = Array.new
-        else
-          # remove this "from_user" from the list of recipients
-          recipient_ids = recipient_ids.delete_if {|id| id == current_user.id}  
-        end
+        # remove this "from_user" from the list of recipients
+        recipient_ids = recipient_ids.delete_if {|id| id == current_user.id} unless recipient_ids.empty?
+        recipient_roster_entries = recipient_roster_entries.delete_if {|roster| roster.user_id == current_user.id } unless recipient_roster_entries.empty?
         
         # add the original thread sender to the start of the list
         recipient_ids << @message_thread.from_id 
-      end
-      
-      recipient_emails = @message_thread.to_emails_array
-      
-      recipient_phones = @message_thread.to_phones_array
-      
-      if @message_thread.to_access_group_ids_array
-        recipient_access_groups = AccessGroup.find(@message_thread.to_access_group_ids_array)
       end
       
     else
@@ -229,6 +258,33 @@ class MessagesController < BaseController
           entry.strip!
           next if entry.length == 0
           
+          # is it a group name
+          if current_user.admin?
+            access_group = AccessGroup.find(:first, :conditions => {:name => entry, :enabled => true})
+          elsif session[:mail_to_coach_groups]
+            access_group = session[:mail_to_coach_groups].select{ |group| group.name == entry }.shift
+          end          
+          if access_group
+            logger.debug "Adding valid group '#{entry}'"
+            recipient_access_groups << access_group
+            next
+          end
+
+          # is it a roster entry
+          if session[:mail_to_coach_groups]
+            roster_entry = nil
+            session[:mail_to_coach_groups].each do |group|
+              roster_entry = group.roster().select{ |roster| roster.full_name == entry }.shift
+              break if roster_entry
+            end
+            # found a roster entry... now what??
+            if roster_entry
+              logger.debug "Adding roster entry #{roster_entry.id}: #{entry}"
+              recipient_roster_entries << roster_entry
+              next
+            end
+          end
+
           # is it an email address?
           emails = MessageThread.get_message_emails(entry)
           unless emails.nil? || emails.empty?
@@ -247,35 +303,19 @@ class MessagesController < BaseController
             next
           end
           
-          # is it a group name
-          if current_user.admin?
-            access_group = AccessGroup.find(:first, :conditions => {:name => entry, :enabled => true})
-          elsif current_user.team_staff?
-            access_group = AccessGroup.find(:first, :conditions => {:team_id => current_user.team_id, :name => entry, :enabled => true})
-          end          
-          if access_group
-            logger.debug "Adding valid group '#{entry}'"
-            recipient_access_groups << access_group
-            next
+          # is it a gs user
+          fn,ln = entry.split(' ')
+          user = User.find(:first,
+              :conditions => ['firstname = ? and lastname = ? and enabled = ?',fn,ln,true])
+          if user
+            recipient_ids << user.id
           end
-          
-          begin
-            ids,is_alias =
-              MessageThread.get_message_recipient_ids(entry, current_user)
-            unless ids.nil? || ids.empty?
-              recipient_ids << ids
-              use_alias ||= is_alias
-              recipient_ids.flatten!
-              next
-            end
-          rescue Exception => e
-            logger.error "Error parsing friend names: #{e.message}"
-          end 
           
           logger.error "Invalid recipient entry: #{entry}"
           recipient_errors << entry
         end
-          
+        
+        @message_thread.to_roster_entry_ids= recipient_roster_entries.collect(&:id) unless recipient_roster_entries.empty?
         @message_thread.to_ids_array= recipient_ids unless recipient_ids.empty?
         @message_thread.to_emails_array= recipient_emails unless recipient_emails.empty?
         @message_thread.to_phones_array= recipient_phones unless recipient_phones.empty?
@@ -286,7 +326,8 @@ class MessagesController < BaseController
           render :action => :new and return
         end
       end
-      
+  
+      # shortcut recipients for one-click-email links
       if params[:to_id]
         recipient_ids << params[:to_id].to_i
       end
@@ -310,7 +351,8 @@ class MessagesController < BaseController
         recipient_access_groups = [@access_item.access_group]
       end
   
-      if (recipient_ids.nil? || recipient_ids.empty?) && 
+      if (recipient_roster_entries.nil? || recipient_roster_entries.empty?) &&
+         (recipient_ids.nil? || recipient_ids.empty?) && 
          (recipient_emails.nil? || recipient_emails.empty?) && 
          (recipient_phones.nil? || recipient_phones.empty?) && 
          (recipient_access_groups.nil? || recipient_access_groups.empty?)
@@ -326,8 +368,8 @@ class MessagesController < BaseController
 
       @message_thread.from_id= current_user.id
       if @message_thread.title.nil? || @message_thread.title.blank?
-        if params[:sms] && @sent_message.body && !@sent_message.body.blank?
-          # make subject from first line of message
+        if (@message_thread.is_sms? || params[:sms]) && @sent_message.body && !@sent_message.body.blank?
+          # take subject from first line of message
           @text_body = make_text_body(@sent_message.body)
           @text_body.each_line do |line|
             @message_thread.title = Utilities::truncate_words(line,10)
@@ -344,11 +386,11 @@ class MessagesController < BaseController
 
     end # end if new thread
     
-    logger.debug "Sending message from #{current_user.id} to user ids=>#{recipient_emails.nil? ? '-' : recipient_ids.to_json}, emails=>#{recipient_emails.nil? ? '-' : recipient_emails.join(',')}, phones=>#{recipient_phones.nil? ? '-' : recipient_phones.join(',')}, groups=>#{recipient_access_groups.nil? ? '-' : recipient_access_groups.join(',')}"
+    logger.debug "Sending message from #{current_user.id} to roster entries=>#{recipient_roster_entries.nil? ? '-' : recipient_roster_entries.join(',')}, user ids=>#{recipient_ids.nil? ? '-' : recipient_ids.to_json}, emails=>#{recipient_emails.nil? ? '-' : recipient_emails.join(',')}, phones=>#{recipient_phones.nil? ? '-' : recipient_phones.join(',')}, groups=>#{recipient_access_groups.nil? ? '-' : recipient_access_groups.join(',')}"
     # Now we have all the ids, send the message to each one
 
     @body = @sent_message.body
-    is_html = true
+    is_html = !@message_thread.is_sms?
 
     if @shared_access
       @shared_item = @shared_access.item
@@ -375,19 +417,140 @@ class MessagesController < BaseController
 
     recipient_ids = [recipient_ids] if recipient_ids.class == String
 
-    unless recipient_ids.nil? || recipient_ids.empty?
-      recipient_ids.uniq!
-      recipient_ids.each do |recipient_id|
-        logger.debug("Sending message #{@sent_message.id} to user id: #{recipient_id}")
+    # create a new array to keep all roster_entries that this message
+    # was sent to, so that we can avoid sending duplicate messages
+    all_sent_roster_entries = Array.new
+    all_sent_roster_entries.concat(recipient_roster_entries) unless recipient_roster_entries.nil? || recipient_roster_entries.empty?
+    all_sent_roster_entries.flatten!
 
-        @message = Message.new(:sent_message_id => @sent_message.id, :thread_id => @sent_message.thread_id)
-        @message.to_id= recipient_id
-        @message.save!
+    # create a new array to keep all user ids that this message
+    # was sent to, so that we can avoid sending duplicate messages
+    all_sent_user_ids = Array.new
+    all_sent_user_ids.concat(recipient_ids) unless recipient_ids.nil? || recipient_ids.empty?
+    all_sent_user_ids.flatten!
+    
+    # create a new array to keep all email addresses that this message
+    # was sent to, so that we can avoid sending duplicate messages
+    all_sent_emails = Array.new
+    all_sent_emails.concat(recipient_emails) unless recipient_emails.nil? || recipient_emails.empty?
+    all_sent_emails.flatten!
+
+    # create a new array to keep all phone numbers that this message
+    # was sent to, so that we can avoid sending duplicate messages
+    all_sent_phones = Array.new
+            
+    # collect all the unique users, emails and phone numbers to message
+    unless recipient_access_groups.nil? || recipient_access_groups.empty?
+      recipient_access_groups.each do |group|
+        
+        # first account for access_users
+        group_users = group.users
+        unless group_users.nil?
+          group_users.uniq!
+          group_users.each do |user|
+            # don't deliver duplicate copies
+            unless all_sent_user_ids.include?(user.id)
+              logger.debug("Adding access user for group (#{group.id}), user id: #{user.id}")
+              all_sent_user_ids << user.id
+            end
+          end
+        end
+       
+        # for each access roster entry in the group, send them the message via email -- translate SMS numbers to email
+        roster_entries = group.roster
+        all_sent_roster_entries << roster_entries unless roster_entries.nil? || roster_entries.empty?
+        all_sent_roster_entries.flatten!
       end
     end
-    unless recipient_emails.nil? || recipient_emails.empty?
-      recipient_emails.uniq!
-      recipient_emails.each do |email|
+
+    # This is a shortcut, assuming if the user is a coach anywhere, then he is a coach for all
+    # teams here. 
+    # The more exact way to to do this is to check, for every roster entry below:
+    #    current_user.can?(Permission::COACH,roster_entry.access_group.team_id)
+    sender_is_coach = current_user.can?(Permission::COACH)
+
+    unless all_sent_roster_entries.nil? || all_sent_roster_entries.empty?
+      all_sent_roster_entries.each do |roster_entry|
+
+        # Logic for registered user roster entry
+        # - Always send to internal messaging distribution channel
+        # - For text messages, send the entire message if...
+        #    * if sender is the coach
+        #    * if the user's preferences allow text messaging (notifications)
+        # - For non-text messages
+        #    - send email notifications based on user preferences
+        #    - send text notifications if requested (sent_message.sms_notify) if...
+        #       * if sender is the coach
+        #       * if user's preferences allow text notifications        
+        if roster_entry.user_id && roster_entry.user_id > 0
+          # user referenced in a roster supercedes user in recipient list,
+          # so remove it if its there 
+          all_sent_user_ids.delete_if!{|id| id == roster_entry.user_id}
+          
+          user = User.find(roster_entry.user_id)
+          logger.debug("Delivering message for group (#{group.id}) recipient user id: #{user.id} #{user.full_name}")
+          send_message_to_user(@sent_message, user, roster_entry.access_group_id)
+        
+          # If this is a text message... send the text
+          if @message_thread.is_sms?
+            if roster_entry.phone && !roster_entry.phone.blank?
+              if sender_is_coach || user.notify_message_sms
+                logger.debug("Adding group (#{roster_entry.access_group_id}) recipient phone number: #{roster_entry.phone}")
+                all_sent_phones << roster_entry.phone
+              end
+            end
+          else   
+            # For non-text messages, send allowable notifications
+
+            # 1. Only send a text message notificaiton if the sms_notify checkbox was checked
+            # 2-a. If the recipient's coach is sending the message, ignore the user's notification settings
+            # 2-b. For all other senders, only text if the user allows text message notifications (user.notify_message_sms)
+            if @sent_message.sms_notify? && (sender_is_coach || user.notify_message_sms)
+              if (roster_entry.phone && !roster_entry.phone.blank?)
+                logger.debug("Notifying user #{roster_entry.user_id} roster entry via phone #{roster_entry.phone}")
+                text_notifications << roster_entry.phone
+              end
+            end
+            
+            #  Send an email notification if the user's notification settings permit (user.notify_message_email)
+            if user.notify_message_email
+              if (roster_entry.email && !roster_entry.email.blank?)
+                logger.debug("Notifying user #{roster_entry.user_id} roster entry via email: #{roster_entry.email}")
+                email_notifications << roster_entry.email
+              end
+            end
+          end
+       else
+          # Non-registered user roster entries
+          if @message_thread.is_sms? && sender_is_coach && roster_entry.phone && !roster_entry.phone.blank?
+            logger.debug("Adding group (#{roster_entry.access_group_id}) recipient phone #{roster_entry.phone}")
+            all_sent_phones << roster_entry.phone
+          else
+            if roster_entry.email && !roster_entry.email.blank?
+              logger.debug("Adding group (#{roster_entry.access_group_id}) recipient email: #{roster_entry.email}")
+              all_sent_emails << roster_entry.email
+            end
+            
+            if @sent_message.sms_notify && sender_is_coach
+              logger.debug("Notifying non-user roster entry via phone: #{roster_entry.phone}")
+              text_notifications << roster_entry.phone
+            end
+          end
+        end
+      end
+    end
+    
+    unless all_sent_user_ids.nil? || all_sent_user_ids.empty?
+      all_sent_user_ids.uniq!
+      all_sent_user_ids.each do |user_id|
+        user = User.find(user_id)
+        logger.debug("Delivering message to user id: #{user.id} #{user.full_name}")
+        send_message_to_user(@sent_message, user)
+      end
+    end
+    unless all_sent_emails.nil? || all_sent_emails.empty?
+      all_sent_emails.uniq!
+      all_sent_emails.each do |email|
         logger.debug("Sending message  #{@sent_message.id} to email: #{email}")
         # don't clutter the messages table with these...
         #@message = Message.new(:sent_message_id => @sent_message.id, :thread_id => @sent_message.thread_id)
@@ -401,161 +564,53 @@ class MessagesController < BaseController
         end          
       end
     end
-        
-    # create a new array to keep all user ids that this message
-    # was sent to, so that we can avoid sending duplicate messages
-    all_sent_user_ids = Array.new
-    all_sent_user_ids.concat(recipient_ids) unless recipient_ids.nil? || recipient_ids.empty?
-    
-    # create a new array to keep all email addresses that this message
-    # was sent to, so that we can avoid sending duplicate messages
-    all_sent_emails = Array.new
-    all_sent_emails.concat(recipient_emails) unless recipient_emails.nil? || recipient_emails.empty?
-
-    # create a new array to keep all phone numbers that this message
-    # was sent to, so that we can avoid sending duplicate messages
-    all_sent_phones = Array.new
-
-    if @text_body.nil?
-      if (recipient_phones && recipient_phones.size > 0) ||(recipient_access_groups && recipient_access_groups.size > 0)
+    unless all_sent_phones.nil? || all_sent_phones.empty?
+      if @text_body.nil?
         @text_body = make_text_body(@body)
-      else
-        @text_body = @body
       end
-    end      
 
-    unless recipient_phones.nil? || recipient_phones.empty?
-      recipient_phones.uniq!
-      
-      recipient_phones.each do |sms|
+      all_sent_phones.uniq!
+      all_sent_phones.each do |sms|
         # translate SMS numbers to email
-        contact = AccessContact.createSMSContact(sms)
-        email = contact.to_email_recipient
-        
-        # don't deliver duplicate copies
-        if all_sent_phones.include?(contact.destination)
-          logger.debug("Skipping duplicate recipient email from sms number: #{sms}")
-        else
-          # remember this contact so we don't send multiple copies
-          all_sent_phones << contact.destination
-          
-          logger.debug("Sending message  #{@sent_message.id} to phone number: #{sms}")
-    
-          # don't clutter the messages table with these...
-          #@message = Message.new(:sent_message_id => @sent_message.id, :thread_id => @sent_message.thread_id)
-          #@message.to_email= email
-          #@message.save!
-          begin
-            UserNotifier.deliver_generic(email, @message_thread.title, @text_body, :html => false, :from => current_user.email )
-          rescue Exception => e
-            logger.error "Error sending email to #{email}: #{e.message}"
-            flash[:error] = "Unable to send message to #{contact.destination}"
-          end          
+        email = UserNotifier::sms_to_email(sms)
+        logger.debug("Sending message  #{@sent_message.id} to phone number: #{sms}")
+  
+        # don't clutter the messages table with these...
+        #@message = Message.new(:sent_message_id => @sent_message.id, :thread_id => @sent_message.thread_id)
+        #@message.to_email= email
+        #@message.save!
+        begin
+          # subject = '' for text messages
+          UserNotifier.deliver_generic(email, '', @text_body, :html => false, :from => current_user.email )
+        rescue Exception => e
+          logger.error "Error sending email for sms #{sms} to #{email}: #{e.message}"
+          flash[:error] = "Unable to send message to #{Utilities::readable_phone(sms)}"
         end
       end
     end
-    
-    unless recipient_access_groups.nil? || recipient_access_groups.empty?
-      recipient_access_groups.each do |group|
-        group_users = group.users()
-        unless group_users.nil?
-          group_users.uniq!
-          group_users.each do |user|
-            # don't deliver duplicate copies
-            if all_sent_user_ids.include?(user.id)
-              logger.debug("Skipping duplicate recipient user in access group: #{user.id}")
-            else
-              logger.debug("Sending message #{@sent_message.id} to access group user id: #{user.id}")
-              
-              # remember this user id so we don't send multiple copies
-              all_sent_user_ids << user.id
-              
-              @message = Message.new(:sent_message_id => @sent_message.id, :thread_id => @sent_message.thread_id)
-              @message.to_id= user.id
-              @message.to_access_group_id= group.id
-              @message.save!
-            end
-          end
-        end
-       
-        # for each access group contact, send them the message via email -- translate SMS numbers to email
-        group_contacts = group.contacts()
-        unless group_contacts.nil? || group_contacts.empty?
-          group_contacts.uniq!
-         
-          group_contacts.each do |contact|
-            group_is_html = is_html
-            group_body = @body
-            # don't deliver duplicate copies
-            if contact.contact_type == AccessContact.Type_Email && all_sent_emails.include?(contact.destination)
-              logger.debug("Skipping duplicate recipient email in access group: #{contact.destination}")
-            elsif contact.contact_type == AccessContact.Type_SMS && all_sent_phones.include?(contact.destination)
-              logger.debug("Skipping duplicate recipient phone in access group: #{contact.destination}")
-              group_is_html = false
-              group_body = @text_body
-            else
-              # remember this contact so we don't send multiple copies
-              all_sent_emails << contact.destination
-              
-              email = contact.to_email_recipient
-              logger.debug("Sending message  #{@sent_message.id} to access group recipient: #{contact.destination}")
-        
-              # don't clutter the messages table with these...
-              #@message = Message.new(:sent_message_id => @sent_message.id, :thread_id => @sent_message.thread_id)
-              #@message.to_email= email
-              #@message.save!
-              begin
-                UserNotifier.deliver_generic(email, @message_thread.title, group_body, :html => group_is_html, :from => current_user.email )
-              rescue Exception => e
-                logger.error "Error sending email to #{email}: #{e.message}"
-                flash[:error] = "Unable to send message to #{contact.destination}"
-              end          
-            end
-          end
-        end
-      end
-    end
-   
+ 
     if new_thread
       # And finally, save the recipients in the thread
       logger.debug "Setting recipients for thread #{@message_thread.id}"
-
-      #######
-      # FLAG: to copy all the recipients out of the access group into the sent message,
-      #   set "expand_access_group_contacts" to true
-      expand_access_group_contacts = false
-      if (expand_access_group_contacts)
-        recipient_ids = all_sent_user_ids
-        recipient_emails = all_sent_emails
-        recipient_phones = all_sent_phones
-     end
-      #######
-    
-      unless recipient_ids.nil?
-        if use_alias
-          # We expanded the sent user ids for "all", "team", "league" aliases... want to use an alias id for them in the DB
-          #TODO: we can do better than to re-parse all the recipients here
-          ids,is_alias =
-              MessageThread.get_message_recipient_ids(params[:message_thread][:to], current_user, true)
-          @message_thread.to_ids_array= ids
-        else
-          @message_thread.to_ids_array= recipient_ids
-        end
-      end
-    
-      @message_thread.to_emails_array= recipient_emails unless recipient_emails.nil? || recipient_emails.empty?
-      @message_thread.to_phones_array= recipient_phones unless recipient_phones.nil? || recipient_phones.empty?
-    
-      unless (recipient_access_groups.nil? || recipient_access_groups.empty?)
-        group_ids = Array.new
-        recipient_access_groups.each { |group| group_ids << group.id }
-        logger.debug("Setting sent_message access groups to #{group_ids.join(',')}")
-        @message_thread.to_access_group_ids_array= group_ids
-      end
+      
+      @message_thread.to_roster_entry_ids_array= recipient_roster_entries.collect(&:id).flatten unless recipient_roster_entries.empty?
+      @message_thread.to_ids_array= recipient_ids.flatten unless recipient_ids.nil? || recipient_ids.empty?
+      @message_thread.to_access_group_ids_array= recipient_access_groups.collect(&:id).flatten unless recipient_access_groups.empty?
+      @message_thread.to_emails_array= recipient_emails.flatten unless recipient_emails.empty?
+      @message_thread.to_phones_array= recipient_phones.flatten unless recipient_phones.empty?
     
       @message_thread.save!
 
       logger.debug "The recipient list for the message thread was saved"
+    end
+
+    # clean up session objects
+    session[:mail_to_user_ids] = nil
+    session[:mail_to_coach_groups] = nil
+    
+    # send notifications, if necessary
+    unless email_notifications.empty? && text_notifications.empty?
+      send_message_notifications(@sent_message, email_notifications, text_notifications)
     end
     
     respond_to do |format|
@@ -573,7 +628,6 @@ class MessagesController < BaseController
 #       format.js
 #     end
   end
-  
   
   # DELETE /messages/1
   # DELETE /messages/1.xml
@@ -681,76 +735,188 @@ class MessagesController < BaseController
   # Auto complete for addressing message to people in your 
   # friends list by name
   def auto_complete_for_friend_full_name
+    max_suggestions = 10
+
     if params[:message_thread][:to]
+      suggestion_count = 0
+
       search_name = params[:message_thread][:to].strip.downcase
       search_name_sql = search_name + '%'
+      
+      # search using bidirectional wildcard if they've typed more than a couple letters
       search_name_sql = '%' + search_name_sql if search_name.length > 3
       
       logger.debug "Auto complete for '#{search_name}'"
 
-      if current_user.admin?
-        @groups = AccessGroup.find(:all, :conditions => ["lower(name) like ? and enabled=?",search_name_sql,true], :order => "lower(name)", :limit => 5)
-      elsif current_user.team_staff?
-        @groups = AccessGroup.find(:all, :conditions => ["lower(name) like ? and team_id=? and enabled=?",search_name_sql,current_user.team_id,true], :order => "lower(name)", :limit => 5)
-      end   
-
-      friend_ids = current_user.mail_target_ids
+      # Expect cached friend ids on the session (from 'new' action)
+      friend_ids = session[:mail_to_user_ids]
+      
+      # Expect cached coach access groups on the session (from 'new' action)
+      coach_access_groups = session[:mail_to_coach_groups]
+      
       # the order by "(id in (<friend_list>)) desc" clause puts friends at the top of the list
       @users = User.find(:all, 
           :conditions => ["(LOWER(firstname) like ? or LOWER(lastname) like ?) and enabled = ?",search_name_sql,search_name_sql,true], 
-          :order => "(id in (#{friend_ids && !friend_ids.empty? ? friend_ids.join(',') : '0'})) desc, lower(lastname) asc, lower(firstname) asc", :limit => 5)
-      
-      search_name_sql= '%' + search_name_sql unless search_name_sql[0] == '%'
+          :order => "(id in (#{friend_ids && !friend_ids.empty? ? friend_ids.join(',') : '0'})) desc, lower(lastname) asc, lower(firstname) asc", 
+          :limit => 5)
+
+      if current_user.admin?
+        @groups = AccessGroup.find(:all, 
+            :conditions => ["lower(name) like ? and enabled=?",search_name_sql,true], 
+            :order => "lower(name)", :limit => 5)
+      else
+        if coach_access_groups && !coach_access_groups.empty?
+          @groups = AccessGroup.find(:all, 
+              :conditions => ["lower(name) like ? and id in (?) and enabled=?",
+                              search_name_sql,coach_access_groups,true], 
+              :order => "lower(name)", :limit => 5)
+          
+          @roster_entries = RosterEntry.find(:all, 
+              :conditions => ["access_group_id in (?) and (lower(firstname) like ? or lower(lastname) like ?)", 
+                              coach_access_groups, search_name_sql,search_name_sql],
+              :order => "lower(firstname), lower(lastname)", :limit => 5)
+          
+          # pull users out of roster entries, leaving only non-registered addresses
+          if @roster_entries
+            # put roster entries first in the @users list
+            @users = @roster_entries.collect{|r| r.user}.compact.concat(@users).uniq
             
-      threads = MessageThread.find(:all, :select => "distinct to_emails", :conditions => ["from_id=? and lower(to_emails) like ?",current_user.id,search_name_sql], :limit => 5)
-      if threads && !threads.empty?
-        @emails = Array.new
-        threads.each do |thread|
-          e = thread.to_emails_array.select {|email| email.downcase.include?(search_name)}
-          if e && !e.empty?
-            @emails << e
+            # remove the @roster entries that have user_ids
+            @roster_entries = @roster_entries.select {|r| r.user_id.nil?}
           end
         end
-        @emails = @emails.flatten.uniq
-        @emails = nil if @emails.empty?
       end
       
-      if search_name.match(/\d/)
-        stripped = search_name.gsub(/[^\w]/,'')
-        if stripped.match(/^\d+$/)
-          threads = MessageThread.find(:all, :select => "distinct to_phones", :conditions => ["from_id=? and to_phones like ?",current_user.id,search_name_sql], :limit => 5)
-          if threads && !threads.empty?
-            @phones = Array.new
-            threads.each do |thread|
-              p = thread.to_phones_array.select {|phone| phone.include?(search_name)}
-              if p && !p.empty?
-                @phones << p
+      # update the suggestion count
+      suggestion_count += @groups.length unless @groups.nil?
+      suggestion_count += @users.length unless @users.nil?
+      suggestion_count += @roster_entries.length unless @roster_entries.nil?
+      
+      if suggestion_count < max_suggestions 
+        if search_name.match(/\d/)
+          stripped = search_name.gsub(/[^\w]/,'')
+          if stripped.match(/^\d+$/)
+            # search for phones using %search% wildcard strategy since there may be multiple
+            # comma (or backslash) separated entries in one field
+            phone_search_sql = '%' + stripped + '%'
+            threads = MessageThread.find(:all, :select => "distinct to_phones", 
+                :conditions => ["from_id=? and to_phones like ?",current_user.id,phone_search_sql], 
+                :limit => 5)
+            if threads && !threads.empty?
+              @phones = Array.new
+              threads.each do |thread|
+                # extract the individual phone numbers that match the search string
+                p = thread.to_phones_array.select {|phone| phone.include?(stripped)}
+                if p && !p.empty?
+                  @phones << p
+                end
               end
+              @phones = @phones.flatten.uniq
+              @phones = nil if @phones.empty?
+
+              # update the suggestion count
+              suggestion_count += @phones.length unless @phones.nil?
             end
-            @phones = @phones.flatten.uniq
-            @phones = nil if @phones.empty?
           end
         end
+        
+        if suggestion_count < max_suggestions
+          # search for emails using %search% wildcard strategy since there may be multiple
+          # comma (or backslash) separated entries in one field
+          search_email_sql= '%' + search_name + '%'
+                
+          threads = MessageThread.find(:all, :select => "distinct to_emails", :conditions => ["from_id=? and lower(to_emails) like ?",current_user.id,search_email_sql], :limit => 5)
+          if threads && !threads.empty?
+            @emails = Array.new
+            threads.each do |thread|
+              # extract the individual phone numbers that match the search string
+              e = thread.to_emails_array.select {|email| email.downcase.include?(search_name)}
+              if e && !e.empty?
+                @emails << e
+              end
+            end
+            @emails = @emails.flatten.uniq
+            @emails = nil if @emails.empty?
+
+            # update the suggestion count
+            suggestion_count += @emails.length unless @emails.nil?
+          end
+        end
+
+        logger.debug("Found #{suggestion_count} suggestion(s) for #{search_name}")
       end
       
       #choices = "<%= content_tag(:ul, @users.map { |u| content_tag(:li, h(u.full_name)) }) %>"
       #render :inline => choices
-      logger.debug (render_to_string :partial => "messages/auto_complete_for_users")
       render :partial => "messages/auto_complete_for_users"
     end
   end
 
-
-  def make_text_body(body)
+  private
+  
+  def make_text_body(body)    
     # strip tags for text message recipients
-    # TODO: make this conditional
-    text_body = ActionController::Base.helpers.strip_tags(body)    
+    text_body = ActionController::Base.helpers.strip_tags(body)
+    
+    # strip out cr-lf
+    text_body.gsub!(/[\r\n]/m, ' ') 
+    # strip out non alpha-num-punct chars
+    text_body.gsub!(/[^A-Za-z0-9!-~]/, ' ')
     # normalize spaces
     text_body.squeeze!
     # remove leading and trailing whitespace
     text_body.strip!
     
+    if text_body.length > 160
+      read_more_link = " View full message @ globalsports.net"
+      maxlength = 160-(read_more_link.length)
+      text_body = text_body.slice(0,maxlength-3).concat('...')
+    end
+   
     return text_body
   end
+
+  def setup_new_message_session    
+    # save some time keeping friend ids on the session
+    friend_ids = current_user.mail_target_ids
+    session[:mail_to_user_ids] = friend_ids unless friend_ids.nil?
+
+    # cache coach access groups on the session
+    team_sports = current_user.scopes_for(Permission::COACH)
+    if team_sports && !team_sports.empty?
+      team_ids = team_sports.collect(&:team_id).compact
+      coach_access_groups = AccessGroup.find(:all, :conditions => ["team_id in (?) and enabled=?",team_ids,true])
+      session[:mail_to_coach_groups] = coach_access_groups unless coach_access_groups.nil?      
+    end
+  end
+  
+  def send_message_to_user(sent_message, user, access_group_id=nil)
+    if sent_message && user
+      logger.debug("Delivering message #{sent_message.id} to user: #{user.id} #{user.full_name}")
+  
+      message = Message.new(:sent_message_id => sent_message.id, :thread_id => sent_message.thread_id)
+      message.to_id= user.id
+      message.to_access_group_id= access_group_id unless access_group_id.nil?
+      message.save!
+    end
+  end  
+  
+  def send_message_notifications(sent_message, emails, phone_numbers)
+    if sent_message
+      if emails
+        emails.each do |email|
+          logger.debug("Sending message notification to #{email}")
+          UserNotifier.deliver_new_message(sent_message, email)
+        end
+      end
+      if phone_numbers
+        phone_numbers.each do |phone|
+          logger.debug("Sending message notification to #{phone}")
+          UserNotifier.deliver_new_message_sms(sent_message, phone)
+        end
+      end
+    end
+  end
+
   
 end

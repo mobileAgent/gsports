@@ -86,16 +86,16 @@
                 = text_field :user, :email, :size => "28"
                 %br
                 
-                %h3 E-mail Notification
+                %h3 General Notification Settings
                 %label 
                   = check_box :user, :notify_friend_requests        
-                  Notify me when
+                  Notify me by email when
                   = AppConfig.community_name
                   members request friendship.
                 %br
                 %label
                   = check_box :user, :notify_comments         
-                  Notify me when
+                  Notify me by email when
                   = AppConfig.community_name
                   members comment on my profile, blog, or photos.
                 %br
@@ -104,6 +104,19 @@
                   Send me occasional news and updates from the
                   = AppConfig.community_name
                   Team.
+                %br
+
+                %h3 Messaging Settings
+                %label 
+                  = check_box :user, :suppress_notify_message_email
+                  Do not allow anyone except my coach(s) to notify me by email through
+                  = AppConfig.community_name
+                %br
+                %label
+                  = check_box :user, :suppress_notify_message_sms
+                  Do not allow anyone except my coach(s) to notify me by text-message through
+                  = AppConfig.community_name
+
 
               %td{ :valign=>'top' }
                 %h3 Password

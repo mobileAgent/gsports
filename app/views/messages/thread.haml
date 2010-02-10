@@ -63,12 +63,22 @@
               
               -fields_for @message_thread do |thread_f|
                 = thread_f.hidden_field :id
+                = thread_f.hidden_field :is_sms
                   
               -fields_for SentMessage.new do |sent_f|
                 %p
                   %br/
                 %p
-                  = sent_f.text_area :body, :id => 'replybox', :rows => 8, :style => 'width:100%'
+                  - if @message_thread.is_sms?
+                    = sent_f.text_area :body, :id => 'replybox', :rows => 5, :style => 'width:100%', :class => 'mceNoEditor', :onkeypress => "var max=160;var t = $('replybox'); if(t.value.length >= max) { t.value = t.value.substring(0,max); }"
+                    %br/
+                    %div{ :align => 'right' }
+                      %span{ :id => 'body_char_count' } 160
+                      characters remaining                        
+                    = remaining_char_count('replybox', 'body_char_count', 160)
+
+                  - else
+                    = sent_f.text_area :body, :id => 'replybox', :rows => 8, :style => 'width:100%'
             
             .clearDiv
           .clearDiv
