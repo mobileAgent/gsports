@@ -28,6 +28,10 @@ class SentMessage < ActiveRecord::Base
     messages.find(:first, :conditions => { :deleted => 0, :sent_message_id => id, :to_id => user.id })
   end
   
+  def sms_notify?
+    sms_notify
+  end
+  
   def sent_on_display(format = "%Y/%m/%d ")
    created_at.strftime(format)
   end

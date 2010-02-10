@@ -20,4 +20,7 @@ class RosterEntry < ActiveRecord::Base
     User.find(:all, :conditions=>{:team_id=>access_group.team_id, :firstname=>firstname, :lastname=>lastname})
   end
 
+  def full_name()
+    "#{firstname} #{lastname}".squeeze.strip
+  end
 end

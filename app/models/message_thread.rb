@@ -21,16 +21,16 @@ class MessageThread < ActiveRecord::Base
   def multiple_recipients?
     recipient_count = 0;
 
+    unless to_roster_entry_ids.nil?
+      recipient_count += to_roster_entry_ids.size
+      return true if recipient_count > 1
+    end
+
     unless to_ids_array.nil?    
       recipient_count += to_ids_array.size
       return true if recipient_count > 1
     end  
 
-    if to_ids
-      # team, league, and "all" aliases are assumed to be multi-recipients
-      return true if (to_ids.index('-1') || to_ids.index('-2') || to_ids.index('-3'))
-    end
-    
     if to_emails
       recipient_count += to_emails_array.size
       return true if recipient_count > 1
@@ -52,6 +52,10 @@ class MessageThread < ActiveRecord::Base
     return false  
   end
   
+  def is_sms?
+    (is_sms == true)
+  end
+  
   def to=(entries_csv)
   end
   
@@ -70,51 +74,25 @@ class MessageThread < ActiveRecord::Base
   # gets sent to.
   # NOTE: does not check against access groups, but this may be something
   #  we want to add later. It would require an update to the ajax auto-complete, too.
-  def self.get_message_recipient_ids(names,current_user,use_alias_id= false)
+  def self.get_message_recipient_ids(names,current_user)
     recipient_ids = []
     is_alias = false
     to_names = Utilities::csv_split(names)
     friend_ids = current_user.mail_target_ids() #accepted_friendships.collect(&:friend_id)
     to_names.each do |recipient|
-      if recipient == 'all' && current_user.admin?
-        if (use_alias_id)
-          recipient_ids << Message.alias_id(recipient)
-        else
-          users = User.find(:all,:conditions => ['enabled = ?',true])
-          users.each { |user| recipient_ids << user.id }
-          is_alias = true
-        end
-      elsif recipient == 'team' && current_user.team_staff?
-        if (use_alias_id)
-          recipient_ids << Message.alias_id(recipient)
-        else
-          users = User.find(:all, :conditions => ['team_id = ? and enabled = ?',current_user.team_id,true])
-          users.each { |user| recipient_ids << user.id }
-          is_alias = true
-        end
-      elsif recipient == 'league' && current_user.league_staff?
-        if (use_alias_id)
-          recipient_ids << Message.alias_id(recipient)
-        else
-          users = User.find(:all, :conditions => ['league_id = ? and enabled = ?',current_user.league_id,true])
-          users.each { |user| recipient_ids << user.id }
-          is_alias = true
-        end
-      else # normal case, one of current_user's friendships
-        fn,ln = recipient.split(' ')
-        if (current_user.admin?)
-          user = User.find(:first,
-                           :conditions => ['firstname = ? and lastname = ? and enabled = ?',
-                                           fn,ln,true])
-        else
-          user = User.find(:first,
-                           :conditions => ['firstname = ? and lastname = ? and id in (?) and enabled = ?',
-                                           fn,ln,friend_ids,true])
-        end
-        recipient_ids << user.id if user
+      fn,ln = recipient.split(' ')
+      if (current_user.admin?)
+        user = User.find(:first,
+                         :conditions => ['firstname = ? and lastname = ? and enabled = ?',
+                                         fn,ln,true])
+      else
+        user = User.find(:first,
+                         :conditions => ['firstname = ? and lastname = ? and id in (?) and enabled = ?',
+                                         fn,ln,friend_ids,true])
       end
+      recipient_ids << user.id if user
     end
-    [recipient_ids,is_alias]
+    recipient_ids
   end
 
   def self.get_message_emails(email_str)
@@ -172,6 +150,16 @@ class MessageThread < ActiveRecord::Base
     self.to_ids= ary.to_param unless ary.nil?
   end
 
+  # "1/2/3" => [1,2,3]
+  def to_roster_entry_ids_array
+    return self.to_roster_entry_ids.split('/').collect(&:to_i) unless to_roster_entry_ids.nil?
+  end
+
+  # [1,2,3] => "1/2/3"
+  def to_roster_entry_ids_array=(ary)
+    self.to_roster_entry_ids= ary.to_param unless ary.nil?
+  end
+
   # [x@y.z,a@b.c,h@j.k] => "x@y.z/a@b.c/h@j.k"
   def to_emails_array=(ary)
     self.to_emails= ary.to_param unless ary.nil?
@@ -194,20 +182,21 @@ class MessageThread < ActiveRecord::Base
 
   # [1,2,3] => "1/2/3"
   def to_access_group_ids_array=(ary)
-    logger.debug("assign to_access_group_ids array: #{ary.join(',')}")
-    
     self.to_access_group_ids= ary.to_param unless ary.nil?
   end
 
   # "1/2/3" => [1,2,3]
   def to_access_group_ids_array
-    logger.debug("to_access_group_ids: #{to_access_group_ids}")
-    
     return self.to_access_group_ids.split('/').collect(&:to_i) unless to_access_group_ids.nil?
   end
 
   def recipient_display_array(from_user=nil)
     ary = Array.new
+    
+    unless to_roster_entry_ids_array.nil?
+      roster_entries = RosterEntry.find(:all, :conditions => [":id IN (?)", to_roster_entry_ids_array])
+      ary << roster_entries.collect { |r| r.full_name }
+    end
     
     unless to_ids_array.nil?    
       users = User.find(:all, :conditions => ["id IN (?)", to_ids_array]) 
@@ -228,18 +217,12 @@ class MessageThread < ActiveRecord::Base
     end
     
     unless users.nil?
-      ary = users.inject([]) { |a,u| a << u.full_name}
+      ary << users.collect{ |u| u.full_name }
     end
 
     if to_access_group_ids
       groups = AccessGroup.find(to_access_group_ids_array)
       groups.each {|group| ary.insert(0, group.name)}
-    end
-
-    if to_ids
-      ary.insert(0, 'all') if to_ids.index('-1')
-      ary.insert(0, 'team') if to_ids.index('-2')
-      ary.insert(0, 'league') if to_ids.index('-3')
     end
     
     unless to_emails_array.nil?
@@ -247,11 +230,9 @@ class MessageThread < ActiveRecord::Base
     end 
     
     unless to_phones_array.nil?
-      to_phones_array.each do |phone|
-        ary << Utilities::readable_phone(phone)
-      end
+      ary << to_phones_array.collect{ |phone| Utilities::readable_phone(phone) }
     end
 
-    ary
+    ary.flatten
   end 
 end

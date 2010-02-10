@@ -143,11 +143,11 @@ class TeamSportsController < BaseController
 
     action = case params[:message_type].to_i
     when 1
-      new_message_path(:to=>to)
+      new_message_path(:to_group=>to)
     when 2
-      new_text_messages_path(:to=>to)
+      new_text_messages_path(:to_group=>to)
     else
-      new_message_path(:to=>to)
+      new_message_path(:to_group=>to)
     end
 
     redirect_to action

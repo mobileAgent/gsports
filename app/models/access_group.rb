@@ -40,6 +40,14 @@ class AccessGroup < ActiveRecord::Base
     access_users.collect(&:user_id).include? user.id
   end
 
+  def size()
+    s = 0
+    s += access_contacts.length unless access_contacts.nil?
+    s += access_users.length unless access_users.nil?
+    s += roster.length unless roster.nil?
+    s
+  end
+
   def self.allow_access?(user, item)
     debugger
     access_items = AccessItem.for_item(item)

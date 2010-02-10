@@ -6,6 +6,19 @@ class UserNotifier < ActionMailer::Base
   include ActionView::Helpers::TextHelper
   include ActionView::Helpers::SanitizeHelper  
   include BaseHelper
+      
+   # http://www.mutube.com/projects/open-email-to-sms/gateway-list/
+  SMS_Gateway_Domains = ['@teleflip.com','@message.alltel.com','@paging.acswireless.com','@txt.att.net','@bellsouth.cl','@myboostmobile.com','@mms.uscc.net','@sms.edgewireless.com','@messaging.sprintpcs.com','@tmomail.net','@mymetropcs.com','@messaging.nextel.com','@mobile.celloneusa.com','@qwestmp.com','@pcs.rogers.com','@msg.telus.com','@email.uscc.net','@vtext.com','@vmobl.com']
+  
+  def self.sms_to_email(phone_number)
+    recipient = nil
+    if phone_number && phone_number.match(/\d/)
+      stripped = phone_number.gsub(/[^\w]/,'')
+      l = SMS_Gateway_Domains.collect { |domain| stripped.concat(domain) }
+      recipient = l.join(',') unless l.empty?
+    end
+    recipient
+  end
   
   def signup_invitation(email, user, message)
     setup_sender_info
@@ -66,7 +79,6 @@ class UserNotifier < ActionMailer::Base
     @body[:url]  = "#{APP_URL}/users/activate/#{user.activation_code}"
   end
 
-
   def post_recommendation(name, email, post, message = nil, current_user = nil)
     @recipients  = "#{email}"
     @sent_on     = Time.now
@@ -104,6 +116,38 @@ class UserNotifier < ActionMailer::Base
     @subject    += "#{AppConfig.community_name} User information"
   end
 
+  def new_message(sent_message,email)
+    @recipients  = "#{email}"
+    setup_sender_info
+    @subject     = "#{sent_message.sender.full_name} has sent you a message on #{AppConfig.community_name}!"
+    @sent_on     = Time.now
+    @body[:url]  = "#{APP_URL}/messages/thread/#{sent_message.thread_id}"
+    @body[:from] = sent_message.sender
+    @body[:title] = sent_message.title
+  end
+
+  def new_message_sms(sent_message,phonenumber) 
+    content_type ('text/plain')
+    setup_sender_info
+    
+    @recipients = "#{sms_to_email(phonenumber)}"   
+    @subject = ''
+    @sent_on = Time.now
+    
+    msg_a = "#{sent_message.sender.full_name} has sent you a message on #{AppConfig.community_name}."
+    msg_b = " Login to view: #{APP_URL}"
+    msg = msg_a + msg_b
+    if msg.length > 160
+      msg_a = "#{sent_message.sender.firstname} has sent you a message on #{AppConfig.community_name}."      
+      if msg_a.length + msg_b.length > 160
+        msg = (msg_a + msg_b).slice(0,157).concat('...')
+      else
+        msg = msg_a + msg_b
+      end
+    end
+    @body[:message] = msg
+  end
+
   def generic(email, subject, message, options={})
     o_html = options[:html]
     o_from = options[:from]
@@ -116,7 +160,7 @@ class UserNotifier < ActionMailer::Base
     @body[:message] = message
 
     if o_from
-      from o_from
+      @from = o_from
     end
   end
 

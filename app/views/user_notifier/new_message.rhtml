@@ -1,0 +1,16 @@
+<%= @from.full_name %> has sent you a message on <%= AppConfig.community_name %>! 
+
+  Subject: <% @title %>
+
+Use this link to see:
+
+<%= @url %> 
+
+Thanks,
+The <%= AppConfig.community_name %> team
+
+---------------------------------------------------------------------------------
+If you don't want to receive e-mails like this one from <%= AppConfig.community_name %>, you can change 
+your e-mail preferences here:
+
+<%= APP_URL %>/<%= @user.id %>/edit_account

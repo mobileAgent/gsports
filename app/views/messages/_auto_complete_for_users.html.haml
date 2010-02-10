@@ -13,7 +13,7 @@
             %br/
             %span.autocompletename= h(group.name)
             .mailPosterTeam
-              = "#{group.contacts.size} contacts"
+              = "#{group.size} contacts"
         .clearDiv
 
   -if count < max && @users && !@users.empty?
@@ -32,6 +32,22 @@
                 = h(user.team_name)
         .clearDiv
 
+  - if count < max && @roster_entries && !@roster_entries.empty?
+    - @roster_entries.each do |roster|
+      -# break if count >= max
+      - count += 1
+      %li
+        .mailPoster
+          .mailPosterThumb
+            =image_tag(user.avatar_photo_url(:thumb), :alt=>"Profile Picture", :width=>"50", :height=>"50")
+          .mailPosterName
+            %br/
+            %span.autocompletename= h(user.full_name)
+            - if user.team_name
+              .mailPosterTeam
+                = h(user.team_name)
+        .clearDiv
+      
   -# Reset count for emails and phones... they are small
   - count = count / 2
 
