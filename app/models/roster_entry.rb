@@ -13,6 +13,10 @@ class RosterEntry < ActiveRecord::Base
   named_scope :roster,
     lambda { |p_access_group_id| {:conditions => {:access_group_id=>p_access_group_id} } }
 
+  named_scope :for_user,
+    lambda { |user| {:conditions => {:user_id=>user.id} } }
+
+
   def team_sport()
     TeamSport.for_access_group_id(access_group_id).first
   end

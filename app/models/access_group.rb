@@ -11,15 +11,13 @@ class AccessGroup < ActiveRecord::Base
   
   validates_presence_of :name
   validates_presence_of :team_id
-  
-  
+    
   named_scope :for_team,
     lambda { |team| {:conditions => {:team_id=>team.id, :enabled=>true}, :include => [:team] } }
 
   named_scope :named,
     lambda { |name| {:conditions => {:name=>name, :enabled=>true}} }
 
-  
   def items()
     access_items.collect(&:item)
   end
@@ -77,6 +75,12 @@ class AccessGroup < ActiveRecord::Base
   def long_name
     "#{name} for #{team_name}"
   end
-  
+
+  def self.for_user(user)
+    group_ids = Array.new
+    group_ids << AccessUser.for_user(user).collect(&:access_group_id)
+    group_ids << RosterEntry.for_user(user).collect(&:access_group_id)
+    AccessGroup.find(group_ids.flatten.uniq) unless group_ids.empty?
+  end
   
 end
