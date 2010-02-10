@@ -642,12 +642,13 @@ ActiveRecord::Schema.define(:version => 20100209225400) do
 
   create_table "team_sports", :force => true do |t|
     t.string   "name"
-    t.integer  "team_id",         :limit => 11
-    t.integer  "access_group_id", :limit => 11
+    t.integer  "team_id",               :limit => 11
+    t.integer  "access_group_id",       :limit => 11
     t.string   "description"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "avatar_id",       :limit => 11
+    t.integer  "avatar_id",             :limit => 11
+    t.integer  "staff_access_group_id", :limit => 11
   end
 
   create_table "teams", :force => true do |t|

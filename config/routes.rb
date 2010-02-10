@@ -36,6 +36,7 @@ ActionController::Routing::Routes.draw do |map|
 
   map.register         'register',        :controller => 'users', :action => 'register'
   map.forgot_password  'forgot_password', :controller => 'users', :action => 'forgot_password'
+  map.user_logins      '/users/logins',   :controller => 'users', :action => 'logins'
 
   # Override CE on this one by getting mine in there first
   map.admin_dashboard  '/admin/dashboard', :controller => 'admin', :action => 'dashboard'

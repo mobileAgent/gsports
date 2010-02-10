@@ -7,7 +7,8 @@ class RosterEntry < ActiveRecord::Base
   attr_writer :send_invite
 
   validates_presence_of :access_group
-  
+
+  before_destroy { |item| AccessUser.for(item.user, item.access_group).destroy_all }
 
   named_scope :roster,
     lambda { |p_access_group_id| {:conditions => {:access_group_id=>p_access_group_id} } }

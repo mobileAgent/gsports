@@ -14,7 +14,7 @@ class UsersController < BaseController
                                                   :account_expired, :membership_canceled, :renew, :cancel_membership, 
                                                   :auto_complete_for_team_name, :auto_complete_for_league_name]
   
-  before_filter :admin_required, :only => [:assume, :destroy, :featured, :toggle_featured, :toggle_moderator, :disable, :registrations, :edit_promotion, :update_promotion ]
+  before_filter :admin_required, :only => [:logins, :assume, :destroy, :featured, :toggle_featured, :toggle_moderator, :disable, :registrations, :edit_promotion, :update_promotion ]
   before_filter :find_user, :only => [:edit, :edit_pro_details, :show, :update, :destroy, :statistics, :disable ]
   
   uses_tiny_mce(:options => AppConfig.gsdefault_mce_options.merge({:editor_selector => "rich_text_editor"}), 
@@ -25,7 +25,7 @@ class UsersController < BaseController
   
   VERIFICATION_COST = 9.99
   
-  sortable_attributes :id, :firstname, :lastname, :team_id, :league_id, 'memberships.billing_method', :email, :role_id, 'teams.name'
+  sortable_attributes :id, :firstname, :lastname, :team_id, :league_id, 'memberships.billing_method', :email, :role_id, 'teams.name', 'last', 'count', 'u.firstname', 'u.lastname', 'user_id'
   
   
   def show
@@ -1120,7 +1120,9 @@ class UsersController < BaseController
     
   end
 
-
+  def logins
+    @logins = Activity.logins(sort_order).paginate(:order=>sort_order, :page => params[:page])
+  end
 
 
   protected
