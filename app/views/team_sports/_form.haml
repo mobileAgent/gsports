@@ -1,18 +1,21 @@
+%div{ :style=>'float:left' }
 
-%div
-  %b Name
-  %br/
-  = f.text_field :name
+  %div
+    %b Name
+    %br/
+    = f.text_field :name
 
-%div
-  %b Description
-  %br/
-  = f.text_area :description
+  %div
+    %b Description
+    %br/
+    = f.text_area :description, :cols=>66, :rows=>16
 
-%div
+%div{ :style=>'float:left; margin-left: 18px' }
   %b Photo
   %br/
   = image_tag @team_sport.avatar_photo_url
   %br
   = file_field :avatar, :uploaded_data, :size => "20"
 
+
+.clearDiv
