@@ -21,7 +21,7 @@
   .listings
     .padded
 
-
+      - first = true
       - for team_sport in @team_sports
         - panel_id = "team-sport-#{team_sport.id}"
         .team-sport-summary{ :id=>panel_id }
@@ -42,7 +42,7 @@
 
 
             %h1= link_to team_sport.name, edit_team_sport_path(team_sport, :scope_select=>scope_select), {:title => "edit"}
-            = "#{team_sport.access_group.users.size() rescue 0} Athletes |"
+            = "#{RosterEntry.roster(team_sport.access_group.id).size() rescue 0} Athletes |"
             = link_to "#{team_sport.access_group.items.size() rescue 0} Restricted Videos", "javascript:gs.team_sports.show_videos('#{team_sport.id}')"  #"javascript:gs.ui.open_dialog('http://gsports.sonic/team_sports/videos/#{team_sport.id}')"
             %br
             Coaches:
@@ -57,7 +57,10 @@
           .roster
           .buffer
         .clearDiv
-
+        - if first
+          %script
+            = "gs.team_sports.open_panel(#{team_sport.id})"
+          - first = false;
 
       -#
         %table
