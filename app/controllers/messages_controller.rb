@@ -310,6 +310,7 @@ class MessagesController < BaseController
           user = User.find(:first, :conditions => {:firstname => fn, :lastname => ln, :enabled => true})
           if user
             recipient_ids << user.id
+            next
           end
           
           logger.error "Invalid recipient entry: #{entry}"
