@@ -160,7 +160,7 @@ class UserNotifier < ActionMailer::Base
     @body[:message] = message
 
     if o_from
-      @from = o_from
+      @reply_to = o_from
     end
   end
 

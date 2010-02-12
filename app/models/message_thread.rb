@@ -62,7 +62,7 @@ class MessageThread < ActiveRecord::Base
   # used by the form
   def to
     s = recipient_display_array(nil).join(', ')
-    s + ", " unless s.nil? || s.empty?
+    s += ", " unless s.nil? || s.empty?
     s
   end
 
