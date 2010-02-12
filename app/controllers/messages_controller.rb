@@ -107,7 +107,7 @@ class MessagesController < BaseController
     shared_access_id = params[:shared_access_id] || (params[:sent_message] ? params[:sent_message][:shared_access_id] : nil)
     if shared_access_id
       logger.debug("sharing item: #{shared_access_id}")
-      @shared_access = sharedaccess.find(shared_access_id.to_i)
+      @shared_access = SharedAccess.find(shared_access_id.to_i)
     end
 
     unless (@shared_access || current_user.admin? || current_user.team_staff? || current_user.league_staff?)
