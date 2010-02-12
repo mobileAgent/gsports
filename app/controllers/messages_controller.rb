@@ -439,7 +439,9 @@ class MessagesController < BaseController
     # create a new array to keep all phone numbers that this message
     # was sent to, so that we can avoid sending duplicate messages
     all_sent_phones = Array.new
-            
+    all_sent_phones.concat(recipient_phones) unless recipient_phones.nil? || recipient_phones.empty?
+    all_sent_phones.flatten!
+
     # collect all the unique users, emails and phone numbers to message
     unless recipient_access_groups.nil? || recipient_access_groups.empty?
       recipient_access_groups.each do |group|
