@@ -21,7 +21,7 @@
 .team-sport-summary .dock {
   float:left;
   height: 72px;
-  width: 600px;
+  width: 626px;
   border: 1px solid #ccc;
   border-left: 0;
   border-right: 0;
@@ -37,6 +37,7 @@
   border: 1px solid black;
   background: #E6E6E6 url(/images/team_sports/msg-fade.png) repeat-x top left;
   height: 49px;
+  max-width: 300px;
 }
 
 .team-sport-summary .messager span {
@@ -89,7 +90,7 @@
 }
 
 .team-sport-summary .roster table {
-  width: 772px;
+  width: 798px;
 	border: 1px solid black;
 	border-top: 0;
 	border-left: 0;
@@ -99,6 +100,7 @@
 
 .team-sport-summary .roster th {
   color: #58B120;
+  font-size: 130%;
 	padding: 3px;
 	border: 1px solid black;
 	border-bottom: 0;
