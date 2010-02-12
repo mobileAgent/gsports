@@ -4,7 +4,9 @@
 <%- fvars ||= { :p1 => @vidavee.file_flv_const(session[:vidavee],dockey) } %>
 <%- flashVars = fvars.inject([]) { |s,(k,v)| s << "#{k}: encodeURIComponent('#{v}')"}.join(",") %>
 <%- params ||= {} %>
-<%- params['wmode']='transparent' %>
+<%- params['wmode']='opaque' %>
+<%- params['bgcolor']='#0c1329' %>
+<%- params['quality']='high' %>
 <%- paramsLine = params.inject([]) { |s,(k,v)| s << "#{k}: encodeURIComponent('#{v}')"}.join(",") %>
 <script type="text/javascript">
   var flashvars = { <%= flashVars %> };

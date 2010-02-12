@@ -9,5 +9,11 @@
   var attributes = {};
   var testPlayer = "/gs/scripts/swfobject/test.swf";
   var demoPlayer = "/players/playerTest.swf";
+
+  params['wmode']='opaque'
+  params['bgcolor']='#0c1329'
+  params['quality']='high'
+
+
   swfobject.embedSWF(demoPlayer,'<%=target-%>',"580","395","9.0.28","/gs/scripts/swfobject/expressInstall.swf", flashvars, params, attributes);
 </script>
