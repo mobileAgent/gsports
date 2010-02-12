@@ -882,17 +882,19 @@ class MessagesController < BaseController
     # strip tags for text message recipients
     text_body = ActionController::Base.helpers.strip_tags(body)
     
-    # strip out cr-lf
-    text_body.gsub!(/[\r\n]/m, ' ') 
     # strip out non alpha-num-punct chars
-    text_body.gsub!(/[^A-Za-z0-9!-~]/, ' ')
     # normalize spaces
-    text_body.squeeze!
+    text_body = text_body.gsub(/[^A-Za-z0-9!-~\n\r]/, ' ').gsub(/&nbsp;/, ' ').squeeze(' ')
+
+    # strip out cr-lf
+    # normalize lines
+    text_body = text_body.gsub(/[\r\n]/m, "\n").squeeze("\n") 
+
     # remove leading and trailing whitespace
     text_body.strip!
     
     if text_body.length > 160
-      read_more_link = " View full message @ globalsports.net"
+      read_more_link = "\nLogin to globalsports.net to read more"
       maxlength = 160-(read_more_link.length)
       text_body = text_body.slice(0,maxlength-3).concat('...')
     end
