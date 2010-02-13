@@ -89,9 +89,25 @@
           %p
             %div{:align => 'right'}
               - if @message_thread.multiple_recipients?
-                = image_submit_tag '/images/messages/button_reply_all.png', :border => 0, :style => 'border:none', :mouseclick => '/images/messages/button_reply_all_ro.jpg'
+                = image_submit_tag '/images/messages/button_reply_all.png', :border => 0, :style => 'border:none', :onmousedown => "this.src='/images/messages/button_reply_all_ro.png';$('sending').innerHTML='Sending messages... please wait';return true", :onclick => "this.disabled='disabled'"
               - else
-                = image_submit_tag '/images/messages/button_reply.png', :border => 0, :style => 'border:none', :mouseclick => '/images/messages/button_reply_ro.jpg'
+                = image_submit_tag '/images/messages/button_reply.png', :border => 0, :style => 'border:none', :onmousedown => "this.src='/images/messages/button_reply_ro.png';$('sending').innerHTML='Sending message... please wait';return true", :onclick => "this.disabled='disabled'"
+    
+                -unless sms
+                  -fields_for @sent_message do |sent_f|
+                    %div{:style => 'float:right; margin-right: 30px'}
+                      %table{ :cellpadding => 5 }
+                        %tr
+                          %td
+                            = sent_f.check_box :sms_notify
+                          %td
+                            %label
+                              %em &nbsp;Send notification by text message&nbsp;
+                  .clearDiv
+            .clearDiv
+            %div{:id => 'sending', :align => 'right', :style => "font-weight:bold" } &nbsp;
+    
+    
     
           %br/
           %div{:align => 'right'}

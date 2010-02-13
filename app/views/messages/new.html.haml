@@ -128,7 +128,7 @@
               %br/
               %p
                 %div{:style => 'float:right'}
-                  = image_submit_tag '/images/messages/send.jpg', :border => 0, :style => 'border:none'
+                  = image_submit_tag '/images/messages/send.jpg', :border => 0, :style => 'border:none', :onmousedown => "this.src='/images/messages/send_ro.jpg';$('sending').innerHTML='Sending messages... please wait';return true", :onclick => "this.disabled='disabled'"
                 -unless sms
                   -fields_for @sent_message do |sent_f|
                     %div{:style => 'float:right; margin-right: 30px'}
@@ -140,6 +140,7 @@
                             %label
                               %em &nbsp;Send notification by text message&nbsp;
                 .clearDiv
+                %div{:id => 'sending', :align => 'right', :style => "font-weight:bold" } &nbsp;
         
               %br/
               %div{:align => 'right'}
