@@ -149,7 +149,7 @@ class User < ActiveRecord::Base
 
 
   def full_name
-    "#{firstname} #{lastname}"
+    "#{firstname} #{lastname}".squeeze(' ').strip
   end
 
   def name

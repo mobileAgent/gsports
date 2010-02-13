@@ -26,6 +26,6 @@ class RosterEntry < ActiveRecord::Base
   end
 
   def full_name()
-    "#{firstname} #{lastname}".squeeze.strip
+    "#{firstname} #{lastname}".squeeze(' ').strip
   end
 end

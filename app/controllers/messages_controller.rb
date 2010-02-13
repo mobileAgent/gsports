@@ -888,7 +888,7 @@ class MessagesController < BaseController
 
     # strip out cr-lf
     # normalize lines
-    text_body = text_body.gsub(/[\r\n]/m, "\n").squeeze("\n") 
+    text_body = text_body.gsub(/\s*[\r\n]\s*/m, "\n").squeeze("\n") 
 
     # remove leading and trailing whitespace
     text_body.strip!
