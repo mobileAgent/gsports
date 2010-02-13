@@ -106,8 +106,8 @@ class MessagesController < BaseController
     # allow external-only emails to be sent for shared items
     shared_access_id = params[:shared_access_id] || (params[:sent_message] ? params[:sent_message][:shared_access_id] : nil)
     if shared_access_id
-      logger.debug("sharing item: #{shared_access_id}")
-      @shared_access = sharedaccess.find(shared_access_id.to_i)
+      logger.debug("Sharing item: #{shared_access_id}")
+      @shared_access = SharedAccess.find(shared_access_id.to_i)
     end
 
     unless (@shared_access || current_user.admin? || current_user.team_staff? || current_user.league_staff?)
@@ -306,21 +306,25 @@ class MessagesController < BaseController
             next
           end
           
-          # is it a gs user
-          user = User.find(:first, :conditions => {:firstname => fn, :lastname => ln, :enabled => true})
-          if user
-            recipient_ids << user.id
+          # is it a gs user?
+          # Seems like find(:first) would be better, but if there are multiple users with the same name,
+          # how do we know they meant to send it to the first, and not the second. Ugly problem....
+          users = User.find(:all, :conditions => {:firstname => fn, :lastname => ln, :enabled => true})
+          unless users.nil? || users.empty?
+            recipient_ids << users.collect(&:id)
+            recipient_ids.flatten!
+            next
           end
           
           logger.error "Invalid recipient entry: #{entry}"
           recipient_errors << entry
         end
         
-        @message_thread.to_roster_entry_ids= recipient_roster_entries.collect(&:id) unless recipient_roster_entries.empty?
-        @message_thread.to_ids_array= recipient_ids unless recipient_ids.empty?
-        @message_thread.to_emails_array= recipient_emails unless recipient_emails.empty?
-        @message_thread.to_phones_array= recipient_phones unless recipient_phones.empty?
-        @message_thread.to_access_group_ids_array= recipient_access_groups.collect(&:id) unless recipient_access_groups.empty?
+        @message_thread.to_roster_entry_ids= recipient_roster_entries.collect(&:id).uniq unless recipient_roster_entries.empty?
+        @message_thread.to_ids_array= recipient_ids.uniq unless recipient_ids.empty?
+        @message_thread.to_emails_array= recipient_emails.uniq unless recipient_emails.empty?
+        @message_thread.to_phones_array= recipient_phones.uniq unless recipient_phones.empty?
+        @message_thread.to_access_group_ids_array= recipient_access_groups.collect(&:id).uniq unless recipient_access_groups.empty?
         
         unless recipient_errors.empty?
           flash[:error] = "Invalid recipient entr#{recipient_errors.size > 1 ? 'ies' : 'y'}: #{recipient_errors.join(', ')}"
@@ -549,8 +553,32 @@ class MessagesController < BaseController
         user = User.find(user_id)
         logger.debug("Delivering message to user id: #{user.id} #{user.full_name}")
         send_message_to_user(@sent_message, user)
+        
+        sent_text_message = false
+        # Send a text notification if the user's notificaiton settings permit (user.notify_message_sms
+        # AND the sender has requested that text notifcations be sent
+        if user.notify_message_sms && user.phone && !user.phone.blank?
+          # send the whole text message if on the send_text screen
+          if @message_thread.is_sms?
+            logger.debug("Sending text to user #{user.id} via phone #{user.phone}")
+            all_sent_phones << user.phone
+            sent_text = true
+          elsif @sent_message.sms_notify?
+            logger.debug("Notifying user #{user.id} via phone #{user.phone}")
+            text_notifications << user.phone
+          end
+        end
+                
+        #  Send an email notification if the user's notification settings permit (user.notify_message_email)
+        unless sent_text_message
+          if user.notify_message_email && user.email && !user.email.blank?
+            logger.debug("Notifying user #{user.id} via email: #{user.email}")
+            email_notifications << user.email
+          end
+        end
       end
     end
+
     unless all_sent_emails.nil? || all_sent_emails.empty?
       all_sent_emails.uniq!
       all_sent_emails.each do |email|
@@ -596,11 +624,11 @@ class MessagesController < BaseController
       # And finally, save the recipients in the thread
       logger.debug "Setting recipients for thread #{@message_thread.id}"
       
-      @message_thread.to_roster_entry_ids_array= recipient_roster_entries.collect(&:id).flatten unless recipient_roster_entries.empty?
-      @message_thread.to_ids_array= recipient_ids.flatten unless recipient_ids.nil? || recipient_ids.empty?
-      @message_thread.to_access_group_ids_array= recipient_access_groups.collect(&:id).flatten unless recipient_access_groups.empty?
-      @message_thread.to_emails_array= recipient_emails.flatten unless recipient_emails.empty?
-      @message_thread.to_phones_array= recipient_phones.flatten unless recipient_phones.empty?
+      @message_thread.to_roster_entry_ids_array= recipient_roster_entries.collect(&:id).flatten.uniq unless recipient_roster_entries.empty?
+      @message_thread.to_ids_array= recipient_ids.flatten.uniq unless recipient_ids.nil? || recipient_ids.empty?
+      @message_thread.to_access_group_ids_array= recipient_access_groups.collect(&:id).flatten.uniq unless recipient_access_groups.empty?
+      @message_thread.to_emails_array= recipient_emails.flatten.uniq unless recipient_emails.empty?
+      @message_thread.to_phones_array= recipient_phones.flatten.uniq unless recipient_phones.empty?
     
       @message_thread.save!
 
@@ -613,9 +641,9 @@ class MessagesController < BaseController
     session[:mail_to_member_group_ids] = nil
     
     # send notifications, if necessary
-    unless email_notifications.empty? && text_notifications.empty?
-      send_message_notifications(@sent_message, email_notifications, text_notifications)
-    end
+    email_notifications.uniq! unless email_notifications.empty?
+    text_notifications.uniq! unless text_notifications.empty?
+    send_message_notifications(@sent_message, email_notifications, text_notifications)
     
     respond_to do |format|
       format.html { 
@@ -894,9 +922,10 @@ class MessagesController < BaseController
     text_body.strip!
     
     if text_body.length > 160
-      read_more_link = "\nLogin to globalsports.net to read more"
+      read_more_link = "...\nLogin to globalsports.net to read more"
       maxlength = 160-(read_more_link.length)
-      text_body = text_body.slice(0,maxlength-3).concat('...')
+      text_body = text_body.slice(0,maxlength)
+      text_body += read_more_link
     end
    
     return text_body
@@ -935,16 +964,20 @@ class MessagesController < BaseController
   
   def send_message_notifications(sent_message, emails, phone_numbers)
     if sent_message
-      if emails
+      if emails && !emails.empty?
         emails.each do |email|
-          logger.debug("Sending message notification to #{email}")
-          UserNotifier.deliver_new_message(sent_message, email)
+          unless email.blank?
+            logger.debug("Sending message notification to #{email}")
+            UserNotifier.deliver_new_message(sent_message, email)
+          end
         end
       end
-      if phone_numbers
+      if phone_numbers && !phone_numbers.empty?
         phone_numbers.each do |phone|
-          logger.debug("Sending message notification to #{phone}")
-          UserNotifier.deliver_new_message_sms(sent_message, phone)
+          unless phone.blank?
+            logger.debug("Sending message notification to #{phone}")
+            UserNotifier.deliver_new_message_sms(sent_message, phone)
+          end
         end
       end
     end

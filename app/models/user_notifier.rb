@@ -117,13 +117,13 @@ class UserNotifier < ActionMailer::Base
   end
 
   def new_message(sent_message,email)
-    @recipients  = "#{email}"
+    @recipients   = "#{email}"
     setup_sender_info
-    @subject     = "#{sent_message.sender.full_name} has sent you a message on #{AppConfig.community_name}!"
-    @sent_on     = Time.now
-    @body[:url]  = "#{APP_URL}/messages/thread/#{sent_message.thread_id}"
-    @body[:from] = sent_message.sender
-    @body[:title] = sent_message.title
+    @subject      = "#{sent_message.sender.full_name} has sent you a message on #{AppConfig.community_name}!"
+    @sent_on      = Time.now
+    @body[:url]   = "#{APP_URL}/messages/thread/#{sent_message.thread_id}"
+    @body[:from]  = sent_message.sender
+    @body[:title] = sent_message.message_thread.title
   end
 
   def new_message_sms(sent_message,phonenumber) 
