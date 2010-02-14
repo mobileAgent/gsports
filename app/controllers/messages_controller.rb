@@ -391,7 +391,7 @@ class MessagesController < BaseController
 
     end # end if new thread
     
-    logger.debug "Sending message from #{current_user.id} to roster entries=>#{recipient_roster_entries.nil? ? '-' : recipient_roster_entries.join(',')}, user ids=>#{recipient_ids.nil? ? '-' : recipient_ids.to_json}, emails=>#{recipient_emails.nil? ? '-' : recipient_emails.join(',')}, phones=>#{recipient_phones.nil? ? '-' : recipient_phones.join(',')}, groups=>#{recipient_access_groups.nil? ? '-' : recipient_access_groups.join(',')}"
+    logger.debug "Sending message from #{current_user.id} to roster entries=>#{recipient_roster_entries.nil? ? '-' : recipient_roster_entries.collect(&:id).join(',')}, user ids=>#{recipient_ids.nil? ? '-' : recipient_ids.to_json}, emails=>#{recipient_emails.nil? ? '-' : recipient_emails.join(',')}, phones=>#{recipient_phones.nil? ? '-' : recipient_phones.join(',')}, groups=>#{recipient_access_groups.nil? ? '-' : recipient_access_groups.collect(&:id).join(',')}"
     # Now we have all the ids, send the message to each one
 
     @body = @sent_message.body
@@ -425,26 +425,26 @@ class MessagesController < BaseController
     # create a new array to keep all roster_entries that this message
     # was sent to, so that we can avoid sending duplicate messages
     all_sent_roster_entries = Array.new
-    all_sent_roster_entries.concat(recipient_roster_entries) unless recipient_roster_entries.nil? || recipient_roster_entries.empty?
-    all_sent_roster_entries.flatten!
+    all_sent_roster_entries << recipient_roster_entries unless recipient_roster_entries.nil? || recipient_roster_entries.empty?
+    all_sent_roster_entries.flatten! unless all_sent_roster_entries.empty?
 
     # create a new array to keep all user ids that this message
     # was sent to, so that we can avoid sending duplicate messages
     all_sent_user_ids = Array.new
-    all_sent_user_ids.concat(recipient_ids) unless recipient_ids.nil? || recipient_ids.empty?
-    all_sent_user_ids.flatten!
+    all_sent_user_ids << recipient_ids unless recipient_ids.nil? || recipient_ids.empty?
+    all_sent_user_ids.flatten! unless all_sent_user_ids.empty?
     
     # create a new array to keep all email addresses that this message
     # was sent to, so that we can avoid sending duplicate messages
     all_sent_emails = Array.new
-    all_sent_emails.concat(recipient_emails) unless recipient_emails.nil? || recipient_emails.empty?
-    all_sent_emails.flatten!
+    all_sent_emails << recipient_emails unless recipient_emails.nil? || recipient_emails.empty?
+    all_sent_emails.flatten! unless all_sent_emails.empty?
 
     # create a new array to keep all phone numbers that this message
     # was sent to, so that we can avoid sending duplicate messages
     all_sent_phones = Array.new
-    all_sent_phones.concat(recipient_phones) unless recipient_phones.nil? || recipient_phones.empty?
-    all_sent_phones.flatten!
+    all_sent_phones << recipient_phones unless recipient_phones.nil? || recipient_phones.empty?
+    all_sent_phones.flatten! unless all_sent_phones.empty?
 
     # collect all the unique users, emails and phone numbers to message
     unless recipient_access_groups.nil? || recipient_access_groups.empty?
@@ -466,7 +466,7 @@ class MessagesController < BaseController
         # for each access roster entry in the group, send them the message via email -- translate SMS numbers to email
         roster_entries = group.roster
         all_sent_roster_entries << roster_entries unless roster_entries.nil? || roster_entries.empty?
-        all_sent_roster_entries.flatten!
+        all_sent_roster_entries.flatten! unless all_sent_roster_entries.empty?
       end
     end
 
@@ -495,7 +495,7 @@ class MessagesController < BaseController
           all_sent_user_ids.delete_if!{|id| id == roster_entry.user_id}
           
           user = User.find(roster_entry.user_id)
-          logger.debug("Delivering message for group (#{group.id}) recipient user id: #{user.id} #{user.full_name}")
+          logger.debug("Delivering message roster entry (#{roster_entry.id} in group #{roster_entry.access_group_id}) recipient user id: #{user.id} #{user.full_name}")
           send_message_to_user(@sent_message, user, roster_entry.access_group_id)
         
           # If this is a text message... send the text
@@ -514,7 +514,7 @@ class MessagesController < BaseController
             # 2-b. For all other senders, only text if the user allows text message notifications (user.notify_message_sms)
             if @sent_message.sms_notify? && (sender_is_coach || user.notify_message_sms)
               if (roster_entry.phone && !roster_entry.phone.blank?)
-                logger.debug("Notifying user #{roster_entry.user_id} roster entry via phone #{roster_entry.phone}")
+                logger.debug("Notifying user #{roster_entry.user_id} roster entry (#{roster_entry.id} in group #{roster_entry.access_group_id}) via phone #{roster_entry.phone}")
                 text_notifications << roster_entry.phone
               end
             end
@@ -522,7 +522,7 @@ class MessagesController < BaseController
             #  Send an email notification if the user's notification settings permit (user.notify_message_email)
             if user.notify_message_email
               if (roster_entry.email && !roster_entry.email.blank?)
-                logger.debug("Notifying user #{roster_entry.user_id} roster entry via email: #{roster_entry.email}")
+                logger.debug("Notifying user #{roster_entry.user_id} roster entry (#{roster_entry.id} in group #{roster_entry.access_group_id}) via email: #{roster_entry.email}")
                 email_notifications << roster_entry.email
               end
             end
@@ -530,16 +530,16 @@ class MessagesController < BaseController
        else
           # Non-registered user roster entries
           if @message_thread.is_sms? && sender_is_coach && roster_entry.phone && !roster_entry.phone.blank?
-            logger.debug("Adding group (#{roster_entry.access_group_id}) recipient phone #{roster_entry.phone}")
+            logger.debug("Adding phone for roster (#{roster_entry.id} in group #{roster_entry.access_group_id}): #{roster_entry.phone}")
             all_sent_phones << roster_entry.phone
           else
             if roster_entry.email && !roster_entry.email.blank?
-              logger.debug("Adding group (#{roster_entry.access_group_id}) recipient email: #{roster_entry.email}")
+              logger.debug("Adding email for roster (#{roster_entry.id} in group #{roster_entry.access_group_id}): #{roster_entry.email}")
               all_sent_emails << roster_entry.email
             end
             
             if @sent_message.sms_notify && sender_is_coach
-              logger.debug("Notifying non-user roster entry via phone: #{roster_entry.phone}")
+              logger.debug("Notifying non-user roster entry (#{roster_entry.id} in group #{roster_entry.access_group_id}) via phone: #{roster_entry.phone}")
               text_notifications << roster_entry.phone
             end
           end
@@ -548,7 +548,7 @@ class MessagesController < BaseController
     end
     
     unless all_sent_user_ids.nil? || all_sent_user_ids.empty?
-      all_sent_user_ids.uniq!
+      all_sent_user_ids.uniq! unless all_sent_user_ids.length == 1
       all_sent_user_ids.each do |user_id|
         user = User.find(user_id)
         logger.debug("Delivering message to user id: #{user.id} #{user.full_name}")
@@ -580,9 +580,9 @@ class MessagesController < BaseController
     end
 
     unless all_sent_emails.nil? || all_sent_emails.empty?
-      all_sent_emails.uniq!
+      all_sent_emails.uniq! unless all_sent_emails.length == 1
       all_sent_emails.each do |email|
-        logger.debug("Sending message  #{@sent_message.id} to email: #{email}")
+        logger.debug("Sending message #{@sent_message.id} to email: #{email}")
         # don't clutter the messages table with these...
         #@message = Message.new(:sent_message_id => @sent_message.id, :thread_id => @sent_message.thread_id)
         #@message.to_email= email
@@ -590,8 +590,8 @@ class MessagesController < BaseController
         begin
           UserNotifier.deliver_generic(email, @message_thread.title, @body, :html => is_html, :from => current_user.email )
         rescue Exception => e
-          logger.error "Error sending email to #{email}: #{e.message}"
-          flash[:error] = "Unable to send email to #{email}"
+          logger.error "Error sending email to '#{email}': #{e.message}"
+          flash[:error] = "Unable to send email to '#{email}'"
         end          
       end
     end
@@ -600,7 +600,7 @@ class MessagesController < BaseController
         @text_body = make_text_body(@body)
       end
 
-      all_sent_phones.uniq!
+      all_sent_phones.uniq! unless all_sent_phones.length == 1
       all_sent_phones.each do |sms|
         # translate SMS numbers to email
         email = UserNotifier::sms_to_email(sms)

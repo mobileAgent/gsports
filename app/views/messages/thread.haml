@@ -89,9 +89,11 @@
           %p
             %div{:style => 'float:right', :align => 'right'}
               - if @message_thread.multiple_recipients?
-                = image_submit_tag '/images/messages/button_reply_all.png', :border => 0, :style => 'border:none', :onmousedown => "this.src='/images/messages/button_reply_all_ro.png';$('sending').innerHTML='Sending messages... please wait';return true", :onclick => "this.disabled='disabled'"
+                = image_submit_tag '/images/messages/button_reply_all.png', :border => 0, :style => 'border:none', :onmousedown => "this.src='/images/messages/button_reply_all_ro.png';$('sending').innerHTML='Sending messages... please wait';return true"
+                -#, :onclick => "this.disabled='disabled';return true"
               - else
-                = image_submit_tag '/images/messages/button_reply.png', :border => 0, :style => 'border:none', :onmousedown => "this.src='/images/messages/button_reply_ro.png';$('sending').innerHTML='Sending message... please wait';return true", :onclick => "this.disabled='disabled'"
+                = image_submit_tag '/images/messages/button_reply.png', :border => 0, :style => 'border:none', :onmousedown => "this.src='/images/messages/button_reply_ro.png';$('sending').innerHTML='Sending message... please wait';return true"
+                -#, :onclick => "this.disabled='disabled';return true"
     
             -unless @message_thread.is_sms?
               %div{:style => 'float:right; margin-right: 30px'}
