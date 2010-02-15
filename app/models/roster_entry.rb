@@ -3,12 +3,15 @@ class RosterEntry < ActiveRecord::Base
   belongs_to :access_group
   belongs_to :user
 
+  has_many :parents
+
   attr_reader :send_invite
   attr_writer :send_invite
 
   validates_presence_of :access_group
 
   before_destroy { |item| AccessUser.for(item.user, item.access_group).destroy_all }
+  before_destroy { |item| item.parents.destroy_all }
 
   named_scope :roster,
     lambda { |p_access_group_id| {:conditions => {:access_group_id=>p_access_group_id} } }

@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100209225400) do
+ActiveRecord::Schema.define(:version => 20100215155324) do
 
   create_table "access_contacts", :force => true do |t|
     t.integer "access_group_id", :limit => 11
@@ -419,6 +419,17 @@ ActiveRecord::Schema.define(:version => 20100209225400) do
     t.string   "permalink"
     t.text     "content"
     t.text     "html_content"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "parents", :force => true do |t|
+    t.integer  "roster_entry_id", :limit => 11
+    t.integer  "user_id",         :limit => 11
+    t.string   "firstname"
+    t.string   "lastname"
+    t.string   "email"
+    t.string   "phone"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
