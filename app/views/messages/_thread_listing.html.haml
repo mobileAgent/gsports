@@ -10,7 +10,7 @@
 .mailItem{:id => "message_#{msg_thread.id}", :class => "#{unreadCss}"}
   .mailSelect
     -if thread_unread == 0
-      %input{ :name => "thread_id_check[]", :type => "checkbox", :value => msg_thread.id, :onclick=>"hMessageCheck(this)" }/
+      %input{ :name => "thread_id_check[]", :type => "checkbox", :value => msg_thread.id, :onclick=>"hMessageCheck(this)" }
     -else
       =image_tag('/images/listing_icons/17/globe.png')
   .mailPoster
