@@ -390,9 +390,6 @@ class MessagesController < BaseController
       logger.debug("New thread id: #{@message_thread.id}")
 
     end # end if new thread
-    
-    logger.debug "Sending message from #{current_user.id} to roster entries=>#{recipient_roster_entries.nil? ? '-' : recipient_roster_entries.collect(&:id).join(',')}, user ids=>#{recipient_ids.nil? ? '-' : recipient_ids.to_json}, emails=>#{recipient_emails.nil? ? '-' : recipient_emails.join(',')}, phones=>#{recipient_phones.nil? ? '-' : recipient_phones.join(',')}, groups=>#{recipient_access_groups.nil? ? '-' : recipient_access_groups.collect(&:id).join(',')}"
-    # Now we have all the ids, send the message to each one
 
     @body = @sent_message.body
     is_html = !@message_thread.is_sms?
@@ -426,25 +423,24 @@ class MessagesController < BaseController
     # was sent to, so that we can avoid sending duplicate messages
     all_sent_roster_entries = Array.new
     all_sent_roster_entries << recipient_roster_entries unless recipient_roster_entries.nil? || recipient_roster_entries.empty?
-    all_sent_roster_entries.flatten! unless all_sent_roster_entries.empty?
 
     # create a new array to keep all user ids that this message
     # was sent to, so that we can avoid sending duplicate messages
     all_sent_user_ids = Array.new
     all_sent_user_ids << recipient_ids unless recipient_ids.nil? || recipient_ids.empty?
-    all_sent_user_ids.flatten! unless all_sent_user_ids.empty?
-    
+
     # create a new array to keep all email addresses that this message
     # was sent to, so that we can avoid sending duplicate messages
     all_sent_emails = Array.new
     all_sent_emails << recipient_emails unless recipient_emails.nil? || recipient_emails.empty?
-    all_sent_emails.flatten! unless all_sent_emails.empty?
 
     # create a new array to keep all phone numbers that this message
     # was sent to, so that we can avoid sending duplicate messages
     all_sent_phones = Array.new
     all_sent_phones << recipient_phones unless recipient_phones.nil? || recipient_phones.empty?
-    all_sent_phones.flatten! unless all_sent_phones.empty?
+
+    logger.debug "Sending message from #{current_user.id} to roster entries=>#{all_sent_roster_entries.collect(&:id).to_json}, user ids=>#{all_sent_user_ids.to_json}, emails=>#{all_sent_emails.to_json}, phones=>#{all_sent_phones.to_json}, groups=>#{recipient_access_groups.nil? ? '[]' : recipient_access_groups.collect(&:id).to_json}"
+    # Now we have all the ids, send the message to each one
 
     # collect all the unique users, emails and phone numbers to message
     unless recipient_access_groups.nil? || recipient_access_groups.empty?
@@ -466,9 +462,11 @@ class MessagesController < BaseController
         # for each access roster entry in the group, send them the message via email -- translate SMS numbers to email
         roster_entries = group.roster
         all_sent_roster_entries << roster_entries unless roster_entries.nil? || roster_entries.empty?
-        all_sent_roster_entries.flatten! unless all_sent_roster_entries.empty?
       end
     end
+
+    # Clean up all of the arrays... remove nulls, flatten nested arrays, and remove dupes 
+    all_sent_roster_entries = all_sent_roster_entries.flatten.compact.uniq unless all_sent_roster_entries.empty?
 
     # This is a shortcut, assuming if the user is a coach anywhere, then he is a coach for all
     # teams here. 
@@ -546,9 +544,21 @@ class MessagesController < BaseController
         end
       end
     end
+
+    # Clean up all of the arrays... remove nulls, flatten nested arrays, and remove dupes 
+    logger.debug("**DEBUG: Before uniq, all_sent_user_ids #{all_sent_user_ids.length}: #{all_sent_user_ids.to_json}")
+    all_sent_user_ids = all_sent_user_ids.flatten.compact.uniq unless all_sent_user_ids.empty?
+    logger.debug("**DEBUG: After uniq, all_sent_user_ids #{all_sent_user_ids.length}: #{all_sent_user_ids.to_json}")
     
-    unless all_sent_user_ids.nil? || all_sent_user_ids.empty?
-      all_sent_user_ids.uniq! unless all_sent_user_ids.length == 1
+    logger.debug("**DEBUG: Before uniq, all_sent_emails #{all_sent_emails.length}: #{all_sent_emails.to_json}")
+    all_sent_emails = all_sent_emails.flatten.compact.uniq unless all_sent_emails.empty?
+    logger.debug("**DEBUG: After uniq, all_sent_emails #{all_sent_emails.length}: #{all_sent_emails.to_json}")
+    
+    logger.debug("**DEBUG: Before uniq, all_sent_phones #{all_sent_phones.length}: #{all_sent_phones.to_json}")
+    all_sent_phones = all_sent_phones.flatten.compact.uniq unless all_sent_phones.empty?
+    logger.debug("**DEBUG: After uniq, all_sent_phones #{all_sent_phones.length}: #{all_sent_phones.to_json}")
+    
+    unless all_sent_user_ids.empty?
       all_sent_user_ids.each do |user_id|
         user = User.find(user_id)
         logger.debug("Delivering message to user id: #{user.id} #{user.full_name}")
@@ -566,6 +576,7 @@ class MessagesController < BaseController
           elsif @sent_message.sms_notify?
             logger.debug("Notifying user #{user.id} via phone #{user.phone}")
             text_notifications << user.phone
+            logger.debug("**DEBUG: text_notifications #{text_notifications.join(',')}")
           end
         end
                 
@@ -574,15 +585,15 @@ class MessagesController < BaseController
           if user.notify_message_email && user.email && !user.email.blank?
             logger.debug("Notifying user #{user.id} via email: #{user.email}")
             email_notifications << user.email
+            logger.debug("**DEBUG: email_notifications: #{email_notifications.join(',')}")
           end
         end
       end
     end
 
-    unless all_sent_emails.nil? || all_sent_emails.empty?
-      all_sent_emails.uniq! unless all_sent_emails.length == 1
+    unless all_sent_emails.empty?
       all_sent_emails.each do |email|
-        logger.debug("Sending message #{@sent_message.id} to email: #{email}")
+        logger.debug("Sending message #{@sent_message.id} to email: '#{email}'")
         # don't clutter the messages table with these...
         #@message = Message.new(:sent_message_id => @sent_message.id, :thread_id => @sent_message.thread_id)
         #@message.to_email= email
@@ -595,16 +606,16 @@ class MessagesController < BaseController
         end          
       end
     end
-    unless all_sent_phones.nil? || all_sent_phones.empty?
+    
+    unless all_sent_phones.empty?
       if @text_body.nil?
         @text_body = make_text_body(@body)
       end
-
-      all_sent_phones.uniq! unless all_sent_phones.length == 1
+      
       all_sent_phones.each do |sms|
         # translate SMS numbers to email
         email = UserNotifier::sms_to_email(sms)
-        logger.debug("Sending message  #{@sent_message.id} to phone number: #{sms}")
+        logger.debug("Sending message #{@sent_message.id} via email gateway to phone number: #{sms}")
   
         # don't clutter the messages table with these...
         #@message = Message.new(:sent_message_id => @sent_message.id, :thread_id => @sent_message.thread_id)
@@ -624,11 +635,11 @@ class MessagesController < BaseController
       # And finally, save the recipients in the thread
       logger.debug "Setting recipients for thread #{@message_thread.id}"
       
-      @message_thread.to_roster_entry_ids_array= recipient_roster_entries.collect(&:id).flatten.uniq unless recipient_roster_entries.empty?
-      @message_thread.to_ids_array= recipient_ids.flatten.uniq unless recipient_ids.nil? || recipient_ids.empty?
-      @message_thread.to_access_group_ids_array= recipient_access_groups.collect(&:id).flatten.uniq unless recipient_access_groups.empty?
-      @message_thread.to_emails_array= recipient_emails.flatten.uniq unless recipient_emails.empty?
-      @message_thread.to_phones_array= recipient_phones.flatten.uniq unless recipient_phones.empty?
+      @message_thread.to_roster_entry_ids_array= recipient_roster_entries.collect(&:id).flatten.compact.uniq unless recipient_roster_entries.empty?
+      @message_thread.to_ids_array= recipient_ids.flatten.compact.uniq unless recipient_ids.nil? || recipient_ids.empty?
+      @message_thread.to_access_group_ids_array= recipient_access_groups.collect(&:id).flatten.compact.uniq unless recipient_access_groups.empty?
+      @message_thread.to_emails_array= recipient_emails.flatten.compact.uniq unless recipient_emails.empty?
+      @message_thread.to_phones_array= recipient_phones.flatten.compact.uniq unless recipient_phones.empty?
     
       @message_thread.save!
 
