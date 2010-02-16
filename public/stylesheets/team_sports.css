@@ -112,19 +112,6 @@
   color: #58B120;
   text-decoration: none;
 }
-
-.team-sport-summary .roster td div { overflow: hidden; }
-
-.team-sport-summary .roster td div.status    { width: 75px }
-.team-sport-summary .roster td div.no    { width: 50px }
-.team-sport-summary .roster td div.first { width: 100px }
-.team-sport-summary .roster td div.last  { width: 100px }
-.team-sport-summary .roster td div.email { width: 135px; }
-.team-sport-summary .roster td div.phone { width: 85px }
-.team-sport-summary .roster td div.pos   { width: 50px }
-.team-sport-summary .roster td div.actions   { width: 100px }
-
-
 .team-sport-summary .roster tr {
 }
 
@@ -142,7 +129,31 @@
 	border: 1px solid black;
 	border-bottom: 0;
 	border-right: 0;
+  xvertical-align: top;
 }
+
+
+.team-sport-summary .roster td div {
+  margin-top: 3px;
+  overflow: hidden;
+}
+
+.team-sport-summary .roster td div.status    { width: 75px }
+.team-sport-summary .roster td div.no    { width: 50px }
+.team-sport-summary .roster td div.first { width: 100px }
+.team-sport-summary .roster td div.last  { width: 100px }
+.team-sport-summary .roster td div.email { width: 135px; }
+.team-sport-summary .roster td div.phone { width: 85px }
+.team-sport-summary .roster td div.pos   { width: 50px }
+.team-sport-summary .roster td div.actions   { width: 100px }
+
+.team-sport-summary .roster td div.actions a  {
+  text-decoration: none;
+  font-weight: bold;
+  color: blue;
+  padding: 4px;
+}
+
 
 
 .team-sport-summary .roster .send-invite {

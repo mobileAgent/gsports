@@ -105,6 +105,23 @@ class UserNotifier < ActionMailer::Base
     @subject += "Your account has been created!"
     @body[:url]  = "#{APP_URL}"
   end
+
+  def roster_invite(options = {})
+debugger
+    @roster_entry  = options[:to]
+    @coach         = options[:from]
+
+    setup_sender_info
+    
+    @recipients  = "#{@roster_entry.email}"
+    @subject     = "#{AppConfig.community_name} invitation"
+    @sent_on     = Time.now
+
+    @body[:roster_entry] = @roster_entry
+    @body[:coach] = @coach
+
+    @body[:url]  = "#{APP_URL}"
+  end
   
   def reset_password(user)
     setup_email(user)

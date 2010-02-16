@@ -10,7 +10,7 @@ class RosterEntry < ActiveRecord::Base
 
   validates_presence_of :access_group
 
-  before_destroy { |item| AccessUser.for(item.user, item.access_group).destroy_all }
+  before_destroy { |item| AccessUser.for(item.user, item.access_group).destroy_all if item.user }
   before_destroy { |item| item.parents.destroy_all }
 
   named_scope :roster,
@@ -31,4 +31,8 @@ class RosterEntry < ActiveRecord::Base
   def full_name()
     "#{firstname} #{lastname}".squeeze(' ').strip
   end
+
+
+
+
 end

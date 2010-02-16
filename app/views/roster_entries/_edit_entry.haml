@@ -1,9 +1,12 @@
 - editing ||= false
 %tr
   %td{ :align=>'center' }
-    .send-invite
-      Send Invite
-    = f.check_box :send_invite
+    - if !editing
+      .send-invite
+        Send Invite
+      = f.check_box :send_invite
+    - else
+      &nbsp;
   %td
     = f.text_field :number, :size=>2
   %td

@@ -35,4 +35,12 @@
     .actions
       = link_to_remote '', {:url => roster_entry_path(athlete), :confirm => 'Are you sure?', :method=>:delete}, :complete => evaluate_remote_response, :class=>'delete-button'
       = link_to 'Edit', "javascript:gs.team_sports.edit_row('#{@team_sport.id}', '#{athlete.id}')"
+      -#
+        %br
+        = link_to 'Add Parent', "javascript:gs.team_sports.edit_row('#{@team_sport.id}', '#{athlete.id}')"
+      -#
+        %br
+        = link_to 'Send Email', new_messages_path(:to_id=>13) #"/messages/new?to_id=13"
+        %br
+        = link_to 'Send Text', "/messages/new_text?to_id=13"
 

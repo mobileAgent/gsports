@@ -21,7 +21,7 @@ class RosterEntriesController < BaseController
 
 
   def post
-    debugger
+    
     @roster_entry = nil
 
     saved = false
@@ -51,12 +51,18 @@ class RosterEntriesController < BaseController
 
     render :update do |page|
       if saved
+
         flashnow(page,"Roster entry was successfully updated. #{params[:skip_match_dialog].inspect}-#{@roster_entry.user_id.inspect}-#{@roster_entry.match_users().collect(&:id).inspect}")
         page.call 'gs.team_sports.sort_row', "/roster_entries/roster/#{@roster_entry.team_sport.id}?order=descending&sort=id"
+
         if params[:skip_match_dialog].nil? && @roster_entry.user_id.nil? && !@roster_entry.match_users().empty?
           page.call 'gs.team_sports.match_user', @roster_entry.id
         end
-        if @roster_entry.user_id
+
+        if @roster_entry.send_invite && @roster_entry.email && !@roster_entry.email.empty?
+          UserNotifier.deliver_roster_invite({:to=>@roster_entry, :from=>current_user})
+        
+        elsif @roster_entry.user_id
           access = AccessUser.for(@roster_entry.user, @roster_entry.access_group)
           if access.empty?
             au = AccessUser.new()
@@ -64,7 +70,9 @@ class RosterEntriesController < BaseController
             au.access_group = @roster_entry.access_group
             au.save!
           end
+
         end
+
       else
         #page.replace_html 'staff_summary', :text => 'zoom'
         flashnow(page,"Roster entry could not be updated.")
