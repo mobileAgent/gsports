@@ -113,6 +113,18 @@
   text-decoration: none;
 }
 
+.team-sport-summary .roster td div { overflow: hidden; }
+
+.team-sport-summary .roster td div.status    { width: 75px }
+.team-sport-summary .roster td div.no    { width: 50px }
+.team-sport-summary .roster td div.first { width: 100px }
+.team-sport-summary .roster td div.last  { width: 100px }
+.team-sport-summary .roster td div.email { width: 135px; }
+.team-sport-summary .roster td div.phone { width: 85px }
+.team-sport-summary .roster td div.pos   { width: 50px }
+.team-sport-summary .roster td div.actions   { width: 100px }
+
+
 .team-sport-summary .roster tr {
 }
 

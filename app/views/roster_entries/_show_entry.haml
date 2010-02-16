@@ -1,30 +1,38 @@
 -row_name = "athlete-#{athlete.id}"
 %tr{ :id=>row_name }
   %td
-    -if athlete.user
-      %img{ :src=>athlete.user.avatar_photo_url(), :width=>64, :height=>64 }
-    -else
-      %img{ :src=>'/images/pixel.gif', :width=>'64px', :height=>'64px' }
+    .status
+      -if athlete.user
+        %img{ :src=>athlete.user.avatar_photo_url(), :width=>64, :height=>64 }
+      -else
+        %img{ :src=>'/images/pixel.gif', :width=>'64px', :height=>'64px' }
   %td
-    -if athlete.number && !athlete.number.empty?
-      = "##{h athlete.number}"
-    &nbsp;
+    .no
+      -if athlete.number && !athlete.number.empty?
+        = "##{h athlete.number}"
+      &nbsp;
   %td
-    = h athlete.firstname
-    &nbsp;
+    .first
+      = h athlete.firstname
+      &nbsp;
   %td
-    = h athlete.lastname
-    &nbsp;
+    .last
+      = h athlete.lastname
+      &nbsp;
   %td
-    = h athlete.email
-    &nbsp;
+    .email
+      = h athlete.email
+      &nbsp;
   %td
-    = h athlete.phone
-    &nbsp;
+    .phone
+      = h athlete.phone
+      &nbsp;
   %td
-    = h athlete.position
-    &nbsp;
+    .pos
+      = h athlete.position
+      &nbsp;
   %td
-    = link_to_remote '', {:url => roster_entry_path(athlete), :confirm => 'Are you sure?', :method=>:delete}, :complete => evaluate_remote_response, :class=>'delete-button'
-    = link_to 'Edit', "javascript:gs.team_sports.edit_row('#{@team_sport.id}', '#{athlete.id}')"
+    .actions
+      = link_to_remote '', {:url => roster_entry_path(athlete), :confirm => 'Are you sure?', :method=>:delete}, :complete => evaluate_remote_response, :class=>'delete-button'
+      = link_to 'Edit', "javascript:gs.team_sports.edit_row('#{@team_sport.id}', '#{athlete.id}')"
 

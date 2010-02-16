@@ -446,7 +446,7 @@ div.auto_complete .mailPoster .mailPosterThumb {
   width: 55px;
 }
 div.auto_complete .mailPoster .mailPosterName {
-  /*width: 450px;*/
+  width: auto;
   padding-top: 5px;
   padding-bottom: 5px;
 }
@@ -489,8 +489,18 @@ div.auto_complete .mailPoster .mailPosterName {
   position: relative;
   text-align: left;
   border: 1px solid #888;
+  background-color: #E7E7E7;
+  padding: 3px;
   width: 380px;
+}
+.to_group_popup.auto_complete .closer {
+  padding: 5px;
+  font-weight: bold;
+  color: #000000;
+}
+.to_group_popup.auto_complete .scroller {
   height: 350px;
+  background-color: #fff;
   overflow: scroll;
   overflow-x: hidden;
 }
