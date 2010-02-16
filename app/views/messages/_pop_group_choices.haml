@@ -4,20 +4,21 @@
     %a{ :onclick=>"Element.update('dialog', '');" }
       close[x]
   .clearDiv
-  %ul
-    - if @groups && !@groups.empty?
-      - @groups.each do |group|
-        %li{ :onmouseover => "this.className='selected'", :onmouseout => "this.className=''", :onclick => "to_group_select('#{h(group.name)}')"}
-          .mailPoster
-            .mailPosterThumb
-              - sport = TeamSport.for_access_group_id(group.id).first
-              - if sport
-                =image_tag(sport.avatar_photo_url(:thumb), :alt=>"#{sport.name}", :width=>"50", :height=>"50")
-              - else
-                =image_tag(group.team.avatar_photo_url(:thumb), :alt=>"Team", :width=>"50", :height=>"50")
-            .mailPosterName
-              %br/
-              %span.autocompletename= h(group.name)
-              .mailPosterTeam
-                = "#{group.size} contacts"
-          .clearDiv
+  .scroller
+    %ul
+      - if @groups && !@groups.empty?
+        - @groups.each do |group|
+          %li{ :onmouseover => "this.className='selected'", :onmouseout => "this.className=''", :onclick => "to_group_select('#{h(group.name)}')"}
+            .mailPoster
+              .mailPosterThumb
+                - sport = TeamSport.for_access_group_id(group.id).first
+                - if sport
+                  =image_tag(sport.avatar_photo_url(:thumb), :alt=>"#{sport.name}", :width=>"50", :height=>"50")
+                - else
+                  =image_tag(group.team.avatar_photo_url(:thumb), :alt=>"Team", :width=>"50", :height=>"50")
+              .mailPosterName
+                %br/
+                %span.autocompletename= h(group.name)
+                .mailPosterTeam
+                  = "#{group.size} contacts"
+            .clearDiv
