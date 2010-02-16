@@ -80,7 +80,8 @@ class AccessGroup < ActiveRecord::Base
     group_ids = Array.new
     group_ids << AccessUser.for_user(user).collect(&:access_group_id)
     group_ids << RosterEntry.for_user(user).collect(&:access_group_id)
-    AccessGroup.find(group_ids.flatten.uniq) unless group_ids.empty?
+    group_ids = group_ids.flatten.compact.uniq
+    AccessGroup.find(group_ids) unless group_ids.empty?
   end
   
 end

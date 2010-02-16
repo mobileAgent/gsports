@@ -546,17 +546,17 @@ class MessagesController < BaseController
     end
 
     # Clean up all of the arrays... remove nulls, flatten nested arrays, and remove dupes 
-    logger.debug("**DEBUG: Before uniq, all_sent_user_ids #{all_sent_user_ids.length}: #{all_sent_user_ids.to_json}")
+    #logger.debug("**DEBUG: Before uniq, all_sent_user_ids #{all_sent_user_ids.length}: #{all_sent_user_ids.to_json}")
     all_sent_user_ids = all_sent_user_ids.flatten.compact.uniq unless all_sent_user_ids.empty?
-    logger.debug("**DEBUG: After uniq, all_sent_user_ids #{all_sent_user_ids.length}: #{all_sent_user_ids.to_json}")
+    #logger.debug("**DEBUG: After uniq, all_sent_user_ids #{all_sent_user_ids.length}: #{all_sent_user_ids.to_json}")
     
-    logger.debug("**DEBUG: Before uniq, all_sent_emails #{all_sent_emails.length}: #{all_sent_emails.to_json}")
+    #logger.debug("**DEBUG: Before uniq, all_sent_emails #{all_sent_emails.length}: #{all_sent_emails.to_json}")
     all_sent_emails = all_sent_emails.flatten.compact.uniq unless all_sent_emails.empty?
-    logger.debug("**DEBUG: After uniq, all_sent_emails #{all_sent_emails.length}: #{all_sent_emails.to_json}")
+    #logger.debug("**DEBUG: After uniq, all_sent_emails #{all_sent_emails.length}: #{all_sent_emails.to_json}")
     
-    logger.debug("**DEBUG: Before uniq, all_sent_phones #{all_sent_phones.length}: #{all_sent_phones.to_json}")
+    #logger.debug("**DEBUG: Before uniq, all_sent_phones #{all_sent_phones.length}: #{all_sent_phones.to_json}")
     all_sent_phones = all_sent_phones.flatten.compact.uniq unless all_sent_phones.empty?
-    logger.debug("**DEBUG: After uniq, all_sent_phones #{all_sent_phones.length}: #{all_sent_phones.to_json}")
+    #logger.debug("**DEBUG: After uniq, all_sent_phones #{all_sent_phones.length}: #{all_sent_phones.to_json}")
     
     unless all_sent_user_ids.empty?
       all_sent_user_ids.each do |user_id|
@@ -945,7 +945,7 @@ class MessagesController < BaseController
   def setup_new_message_session    
     # save some time keeping friend ids on the session
     friend_ids = current_user.mail_target_ids
-    session[:mail_to_user_ids] = friend_ids unless friend_ids.nil?
+    session[:mail_to_user_ids] = friend_ids unless friend_ids.nil? || friend_ids.empty?
 
     # cache coach access groups on the session
     #  - coaches can send to individual roster entries
@@ -953,13 +953,16 @@ class MessagesController < BaseController
     if team_sports && !team_sports.empty?
       team_ids = team_sports.collect(&:team_id).compact
       coach_access_groups = AccessGroup.find(:all, :conditions => ["team_id in (?) and enabled=?",team_ids,true])
-      session[:mail_to_coach_group_ids] = coach_access_groups.collect(&:id) unless coach_access_groups.nil?      
+      session[:mail_to_coach_group_ids] = coach_access_groups.collect(&:id) unless coach_access_groups.nil? || coach_access_groups.empty?
     end
     
     # cache member access groups on the session
     #   - members can send to entire group, but not individual roster entries
     member_groups = AccessGroup.for_user(current_user)
-    session[:mail_to_member_group_ids] = member_groups.collect(&:id) unless member_groups && !member_groups.empty?
+    if member_groups && !member_groups.empty?
+      ids = member_groups.collect(&:id)
+      session[:mail_to_member_group_ids] = ids unless ids.empty?
+    end
   end
   
   def send_message_to_user(sent_message, user, access_group_id=nil)
