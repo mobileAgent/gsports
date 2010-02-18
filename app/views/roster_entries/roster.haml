@@ -4,14 +4,14 @@
 
   %table{ :cellspacing=>0, :cellpadding=>0 }
     %tr
-      %th
+      %th.status
         Status
-      = gs_team_sports_sortable_table_header :name => '#',     :sort => "number"
-      = gs_team_sports_sortable_table_header :name => "First",     :sort => "firstname"
+      = gs_team_sports_sortable_table_header :name => '#',        :sort => "number"
+      = gs_team_sports_sortable_table_header :name => "First",    :sort => "firstname"
       = gs_team_sports_sortable_table_header :name => "Last",     :sort => "lastname"
-      = gs_team_sports_sortable_table_header :name => "Email",     :sort => "email"
-      = gs_team_sports_sortable_table_header :name => 'Mobile #',     :sort => "phone"
-      = gs_team_sports_sortable_table_header :name => "Position",     :sort => "position"
+      = gs_team_sports_sortable_table_header :name => "Email",    :sort => "email"
+      = gs_team_sports_sortable_table_header :name => 'Mobile #', :sort => "phone"
+      = gs_team_sports_sortable_table_header :name => "Position", :sort => "position"
       %th
         Actions
 
