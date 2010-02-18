@@ -38,9 +38,9 @@
       -#
         %br
         = link_to 'Add Parent', "javascript:gs.team_sports.edit_row('#{@team_sport.id}', '#{athlete.id}')"
-      -#
-        %br
-        = link_to 'Send Email', new_messages_path(:to_id=>13) #"/messages/new?to_id=13"
-        %br
-        = link_to 'Send Text', "/messages/new_text?to_id=13"
+
+      %br
+      = link_to 'Send Email', new_message_path(:to_roster=>athlete.id)
+      %br
+      = link_to 'Send Text', new_text_messages_path(:to_roster=>athlete.id)
 
