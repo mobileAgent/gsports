@@ -111,13 +111,6 @@ class MessagesController < BaseController
       @shared_access = SharedAccess.find(shared_access_id.to_i)
     end
 
-    unless (@shared_access || current_user.admin? || current_user.team_staff? || current_user.league_staff?)
-      if current_user.accepted_friendships.size == 0
-        flash[:info] = "You need to have some friends to send messages to!"
-        redirect_to accepted_user_friendships_path(current_user) and return
-      end
-    end
-    
     @sent_message = SentMessage.new(params[:sent_message])
     logger.debug("built message #{@sent_message.inspect} from params #{params.inspect}")
    

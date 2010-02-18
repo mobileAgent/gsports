@@ -107,16 +107,31 @@
                 %br
 
                 %h3 Messaging Settings
-                %label 
-                  = check_box :user, :suppress_notify_message_email
-                  Do not allow anyone except my coach(s) to notify me by email through
+                -#
+                  %label{:for => :suppress_notify_message_email} 
+                    = check_box :user, :suppress_notify_message_email
+                    Do not allow anyone except my coach(s) to notify me by email through
+                    = AppConfig.community_name
+                  %br
+                  %label{:for => :suppress_notify_message_sms}
+                    = check_box :user, :suppress_notify_message_sms
+                    Do not allow anyone except my coach(s) to notify me by text-message through
+                    = AppConfig.community_name
+
+                %div
+                  %em Note: Coaches may email or text-message members of their team at any time. 
+                %label{:for => :notify_message_email} 
+                  = check_box :user, :notify_message_email
+                  Allow notifications and messages delivered by email through
                   = AppConfig.community_name
                 %br
-                %label
-                  = check_box :user, :suppress_notify_message_sms
-                  Do not allow anyone except my coach(s) to notify me by text-message through
+                %label{:for => :notify_message_sms}
+                  = check_box :user, :notify_message_sms
+                  Allow notifications and messages delivered by text-message through
                   = AppConfig.community_name
 
+                %div
+                  ="Notify email: #{@user.notify_message_email}, suppress: #{@user.suppress_notify_message_email}"
 
               %td{ :valign=>'top' }
                 %h3 Password

@@ -32,6 +32,7 @@ class SentMessage < ActiveRecord::Base
     sms_notify
   end
   
+  # deprecated. Use ApplicationHelper.human_date(_time) with timezone option
   def sent_on_display(format = "%Y/%m/%d ")
    created_at.strftime(format)
   end

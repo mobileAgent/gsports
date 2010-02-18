@@ -632,19 +632,20 @@ class User < ActiveRecord::Base
   end
   
   def suppress_notify_message_email()
-    !notify_message_email
+    !self.notify_message_email
   end
 
   def suppress_notify_message_email= (v)
-    notify_message_email = !v
+    logger.debug("Setting suppress_notify_message_email #{v}")
+    self.notify_message_email = !v
   end
 
   def suppress_notify_message_sms()
-    !notify_message_sms
+    !self.notify_message_sms
   end
 
   def suppress_notify_message_sms= (v)
-    notify_message_sms = !v
+    self.notify_message_sms = !v
   end
   
   def current_membership
