@@ -237,8 +237,8 @@ class MessagesController < BaseController
       # add the original sender
       unless @message_thread.from_id == current_user.id
         # remove this "from_user" from the list of recipients
-        recipient_ids = recipient_ids.delete_if {|id| id == current_user.id} unless recipient_ids.empty?
-        recipient_roster_entries = recipient_roster_entries.delete_if {|roster| roster.user_id == current_user.id } unless recipient_roster_entries.empty?
+        recipient_ids = recipient_ids.reject {|id| id == current_user.id} unless recipient_ids.empty?
+        recipient_roster_entries = recipient_roster_entries.reject {|roster| roster.user_id == current_user.id } unless recipient_roster_entries.empty?
         
         # add the original thread sender to the start of the list
         recipient_ids << @message_thread.from_id 
@@ -490,7 +490,7 @@ class MessagesController < BaseController
         if roster_entry.user_id && roster_entry.user_id > 0
           # user referenced in a roster supercedes user in recipient list,
           # so remove it if its there 
-          all_sent_user_ids.delete_if!{|id| id == roster_entry.user_id}
+          all_sent_user_ids = all_sent_user_ids.reject{|id| id == roster_entry.user_id}
           
           user = User.find(roster_entry.user_id)
           logger.debug("Delivering message roster entry (#{roster_entry.id} in group #{roster_entry.access_group_id}) recipient user id: #{user.id} #{user.full_name}")
