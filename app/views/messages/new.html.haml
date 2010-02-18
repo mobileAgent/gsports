@@ -38,7 +38,12 @@
                 %div{:style => "border: 1px solid #000000;"}
                   %div{:style => "border-bottom: 1px solid #000000; padding: 3px; background-color: #cccccc; font-size: 10px; font-style: italic" }
                     %div{:style => "float:left; width:450px"}
-                      = "You can type names, #{has_groups ? 'group names,' : ''} email addresses, or text/phone numbers below. Separate multiple recipients with commas."
+                      You can type names,
+                      - if has_groups 
+                        group names,
+                      - unless sms 
+                        email addresses,
+                      or text/phone numbers below. Separate multiple recipients with commas.
                     %div{:style => "float:right"}
                       - if has_groups
                         %script
