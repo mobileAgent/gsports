@@ -12,9 +12,9 @@
   %br
 
   - form_for(Message.new) do |f|  #, :url=>{ :controller=>'reports', :action=>'publish'}
-
     = hidden_field :report, :id, :value=>@report.id
-    = f.hidden_field :title, :value=>@report.name
+    - fields_for MessageThread.new() do |thread_f|
+      = thread_f.hidden_field :title, :value=>@report.name
 
     - access_groups = AccessGroup.for_team(current_user.team)
     - if access_groups.size > 0
@@ -30,11 +30,26 @@
       Message
     %p
       - message = "Please visit the report #{@report.name}.\n\n  #{report_url(@report)}\n\n#{current_user.full_name}"
-      = f.text_area(:body, :rows => 10, :style => 'width:80%;', :value=>message)
+      - fields_for SentMessage.new() do |sent_f|
+        = sent_f.text_area(:body, :rows => 10, :style => 'width:80%;', :value=>message)
 
     %br
     %p{ :style=>'float:right' }
       = submit_tag "Publish"
 
     .clearDiv
-    
+
+
+-#  {
+-#    "sent_message"=>{
+-#      "body"=>"<p>meow</p>",
+-#      "sms_notify"=>"0"
+-#    },
+-#    "x"=>"63",
+-#    "y"=>"11", "action"=>"create",
+-#    "authenticity_token"=>"a3dfe1ac1f14efee7135ccde50aa3ffe0b7ae8f5",
+-#    "controller"=>"messages",
+-#    "message_thread"=>{
+-#      "title"=>"test", "is_sms"=>"", "id"=>"", "to"=>"mzimu ndugu, "
+-#    }
+-#  }
