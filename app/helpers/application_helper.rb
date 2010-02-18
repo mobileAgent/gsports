@@ -21,18 +21,22 @@ module ApplicationHelper
     page.select("#flash_#{level}").first.show
   end
 
-  def game_date(dtm)
+  def game_date(dtm, tz=TimeZone.new('Eastern Time (US & Canada)'))
     return '' if dtm.nil?
-    return dtm.to_s(:game_date)
+    return dtm.in_time_zone(tz).to_s(:game_date)
   end
   
-  def human_date(dtm)
+  def human_date(dtm, tz=TimeZone.new('Eastern Time (US & Canada)'))
     return '' if dtm.nil?
-    return dtm.to_s(:readable)
+    return dtm.in_time_zone(tz).to_s(:readable)
   end
 
-  def human_date_time(dtm)
+  def human_date_time(dtm, tz=TimeZone.new('Eastern Time (US & Canada)'))
     return '' if dtm.nil?
+    
+    # Temporarily forces use of EST/EDT always
+    dtm = dtm.in_time_zone(tz)
+
     case Date.today - dtm.to_date
     when 1 
       day = "Yesterday"
@@ -44,7 +48,7 @@ module ApplicationHelper
       day = dtm.strftime("%B %e, %Y")
     end
 
-    day + " at " + dtm.strftime("%I:%M %p")
+    day + " at " + dtm.strftime("%I:%M %p %Z")
   end
     
   class Pair

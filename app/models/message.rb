@@ -50,7 +50,8 @@ class Message < ActiveRecord::Base
       end
     end
   end
-  
+
+  # deprecated. Use ApplicationHelper.human_date(_time) with timezone option
   def sent_on_display(format = "%Y/%m/%d")
      created_at.strftime(format)
   end

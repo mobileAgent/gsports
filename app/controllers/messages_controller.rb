@@ -111,13 +111,6 @@ class MessagesController < BaseController
       @shared_access = SharedAccess.find(shared_access_id.to_i)
     end
 
-    unless (@shared_access || current_user.admin? || current_user.team_staff? || current_user.league_staff?)
-      if current_user.accepted_friendships.size == 0
-        flash[:info] = "You need to have some friends to send messages to!"
-        redirect_to accepted_user_friendships_path(current_user) and return
-      end
-    end
-    
     @sent_message = SentMessage.new(params[:sent_message])
     logger.debug("built message #{@sent_message.inspect} from params #{params.inspect}")
    
@@ -149,19 +142,48 @@ class MessagesController < BaseController
       end
       
       # list of available groups prepared by setup_new_message_session
-      if params[:to_group] && session[:mail_to_coach_group_ids] 
+      if params[:to_group] && (session[:mail_to_coach_group_ids] || session[:mail_to_member_group_ids]) 
         group_ids = Array.new
         group_params = Utilities::csv_split(params[:to_group])
         group_params.each do |param|
-          matched = session[:mail_to_coach_group_ids].select {|group_id| group_id == param.to_i}
-          if matched && !matched.empty?
-            group_ids << matched
+          if session[:mail_to_coach_group_ids]
+            matched = session[:mail_to_coach_group_ids].select {|group_id| group_id == param.to_i}
+            if matched && !matched.empty?
+              group_ids << matched
+              next
+            end
+          end
+          if session[:mail_to_member_group_ids]
+            matched = session[:mail_to_member_group_ids].select {|group_id| group_id == param.to_i}
+            if matched && !matched.empty?
+              group_ids << matched
+              next
+            end
           end
         end
         unless group_ids.empty?
-          @message_thread.to_access_group_ids_array= group_ids.flatten
+          @message_thread.to_access_group_ids_array= group_ids.flatten.compact.uniq
         end
       end
+
+      # list of available groups prepared by setup_new_message_session
+      if params[:to_roster] && session[:mail_to_coach_group_ids] 
+        roster_ids = Array.new
+        roster_params = Utilities::csv_split(params[:to_roster])
+        roster_params.each do |param|
+          # look up the roster entry record
+          roster_entry = RosterEntry.find(param.to_i)
+          # make sure this roster entry is associated with one of this coach's groups
+          if session[:mail_to_coach_group_ids].include?(roster_entry.access_group_id)
+            roster_ids << roster_entry.id
+            next
+          end
+        end
+        unless roster_ids.empty?
+          @message_thread.to_roster_entry_ids_array= roster_ids.flatten.compact.uniq
+        end
+      end
+
     end
 
     if @message_thread && @message_thread.id
@@ -238,8 +260,8 @@ class MessagesController < BaseController
       # add the original sender
       unless @message_thread.from_id == current_user.id
         # remove this "from_user" from the list of recipients
-        recipient_ids = recipient_ids.delete_if {|id| id == current_user.id} unless recipient_ids.empty?
-        recipient_roster_entries = recipient_roster_entries.delete_if {|roster| roster.user_id == current_user.id } unless recipient_roster_entries.empty?
+        recipient_ids = recipient_ids.reject {|id| id == current_user.id} unless recipient_ids.empty?
+        recipient_roster_entries = recipient_roster_entries.reject {|roster| roster.user_id == current_user.id } unless recipient_roster_entries.empty?
         
         # add the original thread sender to the start of the list
         recipient_ids << @message_thread.from_id 
@@ -491,7 +513,7 @@ class MessagesController < BaseController
         if roster_entry.user_id && roster_entry.user_id > 0
           # user referenced in a roster supercedes user in recipient list,
           # so remove it if its there 
-          all_sent_user_ids.delete_if!{|id| id == roster_entry.user_id}
+          all_sent_user_ids = all_sent_user_ids.reject{|id| id == roster_entry.user_id}
           
           user = User.find(roster_entry.user_id)
           logger.debug("Delivering message roster entry (#{roster_entry.id} in group #{roster_entry.access_group_id}) recipient user id: #{user.id} #{user.full_name}")
@@ -722,8 +744,8 @@ class MessagesController < BaseController
         thread = MessageThread.find(id)
         thread.messages.for_user(current_user.id).each do |msg|
           next if msg.read==0
-          message.read=0;
-          message.save!
+          msg.read=0;
+          msg.save!
           c+=1
         end
       end
