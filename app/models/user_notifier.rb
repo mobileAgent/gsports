@@ -168,6 +168,7 @@ debugger
   def generic(email, subject, message, options={})
     o_html = options[:html]
     o_from = options[:from]
+    o_reply_to = options[:reply_to]
     
     setup_sender_info
     content_type (o_html ? "text/html" : "text/plain")
@@ -177,17 +178,32 @@ debugger
     @body[:message] = message
 
     if o_from
+      @from = o_from
       @reply_to = o_from
+    end
+    if o_reply_to
+      @reply_to = o_reply_to
     end
   end
 
   def generic_html(email, subject, message)
+    o_from = options[:from]
+    o_reply_to = options[:reply_to]
+    
     content_type "text/html"
     setup_sender_info
     @recipients  = "#{email}"
     @subject     = "#{subject}"
     @sent_on     = Time.now
     @body[:message] = message
+
+    if o_from
+      @from = o_from
+      @reply_to = o_from
+    end
+    if o_reply_to
+      @reply_to = o_reply_to
+    end
   end
   
   protected

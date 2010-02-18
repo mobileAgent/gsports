@@ -38,7 +38,12 @@
                 %div{:style => "border: 1px solid #000000;"}
                   %div{:style => "border-bottom: 1px solid #000000; padding: 3px; background-color: #cccccc; font-size: 10px; font-style: italic" }
                     %div{:style => "float:left; width:450px"}
-                      = "You can type names, #{has_groups ? 'group names,' : ''} email addresses, or text/phone numbers below. Separate multiple recipients with commas."
+                      You can type names,
+                      - if has_groups 
+                        group names,
+                      - unless sms 
+                        email addresses,
+                      or text/phone numbers below. Separate multiple recipients with commas.
                     %div{:style => "float:right"}
                       - if has_groups
                         %script
@@ -106,9 +111,9 @@
                       %label Your Message:
                     %br/
                     - if sms
-                      = sent_f.text_area :body, :id => 'replybox', :rows => 6, :style => 'width:100%', :class => 'mceNoEditor', :onkeypress => "var max=160;var t = $('replybox'); if(t.value.length >= max) { t.value = t.value.substring(0,max); }"
+                      = sent_f.text_area :body, :id => 'replybox', :rows => 6, :cols => 60, :style => 'width:530px;border:solid 1px black', :class => 'mceNoEditor', :onkeypress => "var max=160;var t = $('replybox'); if(t.value.length >= max) { t.value = t.value.substring(0,max); }"
                     - else
-                      = sent_f.text_area :body, :id => 'replybox', :rows => 10, :style => 'width:100%'
+                      = sent_f.text_area :body, :id => 'replybox', :rows => 10, :cols => 60, :style => 'width:530px;border:solid 1px black'
 
                     -if sms
                       %br/
@@ -120,7 +125,7 @@
                     -if @shared_access
                       = sent_f.hidden_field :shared_access_id
                       =render :partial => 'messages/shared_item', :locals => {:body => nil}
-                .clearDiv
+                  .clearDiv
               .clearDiv
             .mailDetailBottom
 
