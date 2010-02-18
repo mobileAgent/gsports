@@ -149,19 +149,48 @@ class MessagesController < BaseController
       end
       
       # list of available groups prepared by setup_new_message_session
-      if params[:to_group] && session[:mail_to_coach_group_ids] 
+      if params[:to_group] && (session[:mail_to_coach_group_ids] || session[:mail_to_member_group_ids]) 
         group_ids = Array.new
         group_params = Utilities::csv_split(params[:to_group])
         group_params.each do |param|
-          matched = session[:mail_to_coach_group_ids].select {|group_id| group_id == param.to_i}
-          if matched && !matched.empty?
-            group_ids << matched
+          if session[:mail_to_coach_group_ids]
+            matched = session[:mail_to_coach_group_ids].select {|group_id| group_id == param.to_i}
+            if matched && !matched.empty?
+              group_ids << matched
+              next
+            end
+          end
+          if session[:mail_to_member_group_ids]
+            matched = session[:mail_to_member_group_ids].select {|group_id| group_id == param.to_i}
+            if matched && !matched.empty?
+              group_ids << matched
+              next
+            end
           end
         end
         unless group_ids.empty?
-          @message_thread.to_access_group_ids_array= group_ids.flatten
+          @message_thread.to_access_group_ids_array= group_ids.flatten.compact.uniq
         end
       end
+
+      # list of available groups prepared by setup_new_message_session
+      if params[:to_roster] && session[:mail_to_coach_group_ids] 
+        roster_ids = Array.new
+        roster_params = Utilities::csv_split(params[:to_roster])
+        roster_params.each do |param|
+          # look up the roster entry record
+          roster_entry = RosterEntry.find(param.to_i)
+          # make sure this roster entry is associated with one of this coach's groups
+          if session[:mail_to_coach_group_ids].include?(roster_entry.access_group_id)
+            roster_ids << roster_entry.id
+            next
+          end
+        end
+        unless roster_ids.empty?
+          @message_thread.to_roster_entry_ids_array= roster_ids.flatten.compact.uniq
+        end
+      end
+
     end
 
     if @message_thread && @message_thread.id
@@ -722,8 +751,8 @@ class MessagesController < BaseController
         thread = MessageThread.find(id)
         thread.messages.for_user(current_user.id).each do |msg|
           next if msg.read==0
-          message.read=0;
-          message.save!
+          msg.read=0;
+          msg.save!
           c+=1
         end
       end
