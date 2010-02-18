@@ -393,7 +393,7 @@
 }
 .mailDetailContent {
   width:545px;
-  padding: 10px 0px 0px 20px;
+  padding: 10px 0px 0px 10px;
   float:left;
 }
 .mailDetailContent .mailDetailDate {
