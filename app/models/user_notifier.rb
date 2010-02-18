@@ -107,7 +107,6 @@ class UserNotifier < ActionMailer::Base
   end
 
   def roster_invite(options = {})
-debugger
     @roster_entry  = options[:to]
     @coach         = options[:from]
 
@@ -120,7 +119,7 @@ debugger
     @body[:roster_entry] = @roster_entry
     @body[:coach] = @coach
 
-    @body[:url]  = "#{APP_URL}"
+    @body[:url]  = "#{APP_URL}/?roster_invite_key=#{@roster_entry.reg_key}"
   end
   
   def reset_password(user)

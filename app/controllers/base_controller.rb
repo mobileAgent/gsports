@@ -178,6 +178,7 @@ class BaseController < ApplicationController
   end
   
   # store promo codes from affiliates
+  # and roster invitations
   def detect_promo
     if params[:promocode]
       @promocode = params[:promocode]
@@ -186,6 +187,10 @@ class BaseController < ApplicationController
         @promoteam = params[:promoteam]
         cookies[:promoteam] = { :value => @promoteam, :expires => 30.days.from_now } 
       end
+    end
+    if params[:roster_invite_key]
+      @roster_invite_key = params[:roster_invite_key]
+      cookies[:roster_invite_key] = { :value => @roster_invite_key, :expires => 30.days.from_now }
     end
   end
 

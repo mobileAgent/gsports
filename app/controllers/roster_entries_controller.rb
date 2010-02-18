@@ -58,9 +58,11 @@ class RosterEntriesController < BaseController
           page.call 'gs.team_sports.match_user', @roster_entry.id
         end
 
-        if @roster_entry.send_invite && @roster_entry.email && !@roster_entry.email.empty?
+        if !@roster_entry.user_id && @roster_entry.send_invite && @roster_entry.email && !@roster_entry.email.empty?
+          @roster_entry.share()
+          @roster_entry.save()
           UserNotifier.deliver_roster_invite({:to=>@roster_entry, :from=>current_user})
-        
+          
         elsif @roster_entry.user_id
           access = AccessUser.for(@roster_entry.user, @roster_entry.access_group)
           if access.empty?
