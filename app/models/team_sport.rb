@@ -5,7 +5,7 @@ class TeamSport < ActiveRecord::Base
   belongs_to :staff_access_group, :class_name => 'AccessGroup'
   belongs_to :avatar, :class_name => "Photo", :foreign_key => "avatar_id"
 
-  #before_save :check_access_group
+  before_save :check_access_group
 
   #TODO create access group on save if nil
 
@@ -51,8 +51,18 @@ class TeamSport < ActiveRecord::Base
 
   end
 
+  def check_access_group
+    if self.access_group && self.name != self.access_group.name
+      self.access_group.name = self.name
+      self.access_group.save
+      if self.staff_access_group
+        self.staff_access_group.name = "#{self.name} Staff"
+        self.staff_access_group.save
+      end
+    end
+  end
 
-
+  
   def avatar_photo_url(size = nil)
     if avatar
       avatar.public_filename(size)
