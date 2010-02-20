@@ -517,7 +517,7 @@ class MessagesController < BaseController
           
           user = User.find(roster_entry.user_id)
           logger.debug("Delivering message roster entry (#{roster_entry.id} in group #{roster_entry.access_group_id}) recipient user id: #{user.id} #{user.full_name}")
-          send_message_to_user(@sent_message, user, roster_entry.access_group_id)
+          send_message_to_user(@sent_message, user)#, roster_entry.access_group_id)
         
           # If this is a text message... send the text
           if @message_thread.is_sms?
