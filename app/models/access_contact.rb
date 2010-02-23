@@ -6,7 +6,7 @@ class AccessContact < ActiveRecord::Base
   Type_SMS    = 'T'
 
   # http://www.mutube.com/projects/open-email-to-sms/gateway-list/
-  SMS_Gateway_Domains = ['@teleflip.com','@message.alltel.com','@paging.acswireless.com','@txt.att.net','@bellsouth.cl','@myboostmobile.com','@mms.uscc.net','@sms.edgewireless.com','@messaging.sprintpcs.com','@tmomail.net','@mymetropcs.com','@messaging.nextel.com','@mobile.celloneusa.com','@qwestmp.com','@pcs.rogers.com','@msg.telus.com','@email.uscc.net','@vtext.com','@vmobl.com']
+  SMS_Gateway_Domains = ['@teleflip.com','@message.alltel.com','@paging.acswireless.com','@txt.att.net','@bellsouth.cl','@myboostmobile.com','@mms.uscc.net','@sms.edgewireless.com','@messaging.sprintpcs.com','@tmomail.net','@mymetropcs.com','@messaging.nextel.com','@mobile.celloneusa.com','@qwestmp.com','@pcs.rogers.com','@msg.telus.com','@vtext.com','@vmobl.com']
 
   def contact_type_s()
     case contact_type
