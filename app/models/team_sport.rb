@@ -13,6 +13,8 @@ class TeamSport < ActiveRecord::Base
 
   named_scope :for_access_group_id, lambda { |p_access_group_id| {:conditions=>{:access_group_id => p_access_group_id}}  }
 
+  named_scope :for_team, lambda { |team| { :conditions=>{:team_id=>team.id}} }
+
 
   def setup_access_groups(user)
 

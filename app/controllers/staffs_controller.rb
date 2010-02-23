@@ -13,6 +13,12 @@ class StaffsController < BaseController
   def index
     @staffs = @scope ? @scope.staff() : []  #get_managed_users(@current_user, params)
 
+    TeamSport.for_team(@scope).each() do |team_sport|
+      @staffs += User.third_party_staff(team_sport)
+    end
+
+    @staffs.uniq!
+    
     respond_to do |format|
       format.html # index.haml
       format.xml  { render :xml => @staffs }
@@ -195,37 +201,38 @@ class StaffsController < BaseController
 
     trash = @staff.user.scopes_for(Permission::COACH)
 
-    sports.each_pair() do |key, value|
-      next if value.empty?
-      
-      m= key.match(Coach_Sport_RE)
-      if m
-        if value == "-1"
-          suffix = m[1]
-          value = sports["sporttext-"+suffix]
-        end
+    if sports
+      sports.each_pair() do |key, value|
+        next if value.empty?
 
-        team_sport = TeamSport.for(@scope, value).first
-
-        if trash.index(team_sport)
-          #have it
-          trash.delete(team_sport)
-        else
-          #need it
-          if !team_sport
-            team_sport = TeamSport.new()
-            team_sport.team = @scope
-            team_sport.name = value
+        m= key.match(Coach_Sport_RE)
+        if m
+          if value == "-1"
+            suffix = m[1]
+            value = sports["sporttext-"+suffix]
           end
 
-          team_sport.setup_access_groups(@staff.user)
+          team_sport = TeamSport.for(@scope, value).first
 
-          team_sport.save!
+          if trash.index(team_sport)
+            #have it
+            trash.delete(team_sport)
+          else
+            #need it
+            if !team_sport
+              team_sport = TeamSport.new()
+              team_sport.team = @scope
+              team_sport.name = value
+            end
 
-          Permission.grant(staff.user, Permission::COACH, team_sport)
+            team_sport.setup_access_groups(@staff.user)
+
+            team_sport.save!
+
+            Permission.grant(staff.user, Permission::COACH, team_sport)
+          end
         end
       end
-
     end
 
     trash.each() do |scope|
