@@ -134,10 +134,12 @@ class UsersController < BaseController
 
     if cookies[:roster_invite_key]
       @roster_entry = RosterEntry.for_invite_key(cookies[:roster_invite_key]).first
-      @user.firstname = @roster_entry.firstname
-      @user.lastname  = @roster_entry.lastname
-      @user.phone     = @roster_entry.phone
-      @user.email     = @roster_entry.email
+      if @roster_entry
+        @user.firstname = @roster_entry.firstname
+        @user.lastname  = @roster_entry.lastname
+        @user.phone     = @roster_entry.phone
+        @user.email     = @roster_entry.email
+      end
     end
 
     
@@ -488,10 +490,12 @@ class UsersController < BaseController
     if cookies[:roster_invite_key]
       @roster_entry = RosterEntry.for_invite_key(cookies[:roster_invite_key]).first
       #if @user.lastname == @roster_entry.lastname
+      if @roster_entry 
         @roster_entry.reg_key = nil
         @roster_entry.user = @user
         @roster_entry.save()
-      #end
+        cookies.delete :roster_invite_key
+      end
     end
 
     begin
