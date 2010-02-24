@@ -30,6 +30,16 @@
   padding-top: 8px;
 }
 
+
+.team-sport-summary .dock h1{
+  font-size: 182%;
+}
+
+.team-sport-summary .dock h1 a{
+
+}
+
+
 .team-sport-summary .messager {
   float: right;
   margin: 8px 8px 0 0;
