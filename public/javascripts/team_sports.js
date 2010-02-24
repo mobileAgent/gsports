@@ -91,3 +91,9 @@
         href:'/roster_entries/match/'+id
     }).show()
   }
+
+  gs.team_sports.button_off = function(label) {
+      button = $('roster_entry_submit')
+      button.value= label
+      button.disabled = true;
+  }

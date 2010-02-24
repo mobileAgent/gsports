@@ -20,4 +20,6 @@
   %td
     = f.text_field :position, :size=>8
   %td
-    = f.submit (editing ? 'Save' : 'Add')
+    - label = (editing ? 'Save' : 'Add')
+    - label2 = (editing ? 'Saving...' : 'Adding...')
+    = f.submit label, :onclick=>"javascript:gs.team_sports.button_off('#{label2}')" # :disable_with => "#{label}ing..."
