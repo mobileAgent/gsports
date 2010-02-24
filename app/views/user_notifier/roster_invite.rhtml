@@ -1,8 +1,43 @@
-Hi <%= @roster_entry.full_name %>,
+<html>
+<head>
+	<title><%= AppConfig.community_name %> - <%= @coach.full_name %> invited you to join their roster!</title>
+	<style>
+		<!--
+		p {
+			font-family: Arial, Helvetica, sans-serif;
+			font-size: 12px;
+			color: #000;
+			}
+		a:link, a:visited, a:active {
+			color: #03C;
+			}
+		div.container {
+			padding: 10px;
+			font-family: Arial, Helvetica, sans-serif;
+			font-size: 12px;
+			background-color: #FFF;
+			}
+		-->
+	</style>
+</head>
 
-* You have been invited to join your team roster on <%= AppConfig.community_name %>!
+<body>
+<div class="container">
 
-  <%= @url %>
+  <p>
+    Hi <%= @roster_entry.full_name %>,
+  </p>
 
-Thanks,
-<%= @coach.full_name %> and The <%= AppConfig.community_name %> Team
+  <p>
+  You have been invited to join your team roster on <%= AppConfig.community_name %>! Use this link to sign up for your own <%= AppConfig.community_name %> account: <a href="<%= @url %>">Sign up!</a>
+  </p>
+
+  <p>
+  Thanks,<br>
+  &nbsp;<%= @coach.full_name %> and The <%= AppConfig.community_name %> Team
+  </p>
+
+</div>
+
+</body>
+</html>

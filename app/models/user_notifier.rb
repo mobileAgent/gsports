@@ -112,6 +112,8 @@ class UserNotifier < ActionMailer::Base
 
     setup_sender_info
     
+    content_type "text/html"
+    
     @recipients  = "#{@roster_entry.email}"
     @subject     = "#{AppConfig.community_name} invitation"
     @sent_on     = Time.now
