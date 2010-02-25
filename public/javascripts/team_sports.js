@@ -96,4 +96,5 @@
       button = $('roster_entry_submit')
       button.value= label
       button.disabled = true;
+      return true;
   }

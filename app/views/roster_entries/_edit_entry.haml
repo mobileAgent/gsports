@@ -22,4 +22,5 @@
   %td
     - label = (editing ? 'Save' : 'Add')
     - label2 = (editing ? 'Saving...' : 'Adding...')
-    = f.submit label, :onclick=>"javascript:gs.team_sports.button_off('#{label2}')" # :disable_with => "#{label}ing..."
+    = f.submit label #, :disable_with => label2
+    -#:onclick=>"javascript:gs.team_sports.button_off('#{label2}')" 
