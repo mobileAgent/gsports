@@ -40,7 +40,7 @@ class VideoAssetsController < BaseController
     
     # Only admin, league and team staff have video_assets
     # If user isn't one of those, redirect to video_clips
-    if(!current_user.admin? && !current_user.team_staff? && !current_user.league_staff?)
+    if(!current_user.can_upload? && !current_user.admin? && !current_user.team_staff? && !current_user.league_staff?)
       redirect_to user_video_clips_path(@user) and return
     end
 
