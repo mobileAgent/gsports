@@ -30,6 +30,7 @@
               %th.padded.sortableContentHeader= "Access Controlled"
 
           %tbody
+            - @access_groups ||= []
             - for grp in @access_groups
               %tr.leagueList
                 %td.leagueList{ :valign=>'top'}= link_to grp.name, edit_access_group_path(grp, :scope_select=>scope_select), {:title => "edit"}
@@ -38,7 +39,7 @@
                   -#=link_to grp.users.size, users_access_group_path(grp)
                   - for access_user in grp.access_users #[0,9]
                     %div{ :id=>"access_user_#{access_user.id}" }
-                      = access_user.user.full_name
+                      = access_user.user.full_name rescue '-'
                       [
                       = link_to_remote 'X', {:url => {:controller=>:access_groups, :action=>:remove_user, :id=>access_user.id}, :confirm => 'Are you sure?', :method=>:delete}, :complete => evaluate_remote_response
                       ]
@@ -74,6 +75,7 @@
                         [
                         = link_to_remote 'X', {:url => {:controller=>:access_groups, :action=>:remove_video, :id=>access_item.id}, :confirm => 'Are you sure?', :method=>:delete}, :complete => evaluate_remote_response
                         ]
-        .apple_pagination
-          = will_paginate @access_groups
+        - if @access_groups.respond_to?('total_pages')
+          .apple_pagination
+            = will_paginate @access_groups
 
