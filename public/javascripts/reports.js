@@ -221,6 +221,37 @@
     img.setStyle('border: 1px solid black')
   }
 
+  function gs_reports_edit_inplace(editor_id) {
+    inplace = $(editor_id);
+    status = inplace.readAttribute('status');
+    
+    switch(status){
+      case 'v':
+        inplace.writeAttribute('status', 'x');
+        inplace.select('.target')[0].hide();
+        inplace.select('.editor')[0].show();
+        break;
+      case 'x':
+        inplace.writeAttribute('status', 'v');
+        inplace.select('.target')[0].show();
+        inplace.select('.editor')[0].hide();
+        break;
+     }
+
+     
+  }
+
+
+
+
+
+
+
+
+
+
+
+
 
   function TafelTreeInit () {
     tree = new TafelTree('tree-view', tree_struct, {

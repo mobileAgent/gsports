@@ -1,0 +1,25 @@
+-
+-# model ||= <required>
+-# attr ||= <required>
+-# klass ||= <optional>
+-
+- editor_id = "#{model.class}_#{attr}_editor"
+- #css_class = "target #{css_class}"
+- value = model.attributes()['name'] rescue '-'
+-
+- 
+-
+.inplace-edit{ :id=>editor_id, :status=>'v' }
+  .target{ :class=>css_class }
+    = value
+  .editor{ :style=>'display:none' }
+    %form{ :id=>"#{editor_id}_form" }
+      %input{ :type=>'text', :value=>value, :size=>6 }
+    -#= form_for(model) do |f|
+      = f.text_field attr
+      = f.submit :value=>'Save'
+  %a.edit-button{ :href=>"javascript:gs_reports_edit_inplace('#{editor_id}');" }= ""
+
+
+
+  
