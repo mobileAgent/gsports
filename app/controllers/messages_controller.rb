@@ -834,13 +834,13 @@ class MessagesController < BaseController
           ln = fn
         end
 
-        @users = User.find(:all, 
+        @friends = User.find(:all, 
             :conditions => ["id in (?) and (lower(firstname) like ? or lower(lastname) like ?) and enabled = ?",friend_ids,fn,ln,true], 
             :order => "lower(firstname) asc, lower(lastname) asc", 
             :limit => 5) unless friend_ids.nil? || friend_ids.empty?
 
         # update the suggestion count
-        suggestion_count += @users.length unless @users.nil?
+        suggestion_count += @friends.length unless @friends.nil?
 
         if suggestion_count < max_suggestions
           logger.debug ("Found #{suggestion_count} friends, looking for roster entries next")
@@ -856,10 +856,10 @@ class MessagesController < BaseController
               # put roster entries first in the @users list
               roster_users = @roster_entries.collect{|r| r.user}.compact
               if roster_users && !roster_users.empty?
-                if @users
-                  @users = @users | roster_users
+                if @friends
+                  @friends = @friends | roster_users
                 else
-                  @users = roster_users
+                  @friends = roster_users
                 end
                 
                 # remove the @roster entries that have user_ids
@@ -869,24 +869,22 @@ class MessagesController < BaseController
           end
           
           # update the suggestion count
+          suggestion_count = 0
+          suggestion_count += @friends.length unless @friends.nil?
           suggestion_count += @roster_entries.length unless @roster_entries.nil?
         
           if suggestion_count < max_suggestions
             logger.debug ("Found #{suggestion_count} friends && roster entries, searching all users")
 
-            all_users = User.find(:all, 
+            @users = User.find(:all, 
                 :conditions => ["(lower(firstname) like ? or lower(lastname) like ?) and enabled = ?",fn,ln,true], 
                 :order => "lower(firstname) asc, lower(lastname) asc", 
                 :limit => 5)
-            
-            if all_users && !all_users.empty?
-              prev_len = @users ? @users.length : 0
-              if @users
-                @users = @users | all_users
-              else
-                @users = all_users
+            if @users
+              if @friends
+                @users = @users - @friends
               end
-              suggestion_count += (@users.length - prev_len)
+              suggestion_count += @users.length if @users
             end
           end
         end
