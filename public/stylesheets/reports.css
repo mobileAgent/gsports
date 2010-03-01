@@ -379,6 +379,17 @@ a.new-report-button:hover
   float: left;
 }
 
+.inplace-edit .editor {
+  display: block;
+  float: left;
+}
+
+.inplace-edit input[type='submit'] {
+  padding: 3px;
+  margin: 0px;
+  margin-right: 3px;
+}
+
 .inplace-edit .target {
   display: block;
   float: left;
