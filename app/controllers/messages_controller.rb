@@ -823,11 +823,74 @@ class MessagesController < BaseController
       # Expect cached groups that user is a member of on the session (from 'new' action'
       member_access_group_ids = session[:mail_to_member_group_ids]
       
-      # the order by "(id in (<friend_list>)) desc" clause puts friends at the top of the list
-      @users = User.find(:all, 
-          :conditions => ["(LOWER(firstname) like ? or LOWER(lastname) like ?) and enabled = ?",search_name_sql,search_name_sql,true], 
-          :order => "(id in (#{friend_ids && !friend_ids.empty? ? friend_ids.join(',') : '0'})) desc, lower(lastname) asc, lower(firstname) asc", 
-          :limit => 5)
+      # only look up users by first/last name if there is no number or @ in the entered value
+      unless search_name.match(/[\d@]/)
+        names = search_name.split(' ')
+        if names.length > 1
+          fn = names[0] + '%'
+          ln = names[1] + '%'
+        else
+          fn = search_name + '%'
+          ln = fn
+        end
+
+        @users = User.find(:all, 
+            :conditions => ["id in (?) and (lower(firstname) like ? or lower(lastname) like ?) and enabled = ?",friend_ids,fn,ln,true], 
+            :order => "lower(firstname) asc, lower(lastname) asc", 
+            :limit => 5) unless friend_ids.nil? || friend_ids.empty?
+
+        # update the suggestion count
+        suggestion_count += @users.length unless @users.nil?
+
+        if suggestion_count < max_suggestions
+          logger.debug ("Found #{suggestion_count} friends, looking for roster entries next")
+  
+          if coach_access_group_ids && !coach_access_group_ids.empty?
+            @roster_entries = RosterEntry.find(:all, 
+                :conditions => ["access_group_id in (?) and (lower(firstname) like ? or lower(lastname) like ?)", 
+                                coach_access_group_ids, fn, ln],
+                :order => "lower(firstname) asc, lower(lastname) asc", :limit => 5)
+            
+            # pull users out of roster entries, leaving only non-registered addresses
+            if @roster_entries
+              # put roster entries first in the @users list
+              roster_users = @roster_entries.collect{|r| r.user}.compact
+              if roster_users && !roster_users.empty?
+                if @users
+                  @users = @users | roster_users
+                else
+                  @users = roster_users
+                end
+                
+                # remove the @roster entries that have user_ids
+                @roster_entries = @roster_entries.select {|r| r.user_id.nil?}
+              end
+            end
+          end
+          
+          # update the suggestion count
+          suggestion_count += @roster_entries.length unless @roster_entries.nil?
+        
+          if suggestion_count < max_suggestions
+            logger.debug ("Found #{suggestion_count} friends && roster entries, searching all users")
+
+            all_users = User.find(:all, 
+                :conditions => ["(lower(firstname) like ? or lower(lastname) like ?) and enabled = ?",fn,ln,true], 
+                :order => "lower(firstname) asc, lower(lastname) asc", 
+                :limit => 5)
+            
+            if all_users && !all_users.empty?
+              prev_len = @users ? @users.length : 0
+              if @users
+                @users = @users | all_users
+              else
+                @users = all_users
+              end
+              suggestion_count += (@users.length - prev_len)
+            end
+          end
+        end
+      end
 
       if current_user.admin?
         @groups = AccessGroup.find(:all, 
@@ -843,28 +906,10 @@ class MessagesController < BaseController
                               search_name_sql,search_group_ids.flatten.uniq,true], 
               :order => "lower(name)", :limit => 5)
         end
-
-        if coach_access_group_ids && !coach_access_group_ids.empty?
-          @roster_entries = RosterEntry.find(:all, 
-              :conditions => ["access_group_id in (?) and (lower(firstname) like ? or lower(lastname) like ?)", 
-                              coach_access_group_ids, search_name_sql,search_name_sql],
-              :order => "lower(firstname), lower(lastname)", :limit => 5)
-          
-          # pull users out of roster entries, leaving only non-registered addresses
-          if @roster_entries
-            # put roster entries first in the @users list
-            @users = @roster_entries.collect{|r| r.user}.compact.concat(@users).uniq
-            
-            # remove the @roster entries that have user_ids
-            @roster_entries = @roster_entries.select {|r| r.user_id.nil?}
-          end
-        end
       end
       
       # update the suggestion count
       suggestion_count += @groups.length unless @groups.nil?
-      suggestion_count += @users.length unless @users.nil?
-      suggestion_count += @roster_entries.length unless @roster_entries.nil?
       
       if suggestion_count < max_suggestions 
         if search_name.match(/\d/)
