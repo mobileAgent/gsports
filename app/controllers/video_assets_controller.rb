@@ -149,8 +149,7 @@ class VideoAssetsController < BaseController
     redirect_to url_for({ :controller => "search", :action => "my_videos" })
   end
 
-  # POST /video_assets
-  # POST /video_assets.xml
+  # create is not called on creation as expected - see save_video
   def create
     
     unless current_user.can_upload?
@@ -159,11 +158,7 @@ class VideoAssetsController < BaseController
     end
     
     if ! is_gamex?
-      gd = params[:video_asset][:game_date] 
-      if (gd && gd.length > 0 && gd.length <= 7) # yyyy-mm
-        params[:video_asset][:game_date] += '-01'
-        params[:video_asset][:ignore_game_day] = true
-      end
+      adjust_game_date_params(params)
     end
     @video_asset = VideoAsset.new(params[:video_asset])
     @video_asset.video_status = 'unknown'
@@ -185,7 +180,6 @@ class VideoAssetsController < BaseController
   def update
     @video_asset = VideoAsset.find(params[:id])
 
-
     unless (current_user.can_edit?(@video_asset))
       @video_asset = nil
       flash[:notice] = "You don't have permission edit that video"
@@ -199,19 +193,7 @@ class VideoAssetsController < BaseController
       @video_asset = add_team_and_league_relations(@video_asset,params)
 
       if ! is_gamex?
-        gd = params[:video_asset][:game_date]
-        params[:video_asset][:ignore_game_month] = false
-        params[:video_asset][:ignore_game_day] = false
-        params[:video_asset][:game_date_str] = gd
-        if (gd && gd.length > 0 && gd.length == 4) # yyyy
-          params[:video_asset][:game_date] += "-01"
-          params[:video_asset][:ignore_game_month] = true
-        end
-        gd = params[:video_asset][:game_date]
-        if (gd && gd.length > 0 && gd.length == 7) # yyyy-mm
-          params[:video_asset][:game_date] += '-01'
-          params[:video_asset][:ignore_game_day] = true
-        end
+        adjust_game_date_params(params)
       end
 
       updated = @video_asset.update_attributes(params[:video_asset])
@@ -266,6 +248,10 @@ class VideoAssetsController < BaseController
   
   # POST /vidapi/save_video (the rest of the form after the swfupload)
   def save_video
+
+    if ! is_gamex?
+      adjust_game_date_params(params)
+    end
     
     if params[:hidFileID]
       # Here we are hacking around a problem with ultra large
@@ -365,6 +351,31 @@ class VideoAssetsController < BaseController
   end
 
   private
+
+
+
+  def adjust_game_date_params(params)
+
+    gd = params[:video_asset][:game_date]
+
+    params[:video_asset][:ignore_game_month] = false
+    params[:video_asset][:ignore_game_day] = false
+    params[:video_asset][:game_date_str] = gd
+
+    if (gd && gd.length > 0 && gd.length == 4) # yyyy
+      params[:video_asset][:game_date] += "-01"
+      params[:video_asset][:ignore_game_month] = true
+    end
+
+    gd = params[:video_asset][:game_date]
+
+    if (gd && gd.length > 0 && gd.length == 7) # yyyy-mm
+      params[:video_asset][:game_date] += '-01'
+      params[:video_asset][:ignore_game_day] = true
+    end
+
+  end
+
 
   def auto_complete_team_field(team_name_start)
     @teams = Team.find(:all, :conditions => ["LOWER(name) like ?", team_name_start.downcase + '%' ], :order => "name ASC", :limit => 10 )
