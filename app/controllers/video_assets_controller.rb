@@ -18,10 +18,10 @@ class VideoAssetsController < BaseController
   verify :method => :post, :only => [ :save_video, :swfupload ]
   after_filter :cache_control, :only => [:create, :update, :destroy]
   after_filter :expire_games_of_the_week, :only => [:destroy]
-  before_filter :find_user, :only => [:index, :show, :new, :edit, :save_video ]
-  before_filter :find_gamex_user, :only => [:index, :show, :new, :save_video ]
+  before_filter :find_user, :only => [:index, :show, :new, :create, :upload_video, :edit, :save_video ]
+  before_filter :find_gamex_user, :only => [:index, :show, :new, :create, :save_video ]
   #before_filter :find_staff_scope, :only => [:new, :save_video]
-  before_filter :only => [:new, :edit, :save_video] do  |c| c.find_staff_scope(Permission::UPLOAD) end
+  before_filter :only => [:new, :edit, :save_video, :create] do  |c| c.find_staff_scope(Permission::UPLOAD) end
 
 
 
@@ -149,8 +149,56 @@ class VideoAssetsController < BaseController
     redirect_to url_for({ :controller => "search", :action => "my_videos" })
   end
 
-  # create is not called on creation as expected - see save_video
+
   def create
+
+    @video_asset = VideoAsset.new params[:video_asset]
+
+    if ! is_gamex?
+      adjust_game_date_params(params)
+    end
+
+    # Set up things that don't come naturally from the form
+    @video_asset.video_status = 'new'
+    @video_asset.user_id = current_user.id
+    @video_asset = add_team_and_league_relations(@video_asset,params)
+
+    fix_gamex_fields()
+
+    access_ok = setup_access @video_asset
+
+    @video_asset.tag_with(params[:tag_list] || '')
+
+    if access_ok && @video_asset.save
+      #publish(:push_video_files,"#{@video_asset.id}")
+      #flash[:notice] = "Your video is being procesed. It may be several minutes before it appears in your gallery"
+      redirect_to :action=>:upload_video, :id=>@video_asset.id
+
+      #VideoHistory.uploaded(@video_asset)
+    else
+      flash[:notice] = "There was a problem with the video meta data"
+      render :action=>:new
+    end
+    
+  end
+
+  def upload_video
+    @video_asset = VideoAsset.find(params[:id])
+    
+  end
+
+  def submit_video
+
+    @video_asset = VideoAsset.find(params[:id])
+
+    flash[:notice] = "Your video is being procesed. It may be several minutes before it appears in your gallery"
+    render :action=>:upload_success
+
+  end
+
+
+  # create is not called on creation as expected - see save_video
+  def xcreate
     
     unless current_user.can_upload?
       flash[:notice] = "You don't have permission to upload video"
@@ -173,6 +221,7 @@ class VideoAssetsController < BaseController
         format.xml  { render :xml => @video_asset.errors, :status => :unprocessable_entity }
       end
     end
+
   end
 
   # PUT /video_assets/1
@@ -239,11 +288,19 @@ class VideoAssetsController < BaseController
   def swfupload
     f = params[:Filedata] # the tmp file
     fpath = VideoAsset.move_upload_to_repository(f,params[:Filename])
-    @video = VideoAsset.new :uploaded_file_path => fpath, :title => 'Upload in Progress', :user_id => current_user.id
+    #@video = VideoAsset.new :uploaded_file_path => fpath, :title => 'Upload in Progress', :user_id => current_user.id
+    
+    @video = VideoAsset.find(params[:id])
+    @video.uploaded_file_path = fpath
+    @video.title = 'Upload in Progress'
+    @video.user_id = current_user.id
+
+    @video.video_status = 'saving'
+
     @video.save!
     render :text => @video.id
-  rescue
-    render :text => "Error saving file"
+  #rescue Exception=>e
+    #render :text => "Error saving file: #{e.message}"
   end
   
   # POST /vidapi/save_video (the rest of the form after the swfupload)

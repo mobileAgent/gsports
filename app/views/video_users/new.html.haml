@@ -30,7 +30,7 @@
           %script{:type=>'text/javascript'}
             var uploader;
             window.onload = function (){
-            ="uploader = new GSports.SwfUpload('#{swfupload_new_video_user_path(session_key => session.session_id)}','#{Vidavee.legal_file_extensions.join(";")}', '200 MB');"
+            ="uploader = new GSports.SwfUpload(-3,'#{swfupload_new_video_user_path(session_key => session.session_id)}','#{Vidavee.legal_file_extensions.join(";")}', '200 MB');"
             };
     
         %div{:style=>"margin: 0px 10px;", :id => "flashUI"}

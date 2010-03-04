@@ -12,7 +12,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :gamex_users
   map.resources :gamex_leagues
   map.resources :vidavees
-  map.resources :video_assets, :new => { :save_video => :post, :swfupload => :post }, :collection => { :admin => :any, :download => :any }
+  map.resources :video_assets, :new => { :save_video => :post, :swfupload => :post }, :collection => { :admin => :any, :download => :any, :upload_video => :any }
   map.resources :video_clips
   map.resources :video_reels
   map.resources :video_users, :new => { :save_video => :post, :swfupload => :post }, :collection => { :admin => :any }
@@ -31,7 +31,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :reports, :collection => { :pop_new => :any, :build => :any, :clips=>:any, :player=>:any, :clip_detail=>:any, :detail=>:any, :sync=>:any, :publish=>:any }
   map.resources :sessions, :collection => { :pop_login_box => :any }
   map.resources :team_sports, :collection => { :videos=>:any, :message=>:any }
-  map.resources :roster_entries, :collection => { :roster => :any, :post => :any, :match => :any, :update_entry=>:any }
+  map.resources :roster_entries, :collection => { :roster => :any, :post => :any, :match => :any, :update_entry=>:any, :submit_entry=>:any }
   
 
   map.register         'register',        :controller => 'users', :action => 'register'

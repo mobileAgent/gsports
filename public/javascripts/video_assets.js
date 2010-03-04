@@ -41,3 +41,25 @@
   }
 
 
+
+  gs.video_assets.start_upload = function() {
+    video_asset_submit.value = "Uploading...";
+    video_asset_submit.disabled = true;
+    uploader.swfu.startUpload();
+  }
+
+  gs.video_assets.video_loaded = function() {
+    video_asset_submit.value = "Upload Complete";
+    var form = document.getElementById('submit_form');
+    form.submit();
+  }
+
+  gs.video_assets.video_failed = function(msg) {
+//    var txtFileName = document.getElementById("uploaded_file_path");
+//    txtFileName.value = "";
+
+    //video_asset_submit.value = "Try Again";
+    //video_asset_submit.disabled = false;
+
+    //flasherror(msg);
+  }

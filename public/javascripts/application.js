@@ -8,6 +8,10 @@
     $('flash_notice').show()
   }
 
+  function flasherror(msg) {
+    $('flash_error').select('span')[0].replace("<span>"+msg+"</span>")
+    $('flash_error').show()
+  }
 
   var gs = {}
 
