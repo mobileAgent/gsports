@@ -292,7 +292,7 @@ class VideoAssetsController < BaseController
     
     @video = VideoAsset.find(params[:id])
     @video.uploaded_file_path = fpath
-    @video.title = 'Upload in Progress'
+    #@video.title = 'Upload in Progress'
     @video.user_id = current_user.id
 
     @video.video_status = 'saving'
