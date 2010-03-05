@@ -177,6 +177,10 @@ class VideoAssetsController < BaseController
       #VideoHistory.uploaded(@video_asset)
     else
       flash[:notice] = "There was a problem with the video meta data"
+      if @gamex_user
+        @render_gamex_tips = true
+        load_opponents()
+      end
       render :action=>:new
     end
     

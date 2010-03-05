@@ -43,13 +43,13 @@
 
 
   gs.video_assets.start_upload = function() {
-    video_asset_submit.value = "Uploading...";
-    video_asset_submit.disabled = true;
+    $('video_asset_submit').value = "Uploading...";
+    $('video_asset_submit').disabled = true;
     uploader.swfu.startUpload();
   }
 
   gs.video_assets.video_loaded = function() {
-    video_asset_submit.value = "Upload Complete";
+    $('video_asset_submit').value = "Upload Complete";
     var form = document.getElementById('submit_form');
     form.submit();
   }
