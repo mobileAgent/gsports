@@ -1,0 +1,87 @@
+= javascript_include_tag 'video_assets'
+- @need_to_upload = true
+.profileContentArea.listingPage
+  .profilePageHeader
+    %h2.columnDescriptor
+      -if @render_gamex_menu
+        %span
+          GameXchange
+        &gt; Upload
+      -else
+        %span
+          = link_to _('MY VIDEOS'), url_for({:controller => 'search', :action => 'my_videos', :user_id => @user.id})
+        Upload New Video Content
+      -#
+        for
+        = current_user.full_name
+  - extra_listings_class = (@render_gamex_menu ? 'gamexlistings' : 'none')
+  .listings{ :class=>extra_listings_class }
+
+    - if @gamex_user
+      %p.gamex-league-avatar
+        -#= link_to 'Upload a new video', new_video_asset_path('gamex_user[id]' => @gamex_user.id), :class => 'genericButton'
+        %a{ :href=>league_path(@gamex_user.league) }
+          - if @gamex_user.league.avatar
+            %img{ :src=>@gamex_user.league.avatar.public_filename, :title=>@gamex_user.league.name, :alt=>@gamex_user.league.name }
+
+    -#%div{ :class=>(is_gamex? ? 'padding' : 'listingItem') }
+    - extra_class = (@gamex_user ? 'gamex-upload-box' : 'none')
+    .listingItem{ :class=>extra_class }
+      - day = Time.now.strftime("%A")
+      - hour = Time.now.hour
+      - if (day == 'Tuesday' && hour > 16) || (day == 'Wednesday' && hour < 4)
+        .warningBox{:style => 'width: 60%; margin-left: 20%; padding: 5px; text-align: center'}
+          There is a maintenance window each
+          %br/
+          Wednesday, 3:00-3:30 a.m. Eastern
+          %br/
+          Video uploads should not be started if they will span this window
+
+      - form_for(:video_asset, @video_asset,:html => {:multipart => true}, :url => {:controller => 'video_assets' , :action => 'submit_video'}, :html => {:id => 'submit_form' } ) do |f|
+        %input{ :type=>"hidden", :name=>"id", :value=>@video_asset.id }
+
+      - form_for(:video_asset, @video_asset,:html => {:multipart => true}, :url => "javascript:gs.video_assets.start_upload()", :html => {:id => 'upload_form' } ) do |f|
+        %p
+          %h2 Attach Your Video File
+          Please click the "Browse" button below to locate the video file you wish to upload.
+          We strongly encourage that you upload your game in Windows Media (.wmv) format, but we also accept .mp4, .mov, .mpg, and .mpeg files.
+          %br
+          %br
+
+          <input type="hidden" name="hidFileID" id="hidFileID" value="" />
+          <label for="uploaded_file_path">Selected File:</label>
+          %br/
+          <input type="text" id="uploaded_file_path" disabled="disabled" style="border: solid 1px; background-color: #FFFFFF;" />
+          - session_key = (ActionController::Base.session.first[:session_key] || '_session_id').to_sym
+          - @legal_file_extensions = Vidavee.legal_file_extensions({:gamex=>@gamex_user})
+
+          -#- url = "#{swfupload_new_video_asset_path(session_key => session.session_id)}"
+          -# url = "/video_assets/swfupload/#{@video_asset.id}?#{session_key}=#{session.session_id.gsub("\n",'')}"
+          -#%p= swfupload_new_video_asset_path(:id => @video_asset.id)
+            
+          %script{:type=>'text/javascript'}
+            var uploader;
+            window.onload = function (){
+            ="uploader = new GSports.SwfUpload('#{@video_asset.id}', '#{swfupload_new_video_asset_path(session_key => session.session_id)}','#{@legal_file_extensions.join(";")}');"
+            };
+
+        %div{:style=>"margin: 0px 10px;", :id => "flashUI"}
+          %div
+            %p
+              -#%button{:id=>"btnBrowse", :type=>"button", :style=>"padding: 5px;", :onclick=>"uploader.swfu.selectFile(); this.blur();"}
+                =image_tag '/icons/add.png', :plugin => 'community_engine'
+                Browse Video Files
+              #swfuploadContainer
+              %br
+            %label
+              %em
+                You can select only one file
+                %br
+                = (AppConfig.video_asset['attachment_fu_options']['max_size'])
+                megabyte upload limit per file.
+
+          #uploadProgressContainer
+
+        %p
+          = f.submit "Upload"
+
