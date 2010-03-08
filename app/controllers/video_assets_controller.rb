@@ -165,23 +165,29 @@ class VideoAssetsController < BaseController
 
     fix_gamex_fields()
 
-    access_ok = setup_access @video_asset
-
     @video_asset.tag_with(params[:tag_list] || '')
 
-    if access_ok && @video_asset.save
+    if @video_asset.save
       #publish(:push_video_files,"#{@video_asset.id}")
       #flash[:notice] = "Your video is being procesed. It may be several minutes before it appears in your gallery"
-      redirect_to :action=>:upload_video, :id=>@video_asset.id
+      
+      #redirect_to :action=>:upload_video, :id=>@video_asset.id
+
+      @access_ok = setup_access @video_asset
+
+
+      #render :text => @video_asset.id
 
       #VideoHistory.uploaded(@video_asset)
     else
-      flash[:notice] = "There was a problem with the video meta data"
-      if @gamex_user
-        @render_gamex_tips = true
-        load_opponents()
-      end
-      render :action=>:new
+      #flash[:notice] = "There was a problem with the video meta data"
+#      if @gamex_user
+#        @render_gamex_tips = true
+#        load_opponents()
+#      end
+      #render :action=>:new
+      #render :text => "There was a problem with the video meta data"
+      #render :partial => 'errors'
     end
     
   end

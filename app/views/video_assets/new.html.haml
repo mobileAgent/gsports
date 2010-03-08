@@ -37,10 +37,10 @@
           %br/
           Video uploads should not be started if they will span this window
     
-      - form_for(:video_asset, @video_asset,:html => {:multipart => true}, :url => {:controller => 'video_assets' , :action => 'create'}, :html => {:id => 'upload_form', :xonsubmit => 'return doSubmit();' } ) do |f|
+      - form_for(:video_asset, @video_asset, :html => {:multipart => true}, :url=>'javascript:gs.video_assets.send_meta()', :xurl => {:controller => 'video_assets' , :action => 'create'}, :html => {:id => 'upload_form', :xonsubmit => 'return doSubmit();' } ) do |f|
         -#= render :partial => ( @video_asset.gamex_league_id ? "gamex_form" : "form" ), :locals => { :f => f }
         = render :partial => ( @render_gamex_menu ? "gamex_form" : "form" ), :locals => { :f => f }
-        -#%p
+        %p
           %h2 Attach Your Video File
           Please click the "Browse" button below to locate the video file you wish to upload.
           We strongly encourage that you upload your game in Windows Media (.wmv) format, but we also accept .mp4, .mov, .mpg, and .mpeg files.
@@ -57,10 +57,10 @@
           %script{:type=>'text/javascript'}
             var uploader;
             window.onload = function (){
-            ="uploader = new GSports.SwfUpload('#{swfupload_new_video_asset_path(session_key => session.session_id)}','#{@legal_file_extensions.join(";")}');"
+            ="uploader = new GSports.SwfUpload('#{@video_asset.id}', '#{swfupload_new_video_asset_path(session_key => session.session_id)}','#{@legal_file_extensions.join(";")}');"
             };
     
-        -#%div{:style=>"margin: 0px 10px;", :id => "flashUI"}
+        %div{:style=>"margin: 0px 10px;", :id => "flashUI"}
           %div
             %p
               -#%button{:id=>"btnBrowse", :type=>"button", :style=>"padding: 5px;", :onclick=>"uploader.swfu.selectFile(); this.blur();"}
@@ -78,5 +78,5 @@
           #uploadProgressContainer
 
         %p
-          = f.submit "Proceed to Upload"
+          = f.submit "Upload"
 

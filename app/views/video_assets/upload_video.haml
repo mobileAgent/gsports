@@ -55,10 +55,6 @@
           - session_key = (ActionController::Base.session.first[:session_key] || '_session_id').to_sym
           - @legal_file_extensions = Vidavee.legal_file_extensions({:gamex=>@gamex_user})
 
-          -#- url = "#{swfupload_new_video_asset_path(session_key => session.session_id)}"
-          -# url = "/video_assets/swfupload/#{@video_asset.id}?#{session_key}=#{session.session_id.gsub("\n",'')}"
-          -#%p= swfupload_new_video_asset_path(:id => @video_asset.id)
-            
           %script{:type=>'text/javascript'}
             var uploader;
             window.onload = function (){
