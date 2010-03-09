@@ -174,7 +174,7 @@ class VideoAssetsController < BaseController
       
       #redirect_to :action=>:upload_video, :id=>@video_asset.id
 
-      @access_ok = setup_access @video_asset
+      setup_access @video_asset
 
 
       #render :text => @video_asset.id
@@ -351,7 +351,7 @@ class VideoAssetsController < BaseController
     
     fix_gamex_fields()
     
-    access_ok = setup_access @video_asset
+    setup_access @video_asset
     
     @video_asset.tag_with(params[:tag_list] || '') 
 
@@ -617,21 +617,18 @@ class VideoAssetsController < BaseController
   end
   
   def setup_access video
-    result = true
-    #logger.debug "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-    #logger.debug "MEOW setup_access"
-    #logger.debug "MEOW params #{params[:access_item].inspect}"
+    
+    if video.id
+      AccessItem.for_item(video).destroy_all;
+    end
+
     @access_item = AccessItem.new params[:access_item]
     if @access_item.access_group_id
       @access_item.item = video
-      #logger.debug "access_item #{@access_item.inspect}"
-      #try this quietly
-      result = @access_item.save
-      #logger.debug "MEOW #{result.inspect}"
-      
+
+      @access_item.save
     end
-    #logger.debug "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-    result
+    
   end
 
   def load_opponents(options={})

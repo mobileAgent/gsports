@@ -129,7 +129,8 @@ GameXchange needs specific information about the game you are uploading in order
         %td &nbsp;
         %td
           %p
-            - if @gamex_user
+            - @access_item = AccessItem.for_item(@video_asset).first
+            - if @gamex_user && @access_item.nil?
               - @access_item = AccessItem.new({:access_group_id => @gamex_user.access_group})
             %label{:for=>"access_item[id]"} Access Group
             %br/
