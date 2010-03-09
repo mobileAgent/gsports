@@ -47,7 +47,19 @@
               = text_field_tag 'tag_list', @video_clip.tags.collect{|t| t.name}.join(", "), {:autocomplete => "off", :size => 35}
               #tag_list_auto_complete.auto_complete
               = auto_complete_field 'tag_list', {:url => { :controller => "tags", :action => 'auto_complete_for_tag_name'}, :tokens => [',']  }
-            
+
+            - if current_user.admin?
+              %fieldset.emphasized
+                %legend="Very Advanced Fields (Vidavee Coordination, Admin Only)"
+                %p
+                  = f.label :dockey
+                  %br/
+                  = f.text_field :dockey, :size => 32
+                %p
+                  = f.label :video_length
+                  %br/
+                  = f.text_field :video_length
+
             %p
               = f.submit "Update"
           
