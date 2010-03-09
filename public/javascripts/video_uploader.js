@@ -18,6 +18,7 @@ GSports.SwfUpload = Class.create({
       file_queued_handler : this.fileQueued.bind(this),
       file_queue_error_handler : this.fileQueueError.bind(this),
       file_dialog_complete_handler : this.fileDialogComplete.bind(this),
+
       file_dialog_start_handler: this.fileDialogStart.bind(this),
 	
       upload_progress_handler : this.uploadProgress.bind(this),
@@ -51,7 +52,7 @@ GSports.SwfUpload = Class.create({
   uploadErrors: [],
     
   fileDialogStart : function() {
-    var txtFileName = document.getElementById("uploaded_file_path");
+    var txtFileName = document.getElementById(gs.video_assets.base_model+"_uploaded_file_path");
     txtFileName.value = "";
     this.swfu.cancelUpload();
   },
@@ -97,7 +98,7 @@ GSports.SwfUpload = Class.create({
 
   fileQueued : function(file) {
     try {
-      var txtFileName = document.getElementById("uploaded_file_path");
+      var txtFileName = document.getElementById(gs.video_assets.base_model+"_uploaded_file_path");
       txtFileName.value = file.name;
     } catch (e) {
       alert("File queued handler problem : " + e);

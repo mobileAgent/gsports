@@ -1,4 +1,5 @@
 class VideoAssetsController < BaseController
+  
   include Viewable
   include ActiveMessaging::MessageSender
   publishes_to :push_video_files

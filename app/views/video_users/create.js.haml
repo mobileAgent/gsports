@@ -1,0 +1,9 @@
+- out = {}
+-
+- out['id']= @video_user.id
+-
+- err = error_messages_for :video_user
+- out['err']= err if err && !err.empty?
+- out['access']= false if !@access_ok
+-
+= out.to_json

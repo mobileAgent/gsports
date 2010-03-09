@@ -1,9 +1,11 @@
 
   gs.video_assets = {}
 
+  gs.video_assets.base_model = 'video_asset'
+
   gs.video_assets.select_sport = function() {
-    select = $('video_asset_sport_select')
-    input = $('video_asset_sport')
+    select = $(this.base_model+'_sport_select')
+    input = $(this.base_model+'_sport')
 
     if(select.value == 'Other'){
       select.hide();
@@ -15,8 +17,8 @@
   }
 
   gs.video_assets.select_game_level = function() {
-    select = $('video_asset_game_level_select')
-    input = $('video_asset_game_level')
+    select = $(this.base_model+'_game_level_select')
+    input = $(this.base_model+'_game_level')
 
     if(select.value == 'Other'){
       select.hide();
@@ -28,8 +30,8 @@
   }
 
   gs.video_assets.select_game_type = function() {
-    select = $('video_asset_game_type_select')
-    input = $('video_asset_game_type')
+    select = $(this.base_model+'_game_type_select')
+    input = $(this.base_model+'_game_type')
 
     if(select.value == 'Other'){
       select.hide();
@@ -45,11 +47,11 @@
   //javascript:gs.video_assets.start_upload()
 
   gs.video_assets.send_meta = function() {
-    $('video_asset_submit').value = "Uploading...";
-    $('video_asset_submit').disabled = true;
+    $(this.base_model+'_submit').value = "Uploading...";
+    $(this.base_model+'_submit').disabled = true;
 
     form = $('upload_form')
-    url = '/video_assets/create'
+    url = '/'+this.base_model+'s/create'
 
     var jax = new Ajax.Request(url, {
       method: 'post',
@@ -63,28 +65,30 @@
             gs.video_assets.start_upload()
           }else{
             flasherror(obj.err)
+            $(gs.video_assets.base_model+'_submit').value = "Upload";
+            $(gs.video_assets.base_model+'_submit').disabled = false;
           }
       },
       onError: function(transport) {
-        flashnow('Could not save video');
-        $('video_asset_submit').value = "Upload";
-        $('video_asset_submit').disabled = false;
+        flasherror('Could not save video');
+        $(gs.video_assets.base_model+'_submit').value = "Upload";
+        $(gs.video_assets.base_model+'_submit').disabled = false;
       }
     })
   }
 
 
   gs.video_assets.start_upload = function() {
-    $('video_asset_submit').value = "Uploading Video...";
-    $('video_asset_submit').disabled = true;
+    $(this.base_model+'_submit').value = "Uploading Video...";
+    $(this.base_model+'_submit').disabled = true;
     uploader.swfu.startUpload();
   }
 
   gs.video_assets.video_loaded = function() {
-    $('video_asset_submit').value = "Upload Complete";
+    $(this.base_model+'_submit').value = "Upload Complete";
     var form = document.getElementById('submit_form');
     //form.submit();
-    window.location='/video_assets/submit_video/'+uploader.swfu.settings.post_params['id']
+    window.location='/'+this.base_model+'s/submit_video/'+uploader.swfu.settings.post_params['id']
   }
 
   gs.video_assets.video_failed = function(msg) {
