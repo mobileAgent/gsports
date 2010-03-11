@@ -1,0 +1,8 @@
+- out = {}
+-
+- out['saved']= @saved
+-
+- %w(info notice error).each do |type|
+  - out["flash_#{type}"]= flash[type.to_sym]
+-
+= out.to_json

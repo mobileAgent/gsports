@@ -196,3 +196,13 @@
 {
   xbackground-position: 0 -50px;
 }
+
+
+
+.team-sport-summary a.new-info {
+  float: right;
+  color: red;
+  font-weight: bold;
+  text-decoration: none;
+
+}

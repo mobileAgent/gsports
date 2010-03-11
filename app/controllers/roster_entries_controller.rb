@@ -89,28 +89,33 @@ class RosterEntriesController < BaseController
 
 
   def update
-    @team_sport = TeamSport.find(params[:id])
-
-    unless current_user.can?(Permission::COACH, @team_sport)
+    @roster_entry = RosterEntry.find(params[:id])
+debugger
+    unless current_user.can?(Permission::COACH, @roster_entry.team_sport)
       flash[:notice] = "You don't have permission to edit that record"
       access_denied and return
     end
 
-    @avatar = Photo.new(params[:avatar])
-    @avatar.user_id = current_user.id
-    if @avatar.save
-      @team_sport.avatar = @avatar
-    else
-      flash[:notice] = 'Avatar was not created.'
+
+    @saved = @roster_entry.update_attributes(params[:roster_entries])
+
+
+    respond_to do |format|
+      format.html {
+        if @saved
+          flash[:notice] = 'Entry successfully updated.'
+          redirect_to team_sports_url
+        else
+          render :action => "edit"
+        end
+      }
+      format.js {
+        render :action => "json"
+      }
     end
 
-    if @team_sport.update_attributes(params[:team_sport])
 
-      flash[:notice] = 'School info was successfully updated.'
-      redirect_to team_sports_url
-    else
-      render :action => "edit"
-    end
+
   end
 
 

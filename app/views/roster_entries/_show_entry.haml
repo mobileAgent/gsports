@@ -22,10 +22,14 @@
       &nbsp;
   %td
     .email
+      - if athlete.user && (athlete.user.email != athlete.email)
+        = link_to_remote 'New', {:url => roster_entry_path(athlete, 'roster_entries[email]'=>athlete.user.email), :confirm => "Change email # to #{athlete.user.email}", :method=>:put, :complete=>'javascript: gs.team_sports.load_current()'}, :class=>'new-info'
       = h athlete.email
       &nbsp;
   %td
     .phone
+      - if athlete.user && (athlete.user.phone != athlete.phone)
+        = link_to_remote 'New', {:url => roster_entry_path(athlete, 'roster_entries[phone]'=>athlete.user.phone), :confirm => "Change phone # to #{athlete.user.phone}", :method=>:put, :complete=>'javascript: gs.team_sports.load_current()'}, :class=>'new-info'
       = h athlete.phone
       &nbsp;
   %td
