@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100218182808) do
+ActiveRecord::Schema.define(:version => 20100311210456) do
 
   create_table "access_contacts", :force => true do |t|
     t.integer "access_group_id", :limit => 11
@@ -568,6 +568,7 @@ ActiveRecord::Schema.define(:version => 20100218182808) do
     t.datetime "updated_at"
     t.integer  "user_id",         :limit => 11
     t.string   "reg_key"
+    t.boolean  "invitation_sent"
   end
 
   create_table "sb_posts", :force => true do |t|

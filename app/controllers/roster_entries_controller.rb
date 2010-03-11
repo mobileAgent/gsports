@@ -62,6 +62,9 @@ class RosterEntriesController < BaseController
           @roster_entry.share()
           @roster_entry.save()
           UserNotifier.deliver_roster_invite({:to=>@roster_entry, :from=>current_user})
+
+          @roster_entry.invitation_sent = true;
+          @roster_entry.save
           
         elsif @roster_entry.user_id
           access = AccessUser.for(@roster_entry.user, @roster_entry.access_group)
