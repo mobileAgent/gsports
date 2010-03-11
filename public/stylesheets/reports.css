@@ -83,7 +83,9 @@ a.new-report-button:hover
 /* builder & viewer */
 
 
+
 .report-layout {
+  position: relative;
   float: left;
   width: 600px;
   height: 620px;
@@ -98,6 +100,15 @@ a.new-report-button:hover
   font-weight: bold;
   color: black;
   padding: 0 0 15px 0;
+}
+
+#report-type{
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 2px 2px 0pt 0pt;
+  color: grey;
+  xfloat:right;
 }
 
 .report-viewer .report-layout {
@@ -265,12 +276,25 @@ a.new-report-button:hover
 }
 
 
+
+
+.report-stage {
+  position: relative;
+  width: 345px;
+}
+
+
 /* clip strip */
 
 
 #clip-strip-holder {
-  float: right;
-  position: relative;
+  xposition: relative;
+  xfloat: right;
+
+  position: absolute;
+  top: 21px;
+  left: 355px;
+
   width: 245px;
   height: 580px;
   overflow: scroll;
@@ -366,44 +390,3 @@ a.new-report-button:hover
 
 
 
-
-
-/* move up */
-
-.inplace-edit{
-  display: table-cell;
-  vertical-align: top;
-}
-
-.inplace-edit xh1 {
-  float: left;
-}
-
-.inplace-edit .editor {
-  display: block;
-  float: left;
-}
-
-.inplace-edit input[type='submit'] {
-  padding: 3px;
-  margin: 0px;
-  margin-right: 3px;
-}
-
-.inplace-edit .target {
-  display: block;
-  float: left;
-}
-
-.inplace-edit a.edit-button{
-  background: url('../images/inplace-edit.png') no-repeat 0 0;
-  width: 12px;
-  height: 12px;
-  display: block;
-  float: left;
-}
-
-.inplace-edit a.edit-button:hover
-{
-  background-position: 0 -12px;
-}

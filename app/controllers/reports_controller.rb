@@ -1,7 +1,7 @@
 class ReportsController < BaseController
 
   skip_before_filter :gs_login_required, :only => [:detail]
-  skip_before_filter :verify_authenticity_token, :only => [:clips, :player, :clip_detail, :sync ]
+  skip_before_filter :verify_authenticity_token, :only => [:clips, :player, :clip_detail, :sync, :update ]
 
   before_filter :except => [:show] do  |c| c.find_staff_scope(Permission::REPORT) end
 

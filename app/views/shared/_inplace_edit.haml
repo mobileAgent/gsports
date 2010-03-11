@@ -1,24 +1,34 @@
--
--# model ||= <required>
--# attr ||= <required>
--# klass ||= <optional>
--
-- editor_id = "#{model.class}_#{attr}_editor"
-- #css_class = "target #{css_class}"
-- value = model.attributes()['name'] rescue '-'
--
-- 
--
-.inplace-edit{ :id=>editor_id, :status=>'v' }
-  .target{ :class=>css_class }
-    = value
+= javascript_include_tag 'inplace_edit'
+= stylesheet_link_tag 'inplace_edit'
+
+.inplace-edit{ :id=>options[:editor_id], :status=>'v', :inplace_url=>options[:url], :model_name=>model.class, :attr_name=>attr }
+
+  .target{ :class=>options[:class], :id=>"#{options[:editor_id]}_target" }
+    = options[:value]
+
+
   .editor{ :style=>'display:none' }
-    %form{ :id=>"#{editor_id}_form" }
-      %input{ :type=>'text', :value=>value, :size=>6 }
+    %form{ :id=>"#{options[:editor_id]}_form", :action=>"javascript:gs.inplace.submit('#{options[:editor_id]}')" }
+      -#%input{ :id=>"#{options[:editor_id]}_input", :name=>"#{model.class.to_s.downcase}[#{attr}]", :type=>'text', :value=>value, :size=>6 }
+      
+      - if options[:body]
+
+        -#= capture(form, input_id, &options[:body])
+        -#= capture(&options[:body])
+        -# options[:body].call(form, input_id)
+        = options[:body]
+
+      -else
+        %textarea{ :id=>"#{options[:editor_id]}_input", :name=>"#{model.class.to_s.downcase}[#{attr}]", :type=>'text', :rows=>options[:rows], :cols=>options[:cols] }= options[:value]
+
+
       %input{ :type=>'submit', :value=>'Save' }
+      %input{ :type=>'hidden', :name=>'authenticity_token', :value=>form_authenticity_token.inspect }
       -#= f.text_field attr
       -#= f.submit :value=>'Save'
-  %a.edit-button{ :href=>"javascript:gs_reports_edit_inplace('#{editor_id}');" }= ""
+
+
+  %a.edit-button{ :href=>"javascript:gs.inplace.edit('#{options[:editor_id]}');" }= ""
 
 
 

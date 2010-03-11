@@ -62,8 +62,13 @@
 
 
       .report-layout
-        %span{ :style=>'margin: 2px 2px 0pt 0pt; color: grey; float:right' }
-          %i= @report.type_name
+        #report-type{ :style=>'margin: 2px 2px 0pt 0pt; color: grey; float:right' }
+          = edit_inplace(@report, 'report_type', :value=>Report::Types[@report.report_type]) do |options|
+            %select{ :id=>options[:input_id], :name=>options[:input_name] }
+              - Report::TypeKeyList.each() do |key|
+                %option{ :value=>key, :selected=>(@report.report_type==key) }
+                  = Report::Types[key]
+          -#%i= @report.type_name
 
 
         %br{ :clear=>'right' }
@@ -83,33 +88,37 @@
             - @details.each() do |detail|
               = render :partial=>'clip', :locals=>{ :video=>detail.video, :options=>{ :click_to_preview=>true, :panel_id_prefix=>'report'} }
 
-        = render :partial=>'shared/inplace_edit', :locals=>{ :model=>@report, :attr=>'name', :css_class=>'h1' }
+        .report-stage
+          = edit_inplace(@report, 'name', :class=>'h1')
+          -#= render :partial=>'shared/inplace_edit', :locals=>{ :model=>@report, :attr=>'name', :css_class=>'h1' }
 
-        #play-button{ :style=>'float: right' }
-          %a{ :href=>'javascript:gs_reports_play_all()', :class => 'listingButton' }
-            = image_tag('/images/listing_icons/play.png', :mouseclick => '/images/listing_icons/sel-play.png', :border=>0)
+          #play-button{ :style=>'float: right' }
+            %a{ :href=>'javascript:gs_reports_play_all()', :class => 'listingButton' }
+              = image_tag('/images/listing_icons/play.png', :mouseclick => '/images/listing_icons/sel-play.png', :border=>0)
 
 
-        %div{ :style=>'color: grey; margin-bottom: 8px;' }
-          %i= @report.created_at.strftime("%b %d, %Y") rescue ''
-          by
-          %i= @report.author.full_name
+          %div{ :style=>'color: grey; margin-bottom: 8px;' }
+            %i= @report.created_at.strftime("%b %d, %Y") rescue ''
+            by
+            %i= @report.author.full_name
 
-        %div{ :style=>'color: grey; margin-bottom: 8px;' }
-          %i= @report.description
+          %div{ :style=>'color: grey; margin-bottom: 8px;' }
+            = edit_inplace(@report, 'description', {:class=>'desc', :rows=>3, :cols=>32} )
+            -#= render :partial=>'shared/inplace_edit', :locals=>{ :model=>@report, :attr=>'description', :css_class=>'desc' }
+            -#%i= @report.description
 
-        %script{ :type=>"text/javascript" }
-          Sortable.create('clip-strip', { tag: 'div'});
-          ="Droppables.add('clip-strip-decoy', { accept: 'report-dropper', hoverclass: 'clip-strip-hover', onDrop: function(dragName,dropName) {gs_reports_drop_clip(#{@report.id},dragName,dropName)}})"
-          var gs_reports_small_player = true
+          %script{ :type=>"text/javascript" }
+            Sortable.create('clip-strip', { tag: 'div'});
+            ="Droppables.add('clip-strip-decoy', { accept: 'report-dropper', hoverclass: 'clip-strip-hover', onDrop: function(dragName,dropName) {gs_reports_drop_clip(#{@report.id},dragName,dropName)}})"
+            var gs_reports_small_player = true
 
-        #report-player
-          - @small_player= true
-          = render :partial=>'player' #, :locals=>{ :options=>{:small_player=>true} }
-        %br
-        %br
-        #report-detail
-          = render :partial=>'clip_detail'
+          #report-player
+            - @small_player= true
+            = render :partial=>'player' #, :locals=>{ :options=>{:small_player=>true} }
+          %br
+          %br
+          #report-detail
+            = render :partial=>'clip_detail'
 
 
       .clearDiv

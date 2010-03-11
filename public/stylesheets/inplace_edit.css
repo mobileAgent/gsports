@@ -1,0 +1,40 @@
+
+
+.inplace-edit{
+  display: table-cell;
+  vertical-align: top;
+}
+
+.inplace-edit xh1 {
+  float: left;
+}
+
+.inplace-edit .editor {
+  display: block;
+  float: left;
+}
+
+.inplace-edit input[type='submit'] {
+  padding: 3px;
+  margin: 0px;
+  margin-right: 3px;
+  vertical-align: top;
+}
+
+.inplace-edit .target {
+  display: block;
+  float: left;
+}
+
+.inplace-edit a.edit-button{
+  background: url('../images/inplace-edit.png') no-repeat 0 0;
+  width: 12px;
+  height: 12px;
+  display: block;
+  float: left;
+}
+
+.inplace-edit a.edit-button:hover
+{
+  background-position: 0 -12px;
+}
