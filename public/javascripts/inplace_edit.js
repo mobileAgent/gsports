@@ -4,8 +4,8 @@ gs.inplace = {}
 
 
 gs.inplace.edit = function(editor_id) {
-  inplace = $(editor_id);
-  status = inplace.readAttribute('status');
+  var inplace = $(editor_id);
+  var status = inplace.readAttribute('status');
 
   switch(status){
     case 'v':
