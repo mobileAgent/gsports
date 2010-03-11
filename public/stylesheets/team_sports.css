@@ -126,20 +126,17 @@
 }
 
 .team-sport-summary .roster td {
-	padding: 1px;
-	border: 1px solid black;
-	border-bottom: 0;
-	border-right: 0;
-  background: #F7F7F7 url(/images/team_sports/row-fade.png) repeat-x bottom left;
-}
-
-
-.team-sport-summary .roster td {
 	padding: 3px;
 	border: 1px solid black;
 	border-bottom: 0;
 	border-right: 0;
+  background: #F7F7F7 url(/images/team_sports/row-fade.png) repeat-x bottom left;
   xvertical-align: top;
+}
+
+
+.team-sport-summary .roster .parent td {
+	border-top: 0;
 }
 
 

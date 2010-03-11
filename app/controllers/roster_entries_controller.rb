@@ -44,7 +44,7 @@ class RosterEntriesController < BaseController
       if current_user.can?(Permission::COACH, @roster_entry.team_sport)
         saved = @roster_entry.save
       else
-        msg = "You don't have permission to edit that record"
+        msg = "You don't have permission to create that record"
       end
 
     end
@@ -148,6 +148,16 @@ class RosterEntriesController < BaseController
       @roster_entry = RosterEntry.find(edit_me)
       if @roster_entry && current_user.can?(Permission::COACH, @roster_entry.team_sport)
         @editing = edit_me
+      end
+    end
+
+    if params[:add]
+      add_me = params[:add].to_i
+      @parent = Parent.new()
+      @parent.roster_entry= RosterEntry.find(add_me)
+
+      if @parent.roster_entry && current_user.can?(Permission::COACH, @parent.roster_entry.team_sport)
+        @adding = add_me
       end
     end
 

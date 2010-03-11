@@ -66,10 +66,21 @@
   }
 
   gs.team_sports.edit_row = function(ts_id, re_id) {
+    map = this.panel_info(ts_id)
     url = '/roster_entries/roster'
 
     new Ajax.Updater(map.roster_div, url, {
         parameters: { "id": ts_id, "edit":re_id },
+        evalScripts: true
+      });
+  }
+
+  gs.team_sports.add_parent = function(ts_id, re_id) {
+    map = this.panel_info(ts_id)
+    url = '/roster_entries/roster'
+
+    new Ajax.Updater(map.roster_div, url, {
+        parameters: { "id": ts_id, "add":re_id },
         evalScripts: true
       });
   }

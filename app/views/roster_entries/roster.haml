@@ -1,7 +1,22 @@
-- remote_form_for :roster_entry, @roster_entry, :url=>post_roster_entries_path(), :html=>{:id=>'roster_entry'} do |f|
-  = f.hidden_field :id
-  = f.hidden_field :access_group_id
+- if @adding
+  - model = :parent
+  - instance = @parent
+  - url = post_parents_path()
+  - html = {:id=>'roster_entry'}
+- else
+  - model = :roster_entry
+  - instance = @roster_entry
+  - url = post_roster_entries_path()
+  - html = {:id=>'roster_entry'}
 
+- remote_form_for model, instance, :url=>url, :html=>html do |f|
+  - if @adding
+    = f.hidden_field :roster_entry_id
+  -else
+    = f.hidden_field :id
+    = f.hidden_field :access_group_id
+
+  -# if true
   %table{ :cellspacing=>0, :cellpadding=>0 }
     %tr
       %th.status
@@ -22,7 +37,13 @@
       - else
         = render :partial=>'show_entry', :locals=>{ :athlete => athlete }
 
-    - if !@editing
+      - athlete.parents.each do |parent|
+        = render :partial=>'show_parent', :locals=>{ :parent => parent }
+
+      - if athlete.id == @adding
+        = render :partial=>'edit_entry', :locals=>{ :f => f, :adding=>true }
+
+    - if !@editing && !@adding
       = render :partial=>'edit_entry', :locals=>{ :f => f }
 
   - if @roster.respond_to? 'total_pages'
