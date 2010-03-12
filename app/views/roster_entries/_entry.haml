@@ -34,7 +34,7 @@
           = "##{h athlete.number}"
       &nbsp;
 
-      - athlete.parents.size.times do
+      - (athlete.parents.size + ( add_parent ? 1 : 0 ) ).times do
         .parent parent
 
   %td
