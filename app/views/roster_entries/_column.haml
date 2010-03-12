@@ -1,0 +1,15 @@
+
+- if edit_me
+  = f.text_field attr, :size=>size
+-else
+  .athlete= "#{h athlete.attributes[attr]}&nbsp;"
+
+- athlete.parents.each do |parent|
+  - if @parent == parent
+    = f.text_field attr, :size=>size
+  - else
+    .parent= "#{h parent.attributes[attr]}&nbsp;"
+
+- if add_parent
+  = f.text_field attr, :size=>size
+

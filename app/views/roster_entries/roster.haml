@@ -1,4 +1,4 @@
-- if @adding
+- if @parent
   - model = :parent
   - instance = @parent
   - url = post_parents_path()
@@ -10,7 +10,8 @@
   - html = {:id=>'roster_entry'}
 
 - remote_form_for model, instance, :url=>url, :html=>html do |f|
-  - if @adding
+  - if @parent
+    = f.hidden_field :id
     = f.hidden_field :roster_entry_id
   -else
     = f.hidden_field :id
@@ -32,18 +33,15 @@
 
     - @roster.each() do |athlete|
       - edit_me = athlete.id == @editing
-      - if edit_me
+      - if false && edit_me
         = render :partial=>'edit_entry', :locals=>{ :f => f, :editing=>true }
       - else
-        = render :partial=>'show_entry', :locals=>{ :athlete => athlete }
+        = render :partial=>'entry', :locals=>{ :f => f, :athlete => athlete }
 
-      - athlete.parents.each do |parent|
-        = render :partial=>'show_parent', :locals=>{ :parent => parent }
-
-      - if athlete.id == @adding
+      -# if athlete.id == @adding
         = render :partial=>'edit_entry', :locals=>{ :f => f, :adding=>true }
 
-    - if !@editing && !@adding
+    - if @roster_entry.id.nil? #!@editing && !@adding
       = render :partial=>'edit_entry', :locals=>{ :f => f }
 
   - if @roster.respond_to? 'total_pages'

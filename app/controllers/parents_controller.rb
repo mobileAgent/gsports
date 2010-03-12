@@ -80,9 +80,9 @@ class ParentsController < BaseController
       format.html { redirect_to(team_sports_url) }
       format.js {
         render :update do |page|
-          target = "parent-#{@parent.id}"
-          page.replace_html target, :text => ''
-          #page.call 'gs.team_sports.show_row'
+          #target = "parent-#{@parent.id}"
+          #page.replace_html target, :text => ''
+          page.call 'gs.team_sports.load_current'
         end
       }
     end

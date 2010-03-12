@@ -93,7 +93,7 @@ class RosterEntriesController < BaseController
 
   def update
     @roster_entry = RosterEntry.find(params[:id])
-debugger
+
     unless current_user.can?(Permission::COACH, @roster_entry.team_sport)
       flash[:notice] = "You don't have permission to edit that record"
       access_denied and return
@@ -148,25 +148,27 @@ debugger
 
   def roster
     @team_sport = TeamSport.find(params[:id])
+    
+    unless current_user.can?(Permission::COACH, @team_sport)
+      access_denied
+      return
+    end
 
     @roster = RosterEntry.roster(@team_sport.access_group).find(:all, :order => sort_order)#.paginate(:all, :order => sort_order, :page => params[:page])
 
-    if params[:edit]
-      edit_me = params[:edit].to_i
-      @roster_entry = RosterEntry.find(edit_me)
-      if @roster_entry && current_user.can?(Permission::COACH, @roster_entry.team_sport)
-        @editing = edit_me
-      end
-    end
+    if p= params[:add_parent]
+      @roster_entry = RosterEntry.find(p)
 
-    if params[:add]
-      add_me = params[:add].to_i
       @parent = Parent.new()
-      @parent.roster_entry= RosterEntry.find(add_me)
+      @parent.roster_entry= @roster_entry
 
-      if @parent.roster_entry && current_user.can?(Permission::COACH, @parent.roster_entry.team_sport)
-        @adding = add_me
-      end
+    elsif p= params[:edit_parent]
+      @parent = Parent.find(p)
+      @roster_entry = @parent.roster_entry
+
+    elsif p= params[:edit]
+      @roster_entry = RosterEntry.find(p)
+
     end
 
     if @roster_entry.nil?

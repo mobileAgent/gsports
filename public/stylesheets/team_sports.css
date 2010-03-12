@@ -127,6 +127,7 @@
 
 .team-sport-summary .roster td {
 	padding: 3px;
+	padding-left: 9px;
 	border: 1px solid black;
 	border-bottom: 0;
 	border-right: 0;
@@ -135,8 +136,9 @@
 }
 
 
-.team-sport-summary .roster .parent td {
-	border-top: 0;
+.roster .parent {
+	color: #333;
+  font-style: italic;
 }
 
 
@@ -161,6 +163,10 @@
   padding: 4px;
 }
 
+.team-sport-summary .roster td div.actions input  {
+  margin: 2px 0px 1px 3px;
+  padding: 1px 3px;
+}
 
 
 .team-sport-summary .roster .send-invite {
@@ -184,12 +190,13 @@
 
 
 
-.team-sport-summary  a.delete-button{
+.team-sport-summary .roster td div.actions a.delete-button{
   background: url('/images/team_sports/delete.png') no-repeat 0 0;
   display: block;
   width: 12px;
   height: 12px;
   float: right;
+  padding: 0;
 }
 
 .team-sport-summary  a.delete-button:hover

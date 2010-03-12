@@ -1,0 +1,114 @@
+-# athlete.id == @roster_entry.id && @parent && @parent.id.nil?
+- editing = edit_parent = add_parent = edit_me = false
+
+- if athlete.id == @roster_entry.id
+  - editing = true
+  - if @parent
+    - if @parent.id
+      - edit_parent = true
+    - else
+      - add_parent = true
+  - else
+    - edit_me = true
+
+-#edit_me = @parent.nil? && athlete.id == @roster_entry.id
+
+%tr{ :id=>"athlete-#{athlete.id}" }
+  %td
+    .status
+      -if athlete.user
+        %a{ :href=>user_path(athlete.user) }
+          %img{ :src=>athlete.user.avatar_photo_url(), :width=>64, :height=>64 }
+      -else
+        -if athlete.invitation_sent
+          %i Invitation&nbsp;Sent
+        -else
+          %img{ :src=>'/images/pixel.gif', :width=>'64px', :height=>'64px' }
+
+  %td
+    .no
+      - if edit_me
+        = f.text_field :number, :size=>2
+      -else
+        -if athlete.number && !athlete.number.empty?
+          = "##{h athlete.number}"
+      &nbsp;
+
+      - athlete.parents.size.times do
+        .parent parent
+
+  %td
+    .first
+      = render :partial=>'column', :locals=>{ :attr=>'firstname', :size=>12, :f=>f, :athlete=>athlete, :edit_me=>edit_me, :add_parent=>add_parent }
+
+  %td
+    .last
+      = render :partial=>'column', :locals=>{ :attr=>'lastname', :size=>12, :f=>f, :athlete=>athlete, :edit_me=>edit_me, :add_parent=>add_parent }
+
+  %td
+    .email
+      - if athlete.user && (athlete.user.email != athlete.email)
+        = link_to_remote 'New', {:url => roster_entry_path(athlete, 'roster_entries[email]'=>athlete.user.email), :confirm => "Change email # to #{athlete.user.email}", :method=>:put, :complete=>'javascript: gs.team_sports.load_current()'}, :class=>'new-info'
+
+      = render :partial=>'column', :locals=>{ :attr=>'email', :size=>16, :f=>f, :athlete=>athlete, :edit_me=>edit_me, :add_parent=>add_parent }
+
+  %td
+    .phone
+      - if athlete.user && (athlete.user.phone != athlete.phone)
+        = link_to_remote 'New', {:url => roster_entry_path(athlete, 'roster_entries[phone]'=>athlete.user.phone), :confirm => "Change phone # to #{athlete.user.phone}", :method=>:put, :complete=>'javascript: gs.team_sports.load_current()'}, :class=>'new-info'
+
+      = render :partial=>'column', :locals=>{ :attr=>'phone', :size=>10, :f=>f, :athlete=>athlete, :edit_me=>edit_me, :add_parent=>add_parent }
+
+  %td
+    .pos
+      - if edit_me
+        = f.text_field :position, :size=>6
+      -else
+        = "#{h athlete.position}&nbsp;"
+
+      - (athlete.parents.size + ( add_parent ? 1 : 0 ) ).times do
+        .parent &nbsp;
+
+  %td
+    .actions
+      - if editing
+        - if edit_me
+          -# if ( @parent || (@parent.nil? && @roster_entry.id) )
+          -# label =  ? 'Save' : 'Add'
+          = f.submit 'Save'
+          = f.submit 'Cancel', :onclick=>'javascript:gs.team_sports.load_current(); return false;'
+        - else
+          .athlete
+            - if add_parent
+              &nbsp;
+            - else
+              = link_to 'Edit', "javascript:gs.team_sports.edit_row('#{@team_sport.id}', '#{athlete.id}')"
+
+        - athlete.parents.each do |parent|
+          - if @parent == parent
+            = f.submit 'Save'
+            = f.submit 'Cancel', :onclick=>'javascript:gs.team_sports.load_current(); return false;'
+          - else
+            .parent
+              - if add_parent
+                &nbsp;
+              - else
+                - msg = "Are you sure you want to remove #{athlete.firstname} #{athlete.lastname}'s parent #{parent.firstname} #{parent.lastname}?"
+                = link_to_remote '', {:url => parent_path(parent), :confirm => msg, :method=>:delete}, :complete => evaluate_remote_response, :class=>'delete-button'
+                = link_to 'Edit Parent', "javascript:gs.team_sports.edit_parent('#{@team_sport.id}', '#{parent.id}')"
+
+        - if add_parent
+          = f.submit 'Add'
+          = f.submit 'Cancel', :onclick=>'javascript:gs.team_sports.load_current(); return false;'
+        -else
+          &nbsp;
+
+      -else
+        - msg = "Are you sure you want to remove #{athlete.firstname} #{athlete.lastname}?"
+        = link_to_remote '', {:url => roster_entry_path(athlete), :confirm => msg, :method=>:delete}, :complete => evaluate_remote_response, :class=>'delete-button'
+        .action= link_to 'Edit', "javascript:gs.team_sports.edit_row('#{@team_sport.id}', '#{athlete.id}')"
+        - if @adding != athlete.id
+          .action= link_to 'Add Parent', "javascript:gs.team_sports.add_parent('#{@team_sport.id}', '#{athlete.id}')"
+        .action= link_to 'Send Email', new_message_path(:to_roster=>athlete.id)
+        .action= link_to 'Send Text', new_text_messages_path(:to_roster=>athlete.id)
+

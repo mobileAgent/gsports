@@ -88,7 +88,17 @@
     url = '/roster_entries/roster'
 
     new Ajax.Updater(map.roster_div, url, {
-        parameters: { "id": ts_id, "add":re_id },
+        parameters: { "id": ts_id, "add_parent":re_id },
+        evalScripts: true
+      });
+  }
+
+  gs.team_sports.edit_parent = function(ts_id, p_id) {
+    map = this.panel_info(ts_id)
+    url = '/roster_entries/roster'
+
+    new Ajax.Updater(map.roster_div, url, {
+        parameters: { "id": ts_id, "edit_parent":p_id },
         evalScripts: true
       });
   }

@@ -6,7 +6,7 @@
   = f.hidden_field :access_group_id
 
 - if true
-  %tr{ :class=>(adding ? 'parent' : '') }
+  %tr
     %td{ :align=>'center' }
       - if !editing && !adding
         .send-invite
