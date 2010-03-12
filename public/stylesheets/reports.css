@@ -102,6 +102,15 @@ a.new-report-button:hover
   padding: 0 0 15px 0;
 }
 
+#Report_name_editor_input {
+  font-size: 138.5%;
+  font-weight: bold;
+  font-size: 18px;
+  font-weight: bold;
+  color: black;
+  padding: 0 0 15px 0;
+}
+
 #report-type{
   position: absolute;
   top: 0;
@@ -292,7 +301,7 @@ a.new-report-button:hover
   xfloat: right;
 
   position: absolute;
-  top: 21px;
+  top: 28px;
   left: 355px;
 
   width: 245px;
