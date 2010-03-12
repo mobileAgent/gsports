@@ -96,6 +96,10 @@ class TeamSport < ActiveRecord::Base
       ["Athletes and Coaches", 3],
       ["Athletes", 2],
       ["Coaches", 1]
+#      ,
+#      ["Parents", 4],
+#      ["Athletes and Parents", 6],
+#      ["Athletes, Coaches and Parents", 7]
     ]
   end
 

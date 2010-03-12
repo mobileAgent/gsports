@@ -127,6 +127,58 @@ class TeamSportsController < BaseController
     render :partial=>'videos'
   end
 
+  def message2
+    @team_sport = TeamSport.find(params[:id])
+
+    message_type = params[:message_type].to_i
+
+    p = { }
+
+    to = params[:recipient].to_i
+
+    if to & 1
+      p[:to_group]= "#{@team_sport.staff_access_group.id rescue -1}"
+    end
+
+    if to & 2
+      if p[:to_group]
+        p[:to_group]+=','
+      else
+        p[:to_group]=''
+      end
+      p[:to_group]+= "#{@team_sport.access_group.id}"
+    end
+
+    if to & 4
+
+      #roster = RosterEntry.roster(@team_sport.access_group).find(:all)
+
+      if message_type == 2
+
+        p[:to_emails]= 1
+
+      else
+
+        p[:to_phones]= 1
+
+
+      end
+    end
+
+
+    action = case message_type
+    when 2
+      new_text_messages_path(:to_group=>to)
+    else
+      new_message_path(:to_group=>to)
+    end
+
+    
+    redirect_to action
+
+  end
+
+
   def message
     @team_sport = TeamSport.find(params[:id])
 
