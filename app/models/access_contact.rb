@@ -34,6 +34,9 @@ class AccessContact < ActiveRecord::Base
     recipient
   end
 
+  def to_s()
+    contact_type == Type_SMS ? Utilities::readable_phone(destination) : destination
+  end
 
   def self.type_list()
     l = []

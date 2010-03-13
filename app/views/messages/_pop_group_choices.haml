@@ -8,7 +8,16 @@
     %ul
       - if @groups && !@groups.empty?
         - @groups.each do |group|
-          %li{ :onmouseover => "this.className='selected'", :onmouseout => "this.className=''", :onclick => "to_group_select('#{h(group.name)}')"}
+          -# NOTE: this logic is duplicated in _auto_complete_for_users
+          -# Expand groups for coaches
+          - if session[:mail_to_coach_group_ids] && session[:mail_to_coach_group_ids].include?(group.id)
+            - gid = group.encoded_recipient_ids.join(',') unless group.encoded_recipient_ids.nil?
+            - gname = group.recipient_display_array.join(', ') unless group.recipient_display_array.nil? 
+          - else
+            - gid = "g#{group.id}"
+            - gname = h(group.name)
+          
+          %li{ :onmouseover => "this.className='selected'", :onmouseout => "this.className=''", :onclick => "to_group_select('#{gid}','#{gname}')"}
             .mailPoster
               .mailPosterThumb
                 - sport = TeamSport.for_access_group_id(group.id).first

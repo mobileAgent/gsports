@@ -56,6 +56,7 @@ class MessageThread < ActiveRecord::Base
     (is_sms == true)
   end
   
+  # used by form only...
   def to=(entries_csv)
   end
   
@@ -65,6 +66,34 @@ class MessageThread < ActiveRecord::Base
     s += ", " unless s.nil? || s.empty?
     s
   end
+
+  # used by form only... 
+  def to_ids_choices=(entries_csv)
+  end
+
+  # used by the form
+  def to_ids_choices()
+    ary = Array.new
+    
+    unless to_roster_entry_ids_array.nil?
+      ary << to_roster_entry_ids_array.collect{ |id| "r#{id}" }
+    end
+    
+    unless to_ids_array.nil?    
+      ary << to_ids_array.collect{ |id| "u#{id}" }
+    end
+
+    if from_id
+      ary << 'u' + from_id
+    end
+    
+    unless to_access_group_ids_array.nil?
+      ary << to_access_group_ids_array.collect{ |id| "g#{id}" }
+    end
+    
+    ary.flatten.join(',') unless ary.empty?
+  end 
+
 
   def to_id=(user_id)
     logger.debug "Setting to_id for user #{user_id}"
@@ -238,4 +267,6 @@ class MessageThread < ActiveRecord::Base
 
     ary.flatten
   end 
+
+
 end

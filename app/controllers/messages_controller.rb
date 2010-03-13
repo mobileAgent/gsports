@@ -274,6 +274,9 @@ class MessagesController < BaseController
       if params[:message_thread][:to]
         entry_csv = params[:message_thread][:to]
         logger.debug ("Parsing TO: #{entry_csv}")
+
+        id_choices = Utilities::csv_split(params[:message_thread][:to_ids_choices])
+        logger.debug ("Using id choices #{id_choices.to_json}")
     
         recipient_errors = Array.new
         
@@ -283,19 +286,41 @@ class MessagesController < BaseController
           
           # is it a group name
           if current_user.admin?
-            access_group = AccessGroup.find(:first, :conditions => {:name => entry, :enabled => true})
+            access_groups = AccessGroup.find(:all, :conditions => {:name => entry, :enabled => true})
           else
-            if session[:mail_to_coach_group_ids]
-              access_group = AccessGroup.find(:first, :conditions => {:id => session[:mail_to_coach_group_ids], :name => entry})
-            end
-            if access_group.nil? && session[:mail_to_member_group_ids]
-              access_group = AccessGroup.find(:first, :conditions => {:id => session[:mail_to_member_group_ids], :name => entry})
+            group_id_filter = session[:mail_to_coach_group_ids] || session[:mail_to_member_group_ids]
+            if group_id_filter
+              logger.debug("Group id filter: #{group_id_filter.to_json}")
+              access_groups = AccessGroup.find(:all, :conditions => {:id => group_id_filter, :name => entry, :enabled => true})
             end
           end          
-          if access_group
-            logger.debug "Adding valid group '#{entry}'"
-            recipient_access_groups << access_group
-            next
+          if access_groups
+            logger.debug("Found #{access_groups.size} groups for entry #{entry}")
+            if access_groups.size == 1
+              access_group = access_groups[0]
+            else
+              # pull the match from the hidden id_choices field
+              access_groups.each do |g|
+                # use index instead of include since there may be duplicates in
+                # the list and we actually want to leave the duplicate in the list
+                # below when we call delete_at. The reason is that if the user did
+                # accidentally put a duplicate entry in there, we don't want to
+                # report an error, we want to just discard it happily with the uniq call
+                # down the logic path...
+                idx = id_choices.index("g#{g.id}")
+                unless idx.nil?
+                  access_group = g
+                  # remove this from the list of choices since its been used
+                  id_choices.delete_at(idx)
+                  break
+                end
+              end
+            end
+            if access_group
+              logger.debug "Adding valid group '#{entry}'"
+              recipient_access_groups << access_group
+              next
+            end
           end
 
           #used by roster lookup and user lookup
@@ -303,11 +328,33 @@ class MessagesController < BaseController
 
           # is it a roster entry
           if session[:mail_to_coach_group_ids]
-            roster_entry = RosterEntry.find(:first, :conditions => {:access_group_id => session[:mail_to_coach_group_ids], :firstname => fn, :lastname => ln})
-            if roster_entry
-              logger.debug "Adding roster entry #{roster_entry.id}: #{entry}"
-              recipient_roster_entries << roster_entry
-              next
+            roster_entries = RosterEntry.find(:all, :conditions => {:access_group_id => session[:mail_to_coach_group_ids], :firstname => fn, :lastname => ln})
+            if roster_entries
+              if roster_entries.size == 1
+                roster_entry = roster_entries[0]
+              else
+                # pull the match from the hidden id_choices field
+                roster_entries.each do |re|
+                # use index instead of include since there may be duplicates in
+                # the list and we actually want to leave the duplicate in the list
+                # below when we call delete_at. The reason is that if the user did
+                # accidentally put a duplicate entry in there, we don't want to
+                # report an error, we want to just discard it happily with the uniq call
+                # down the logic path...
+                idx = id_choices.index("r#{re.id}")
+                unless idx.nil?
+                    roster_entry = re
+                    # remove this from the list of choices since its been used
+                    id_choices.delete_at(idx)
+                    break
+                  end
+                end
+              end
+              if roster_entry
+                logger.debug "Adding roster entry #{roster_entry.id}: #{entry}"
+                recipient_roster_entries << roster_entry
+                next
+              end
             end
           end
 
@@ -330,13 +377,33 @@ class MessagesController < BaseController
           end
           
           # is it a gs user?
-          # Seems like find(:first) would be better, but if there are multiple users with the same name,
-          # how do we know they meant to send it to the first, and not the second. Ugly problem....
           users = User.find(:all, :conditions => {:firstname => fn, :lastname => ln, :enabled => true})
           unless users.nil? || users.empty?
-            recipient_ids << users.collect(&:id)
-            recipient_ids.flatten!
-            next
+            if users.size == 1
+              user_recip = users[0]
+            else
+              # pull the match from the hidden id_choices field
+              users.each do |u|
+                # use index instead of include since there may be duplicates in
+                # the list and we actually want to leave the duplicate in the list
+                # below when we call delete_at. The reason is that if the user did
+                # accidentally put a duplicate entry in there, we don't want to
+                # report an error, we want to just discard it happily with the uniq call
+                # down the logic path...
+                idx = id_choices.index("u#{u.id}")
+                unless idx.nil?
+                  user_recip = u
+                  # remove this from the list of choices since its been used
+                  id_choices.delete_at(idx)
+                  break
+                end
+              end
+            end
+            if user_recip
+              logger.debug "Adding user #{user_recip.id}: #{entry}"
+              recipient_ids << user_recip.id
+              next
+            end
           end
           
           logger.error "Invalid recipient entry: #{entry}"
@@ -350,7 +417,7 @@ class MessagesController < BaseController
         @message_thread.to_access_group_ids_array= recipient_access_groups.collect(&:id).uniq unless recipient_access_groups.empty?
         
         unless recipient_errors.empty?
-          flash[:error] = "Invalid recipient entr#{recipient_errors.size > 1 ? 'ies' : 'y'}: #{recipient_errors.join(', ')}"
+          flash[:error] = "Invalid or duplicate recipient entr#{recipient_errors.size > 1 ? 'ies' : 'y'}: #{recipient_errors.join(', ')}"
           render :action => :new and return
         end
       end
