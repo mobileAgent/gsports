@@ -127,7 +127,8 @@ class RosterEntriesController < BaseController
 
     unless current_user.can?(Permission::COACH, @roster_entry.team_sport)
       flash[:notice] = "You don't have permission to edit that record"
-      access_denied and return
+      access_denied
+      return
     end
 
     @roster_entry.destroy

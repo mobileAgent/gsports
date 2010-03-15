@@ -38,7 +38,7 @@
 
                 .clearDiv
                 = select_tag "recipient", options_for_select(['- Recipient List -']+team_sport.recipient_list())
-                = select_tag "message_type", options_for_select(['- Message Type -', ['Email',1], ['Text',2]])
+                = select_tag "message_type", options_for_select(['- Type -', ['Email',1], ['Text',2]])
 
 
             %h1= link_to team_sport.name, edit_team_sport_path(team_sport, :scope_select=>scope_select), {:title => "edit"}

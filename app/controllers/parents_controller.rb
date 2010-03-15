@@ -21,11 +21,11 @@ class ParentsController < BaseController
 
 
   def post
-
     @parent = nil
 
     saved = false
     msg = ''
+    its_new = false
 
     begin
       @parent = Parent.find(params[:parent][:id])
@@ -38,6 +38,7 @@ class ParentsController < BaseController
 
     rescue
       #it's new
+      its_new = true
 
       @parent = Parent.new(params[:parent])
 
@@ -52,9 +53,11 @@ class ParentsController < BaseController
     render :update do |page|
       if saved
         flashnow(page,"Parent entry was successfully updated.")
-        page.call 'gs.team_sports.sort_row', "/roster_entries/roster/#{@parent.roster_entry.team_sport.id}?order=descending&sort=id"
-
-
+        #if its_new
+          page.call 'gs.team_sports.sort_row', "/roster_entries/roster/#{@parent.roster_entry.team_sport.id}?order=descending&sort=id"
+        #else
+        #  page.call 'gs.team_sports.edit_row', @parent.roster_entry.team_sport.id, @parent.roster_entry.id
+        #end
       else
         #page.replace_html 'staff_summary', :text => 'zoom'
         flashnow(page,"Roster entry could not be updated.")
