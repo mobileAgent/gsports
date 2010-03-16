@@ -1,5 +1,26 @@
 - sms ||= @sms || params[:sms] || @message_thread.is_sms?
 - has_groups = session[:mail_to_coach_group_ids] || session[:mail_to_member_group_ids] 
+
+-# 
+  Function to parse out the value of the autocompleteid element <div class='autocompleteid'>u1234</div>
+  and append to the message_thread to_ids_choices hidden field.
+  This is used during form parsing to resolve users/rosters/groups whose names 
+  return multiple entries from the database 
+  ** IMPORTANT ** These are only CHOICES, they should be used to narrow down selections
+  that are first determined by querying by name. The reason is that these choices are 
+  not updated when a user removes recipients in the TO: field, so there may be extras...
+%script  
+  function msg_to_autocomplete_after_update(element,value) {
+  element.value = element.value + ', ';
+  var re = new RegExp('autocompleteid[^>]*>\\s*(\\S+)\\s*<','mg');
+  var match = new String(value.innerHTML.match(re));
+  if (match) {
+  var to_id = match.replace(re,'$1');
+  var input = $('message_thread_to_ids_choices')
+  if (input.value.length > 0) input.value += ','
+  input.value += to_id;
+  }
+  }
   
 .profileContentArea.listingPage
   .profilePageHeader
@@ -47,17 +68,26 @@
                     %div{:style => "float:right"}
                       - if has_groups
                         %script
-                          function to_group_select(name) {
+                          function to_group_select(gid,gname) {
                           Element.update('dialog', '');
-                          $('message_thread_to').value=$('message_thread_to').value + name + ', ';
-                          $('message_thread_to').focus();
+                          var to_el = $('message_thread_to')
+                          to_el.value=to_el.value + gname + ', ';
+                          to_el.focus();
+                          
+                          var choices = $('message_thread_to_ids_choices')
+                          if (choices.value.length > 0) {
+                          choices.value = choices.value + ',' + gid;
+                          } else {
+                          choices.value = gid;
+                          }
                           }
                         =link_to_remote image_tag('/images/messages/groups.jpg', :border => 0, :style => 'border:none'), :url => "pop_group_choices"
                       - else
                         = image_tag('/images/messages/groups_in.jpg')
                     .clearDiv
                   %div{:style => "padding:3px"}
-                    = text_area_with_auto_complete :message_thread, :to, {:autocomplete => 'off', :style => 'width:100%;border:none', :rows => 2, :cols => 80, :class => 'mceNoEditor' },{:url => { :controller => 'messages', :action => 'auto_complete_for_friend_full_name'}, :tokens => [','], :select => 'autocompletename', :after_update_element => "function(element,value){element.value = element.value + ', '}" }          
+                    = text_area_with_auto_complete :message_thread, :to, {:autocomplete => 'off', :style => 'width:100%;border:none', :rows => 2, :cols => 80, :class => 'mceNoEditor' },{:url => { :controller => 'messages', :action => 'auto_complete_for_friend_full_name'}, :tokens => [','], :select => 'autocompletename', :after_update_element => "msg_to_autocomplete_after_update" }
+                    =hidden_field :message_thread, :to_ids_choices
               .clearDiv
             .clearDiv80
             

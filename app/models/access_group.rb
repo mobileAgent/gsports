@@ -84,4 +84,31 @@ class AccessGroup < ActiveRecord::Base
     AccessGroup.find(group_ids) unless group_ids.empty?
   end
   
+  def encoded_recipient_ids
+    ids = Array.new
+    unless roster.nil? || roster.empty?
+      ids << roster.collect{ |re| "r#{re.id}" }
+    end
+    unless access_users.nil? || access_users.empty?
+      ids << access_users.collect{ |au| "u#{au.user_id}" }
+    end
+    # access_contacts are just emails or sms numbers, so no relevant id here 
+    
+    ids.flatten unless ids.empty?
+  end
+  
+  def recipient_display_array
+    names = Array.new
+    unless roster.nil? || roster.empty?
+      names << roster.collect{ |re| re.full_name }
+    end
+    unless access_users.nil? || access_users.empty?
+      names << access_users.collect{ |au| au.user.full_name }
+    end
+    unless access_contacts.nil? || access_contacts.empty?
+      names << access_contacts.collect{ |ac| ac.to_s }
+    end
+    
+    names.flatten unless names.empty?
+  end
 end

@@ -5,7 +5,17 @@
     - @groups.each do |group|
       -# break if count >= max
       - count += 1
+      -# Expand groups for coaches
+      - if session[:mail_to_coach_group_ids] && session[:mail_to_coach_group_ids].include?(group.id)
+        - gid = group.encoded_recipient_ids.join(',') unless group.encoded_recipient_ids.nil?
+        - gname = group.recipient_display_array.join(', ') unless group.recipient_display_array.nil? 
+      - else
+        - gid = "g#{group.id}"
+        - gname = h(group.name)
+      
       %li
+        .autocompleteid{:style => 'display:none'}
+          ="#{gid}"
         .mailPoster
           .mailPosterThumb
             - sport = TeamSport.for_access_group_id(group.id).first
@@ -15,7 +25,8 @@
               =image_tag(group.team.avatar_photo_url(:thumb), :alt=>"Team", :width=>"50", :height=>"50")
           .mailPosterName
             %br/
-            %span.autocompletename= h(group.name)
+            %span.autocompletename{ :style => 'display:none' }= gname
+            = h(group.name)
             .mailPosterTeam
               = "#{group.size} contacts"
         .clearDiv
@@ -25,6 +36,8 @@
       -# break if count >= max
       - count += 1
       %li
+        .autocompleteid{:style => 'display:none'}
+          ="u#{user.id}"
         .mailPoster
           .mailPosterThumb
             =image_tag(user.avatar_photo_url(:thumb), :alt=>"Profile Picture", :width=>"50", :height=>"50")
@@ -41,6 +54,8 @@
       -# break if count >= max      
       - count += 1
       %li
+        .autocompleteid{:style => 'display:none'}
+          ="r#{roster.id}"
         .mailPoster
           .mailPosterThumb
             - if roster.user_id
@@ -64,6 +79,8 @@
       -# break if count >= max
       - count += 1
       %li
+        .autocompleteid{:style => 'display:none'}
+          ="u#{user.id}"
         .mailPoster
           .mailPosterThumb
             =image_tag(user.avatar_photo_url(:thumb), :alt=>"Profile Picture", :width=>"50", :height=>"50")
