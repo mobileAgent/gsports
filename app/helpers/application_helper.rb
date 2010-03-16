@@ -138,4 +138,45 @@ module ApplicationHelper
   def character_count(field_id, update_id, options={})
     remaining_char_count(field_id,update_id,0,options)
   end
+
+
+  # in place editor
+
+
+  def edit_inplace(record, attr, options={}, &block)
+
+    defaults = { :rows=>1, :cols=>12 }
+
+    options = defaults.merge(options)
+
+    options[:value] ||= (record.attributes()[attr] rescue '-')
+    options[:url] = "/#{record.class.to_s.pluralize.downcase}/update/#{record.id}"
+
+    options[:editor_id] = "#{record.class}_#{attr}_editor"
+
+    options[:input_id]=   "#{options[:editor_id]}_input"
+    options[:input_name]= "#{record.class.to_s.downcase}[#{attr}]"
+
+
+    options.merge!(:body => capture(options, &block)) if block
+    #options.merge!(:body => block)
+
+    if false && block
+      concat(render(:partial=>'shared/inplace_edit', :locals=>{ :model=>record, :attr=>attr, :options=>options }), block.binding)
+    else
+      render(:partial=>'shared/inplace_edit', :locals=>{ :model=>record, :attr=>attr, :options=>options })
+    end
+
+#    if block_given?
+#      concat(render(:partial=>'shared/inplace_edit', :locals=>{ :model=>record, :attr=>attr, :options=>options }), block.binding)
+#    else
+#      concat(render(:partial=>'shared/inplace_edit', :locals=>{ :model=>record, :attr=>attr, :options=>options }))
+#    end
+  end
+
+  def xedit_inplace(record, attr, options)
+    render :partial=>'shared/inplace_edit', :locals=>{ :model=>record, :attr=>attr, :options=>options }
+  end
+
+
 end

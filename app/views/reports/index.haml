@@ -10,6 +10,15 @@
         Reports
       %form{ :style=>"height: 0px;" }
         = render :partial => 'permissions/scope_selector', :locals=>{ :style=>'float:left; margin-left: 16px' }
+
+
+
+  - if @scope
+    .padded{ :style=>'font-weight: bold; padding-left: 160px; width: 500px;' }
+      %br
+      %br
+      Select an existing report to edit below, or create a new report using the “New Report” button to the right. Please note that to make a new report, you need to first create clips from your full-game videos. You’ll be able to add your clips, including their titles and descriptions, to your reports.
+
   .listings{ :style=>'margin-top: 0' }
     .padded
 

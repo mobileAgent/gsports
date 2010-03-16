@@ -1,0 +1,35 @@
+= javascript_include_tag 'inplace_edit'
+= stylesheet_link_tag 'inplace_edit'
+
+.inplace-edit{ :id=>options[:editor_id], :status=>'v', :inplace_url=>options[:url], :model_name=>model.class, :attr_name=>attr }
+
+  .target{ :class=>options[:class], :id=>"#{options[:editor_id]}_target" }
+    = options[:value]
+
+
+  .editor{ :style=>'display:none' }
+    %form{ :id=>"#{options[:editor_id]}_form", :action=>"javascript:gs.inplace.submit('#{options[:editor_id]}')" }
+      -#%input{ :id=>"#{options[:editor_id]}_input", :name=>"#{model.class.to_s.downcase}[#{attr}]", :type=>'text', :value=>value, :size=>6 }
+      
+      - if options[:body]
+
+        -#= capture(form, input_id, &options[:body])
+        -#= capture(&options[:body])
+        -# options[:body].call(form, input_id)
+        = options[:body]
+
+      -else
+        %textarea{ :id=>"#{options[:editor_id]}_input", :name=>"#{model.class.to_s.downcase}[#{attr}]", :type=>'text', :rows=>options[:rows], :cols=>options[:cols] }= options[:value]
+
+
+      %input{ :type=>'submit', :value=>'Save' }
+      %input{ :type=>'hidden', :name=>'authenticity_token', :value=>form_authenticity_token.inspect }
+      -#= f.text_field attr
+      -#= f.submit :value=>'Save'
+
+
+  %a.edit-button{ :href=>"javascript:gs.inplace.edit('#{options[:editor_id]}');" }= ""
+
+  .clearDiv
+
+  

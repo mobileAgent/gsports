@@ -59,6 +59,7 @@
 
     gs_reports_clip_select(rid, divid) //oid, ocls)
     gs_reports_update_clip_droppers()
+  
   }
   
   function gs_reports_add_all(rid) {
@@ -177,9 +178,9 @@
 
   function gs_reports_update_clip_droppers() {
     clips = 0
-    $A($('clip-strip').childNodes).each(function(child) {     if(child.id && child.hasClassName('report-clip')){ clips++ }     });
+    $A($('clip-strip').childNodes).each(function(child) {     if(child.id && $(child).hasClassName('report-clip')){ clips++ }     });
     droppers = 0
-    $A($('clip-strip-decoy').childNodes).each(function(child) {     if(child.id && child.hasClassName('clip-dropper')){ droppers++ }     });
+    $A($('clip-strip-decoy').childNodes).each(function(child) {     if(child.id && $(child).hasClassName('clip-dropper')){ droppers++ }     });
 
     if(clips >= droppers){
       dropper_no = droppers+1
@@ -220,6 +221,20 @@
     img = t.select('img')[0]
     img.setStyle('border: 1px solid black')
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
   function TafelTreeInit () {

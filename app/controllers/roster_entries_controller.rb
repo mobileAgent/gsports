@@ -44,7 +44,7 @@ class RosterEntriesController < BaseController
       if current_user.can?(Permission::COACH, @roster_entry.team_sport)
         saved = @roster_entry.save
       else
-        msg = "You don't have permission to edit that record"
+        msg = "You don't have permission to create that record"
       end
 
     end
@@ -62,6 +62,9 @@ class RosterEntriesController < BaseController
           @roster_entry.share()
           @roster_entry.save()
           UserNotifier.deliver_roster_invite({:to=>@roster_entry, :from=>current_user})
+
+          @roster_entry.invitation_sent = true;
+          @roster_entry.save
           
         elsif @roster_entry.user_id
           access = AccessUser.for(@roster_entry.user, @roster_entry.access_group)
@@ -89,28 +92,33 @@ class RosterEntriesController < BaseController
 
 
   def update
-    @team_sport = TeamSport.find(params[:id])
+    @roster_entry = RosterEntry.find(params[:id])
 
-    unless current_user.can?(Permission::COACH, @team_sport)
+    unless current_user.can?(Permission::COACH, @roster_entry.team_sport)
       flash[:notice] = "You don't have permission to edit that record"
       access_denied and return
     end
 
-    @avatar = Photo.new(params[:avatar])
-    @avatar.user_id = current_user.id
-    if @avatar.save
-      @team_sport.avatar = @avatar
-    else
-      flash[:notice] = 'Avatar was not created.'
+
+    @saved = @roster_entry.update_attributes(params[:roster_entries])
+
+
+    respond_to do |format|
+      format.html {
+        if @saved
+          flash[:notice] = 'Entry successfully updated.'
+          redirect_to team_sports_url
+        else
+          render :action => "edit"
+        end
+      }
+      format.js {
+        render :action => "json"
+      }
     end
 
-    if @team_sport.update_attributes(params[:team_sport])
 
-      flash[:notice] = 'School info was successfully updated.'
-      redirect_to team_sports_url
-    else
-      render :action => "edit"
-    end
+
   end
 
 
@@ -119,7 +127,8 @@ class RosterEntriesController < BaseController
 
     unless current_user.can?(Permission::COACH, @roster_entry.team_sport)
       flash[:notice] = "You don't have permission to edit that record"
-      access_denied and return
+      access_denied
+      return
     end
 
     @roster_entry.destroy
@@ -140,15 +149,27 @@ class RosterEntriesController < BaseController
 
   def roster
     @team_sport = TeamSport.find(params[:id])
+    
+    unless current_user.can?(Permission::COACH, @team_sport)
+      access_denied
+      return
+    end
 
     @roster = RosterEntry.roster(@team_sport.access_group).find(:all, :order => sort_order)#.paginate(:all, :order => sort_order, :page => params[:page])
 
-    if params[:edit]
-      edit_me = params[:edit].to_i
-      @roster_entry = RosterEntry.find(edit_me)
-      if @roster_entry && current_user.can?(Permission::COACH, @roster_entry.team_sport)
-        @editing = edit_me
-      end
+    if p= params[:add_parent]
+      @roster_entry = RosterEntry.find(p)
+
+      @parent = Parent.new()
+      @parent.roster_entry= @roster_entry
+
+    elsif p= params[:edit_parent]
+      @parent = Parent.find(p)
+      @roster_entry = @parent.roster_entry
+
+    elsif p= params[:edit]
+      @roster_entry = RosterEntry.find(p)
+
     end
 
     if @roster_entry.nil?

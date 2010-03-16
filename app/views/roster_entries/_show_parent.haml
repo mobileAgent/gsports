@@ -1,0 +1,31 @@
+-row_name = "parent-#{parent.id}"
+%tr{ :id=>row_name, :class=>'parent' }
+  %td
+    .status
+      &nbsp;
+  %td
+    .no
+      &nbsp;
+  %td
+    .first
+      = h parent.firstname
+      &nbsp;
+  %td
+    .last
+      = h parent.lastname
+      &nbsp;
+  %td
+    .email
+      = h parent.email
+      &nbsp;
+  %td
+    .phone
+      = h parent.phone
+      &nbsp;
+  %td
+    .pos
+      &nbsp;
+  %td
+    .actions
+      = link_to_remote '', {:url => parent_path(parent), :confirm => 'Are you sure?', :method=>:delete}, :complete => evaluate_remote_response, :class=>'delete-button'
+

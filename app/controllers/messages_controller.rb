@@ -140,6 +140,14 @@ class MessagesController < BaseController
           logger.debug("sked for a bad to_id #{params[:to_id]}")
         end
       end
+
+      if params[:to_emails]
+        @message_thread.to_emails= params[:to_emails]
+      end
+
+      if params[:to_phones]
+        @message_thread.to_phones= params[:to_phones]
+      end
       
       # list of available groups prepared by setup_new_message_session
       if params[:to_group] && (session[:mail_to_coach_group_ids] || session[:mail_to_member_group_ids]) 
