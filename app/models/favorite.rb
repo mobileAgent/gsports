@@ -2,7 +2,7 @@ require 'vendor/plugins/community_engine/app/models/favorite'
 
 class Favorite < ActiveRecord::Base
 
-  VIDEO_FAVORITE_TYPES = [VideoAsset.to_s,VideoReel.to_s,VideoClip.to_s]
+  VIDEO_FAVORITE_TYPES = [VideoAsset.to_s,VideoReel.to_s,VideoClip.to_s,VideoUser.to_s]
   
   named_scope :ftype,
      lambda { |favoritable_type| { :conditions => ["favoritable_type = ?", favoritable_type] } }

@@ -20,6 +20,16 @@
                 %br/
               =game_date(f.game_date)
             .clearDiv
+        - when 'video_users'
+          .featureItem
+            .featureItemThumb
+              = link_to "<img src='#{@vidavee.file_thumbnail_medium(f.dockey)}' title='#{h(f.title).gsub(/\'/,'')}' alt='Video'/>", video_user_path(f)
+            .featureText
+              %span.profileSubHeading
+                =truncate(h(f.title),18)
+                %br/
+              =game_date(f.game_date)
+            .clearDiv
         - when 'video_clips'
           .featureItem
             .featureItemThumb
