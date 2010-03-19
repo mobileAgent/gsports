@@ -1,4 +1,4 @@
-
+f
 
 
 
@@ -183,23 +183,30 @@
     $A($('clip-strip-decoy').childNodes).each(function(child) {     if(child.id && $(child).hasClassName('clip-dropper')){ droppers++ }     });
 
     if(clips >= droppers){
-      dropper_no = droppers+1
+      gs_reports_add_clip_dropper(droppers+1)
+    }
+  }
 
-      dropper_id = "clip-dropper-"+dropper_no
+  function gs_reports_add_clip_dropper(dropper_no) {
 
-      dropper = new Element("div", { id: dropper_id })
-      dropper.addClassName('clip-dropper')
-        table = new Element("table")
+    dropper_id = "clip-dropper-"+dropper_no
+
+    dropper = new Element("div", { id: dropper_id })
+    dropper.addClassName('clip-dropper')
+
+      table = new Element("table")
+        tbody = new Element("tbody")
           tr = new Element("tr")
             td = new Element("td")
             td.innerHTML = dropper_no
           tr.appendChild(td);
-        table.appendChild(tr);
-      dropper.appendChild(table);
+        tbody.appendChild(tr);
+      table.appendChild(tbody);
+      
+    dropper.appendChild(table);
 
-      $('clip-strip-decoy').insert( dropper )
+    $('clip-strip-decoy').insert( dropper )
 
-    }
   }
 
   function gs_reports_clear_tips() {
