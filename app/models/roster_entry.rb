@@ -40,7 +40,15 @@ class RosterEntry < ActiveRecord::Base
   end
 
   def match_users()
-    User.find(:all, :conditions=>{:team_id=>access_group.team_id, :firstname=>firstname, :lastname=>lastname})
+    #conditions=>{:team_id=>access_group.team_id, :firstname=>firstname, :lastname=>lastname}
+    conditions=["team_id = ? and ( (firstname = ? and lastname = ?) or email = ? or phone = ? ) ", access_group.team_id, firstname, lastname, email, phone]
+    users = User.find(:all, :conditions=>conditions)
+    users.sort { |a,b|
+      ( a.firstname == firstname ? -4 : 0 ) + ( b.firstname == firstname ? 4 : 0 ) +
+      # redundant to query ( a.lastname  == lastname  ? 4 : 0 ) + ( b.lastname  == lastname  ? -10 : 0 ) +
+      ( a.email     == email     ? -2 : 0 ) + ( b.email     == email     ? 2 : 0 ) +
+      ( a.phone     == phone     ? -1 : 0 ) + ( b.phone     == phone     ? 1 : 0 )
+    }
   end
 
   def full_name()

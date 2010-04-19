@@ -86,25 +86,52 @@ class VideoUsersController < BaseController
 
 
   def create
-        
-    vd = params[:video_user][:video_date] 
-    if (vd && vd.length > 0 && vd.length <= 7) # yyyy-mm
-      params[:video_user][:video_date] += '-01'
+    @video_user = VideoUser.new params[:video_user]
+
+    fpath = params[:uploaded_file_path]
+    if fpath.nil? || fpath.empty?
+      @video_user.errors.add :uploaded_file_path, "Please choose a video file to upload"
     end
-    @video_uses = VideoUser.new(params[:video_user])
-    @video_user.video_status = 'unknown'
-      
-    respond_to do |format|
-      if @video_user.save!
-        flash[:notice] = 'VideoAsset was successfully created.'
-        format.html { redirect_to(@video_user) }
-        format.xml  { render :xml => @video_user, :status => :created, :location => @video_user }
-      else
-        format.html { render :action => "new" }
-        format.xml  { render :xml => @video_user.errors, :status => :unprocessable_entity }
-      end
-    end
+    
+    adjust_game_date_params(params)
+
+    @video_user.video_status = 'new'
+    @video_user.user_id = current_user.id
+
+    @video_user.tag_with(params[:tag_list] || '')
+
+    @video_user.save
+
   end
+
+
+  def adjust_game_date_params(params)
+
+    gd = params[:video_user][:game_date]
+    params[:video_user][:ignore_game_month] = false
+    params[:video_user][:ignore_game_day] = false
+    params[:video_user][:game_date_str] = gd
+    if (gd && gd.length > 0 && gd.length == 4) # yyyy
+      params[:video_user][:game_date] += "-01"
+      params[:video_user][:ignore_game_month] = true
+    end
+    gd = params[:video_user][:game_date]
+    if (gd && gd.length > 0 && gd.length == 7) # yyyy-mm
+      params[:video_user][:game_date] += '-01'
+      params[:video_user][:ignore_game_day] = true
+    end
+
+  end
+
+  def submit_video
+
+    @video_user = VideoUser.find(params[:id])
+
+    flash[:notice] = "Your video is being procesed. It may be several minutes before it appears in your gallery"
+    render :action=>:upload_success
+
+  end
+
 
 
   def update
@@ -118,20 +145,8 @@ class VideoUsersController < BaseController
     respond_to do |format|
       @video_user.tag_with(params[:tag_list] || '') 
       #@video_user = add_team_and_league_relations(@video_asset,params)
-      
-      gd = params[:video_user][:game_date]
-      params[:video_user][:ignore_game_month] = false
-      params[:video_user][:ignore_game_day] = false
-      params[:video_user][:game_date_str] = gd
-      if (gd && gd.length > 0 && gd.length == 4) # yyyy
-        params[:video_user][:game_date] += "-01"
-        params[:video_user][:ignore_game_month] = true
-      end
-      gd = params[:video_user][:game_date]
-      if (gd && gd.length > 0 && gd.length == 7) # yyyy-mm
-        params[:video_user][:game_date] += '-01'
-        params[:video_user][:ignore_game_day] = true
-      end
+
+      adjust_game_date_params(params)
         
       if @video_user.update_attributes(params[:video_user])
         flash[:notice] = 'VideoUser was successfully updated.'
@@ -172,7 +187,16 @@ class VideoUsersController < BaseController
   def swfupload
     f = params[:Filedata] # the tmp file
     fpath = VideoUser.move_upload_to_repository(f,params[:Filename])
-    @video = VideoUser.new :uploaded_file_path => fpath, :title => 'Upload in Progress', :user_id => current_user.id
+
+    #@video = VideoUser.new :uploaded_file_path => fpath, :title => 'Upload in Progress', :user_id => current_user.id
+    
+    @video = VideoUser.find(params[:id])
+    @video.uploaded_file_path = fpath
+    #@video.title = 'Upload in Progress'
+    @video.user_id = current_user.id
+
+    @video.video_status = 'saving'
+
     @video.save!
     render :text => @video.id
   rescue => e

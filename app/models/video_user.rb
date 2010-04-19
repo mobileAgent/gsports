@@ -9,6 +9,7 @@ class VideoUser < ActiveRecord::Base
 
   # Every video needs a title
   validates_presence_of :title
+  validates_presence_of :uploaded_file_path
 
   acts_as_commentable
   acts_as_taggable

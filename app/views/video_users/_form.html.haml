@@ -28,7 +28,7 @@
   %br/
   = f.text_area :description, :rows => 3, :cols => 75
 
-%p  
+%p 
   =f.label :tags
   %br/
   = text_field_tag 'tag_list', @video_user.tags.collect{|t| t.name}.join(", "), {:autocomplete => "off", :size => 35}

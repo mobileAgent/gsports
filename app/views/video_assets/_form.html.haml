@@ -9,10 +9,16 @@
   }
 %p
   = render :partial => 'permissions/scope_selector', :locals => { :auto_submit=>false, :select_first=>true }
+
 %p
   = f.label :sport
   %br/
-  = text_field_with_auto_complete :video_asset, :sport, :autocomplete => "off", :onchange => "javascript:autofill_video_title(); return true;"
+  - sports = @quickfind_sports.clone
+  - sports << VideoAsset.new({:id=>-1,:sport=>'Other'})
+  - select_proc = lambda { |s| s.sport == @video_asset.sport }
+  = collection_select(:video_asset,:sport,sports,"sport","sport",{:prompt => "-Select-", :selected => select_proc}, {:id => 'video_asset_sport_select', :name => 'video_asset_sport_select', :onchange=>'javascript:gs.video_assets.select_sport()'})
+  = text_field_with_auto_complete :video_asset, :sport, :autocomplete => "off", :onchange => "javascript:autofill_video_title(); return true;", :style=>'display:none'
+
 %p
   = f.label "Game Date"
   %br/
@@ -54,23 +60,28 @@
         %p
           %label{:for=>"video_asset[game_gender]"} Boys/Girls
           %br/
-          = collection_select("video_asset","game_gender",VideoAsset.GAME_GENDERS,"to_s","to_s",{ :selected => @video_asset.game_gender }, { :onchange => "javascript:autofill_video_title(); return true;" } )
+          = collection_select("video_asset","game_gender",VideoAsset.GAME_GENDERS,"to_s","to_s",{:prompt => "-Select-",  :selected => @video_asset.game_gender }, { :onchange => "javascript:autofill_video_title(); return true;" } )
       %td &nbsp;
       %td
         %p
           %label{:for=>"video_asset[game_level]"} Level
           %br/
-          = collection_select("video_asset","game_level",@video_asset.game_level_choices, "to_s","to_s", { :selected => @video_asset.game_level}, {:style => "width: 115px", :onchange => "javascript:autofill_video_title(); return true;"})
-          %script
+          - game_levels = @video_asset.game_level_choices.clone
+          - game_levels << 'Other'
+          = collection_select("video_asset","game_level",game_levels, "to_s","to_s", { :prompt => "-Select-", :selected => @video_asset.game_level}, {:style => "width: 115px", :id => 'video_asset_game_level_select', :name=>'video_asset_game_level_select', :onchange=>'javascript:gs.video_assets.select_game_level()'})
+          = text_field :video_asset, :game_level, :size=>12, :onchange => "javascript:autofill_video_title(); return true;", :style => "display:none"
+          -#%script
             var z=dhtmlXComboFromSelect("video_asset_game_level");
       %td &nbsp;
       %td
         %p
           %label{:for=>"video_asset[game_type]"} Game Type
           %br/
-          = collection_select("video_asset","game_type",@video_asset.game_type_choices, "to_s","to_s", {},{:style => "width: 115px", :onchange => "javascript:autofill_video_title(); return true;"})
-          %script
-            var z=dhtmlXComboFromSelect("video_asset_game_type");
+          - game_types = @video_asset.game_type_choices.clone
+          - game_types << 'Other'
+          = collection_select("video_asset","game_type", game_types, "to_s","to_s", {:prompt => "-Select-", :selected => @video_asset.game_type},{:style => "width: 115px", :id => 'video_asset_game_type_select', :name=>'video_asset_game_type_select', :onchange=>'javascript:gs.video_assets.select_game_type()'})
+          = text_field :video_asset, :game_type, :size=>12, :onchange => "javascript:autofill_video_title(); return true;", :style => "display:none"
+
       
       - access_groups = AccessGroup.for_team(current_user.team)
       - if access_groups.size > 0
@@ -115,7 +126,7 @@
   %br/
   = f.text_field :announcer_name, :size => 35
 
-%p  
+%p
   =f.label :tags
   %br/
   = text_field_tag 'tag_list', @video_asset.tags.collect{|t| t.name}.join(", "), {:autocomplete => "off", :size => 35}

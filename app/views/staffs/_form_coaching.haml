@@ -15,7 +15,8 @@
   = link_to 'Add another sport', 'javascript:gs.team.add_coach()' #, :class => 'genericButton'
 
 %script
-  - sport_list = @quickfind_sports.collect(&:sport).to_json
+  -# sport_list = @quickfind_sports.collect(&:sport).to_json
+  - sport_list = (@quickfind_sports.collect(&:sport) + TeamSport.find(:all).collect(&:name)).delete_if(){|s| s.nil? }.uniq.to_json
   = "eval('gs.team.sport_list = #{sport_list}')"
   - if @staff.id
     - @scopes = @staff.user.scopes_for(Permission::COACH)

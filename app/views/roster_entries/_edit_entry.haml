@@ -1,26 +1,35 @@
 - editing ||= false
-%tr
-  %td{ :align=>'center' }
-    - if !editing
-      .send-invite
-        Send Invite
-      = f.check_box :send_invite, :checked=>true
-    - else
-      &nbsp;
-  %td
-    = f.text_field :number, :size=>2
-  %td
-    = f.text_field :firstname, :size=>12
-  %td
-    = f.text_field :lastname, :size=>12
-  %td
-    = f.text_field :email, :size=>16
-  %td
-    = f.text_field :phone, :size=>10
-  %td
-    = f.text_field :position, :size=>8
-  %td
-    - label = (editing ? 'Save' : 'Add')
-    - label2 = (editing ? 'Saving...' : 'Adding...')
-    = f.submit label #, :disable_with => label2
-    -#:onclick=>"javascript:gs.team_sports.button_off('#{label2}')" 
+- adding  ||= false
+
+-# remote_form_for :roster_entry, @roster_entry, :url=>post_roster_entries_path(), :html=>{:id=>'roster_entry'} do |f|
+  = f.hidden_field :id
+  = f.hidden_field :access_group_id
+
+- if true
+  %tr
+    %td{ :align=>'center' }
+      - if !editing && !adding
+        .send-invite
+          Send Invite
+        = f.check_box :send_invite, :checked=>true
+      - else
+        &nbsp;
+    %td
+      - if !adding
+        = f.text_field :number, :size=>2
+    %td
+      = f.text_field :firstname, :size=>12
+    %td
+      = f.text_field :lastname, :size=>12
+    %td
+      = f.text_field :email, :size=>16
+    %td
+      = f.text_field :phone, :size=>10
+    %td
+      - if !adding
+        = f.text_field :position, :size=>8
+    %td
+      - label = (editing ? 'Save' : 'Add')
+      - label2 = (editing ? 'Saving...' : 'Adding...')
+      = f.submit label #, :disable_with => label2
+      -#:onclick=>"javascript:gs.team_sports.button_off('#{label2}')"

@@ -1,3 +1,7 @@
+= javascript_include_tag 'video_assets'
+%script
+  gs.video_assets.base_model = 'video_user'
+  
 .profileContentArea.listingPage
   .profilePageHeader
     %h2.columnDescriptor
@@ -18,19 +22,20 @@
           Wednesday, 3:00-3:30 a.m. Eastern
           %br/
           Video uploads should not be started if they will span this window
-    
-      - form_for(:video_user, @video_user,:html => {:multipart => true}, :url => {:controller => 'video_users' , :action => 'save_video'}, :html => {:id => 'upload_form', :onsubmit => 'return doSubmit();' } ) do |f|
+
+      - form_for(:video_user, @video_user, :html => {:multipart => true}, :url=>'javascript:gs.video_assets.send_meta()', :xurl => {:controller => 'video_users' , :action => 'create'}, :html => {:id => 'upload_form', :xonsubmit => 'return doSubmit();' } ) do |f|
         = render :partial => "form", :locals => { :f => f }
         %p
           <input type="hidden" name="hidFileID" id="hidFileID" value="" />
           <label for="uploaded_file_path">Selected File:</label>
           %br/
-          <input type="text" id="uploaded_file_path" disabled="disabled" style="border: solid 1px; background-color: #FFFFFF;" />
+          -#<input type="text" id="uploaded_file_path" name="video_user[uploaded_file_path]" disabled="disabled" style="border: solid 1px; background-color: #FFFFFF;" />
+          = f.text_field :uploaded_file_path, :readonly=>"readonly"
           - session_key = (ActionController::Base.session.first[:session_key] || '_session_id').to_sym
           %script{:type=>'text/javascript'}
             var uploader;
             window.onload = function (){
-            ="uploader = new GSports.SwfUpload('#{swfupload_new_video_user_path(session_key => session.session_id)}','#{Vidavee.legal_file_extensions.join(";")}', '200 MB');"
+            ="uploader = new GSports.SwfUpload(-3,'#{swfupload_new_video_user_path(session_key => session.session_id)}','#{Vidavee.legal_file_extensions.join(";")}', '200 MB');"
             };
     
         %div{:style=>"margin: 0px 10px;", :id => "flashUI"}

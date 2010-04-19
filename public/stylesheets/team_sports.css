@@ -126,20 +126,19 @@
 }
 
 .team-sport-summary .roster td {
-	padding: 1px;
+	padding: 3px;
+	padding-left: 9px;
 	border: 1px solid black;
 	border-bottom: 0;
 	border-right: 0;
   background: #F7F7F7 url(/images/team_sports/row-fade.png) repeat-x bottom left;
+  xvertical-align: top;
 }
 
 
-.team-sport-summary .roster td {
-	padding: 3px;
-	border: 1px solid black;
-	border-bottom: 0;
-	border-right: 0;
-  xvertical-align: top;
+.roster .parent {
+	color: #333;
+  font-style: italic;
 }
 
 
@@ -164,6 +163,10 @@
   padding: 4px;
 }
 
+.team-sport-summary .roster td div.actions input  {
+  margin: 2px 0px 1px 3px;
+  padding: 1px 3px;
+}
 
 
 .team-sport-summary .roster .send-invite {
@@ -187,15 +190,26 @@
 
 
 
-.team-sport-summary  a.delete-button{
+.team-sport-summary .roster td div.actions a.delete-button{
   background: url('/images/team_sports/delete.png') no-repeat 0 0;
   display: block;
   width: 12px;
   height: 12px;
   float: right;
+  padding: 0;
 }
 
 .team-sport-summary  a.delete-button:hover
 {
   xbackground-position: 0 -50px;
+}
+
+
+
+.team-sport-summary a.new-info {
+  float: right;
+  color: red;
+  font-weight: bold;
+  text-decoration: none;
+
 }

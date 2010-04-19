@@ -39,8 +39,12 @@ GameXchange needs specific information about the game you are uploading in order
         %p
           %label{:for=>"video_asset[game_level]"} Level
           %br/
-          = collection_select("video_asset","game_level",@video_asset.game_level_choices, "to_s","to_s", { :selected => @video_asset.game_level}, {:style => "width: 115px", :onchange => "javascript:autofill_video_title(); return true;"})
-          %script
+          - game_levels = @video_asset.game_level_choices.clone
+          - game_levels << 'Other'
+          = collection_select("video_asset","game_level",game_levels, "to_s","to_s", { :selected => @video_asset.game_level}, {:style => "width: 115px", :id => 'video_asset_game_level_select', :name=>'video_asset_game_level_select', :onchange=>'javascript:gs.video_assets.select_game_level()'})
+          = text_field :video_asset, :game_level, :size=>12, :onchange => "javascript:autofill_video_title(); return true;", :style => "display:none"
+          -#= collection_select("video_asset","game_level",@video_asset.game_level_choices, "to_s","to_s", { :selected => @video_asset.game_level}, {:style => "width: 115px", :onchange => "javascript:autofill_video_title(); return true;"})
+          -#%script
             var z=dhtmlXComboFromSelect("video_asset_game_level");
 
       %td &nbsp;
@@ -125,7 +129,8 @@ GameXchange needs specific information about the game you are uploading in order
         %td &nbsp;
         %td
           %p
-            - if @gamex_user
+            - @access_item = AccessItem.for_item(@video_asset).first
+            - if @gamex_user && @access_item.nil?
               - @access_item = AccessItem.new({:access_group_id => @gamex_user.access_group})
             %label{:for=>"access_item[id]"} Access Group
             %br/
