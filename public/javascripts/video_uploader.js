@@ -7,6 +7,7 @@ GSports.SwfUpload = Class.create({
       upload_url : upload_url,
       //flash_url: '/plugin_assets/community_engine/images/swf/swfupload_f9.swf',
       flash_url: '/swfupload.swf',
+      flash9_url: '/swfupload_fp9.swf',
 //      post_params : {
 //        "id" : vid
 //      },
