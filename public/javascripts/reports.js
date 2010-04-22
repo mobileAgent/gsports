@@ -1,6 +1,3 @@
-f
-
-
 
   var tree = null;
 	var reports_tree_request = null;
