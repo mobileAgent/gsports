@@ -8,7 +8,7 @@ require 'yaml'
 # ENV['RAILS_ENV'] ||= 'production'
 
 # Specifies gem version of Rails to use when vendor/rails is not present
-RAILS_GEM_VERSION = '2.1.0' unless defined? RAILS_GEM_VERSION
+RAILS_GEM_VERSION = '2.1.2' unless defined? RAILS_GEM_VERSION
 
 # Bootstrap the Rails environment, frameworks, and default configuration
 require File.join(File.dirname(__FILE__), 'boot')
@@ -24,13 +24,13 @@ Rails::Initializer.run do |config|
   # you must remove the Active Record framework.
   # config.frameworks -= [ :active_record, :active_resource, :action_mailer ]
 
-  # Specify gems that this application depends on. 
+  # Specify gems that this application depends on.
   # They can then be installed with "rake gems:install" on new installations.
   # config.gem "bj"
   # config.gem "hpricot", :version => '0.6', :source => "http://code.whytheluckystiff.net"
   # config.gem "aws-s3", :lib => "aws/s3"
 
-  # Only load the plugins named here, in the order given. By default, all plugins 
+  # Only load the plugins named here, in the order given. By default, all plugins
   # in vendor/plugins are loaded in alphabetical order.
   # :all can be used as a placeholder for all plugins not explicitly named
   # config.plugins = [ :exception_notification, :ssl_requirement, :all ]
@@ -70,7 +70,7 @@ Rails::Initializer.run do |config|
 
   # Activate observers that should always be running
   # config.active_record.observers = :cacher, :garbage_collector
-  
+
   # Make sure we get super red cloth
   config.gem "RedCloth", :version => ">= 4.0.3"
   config.gem "httpclient", :version => ">= 2.1.2"
@@ -82,16 +82,16 @@ Rails::Initializer.run do |config|
   config.gem "mocha", :version => ">= 0.9.0"
   config.gem "haml", :version => "= 2.0.3"
   #config.gem "mime-types", :version => ">= 1.15" # this one fails for some reason
-  config.gem "mysql", :version => "= 2.7"
+  config.gem "mysql", :version => ">= 2.7"
   config.gem "uuid", :version => ">= 1.0.4"
   config.gem "will_paginate", :version => ">= 2.2.2"
   config.gem "htmlentities", :version => ">= 4.0.0"
-  config.gem "ezcrypto", :version => "= 0.7"
+  config.gem "ezcrypto", :version => ">= 0.7"
   config.gem "daemons", :version => ">= 1.0.9"
   config.gem "mechanize", :version => ">= 0.7.8"
-  config.gem "curb", :version => "= 0.1.4"
-  config.gem "json", :version => "= 1.1.9"
-  
+  config.gem "curb", :version => ">= 0.1.4"
+  config.gem "json", :version => ">= 1.1.9"
+
   #resource_hacks required here to ensure routes like /:login_slug work
   config.plugins = [:engines, :community_engine, :white_list, :all]
   config.plugin_paths += ["#{RAILS_ROOT}/vendor/plugins/community_engine/engine_plugins"]
@@ -104,7 +104,7 @@ require "#{RAILS_ROOT}/vendor/plugins/community_engine/engine_config/boot.rb"
 require 'digest/md5'
 require 'activemessaging/processor'
 
-# This sets the root of where video upload and 
+# This sets the root of where video upload and
 # transfer to vidavee takes place. Best not to be
 # under the public web server as we don't want to
 # be serving these up ourselves. Put it above RAILS_ROOT
@@ -124,6 +124,6 @@ ExceptionNotifier.exception_recipients = %w(icciapps@gmail.com)
 ExceptionNotifier.sender_address = %("Application Error" <admin@globalsports.net>)
 ExceptionNotifier.email_prefix = '[GS] '
 
-# Prevent a rexml DoS attack. This has to be 
+# Prevent a rexml DoS attack. This has to be
 # at the bottom of the file
 require 'rexml-expansion-fix'
