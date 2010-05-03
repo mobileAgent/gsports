@@ -19,10 +19,10 @@ class VideoAssetsController < BaseController
   verify :method => :post, :only => [ :save_video, :swfupload ]
   after_filter :cache_control, :only => [:create, :update, :destroy]
   after_filter :expire_games_of_the_week, :only => [:destroy]
-  before_filter :find_user, :only => [:index, :show, :new, :create, :upload_video, :edit, :save_video ]
-  before_filter :find_gamex_user, :only => [:index, :show, :new, :create, :save_video ]
+  before_filter :find_user, :only => [:index, :show, :new, :create, :upload_video, :edit, :save_video, :test, :testup ]
+  before_filter :find_gamex_user, :only => [:index, :show, :new, :create, :save_video, :test, :testup ]
   #before_filter :find_staff_scope, :only => [:new, :save_video]
-  before_filter :only => [:new, :edit, :save_video, :create] do  |c| c.find_staff_scope(Permission::UPLOAD) end
+  before_filter :only => [:new, :edit, :save_video, :create, :test, :testup ] do  |c| c.find_staff_scope(Permission::UPLOAD) end
 
 
 
@@ -150,6 +150,93 @@ class VideoAssetsController < BaseController
     redirect_to url_for({ :controller => "search", :action => "my_videos" })
   end
 
+
+
+  def test
+    if @gamex_user
+      @render_gamex_tips = true
+      load_opponents()
+    end
+
+    unless current_user.can_upload?
+      flash[:notice] = "You don't have permission to upload videos"
+      redirect_to url_for({ :controller => "search", :action => "my_videos" }) and return
+    end
+
+    @video_asset = VideoAsset.new
+
+    #if is_gamex?
+    #  @video_asset.gamex_league_id = @gamex_user.league_id
+    #end
+
+    # Set default team name in the home team slot to help them figure it out
+    unless (current_user.admin? || current_user.league_staff?)
+      @video_asset.home_team_name = current_user.team.name
+      @video_asset.home_team_name = current_user.team.name
+    end
+  end
+
+  def testup
+
+    @video_asset = VideoAsset.new params[:video_asset]
+
+
+    file = @video_asset.uploaded_file_path #params[:uploaded_file_path] # the tmp file
+    filename = @video_asset.uploaded_file_path.original_filename #title.gsub(/[^a-zA-Z0-9]/,'')
+    fpath = VideoAsset.move_upload_to_repository(file,filename)
+    @video_asset.uploaded_file_path = fpath
+
+
+
+    if ! is_gamex?
+      adjust_game_date_params(params)
+    end
+
+    # Set up things that don't come naturally from the form
+    #@video_asset.video_status = 'new'
+    @video_asset.user_id = current_user.id
+    @video_asset = add_team_and_league_relations(@video_asset,params)
+
+    fix_gamex_fields()
+
+    @video_asset.tag_with(params[:tag_list] || '')
+
+    @video_asset.video_status = 'saving'
+
+
+
+    if @video_asset.save
+      #publish(:push_video_files,"#{@video_asset.id}")
+      #flash[:notice] = "Your video is being procesed. It may be several minutes before it appears in your gallery"
+
+      #redirect_to :action=>:upload_video, :id=>@video_asset.id
+
+      setup_access @video_asset
+
+
+      render :text => "OK #{@video_asset.id} _ #{CGI.escapeHTML(params.inspect)}"
+
+      #render :text => @video_asset.id
+
+      #VideoHistory.uploaded(@video_asset)
+    else
+
+      render :text => "ERR #{CGI.escapeHTML(params.inspect)}"
+
+      #flash[:notice] = "There was a problem with the video meta data"
+#      if @gamex_user
+#        @render_gamex_tips = true
+#        load_opponents()
+#      end
+      #render :action=>:new
+      #render :text => "There was a problem with the video meta data"
+      #render :partial => 'errors'
+    end
+
+
+
+
+  end
 
   def create
 
