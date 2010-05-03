@@ -8,7 +8,6 @@ tmp/**/*
 tmp/poller*.log
 tmp/poller.output
 tmp/*.pid
-videos
 public/photos
 public/assets
 prep
