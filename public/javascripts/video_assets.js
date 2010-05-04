@@ -160,7 +160,7 @@ gs.video_assets.uploader = {
 
   startCallback: function() {
     // make something useful before submit (onStart)
-    document.getElementById('uploadProgressContainer').innerHTML = '<br><img src="/images/ajax-loader.gif">&nbsp;Upload estimate: it will be a while...';
+    document.getElementById('uploadProgressContainer').innerHTML = '<br><img src="/images/ajax-loader.gif">&nbsp;';
     $(gs.video_assets.base_model+'_submit').value = "Uploading Video...";
     (gs.video_assets.base_model+'_submit').disabled = true;
     return true;

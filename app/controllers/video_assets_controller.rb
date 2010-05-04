@@ -176,7 +176,7 @@ class VideoAssetsController < BaseController
     end
   end
 
-  def testup
+  def create
 
     @video_asset = VideoAsset.new params[:video_asset]
 
@@ -214,14 +214,14 @@ class VideoAssetsController < BaseController
       setup_access @video_asset
 
 
-      render :text => "OK #{@video_asset.id} _ #{CGI.escapeHTML(params.inspect)}"
+      render :action => :upload_success, :layout=>false #:text => "OK #{@video_asset.id} _ #{CGI.escapeHTML(params.inspect)}"
 
       #render :text => @video_asset.id
 
       #VideoHistory.uploaded(@video_asset)
     else
 
-      render :text => "ERR #{CGI.escapeHTML(params.inspect)}"
+      render :action => "There was a problem with the video upload, please try again later." #"ERR #{CGI.escapeHTML(params.inspect)}"
 
       #flash[:notice] = "There was a problem with the video meta data"
 #      if @gamex_user
@@ -238,7 +238,7 @@ class VideoAssetsController < BaseController
 
   end
 
-  def create
+  def xcreate
 
     @video_asset = VideoAsset.new params[:video_asset]
 

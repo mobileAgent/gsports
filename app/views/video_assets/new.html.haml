@@ -9,7 +9,7 @@
         &gt; Upload
       -else
         %span
-          = link_to _('MY VIDEOS'), url_for({:controller => 'search', :action => 'my_videos', :user_id => @user.id})        
+          = link_to _('MY VIDEOS'), url_for({:controller => 'search', :action => 'my_videos', :user_id => @user.id})
         Upload New Video
       -#
         for
@@ -36,8 +36,8 @@
           Wednesday, 3:00-3:30 a.m. Eastern
           %br/
           Video uploads should not be started if they will span this window
-    
-      - form_for(:video_asset, @video_asset, :html => {:multipart => true}, :url=>'javascript:gs.video_assets.send_meta()', :xurl => {:controller => 'video_assets' , :action => 'create'}, :html => {:id => 'upload_form', :xonsubmit => 'return doSubmit();' } ) do |f|
+
+      - form_for(:video_asset, @video_asset, :url => {:controller => 'video_assets' , :action => 'create'}, :html => { :multipart => true, :id => 'upload_form', :onsubmit=>"return gs.video_assets.uploader.submit(this, {'onStart' : gs.video_assets.uploader.startCallback, 'onComplete' : gs.video_assets.uploader.completeCallback})" } ) do |f|
         -#= render :partial => ( @video_asset.gamex_league_id ? "gamex_form" : "form" ), :locals => { :f => f }
         = render :partial => ( @render_gamex_menu ? "gamex_form" : "form" ), :locals => { :f => f }
         %p
@@ -51,16 +51,17 @@
           <label for="uploaded_file_path">Selected File:</label>
           %br/
           -#<input type="text" id="uploaded_file_path" disabled="disabled" style="border: solid 1px; background-color: #FFFFFF;" />
-          = f.text_field :uploaded_file_path, :readonly=>"readonly"
+          -#= f.text_field :uploaded_file_path, :readonly=>"readonly"
+          = f.file_field :uploaded_file_path, :style=>'border: 0'
           - session_key = (ActionController::Base.session.first[:session_key] || '_session_id').to_sym
           - @legal_file_extensions = Vidavee.legal_file_extensions({:gamex=>@gamex_user})
-          
-          %script{:type=>'text/javascript'}
+
+          -#%script{:type=>'text/javascript'}
             var uploader;
             window.onload = function (){
             ="uploader = new GSports.SwfUpload('#{@video_asset.id}', '#{swfupload_new_video_asset_path(session_key => session.session_id)}','#{@legal_file_extensions.join(";")}');"
             };
-    
+
         %div{:style=>"margin: 0px 10px;", :id => "flashUI"}
           %div
             %p
@@ -74,8 +75,8 @@
                 You can select only one file
                 %br
                 = (AppConfig.video_asset['attachment_fu_options']['max_size'])
-                megabyte upload limit per file.                          
-          
+                megabyte upload limit per file.
+
           #uploadProgressContainer
 
         %p
