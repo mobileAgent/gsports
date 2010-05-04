@@ -160,9 +160,9 @@ gs.video_assets.uploader = {
 
   startCallback: function() {
     // make something useful before submit (onStart)
-    document.getElementById('uploadProgressContainer').innerHTML = '<br><img src="/images/ajax-loader.gif">&nbsp;';
+    document.getElementById('uploadProgressContainer').innerHTML = '<br><table><tr><td valign=top><img src="/images/ajax-loader.gif" style="padding-right:16px;"></td><td valign=top>Your video is uploading. This may take several minutes to several hours depending on the size of your video, and the speed of your internet connection. For reference, a 500MB file on a home-internet connection will usually take about an hour to upload. Please note that this browser window must remain open until upload completes.</td></tr></table>';
     $(gs.video_assets.base_model+'_submit').value = "Uploading Video...";
-    (gs.video_assets.base_model+'_submit').disabled = true;
+    $(gs.video_assets.base_model+'_submit').disabled = true;
     return true;
   },
 
