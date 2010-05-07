@@ -872,16 +872,19 @@ class MessagesController < BaseController
     end
   end
 
-
   # Auto complete for addressing message to people in your 
   # friends list by name
   def auto_complete_for_friend_full_name
+    do_recipient_auto_complete(params[:message_thread][:to], true)
+  end
+  
+  def do_recipient_auto_complete(input, include_groups=true)
     max_suggestions = 10
 
-    if params[:message_thread][:to]
+    if input
       suggestion_count = 0
 
-      search_name = params[:message_thread][:to].strip.downcase
+      search_name = input.strip.downcase
       search_name_sql = search_name + '%'
       
       # search using bidirectional wildcard if they've typed more than a couple letters
@@ -965,24 +968,26 @@ class MessagesController < BaseController
         end
       end
 
-      if current_user.admin?
-        @groups = AccessGroup.find(:all, 
-            :conditions => ["lower(name) like ? and enabled=?",search_name_sql,true], 
-            :order => "lower(name)", :limit => 5)
-      else
-        search_group_ids = Array.new
-        search_group_ids << coach_access_group_ids if coach_access_group_ids 
-        search_group_ids << member_access_group_ids if member_access_group_ids
-        unless search_group_ids.empty?
+      if include_groups
+        if current_user.admin?
           @groups = AccessGroup.find(:all, 
-              :conditions => ["lower(name) like ? and id in (?) and enabled=?",
-                              search_name_sql,search_group_ids.flatten.uniq,true], 
+              :conditions => ["lower(name) like ? and enabled=?",search_name_sql,true], 
               :order => "lower(name)", :limit => 5)
+        else
+          search_group_ids = Array.new
+          search_group_ids << coach_access_group_ids if coach_access_group_ids 
+          search_group_ids << member_access_group_ids if member_access_group_ids
+          unless search_group_ids.empty?
+            @groups = AccessGroup.find(:all, 
+                :conditions => ["lower(name) like ? and id in (?) and enabled=?",
+                                search_name_sql,search_group_ids.flatten.uniq,true], 
+                :order => "lower(name)", :limit => 5)
+          end
         end
+        
+        # update the suggestion count
+        suggestion_count += @groups.length unless @groups.nil?
       end
-      
-      # update the suggestion count
-      suggestion_count += @groups.length unless @groups.nil?
       
       if suggestion_count < max_suggestions 
         if search_name.match(/\d/)

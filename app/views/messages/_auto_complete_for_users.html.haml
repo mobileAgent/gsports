@@ -5,6 +5,8 @@
     - @groups.each do |group|
       -# break if count >= max
       - count += 1
+      
+      -# NOTE: this logic is duplicated in _pop_group_choices
       -# Expand groups for coaches
       - if session[:mail_to_coach_group_ids] && session[:mail_to_coach_group_ids].include?(group.id)
         - gid = group.encoded_recipient_ids.join(',') unless group.encoded_recipient_ids.nil?
