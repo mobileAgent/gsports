@@ -1,5 +1,5 @@
-
-- if current_page?(:action => 'show')
+-# "if true" avoi returns falseds this faulty current_page? check, which incorrectly
+- if true || current_page?(:action => 'show')
 
   - video = @video_clip || @video_reel || @video_asset || @video_user
   - if video
