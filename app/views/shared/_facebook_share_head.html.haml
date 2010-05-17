@@ -4,14 +4,25 @@
   - video = @video_clip || @video_reel || @video_asset || @video_user
   - if video
     %meta{:name=>'title', :content=>video.title}
-    %meta{:name=>'description', :content=>video.description}
+    
+    - if video.description && !video.description.empty?
+      %meta{:name=>'description', :content=>video.description}
+    - else
+      %meta{:name=>'description', :content=>video.title}
+    
     %link{:rel=>'image_src', :href=>@vidavee.file_thumbnail_medium(video.thumbnail_dockey || video.dockey)}
   
   -# inject FB meta tags for shared_access
   - if @shared_access && @shared_access.video? && @shared_access.item
     %meta{:name=>'title', :content=>@shared_access.item.title}
-    %meta{:name=>'description', :content=>@shared_access.item.description}
+    
+    - if @shared_access.item.description && !@shared_access.item.description.empty? 
+      %meta{:name=>'description', :content=>@shared_access.item.description}
+    - else
+      %meta{:name=>'description', :content=>@shared_access.item.title}
+      
     %link{:rel=>'image_src', :href=>@vidavee.file_thumbnail_medium(@shared_access.item.thumbnail_dockey || @shared_access.item.dockey)}
+
     - if params[:embed]
       - abs_share_url = "#{APP_URL}/players/previewPlayer.swf?sakey=#{@shared_access.key}&dockeys=#{@shared_access.item.dockey}"
       %link{:rel=>'video_src', :href=>abs_share_url}
