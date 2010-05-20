@@ -60,7 +60,7 @@ class ReportsController < BaseController
 
     @tree_detail += make_scope_video_tree()
 
-    @tree_detail << make_gamex_tree_root()
+    @tree_detail += make_gamex_tree_root()
 
   end
 
@@ -146,6 +146,7 @@ class ReportsController < BaseController
   end
 
   def make_gamex_tree_root()
+    gamex_list = []
 
     GamexUser.for_user(current_user).each() do |gamex|
 
@@ -174,9 +175,12 @@ class ReportsController < BaseController
         :onclick => "gs_reports_expandme"
       }
 
-      @tree_detail << gamex_tree_root
+      #@tree_detail
+      gamex_list << gamex_tree_root
 
     end
+
+    gamex_list
   end
 
 

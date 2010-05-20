@@ -1,0 +1,249 @@
+- display_new_user = @account_type == 'n' && !current_user
+#ppvRegContent
+
+  .ppvRegistrationContent{ :xstyle=>'height: 500px; width: 600px; overflow: auto;' }
+  
+
+    %p
+      %br/
+      .bothCols
+        %div{ :style => "float: right; text-align: right" }
+          (* = required information)          
+
+    -# form_for(@team_sport, :url => team_sport_url(@team_sport), :html => {:multipart => true}) do |f|
+    -# form_for(:user, :url => {:controller=>'user', :action=>'ppv_create'}, :html => {:class => 'userForm'}) do |f|
+    -# form_tag 'javascript:gs.video_assets.submit_ppv_purchase', :html => {:id => 'ppvRegForm'} do |f|
+    - form_for :user, @user, :url => "javascript:gs.video_assets.submit_ppv_purchase()", :html => {:id => 'ppvRegForm'} do |f|
+
+      = hidden_field :user, :id
+      = hidden_field :ppv, :video_id
+
+      .ppvcontentBox
+
+
+        %table{ :width=>'550px' }
+          - if !current_user
+            %tr
+              %td{ :valign=>'top' }
+                Your e-mail address will be your username.
+                Passwords should be 8-10 characters
+                in length and contain at least one number and
+                one non-alphabetic character.
+                %br
+                %br
+
+
+          -#%tr
+            %td{ :valign=>'top', :colspan=>2 }
+              = error_messages_for :user, :credit_card, :billing_address, :ppv_access
+              [
+              = logged_in?
+              ,
+              = current_user ? current_user.id : '-'
+              ]
+
+          %tr
+            %td{ :valign=>'top' }
+              - if current_user
+                = current_user.email
+              - else
+
+                %label
+                  = radio_button(:account_type, :to_s, 'n', :onclick=>'gs.video_assets.ppv_new_user()')
+                  New User
+                &nbsp;
+                %label
+                  = radio_button(:account_type, :to_s, 'e', :onclick=>'gs.video_assets.ppv_existing_user()')
+                  Existing User
+
+
+                %table
+                  %tr
+                    %td.field-block
+                      %label.required{"for"=>"email"}
+                        * E-mail address
+                      %br
+                      = text_field :user, :email, :size => 24
+
+                %table
+                  %tr
+                    %td.field-block
+                      %label.required{"for"=>"password"}
+                        * Choose a password
+                      %br
+                      = password_field :user, :password, :size => 18
+
+                    - if display_new_user
+                      %td.field-block.new_user_only
+                        %label.required{"for"=>"password_confirmation"}
+                          * Re-type password
+                        %br
+                        = password_field :user, :password_confirmation, :size => 18
+
+                %br
+                %br
+
+
+
+
+                - if @billing_gateway_error
+                  .warning
+                    = @billing_gateway_error
+
+                - if display_new_user
+                  %label.new_user_only{"for"=>"firstname"}
+                    * First Name
+                    %br
+                    = text_field :user, :firstname
+
+                  %br.new_user_only
+                  %label.new_user_only{"for"=>"lastname"}
+                    * Last Name
+                    %br
+                    = text_field :user, :lastname
+
+                  %br.new_user_only
+                  %br.new_user_only
+
+                  .field-block.new_user_only
+                    %label.required{"for"=>"birthdate"}
+                      * Birthday:
+                      %em (you must be at least 13 years old to sign up.)
+                    %br
+                    = date_select :user, :birthday, {:start_year => 1926, :end_year => Time.now.year - 13}
+
+
+              %br
+              %br
+
+              .field-block
+
+                = radio_button(:purchase, :to_s, 'd')
+                24 Hours: $X.99
+                %br
+                = radio_button(:purchase, :to_s, 'w')
+                7 Days: $Y.99
+                %br
+                = radio_button(:purchase, :to_s, 'i')
+                Forever: $Z.99
+                %br
+
+              %br
+              %br
+
+              %table
+                %tr
+                  %td.field-block
+                    %label{"for"=>"promo_code"}
+                      If you have a promotion code, enter it in the box below.
+                    %br
+                    -#= text_field_tag :promo_code, ( params[:promo] || params[:promo_code] ) , :size => 24
+                    = text_field_tag :promo_code, @promocode , :size => 24
+
+
+
+
+
+            %td{ :valign=>'top' }
+
+              %table
+                %tr
+                  %td.field-block
+                    %label{"for"=>"number"}
+                      * Card Number
+                      %br
+                      = text_field :credit_card, :number, :size => 16, :maxlength => 16
+
+                  %td.field-block
+                    %label{"for"=>"verification_value"}
+                      %nobr * Verification number
+                      %br
+                      = text_field :credit_card, :verification_value, {:size => 4, :maxlength => 4}
+
+
+              %fieldset.inline
+                %label{"for"=>"expiration_date"}
+                  * Expiration Date:
+                  %br/
+                  %table
+                    %tr
+                      %td
+                        =collection_select(:credit_card, :year, cc_years,"number","name",{:prompt => '-Year-'}, {:selected => @credit_card.year })
+                      %td
+                        =collection_select(:credit_card, :month, cc_months,"number","name",{:prompt => '-Month-'}, {:selected => @credit_card.month })
+
+              %br
+
+              %div{:id => 'billingAddress'}
+
+                %br
+                %label{:for=>'address1'}
+                  Address Line 1
+                  %br/
+                  = text_field :user, :address1
+
+                %br
+                %label{:for=>'address2'}
+                  Address Line 2
+                  %br/
+                  = text_field :user, :address2
+
+                %br
+                %label{:for=>'city'}
+                  City
+                  %br/
+                  = text_field :user, :city
+
+                %br
+
+                %table
+                  %tr
+                    %td.field-block
+                      %label{:for => 'state'}
+                        State
+                        %br/
+                        =collection_select(:user ,:state_id , State.all,"id","name", { :prompt => 'State', :selected => (@user.state? ? @user.state : '') })
+                        -#=collection_select(:billing_address ,:state , State.all,"name","name", { :prompt => 'State', :selected => (@billing_address.state? ? @billing_address.state : '') })
+
+                    %td.field-block
+                
+                      %label{:for=>'zip'}
+                        Zip/Postal Code
+                        %br/
+                        = text_field :user, :zip, :size => 10
+                      / end of billing address
+
+                %br
+                %br
+
+              %fieldset.inline
+                %input#tos{:name=>"tos", :type=>"checkbox", :value=>"tos", :checked=>params[:tos]}
+                %label{:for => "tos"}
+                  I have read and agree to the
+                  =link_to("#{AppConfig.community_name} Terms of Service", '/info/terms', {:target => "_blank"})
+
+              %fieldset.inline
+                %input#suba{ :name=>'suba', :type=>'checkbox', :value=>'suba', :checked=>params[:suba]}
+                %label{:for => "suba"}
+                  I have read and agree to the
+                  =link_to("#{AppConfig.community_name} Subscriber Agreement", "/info/subscriber_member", {:target => "_blank"})
+
+
+
+
+
+        %br
+        %br
+
+        .accountContinue2
+          %p
+            -#%input{ :name => "Continue", :type => "image", :src => "/gs/images/billing_continue.png", :value => "Continue", :alt => "Continue", :style => 'border: none' }
+            %input{ :type=>'submit', :value=>'Purchase Video' }
+
+
+      
+      
+
+
+  
+  

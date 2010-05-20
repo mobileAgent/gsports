@@ -107,14 +107,20 @@ class BaseController < ApplicationController
   # one and that only those actions which explicity skip this filter
   # should be viewable to the public side.
   def gs_login_required
-    login_required
+    #login_required
+    access = access_denied
+    if logged_in? && current_user.role
+
+      access = true
+    end
+    access
   end
   
   # Ensure the status of the users billing
   def billing_required
     # Need to check that when they edit billing, we go ahead
     # and charge them at that time.
-    return true if current_user.nil?
+    return true if current_user.nil? || current_user.role.nil?
    
     if current_user.billing_needed? || current_user.credit_card_expired?
       flash[:error] = "Your billing information must be updated!"

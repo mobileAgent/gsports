@@ -8,11 +8,15 @@ class UsersController < BaseController
   skip_before_filter :gs_login_required, :only => [:signup, :register, :new, :create, :billing, :submit_billing, :forgot_password, 
                                                    :registration_fill_team, :registration_fill_teams_by_state,
                                                    :registration_fill_league, :registration_fill_leagues_by_state,
-                                                   :auto_complete_for_team_name, :auto_complete_for_league_name]
+                                                   :auto_complete_for_team_name, :auto_complete_for_league_name,
+                                                   :ppv, :ppv_reg, :ppv_reg_create, :dashboard
+                                                   ]
   
   skip_before_filter :billing_required, :only => [:billing, :edit_billing, :submit_billing, :update_billing, 
                                                   :account_expired, :membership_canceled, :renew, :cancel_membership, 
-                                                  :auto_complete_for_team_name, :auto_complete_for_league_name]
+                                                  :auto_complete_for_team_name, :auto_complete_for_league_name,
+                                                  :ppv, :ppv_reg, :ppv_reg_create, :dashboard
+                                                  ]
   
   before_filter :admin_required, :only => [:logins, :assume, :destroy, :featured, :toggle_featured, :toggle_moderator, :disable, :registrations, :edit_promotion, :update_promotion ]
   before_filter :find_user, :only => [:edit, :edit_pro_details, :show, :update, :destroy, :statistics, :disable ]
@@ -145,6 +149,163 @@ class UsersController < BaseController
     
     #render :action => 'new', :layout => 'beta' and return if AppConfig.closed_beta_mode
   end
+
+  def ppv_reg
+    @user = User.new(params[:user])
+    @billing_address = Address.new(params[:billing_address])
+    @credit_card = ActiveMerchant::Billing::CreditCard.new(params[:credit_card])
+    @ppv = PPVAccess.new()
+    @ppv.video_id = params[:id]
+    @account_type = 'n'
+
+    ppv_prefill_payment
+
+    if !session[:promo_id].nil?
+      @promotion = Promotion.find(session[:promocode])
+    end
+
+    render :partial => 'ppv_reg'
+  end
+
+  def ppv
+    
+  end
+
+  def ppv_reg_create
+
+    #User.transaction do
+    begin
+
+      @ppv = PPVAccess.new(params[:ppv_access])
+      @billing_address = Address.new(params[:billing_address])
+      @credit_card = ActiveMerchant::Billing::CreditCard.new(params[:credit_card])
+      @purchase = params[:purchase][:to_s] if params[:purchase]
+      @account_type = params[:account_type][:to_s] if params[:account_type]
+
+      @user = ppv_process_user
+      ppv_prefill_payment
+      ppv_process_payment
+      
+      render :partial => 'ppv_pass'
+
+    rescue ActiveRecord::RecordInvalid
+      render :partial => 'ppv_reg'
+    rescue ActiveRecord::StatementInvalid
+      render :partial => 'ppv_reg'
+    end
+
+  end
+
+  def ppv_process_user
+    if logged_in?
+      @user = current_user
+    else
+      case @account_type
+      when 'n'
+        @user = User.new(params[:user])
+        @user.login= "gs#{Time.now.to_i}#{rand(1000)}"
+        @user.phone = '-'
+        @user.team_id = 1
+        @user.league_id = 1
+
+        @user.save!
+
+        self.current_user = @user
+      when 'e'
+        user=User.authenticate(params[:user][:email], params[:user][:password])
+
+        if user
+          @user = user
+          @user.password = params[:user][:password]
+          self.current_user = @user
+        else
+          @user = User.new(params[:user])
+          @user.errors.add_to_base("Email address and password are invalid.")
+          raise ActiveRecord::RecordInvalid.new(@user)
+        end
+      end
+    end
+  end
+
+  def ppv_prefill_payment
+    @credit_card.first_name = @user.firstname
+    @credit_card.last_name = @user.lastname
+
+    @billing_address.address1 = @user.address1
+    @billing_address.address2 = @user.address2
+    @billing_address.city = @user.city
+    @billing_address.state = @user.state_id
+    @billing_address.zip = @billing_address.zip
+  end
+
+  def ppv_process_payment
+    case @purchase
+    when 'w'
+      @cost = 2.99
+      @expire = Time.now + (60 * 60 * 24) * 7
+    when 'i'
+      @cost = 3.99
+      @expire = null
+    #when 'd'
+    else
+      @cost = 1.99
+      @expire = Time.now + (60 * 60 * 24)
+    end
+
+
+
+    gateway = ActiveMerchant::Billing::PayflowGateway.new(
+      :login => Active_Merchant_payflow_gateway_username,
+      :password => Active_Merchant_payflow_gateway_password,
+      :partner => Active_Merchant_payflow_gateway_partner)
+
+
+    if !params[:tos] || !params[:suba]
+      @user.errors.add_to_base("Please accept the Terms of Service and the Subscriber Agreement")
+      raise ActiveRecord::RecordInvalid.new(@user)
+    end
+
+
+    if (!@credit_card.valid?)
+      @credit_card.errors.add_to_base("Card information is not valid.")
+      raise ActiveRecord::RecordInvalid.new(@credit_card)
+    end
+
+    @response = gateway.purchase(@cost, @credit_card, {:description=>"PPV Purchase for User ID: #{@user.id}"})
+
+    logger.info "PPVREGWATCH * Response from gateway #{@response.inspect} for #{@user.full_name} at #{@cost}"
+
+    if (!@response.success?)
+      logger.info "PPVREGWATCH * Gatway response failed"
+
+      if @response.nil? || @response.message.nil? || @response.message.blank?
+        flash.now[:error] = "Sorry, we are having technical difficulties contacting our payment gateway. Try again in a few minutes."
+      else
+        flash.now[:error] = @response.message
+      end
+
+      @credit_card.errors.add_to_base(@response.message)
+
+      raise ActiveRecord::RecordInvalid.new(@credit_card)
+    end
+
+
+    logger.info "PPVREGWATCH * Gatway response is success"
+
+    credit_card_for_db = CreditCard.from_active_merchant_cc(@credit_card)
+    credit_card_for_db.user = @user
+    credit_card_for_db.save!
+
+
+    @ppv.user = @user
+    @ppv.cost = @cost
+    @ppv.expires = @expire
+    @ppv.save!
+
+
+
+  end
+
 
   def create
     @role = nil
@@ -775,7 +936,10 @@ class UsersController < BaseController
   end
   
   def dashboard
+    redirect_to ppv_user_path(current_user) if current_user.role.nil?
+
     redirect_to team_path(current_user.team)
+
   end
   
   def old_dashboard  

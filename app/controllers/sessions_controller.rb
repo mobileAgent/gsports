@@ -15,15 +15,22 @@ class SessionsController < BaseController
 
   def create
     self.current_user = User.authenticate(params[:login], params[:password])
-    if logged_in? && current_user.enabled?
-      if params[:remember_me] == "1"
-        self.current_user.remember_me
-        cookies[:auth_token] = { :value => self.current_user.remember_token , :expires => self.current_user.remember_token_expires_at }
+    if logged_in?
+      if current_user.enabled?
+        if params[:remember_me] == "1"
+          self.current_user.remember_me
+          cookies[:auth_token] = { :value => self.current_user.remember_token , :expires => self.current_user.remember_token_expires_at }
+        end
+        #session[:return_to] = params[:session_return_to]
+        redirect_back_or_default(dashboard_user_path(current_user.id))
+        flash[:notice] = "Thanks! You're now logged in."
+        current_user.track_activity(:logged_in)
+      else
+        #ppv
+        redirect_to :controller => 'users', :action => 'ppv'
+        flash[:notice] = "Thanks! You're now logged in."
+        current_user.track_activity(:logged_in)
       end
-      #session[:return_to] = params[:session_return_to]
-      redirect_back_or_default(dashboard_user_path(current_user.id))
-      flash[:notice] = "Thanks! You're now logged in."
-      current_user.track_activity(:logged_in)
     else
       self.current_user = nil
       inactive_user = User.authenticate_inactive(params[:login],params[:password])
@@ -36,7 +43,7 @@ class SessionsController < BaseController
           redirect_to :controller => 'users', :action => 'billing', :userid => inactive_user.id and return
         end
       else
-        flash[:error] = "Uh oh. We couldn't log you in with the username and password you entered. Your username is your email address. Try again?"      
+        flash[:error] = "Uh oh. We couldn't log you in with the username and password you entered. Your username is your email address. Try again?"
       end
       redirect_to teaser_path and return if AppConfig.closed_beta_mode        
       redirect_to :controller => 'base', :action => 'site_index' and return

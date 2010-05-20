@@ -101,6 +101,41 @@
     //flasherror(msg);
   }
 
+  gs.video_assets.ppv_dialog = null;
+
+  gs.video_assets.buy_video = function(id) {
+    this.ppv_dialog = new dijit.Dialog({
+        title: "Purchase Video",
+        //style: "width: 600px",
+        href:'/users/ppv_reg/'+id
+    })
+    this.ppv_dialog.show()
+  }
+
+  gs.video_assets.submit_ppv_purchase = function() {
+    var params = $('ppvRegForm').serialize(true)
+
+    $('ppvRegContent').update('<div style="height: 500px; width: 600px; overflow: auto;">submitting info...</div>')
+
+    new Ajax.Updater('ppvRegContent', '/users/ppv_reg_create', {
+      method:     'post',
+      parameters: params,
+      evalScripts: true
+      //onFailure:  function() {Element.classNames('about-content').add('failure')},
+      //onComplete: function() {new Effect.BlindDown('about-content', {duration: 0.25})}
+    });
+
+  }
+
+  gs.video_assets.ppv_new_user = function(){
+    $$('.new_user_only').each(function(e, i){e.show()})
+  }
+  gs.video_assets.ppv_existing_user = function(){
+    $$('.new_user_only').each(function(e, i){e.hide()})
+  }
+
+
+
 
 
 gs.video_assets.uploader = {

@@ -24,6 +24,7 @@ class VideoAssetsController < BaseController
   #before_filter :find_staff_scope, :only => [:new, :save_video]
   before_filter :only => [:new, :edit, :save_video, :create, :test, :testup ] do  |c| c.find_staff_scope(Permission::UPLOAD) end
 
+  skip_before_filter :gs_login_required, :only => [ :show_public ]
 
 
   uses_tiny_mce(:options => AppConfig.narrow_mce_options.merge({:width => 530}),
@@ -94,6 +95,21 @@ class VideoAssetsController < BaseController
     flash[:notice] = 'That video could not be found.'
     redirect_to url_for({ :controller => "search", :action => "my_videos" })
   end
+
+
+  #http://gsports.sonic/video_assets/show_public/74
+  def show_public
+    @video_asset = VideoAsset.find(params[:id])
+
+    # is it protected / in an access group / is gamex -> deny
+
+    # do we have ppv access?
+
+
+  end
+
+
+
 
   # GET /video_assets/new
   # GET /video_assets/new.xml
