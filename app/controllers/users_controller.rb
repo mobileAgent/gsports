@@ -936,10 +936,11 @@ class UsersController < BaseController
   end
   
   def dashboard
-    redirect_to ppv_user_path(current_user) if current_user.role.nil?
-
-    redirect_to team_path(current_user.team)
-
+    if current_user.role.nil?
+      redirect_to ppv_user_path(current_user)
+    else
+      redirect_to team_path(current_user.team)
+    end
   end
   
   def old_dashboard  
