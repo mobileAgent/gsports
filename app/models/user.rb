@@ -576,7 +576,8 @@ class User < ActiveRecord::Base
   # We only do this by email and we also handle disabled user accounts
   def self.authenticate(login, password)
     # hide records with a nil activated_at
-    u = find :first, :conditions => ['email = ? and activated_at IS NOT NULL and enabled = true', login]
+    #u = find :first, :conditions => ['email = ? and activated_at IS NOT NULL and enabled = true', login]
+    u = find :first, :conditions => ['email = ?', login]
     u && u.authenticated?(password) && u.update_last_login ? u : nil
   end
 

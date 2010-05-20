@@ -154,8 +154,8 @@ class UsersController < BaseController
     @user = User.new(params[:user])
     @billing_address = Address.new(params[:billing_address])
     @credit_card = ActiveMerchant::Billing::CreditCard.new(params[:credit_card])
-    @ppv = PPVAccess.new()
-    @ppv.video_id = params[:id]
+    @ppv_access = PPVAccess.new()
+    @ppv_access.video_id = params[:id]
     @account_type = 'n'
 
     ppv_prefill_payment
@@ -176,7 +176,7 @@ class UsersController < BaseController
     #User.transaction do
     begin
 
-      @ppv = PPVAccess.new(params[:ppv_access])
+      @ppv_access = PPVAccess.new(params[:ppv_access])
       @billing_address = Address.new(params[:billing_address])
       @credit_card = ActiveMerchant::Billing::CreditCard.new(params[:credit_card])
       @purchase = params[:purchase][:to_s] if params[:purchase]
@@ -244,11 +244,11 @@ class UsersController < BaseController
       @cost = 2.99
       @expire = Time.now + (60 * 60 * 24) * 7
     when 'i'
-      @cost = 3.99
-      @expire = null
+      @cost = 4.99
+      @expire = nil
     #when 'd'
     else
-      @cost = 1.99
+      @cost = 19.99
       @expire = Time.now + (60 * 60 * 24)
     end
 
@@ -259,6 +259,10 @@ class UsersController < BaseController
       :password => Active_Merchant_payflow_gateway_password,
       :partner => Active_Merchant_payflow_gateway_partner)
 
+    if !@purchase
+      @user.errors.add_to_base("Please choose a duration for viewing.")
+      raise ActiveRecord::RecordInvalid.new(@user)
+    end
 
     if !params[:tos] || !params[:suba]
       @user.errors.add_to_base("Please accept the Terms of Service and the Subscriber Agreement")
@@ -297,10 +301,10 @@ class UsersController < BaseController
     credit_card_for_db.save!
 
 
-    @ppv.user = @user
-    @ppv.cost = @cost
-    @ppv.expires = @expire
-    @ppv.save!
+    @ppv_access.user = @user
+    @ppv_access.cost = @cost
+    @ppv_access.expires = @expire
+    @ppv_access.save!
 
 
 
@@ -937,7 +941,8 @@ class UsersController < BaseController
   
   def dashboard
     if current_user.role.nil?
-      redirect_to ppv_user_path(current_user)
+      flash[:notice] = "Upgrade to full membership to access more site features."
+      redirect_to '/users/ppv'
     else
       redirect_to team_path(current_user.team)
     end

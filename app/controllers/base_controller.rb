@@ -108,10 +108,17 @@ class BaseController < ApplicationController
   # should be viewable to the public side.
   def gs_login_required
     #login_required
-    access = access_denied
-    if logged_in? && current_user.role
+    logged_in? && self.current_user.enabled? ? true : access_denied
+  end
 
-      access = true
+  def xgs_login_required
+    #login_required
+    #logged_in? && authorized? ? true : access_denied
+    access = access_denied
+    if logged_in?
+      if self.current_user.role
+        access = true
+      end
     end
     access
   end
@@ -120,7 +127,13 @@ class BaseController < ApplicationController
   def billing_required
     # Need to check that when they edit billing, we go ahead
     # and charge them at that time.
-    return true if current_user.nil? || current_user.role.nil?
+
+    #ppv user
+    return false if current_user.role.nil?
+
+    if current_user.nil?
+      return true
+    end
    
     if current_user.billing_needed? || current_user.credit_card_expired?
       flash[:error] = "Your billing information must be updated!"

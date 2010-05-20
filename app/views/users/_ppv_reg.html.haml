@@ -16,7 +16,7 @@
     - form_for :user, @user, :url => "javascript:gs.video_assets.submit_ppv_purchase()", :html => {:id => 'ppvRegForm'} do |f|
 
       = hidden_field :user, :id
-      = hidden_field :ppv, :video_id
+      = hidden_field :ppv_access, :video_id
 
       .ppvcontentBox
 
@@ -33,14 +33,9 @@
                 %br
 
 
-          -#%tr
+          %tr
             %td{ :valign=>'top', :colspan=>2 }
               = error_messages_for :user, :credit_card, :billing_address, :ppv_access
-              [
-              = logged_in?
-              ,
-              = current_user ? current_user.id : '-'
-              ]
 
           %tr
             %td{ :valign=>'top' }
@@ -119,13 +114,13 @@
               .field-block
 
                 = radio_button(:purchase, :to_s, 'd')
-                24 Hours: $X.99
+                24 Hours: $2.99
                 %br
                 = radio_button(:purchase, :to_s, 'w')
-                7 Days: $Y.99
+                7 Days: $4.99
                 %br
                 = radio_button(:purchase, :to_s, 'i')
-                Forever: $Z.99
+                DVD with free online access forever: $19.99
                 %br
 
               %br
@@ -217,15 +212,18 @@
                 %br
 
               %fieldset.inline
+                I have read and agree to the
+                %br
+
                 %input#tos{:name=>"tos", :type=>"checkbox", :value=>"tos", :checked=>params[:tos]}
                 %label{:for => "tos"}
-                  I have read and agree to the
+                  &nbsp;
                   =link_to("#{AppConfig.community_name} Terms of Service", '/info/terms', {:target => "_blank"})
 
               %fieldset.inline
                 %input#suba{ :name=>'suba', :type=>'checkbox', :value=>'suba', :checked=>params[:suba]}
                 %label{:for => "suba"}
-                  I have read and agree to the
+                  &nbsp;
                   =link_to("#{AppConfig.community_name} Subscriber Agreement", "/info/subscriber_member", {:target => "_blank"})
 
 
