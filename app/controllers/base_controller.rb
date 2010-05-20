@@ -129,10 +129,12 @@ class BaseController < ApplicationController
     # and charge them at that time.
 
     #ppv user
-    return false if current_user.role.nil?
+    #return false if !current_user || !current_user.enabled?
 
     if current_user.nil?
       return true
+    elsif !current_user.enabled?
+      return false
     end
    
     if current_user.billing_needed? || current_user.credit_card_expired?
