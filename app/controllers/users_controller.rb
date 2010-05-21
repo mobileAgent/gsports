@@ -183,7 +183,8 @@ class UsersController < BaseController
       @billing_address = Address.new(params[:billing_address])
       @credit_card = ActiveMerchant::Billing::CreditCard.new(params[:credit_card])
       @purchase = params[:purchase][:to_s] if params[:purchase]
-      @account_type = params[:account_type][:to_s] if params[:account_type]
+      #@account_type = params[:account_type][:to_s] if params[:account_type]
+      @account_type = 'n'
 
       @user = ppv_process_user
       ppv_prefill_payment
