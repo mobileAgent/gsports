@@ -1,4 +1,5 @@
-- allowed = current_user.has_access?(@video_asset)
+= javascript_include_tag 'video_assets'
+- allowed = current_user && current_user.has_access?(@video_asset)
 .profileContentArea.listingPage
   .profilePageHeader
     %h2.columnDescriptor
@@ -11,18 +12,24 @@
         &gt; Watch Video
       -else
         %span
-          = link_to _('MY VIDEOS'), url_for({:controller => 'search', :action => 'my_videos', :user_id => @user.id})        
+          = link_to _('MY VIDEOS'), url_for({:controller => 'search', :action => 'my_videos', :user_id => (@user ? @user.id : nil)})
         Player
   .playerContentArea
     .leftNavColPlayer
       .leftNavPlayer
         = render :partial => 'ratings/stars', :locals => { :item => @video_asset }
-        = render :partial => 'shared/video_actions', :locals => { :video_listing => @video_asset }
-        
+        - if allowed
+          = render :partial => 'shared/video_actions', :locals => { :video_listing => @video_asset }
+        -else
+          .ppv-link
+            %a{ :href=>"javascript:gs.video_assets.buy_video(#{@video_asset.id})" }
+              PPV!
     .flashArea#flashArea
     - if @vidavee && session[:vidavee] && @video_asset.dockey
-      -if allowed
-        = render(:partial => 'shared/video_player', :locals => { :fvars => {:dockey => @video_asset.dockey, :allowFS => "true"}, :params => {:allowFullScreen=>"true"}, :target => 'flashArea', :height => 685, :width => 800 })
+      - params = {:allowFullScreen=>"true"}
+      - if !allowed
+        - params[:previewTime] = 3
+      = render(:partial => 'shared/video_player', :locals => { :fvars => {:dockey => @video_asset.dockey, :allowFS => "true"}, :params => params, :target => 'flashArea', :height => 685, :width => 800 })
       
     .clearDiv
   
@@ -37,7 +44,7 @@
               #newest_comment
               =render :partial => 'comments/comment', :collection => @video_asset.comments
             %span#more_comments_links= more_comments_links(@video_asset)
-          -else
+          -#else
             We’re sorry, but this video is currently restricted. Please contact your coach at 
             - team_name = (@video_asset.team ? @video_asset.team.name : '   ' )
             = link_to team_name, team_path(@video_asset.team) 

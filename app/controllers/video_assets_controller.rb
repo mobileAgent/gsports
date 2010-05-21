@@ -24,7 +24,7 @@ class VideoAssetsController < BaseController
   #before_filter :find_staff_scope, :only => [:new, :save_video]
   before_filter :only => [:new, :edit, :save_video, :create, :test, :testup ] do  |c| c.find_staff_scope(Permission::UPLOAD) end
 
-  skip_before_filter :gs_login_required, :only => [ :show_public ]
+  skip_before_filter :gs_login_required, :only => [ :show ]
 
 
   uses_tiny_mce(:options => AppConfig.narrow_mce_options.merge({:width => 530}),
