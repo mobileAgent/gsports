@@ -1,10 +1,9 @@
-- display_new_user = @account_type == 'n' && !current_user
 #ppvRegContent
 
   .ppvRegistrationContent{ :xstyle=>'height: 500px; width: 600px; overflow: auto;' }
   
 
-    %p
+    -#%p
       %br/
       .bothCols
         %div{ :style => "float: right; text-align: right" }
@@ -18,31 +17,83 @@
       = hidden_field :user, :id
       = hidden_field :ppv_access, :video_id
 
-      .ppvcontentBox
+      .ppvHeaderBox
+
+        %h2= @video_asset.title
+        %br
+        = @video_asset.sport
+        ,
+        = @video_asset.game_date
+
+        %hr
+
+      .ppvHeaderBox
+
+        = error_messages_for :user, :credit_card, :billing_address, :ppv_access
+
+        - if @billing_gateway_error
+          .warning
+            = @billing_gateway_error
+
+        .field-block
+          %table{ :width=>'100%' }
+            %tr
+              %td
+                %label
+                  = radio_button(:purchase, :to_s, 'd')
+                  24 Hours: $2.99
+              %td
+                %label
+                  = radio_button(:purchase, :to_s, 'w')
+                  7 Days: $4.99
+              %td
+                %label
+                  = radio_button(:purchase, :to_s, 'i')
+                  Mail me a DVD! - $19.99 (w/ online viewing)
+
+        %hr
 
 
-        %table{ :width=>'550px' }
-          - if !current_user
+      - if current_user
+        .ppvContentBox
+          %b Already a GlobalSports Member?
+          %br
+          %br
+          %table{ :width=>'100%' }
+            %tr
+              %th
+                Username (Email Address):
+              %th
+                password
+              %th
+                Your card will be billed
             %tr
               %td{ :valign=>'top' }
-                Your e-mail address will be your username.
-                Passwords should be 8-10 characters
-                in length and contain at least one number and
-                one non-alphabetic character.
-                %br
-                %br
+                - if current_user
+                  = current_user.email
+                - else
+                  %input{ :type=>'text', :name=>'login', :size => 24}
+
+              %td{ :valign=>'top' }
+                %input{ :type=>'password', :name=>'password', :size => 18}
+
+              %td{ :valign=>'top' }
+                %input{ :type=>'submit', :value=>'Purchase Video' }
+
+        .ppvHeaderBox
+          %hr{ :style=>'padding-top:8px' }
 
 
-          %tr
-            %td{ :valign=>'top', :colspan=>2 }
-              = error_messages_for :user, :credit_card, :billing_address, :ppv_access
+      .ppvContentBox
+        %b Not a Member?
+        Just fill out this form to purchase.
+
+        %table{ :width=>'550px' }
 
           %tr
             %td{ :valign=>'top' }
-              - if current_user
-                = current_user.email
-              - else
 
+              -#
                 %label
                   = radio_button(:account_type, :to_s, 'n', :onclick=>'gs.video_assets.ppv_new_user()')
                   New User
@@ -52,81 +103,59 @@
                   Existing User
 
 
-                %table
-                  %tr
-                    %td.field-block
-                      %label.required{"for"=>"email"}
-                        * E-mail address
-                      %br
-                      = text_field :user, :email, :size => 24
-
-                %table
-                  %tr
-                    %td.field-block
-                      %label.required{"for"=>"password"}
-                        * Choose a password
-                      %br
-                      = password_field :user, :password, :size => 18
-
-                    - if display_new_user
-                      %td.field-block.new_user_only
-                        %label.required{"for"=>"password_confirmation"}
-                          * Re-type password
-                        %br
-                        = password_field :user, :password_confirmation, :size => 18
-
-                %br
-                %br
-
-
-
-
-                - if @billing_gateway_error
-                  .warning
-                    = @billing_gateway_error
-
-                - if display_new_user
-                  %label.new_user_only{"for"=>"firstname"}
-                    * First Name
+              %table
+                %tr
+                  %td.field-block
+                    %label.required{"for"=>"email"}
+                      * E-mail address
                     %br
-                    = text_field :user, :firstname
-
-                  %br.new_user_only
-                  %label.new_user_only{"for"=>"lastname"}
-                    * Last Name
-                    %br
-                    = text_field :user, :lastname
-
-                  %br.new_user_only
-                  %br.new_user_only
-
-                  .field-block.new_user_only
-                    %label.required{"for"=>"birthdate"}
-                      * Birthday:
-                      %em (you must be at least 13 years old to sign up.)
-                    %br
-                    = date_select :user, :birthday, {:start_year => 1926, :end_year => Time.now.year - 13}
-
-
-              %br
-              %br
-
-              .field-block
-
-                = radio_button(:purchase, :to_s, 'd')
-                24 Hours: $2.99
-                %br
-                = radio_button(:purchase, :to_s, 'w')
-                7 Days: $4.99
-                %br
-                = radio_button(:purchase, :to_s, 'i')
-                DVD with free online access forever: $19.99
-                %br
-
-              %br
-              %br
+                    = text_field :user, :email, :size => 24
 
               %table
+                %tr
+                  %td.field-block
+                    %label.required{"for"=>"password"}
+                      * Choose a password
+                    %br
+                    = password_field :user, :password, :size => 18
+
+                  %td.field-block.new_user_only
+                    %label.required{"for"=>"password_confirmation"}
+                      * Re-type password
+                    %br
+                    = password_field :user, :password_confirmation, :size => 18
+
+              %br
+              %br
+
+
+              %label.new_user_only{"for"=>"firstname"}
+                * First Name
+                %br
+                = text_field :user, :firstname
+
+              %br.new_user_only
+              %label.new_user_only{"for"=>"lastname"}
+                * Last Name
+                %br
+                = text_field :user, :lastname
+
+              %br.new_user_only
+              %br.new_user_only
+
+              .field-block.new_user_only
+                %label.required{"for"=>"birthdate"}
+                  * Birthday:
+                  %em (you must be at least 13 years old to sign up.)
+                %br
+                = date_select :user, :birthday, {:start_year => 1926, :end_year => Time.now.year - 13}
+
+
+              %br
+              %br
+              %br
+
+              -#%table
                 %tr
                   %td.field-block
                     %label{"for"=>"promo_code"}

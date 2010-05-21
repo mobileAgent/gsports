@@ -105,7 +105,7 @@
 
   gs.video_assets.buy_video = function(id) {
     this.ppv_dialog = new dijit.Dialog({
-        title: "Purchase Video",
+        title: "Pay-Per-View: Purchase Video",
         //style: "width: 600px",
         href:'/users/ppv_reg/'+id
     })

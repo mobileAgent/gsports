@@ -27,7 +27,7 @@
     -# if @rss_title && @rss_url
       = auto_discovery_link_tag(:rss, @rss_url, {:title => @rss_title})
     
-  %body{ :class=>'tundra' }
+  %body{ :class=>'soria' }
     - background = logged_in? ? "backgroundContainer bg_#{(rand(27)+1)}" : 'backgroundContainerHome'
     %div{:class => background }
       .outerContainer

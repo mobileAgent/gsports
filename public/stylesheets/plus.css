@@ -1810,3 +1810,39 @@ a.admin-userreg-link-user{
  color: red;
  font-weight:bold;
 }
+
+
+.ppv-action-purchase-video {
+  padding-top: 7px;
+}
+
+.ppv-action-purchase-video a {
+  border: 1px solid green;
+  background: green;
+  height: 25px;
+  padding: 8px 5px;
+  color: white;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.ppvRegistrationContent hr {
+  background-color: #CCC;
+  margin: 8px 0px;
+  padding: 1px 0px 0px;
+  width: 100%;
+}
+
+.ppvHeaderBox {
+  width: 550px;
+  text-align: center;
+}
+
+.ppvContentBox {
+  width: 550px;
+  padding-left: 16px;
+}
+
+.ppvContentBox th {
+  text-align: left;
+}

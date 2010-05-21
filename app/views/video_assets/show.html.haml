@@ -1,5 +1,5 @@
 = javascript_include_tag 'video_assets'
-- allowed = current_user && current_user.has_access?(@video_asset)
+- allowed = current_user && current_user.enabled? && current_user.has_access?(@video_asset)
 .profileContentArea.listingPage
   .profilePageHeader
     %h2.columnDescriptor
@@ -21,9 +21,9 @@
         - if allowed
           = render :partial => 'shared/video_actions', :locals => { :video_listing => @video_asset }
         -else
-          .ppv-link
-            %a{ :href=>"javascript:gs.video_assets.buy_video(#{@video_asset.id})" }
-              PPV!
+          .ppv-action-purchase-video
+            %a{ :href=>"javascript:gs.video_assets.buy_video(#{@video_asset.id})" }= 'Purchase Video'
+          -#= link_to image_tag('/images/purchase_video.png', :border=>0, :alt => 'Purchase Video', :title => 'Purchase Video'), "javascript:gs.video_assets.buy_video(#{@video_asset.id})"
     .flashArea#flashArea
     - if @vidavee && session[:vidavee] && @video_asset.dockey
       - params = {:allowFullScreen=>"true"}

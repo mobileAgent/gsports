@@ -151,12 +151,14 @@ class UsersController < BaseController
   end
 
   def ppv_reg
+    @video_asset = VideoAsset.find(params[:id])
     @user = User.new(params[:user])
     @billing_address = Address.new(params[:billing_address])
     @credit_card = ActiveMerchant::Billing::CreditCard.new(params[:credit_card])
     @ppv_access = PPVAccess.new()
     @ppv_access.video_id = params[:id]
     @account_type = 'n'
+    @purchase = 'd'
 
     ppv_prefill_payment
 
@@ -177,6 +179,7 @@ class UsersController < BaseController
     begin
 
       @ppv_access = PPVAccess.new(params[:ppv_access])
+      @video_asset = VideoAsset.find(@ppv_access.video_id)
       @billing_address = Address.new(params[:billing_address])
       @credit_card = ActiveMerchant::Billing::CreditCard.new(params[:credit_card])
       @purchase = params[:purchase][:to_s] if params[:purchase]
