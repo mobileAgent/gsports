@@ -20,18 +20,23 @@
     .leftNavColPlayer
       .leftNavPlayer
         = render :partial => 'ratings/stars', :locals => { :item => @video_asset }
+        %a{ :href=>"http://www.facebook.com/sharer.php?u=#{APP_URL}/video_assets/#{@video_asset.id}", :style=>'float:right;' }
+          %img{ :src=>'/images/fb_share.jpg' }
         - if allowed
-          = render :partial => 'shared/video_actions', :locals => { :video_listing => @video_asset }
+          = render :partial => 'shared/video_actions', :locals => { :video_listing => @video_asset, :ppv => @ppv }
         -else
-          .ppv-action-purchase-video
+          %a{ :href=>"javascript:gs.video_assets.buy_video(#{@video_asset.id})", :style=>'float:right;' }
+            %img{ :src=>'/images/purchase.jpg' }
+          -#.ppv-action-purchase-video
             %a{ :href=>"javascript:gs.video_assets.buy_video(#{@video_asset.id})" }= 'Purchase Video'
           -#= link_to image_tag('/images/purchase_video.png', :border=>0, :alt => 'Purchase Video', :title => 'Purchase Video'), "javascript:gs.video_assets.buy_video(#{@video_asset.id})"
     .flashArea#flashArea
     - if @vidavee && session[:vidavee] && @video_asset.dockey
       - params = {:allowFullScreen=>"true"}
+      - fvars = {:dockey => @video_asset.dockey, :allowFS => "true"}
       - if !allowed
-        - params[:previewTime] = 3
-      = render(:partial => 'shared/video_player', :locals => { :fvars => {:dockey => @video_asset.dockey, :allowFS => "true"}, :params => params, :target => 'flashArea', :height => 685, :width => 800 })
+        - fvars[:previewTime] = 60
+      = render(:partial => 'shared/video_player', :locals => { :fvars => fvars, :params => params, :target => 'flashArea', :height => 685, :width => 800 })
       
     .clearDiv
   

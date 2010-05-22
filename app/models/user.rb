@@ -383,12 +383,12 @@ class User < ActiveRecord::Base
       end
     end
 
-    if !enabled?
-      ppv_accesses = PPVAccess.for_user(self).for_video(item).active
-      if ppv_accesses.empty?
-        return false
-      end
-    end
+    return false if !enabled? && !can_ppv?(item)
+
+    # if !enabled?
+      # ppv = PPVAccess.for_user(self).for_video(item).active.first
+      # return false if !ppv
+    # end
 
     logger.info("has_access? #{access_pass}")
     # or is guarded by access groups
@@ -404,6 +404,10 @@ class User < ActiveRecord::Base
     logger.info("has_access? #{access_pass}")
     
     access_pass
+  end
+
+  def can_ppv?(video)
+    PPVAccess.for_user(self).for_video(video).active.first
   end
 
   def needs_access_to_clip?(item)

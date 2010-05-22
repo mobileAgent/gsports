@@ -170,7 +170,7 @@ class UsersController < BaseController
   end
 
   def ppv
-    
+    @ppvs = PPVAccess.for_user(current_user).active.paginate(:page => params[:page])
   end
 
   def ppv_reg_create

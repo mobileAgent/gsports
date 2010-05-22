@@ -16,8 +16,18 @@
 .listingBox-2cols{:id => "#{video_type}_#{video_listing.id}"}
   - if show_tab
     .tabWrapper
-      .listingTab
+      .listingTab{ :style=>'float:left' }
         = video_tab_name(video_listing) #"#{VideoClip === video_listing ? 'Clip' : VideoReel === video_listing ? 'Reel ' : 'Full Game'}"
+      - if !current_user.enabled?
+        - ppv = current_user.can_ppv?(video_listing)
+        - if ppv
+          .ppv{ :style=>'float:right' }
+            - if ppv.expires
+              Expires: 
+              = ppv.expires
+            - else
+              Unlimited Access
+      .clearDiv
     .clearDiv
   .frameTop
   .col1

@@ -1,17 +1,30 @@
+- @skip_profile_nav = true
 .profileContentArea.listingPage
   .profilePageHeader
     %h2.columnDescriptor
       %span
-        Pay Per View Access
+        Welcome Back 
       - if current_user
         = " for #{current_user.full_name} &lt;#{current_user.email}&gt;"
-  .listings
+  .listings{ :style=>'width: 900px' }
     .padded
+  
+      .padded
+        You are currently registered as a Pay-Per-View user.  If you would like to see our subscription plans, please 
+        %a{ :href=>'/register' }
+          click here
+    
+        %br
+        %br
+    
+        %h2 Your Video Library
+   
+        %br
+        %br
+        
+      .clearDiv
 
-
-
-
-      %table{:border => 0, :cellspacing => 0, :cellpadding => 0, :width => '100%'}
+      -#%table{:border => 0, :cellspacing => 0, :cellpadding => 0, :width => '100%'}
         %thead
           %tr.yellowHeader
             %th.padded.contentBoxHeader ID
@@ -20,10 +33,20 @@
             %th.padded.contentBoxHeader Expiration
 
         %tbody
-          - access_list = PPVAccess.for_user(current_user)
-          - for ppv in access_list
+          - for ppv in @videos
             %tr.leagueList
               %td.leagueList= ppv.id
               %td.leagueList= "(#{ppv.video_id}) #{link_to((ppv.video.title rescue '-'), video_asset_path(ppv.video_id))}"
               %td.leagueList= ppv.cost
               %td.leagueList= ppv.expires
+
+      -  for ppv in @ppvs
+        - video = ppv.video
+        - if video
+          =render :partial => 'shared/video_listing', :locals => { :video_listing => video, :skip_controls => false, :show_tab => true }
+        
+      .clearDiv
+
+      - if @videos.respond_to?('total_pages')
+        .apple_pagination
+          = will_paginate @videos
