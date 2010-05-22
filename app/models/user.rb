@@ -383,6 +383,13 @@ class User < ActiveRecord::Base
       end
     end
 
+    if !enabled?
+      ppv_accesses = PPVAccess.for_user(self).for_video(item).active
+      if ppv_accesses.empty?
+        return false
+      end
+    end
+
     logger.info("has_access? #{access_pass}")
     # or is guarded by access groups
     access_items = AccessItem.for_item(item)

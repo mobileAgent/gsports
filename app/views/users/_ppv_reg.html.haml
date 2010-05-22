@@ -1,6 +1,6 @@
 #ppvRegContent
-
-  .ppvRegistrationContent{ :xstyle=>'height: 500px; width: 600px; overflow: auto;' }
+  - style = "height: #{current_user ? 3 : 6}00px; width: 600px; overflow: auto;" 
+  .ppvRegistrationContent{ :style=>style }
   
 
     -#%p
@@ -54,7 +54,7 @@
         %hr
 
 
-      - if current_user
+      - if true #current_user
         .ppvContentBox
           %b Already a GlobalSports Member?
           %br
@@ -71,8 +71,9 @@
               %td{ :valign=>'top' }
                 - if current_user
                   = current_user.email
+                  %input{ :type=>'hidden', :name=>'login', :value=>current_user.email }
                 - else
-                  %input{ :type=>'text', :name=>'login', :size => 24}
+                  %input{ :type=>'text', :name=>'login', :size => 24 }
 
               %td{ :valign=>'top' }
                 %input{ :type=>'password', :name=>'password', :size => 18}
@@ -84,193 +85,163 @@
           %hr{ :style=>'padding-top:8px' }
 
 
-      .ppvContentBox
-        %b Not a Member?
-        Just fill out this form to purchase.
-
-        %table{ :width=>'550px' }
-
-          %tr
-            %td{ :valign=>'top' }
-
-              -#
-                %label
-                  = radio_button(:account_type, :to_s, 'n', :onclick=>'gs.video_assets.ppv_new_user()')
-                  New User
-                &nbsp;
-                %label
-                  = radio_button(:account_type, :to_s, 'e', :onclick=>'gs.video_assets.ppv_existing_user()')
-                  Existing User
-
-
-              %table
-                %tr
-                  %td.field-block
-                    %label.required{"for"=>"email"}
-                      * E-mail address
-                    %br
-                    = text_field :user, :email, :size => 24
-
-              %table
-                %tr
-                  %td.field-block
-                    %label.required{"for"=>"password"}
-                      * Choose a password
-                    %br
-                    = password_field :user, :password, :size => 18
-
-                  %td.field-block.new_user_only
-                    %label.required{"for"=>"password_confirmation"}
-                      * Re-type password
-                    %br
-                    = password_field :user, :password_confirmation, :size => 18
-
-              %br
-              %br
-
-
-              %label.new_user_only{"for"=>"firstname"}
-                * First Name
-                %br
-                = text_field :user, :firstname
-
-              %br.new_user_only
-              %label.new_user_only{"for"=>"lastname"}
-                * Last Name
-                %br
-                = text_field :user, :lastname
-
-              %br.new_user_only
-              %br.new_user_only
-
-              .field-block.new_user_only
-                %label.required{"for"=>"birthdate"}
-                  * Birthday:
-                  %em (you must be at least 13 years old to sign up.)
-                %br
-                = date_select :user, :birthday, {:start_year => 1926, :end_year => Time.now.year - 13}
-
-
-              %br
-              %br
-              %br
-
-              -#%table
-                %tr
-                  %td.field-block
-                    %label{"for"=>"promo_code"}
-                      If you have a promotion code, enter it in the box below.
-                    %br
-                    -#= text_field_tag :promo_code, ( params[:promo] || params[:promo_code] ) , :size => 24
-                    = text_field_tag :promo_code, @promocode , :size => 24
-
-
-
-
-
-            %td{ :valign=>'top' }
-
-              %table
-                %tr
-                  %td.field-block
-                    %label{"for"=>"number"}
-                      * Card Number
-                      %br
-                      = text_field :credit_card, :number, :size => 16, :maxlength => 16
-
-                  %td.field-block
-                    %label{"for"=>"verification_value"}
-                      %nobr * Verification number
-                      %br
-                      = text_field :credit_card, :verification_value, {:size => 4, :maxlength => 4}
-
-
-              %fieldset.inline
-                %label{"for"=>"expiration_date"}
-                  * Expiration Date:
-                  %br/
-                  %table
-                    %tr
-                      %td
-                        =collection_select(:credit_card, :year, cc_years,"number","name",{:prompt => '-Year-'}, {:selected => @credit_card.year })
-                      %td
-                        =collection_select(:credit_card, :month, cc_months,"number","name",{:prompt => '-Month-'}, {:selected => @credit_card.month })
-
-              %br
-
-              %div{:id => 'billingAddress'}
-
-                %br
-                %label{:for=>'address1'}
-                  Address Line 1
-                  %br/
-                  = text_field :user, :address1
-
-                %br
-                %label{:for=>'address2'}
-                  Address Line 2
-                  %br/
-                  = text_field :user, :address2
-
-                %br
-                %label{:for=>'city'}
-                  City
-                  %br/
-                  = text_field :user, :city
-
-                %br
-
+      - if !current_user
+        .ppvContentBox
+          %b Not a Member?
+          Just fill out this form to purchase.
+  
+          %table{ :width=>'550px' }
+            %tr
+              %td{ :valign=>'top' }
                 %table
                   %tr
                     %td.field-block
-                      %label{:for => 'state'}
-                        State
-                        %br/
-                        =collection_select(:user ,:state_id , State.all,"id","name", { :prompt => 'State', :selected => (@user.state? ? @user.state : '') })
-                        -#=collection_select(:billing_address ,:state , State.all,"name","name", { :prompt => 'State', :selected => (@billing_address.state? ? @billing_address.state : '') })
-
+                      %label.required{"for"=>"email"}
+                        * E-mail address
+                      %br
+                      = text_field :user, :email, :size => 24
+                %table
+                  %tr
                     %td.field-block
+                      %label.required{"for"=>"password"}
+                        * Choose a password
+                      %br
+                      = password_field :user, :password, :size => 18
+  
+                    %td.field-block
+                      %label.required{"for"=>"password_confirmation"}
+                        * Re-type password
+                      %br
+                      = password_field :user, :password_confirmation, :size => 18
+          
+          %hr
                 
-                      %label{:for=>'zip'}
-                        Zip/Postal Code
-                        %br/
-                        = text_field :user, :zip, :size => 10
-                      / end of billing address
+          %table{ :width=>'100%' }
+            %tr
+              %td{ :valign=>'top' }
+  
+    
+  
+                %table
+                  %tr
+                    %td.field-block
 
+        
+                      %label{"for"=>"firstname"}
+                        * First Name
+                        %br
+                        = text_field :user, :firstname, :size=>16
+        
+                    %td.field-block
+                      %label{"for"=>"lastname"}
+                        * Last Name
+                        %br
+                        = text_field :user, :lastname, :size=>16
+        
+  
+  
+                %div{:id => 'billingAddress'}
+  
+                  %br
+                  %label{:for=>'address1'}
+                    Address Line 1
+                    %br/
+                    = text_field :user, :address1
+  
+                  %br
+                  %label{:for=>'address2'}
+                    Address Line 2
+                    %br/
+                    = text_field :user, :address2
+  
+                  %br
+                  %label{:for=>'city'}
+                    City
+                    %br/
+                    = text_field :user, :city
+  
+                  %br
+  
+                  %table
+                    %tr
+                      %td.field-block
+                        %label{:for => 'state'}
+                          State
+                          %br/
+                          =collection_select(:user ,:state_id , State.all,"id","name", { :prompt => 'State', :selected => (@user.state? ? @user.state : '') })
+                          -#=collection_select(:billing_address ,:state , State.all,"name","name", { :prompt => 'State', :selected => (@billing_address.state? ? @billing_address.state : '') })
+  
+                      %td.field-block
+                  
+                        %label{:for=>'zip'}
+                          Zip/Postal Code
+                          %br/
+                          = text_field :user, :zip, :size => 10
+                        / end of billing address
+  
+                -#.field-block
+                  %label.required{"for"=>"birthdate"}
+                    * Birthday:
+                    %em (you must be at least 13 years old to sign up.)
+                  %br
+                  = date_select :user, :birthday, {:start_year => 1926, :end_year => Time.now.year - 13}
+  
+                -#%table
+                  %tr
+                    %td.field-block
+                      %label{"for"=>"promo_code"}
+                        If you have a promotion code, enter it in the box below.
+                      %br
+                      -#= text_field_tag :promo_code, ( params[:promo] || params[:promo_code] ) , :size => 24
+                      = text_field_tag :promo_code, @promocode , :size => 24
+  
+              %td{ :valign=>'top' }
+  
+                %table
+                  %tr
+                    %td.field-block
+                      %label{"for"=>"number"}
+                        * Card Number
+                        %br
+                        = text_field :credit_card, :number, :size => 16, :maxlength => 16
+  
+                    %td.field-block
+                      %label{"for"=>"verification_value"}
+                        %nobr * Verification number
+                        %br
+                        = text_field :credit_card, :verification_value, {:size => 4, :maxlength => 4}
+  
+  
+                %fieldset.inline
+                  %label{"for"=>"expiration_date"}
+                    * Expiration Date:
+                    %br/
+                    %table
+                      %tr
+                        %td
+                          =collection_select(:credit_card, :year, cc_years,"number","name",{:prompt => '-Year-'}, {:selected => @credit_card.year })
+                        %td
+                          =collection_select(:credit_card, :month, cc_months,"number","name",{:prompt => '-Month-'}, {:selected => @credit_card.month })
+  
                 %br
-                %br
-
-              %fieldset.inline
-                I have read and agree to the
-                %br
-
-                %input#tos{:name=>"tos", :type=>"checkbox", :value=>"tos", :checked=>params[:tos]}
-                %label{:for => "tos"}
-                  &nbsp;
-                  =link_to("#{AppConfig.community_name} Terms of Service", '/info/terms', {:target => "_blank"})
-
-              %fieldset.inline
-                %input#suba{ :name=>'suba', :type=>'checkbox', :value=>'suba', :checked=>params[:suba]}
-                %label{:for => "suba"}
-                  &nbsp;
-                  =link_to("#{AppConfig.community_name} Subscriber Agreement", "/info/subscriber_member", {:target => "_blank"})
-
-
-
-
-
-        %br
-        %br
+  
+                %fieldset.inline
+                  I have read and agree to the
+                  %br
+  
+                  %input#tos{:name=>"tos", :type=>"checkbox", :value=>"tos", :checked=>params[:tos]}
+                  %label{:for => "tos"}
+                    &nbsp;
+                    =link_to("#{AppConfig.community_name} Terms of Service", '/info/terms', {:target => "_blank"})
+  
+                %fieldset.inline
+                  %input#suba{ :name=>'suba', :type=>'checkbox', :value=>'suba', :checked=>params[:suba]}
+                  %label{:for => "suba"}
+                    &nbsp;
+                    =link_to("#{AppConfig.community_name} Subscriber Agreement", "/info/subscriber_member", {:target => "_blank"})
+  
 
         .accountContinue2
           %p
             -#%input{ :name => "Continue", :type => "image", :src => "/gs/images/billing_continue.png", :value => "Continue", :alt => "Continue", :style => 'border: none' }
             %input{ :type=>'submit', :value=>'Purchase Video' }
-
-
-      
-      
-
-
-  
-  

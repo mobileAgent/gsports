@@ -1,3 +1,10 @@
-
-yay!
+You've purchased 
+= @video_asset.title
+%br
+%br
+click 
+%a{ :href=>video_asset_path(@video_asset) }
+  here
+if you are not redirected
 %script
+  = "window.location = '#{video_asset_path(@video_asset)}';"

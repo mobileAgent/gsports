@@ -1,5 +1,7 @@
 = javascript_include_tag 'video_assets'
-- allowed = current_user && current_user.enabled? && current_user.has_access?(@video_asset)
+-# allowed = current_user && current_user.enabled? && current_user.has_access?(@video_asset)
+-# allowed = current_user && ((current_user.enabled? && current_user.has_access?(@video_asset)) || (current_user.can_ppv?) )
+- allowed = current_user && current_user.has_access?(@video_asset)
 .profileContentArea.listingPage
   .profilePageHeader
     %h2.columnDescriptor

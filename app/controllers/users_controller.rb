@@ -184,9 +184,9 @@ class UsersController < BaseController
       @credit_card = ActiveMerchant::Billing::CreditCard.new(params[:credit_card])
       @purchase = params[:purchase][:to_s] if params[:purchase]
       #@account_type = params[:account_type][:to_s] if params[:account_type]
-      @account_type = 'n'
+      @account_type = (params[:login] && !params[:login].empty?) ? 'e' : 'n'
 
-      @user = ppv_process_user
+      ppv_process_user
       ppv_prefill_payment
       ppv_process_payment
       
@@ -201,11 +201,21 @@ class UsersController < BaseController
   end
 
   def ppv_process_user
-    if logged_in?
-      @user = current_user
-    else
+#    if logged_in?
+#      @user = current_user
+#      user=User.authenticate(params[:login], params[:password])
+#
+#
+#      @credit_card = @user.credit_card
+#    else
       case @account_type
       when 'n'
+    
+        if !params[:tos] || !params[:suba]
+          @user.errors.add_to_base("Please accept the Terms of Service and the Subscriber Agreement")
+          raise ActiveRecord::RecordInvalid.new(@user)
+        end
+        
         @user = User.new(params[:user])
         @user.login= "gs#{Time.now.to_i}#{rand(1000)}"
         @user.phone = '-'
@@ -215,31 +225,36 @@ class UsersController < BaseController
         @user.save!
 
         self.current_user = @user
+        
+        @credit_card.first_name = @user.firstname
+        @credit_card.last_name = @user.lastname
+        
       when 'e'
-        user=User.authenticate(params[:user][:email], params[:user][:password])
+        #user=User.authenticate(params[:user][:email], params[:user][:password])
+        user=User.authenticate(params[:login], params[:password])
 
         if user
           @user = user
-          @user.password = params[:user][:password]
+          #@user.password = params[:user][:password]
+          @user.password = params[:password]
           self.current_user = @user
+          
+          @credit_card = @user.credit_card
         else
           @user = User.new(params[:user])
           @user.errors.add_to_base("Email address and password are invalid.")
           raise ActiveRecord::RecordInvalid.new(@user)
         end
       end
-    end
+#    end
   end
 
   def ppv_prefill_payment
-    @credit_card.first_name = @user.firstname
-    @credit_card.last_name = @user.lastname
-
     @billing_address.address1 = @user.address1
     @billing_address.address2 = @user.address2
     @billing_address.city = @user.city
     @billing_address.state = @user.state_id
-    @billing_address.zip = @billing_address.zip
+    @billing_address.zip = @user.zip
   end
 
   def ppv_process_payment
@@ -265,11 +280,6 @@ class UsersController < BaseController
 
     if !@purchase
       @user.errors.add_to_base("Please choose a duration for viewing.")
-      raise ActiveRecord::RecordInvalid.new(@user)
-    end
-
-    if !params[:tos] || !params[:suba]
-      @user.errors.add_to_base("Please accept the Terms of Service and the Subscriber Agreement")
       raise ActiveRecord::RecordInvalid.new(@user)
     end
 
