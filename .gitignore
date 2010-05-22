@@ -1,7 +1,7 @@
 log/*.log
 log/*.pid
 db/sphinx
-config/*.sphinx.conf
+config/aaron.sphinx.conf
 nbproject
 .DS_Store
 tmp/**/*
