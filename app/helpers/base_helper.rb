@@ -30,17 +30,27 @@ module BaseHelper
         title = @user.full_name + '\'s photos &raquo; ' + app_base + tagline
       end
     when 'video_assets'
-      if @user and @user.full_name
+      if @controller.action_name == 'show' and @video_asset
+        title = @video_asset.title + ' &raquo; ' + app_base + tagline
+      elsif @user and @user.full_name
         title = @user.full_name + '\'s videos &raquo; ' + app_base + tagline
       end
     when 'video_reels'
-      if @user and @user.full_name
+      if @controller.action_name == 'show' and @video_reel
+        title = @video_reel.title + ' &raquo; ' + app_base + tagline
+      elsif @user and @user.full_name
         title = @user.full_name + '\'s reels &raquo; ' + app_base + tagline
       end
     when 'video_clips'
-      if @user and @user.full_name
+      if @controller.action_name == 'show' and @video_clip
+        title = @video_clip.title + ' &raquo; ' + app_base + tagline
+      elsif @user and @user.full_name
         title = @user.full_name + '\'s clips &raquo; ' + app_base + tagline
       end
+    when 'shared_access'
+      if @shared_access and @shared_access.video? and @shared_access.item
+        title = @shared_access.item.title + ' &raquo; ' + app_base + tagline
+      end    
     when 'clippings'
       if @user and @user.full_name
         title = @user.full_name + '\'s clippings &raquo; ' + app_base + tagline
