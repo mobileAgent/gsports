@@ -1,3 +1,5 @@
+- DEFAULT_DESCRIPTION = 'Check out this video, and come create your own clips and highlights from the thousands of full-game videos at GlobalSports.net'
+
 -# "if true" avoi returns falseds this faulty current_page? check, which incorrectly
 - if true || current_page?(:action => 'show')
 
@@ -8,7 +10,7 @@
     - if video.description && !video.description.empty?
       %meta{:name=>'description', :content=>video.description}
     - else
-      %meta{:name=>'description', :content=>video.title}
+      %meta{:name=>'description', :content=>DEFAULT_DESCRIPTION}
     
     %link{:rel=>'image_src', :href=>@vidavee.file_thumbnail_medium(video.thumbnail_dockey || video.dockey)}
   
@@ -19,7 +21,7 @@
     - if @shared_access.item.description && !@shared_access.item.description.empty? 
       %meta{:name=>'description', :content=>@shared_access.item.description}
     - else
-      %meta{:name=>'description', :content=>@shared_access.item.title}
+      %meta{:name=>'description', :content=>DEFAULT_DESCRIPTION}
       
     %link{:rel=>'image_src', :href=>@vidavee.file_thumbnail_medium(@shared_access.item.thumbnail_dockey || @shared_access.item.dockey)}
 
