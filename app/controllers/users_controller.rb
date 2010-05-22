@@ -219,6 +219,7 @@ class UsersController < BaseController
         @user = User.new(params[:user])
         @user.login= "gs#{Time.now.to_i}#{rand(1000)}"
         @user.phone = '-'
+        @user.birthday= '1969-01-01'
         @user.team_id = 1
         @user.league_id = 1
 
