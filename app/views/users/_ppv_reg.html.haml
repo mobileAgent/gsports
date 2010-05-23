@@ -256,7 +256,7 @@
                       =link_to("#{AppConfig.community_name} Subscriber Agreement", "/info/subscriber_member", {:target => "_blank"})
 
 
-        .accountContinue2
-          %p
+        .ppvContentBox{ :style=>'float:right; width: 200px;' }
+          -#%p
             -#%input{ :name => "Continue", :type => "image", :src => "/gs/images/billing_continue.png", :value => "Continue", :alt => "Continue", :style => 'border: none' }
-            %input{ :type=>'submit', :value=>'Purchase Video' }
+          %input{ :type=>'submit', :value=>'Purchase Video' }

@@ -8,13 +8,14 @@
 
 .homeText
   -#%h1.homeTextWelcome= "Welcome to #{AppConfig.community_name}!"
-  - video = VideoAsset.find(719)
+  -# video = VideoAsset.find(719)
   %h2{ :style=>'color: green; font-size: 131%;' }
     NYPD vs. FDNY, Fun City Bowl XVIII, May 23, 2010
   %table
     %tr
       %td
-        %img{ :style=>'padding: 6px 6px 0 0', :src=>"#{@vidavee.file_thumbnail_medium(video.thumbnail_dockey || video.dockey)}" }
+        -#%img{ :style=>'padding: 6px 6px 0 0', :src=>"#{@vidavee.file_thumbnail_medium(video.thumbnail_dockey || video.dockey)}" }
+        %img{ :style=>'padding: 6px 6px 0 0', :src=>"/images/tmp/NYPDvsFDNC.jpg" }
       %td{ :style=>'color: black' }
         Today's Fun City Bowl game will be available for purchase and viewing on Global Sports on Monday, May 24th. Please check back to watch the game!
   %br/
@@ -22,7 +23,7 @@
     %strong
       Full Game Video
     Global Sports has partnered with schools and private clubs to assemble the largest full game video sports library on the Web! Watch games from start to finish or just the big plays on your computer whenever and wherever you want.
-  %p
+  -#%p
     %strong
       Safe and Secure
     We pride ourselves on being a trusted partner to schools, parents, coaches and our youth.  We have built an extremely secure site and screen our users to minimize inappropriate content and misuse of our platform.
