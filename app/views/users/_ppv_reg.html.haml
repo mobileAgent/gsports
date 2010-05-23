@@ -1,8 +1,7 @@
 #ppvRegContent
-  - style = "height: #{current_user ? 3 : 6}00px; width: 600px; overflow: auto;" 
+  - style = "height: #{(!current_user || @prompt_for_card) ? 6 : 3}00px; width: 600px; overflow: auto;"
   .ppvRegistrationContent{ :style=>style }
   
-
     -#%p
       %br/
       .bothCols
@@ -73,7 +72,7 @@
                   = current_user.email
                   %input{ :type=>'hidden', :name=>'login', :value=>current_user.email }
                 - else
-                  %input{ :type=>'text', :name=>'login', :size => 24 }
+                  %input{ :type=>'text', :name=>'login', :size => 32 }
 
               %td{ :valign=>'top' }
                 %input{ :type=>'password', :name=>'password', :size => 18}
@@ -99,7 +98,7 @@
                       %label.required{"for"=>"email"}
                         * E-mail address
                       %br
-                      = text_field :user, :email, :size => 24
+                      = text_field :user, :email, :size => 32
                 %table
                   %tr
                     %td.field-block
@@ -115,7 +114,9 @@
                       = password_field :user, :password_confirmation, :size => 18
           
           %hr
-                
+
+      - if !current_user || @prompt_for_card
+        .ppvContentBox
           %table{ :width=>'100%' }
             %tr
               %td{ :valign=>'top' }
@@ -222,24 +223,25 @@
                           =collection_select(:credit_card, :year, cc_years,"number","name",{:prompt => '-Year-'}, {:selected => @credit_card.year })
                         %td
                           =collection_select(:credit_card, :month, cc_months,"number","name",{:prompt => '-Month-'}, {:selected => @credit_card.month })
-  
-                %br
-  
-                %fieldset.inline
-                  I have read and agree to the
+
+                - if !current_user
                   %br
-  
-                  %input#tos{:name=>"tos", :type=>"checkbox", :value=>"tos", :checked=>params[:tos]}
-                  %label{:for => "tos"}
-                    &nbsp;
-                    =link_to("#{AppConfig.community_name} Terms of Service", '/info/terms', {:target => "_blank"})
-  
-                %fieldset.inline
-                  %input#suba{ :name=>'suba', :type=>'checkbox', :value=>'suba', :checked=>params[:suba]}
-                  %label{:for => "suba"}
-                    &nbsp;
-                    =link_to("#{AppConfig.community_name} Subscriber Agreement", "/info/subscriber_member", {:target => "_blank"})
-  
+
+                  %fieldset.inline
+                    I have read and agree to the
+                    %br
+
+                    %input#tos{:name=>"tos", :type=>"checkbox", :value=>"tos", :checked=>params[:tos]}
+                    %label{:for => "tos"}
+                      &nbsp;
+                      =link_to("#{AppConfig.community_name} Terms of Service", '/info/terms', {:target => "_blank"})
+
+                  %fieldset.inline
+                    %input#suba{ :name=>'suba', :type=>'checkbox', :value=>'suba', :checked=>params[:suba]}
+                    %label{:for => "suba"}
+                      &nbsp;
+                      =link_to("#{AppConfig.community_name} Subscriber Agreement", "/info/subscriber_member", {:target => "_blank"})
+
 
         .accountContinue2
           %p

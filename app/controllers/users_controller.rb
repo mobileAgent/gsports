@@ -188,6 +188,7 @@ class UsersController < BaseController
 
       ppv_process_user
       ppv_prefill_payment
+      @prompt_for_card = true #if we go back now, we'll need it
       ppv_process_payment
       
       render :partial => 'ppv_pass'
@@ -210,13 +211,13 @@ class UsersController < BaseController
 #    else
       case @account_type
       when 'n'
+        @user = User.new(params[:user])
     
         if !params[:tos] || !params[:suba]
           @user.errors.add_to_base("Please accept the Terms of Service and the Subscriber Agreement")
           raise ActiveRecord::RecordInvalid.new(@user)
         end
         
-        @user = User.new(params[:user])
         @user.login= "gs#{Time.now.to_i}#{rand(1000)}"
         @user.phone = '-'
         @user.birthday= '1969-01-01'
@@ -224,6 +225,8 @@ class UsersController < BaseController
         @user.league_id = 1
 
         @user.save!
+
+        @user.password = params[:password] # for the form ui
 
         self.current_user = @user
         
@@ -239,8 +242,13 @@ class UsersController < BaseController
           #@user.password = params[:user][:password]
           @user.password = params[:password]
           self.current_user = @user
-          
-          @credit_card = @user.credit_card
+
+          if(params[:credit_card])
+            @credit_card.first_name = @user.firstname
+            @credit_card.last_name = @user.lastname
+          else
+            @credit_card = @user.credit_card
+          end
         else
           @user = User.new(params[:user])
           @user.errors.add_to_base("Email address and password are invalid.")
