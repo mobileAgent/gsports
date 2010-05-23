@@ -121,7 +121,10 @@ class VideoAsset < ActiveRecord::Base
 
   named_scope :ready,
     :conditions => ["video_status = 'ready' and dockey IS NOT NULL"]
-  
+
+  def is_restricted?
+    !AccessItem.for_item(self).empty?
+  end
 
   def self.video_repository
     VIDEO_REPOSITORY

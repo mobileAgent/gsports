@@ -19,19 +19,20 @@
   .playerContentArea
     .leftNavColPlayer
       .leftNavPlayer{ :style=>'width:490px;' }
-        = render :partial => 'ratings/stars', :locals => { :item => @video_asset }
-        %a{ :href=>"http://www.facebook.com/sharer.php?u=#{APP_URL}/video_assets/#{@video_asset.id}", :style=>'float:right;' }
-          %img{ :src=>'/images/fb_share.jpg' }
-        - if allowed
-          = render :partial => 'shared/video_actions', :locals => { :video_listing => @video_asset, :ppv => @ppv }
-        -else
-          %a{ :href=>"javascript:gs.video_assets.buy_video(#{@video_asset.id})", :style=>'float:right;' }
-            %img{ :src=>'/images/purchase.jpg' }
-          -#.ppv-action-purchase-video
-            %a{ :href=>"javascript:gs.video_assets.buy_video(#{@video_asset.id})" }= 'Purchase Video'
-          -#= link_to image_tag('/images/purchase_video.png', :border=>0, :alt => 'Purchase Video', :title => 'Purchase Video'), "javascript:gs.video_assets.buy_video(#{@video_asset.id})"
+        - if ! @video_asset.is_restricted?
+          = render :partial => 'ratings/stars', :locals => { :item => @video_asset }
+          %a{ :href=>"http://www.facebook.com/sharer.php?u=#{APP_URL}/video_assets/#{@video_asset.id}", :style=>'float:right;' }
+            %img{ :src=>'/images/fb_share.jpg' }
+          - if allowed
+            = render :partial => 'shared/video_actions', :locals => { :video_listing => @video_asset, :ppv => @ppv }
+          -else
+            %a{ :href=>"javascript:gs.video_assets.buy_video(#{@video_asset.id})", :style=>'float:right;' }
+              %img{ :src=>'/images/purchase.jpg' }
+            -#.ppv-action-purchase-video
+              %a{ :href=>"javascript:gs.video_assets.buy_video(#{@video_asset.id})" }= 'Purchase Video'
+            -#= link_to image_tag('/images/purchase_video.png', :border=>0, :alt => 'Purchase Video', :title => 'Purchase Video'), "javascript:gs.video_assets.buy_video(#{@video_asset.id})"
     .flashArea#flashArea
-    - if @vidavee && session[:vidavee] && @video_asset.dockey
+    - if @vidavee && session[:vidavee] && @video_asset.dockey && !@video_asset.is_restricted?
       - params = {:allowFullScreen=>"true"}
       - fvars = {:dockey => @video_asset.dockey, :allowFS => "true"}
       - player_name = '/players/clipmaker.swf'
@@ -53,7 +54,7 @@
               #newest_comment
               =render :partial => 'comments/comment', :collection => @video_asset.comments
             %span#more_comments_links= more_comments_links(@video_asset)
-          -#else
+          -elsif @video_asset.is_restricted?
             We’re sorry, but this video is currently restricted. Please contact your coach at 
             - team_name = (@video_asset.team ? @video_asset.team.name : '   ' )
             = link_to team_name, team_path(@video_asset.team) 
