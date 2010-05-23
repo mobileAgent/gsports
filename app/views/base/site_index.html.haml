@@ -7,8 +7,16 @@
 = render :partial => 'shared/video_player', :locals => {:target => 'homeFlash', :player_name => '/players/main.swf', :fvars => {:dockeys => @game_dockey_string } }
 
 .homeText
-  %h1.homeTextWelcome= "Welcome to #{AppConfig.community_name}!"
-  %br/
+  -#%h1.homeTextWelcome= "Welcome to #{AppConfig.community_name}!"
+  - video = VideoAsset.find(719)
+  %h2{ :style=>'color: green; font-size: 131%;' }
+    NYPD vs. FDNY, Fun City Bowl XVIII, May 23, 2010
+  %table
+    %tr
+      %td
+        %img{ :style=>'padding: 6px 6px 0 0', :src=>"#{@vidavee.file_thumbnail_medium(video.thumbnail_dockey || video.dockey)}" }
+      %td{ :style=>'color: black' }
+        Today's Fun City Bowl game will be available for purchase and viewing on Global Sports on Monday, May 24th. Please check back to watch the game!
   %br/
   %p
     %strong
@@ -26,6 +34,6 @@
     %strong
       Stay Current...or Reminisce
     Our Members are constantly adding new content to the site to bring you the latest games. We also have a vintage &quot;Classics&quot; section of the site where we have games from the 1950&rsquo;s, 60&rsquo;s, 70&rsquo;s and 80&rsquo;s.
-  = link_to image_tag('/images/watch_demo2.gif', :alt => 'Click here to watch the demo video and learn more about Global Sports...', :title => 'Click here to watch the demo video and learn more about Global Sports...'), '/info/demo'
+  -#= link_to image_tag('/images/watch_demo2.gif', :alt => 'Click here to watch the demo video and learn more about Global Sports...', :title => 'Click here to watch the demo video and learn more about Global Sports...'), '/info/demo'
 /
   end col 2

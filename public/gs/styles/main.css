@@ -800,11 +800,12 @@ td.forumList,th.forumList {
 .homeText {
 	width:330px;
 	margin: 0px;
-	padding-top: 20px; /* mjf */
+	/* padding-top: 20px;  mjf */
+	padding-top: 10px;
 	padding-right: 20px;
 	padding-bottom: 0; /* mjf */
 	padding-left: 15px;
-	background-image: url(../images/home_welcome_to_global_sports.gif);
+	/* background-image: url(../images/home_welcome_to_global_sports.gif); */
 	background-repeat: no-repeat;
 	background-position: 15px 20px;
 	color:#4D4D4D;
