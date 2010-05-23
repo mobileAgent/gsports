@@ -34,9 +34,11 @@
     - if @vidavee && session[:vidavee] && @video_asset.dockey
       - params = {:allowFullScreen=>"true"}
       - fvars = {:dockey => @video_asset.dockey, :allowFS => "true"}
+      - player_name = '/players/clipmaker.swf'
       - if !allowed
         - fvars[:previewTime] = 60
-      = render(:partial => 'shared/video_player', :locals => { :fvars => fvars, :params => params, :target => 'flashArea', :height => 685, :width => 800 })
+        - player_name = '/players/clipmaker-ppv.swf'
+      = render(:partial => 'shared/video_player', :locals => { :player_name => player_name, :fvars => fvars, :params => params, :target => 'flashArea', :height => 685, :width => 800 })
       
     .clearDiv
   
