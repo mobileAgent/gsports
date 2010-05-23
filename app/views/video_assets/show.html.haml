@@ -18,7 +18,7 @@
         Player
   .playerContentArea
     .leftNavColPlayer
-      .leftNavPlayer
+      .leftNavPlayer{ :style=>'width:490px;' }
         = render :partial => 'ratings/stars', :locals => { :item => @video_asset }
         %a{ :href=>"http://www.facebook.com/sharer.php?u=#{APP_URL}/video_assets/#{@video_asset.id}", :style=>'float:right;' }
           %img{ :src=>'/images/fb_share.jpg' }
