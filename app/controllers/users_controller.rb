@@ -187,9 +187,11 @@ class UsersController < BaseController
       @account_type = (params[:login] && !params[:login].empty?) ? 'e' : 'n'
 
       ppv_process_user
-      ppv_prefill_payment
-      @prompt_for_card = true #if we go back now, we'll need it
-      ppv_process_payment
+      if !@user.enabled?
+        ppv_prefill_payment
+        @prompt_for_card = true #if we go back now, we'll need it
+        ppv_process_payment
+      end
       
       render :partial => 'ppv_pass'
 
@@ -209,8 +211,12 @@ class UsersController < BaseController
 #
 #      @credit_card = @user.credit_card
 #    else
-      case @account_type
-      when 'n'
+
+
+#      case @account_type
+#      when 'n'
+
+      if !current_user
         @user = User.new(params[:user])
     
         if !params[:tos] || !params[:suba]
@@ -226,16 +232,17 @@ class UsersController < BaseController
 
         @user.save!
 
-        @user.password = params[:password] # for the form ui
+        #@user.password = params[:password] # for the form ui
 
         self.current_user = @user
         
         @credit_card.first_name = @user.firstname
         @credit_card.last_name = @user.lastname
-        
-      when 'e'
+      
+      else
+#      when 'e'
         #user=User.authenticate(params[:user][:email], params[:user][:password])
-        user=User.authenticate(params[:login], params[:password])
+        user = User.authenticate(params[:login], params[:password]) || User.authenticate(params[:user][:email], params[:user][:password])
 
         if user
           @user = user

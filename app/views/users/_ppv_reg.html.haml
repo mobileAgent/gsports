@@ -24,17 +24,21 @@
         ,
         = @video_asset.game_date
 
-        %hr
-
       .ppvHeaderBox
-
         = error_messages_for :user, :credit_card, :billing_address, :ppv_access
 
         - if @billing_gateway_error
           .warning
             = @billing_gateway_error
 
-        .field-block
+      .ppvContentBox
+        %br
+        %br
+        How long do you want access to this video?
+
+      .ppvHeaderBox
+
+        .field-block{ :style=>"padding: 6px 0 0 18px;" }
           %table{ :width=>'100%' }
             %tr
               %td
@@ -50,13 +54,17 @@
                   = radio_button(:purchase, :to_s, 'i')
                   Mail me a DVD! - $19.99 (w/ online viewing)
 
-        %hr
 
+      - if true #!current_user
 
-      - if true #current_user
-        .ppvContentBox
-          %b Already a GlobalSports Member?
+        .ppvHeaderBox
           %br
+          %br
+
+        .ppvContentBox{ :style=>"border: 1px solid #D2D5DD;" }
+          %h2 Already a GlobalSports Member?
+          %br
+          Subscription members will not be charged. If you are a Pay-Per-View member, the card associated with your account will be charged the amount you selected.
           %br
           %table{ :width=>'100%' }
             %tr
@@ -78,16 +86,21 @@
                 %input{ :type=>'password', :name=>'password', :size => 18}
 
               %td{ :valign=>'top' }
-                %input{ :type=>'submit', :value=>'Purchase Video' }
+                %input{ :type=>'submit', :value=>'Access Video' }
 
         .ppvHeaderBox
-          %hr{ :style=>'padding-top:8px' }
 
 
-      - if !current_user
+      - if !current_user || @prompt_for_card
         .ppvContentBox
-          %b Not a Member?
-          Just fill out this form to purchase.
+          - if !@prompt_for_card
+            %br
+            %h2 Not a Member?
+            %br
+            Use this form to become a Pay-Per-View member of Global Sports.  If you are interested in a subscription access plan,
+            %a{ :href=>'/register' }
+              click here
+            %br
   
           %table{ :width=>'550px' }
             %tr
@@ -106,16 +119,16 @@
                         * Choose a password
                       %br
                       = password_field :user, :password, :size => 18
-  
-                    %td.field-block
-                      %label.required{"for"=>"password_confirmation"}
-                        * Re-type password
-                      %br
-                      = password_field :user, :password_confirmation, :size => 18
+
+                    - if !@prompt_for_card
+                      %td.field-block
+                        %label.required{"for"=>"password_confirmation"}
+                          * Re-type password
+                        %br
+                        = password_field :user, :password_confirmation, :size => 18
           
           %hr
 
-      - if !current_user || @prompt_for_card
         .ppvContentBox
           %table{ :width=>'100%' }
             %tr
