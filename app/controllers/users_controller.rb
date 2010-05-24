@@ -187,7 +187,7 @@ class UsersController < BaseController
       @account_type = (params[:login] && !params[:login].empty?) ? 'e' : 'n'
 
       ppv_process_user
-      if !@user.enabled?
+      if !@user.enabled? && !@user.can_ppv?(@video_asset)
         ppv_prefill_payment
         @prompt_for_card = true #if we go back now, we'll need it
         ppv_process_payment
@@ -216,7 +216,7 @@ class UsersController < BaseController
 #      case @account_type
 #      when 'n'
 
-      if !current_user
+      if !current_user && !(params[:login] && !params[:login].empty?)
         @user = User.new(params[:user])
     
         if !params[:tos] || !params[:suba]
