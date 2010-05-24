@@ -4,20 +4,22 @@
 - allowed = current_user && current_user.has_access?(@video_asset)
 .profileContentArea.listingPage
   .profilePageHeader
-    %h2.columnDescriptor
-      -if @render_gamex_menu
-        %div{ :style=>'float: right;' }
-          .gamexButton
-            =link_to 'Download', "/video_assets/download/#{@video_asset.id}"  #@video_asset.download_url()
-        %span
-          GameXchange
-        &gt; Watch Video
+    -if @render_gamex_menu
+      %h2.columnDescriptor
+      %div{ :style=>'float: right;' }
+        .gamexButton
+          =link_to 'Download', "/video_assets/download/#{@video_asset.id}"  #@video_asset.download_url()
+      %span
+        GameXchange
+      &gt; Watch Video
+    -else
+      - if (!allowed && !@video_asset.is_restricted?)
+        You are watching a short preview of this video. For full access options, click "Purchase Video" below".
       -else
+        %h2.columnDescriptor
         %span
           = link_to _('MY VIDEOS'), url_for({:controller => 'search', :action => 'my_videos', :user_id => (@user ? @user.id : nil)})
         Player
-    - if (!allowed && !@video_asset.is_restricted?)
-      You are watching a short preview of this video. For full access options, click "Purchase Video" below".
   .playerContentArea
     .leftNavColPlayer
       .leftNavPlayer{ :style=>'width:490px;' }

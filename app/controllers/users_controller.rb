@@ -305,7 +305,8 @@ class UsersController < BaseController
       raise ActiveRecord::RecordInvalid.new(@credit_card)
     end
 
-    @response = gateway.purchase(@cost, @credit_card, {:description=>"PPV Purchase for User ID: #{@user.id}"})
+    cost_for_gateway = (@cost * 100).to_i
+    @response = gateway.purchase(cost_for_gateway, @credit_card, {:description=>"PPV Purchase for User ID: #{@user.id}"})
 
     logger.info "PPVREGWATCH * Response from gateway #{@response.inspect} for #{@user.full_name} at #{@cost}"
 

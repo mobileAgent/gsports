@@ -19,10 +19,10 @@
       .ppvHeaderBox
 
         %h2= @video_asset.title
-        %br
-        = @video_asset.sport
-        ,
-        = @video_asset.game_date
+        -#%br
+        -#= @video_asset.sport
+        -#,
+        -#= @video_asset.game_date
 
       .ppvHeaderBox
         = error_messages_for :user, :credit_card, :billing_address, :ppv_access
@@ -32,7 +32,6 @@
             = @billing_gateway_error
 
       .ppvContentBox
-        %br
         %br
         How long do you want access to this video?
 
@@ -63,7 +62,6 @@
 
         .ppvContentBox{ :style=>"border: 1px solid #D2D5DD;" }
           %h2 Already a GlobalSports Member?
-          %br
           Subscription members will not be charged. If you are a Pay-Per-View member, the card associated with your account will be charged the amount you selected.
           %br
           %table{ :width=>'100%' }
@@ -73,7 +71,7 @@
               %th
                 Password
               %th
-                Your card will be billed
+                -#Your card will be billed
             %tr
               %td{ :valign=>'top' }
                 - if current_user
@@ -85,7 +83,7 @@
               %td{ :valign=>'top' }
                 %input{ :type=>'password', :name=>'password', :size => 18}
 
-              %td{ :valign=>'top' }
+              %td{ :valign=>'top', :align=>'right' }
                 %input{ :type=>'submit', :value=>'Access Video' }
 
         .ppvHeaderBox
@@ -101,33 +99,38 @@
             %a{ :href=>'/register' }
               click here
             %br
+            %br
   
           %table{ :width=>'550px' }
             %tr
-              %td{ :valign=>'top' }
+              %td{ :valign=>'top', :colspan=>2 }
                 %table
                   %tr
                     %td.field-block
-                      %label.required{"for"=>"email"}
-                        * E-mail address
-                      %br
-                      = text_field :user, :email, :size => 32
-                %table
-                  %tr
-                    %td.field-block
-                      %label.required{"for"=>"password"}
-                        * Choose a password
-                      %br
-                      = password_field :user, :password, :size => 18
+                      %table
+                        %tr
+                          %td.field-block
+                            %label.required{"for"=>"email"}
+                              * E-mail address
+                            %br
+                            = text_field :user, :email, :size => 32
+                          %td.field-block
+                            %label.required{"for"=>"password"}
+                              - if @prompt_for_card
+                                * Enter your password
+                              - else
+                                * Choose a password
+                            %br
+                            = password_field :user, :password, :size => 18
 
-                    - if !@prompt_for_card
-                      %td.field-block
-                        %label.required{"for"=>"password_confirmation"}
-                          * Re-type password
-                        %br
-                        = password_field :user, :password_confirmation, :size => 18
-          
-          %hr
+                          - if !@prompt_for_card
+                            %td.field-block
+                              %label.required{"for"=>"password_confirmation"}
+                                * Re-type password
+                              %br
+                              = password_field :user, :password_confirmation, :size => 18
+
+          -#%hr
 
         .ppvContentBox
           -#%br
@@ -246,11 +249,14 @@
                   %fieldset.inline
                     I have read and agree to the
                     %br
+                    %br
 
                     %input#tos{:name=>"tos", :type=>"checkbox", :value=>"tos", :checked=>params[:tos]}
                     %label{:for => "tos"}
                       &nbsp;
                       =link_to("#{AppConfig.community_name} Terms of Service", '/info/terms', {:target => "_blank"})
+                    %br
+                    %br
 
                   %fieldset.inline
                     %input#suba{ :name=>'suba', :type=>'checkbox', :value=>'suba', :checked=>params[:suba]}
@@ -259,7 +265,7 @@
                       =link_to("#{AppConfig.community_name} Subscriber Agreement", "/info/subscriber_member", {:target => "_blank"})
 
 
-        .ppvContentBox{ :style=>'float:right; width: 200px;' }
+        .ppvContentBox{ :style=>'float:right; width: 140px;' }
           -#%p
             -#%input{ :name => "Continue", :type => "image", :src => "/gs/images/billing_continue.png", :value => "Continue", :alt => "Continue", :style => 'border: none' }
           %input{ :type=>'submit', :value=>'Purchase Video' }
