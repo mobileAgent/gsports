@@ -24,7 +24,7 @@
           .ppv{ :style=>'float:right' }
             - if ppv.expires
               Expires: 
-              = ppv.expires
+              = human_date_time(ppv.expires)
             - else
               Unlimited Access
       .clearDiv

@@ -19,7 +19,7 @@
   .playerContentArea
     .leftNavColPlayer
       .leftNavPlayer{ :style=>'width:490px;' }
-        - if ! @video_asset.is_restricted?
+        - if (allowed || !@video_asset.is_restricted?)
           = render :partial => 'ratings/stars', :locals => { :item => @video_asset }
           %a{ :href=>"http://www.facebook.com/sharer.php?u=#{APP_URL}/video_assets/#{@video_asset.id}", :style=>'float:right;' }
             %img{ :src=>'/images/fb_share.jpg' }
@@ -32,7 +32,7 @@
               %a{ :href=>"javascript:gs.video_assets.buy_video(#{@video_asset.id})" }= 'Purchase Video'
             -#= link_to image_tag('/images/purchase_video.png', :border=>0, :alt => 'Purchase Video', :title => 'Purchase Video'), "javascript:gs.video_assets.buy_video(#{@video_asset.id})"
     .flashArea#flashArea
-    - if @vidavee && session[:vidavee] && @video_asset.dockey && !@video_asset.is_restricted?
+    - if @vidavee && session[:vidavee] && @video_asset.dockey && (allowed || !@video_asset.is_restricted?)
       - params = {:allowFullScreen=>"true"}
       - fvars = {:dockey => @video_asset.dockey, :allowFS => "true"}
       - player_name = '/players/clipmaker.swf'
