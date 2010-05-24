@@ -16,6 +16,8 @@
         %span
           = link_to _('MY VIDEOS'), url_for({:controller => 'search', :action => 'my_videos', :user_id => (@user ? @user.id : nil)})
         Player
+    - if (!allowed && !@video_asset.is_restricted?)
+      You are watching a short preview of this video. For full access options, click "Purchase Video" below".
   .playerContentArea
     .leftNavColPlayer
       .leftNavPlayer{ :style=>'width:490px;' }

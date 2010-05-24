@@ -1834,6 +1834,10 @@ a.admin-userreg-link-user{
   width: 100%;
 }
 
+.ppvRegistrationContent input[type="submit"] {
+  margin: 0;
+}
+
 .ppvHeaderBox {
   width: 550px;
   text-align: center;
@@ -1841,7 +1845,7 @@ a.admin-userreg-link-user{
 
 .ppvContentBox {
   width: 550px;
-  padding-left: 16px;
+  padding: 4px 0 4px 16px;
 }
 
 .ppvContentBox th {
