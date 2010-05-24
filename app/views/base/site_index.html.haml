@@ -8,7 +8,7 @@
 
 .homeText
   -#%h1.homeTextWelcome= "Welcome to #{AppConfig.community_name}!"
-  -# video = VideoAsset.find(719)
+  -# video = VideoAsset.find(4035)
   %h2{ :style=>'color: green; font-size: 131%;' }
     NYPD vs. FDNY, Fun City Bowl XXXVIII
   %table
@@ -17,8 +17,13 @@
         -#%img{ :style=>'padding: 6px 6px 0 0', :src=>"#{@vidavee.file_thumbnail_medium(video.thumbnail_dockey || video.dockey)}" }
         %img{ :style=>'padding: 6px 6px 0 0', :src=>"/images/tmp/NYPDvsFDNC.jpg" }
       %td{ :style=>'color: black' }
-        The 2010 Fun City Bowl game will be available for purchase and viewing on Global Sports later on today. Please check back to watch the game!
+        New York's Bravest take on New York's Finest in the 38th annual Fun City Bowl. Click to view/purchase now.
+        -#The 2010 Fun City Bowl game will be available for purchase and viewing on Global Sports later on today. Please check back to watch the game!
         -#Today's Fun City Bowl game will be available for purchase and viewing on Global Sports on Monday, May 24th. Please check back to watch the game!
+        %br
+        %br
+        %a{ :href=>"/video_assets/4035" }
+          %img{ :src=>"/images/tmp/watch_this_game.jpg" }
   %br/
   %p
     %strong
