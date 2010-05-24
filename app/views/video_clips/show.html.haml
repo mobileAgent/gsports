@@ -11,6 +11,8 @@
         = render :partial => 'ratings/stars', :locals => { :item => @video_clip }
         %div
           = render :partial => 'shared/video_actions', :locals => { :video_listing => @video_clip }
+        %a{ :href=>"http://www.facebook.com/sharer.php?u=#{APP_URL}/video_clips/#{@video_clip.id}", :style=>'float:right;' }
+          %img{ :src=>'/images/fb_share.jpg' }
 
     .flashArea#flashArea
     - if @vidavee && session[:vidavee] && @video_clip.dockey
