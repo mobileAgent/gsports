@@ -282,7 +282,7 @@ class UsersController < BaseController
       @cost = 4.99
       @expire = Time.now + (60 * 60 * 24) * 7
     when 'i'
-      @cost = 12.99
+      @cost = 19.99
       @expire = nil
     else
       @user.errors.add_to_base("Please choose a viewing duration.")
