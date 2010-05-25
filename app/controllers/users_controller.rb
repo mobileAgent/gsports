@@ -275,16 +275,18 @@ class UsersController < BaseController
 
   def ppv_process_payment
     case @purchase
-    when 'w'
+    when 'd'
       @cost = 2.99
+      @expire = Time.now + (60 * 60 * 24)
+    when 'w'
+      @cost = 4.99
       @expire = Time.now + (60 * 60 * 24) * 7
     when 'i'
-      @cost = 4.99
+      @cost = 12.99
       @expire = nil
-    #when 'd'
     else
-      @cost = 19.99
-      @expire = Time.now + (60 * 60 * 24)
+      @user.errors.add_to_base("Please choose a viewing duration.")
+      raise ActiveRecord::RecordInvalid.new(@user)
     end
 
 
