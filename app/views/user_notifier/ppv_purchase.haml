@@ -1,0 +1,65 @@
+%html
+  %head
+    %title
+      = "Your #{AppConfig.community_name} Purchase"
+    %style
+      /
+        p {
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 12px;
+        color: #000;
+        }
+        a:link, a:visited, a:active {
+        color: #03C;
+        }
+        div.container {
+        padding: 10px;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 12px;
+        background-color: #FFF;
+        }
+  %body
+    .container
+      - if @ppv.expires
+        %p
+          Welcome,
+        %p
+          Thank you for purchasing
+          = @ppv.video.title
+          on Global Sports. Your DVD will be mailed shortly to:
+          %br
+          %blockquote
+            = @ppv.user.address1
+            %br
+            - if @ppv.user.address2 && !@ppv.user.address2.empty?
+              = @ppv.user.address2
+              %br
+            = @ppv.user.city
+            ,
+            = @ppv.user.state
+            = @ppv.user.zip
+        %p
+          If you would like your DVD sent to a different address, please send an email with the correct address to orders@globalsports.net immediately.
+        %p
+          Note that in addition to your DVD, you have complete online access to this game forever. Just login to your account at
+          %a{ :href=>"http://globalsports.net/"} http://globalsports.net/
+        %p
+          If you would like complete access to ALL games on Global Sports, please visit
+          %a{ :href=>"http://globalsports.net/register"} http://globalsports.net/register
+          to register as an unlimited subscription user for $9.99/mo.
+
+        %p
+          Thank you, and enjoy your games!
+          %br
+          \- The Global Sports Team
+      - else
+        %p
+          Welcome,
+        %p
+          = "Thank you for purchasing access to #{@ppv.video.title} on Global Sports. You will have complete access to this game until #{human_date_time(@ppv.expires)}."
+          If you would like to upgrade to an unlimited subscription membership for $9.99/mo, please visit
+          %a{ :href=>"http://globalsports.net/register"} http://globalsports.net/register
+        %p
+          Thank you, and enjoy your games!
+          %br
+          \- The Global Sports Team
