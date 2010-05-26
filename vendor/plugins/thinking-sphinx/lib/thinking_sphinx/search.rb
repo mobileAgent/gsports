@@ -1,3 +1,4 @@
+# encoding: UTF-8
 module ThinkingSphinx
   # Once you've got those indexes in and built, this is the stuff that
   # matters - how to search! This class provides a generic search
@@ -7,471 +8,778 @@ module ThinkingSphinx
   # called from a model.
   # 
   class Search
-    class << self
-      # Searches for results that match the parameters provided. Will only
-      # return the ids for the matching objects. See #search for syntax
-      # examples.
-      #
-      def search_for_ids(*args)
-        results, client = search_results(*args.clone)
+    CoreMethods = %w( == class class_eval extend frozen? id instance_eval
+      instance_of? instance_values instance_variable_defined?
+      instance_variable_get instance_variable_set instance_variables is_a?
+      kind_of? member? method methods nil? object_id respond_to? send should
+      type )
+    SafeMethods = %w( partition private_methods protected_methods
+      public_methods send class )
+    
+    instance_methods.select { |method|
+      method.to_s[/^__/].nil? && !CoreMethods.include?(method.to_s)
+    }.each { |method|
+      undef_method method
+    }
+    
+    HashOptions   = [:conditions, :with, :without, :with_all]
+    ArrayOptions  = [:classes, :without_ids]
+    
+    attr_reader :args, :options
+    
+    # Deprecated. Use ThinkingSphinx.search
+    def self.search(*args)
+      log 'ThinkingSphinx::Search.search is deprecated. Please use ThinkingSphinx.search instead.'
+      ThinkingSphinx.search *args
+    end
+    
+    # Deprecated. Use ThinkingSphinx.search_for_ids
+    def self.search_for_ids(*args)
+      log 'ThinkingSphinx::Search.search_for_ids is deprecated. Please use ThinkingSphinx.search_for_ids instead.'
+      ThinkingSphinx.search_for_ids *args
+    end
+    
+    # Deprecated. Use ThinkingSphinx.search_for_ids
+    def self.search_for_id(*args)
+      log 'ThinkingSphinx::Search.search_for_id is deprecated. Please use ThinkingSphinx.search_for_id instead.'
+      ThinkingSphinx.search_for_id *args
+    end
+    
+    # Deprecated. Use ThinkingSphinx.count
+    def self.count(*args)
+      log 'ThinkingSphinx::Search.count is deprecated. Please use ThinkingSphinx.count instead.'
+      ThinkingSphinx.count *args
+    end
+    
+    # Deprecated. Use ThinkingSphinx.facets
+    def self.facets(*args)
+      log 'ThinkingSphinx::Search.facets is deprecated. Please use ThinkingSphinx.facets instead.'
+      ThinkingSphinx.facets *args
+    end
+    
+    def self.matching_fields(fields, bitmask)
+      matches   = []
+      bitstring = bitmask.to_s(2).rjust(32, '0').reverse
+      
+      fields.each_with_index do |field, index|
+        matches << field if bitstring[index, 1] == '1'
+      end
+      matches
+    end
+    
+    def initialize(*args)
+      ThinkingSphinx.context.define_indexes
+      
+      @array    = []
+      @options  = args.extract_options!
+      @args     = args
+      
+      populate if @options[:populate]
+    end
+    
+    def to_a
+      populate
+      @array
+    end
+    
+    def freeze
+      populate
+      @array.freeze
+      self
+    end
+    
+    # Indication of whether the request has been made to Sphinx for the search
+    # query.
+    # 
+    # @return [Boolean] true if the results have been requested.
+    # 
+    def populated?
+      !!@populated
+    end
+    
+    # The query result hash from Riddle.
+    # 
+    # @return [Hash] Raw Sphinx results
+    # 
+    def results
+      populate
+      @results
+    end
+    
+    def method_missing(method, *args, &block)
+      if is_scope?(method)
+        add_scope(method, *args, &block)
+        return self
+      elsif method == :search_count
+        return scoped_count
+      elsif method.to_s[/^each_with_.*/].nil? && !@array.respond_to?(method)
+        super
+      elsif !SafeMethods.include?(method.to_s)
+        populate
+      end
+      
+      if method.to_s[/^each_with_.*/] && !@array.respond_to?(method)
+        each_with_attribute method.to_s.gsub(/^each_with_/, ''), &block
+      else
+        @array.send(method, *args, &block)
+      end
+    end
         
-        options = args.extract_options!
-        page    = options[:page] ? options[:page].to_i : 1
-        
+    # Returns true if the Search object or the underlying Array object respond
+    # to the requested method.
+    # 
+    # @param [Symbol] method The method name
+    # @return [Boolean] true if either Search or Array responds to the method.
+    # 
+    def respond_to?(method, include_private = false)
+      super || @array.respond_to?(method, include_private)
+    end
+    
+    # The current page number of the result set. Defaults to 1 if no page was
+    # explicitly requested.
+    # 
+    # @return [Integer]
+    # 
+    def current_page
+      @options[:page].blank? ? 1 : @options[:page].to_i
+    end
+    
+    # The next page number of the result set. If there are no more pages
+    # available, nil is returned.
+    # 
+    # @return [Integer, nil]
+    # 
+    def next_page
+      current_page >= total_pages ? nil : current_page + 1
+    end
+    
+    # The previous page number of the result set. If this is the first page,
+    # then nil is returned.
+    # 
+    # @return [Integer, nil]
+    # 
+    def previous_page
+      current_page == 1 ? nil : current_page - 1
+    end
+    
+    # The amount of records per set of paged results. Defaults to 20 unless a
+    # specific page size is requested.
+    # 
+    # @return [Integer]
+    # 
+    def per_page
+      @options[:limit] ||= @options[:per_page]
+      @options[:limit] ||= 20
+      @options[:limit].to_i
+    end
+    
+    # The total number of pages available if the results are paginated.
+    # 
+    # @return [Integer]
+    # 
+    def total_pages
+      populate
+      return 0 if @results[:total].nil?
+      
+      @total_pages ||= (@results[:total] / per_page.to_f).ceil
+    end
+    # Compatibility with older versions of will_paginate
+    alias_method :page_count, :total_pages
+    
+    # The total number of search results available.
+    # 
+    # @return [Integer]
+    # 
+    def total_entries
+      populate
+      return 0 if @results[:total_found].nil?
+      
+      @total_entries ||= @results[:total_found]
+    end
+    
+    # The current page's offset, based on the number of records per page.
+    # Or explicit :offset if given. 
+    # 
+    # @return [Integer]
+    # 
+    def offset
+      @options[:offset] || ((current_page - 1) * per_page)
+    end
+    
+    def indexes
+      return options[:index] if options[:index]
+      return '*' if classes.empty?
+      
+      classes.collect { |klass|
+        klass.sphinx_index_names
+      }.flatten.uniq.join(',')
+    end
+    
+    def each_with_groupby_and_count(&block)
+      populate
+      results[:matches].each_with_index do |match, index|
+        yield self[index],
+          match[:attributes]["@groupby"],
+          match[:attributes]["@count"]
+      end
+    end
+    alias_method :each_with_group_and_count, :each_with_groupby_and_count
+    
+    def each_with_weighting(&block)
+      populate
+      results[:matches].each_with_index do |match, index|
+        yield self[index], match[:weight]
+      end
+    end
+    
+    def excerpt_for(string, model = nil)
+      if model.nil? && one_class
+        model ||= one_class
+      end
+      
+      populate
+      client.excerpts(
+        :docs   => [string],
+        :words  => results[:words].keys.join(' '),
+        :index  => "#{model.source_of_sphinx_index.sphinx_name}_core"
+      ).first
+    end
+    
+    def search(*args)
+      add_default_scope
+      merge_search ThinkingSphinx::Search.new(*args)
+      self
+    end
+    
+    private
+    
+    def config
+      ThinkingSphinx::Configuration.instance
+    end
+    
+    def populate
+      return if @populated
+      @populated = true
+      
+      retry_on_stale_index do
         begin
-          pager = WillPaginate::Collection.create(page,
-            client.limit, results[:total_found] || 0) do |collection|
-            collection.replace results[:matches].collect { |match| match[:doc] }
-            collection.instance_variable_set :@total_entries, results[:total_found]
-          end
-        rescue
-          results[:matches].collect { |match| match[:doc] }
-        end
-      end
-
-      # Searches through the Sphinx indexes for relevant matches. There's
-      # various ways to search, sort, group and filter - which are covered
-      # below.
-      #
-      # Also, if you have WillPaginate installed, the search method can be used
-      # just like paginate. The same parameters - :page and :per_page - work as
-      # expected, and the returned result set can be used by the will_paginate
-      # helper.
-      # 
-      # == Basic Searching
-      #
-      # The simplest way of searching is straight text.
-      # 
-      #   ThinkingSphinx::Search.search "pat"
-      #   ThinkingSphinx::Search.search "google"
-      #   User.search "pat", :page => (params[:page] || 1)
-      #   Article.search "relevant news issue of the day"
-      #
-      # If you specify :include, like in an #find call, this will be respected
-      # when loading the relevant models from the search results.
-      # 
-      #   User.search "pat", :include => :posts
-      #
-      # == Advanced Searching
-      #
-      # Sphinx supports 5 different matching modes. By default Thinking Sphinx
-      # uses :all, which unsurprisingly requires all the supplied search terms
-      # to match a result.
-      #
-      # Alternative modes include:
-      #
-      #   User.search "pat allan", :match_mode => :any
-      #   User.search "pat allan", :match_mode => :phrase
-      #   User.search "pat | allan", :match_mode => :boolean
-      #   User.search "@name pat | @username pat", :match_mode => :extended
-      #
-      # Any will find results with any of the search terms. Phrase treats the search
-      # terms a single phrase instead of individual words. Boolean and extended allow
-      # for more complex query syntax, refer to the sphinx documentation for further
-      # details.
-      #
-      # == Searching by Fields
-      # 
-      # If you want to step it up a level, you can limit your search terms to
-      # specific fields:
-      # 
-      #   User.search :conditions => {:name => "pat"}
-      #
-      # This uses Sphinx's extended match mode, unless you specify a different
-      # match mode explicitly (but then this way of searching won't work). Also
-      # note that you don't need to put in a search string.
-      #
-      # == Searching by Attributes
-      #
-      # Also known as filters, you can limit your searches to documents that
-      # have specific values for their attributes. There are two ways to do
-      # this. The first is one that works in all scenarios - using the :with
-      # option.
-      #
-      #   ThinkingSphinx::Search.search :with => {:parent_id => 10}
-      #
-      # The second is only viable if you're searching with a specific model
-      # (not multi-model searching). With a single model, Thinking Sphinx
-      # can figure out what attributes and fields are available, so you can
-      # put it all in the :conditions hash, and it will sort it out.
-      # 
-      #   Node.search :conditions => {:parent_id => 10}
-      # 
-      # Filters can be single values, arrays of values, or ranges.
-      # 
-      #   Article.search "East Timor", :conditions => {:rating => 3..5}
-      #
-      # == Excluding by Attributes
-      #
-      # Sphinx also supports negative filtering - where the filters are of
-      # attribute values to exclude. This is done with the :without option:
-      #
-      #   User.search :without => {:role_id => 1}
-      # 
-      # == Sorting
-      #
-      # Sphinx can only sort by attributes, so generally you will need to avoid
-      # using field names in your :order option. However, if you're searching
-      # on a single model, and have specified some fields as sortable, you can
-      # use those field names and Thinking Sphinx will interpret accordingly.
-      # Remember: this will only happen for single-model searches, and only
-      # through the :order option.
-      #
-      #   Location.search "Melbourne", :order => :state
-      #   User.search :conditions => {:role_id => 2}, :order => "name ASC"
-      #
-      # Keep in mind that if you use a string, you *must* specify the direction
-      # (ASC or DESC) else Sphinx won't return any results. If you use a symbol
-      # then Thinking Sphinx assumes ASC, but if you wish to state otherwise,
-      # use the :sort_mode option:
-      #
-      #   Location.search "Melbourne", :order => :state, :sort_mode => :desc
-      #
-      # Of course, there are other sort modes - check out the Sphinx
-      # documentation[http://sphinxsearch.com/doc.html] for that level of
-      # detail though.
-      #
-      # == Grouping
-      # 
-      # For this you can use the group_by, group_clause and group_function
-      # options - which are all directly linked to Sphinx's expectations. No
-      # magic from Thinking Sphinx. It can get a little tricky, so make sure
-      # you read all the relevant
-      # documentation[http://sphinxsearch.com/doc.html#clustering] first.
-      # 
-      # Yes this section will be expanded, but this is a start.
-      #
-      # == Geo/Location Searching
-      #
-      # Sphinx - and therefore Thinking Sphinx - has the facility to search
-      # around a geographical point, using a given latitude and longitude. To
-      # take advantage of this, you will need to have both of those values in
-      # attributes. To search with that point, you can then use one of the
-      # following syntax examples:
-      # 
-      #   Address.search "Melbourne", :geo => [1.4, -2.217]
-      #   Address.search "Australia", :geo => [-0.55, 3.108],
-      #     :latitude_attr => "latit", :longitude_attr => "longit"
-      # 
-      # The first example applies when your latitude and longitude attributes
-      # are named any of lat, latitude, lon, long or longitude. If that's not
-      # the case, you will need to explicitly state them in your search, _or_
-      # you can do so in your model:
-      #
-      #   define_index do
-      #     has :latit  # Float column, stored in radians
-      #     has :longit # Float column, stored in radians
-      #     
-      #     set_property :latitude_attr   => "latit"
-      #     set_property :longitude_attr  => "longit"
-      #   end
-      # 
-      # Now, geo-location searching really only has an affect if you have a
-      # filter, sort or grouping clause related to it - otherwise it's just a
-      # normal search. To make use of the positioning difference, use the
-      # special attribute "@geodist" in any of your filters or sorting or grouping
-      # clauses.
-      # 
-      # And don't forget - both the latitude and longitude you use in your
-      # search, and the values in your indexes, need to be stored as a float in radians,
-      # _not_ degrees. Keep in mind that if you do this conversion in SQL
-      # you will need to explicitly declare a column type of :float.
-      #
-      #   define_index do
-      #     has 'RADIANS(lat)', :as => :lat,  :type => :float
-      #     # ...
-      #   end
-      # 
-      def search(*args)
-        results, client = search_results(*args.clone)
-        
-        ::ActiveRecord::Base.logger.error(
-          "Sphinx Error: #{results[:error]}"
-        ) if results[:error]
-        
-        options = args.extract_options!
-        klass   = options[:class]
-        page    = options[:page] ? options[:page].to_i : 1
-        
-        begin
-          pager = WillPaginate::Collection.create(page,
-            client.limit, results[:total] || 0) do |collection|
-            collection.replace instances_from_results(results[:matches], options, klass)
-            collection.instance_variable_set :@total_entries, results[:total_found]
-          end
-        rescue StandardError => err
-          instances_from_results(results[:matches], options, klass)
-        end
-      end
-      
-      # Checks if a document with the given id exists within a specific index.
-      # Expected parameters:
-      #
-      # - ID of the document
-      # - Index to check within
-      # - Options hash (defaults to {})
-      # 
-      # Example:
-      # 
-      #   ThinkingSphinx::Search.search_for_id(10, "user_core", :class => User)
-      # 
-      def search_for_id(*args)
-        options = args.extract_options!
-        client  = client_from_options options
-        
-        query, filters    = search_conditions(
-          options[:class], options[:conditions] || {}
-        )
-        client.filters   += filters
-        client.match_mode = :extended unless query.empty?
-        client.id_range   = args.first..args.first
-        
-        begin
-          return client.query(query, args[1])[:matches].length > 0
-        rescue Errno::ECONNREFUSED => err
-          raise ThinkingSphinx::ConnectionError, "Connection to Sphinx Daemon (searchd) failed."
-        end
-      end
-      
-      private
-      
-      # This method handles the common search functionality, and returns both
-      # the result hash and the client. Not super elegant, but it'll do for
-      # the moment.
-      # 
-      def search_results(*args)
-        options = args.extract_options!
-        client  = client_from_options options
-        
-        query, filters    = search_conditions(
-          options[:class], options[:conditions] || {}
-        )
-        client.filters   += filters
-        client.match_mode = :extended unless query.empty?
-        query             = args.join(" ") + query
-        
-        set_sort_options! client, options
-        
-        client.limit  = options[:per_page].to_i if options[:per_page]
-        page          = options[:page] ? options[:page].to_i : 1
-        client.offset = (page - 1) * client.limit
-
-        begin
-          ::ActiveRecord::Base.logger.debug "Sphinx: #{query}"
-          results = client.query query
-          ::ActiveRecord::Base.logger.debug "Sphinx Result: #{results[:matches].collect{|m| m[:doc]}.inspect}"
-        rescue Errno::ECONNREFUSED => err
-          raise ThinkingSphinx::ConnectionError, "Connection to Sphinx Daemon (searchd) failed."
-        end
-        
-        return results, client
-      end
-      
-      def instances_from_results(results, options = {}, klass = nil)
-        if klass.nil?
-          results.collect { |result| instance_from_result result, options }
-        else
-          ids = results.collect { |result| result[:doc] }
-          instances = klass.find(
-            :all,
-            :conditions => {klass.primary_key.to_sym => ids},
-            :include    => options[:include],
-            :select     => options[:select]
-          )
-          ids.collect { |obj_id| instances.detect { |obj| obj.id == obj_id } }
-        end
-      end
-      
-      # Either use the provided class to instantiate a result from a model, or
-      # get the result's CRC value and determine the class from that.
-      # 
-      def instance_from_result(result, options)
-        class_from_crc(result[:attributes]["class_crc"]).find(
-          result[:doc], :include => options[:include], :select => options[:select]
-        )
-      end
-      
-      # Convert a CRC value to the corresponding class.
-      # 
-      def class_from_crc(crc)
-        unless @models_by_crc
-          Configuration.new.load_models
-          
-          @models_by_crc = ThinkingSphinx.indexed_models.inject({}) do |hash, model|
-            hash[model.constantize.to_crc32] = model
-            hash
-          end
-        end
-        
-        @models_by_crc[crc].constantize
-      end
-      
-      # Set all the appropriate settings for the client, using the provided
-      # options hash.
-      # 
-      def client_from_options(options = {})
-        config = ThinkingSphinx::Configuration.new
-        client = Riddle::Client.new config.address, config.port
-        klass  = options[:class]
-        index_options = klass ? klass.indexes.last.options : {}
-        
-        [
-          :max_matches, :match_mode, :sort_mode, :sort_by, :id_range,
-          :group_by, :group_function, :group_clause, :group_distinct, :cut_off,
-          :retry_count, :retry_delay, :index_weights, :rank_mode,
-          :max_query_time, :field_weights, :filters, :anchor, :limit
-        ].each do |key|
-          client.send(
-            key.to_s.concat("=").to_sym,
-            options[key] || index_options[key] || client.send(key)
-          )
-        end
-        
-        client.anchor = anchor_conditions(klass, options) || {} if client.anchor.empty?
-        
-        client.filters << Riddle::Client::Filter.new(
-          "sphinx_deleted", [0]
-        )
-        # class filters
-        client.filters << Riddle::Client::Filter.new(
-          "class_crc", options[:classes].collect { |klass| klass.to_crc32 }
-        ) if options[:classes]
-        
-        # normal attribute filters
-        client.filters += options[:with].collect { |attr,val|
-          Riddle::Client::Filter.new attr.to_s, filter_value(val)
-        } if options[:with]
-        
-        # exclusive attribute filters
-        client.filters += options[:without].collect { |attr,val|
-          Riddle::Client::Filter.new attr.to_s, filter_value(val), true
-        } if options[:without]
-        
-        client
-      end
-      
-      def filter_value(value)
-        case value
-        when Range
-          value.first.is_a?(Time) ? value.first.to_i..value.last.to_i : value
-        when Array
-          value.collect { |val| val.is_a?(Time) ? val.to_i : val }
-        else
-          Array(value)
-        end
-      end
-      
-      # Translate field and attribute conditions to the relevant search string
-      # and filters.
-      # 
-      def search_conditions(klass, conditions={})
-        attributes = klass ? klass.indexes.collect { |index|
-          index.attributes.collect { |attrib| attrib.unique_name }
-        }.flatten : []
-        
-        search_string = ""
-        filters       = []
-        
-        conditions.each do |key,val|
-          if attributes.include?(key.to_sym)
-            filters << Riddle::Client::Filter.new(
-              key.to_s,
-              val.is_a?(Range) ? val : Array(val)
-            )
-          else
-            search_string << "@#{key} #{val} "
-          end
-        end
-        
-        filters << Riddle::Client::Filter.new(
-          "class_crc", [klass.to_crc32]
-        ) if klass
-        
-        return search_string, filters
-      end
-      
-      # Return the appropriate latitude and longitude values, depending on
-      # whether the relevant attributes have been defined, and also whether
-      # there's actually any values.
-      # 
-      def anchor_conditions(klass, options)
-        attributes = klass ? klass.indexes.collect { |index|
-          index.attributes.collect { |attrib| attrib.unique_name }
-        }.flatten : []
-        
-        lat_attr = klass ? klass.indexes.collect { |index|
-          index.options[:latitude_attr]
-        }.compact.first : nil
-        
-        lon_attr = klass ? klass.indexes.collect { |index|
-          index.options[:longitude_attr]
-        }.compact.first : nil
-        
-        lat_attr = options[:latitude_attr] if options[:latitude_attr]
-        lat_attr ||= :lat       if attributes.include?(:lat)
-        lat_attr ||= :latitude  if attributes.include?(:latitude)
-        
-        lon_attr = options[:longitude_attr] if options[:longitude_attr]
-        lon_attr ||= :lon       if attributes.include?(:lon)
-        lon_attr ||= :long      if attributes.include?(:long)
-        lon_attr ||= :longitude if attributes.include?(:longitude)
-        
-        lat = options[:lat]
-        lon = options[:lon]
-        
-        if options[:geo]
-          lat = options[:geo].first
-          lon = options[:geo].last
-        end
-        
-        lat && lon ? {
-          :latitude_attribute   => lat_attr,
-          :latitude             => lat,
-          :longitude_attribute  => lon_attr,
-          :longitude            => lon
-        } : nil
-      end
-      
-      # Set the sort options using the :order key as well as the appropriate
-      # Riddle settings.
-      # 
-      def set_sort_options!(client, options)
-        klass = options[:class]
-        fields = klass ? klass.indexes.collect { |index|
-          index.fields.collect { |field| field.unique_name }
-        }.flatten : []
-        
-        case order = options[:order]
-        when Symbol
-          client.sort_mode = :attr_asc if client.sort_mode == :relevance || client.sort_mode.nil?
-          if fields.include?(order)
-            client.sort_by = order.to_s.concat("_sort")
-          else
-            client.sort_by = order.to_s
-          end
-        when String
-          client.sort_mode = :extended
-          client.sort_by   = sorted_fields_to_attributes(order, fields)
-        else
-          # do nothing
-        end
-        
-        client.sort_mode = :attr_asc  if client.sort_mode == :asc
-        client.sort_mode = :attr_desc if client.sort_mode == :desc
-      end
-      
-      # Search through a collection of fields and translate any appearances
-      # of them in a string to their attribute equivalent for sorting.
-      # 
-      def sorted_fields_to_attributes(string, fields)
-        fields.each { |field|
-          string.gsub!(/(^|\s)#{field}(,?\s|$)/) { |match|
-            match.gsub field.to_s, field.to_s.concat("_sort")
+          log "Querying: '#{query}'"
+          runtime = Benchmark.realtime {
+            @results = client.query query, indexes, comment
           }
-        }
-        
-        string
+          log "Found #{@results[:total_found]} results", :debug,
+            "Sphinx (#{sprintf("%f", runtime)}s)"
+        rescue Errno::ECONNREFUSED => err
+          raise ThinkingSphinx::ConnectionError,
+            'Connection to Sphinx Daemon (searchd) failed.'
+        end
+      
+        if options[:ids_only]
+          replace @results[:matches].collect { |match|
+            match[:attributes]["sphinx_internal_id"]
+          }
+        else
+          replace instances_from_matches
+          add_excerpter
+          add_sphinx_attributes
+          add_matching_fields if client.rank_mode == :fieldmask
+        end
       end
+    end
+    
+    def add_excerpter
+      each do |object|
+        next if object.respond_to?(:excerpts)
+        
+        excerpter = ThinkingSphinx::Excerpter.new self, object
+        block = lambda { excerpter }
+        
+        object.metaclass.instance_eval do
+          define_method(:excerpts, &block)
+        end
+      end
+    end
+    
+    def add_sphinx_attributes
+      each do |object|
+        next if object.nil? || object.respond_to?(:sphinx_attributes)
+        
+        match = match_hash object
+        next if match.nil?
+        
+        object.metaclass.instance_eval do
+          define_method(:sphinx_attributes) { match[:attributes] }
+        end
+      end
+    end
+    
+    def add_matching_fields
+      each do |object|
+        next if object.nil? || object.respond_to?(:matching_fields)
+        
+        match = match_hash object
+        next if match.nil?
+        fields = ThinkingSphinx::Search.matching_fields(
+          @results[:fields], match[:weight]
+        )
+        
+        object.metaclass.instance_eval do
+          define_method(:matching_fields) { fields }
+        end
+      end
+    end
+    
+    def match_hash(object)
+      @results[:matches].detect { |match|
+        match[:attributes]['sphinx_internal_id'] == object.
+          primary_key_for_sphinx &&
+        match[:attributes]['class_crc'] == object.class.to_crc32
+      }
+    end
+    
+    def self.log(message, method = :debug, identifier = 'Sphinx')
+      return if ::ActiveRecord::Base.logger.nil?
+      identifier_color, message_color = "4;32;1", "0" # 0;1 = Bold
+      info = "  \e[#{identifier_color}m#{identifier}\e[0m   "
+      info << "\e[#{message_color}m#{message}\e[0m"
+      ::ActiveRecord::Base.logger.send method, info
+    end
+    
+    def log(*args)
+      self.class.log(*args)
+    end
+    
+    def client
+      client = config.client
+      
+      index_options = one_class ?
+        one_class.sphinx_indexes.first.local_options : {}
+      
+      [
+        :max_matches, :group_by, :group_function, :group_clause,
+        :group_distinct, :id_range, :cut_off, :retry_count, :retry_delay,
+        :rank_mode, :max_query_time, :field_weights
+      ].each do |key|
+        value = options[key] || index_options[key]
+        client.send("#{key}=", value) if value
+      end
+
+      # treated non-standard as :select is already used for AR queries
+      client.select = options[:sphinx_select] || '*'
+      
+      client.limit      = per_page
+      client.offset     = offset
+      client.match_mode = match_mode
+      client.filters    = filters
+      client.sort_mode  = sort_mode
+      client.sort_by    = sort_by
+      client.group_by   = group_by if group_by
+      client.group_function = group_function if group_function
+      client.index_weights  = index_weights
+      client.anchor     = anchor
+      
+      client
+    end
+    
+    def retry_on_stale_index(&block)
+      stale_ids = []
+      retries   = stale_retries
+      
+      begin
+        options[:raise_on_stale] = retries > 0
+        block.call
+        
+        # If ThinkingSphinx::Search#instances_from_matches found records in
+        # Sphinx but not in the DB and the :raise_on_stale option is set, this
+        # exception is raised. We retry a limited number of times, excluding the
+        # stale ids from the search.
+      rescue StaleIdsException => err
+        retries -= 1
+        
+        # For logging
+        stale_ids |= err.ids
+        # ID exclusion
+        options[:without_ids] = Array(options[:without_ids]) | err.ids
+        
+        log 'Sphinx Stale Ids (%s %s left): %s' % [
+          retries, (retries == 1 ? 'try' : 'tries'), stale_ids.join(', ')
+        ]
+        retry
+      end
+    end
+    
+    def classes
+      @classes ||= options[:classes] || []
+    end
+    
+    def one_class
+      @one_class ||= classes.length != 1 ? nil : classes.first
+    end
+    
+    def query
+      @query ||= begin
+        q = @args.join(' ') << conditions_as_query
+        (options[:star] ? star_query(q) : q).strip
+      end
+    end
+    
+    def conditions_as_query
+      return '' if @options[:conditions].blank?
+      
+      # Soon to be deprecated.
+      keys = @options[:conditions].keys.reject { |key|
+        attributes.include?(key.to_sym)
+      }
+      
+      ' ' + keys.collect { |key|
+        "@#{key} #{options[:conditions][key]}"
+      }.join(' ')
+    end
+    
+    def star_query(query)
+      token = options[:star].is_a?(Regexp) ? options[:star] : /\w+/u
+
+      query.gsub(/("#{token}(.*?#{token})?"|(?![!-])#{token})/u) do
+        pre, proper, post = $`, $&, $'
+        # E.g. "@foo", "/2", "~3", but not as part of a token
+        is_operator = pre.match(%r{(\W|^)[@~/]\Z})
+        # E.g. "foo bar", with quotes
+        is_quote    = proper.starts_with?('"') && proper.ends_with?('"')
+        has_star    = pre.ends_with?("*") || post.starts_with?("*")
+        if is_operator || is_quote || has_star
+          proper
+        else
+          "*#{proper}*"
+        end
+      end
+    end
+    
+    def comment
+      options[:comment] || ''
+    end
+    
+    def match_mode
+      options[:match_mode] || (options[:conditions].blank? ? :all : :extended)
+    end
+    
+    def sort_mode
+      @sort_mode ||= case options[:sort_mode]
+      when :asc
+        :attr_asc
+      when :desc
+        :attr_desc
+      when nil
+        case options[:order]
+        when String
+          :extended
+        when Symbol
+          :attr_asc
+        else
+          :relevance
+        end
+      else
+        options[:sort_mode]
+      end
+    end
+    
+    def sort_by
+      case @sort_by = (options[:sort_by] || options[:order])
+      when String
+        sorted_fields_to_attributes(@sort_by)
+      when Symbol
+        field_names.include?(@sort_by) ?
+          @sort_by.to_s.concat('_sort') : @sort_by.to_s
+      else
+        ''
+      end
+    end
+    
+    def field_names
+      return [] unless one_class
+      
+      one_class.sphinx_indexes.collect { |index|
+        index.fields.collect { |field| field.unique_name }
+      }.flatten
+    end
+    
+    def sorted_fields_to_attributes(order_string)
+      field_names.each { |field|
+        order_string.gsub!(/(^|\s)#{field}(,?\s|$)/) { |match|
+          match.gsub field.to_s, field.to_s.concat("_sort")
+        }
+      }
+      
+      order_string
+    end
+    
+    # Turn :index_weights => { "foo" => 2, User => 1 } into :index_weights =>
+    # { "foo" => 2, "user_core" => 1, "user_delta" => 1 }
+    # 
+    def index_weights
+      weights = options[:index_weights] || {}
+      weights.keys.inject({}) do |hash, key|
+        if key.is_a?(Class)
+          name = ThinkingSphinx::Index.name_for(key)
+          hash["#{name}_core"]  = weights[key]
+          hash["#{name}_delta"] = weights[key]
+        else
+          hash[key] = weights[key]
+        end
+        
+        hash
+      end
+    end
+    
+    def group_by
+      options[:group] ? options[:group].to_s : nil
+    end
+    
+    def group_function
+      options[:group] ? :attr : nil
+    end
+    
+    def internal_filters
+      filters = [Riddle::Client::Filter.new('sphinx_deleted', [0])]
+      
+      class_crcs = classes.collect { |klass|
+        klass.to_crc32s
+      }.flatten
+      
+      unless class_crcs.empty?
+        filters << Riddle::Client::Filter.new('class_crc', class_crcs)
+      end
+      
+      filters << Riddle::Client::Filter.new(
+        'sphinx_internal_id', filter_value(options[:without_ids]), true
+      ) if options[:without_ids]
+      
+      filters
+    end
+    
+    def condition_filters
+      (options[:conditions] || {}).collect { |attrib, value|
+        if attributes.include?(attrib.to_sym)
+          puts <<-MSG
+Deprecation Warning: filters on attributes should be done using the :with
+option, not :conditions. For example:
+  :with => {:#{attrib} => #{value.inspect}}
+MSG
+          Riddle::Client::Filter.new attrib.to_s, filter_value(value)
+        else
+          nil
+        end
+      }.compact
+    end
+    
+    def filters
+      internal_filters +
+      condition_filters +
+      (options[:with] || {}).collect { |attrib, value|
+        Riddle::Client::Filter.new attrib.to_s, filter_value(value)
+      } +
+      (options[:without] || {}).collect { |attrib, value|
+        Riddle::Client::Filter.new attrib.to_s, filter_value(value), true
+      } +
+      (options[:with_all] || {}).collect { |attrib, values|
+        Array(values).collect { |value|
+          Riddle::Client::Filter.new attrib.to_s, filter_value(value)
+        }
+      }.flatten
+    end
+    
+    # When passed a Time instance, returns the integer timestamp.
+    # 
+    # If using Rails 2.1+, need to handle timezones to translate them back to
+    # UTC, as that's what datetimes will be stored as by MySQL.
+    # 
+    # in_time_zone is a method that was added for the timezone support in
+    # Rails 2.1, which is why it's used for testing. I'm sure there's better
+    # ways, but this does the job.
+    # 
+    def filter_value(value)
+      case value
+      when Range
+        filter_value(value.first).first..filter_value(value.last).first
+      when Array
+        value.collect { |v| filter_value(v) }.flatten
+      when Time
+        value.respond_to?(:in_time_zone) ? [value.utc.to_i] : [value.to_i]
+      when NilClass
+        0
+      else
+        Array(value)
+      end
+    end
+    
+    def anchor
+      return {} unless options[:geo] || (options[:lat] && options[:lng])
+      
+      {
+        :latitude   => options[:geo] ? options[:geo].first : options[:lat],
+        :longitude  => options[:geo] ? options[:geo].last  : options[:lng],
+        :latitude_attribute  => latitude_attr.to_s,
+        :longitude_attribute => longitude_attr.to_s
+      }
+    end
+    
+    def latitude_attr
+      options[:latitude_attr]      ||
+      index_option(:latitude_attr) ||
+      attribute(:lat, :latitude)
+    end
+    
+    def longitude_attr
+      options[:longitude_attr]      ||
+      index_option(:longitude_attr) ||
+      attribute(:lon, :lng, :longitude)
+    end
+    
+    def index_option(key)
+      return nil unless one_class
+      
+      one_class.sphinx_indexes.collect { |index|
+        index.local_options[key]
+      }.compact.first
+    end
+    
+    def attribute(*keys)
+      return nil unless one_class
+      
+      keys.detect { |key|
+        attributes.include?(key)
+      }
+    end
+    
+    def attributes
+      return [] unless one_class
+      
+      attributes = one_class.sphinx_indexes.collect { |index|
+        index.attributes.collect { |attrib| attrib.unique_name }
+      }.flatten
+    end
+    
+    def stale_retries
+      case options[:retry_stale]
+      when TrueClass
+        3
+      when nil, FalseClass
+        0
+      else
+        options[:retry_stale].to_i
+      end
+    end
+    
+    def instances_from_class(klass, matches)
+      index_options = klass.sphinx_index_options
+
+      ids = matches.collect { |match| match[:attributes]["sphinx_internal_id"] }
+      instances = ids.length > 0 ? klass.find(
+        :all,
+        :joins      => options[:joins],
+        :conditions => {klass.primary_key_for_sphinx.to_sym => ids},
+        :include    => (options[:include] || index_options[:include]),
+        :select     => (options[:select]  || index_options[:select]),
+        :order      => (options[:sql_order] || index_options[:sql_order])
+      ) : []
+
+      # Raise an exception if we find records in Sphinx but not in the DB, so
+      # the search method can retry without them. See 
+      # ThinkingSphinx::Search.retry_search_on_stale_index.
+      if options[:raise_on_stale] && instances.length < ids.length
+        stale_ids = ids - instances.map { |i| i.id }
+        raise StaleIdsException, stale_ids
+      end
+
+      # if the user has specified an SQL order, return the collection
+      # without rearranging it into the Sphinx order
+      return instances if (options[:sql_order] || index_options[:sql_order])
+
+      ids.collect { |obj_id|
+        instances.detect do |obj|
+          obj.primary_key_for_sphinx == obj_id
+        end
+      }
+    end
+    
+    # Group results by class and call #find(:all) once for each group to reduce
+    # the number of #find's in multi-model searches.
+    # 
+    def instances_from_matches
+      return single_class_results if one_class
+      
+      groups = results[:matches].group_by { |match|
+        match[:attributes]["class_crc"]
+      }
+      groups.each do |crc, group|
+        group.replace(
+          instances_from_class(class_from_crc(crc), group)
+        )
+      end
+      
+      results[:matches].collect do |match|
+        groups.detect { |crc, group|
+          crc == match[:attributes]["class_crc"]
+        }[1].compact.detect { |obj|
+          obj.primary_key_for_sphinx == match[:attributes]["sphinx_internal_id"]
+        }
+      end
+    end
+    
+    def single_class_results
+      instances_from_class one_class, results[:matches]
+    end
+    
+    def class_from_crc(crc)
+      config.models_by_crc[crc].constantize
+    end
+    
+    def each_with_attribute(attribute, &block)
+      populate
+      results[:matches].each_with_index do |match, index|
+        yield self[index],
+          (match[:attributes][attribute] || match[:attributes]["@#{attribute}"])
+      end
+    end
+    
+    def is_scope?(method)
+      one_class && one_class.sphinx_scopes.include?(method)
+    end
+    
+    # Adds the default_sphinx_scope if set.
+    def add_default_scope
+      add_scope(one_class.get_default_sphinx_scope) if one_class && one_class.has_default_sphinx_scope?
+    end
+    
+    def add_scope(method, *args, &block)
+      merge_search one_class.send(method, *args, &block)
+    end
+    
+    def merge_search(search)
+      search.args.each { |arg| args << arg }
+      
+      search.options.keys.each do |key|
+        if HashOptions.include?(key)
+          options[key] ||= {}
+          options[key].merge! search.options[key]
+        elsif ArrayOptions.include?(key)
+          options[key] ||= []
+          options[key] += search.options[key]
+          options[key].uniq!
+        else
+          options[key] = search.options[key]
+        end
+      end
+    end
+    
+    def scoped_count
+      return self.total_entries if @options[:ids_only]
+      
+      @options[:ids_only] = true
+      results_count = self.total_entries
+      @options[:ids_only] = false
+      @populated = false
+      
+      results_count
     end
   end
 end

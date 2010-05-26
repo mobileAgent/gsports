@@ -15,6 +15,19 @@ module ThinkingSphinx
         @stack = stack
       end
       
+      def self.coerce(columns)
+        case columns
+        when Symbol, String
+          FauxColumn.new(columns)
+        when Array
+          columns.collect { |col| FauxColumn.coerce(col) }
+        when FauxColumn
+          columns
+        else
+          nil
+        end
+      end
+      
       # Can't use normal method name, as that could be an association or
       # column name.
       # 
@@ -35,6 +48,10 @@ module ThinkingSphinx
       # 
       def is_string?
         @name.is_a?(String) && @stack.empty?
+      end
+      
+      def to_ary
+        [self]
       end
       
       # This handles any 'invalid' method calls and sets them as the name,
