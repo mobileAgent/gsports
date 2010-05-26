@@ -339,6 +339,7 @@ class UsersController < BaseController
     @ppv_access.expires = @expire
     @ppv_access.save!
 
+    UserNotifier.deliver_ppv_purchase(@ppv_access)
 
 
   end

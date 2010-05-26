@@ -110,20 +110,32 @@ class UserNotifier < ActionMailer::Base
   def roster_invite(options = {})
     @roster_entry  = options[:to]
     @coach         = options[:from]
-
     setup_sender_info
-    
     content_type "text/html"
-    
     @recipients  = "#{@roster_entry.email}"
     @subject     = "#{AppConfig.community_name} invitation"
     @sent_on     = Time.now
-
     @body[:roster_entry] = @roster_entry
     @body[:coach] = @coach
-
     @body[:url]  = "#{APP_URL}/?roster_invite_key=#{@roster_entry.reg_key}"
   end
+
+  def ppv_purchase(ppv)
+    setup_sender_info
+    content_type "text/html"
+    @recipients  = "#{ppv.user.email}"
+    @subject     = "Your #{AppConfig.community_name} Purchase"
+    @sent_on     = Time.now
+    @body[:ppv]  = ppv
+  end
+
+
+  
+
+
+
+
+
   
   def reset_password(user)
     setup_email(user)
