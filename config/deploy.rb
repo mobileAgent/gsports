@@ -140,8 +140,8 @@ namespace :sphinx do
     rescue
       puts "sphinx was not running, ok."
     end
-    #run "cd #{current_release}; #{rake} RAILS_ENV=#{rails_env} thinking_sphinx:configure"
-    #run "cd #{current_release}; #{rake} RAILS_ENV=#{rails_env} thinking_sphinx:index"
+    run "cd #{current_release}; #{rake} RAILS_ENV=#{rails_env} thinking_sphinx:configure"
+    run "cd #{current_release}; #{rake} RAILS_ENV=#{rails_env} thinking_sphinx:index"
     run "cd #{current_release}; #{rake} RAILS_ENV=#{rails_env} thinking_sphinx:start"
   end
 end
