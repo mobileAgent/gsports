@@ -15,10 +15,10 @@
             = render :partial => 'shared/video_actions', :locals => { :video_listing => @video_reel }
         -#%a{ :href=>"http://www.facebook.com/sharer.php?u=#{APP_URL}/video_reels/#{@video_reel.id}", :style=>'float:right;' }
           %img{ :src=>'/images/fb_share.jpg' }
-        - share_url = "#{APP_URL}/video_reels/#{@video_reel.id}"
-        <a name="fb_share" type="button"
-        = "share_url='#{share_url}'"
-        href="http://www.facebook.com/sharer.php">Share</a><script src="http://static.ak.fbcdn.net/connect.php/js/FB.Share" type="text/javascript"></script>
+        -#- share_url = "#{APP_URL}/video_reels/#{@video_reel.id}"
+        -#<a name="fb_share" type="button"
+        -#= "share_url='#{share_url}'"
+        -#href="http://www.facebook.com/sharer.php">Share</a><script src="http://static.ak.fbcdn.net/connect.php/js/FB.Share" type="text/javascript"></script>
  
     .flashArea#flashArea
     - if @vidavee && session[:vidavee] && @video_reel.dockey

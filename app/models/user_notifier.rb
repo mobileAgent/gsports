@@ -124,6 +124,7 @@ class UserNotifier < ActionMailer::Base
     setup_sender_info
     content_type "text/html"
     @recipients  = "#{ppv.user.email}"
+    @cc          = AppConfig.support_email
     @subject     = "Your #{AppConfig.community_name} Purchase"
     @sent_on     = Time.now
     @body[:ppv]  = ppv
