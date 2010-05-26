@@ -20,7 +20,7 @@
         }
   %body
     .container
-      - if @ppv.expires
+      - if @ppv.expires.nil?
         %p
           Welcome,
         %p
@@ -56,10 +56,18 @@
         %p
           Welcome,
         %p
-          = "Thank you for purchasing access to #{@ppv.video.title} on Global Sports. You will have complete access to this game until #{human_date_time(@ppv.expires)}."
+          - human_date = @ppv.expires.in_time_zone(TimeZone.new('Eastern Time (US & Canada)')).strftime("%B %e, %Y %I:%M %p %Z")
+          = "Thank you for purchasing access to #{@ppv.video.title} on Global Sports. You will have complete access to this game until #{human_date}."
           If you would like to upgrade to an unlimited subscription membership for $9.99/mo, please visit
           %a{ :href=>"http://globalsports.net/register"} http://globalsports.net/register
         %p
           Thank you, and enjoy your games!
           %br
           \- The Global Sports Team
+
+
+
+
+
+
+    
