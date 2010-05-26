@@ -25,7 +25,11 @@
       .leftNavPlayer{ :style=>'width:490px;' }
         - if (allowed || !@video_asset.is_restricted?)
           = render :partial => 'ratings/stars', :locals => { :item => @video_asset }
-          %a{ :href=>"http://www.facebook.com/sharer.php?u=#{APP_URL}/video_assets/#{@video_asset.id}", :style=>'float:right;' }
+          - share_url = "#{APP_URL}/video_assets/#{@video_asset.id}"
+          <a name="fb_share" type="button" style='float:right;'
+          = "share_url='#{share_url}'"
+          href="http://www.facebook.com/sharer.php">Share</a><script src="http://static.ak.fbcdn.net/connect.php/js/FB.Share" type="text/javascript"></script>
+          -#%a{ :href=>"http://www.facebook.com/sharer.php?u=#{APP_URL}/video_assets/#{@video_asset.id}", :style=>'float:right;' }
             %img{ :src=>'/images/fb_share.jpg' }
           - if allowed
             = render :partial => 'shared/video_actions', :locals => { :video_listing => @video_asset, :ppv => @ppv }

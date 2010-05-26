@@ -8,6 +8,8 @@ class VideoClipsController < BaseController
                 :only => [:show])
   
   after_filter :expire_games_of_the_week, :only => [:destroy]
+
+  skip_before_filter :gs_login_required, :only => [ :show ]
   
   # GET /video_clips
   # GET /video_clips.xml

@@ -1,22 +1,39 @@
-- allowed = current_user.has_access?(@video_clip)
+- allowed = current_user && current_user.has_access?(@video_clip)
 .profileContentArea.listingPage
   .profilePageHeader
-    %h2.columnDescriptor
-      %span
-        =link_to _('MY CLIPS'), user_video_clips_path(@user.id)
-      Player
+    - if current_user
+      %h2.columnDescriptor
+        %span
+          =link_to _('MY CLIPS'), user_video_clips_path(@user.id)
+        Player
   .playerContentArea
     .leftNavColPlayer
       .leftNavPlayer
-        = render :partial => 'ratings/stars', :locals => { :item => @video_clip }
-        %div
-          = render :partial => 'shared/video_actions', :locals => { :video_listing => @video_clip }
+        - if current_user
+          = render :partial => 'ratings/stars', :locals => { :item => @video_clip }
+          %div
+            = render :partial => 'shared/video_actions', :locals => { :video_listing => @video_clip }
         -#%a{ :href=>"http://www.facebook.com/sharer.php?u=#{APP_URL}/video_clips/#{@video_clip.id}", :style=>'float:right;' }
           %img{ :src=>'/images/fb_share.jpg' }
+        - share_url = "#{APP_URL}/video_clips/#{@video_clip.id}"
+        <a name="fb_share" type="button"
+        = "share_url='#{share_url}'"
+        href="http://www.facebook.com/sharer.php">Share</a><script src="http://static.ak.fbcdn.net/connect.php/js/FB.Share" type="text/javascript"></script>
+
 
     .flashArea#flashArea
     - if @vidavee && session[:vidavee] && @video_clip.dockey
-      -if allowed
+      - dockey = @video_clip.dockey
+      - fvars = {:allowFS => "true"}
+      - player_name = '/players/clipmaker.swf'
+      - if allowed
+        - fvars[:dockey] = dockey
+      - else
+        - player_name = '/players/previewPlayer.swf'
+        - fvars[:dockeys] = dockey
+      = render(:partial => 'shared/video_player', :locals => { :fvars => fvars, :params => {:allowFullScreen=>"true"}, :target => 'flashArea', :height => 635, :width => 800, :player_name=>player_name })
+
+      -#if allowed
         = render(:partial => 'shared/video_player', :locals => { :fvars => {:dockey => @video_clip.dockey, :allowFS => "true"}, :params => {:allowFullScreen=>"true"}, :target => 'flashArea', :height => 635, :width => 800 })
       
     .clearDiv
