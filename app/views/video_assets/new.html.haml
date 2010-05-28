@@ -37,7 +37,7 @@
           %br/
           Video uploads should not be started if they will span this window
 
-      - form_for(:video_asset, @video_asset, :url => {:controller => 'video_assets' , :action => 'create'}, :html => { :multipart => true, :id => 'upload_form', :onsubmit=>"return gs.video_assets.uploader.submit(this, {'onStart' : gs.video_assets.uploader.startCallback, 'onComplete' : gs.video_assets.uploader.completeCallback})" } ) do |f|
+      - form_for(:video_asset, @video_asset, :url => {:controller => 'video_assets' , :action => 'create'}, :html => { :multipart => true, :id => 'upload_form', :onsubmit=>"return gs.video_assets.submit_upload(this)" } ) do |f|
         -#= render :partial => ( @video_asset.gamex_league_id ? "gamex_form" : "form" ), :locals => { :f => f }
         = render :partial => ( @render_gamex_menu ? "gamex_form" : "form" ), :locals => { :f => f }
         %p

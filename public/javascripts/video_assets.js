@@ -92,6 +92,10 @@
   }
 
   gs.video_assets.video_failed = function(msg) {
+
+    $(gs.video_assets.base_model+'_submit').value = "Try Again";
+    $(gs.video_assets.base_model+'_submit').disabled = false;
+
 //    var txtFileName = document.getElementById("uploaded_file_path");
 //    txtFileName.value = "";
 
@@ -136,7 +140,30 @@
 
 
 
+  gs.video_assets.submit_upload = function(form) {
+    
+    title = $('video_asset_title').value
+    filename = $('video_asset_uploaded_file_path').value
+    
+    if(title == "" || filename == ""){
+      html = '<div id="errorExplanation" class="errorExplanation">There were problems with the following fields:<ul>'
+    
+      if(title == ""){
+        html += '<li>Title can\'t be blank</li>'
+      }
+      
+      if(filename == ""){
+        html += '<li>Please select a file to upload</li>'
+      }
 
+      html += '</ul></div>'
+
+      $('uploadProgressContainer').innerHTML = html;
+      return false;
+    }
+    this.uploader.submit(form, {'onStart' : this.uploader.startCallback, 'onComplete' : this.uploader.completeCallback})
+    return true;
+  }
 
 gs.video_assets.uploader = {
 

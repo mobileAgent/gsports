@@ -238,8 +238,10 @@ class VideoAssetsController < BaseController
 
       #VideoHistory.uploaded(@video_asset)
     else
+      #@video_asset.errors.add_to_base("There was a problem with the video upload, please try again later.")
 
-      render :action => "There was a problem with the video upload, please try again later." #"ERR #{CGI.escapeHTML(params.inspect)}"
+      render :action => :upload_errors, :layout=>false
+        #"There was a problem with the video upload, please try again later." #"ERR #{CGI.escapeHTML(params.inspect)}"
 
       #flash[:notice] = "There was a problem with the video meta data"
 #      if @gamex_user
