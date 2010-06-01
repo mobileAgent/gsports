@@ -40,7 +40,7 @@
                 - elsif user.team #_admin?
                   - team_name = user.team.name rescue NoMethodError rescue RecordNotFound
                   = link_to "#{team_name} (#{user.team_id})", team_path(user.team_id) #, :class=>'admin-userreg-link-org'
-                %span{ :style=>'float:right;' }= h user.role.name
+                %span{ :style=>'float:right;' }= user.role.name rescue '-'
 
               - mem = user.current_membership
               - if mem
@@ -64,6 +64,12 @@
                   %td.leagueList
                   
                 %td.leagueList= link_to 'detail', "/membership/?user_id=#{user.id}"
-              
+
+              - elsif (ppvs = PPVAccess.for_user(user)) && !ppvs.empty?
+                %td.leagueList{ :colspan=>1 }
+                  \&nbsp;
+                %td.leagueList{ :colspan=>4 }
+                  = ppvs.size
+                  PPVs
       .apple_pagination
         = will_paginate @users
