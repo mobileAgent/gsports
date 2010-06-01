@@ -141,9 +141,9 @@
 
 
   gs.video_assets.submit_upload = function(form) {
-    
-    title = $('video_asset_title').value
-    filename = $('video_asset_uploaded_file_path').value
+   
+    var title = $('video_asset_title').value
+    var filename = $('video_asset_uploaded_file_path').value
     
     if(title == "" || filename == ""){
       html = '<div id="errorExplanation" class="errorExplanation">There were problems with the following fields:<ul>'
