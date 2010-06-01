@@ -135,7 +135,7 @@ function buildTitle()
         if (game_type_field)
             game_type = game_type_field.value
     }
-    title = htn
+    var title = htn
     if (hscore.length > 0)
         title += '('+hscore+')'
     if (vtn.length > 0)
