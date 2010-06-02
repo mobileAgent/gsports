@@ -106,10 +106,33 @@ class BaseController < ApplicationController
   # It is easy to audit that all controllers extend from this
   # one and that only those actions which explicity skip this filter
   # should be viewable to the public side.
+
+
+  # deprication, gs_login_required basically means that memebership is required
+
   def gs_login_required
     #login_required
-    logged_in? && self.current_user.enabled? ? true : access_denied
+    #logged_in? && self.current_user.enabled? ? true : access_denied
+    gs_membership_required
   end
+
+  def member?
+    logged_in? && self.current_user.enabled?
+  end
+  
+  # use one of these more explicit filters instead
+
+  def gs_membership_required
+    member? ? true : access_denied
+  end
+
+  def gs_user_required
+    logged_in? ? true : access_denied
+  end
+
+  ###
+
+
 
   def xgs_login_required
     #login_required

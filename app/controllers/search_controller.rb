@@ -1,7 +1,13 @@
 class SearchController < BaseController
   
-  skip_before_filter :verify_authenticity_token, :only => [ :quickfind, :quickfind_select_state, :quickfind_select_county, :quickfind_select_school ]
-  skip_before_filter :gs_login_required, :only => [:teamfind,:update_teamfind_counties,:update_teamfind_cities,:dd,:d]
+  skip_before_filter :verify_authenticity_token, :only => [ 
+    :quickfind, :quickfind_select_state, :quickfind_select_county, :quickfind_select_school
+  ]
+  skip_before_filter :gs_login_required, :only => [
+    :teamfind,:update_teamfind_counties,:update_teamfind_cities,:dd,:d,
+    :q, :quickfind, :quickfind_select_state, :quickfind_select_county, :quickfind_select_school
+  ]
+  before_filter :gs_user_required, :only => [:q, :quickfind, :quickfind_select_state, :quickfind_select_county, :quickfind_select_school ]
   before_filter :vidavee_login
   
   # Video quickfind

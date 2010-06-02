@@ -9,8 +9,11 @@ class UsersController < BaseController
                                                    :registration_fill_team, :registration_fill_teams_by_state,
                                                    :registration_fill_league, :registration_fill_leagues_by_state,
                                                    :auto_complete_for_team_name, :auto_complete_for_league_name,
-                                                   :ppv, :ppv_reg, :ppv_reg_create, :dashboard
+                                                   :ppv, :ppv_reg, :ppv_reg_create, :dashboard,
+                                                   :show, :edit, :edit_account, :update, :update_account
                                                    ]
+                                                   
+  before_filter :gs_user_required, :only => [:show, :edit, :edit_account, :update, :update_account]
   
   skip_before_filter :billing_required, :only => [:billing, :edit_billing, :submit_billing, :update_billing, 
                                                   :account_expired, :membership_canceled, :renew, :cancel_membership, 
