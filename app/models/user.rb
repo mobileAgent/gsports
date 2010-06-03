@@ -508,6 +508,22 @@ class User < ActiveRecord::Base
     add_membership(mem)
   end
 
+  def address
+    addr = Address.new
+    addr.firstname = firstname
+    addr.minitial = minitial
+    addr.lastname = lastname
+    addr.address1 = address1
+    addr.address2 = address2
+    addr.city = city
+    addr.state = state
+    addr.country = country
+    addr.phone = phone
+    addr.email = email
+    addr.zip = zip
+    addr
+  end
+
   def set_credit_card(ccinfo)
     cc = CreditCard.from_active_merchant_cc(ccinfo)
     cc.save

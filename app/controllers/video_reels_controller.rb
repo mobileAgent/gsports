@@ -8,7 +8,8 @@ class VideoReelsController < BaseController
   
   after_filter :expire_games_of_the_week, :only => [:destroy]
 
-  #skip_before_filter :gs_login_required, :only => [ :show ]
+  skip_before_filter :gs_login_required, :only => [ :show ]
+  before_filter :gs_user_required, :only => [ :show ]
 
   
   # GET /video_reels

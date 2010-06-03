@@ -10,10 +10,10 @@ class UsersController < BaseController
                                                    :registration_fill_league, :registration_fill_leagues_by_state,
                                                    :auto_complete_for_team_name, :auto_complete_for_league_name,
                                                    :ppv, :ppv_reg, :ppv_reg_create, :dashboard,
-                                                   :show, :edit, :edit_account, :update, :update_account
+                                                   :show, :edit, :edit_account, :update, :update_account, :edit_billing, :update_billing
                                                    ]
                                                    
-  before_filter :gs_user_required, :only => [:show, :edit, :edit_account, :update, :update_account]
+  before_filter :gs_user_required, :only => [:show, :edit, :edit_account, :update, :update_account, :edit_billing, :update_billing]
   
   skip_before_filter :billing_required, :only => [:billing, :edit_billing, :submit_billing, :update_billing, 
                                                   :account_expired, :membership_canceled, :renew, :cancel_membership, 
@@ -1026,8 +1026,8 @@ class UsersController < BaseController
       @credit_card = @membership.credit_card || @user.credit_card || CreditCard.new
       @billing_address = @membership.address || Address.new
     else
-      @credit_card = CreditCard.new
-      @billing_address = Address.new
+      @credit_card = @user.credit_card || CreditCard.new
+      @billing_address = @user.address || Address.new
     end
   end
 
@@ -1053,7 +1053,7 @@ class UsersController < BaseController
       @billing_address ||= @membership.address || Address.new
       @cost = @membership.cost
     end
-    @existing_credit_card ||= CreditCard.new # Can't create card from params due to date issues
+    @existing_credit_card ||= @user.credit_card || CreditCard.new # Can't create card from params due to date issues
     
     # Have to test with an AM::B:CC in order to validate
     cc=params[:credit_card]
